@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       }),
       // Month tab: always all-time, not filtered by date picker
       prisma.lead.findMany({
-        where: { pipelineStage: 'COMPLETED' },
+        where: { pipelineStage: 'COMPLETED', ...teamScope },
         select: { conversionDate: true, surgeryDate: true, leadDate: true, createdDate: true, billAmount: true, netProfit: true },
       }),
     ])

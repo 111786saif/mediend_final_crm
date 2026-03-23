@@ -169,11 +169,11 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
           u.role === 'SALES_HEAD'
             ? '/sales/dashboard'
             : u.role === 'TEAM_LEAD'
-              ? '/team-lead/pipeline'
+              ? '/team-lead/dashboard'
               : '/bd/pipeline',
-        label: u.role === 'SALES_HEAD' ? 'Dashboard' : 'Pipeline',
+        label: u.role === 'SALES_HEAD' || u.role === 'TEAM_LEAD' ? 'Dashboard' : 'Pipeline',
         icon: LayoutDashboard,
-        matchPrefixes: ['/sales/dashboard', '/bd/pipeline', '/team-lead/pipeline'],
+        matchPrefixes: ['/sales/dashboard', '/bd/pipeline', '/team-lead/dashboard'],
         show: hasDashboard || hasPipeline,
       },
       {

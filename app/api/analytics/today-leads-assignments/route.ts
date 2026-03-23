@@ -3,10 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { getLeadPipelineBucket } from '@/lib/pipeline-lead-buckets'
 
 /**
- * Get today's lead assignments grouped by BD
- * Returns count of new leads assigned to each BD today (IST)
+ * Get today's actionable lead assignments grouped by BD
+ * Returns count of leads assigned today (IST), excluding inactive statuses
+ * like Junk, Lost, and DNP which should not appear as "new leads".
  */
 export async function GET(request: NextRequest) {
   try {
@@ -40,7 +42,7 @@ export async function GET(request: NextRequest) {
     const teamScope =
       user.role === 'TEAM_LEAD' && user.teamId ? { bd: { teamId: user.teamId } } : {}
 
-    // Get all leads created today, grouped by BD
+    // Get all leads created today first, then drop inactive statuses.
     const leads = await prisma.lead.findMany({
       where: {
         createdDate: {
@@ -72,6 +74,11 @@ export async function GET(request: NextRequest) {
       },
     })
 
+    const activeLeads = leads.filter((lead) => {
+      const bucket = getLeadPipelineBucket(lead.status)
+      return bucket !== 'junk' && bucket !== 'lost' && bucket !== 'dnp'
+    })
+
     // Group by BD and count
     const bdMap = new Map<
       string,
@@ -91,7 +98,7 @@ export async function GET(request: NextRequest) {
       }
     >()
 
-    leads.forEach((lead) => {
+    activeLeads.forEach((lead) => {
       const bdId = lead.bdId
       if (!bdMap.has(bdId)) {
         bdMap.set(bdId, {
@@ -120,7 +127,8 @@ export async function GET(request: NextRequest) {
 
     return successResponse({
       date: todayStart.toISOString().split('T')[0],
-      totalLeads: leads.length,
+      totalLeads: activeLeads.length,
+      excludedInactiveLeads: leads.length - activeLeads.length,
       assignments,
     })
   } catch (error) {

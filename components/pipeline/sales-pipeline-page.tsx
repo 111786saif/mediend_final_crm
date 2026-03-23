@@ -2,7 +2,11 @@
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { CallNotesPopover } from '@/components/pipeline/call-notes-popover'
-import { CampaignSidebar, type CampaignSelection } from '@/components/pipeline/campaign-sidebar'
+import {
+  CampaignSidebar,
+  type CampaignSelection,
+  type SidebarGroupMode,
+} from '@/components/pipeline/campaign-sidebar'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { LeadAgeBadge } from '@/components/pipeline/lead-age-badge'
 import { PipelineStatusCards } from '@/components/pipeline/pipeline-status-cards'
@@ -74,12 +78,18 @@ function normalizedText(value: unknown, fallback: string): string {
   return (trimmed || fallback).replace(/\s+/g, ' ')
 }
 
+function groupValueForLead(lead: Lead, groupBy: SidebarGroupMode): string {
+  return groupBy === 'circle'
+    ? normalizedText(lead.circle, 'Unknown')
+    : normalizedText(lead.treatment, 'Unknown disease')
+}
+
 function filterByCampaign(leads: Lead[], sel: CampaignSelection): Lead[] {
   if (sel.type === 'all') return leads
   return leads.filter((l) => {
-    const circle = normalizedText(l.circle, 'Unknown')
+    const groupValue = groupValueForLead(l, sel.groupBy)
     const camp = normalizedText(l.campaignName, 'No campaign')
-    return circle === sel.circle && camp === sel.campaignLabel
+    return groupValue === sel.groupValue && camp === sel.campaignLabel
   })
 }
 
@@ -92,6 +102,8 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const [campaignSelection, setCampaignSelection] = useState<CampaignSelection>({ type: 'all' })
+  const [sidebarGroupBy, setSidebarGroupBy] = useState<SidebarGroupMode>('circle')
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [statusBucket, setStatusBucket] = useState<PipelineStatusBucket>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearch = useDebouncedValue(searchQuery, 250)
@@ -113,6 +125,10 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   }, [variant, user?.id])
 
   const { leads, isLoading } = useLeads(leadFilters)
+
+  useEffect(() => {
+    setCampaignSelection({ type: 'all' })
+  }, [sidebarGroupBy])
 
   const { data: targets } = useQuery<Target[]>({
     queryKey: ['targets', 'BD', user?.id],
@@ -310,7 +326,15 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
         </header>
 
         <div className="flex flex-1 overflow-hidden">
-          <CampaignSidebar leads={leads} selection={campaignSelection} onSelect={setCampaignSelection} />
+          <CampaignSidebar
+            leads={leads}
+            groupBy={sidebarGroupBy}
+            onGroupByChange={setSidebarGroupBy}
+            selection={campaignSelection}
+            onSelect={setCampaignSelection}
+            collapsed={sidebarCollapsed}
+            onCollapsedChange={setSidebarCollapsed}
+          />
 
           <main className="flex-1 overflow-y-auto p-4 md:p-6">
             {targetProgress && (
@@ -338,12 +362,15 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                      {campaignSelection.circle}
+                      {campaignSelection.groupValue}
                     </p>
                     <h2 className="text-lg font-bold tracking-tight">{campaignSelection.campaignLabel}</h2>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <Badge variant="secondary" className="text-xs">
                         {campaignFiltered.length} in campaign
+                      </Badge>
+                      <Badge variant="outline" className="text-xs capitalize">
+                        {campaignSelection.groupBy}
                       </Badge>
                     </div>
                   </div>

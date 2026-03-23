@@ -310,6 +310,7 @@ export const navItems: NavItem[] = [
 
 export function getDashboardUrl(role: string): string {
   if (role === 'SALES_HEAD') return '/sales/dashboard'
+  if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
   return '/md/tasks'
 }
 

@@ -79,6 +79,7 @@ interface BdMonthly {
   bds: Array<{
     bdId: string
     bdName: string
+    teamId: string | null
     teamName: string | null
     leads: Record<string, number>
     ipd: Record<string, number>
@@ -126,6 +127,8 @@ interface LeadsBreakdown {
   bySource: Array<{ source: string; totalLeads: number; converted: number; conversionRate: number }>
   byCampaign: Array<{ campaign: string; totalLeads: number; converted: number; conversionRate: number }>
 }
+
+type DashboardVariant = 'org' | 'team-lead'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -230,9 +233,21 @@ function DateRangePicker({
 
 // ─── BD Detail Sheet ──────────────────────────────────────────────────────────
 
-function BdDetailSheet({ bdId, open, onClose, dateParams }: { bdId: string | null; open: boolean; onClose: () => void; dateParams: string }) {
+function BdDetailSheet({
+  bdId,
+  open,
+  onClose,
+  dateParams,
+  variant,
+}: {
+  bdId: string | null
+  open: boolean
+  onClose: () => void
+  dateParams: string
+  variant: DashboardVariant
+}) {
   const { data, isLoading } = useQuery<BdDetail>({
-    queryKey: ['bd-detail', bdId, dateParams],
+    queryKey: ['sales-dashboard', variant, 'bd-detail', bdId, dateParams],
     queryFn: () => apiGet<BdDetail>(`/api/analytics/sales-dashboard/bd-detail?bdId=${bdId}${dateParams ? '&' + dateParams : ''}`),
     enabled: !!bdId && open,
   })
@@ -343,9 +358,21 @@ function BdDetailSheet({ bdId, open, onClose, dateParams }: { bdId: string | nul
 
 // ─── Team Detail Sheet ────────────────────────────────────────────────────────
 
-function TeamDetailSheet({ teamId, open, onClose, dateParams }: { teamId: string | null; open: boolean; onClose: () => void; dateParams: string }) {
+function TeamDetailSheet({
+  teamId,
+  open,
+  onClose,
+  dateParams,
+  variant,
+}: {
+  teamId: string | null
+  open: boolean
+  onClose: () => void
+  dateParams: string
+  variant: DashboardVariant
+}) {
   const { data, isLoading } = useQuery<TeamDetail>({
-    queryKey: ['team-detail', teamId, dateParams],
+    queryKey: ['sales-dashboard', variant, 'team-detail', teamId, dateParams],
     queryFn: () => apiGet<TeamDetail>(`/api/analytics/sales-dashboard/team-detail?teamId=${teamId}${dateParams ? '&' + dateParams : ''}`),
     enabled: !!teamId && open,
   })
@@ -470,33 +497,41 @@ function TeamDetailSheet({ teamId, open, onClose, dateParams }: { teamId: string
 
 // ─── Overview Tab ─────────────────────────────────────────────────────────────
 
-function OverviewTab({ dateParams, onSelectBd }: { dateParams: string; onSelectBd: (bdId: string) => void }) {
+function OverviewTab({
+  dateParams,
+  onSelectBd,
+  variant,
+}: {
+  dateParams: string
+  onSelectBd: (bdId: string) => void
+  variant: DashboardVariant
+}) {
   const today = new Date()
   const thisMonthStart = format(new Date(today.getFullYear(), today.getMonth(), 1), 'yyyy-MM-dd')
   const thisMonthEnd = format(today, 'yyyy-MM-dd')
 
   const { data: comparison } = useQuery<IpdComparison>({
-    queryKey: ['ipd-comparison'],
+    queryKey: ['sales-dashboard', variant, 'ipd-comparison'],
     queryFn: () => apiGet<IpdComparison>('/api/analytics/sales-dashboard/ipd-comparison'),
   })
 
   const { data: bdLeaderboard } = useQuery<LeaderboardEntry[]>({
-    queryKey: ['leaderboard-bd', thisMonthStart, thisMonthEnd],
+    queryKey: ['sales-dashboard', variant, 'leaderboard-bd', thisMonthStart, thisMonthEnd],
     queryFn: () => apiGet(`/api/analytics/leaderboard?type=bd&startDate=${thisMonthStart}&endDate=${thisMonthEnd}`),
   })
 
   const { data: teamLeaderboard } = useQuery<LeaderboardEntry[]>({
-    queryKey: ['leaderboard-team', thisMonthStart, thisMonthEnd],
+    queryKey: ['sales-dashboard', variant, 'leaderboard-team', thisMonthStart, thisMonthEnd],
     queryFn: () => apiGet(`/api/analytics/leaderboard?type=team&startDate=${thisMonthStart}&endDate=${thisMonthEnd}`),
   })
 
   const { data: ipdBreakdown } = useQuery<IpdBreakdown>({
-    queryKey: ['ipd-breakdown-month'],
+    queryKey: ['sales-dashboard', variant, 'ipd-breakdown-month'],
     queryFn: () => apiGet<IpdBreakdown>('/api/analytics/sales-dashboard/ipd-breakdown'),
   })
 
   const { data: todayAssignments } = useQuery<TodayAssignments>({
-    queryKey: ['today-assignments'],
+    queryKey: ['sales-dashboard', variant, 'today-assignments'],
     queryFn: () => apiGet<TodayAssignments>('/api/analytics/today-leads-assignments'),
     refetchInterval: 60000,
   })
@@ -632,14 +667,22 @@ function OverviewTab({ dateParams, onSelectBd }: { dateParams: string; onSelectB
 
 // ─── Team Performance Tab ─────────────────────────────────────────────────────
 
-function TeamPerformanceTab({ dateParams, onSelectTeam }: { dateParams: string; onSelectTeam: (teamId: string) => void }) {
+function TeamPerformanceTab({
+  dateParams,
+  onSelectTeam,
+  variant,
+}: {
+  dateParams: string
+  onSelectTeam: (teamId: string) => void
+  variant: DashboardVariant
+}) {
   const { data: teams } = useQuery<TeamSummary[]>({
-    queryKey: ['teams-list'],
+    queryKey: ['sales-dashboard', variant, 'teams-list'],
     queryFn: () => apiGet('/api/teams'),
   })
 
   const { data: bdMonthly } = useQuery<BdMonthly>({
-    queryKey: ['bd-monthly', dateParams],
+    queryKey: ['sales-dashboard', variant, 'bd-monthly', dateParams],
     queryFn: () => apiGet<BdMonthly>(`/api/analytics/sales-dashboard/bd-monthly${dateParams ? '?' + dateParams : ''}`),
   })
 
@@ -648,8 +691,8 @@ function TeamPerformanceTab({ dateParams, onSelectTeam }: { dateParams: string; 
   const teamLeadsMap = new Map<string, number>()
   if (bdMonthly) {
     for (const bd of bdMonthly.bds) {
-      if (!bd.teamName) continue
-      const key = bd.teamName
+      if (!bd.teamId) continue
+      const key = bd.teamId
       teamIpdMap.set(key, (teamIpdMap.get(key) ?? 0) + bd.totalIpd)
       teamLeadsMap.set(key, (teamLeadsMap.get(key) ?? 0) + bd.totalLeads)
     }
@@ -659,8 +702,8 @@ function TeamPerformanceTab({ dateParams, onSelectTeam }: { dateParams: string; 
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(teams ?? []).map((team) => {
-          const ipd = teamIpdMap.get(team.name) ?? 0
-          const leads = teamLeadsMap.get(team.name) ?? 0
+          const ipd = teamIpdMap.get(team.id) ?? 0
+          const leads = teamLeadsMap.get(team.id) ?? 0
           const conv = leads > 0 ? ((ipd / leads) * 100).toFixed(1) : '0.0'
           return (
             <button
@@ -703,11 +746,19 @@ function TeamPerformanceTab({ dateParams, onSelectTeam }: { dateParams: string; 
 
 // ─── BD Performance Tab ───────────────────────────────────────────────────────
 
-function BdPerformanceTab({ dateParams, onSelectBd }: { dateParams: string; onSelectBd: (bdId: string) => void }) {
+function BdPerformanceTab({
+  dateParams,
+  onSelectBd,
+  variant,
+}: {
+  dateParams: string
+  onSelectBd: (bdId: string) => void
+  variant: DashboardVariant
+}) {
   const [sortBy, setSortBy] = useState<'ipdDone' | 'totalLeads' | 'conversionRate'>('ipdDone')
 
   const { data: bdMonthly } = useQuery<BdMonthly>({
-    queryKey: ['bd-monthly', dateParams],
+    queryKey: ['sales-dashboard', variant, 'bd-monthly', dateParams],
     queryFn: () => apiGet<BdMonthly>(`/api/analytics/sales-dashboard/bd-monthly${dateParams ? '?' + dateParams : ''}`),
   })
 
@@ -786,17 +837,17 @@ function BdPerformanceTab({ dateParams, onSelectBd }: { dateParams: string; onSe
 
 // ─── Sources & Campaigns Tab ──────────────────────────────────────────────────
 
-function SourceCampaignTab({ dateParams }: { dateParams: string }) {
+function SourceCampaignTab({ dateParams, variant }: { dateParams: string; variant: DashboardVariant }) {
   const [view, setView] = useState<'source' | 'campaign'>('source')
   const qp = dateParams ? '?' + dateParams : ''
 
   const { data: ipdBreakdown } = useQuery<IpdBreakdown>({
-    queryKey: ['ipd-breakdown', dateParams],
+    queryKey: ['sales-dashboard', variant, 'ipd-breakdown', dateParams],
     queryFn: () => apiGet<IpdBreakdown>(`/api/analytics/sales-dashboard/ipd-breakdown${qp}`),
   })
 
   const { data: leadsBreakdown } = useQuery<LeadsBreakdown>({
-    queryKey: ['leads-breakdown', dateParams],
+    queryKey: ['sales-dashboard', variant, 'leads-breakdown', dateParams],
     queryFn: () => apiGet<LeadsBreakdown>(`/api/analytics/sales-dashboard/leads-breakdown${qp}`),
   })
 
@@ -884,16 +935,16 @@ function SourceCampaignTab({ dateParams }: { dateParams: string }) {
 
 // ─── Circle Tab ───────────────────────────────────────────────────────────────
 
-function CircleTab({ dateParams }: { dateParams: string }) {
+function CircleTab({ dateParams, variant }: { dateParams: string; variant: DashboardVariant }) {
   const qp = dateParams ? '?' + dateParams : ''
 
   const { data: ipdBreakdown } = useQuery<IpdBreakdown>({
-    queryKey: ['ipd-breakdown', dateParams],
+    queryKey: ['sales-dashboard', variant, 'ipd-breakdown', dateParams],
     queryFn: () => apiGet<IpdBreakdown>(`/api/analytics/sales-dashboard/ipd-breakdown${qp}`),
   })
 
   const { data: leadsBreakdown } = useQuery<LeadsBreakdown>({
-    queryKey: ['leads-breakdown', dateParams],
+    queryKey: ['sales-dashboard', variant, 'leads-breakdown', dateParams],
     queryFn: () => apiGet<LeadsBreakdown>(`/api/analytics/sales-dashboard/leads-breakdown${qp}`),
   })
 
@@ -985,7 +1036,7 @@ function CircleTab({ dateParams }: { dateParams: string }) {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export function SalesDashboardView({ variant = 'org' }: { variant?: 'org' | 'team-lead' }) {
+export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVariant }) {
   const [activeTab, setActiveTab] = useState('overview')
   const [startDate, setStartDate] = useState<Date | undefined>(() => new Date(new Date().getFullYear(), 0, 1))
   const [endDate, setEndDate] = useState<Date | undefined>(() => new Date())
@@ -1039,19 +1090,19 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: 'org' | 'tea
         {/* Tab content */}
         <div className="mt-2">
           {activeTab === 'overview' && (
-            <OverviewTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} />
+            <OverviewTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} variant={variant} />
           )}
           {activeTab === 'team' && variant !== 'team-lead' && (
-            <TeamPerformanceTab dateParams={dateParams} onSelectTeam={(id) => setSelectedTeamId(id)} />
+            <TeamPerformanceTab dateParams={dateParams} onSelectTeam={(id) => setSelectedTeamId(id)} variant={variant} />
           )}
           {activeTab === 'bd' && (
-            <BdPerformanceTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} />
+            <BdPerformanceTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} variant={variant} />
           )}
           {activeTab === 'sources' && (
-            <SourceCampaignTab dateParams={dateParams} />
+            <SourceCampaignTab dateParams={dateParams} variant={variant} />
           )}
           {activeTab === 'circle' && (
-            <CircleTab dateParams={dateParams} />
+            <CircleTab dateParams={dateParams} variant={variant} />
           )}
         </div>
       </div>
@@ -1062,12 +1113,14 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: 'org' | 'tea
         open={!!selectedBdId}
         onClose={() => setSelectedBdId(null)}
         dateParams={dateParams}
+        variant={variant}
       />
       <TeamDetailSheet
         teamId={selectedTeamId}
         open={!!selectedTeamId}
         onClose={() => setSelectedTeamId(null)}
         dateParams={dateParams}
+        variant={variant}
       />
     </AuthenticatedLayout>
   )
