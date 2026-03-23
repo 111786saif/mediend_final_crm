@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { queryMySQL, closeMySQLPool, testMySQLConnection } from '@/lib/mysql-source-client'
+import {
+  queryMySQL,
+  closeMySQLPool,
+  testMySQLConnection,
+  getMySQLLeadAssignmentDateColumn,
+} from '@/lib/mysql-source-client'
 import { prisma } from '@/lib/prisma'
-import { mapMySQLLeadToPrisma, mapMySQLLeadToPrismaAsyncFallback, getLeadReceivedDate, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
+import {
+  mapMySQLLeadToPrisma,
+  mapMySQLLeadToPrismaAsyncFallback,
+  getLeadReceivedDate,
+  getLeadAssignmentDate,
+  type MySQLLeadRow,
+} from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { UserRole } from '@/generated/prisma/client'
@@ -90,14 +101,21 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fetch leads from MySQL: new leads (by Lead_Date) and existing leads with status/field updates (by update_date).
+    const assignmentDateColumn = await getMySQLLeadAssignmentDateColumn()
+    const assignmentDateSelect = assignmentDateColumn ? `, \`${assignmentDateColumn}\` AS assignedDate` : ''
+    const assignmentDateWhere = assignmentDateColumn ? ` OR (\`${assignmentDateColumn}\` IS NOT NULL AND \`${assignmentDateColumn}\` >= ?)` : ''
+    const queryParams = assignmentDateColumn
+      ? [lastSyncedDate, lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
+      : [lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
+
+    // Fetch leads from MySQL: new leads, assignment changes, and existing leads with status/field updates.
     const leads = await queryMySQL<MySQLLeadRow>(
-      `SELECT * FROM lead
+      `SELECT lead.*${assignmentDateSelect} FROM lead
        WHERE (Lead_Date >= ? OR (Lead_Date IS NULL AND COALESCE(LeadEntryDate, create_date) >= ?))
-          OR (update_date IS NOT NULL AND update_date >= ?)
+          OR (update_date IS NOT NULL AND update_date >= ?)${assignmentDateWhere}
        ORDER BY COALESCE(Lead_Date, LeadEntryDate, create_date) ASC, id ASC
        LIMIT ?`,
-      [lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
+      queryParams
     )
 
     if (leads.length === 0) {
@@ -139,8 +157,14 @@ export async function POST(request: NextRequest) {
               return !isNaN(d.getTime()) ? d : null
             })()
           : null
+        const assignmentDate = getLeadAssignmentDate(mysqlLead)
 
-        const candidateDates = [maxDate.getTime(), leadDate.getTime(), ...(updateDate ? [updateDate.getTime()] : [])]
+        const candidateDates = [
+          maxDate.getTime(),
+          leadDate.getTime(),
+          ...(updateDate ? [updateDate.getTime()] : []),
+          ...(assignmentDate ? [assignmentDate.getTime()] : []),
+        ]
         const nextMax = new Date(Math.max(...candidateDates))
         if (nextMax > maxDate) maxDate = nextMax
         if (maxId === null || mysqlLead.id > maxId) {

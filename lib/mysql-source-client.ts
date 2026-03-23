@@ -2,6 +2,7 @@ import mysql from 'mysql2/promise'
 import 'dotenv/config'
 
 let pool: mysql.Pool | null = null
+let leadColumnCache: Set<string> | null = null
 
 /**
  * Get or create MySQL connection pool
@@ -92,7 +93,37 @@ export async function closeMySQLPool(): Promise<void> {
   if (pool) {
     await pool.end()
     pool = null
+    leadColumnCache = null
   }
+}
+
+/**
+ * Return lower-cased column names for the MySQL `lead` table.
+ */
+export async function getMySQLLeadColumns(): Promise<Set<string>> {
+  if (leadColumnCache) {
+    return leadColumnCache
+  }
+
+  const rows = await queryMySQL<{ COLUMN_NAME: string }>(
+    `SELECT COLUMN_NAME
+     FROM information_schema.columns
+     WHERE table_schema = DATABASE()
+       AND table_name = 'lead'`
+  )
+
+  leadColumnCache = new Set(rows.map((row) => row.COLUMN_NAME.toLowerCase()))
+  return leadColumnCache
+}
+
+/**
+ * Detect the assignment timestamp column, if present.
+ */
+export async function getMySQLLeadAssignmentDateColumn(): Promise<string | null> {
+  const columns = await getMySQLLeadColumns()
+  const candidates = ['assigneddate', 'assigned_date', 'assignmentdate', 'assign_date']
+  const match = candidates.find((candidate) => columns.has(candidate))
+  return match ?? null
 }
 
 /**

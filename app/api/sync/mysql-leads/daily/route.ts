@@ -1,7 +1,18 @@
 import { NextRequest } from 'next/server'
-import { queryMySQL, closeMySQLPool, testMySQLConnection } from '@/lib/mysql-source-client'
+import {
+  queryMySQL,
+  closeMySQLPool,
+  testMySQLConnection,
+  getMySQLLeadAssignmentDateColumn,
+} from '@/lib/mysql-source-client'
 import { prisma } from '@/lib/prisma'
-import { mapMySQLLeadToPrisma, mapMySQLLeadToPrismaAsyncFallback, getLeadReceivedDate, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
+import {
+  mapMySQLLeadToPrisma,
+  mapMySQLLeadToPrismaAsyncFallback,
+  getLeadReceivedDate,
+  getLeadAssignmentDate,
+  type MySQLLeadRow,
+} from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { UserRole } from '@/generated/prisma/client'
@@ -109,18 +120,28 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fetch leads from MySQL: new in date range or updated in date range (so status updates are synced).
     const endOfRange = new Date(todayIST.getTime() + 24 * 60 * 60 * 1000)
+    const assignmentDateColumn = await getMySQLLeadAssignmentDateColumn()
+    const assignmentDateSelect = assignmentDateColumn ? `, \`${assignmentDateColumn}\` AS assignedDate` : ''
+    const assignmentDateWhere = assignmentDateColumn
+      ? `OR (\`${assignmentDateColumn}\` IS NOT NULL AND \`${assignmentDateColumn}\` >= ? AND \`${assignmentDateColumn}\` < ?)`
+      : ''
+    const queryParams = assignmentDateColumn
+      ? [syncFromDate, endOfRange, syncFromDate, endOfRange, syncFromDate, endOfRange, syncFromDate, endOfRange, BATCH_SIZE]
+      : [syncFromDate, endOfRange, syncFromDate, endOfRange, syncFromDate, endOfRange, BATCH_SIZE]
+
+    // Fetch leads from MySQL: new in date range, assignment changes, or updated in date range.
     const leads = await queryMySQL<MySQLLeadRow>(
-      `SELECT * FROM lead
+      `SELECT lead.*${assignmentDateSelect} FROM lead
        WHERE (
          (Lead_Date >= ? AND Lead_Date < ?)
          OR (Lead_Date IS NULL AND COALESCE(LeadEntryDate, create_date) >= ? AND COALESCE(LeadEntryDate, create_date) < ?)
          OR (update_date IS NOT NULL AND update_date >= ? AND update_date < ?)
+         ${assignmentDateWhere}
        )
        ORDER BY COALESCE(Lead_Date, LeadEntryDate, create_date) ASC, id ASC
        LIMIT ?`,
-      [syncFromDate, endOfRange, syncFromDate, endOfRange, syncFromDate, endOfRange, BATCH_SIZE]
+      queryParams
     )
 
     console.log(`📥 MySQL query: Found ${leads.length} leads to sync`)
@@ -186,8 +207,9 @@ export async function POST(request: NextRequest) {
       try {
         const leadRef = String(mysqlLead.id)
         const leadDate = getLeadReceivedDate(mysqlLead)
+        const assignmentDate = getLeadAssignmentDate(mysqlLead)
 
-        leadDates.push(leadDate)
+        leadDates.push(assignmentDate ?? leadDate)
         leadIds.push(mysqlLead.id)
 
         let leadData = mapMySQLLeadToPrisma(mysqlLead, systemUser.id, lookups, bdMap)

@@ -12,6 +12,10 @@ export interface MySQLLeadRow {
   Lead_Date?: Date | string | null
   LeadEntryDate?: Date | string | null
   create_date?: Date | string | null
+  assignedDate?: Date | string | null
+  assigned_date?: Date | string | null
+  assignmentDate?: Date | string | null
+  assign_date?: Date | string | null
   Patient_Number: string
   AlternativePhone?: string | null
   Whatsapp?: string | null
@@ -185,6 +189,21 @@ export function getLeadReceivedDate(row: {
     parseDate(row.LeadEntryDate) ??
     parseDate(row.create_date) ??
     new Date(0)
+  )
+}
+
+export function getLeadAssignmentDate(row: {
+  assignedDate?: Date | string | null
+  assigned_date?: Date | string | null
+  assignmentDate?: Date | string | null
+  assign_date?: Date | string | null
+}): Date | null {
+  return (
+    parseDate(row.assignedDate) ??
+    parseDate(row.assigned_date) ??
+    parseDate(row.assignmentDate) ??
+    parseDate(row.assign_date) ??
+    null
   )
 }
 
