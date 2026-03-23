@@ -225,7 +225,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
       })
     }
 
-    return result.toSorted((a, b) => {
+    return [...result].sort((a, b) => {
       const ta = a.createdDate ? new Date(a.createdDate as string).getTime() : 0
       const tb = b.createdDate ? new Date(b.createdDate as string).getTime() : 0
       return tb - ta
