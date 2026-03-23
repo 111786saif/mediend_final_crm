@@ -19,7 +19,7 @@ interface StageHistoryEntry {
     name: string
     email: string
     role: string
-  }
+  } | null
 }
 
 interface ActivityTimelineProps {
@@ -254,6 +254,8 @@ export function ActivityTimeline({ history, className }: ActivityTimelineProps) 
         <div className="space-y-0">
           {history.map((entry, index) => {
             const stageColor = getStageColor(entry.toStage)
+            const changedByName = entry.changedBy?.name || 'System'
+            const changedByRole = entry.changedBy?.role || 'SYSTEM'
             return (
               <div key={entry.id}>
                 <div className="flex items-start gap-4 pb-4">
@@ -283,8 +285,8 @@ export function ActivityTimeline({ history, className }: ActivityTimelineProps) 
                           {formatDistanceToNow(new Date(entry.changedAt), { addSuffix: true })}
                         </span>
                       </div>
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{entry.changedBy.name}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{entry.changedBy.role}</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{changedByName}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">{changedByRole}</p>
                       {entry.note && (
                         <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">{entry.note}</p>
                       )}
