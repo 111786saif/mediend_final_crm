@@ -165,10 +165,15 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
         show: hasApprovals,
       },
       {
-        href: u.role === 'SALES_HEAD' ? '/sales/dashboard' : '/bd/pipeline',
+        href:
+          u.role === 'SALES_HEAD'
+            ? '/sales/dashboard'
+            : u.role === 'TEAM_LEAD'
+              ? '/team-lead/pipeline'
+              : '/bd/pipeline',
         label: u.role === 'SALES_HEAD' ? 'Dashboard' : 'Pipeline',
         icon: LayoutDashboard,
-        matchPrefixes: ['/sales/dashboard', '/bd/pipeline'],
+        matchPrefixes: ['/sales/dashboard', '/bd/pipeline', '/team-lead/pipeline'],
         show: hasDashboard || hasPipeline,
       },
       {

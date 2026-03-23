@@ -105,6 +105,10 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const leadFilters = useMemo(() => {
     const f: Record<string, string> = { view: 'pipeline' }
     if (variant === 'bd' && user?.id) f.bdId = user.id
+    // `teamId` is ignored by /api/leads today, but including a user-scoped value here
+    // keeps the client/query cache isolated per team lead instead of sharing one
+    // generic "pipeline" cache across all team-lead sessions.
+    if (variant === 'team-lead' && user?.id) f.teamId = user.id
     return f
   }, [variant, user?.id])
 
