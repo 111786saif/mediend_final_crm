@@ -48,11 +48,15 @@ export async function PATCH(
       return errorResponse('Leave request is not pending', 400)
     }
 
+    const approverEmployee = await prisma.employee.findUnique({
+      where: { userId: user.id },
+    })
+    if (approverEmployee && approverEmployee.id === leaveRequest.employeeId) {
+      return errorResponse('You cannot approve your own leave request', 403)
+    }
+
     // If not HR/MD override, verify approver is in the applicant's management chain
     if (!canOverride && canApproveByHierarchy) {
-      const approverEmployee = await prisma.employee.findUnique({
-        where: { userId: user.id },
-      })
       if (!approverEmployee) {
         return errorResponse('Employee record not found for approver', 403)
       }

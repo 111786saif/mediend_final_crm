@@ -257,8 +257,8 @@ export default function PLRecordEditPage() {
   if (loadingLead || !record) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50/30 to-indigo-50/40 p-6 flex items-center justify-center dark:from-slate-950 dark:via-teal-950/20 dark:to-indigo-950/25">
+          <Loader2 className="h-8 w-8 animate-spin text-teal-600 dark:text-teal-400" />
         </div>
       </ProtectedRoute>
     )
@@ -266,37 +266,44 @@ export default function PLRecordEditPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50/35 to-indigo-50/40 p-6 dark:from-slate-950 dark:via-teal-950/20 dark:to-indigo-950/25">
         <div className="mx-auto max-w-4xl space-y-6">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              asChild
+              className="text-teal-800 hover:bg-teal-100 dark:text-teal-200 dark:hover:bg-teal-950/40"
+            >
               <Link href="/pl/dashboard" aria-label="Back to P/L ledger">
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <div>
               <nav className="text-sm text-muted-foreground">
-                <Link href="/pl/dashboard" className="hover:text-foreground">
+                <Link href="/pl/dashboard" className="font-medium text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100">
                   P/L Ledger
                 </Link>
                 <span className="mx-2">/</span>
                 <span className="text-foreground">Edit P/L — {record.leadRef ?? record.id}</span>
               </nav>
-              <h1 className="text-2xl font-bold mt-0.5">Edit P/L record</h1>
+              <h1 className="text-2xl font-bold mt-0.5 bg-gradient-to-r from-teal-800 to-indigo-800 bg-clip-text text-transparent dark:from-teal-200 dark:to-indigo-200">
+                Edit P/L record
+              </h1>
             </div>
           </div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <Card className="overflow-hidden border-teal-200/50 shadow-md dark:border-teal-800/40">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-gradient-to-r from-teal-500/10 to-indigo-500/10">
               <div>
-                <CardTitle>Case context</CardTitle>
+                <CardTitle className="text-teal-950 dark:text-teal-100">Case context</CardTitle>
                 <CardDescription>Patient and case details (from lead)</CardDescription>
               </div>
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="outline" size="sm" asChild className="border-teal-200 dark:border-teal-700">
                 <Link href={`/patient/${leadId}`}>View patient</Link>
               </Button>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-muted/30 rounded-lg">
+            <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-teal-50/40 to-indigo-50/25 dark:from-teal-950/20 dark:to-indigo-950/15 rounded-b-lg">
               <div className="sm:col-span-2">
                 <Label className="text-xs text-muted-foreground">Lead ref</Label>
                 <div className="flex items-center gap-1 mt-1">

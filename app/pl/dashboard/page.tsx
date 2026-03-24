@@ -36,6 +36,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { canViewPhoneNumber } from '@/lib/case-permissions'
 import { getPhoneDisplay } from '@/lib/phone-utils'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
+import { cn } from '@/lib/utils'
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
@@ -215,21 +216,34 @@ export default function PLLedgerPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50/35 to-indigo-50/45 p-6 dark:from-slate-950 dark:via-teal-950/20 dark:to-indigo-950/25">
         <div className="mx-auto max-w-[1600px] space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">P/L Ledger</h1>
-              <p className="text-muted-foreground mt-1">Profit &amp; loss entries by surgery date</p>
+            <div className="flex items-start gap-3">
+              <span
+                className="mt-1 inline-flex h-10 w-1.5 shrink-0 rounded-full bg-gradient-to-b from-teal-500 to-indigo-600 shadow-sm"
+                aria-hidden
+              />
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-teal-800 via-cyan-800 to-indigo-800 bg-clip-text text-transparent dark:from-teal-200 dark:via-cyan-200 dark:to-indigo-200">
+                  P/L Ledger
+                </h1>
+                <p className="text-muted-foreground mt-1">Profit &amp; loss entries by surgery date</p>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <Button variant="outline" size="sm" asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="border-indigo-200 bg-indigo-50/80 text-indigo-900 hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-100 dark:hover:bg-indigo-950/60"
+              >
                 <Link href="/pl/surgery-dashboard" className="gap-2">
-                  <LayoutDashboard className="h-4 w-4" />
+                  <LayoutDashboard className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                   Surgery dashboard
                 </Link>
               </Button>
-              <div className="flex flex-wrap gap-1 rounded-md border bg-background p-1">
+              <div className="flex flex-wrap gap-1 rounded-lg border border-teal-200/60 bg-teal-50/70 p-1 shadow-sm dark:border-teal-800/40 dark:bg-teal-950/30">
                 {(
                   [
                     ['today', 'Today'],
@@ -269,8 +283,12 @@ export default function PLLedgerPage() {
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <Settings2 className="h-4 w-4" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 border-slate-300 bg-background/90 dark:border-slate-600"
+                  >
+                    <Settings2 className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                     Columns
                   </Button>
                 </DropdownMenuTrigger>
@@ -330,96 +348,162 @@ export default function PLLedgerPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-indigo-500',
+                'bg-gradient-to-br from-indigo-50/90 to-card dark:from-indigo-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Admitted</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-indigo-900/90 dark:text-indigo-100/90">Admitted</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                  <Users className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{pipelineStats?.admitted ?? '—'}</div>
-                <p className="text-xs text-muted-foreground mt-1">By admission date</p>
+                <div className="text-2xl font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
+                  {pipelineStats?.admitted ?? '—'}
+                </div>
+                <p className="text-xs text-indigo-800/70 dark:text-indigo-200/70 mt-1">By admission date</p>
               </CardContent>
             </Card>
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500',
+                'bg-gradient-to-br from-violet-50/90 to-card dark:from-violet-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Surgeries scheduled</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-violet-900/90 dark:text-violet-100/90">Surgeries scheduled</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-700 dark:text-violet-300">
+                  <Calendar className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{pipelineStats?.surgeryScheduled ?? '—'}</div>
-                <p className="text-xs text-muted-foreground mt-1">Expected surgery date</p>
+                <div className="text-2xl font-bold tabular-nums text-violet-950 dark:text-violet-50">
+                  {pipelineStats?.surgeryScheduled ?? '—'}
+                </div>
+                <p className="text-xs text-violet-800/70 dark:text-violet-200/70 mt-1">Expected surgery date</p>
               </CardContent>
             </Card>
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-cyan-500',
+                'bg-gradient-to-br from-cyan-50/90 to-card dark:from-cyan-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">IPD done</CardTitle>
-                <Activity className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-cyan-900/90 dark:text-cyan-100/90">IPD done</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">
+                  <Activity className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{pipelineStats?.ipdDone ?? '—'}</div>
-                <p className="text-xs text-muted-foreground mt-1">Status update in range</p>
+                <div className="text-2xl font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
+                  {pipelineStats?.ipdDone ?? '—'}
+                </div>
+                <p className="text-xs text-cyan-800/70 dark:text-cyan-200/70 mt-1">Status update in range</p>
               </CardContent>
             </Card>
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500',
+                'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Discharged</CardTitle>
-                <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">Discharged</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                  <CheckCircle2 className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{pipelineStats?.discharged ?? '—'}</div>
-                <p className="text-xs text-muted-foreground mt-1">Discharge date</p>
+                <div className="text-2xl font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
+                  {pipelineStats?.discharged ?? '—'}
+                </div>
+                <p className="text-xs text-emerald-800/70 dark:text-emerald-200/70 mt-1">Discharge date</p>
               </CardContent>
             </Card>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-600',
+                'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/40 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total net profit</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">Total net profit</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600/15 text-emerald-700 dark:text-emerald-300">
+                  <DollarSign className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹{totalProfit.toLocaleString('en-IN')}</div>
-                <p className="text-xs text-muted-foreground mt-1">In filtered rows</p>
+                <div className="text-2xl font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
+                  ₹{totalProfit.toLocaleString('en-IN')}
+                </div>
+                <p className="text-xs text-emerald-800/70 dark:text-emerald-200/70 mt-1">In filtered rows</p>
               </CardContent>
             </Card>
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-teal-500',
+                'bg-gradient-to-br from-teal-50/90 to-card dark:from-teal-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg ticket size</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-teal-900/90 dark:text-teal-100/90">Avg ticket size</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-500/15 text-teal-700 dark:text-teal-300">
+                  <TrendingUp className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
+                <div className="text-2xl font-bold tabular-nums text-teal-950 dark:text-teal-50">
                   ₹{avgTicketSize.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Average per case</p>
+                <p className="text-xs text-teal-800/70 dark:text-teal-200/70 mt-1">Average per case</p>
               </CardContent>
             </Card>
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-amber-500',
+                'bg-gradient-to-br from-amber-50/90 to-card dark:from-amber-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending payouts</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-amber-900/90 dark:text-amber-100/90">Pending payouts</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/15 text-amber-700 dark:text-amber-300">
+                  <FileText className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{pendingPayouts}</div>
-                <p className="text-xs text-muted-foreground mt-1">Hospital or doctor pending</p>
+                <div className="text-2xl font-bold tabular-nums text-amber-950 dark:text-amber-50">{pendingPayouts}</div>
+                <p className="text-xs text-amber-800/70 dark:text-amber-200/70 mt-1">Hospital or doctor pending</p>
               </CardContent>
             </Card>
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-blue-500',
+                'bg-gradient-to-br from-blue-50/90 to-card dark:from-blue-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total cases</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-blue-900/90 dark:text-blue-100/90">Total cases</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/15 text-blue-700 dark:text-blue-300">
+                  <CheckCircle className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{records?.length || 0}</div>
-                <p className="text-xs text-muted-foreground mt-1">P/L rows in period</p>
+                <div className="text-2xl font-bold tabular-nums text-blue-950 dark:text-blue-50">{records?.length || 0}</div>
+                <p className="text-xs text-blue-800/70 dark:text-blue-200/70 mt-1">P/L rows in period</p>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>P/L records</CardTitle>
+          <Card className="overflow-hidden border-teal-200/50 shadow-lg dark:border-teal-800/40">
+            <CardHeader className="border-b bg-gradient-to-r from-teal-500/12 via-indigo-500/10 to-transparent pb-4">
+              <CardTitle className="text-lg text-teal-950 dark:text-teal-100">P/L records</CardTitle>
               <CardDescription>Click a row to edit. Filtered by surgery date (lead or P/L record).</CardDescription>
             </CardHeader>
             <CardContent className="overflow-x-auto">
@@ -428,8 +512,8 @@ export default function PLLedgerPage() {
               ) : (
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead className="min-w-[140px]">Lead ref</TableHead>
+                    <TableRow className="border-b border-teal-200/50 bg-teal-50/60 hover:bg-teal-50/60 dark:border-teal-800/35 dark:bg-teal-950/30">
+                      <TableHead className="min-w-[140px] font-semibold text-teal-950 dark:text-teal-100">Lead ref</TableHead>
                       {visibleCols.month && <TableHead>Month</TableHead>}
                       {visibleCols.manager && <TableHead>Manager</TableHead>}
                       {visibleCols.bdm && <TableHead>BDM</TableHead>}
@@ -486,7 +570,7 @@ export default function PLLedgerPage() {
                       return (
                         <TableRow
                           key={record.id}
-                          className="cursor-pointer hover:bg-muted/60"
+                          className="cursor-pointer border-b border-slate-100/80 transition-colors hover:bg-teal-50/50 dark:border-slate-800/50 dark:hover:bg-teal-950/20"
                           onClick={() => router.push(`/pl/record/${record.id}`)}
                         >
                           <TableCell className="whitespace-nowrap">

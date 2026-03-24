@@ -13,6 +13,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { Building2, CheckCircle, CreditCard, FileText } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
+import { cn } from '@/lib/utils'
 
 type Preset = 'today' | 'week' | 'mtd' | 'lastMonth' | 'custom'
 
@@ -121,15 +122,22 @@ export default function PLOutstandingPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/40 to-orange-50/50 p-6 dark:from-slate-950 dark:via-amber-950/25 dark:to-slate-900">
         <div className="mx-auto max-w-7xl space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">P/L Outstanding</h1>
-              <p className="text-muted-foreground mt-1">Payout statuses and pending amounts for discharged cases</p>
+            <div className="space-y-1">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-10 w-1.5 rounded-full bg-gradient-to-b from-amber-500 to-orange-600 shadow-sm" aria-hidden />
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-800 via-orange-700 to-amber-900 bg-clip-text text-transparent dark:from-amber-200 dark:via-orange-200 dark:to-amber-100">
+                    P/L Outstanding
+                  </h1>
+                  <p className="text-muted-foreground mt-1">Payout statuses and pending amounts for discharged cases</p>
+                </div>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex flex-wrap gap-1 rounded-md border bg-background p-1">
+              <div className="flex flex-wrap gap-1 rounded-lg border border-amber-200/60 bg-amber-50/80 p-1 shadow-sm dark:border-amber-800/40 dark:bg-amber-950/30">
                 {(
                   [
                     ['today', 'Today'],
@@ -162,55 +170,85 @@ export default function PLOutstandingPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-amber-500',
+                'bg-gradient-to-br from-amber-50/90 to-card dark:from-amber-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Pending Amount</CardTitle>
-                <CreditCard className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-amber-900/90 dark:text-amber-100/90">Total Pending Amount</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/15 text-amber-700 dark:text-amber-300">
+                  <CreditCard className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">₹{totalPending.toLocaleString('en-IN')}</div>
-                <p className="text-xs text-muted-foreground mt-1">Hospital + doctor pending</p>
+                <div className="text-2xl font-bold tabular-nums text-amber-950 dark:text-amber-50">
+                  ₹{totalPending.toLocaleString('en-IN')}
+                </div>
+                <p className="text-xs text-amber-800/70 dark:text-amber-200/70 mt-1">Hospital + doctor pending</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-orange-500',
+                'bg-gradient-to-br from-orange-50/90 to-card dark:from-orange-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending Cases</CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-orange-900/90 dark:text-orange-100/90">Pending Cases</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/15 text-orange-700 dark:text-orange-300">
+                  <FileText className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{pendingCases}</div>
-                <p className="text-xs text-muted-foreground mt-1">Any payout not PAID</p>
+                <div className="text-2xl font-bold tabular-nums text-orange-950 dark:text-orange-50">{pendingCases}</div>
+                <p className="text-xs text-orange-800/70 dark:text-orange-200/70 mt-1">Any payout not PAID</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500',
+                'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Fully Paid</CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">Fully Paid</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                  <CheckCircle className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{paidCases}</div>
-                <p className="text-xs text-muted-foreground mt-1">All three statuses PAID</p>
+                <div className="text-2xl font-bold tabular-nums text-emerald-950 dark:text-emerald-50">{paidCases}</div>
+                <p className="text-xs text-emerald-800/70 dark:text-emerald-200/70 mt-1">All three statuses PAID</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card
+              className={cn(
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-sky-500',
+                'bg-gradient-to-br from-sky-50/90 to-card dark:from-sky-950/35 dark:to-card'
+              )}
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending by hospital</CardTitle>
-                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-sky-900/90 dark:text-sky-100/90">Pending by hospital</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-500/15 text-sky-700 dark:text-sky-300">
+                  <Building2 className="h-4 w-4" />
+                </div>
               </CardHeader>
               <CardContent>
                 {topHospitalsPending.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No pending cases in range</p>
+                  <p className="text-sm text-sky-800/60 dark:text-sky-200/60">No pending cases in range</p>
                 ) : (
                   <ul className="space-y-1.5 text-sm">
                     {topHospitalsPending.map(([name, count]) => (
-                      <li key={name} className="flex justify-between gap-2">
-                        <span className="truncate font-medium" title={name}>
+                      <li key={name} className="flex justify-between gap-2 rounded-md px-1 py-0.5 hover:bg-sky-500/10">
+                        <span className="truncate font-medium text-sky-950 dark:text-sky-50" title={name}>
                           {name}
                         </span>
-                        <span className="shrink-0 text-muted-foreground">{count} cases</span>
+                        <span className="shrink-0 font-medium text-sky-700 dark:text-sky-300">{count} cases</span>
                       </li>
                     ))}
                   </ul>
@@ -219,9 +257,9 @@ export default function PLOutstandingPage() {
             </Card>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Outstanding records</CardTitle>
+          <Card className="overflow-hidden border-violet-200/50 shadow-lg dark:border-violet-800/40">
+            <CardHeader className="border-b bg-gradient-to-r from-violet-500/12 via-fuchsia-500/8 to-transparent pb-4">
+              <CardTitle className="text-lg text-violet-950 dark:text-violet-100">Outstanding records</CardTitle>
               <CardDescription>Click a row to edit. Lead date filter uses lead created date.</CardDescription>
             </CardHeader>
             <CardContent className="overflow-x-auto">
@@ -230,7 +268,7 @@ export default function PLOutstandingPage() {
               ) : (
                 <Table>
                   <TableHeader>
-                    <TableRow>
+                    <TableRow className="border-b border-violet-200/40 bg-violet-50/50 hover:bg-violet-50/50 dark:border-violet-800/30 dark:bg-violet-950/25">
                       <TableHead>Lead Ref</TableHead>
                       <TableHead>Patient</TableHead>
                       <TableHead>Hospital</TableHead>
@@ -259,7 +297,11 @@ export default function PLOutstandingPage() {
                       return (
                         <TableRow
                           key={record.id}
-                          className="cursor-pointer hover:bg-muted/50"
+                          className={cn(
+                            'cursor-pointer border-b border-transparent transition-colors',
+                            'hover:bg-amber-50/60 dark:hover:bg-amber-950/20',
+                            isPendingPayout(record) && 'bg-amber-50/25 dark:bg-amber-950/10'
+                          )}
                           onClick={() => router.push(`/pl/outstanding/${record.id}`)}
                         >
                           <TableCell className="whitespace-nowrap" onClick={(e) => e.stopPropagation()}>

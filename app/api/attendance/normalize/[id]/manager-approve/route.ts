@@ -56,6 +56,10 @@ export async function PATCH(
       return errorResponse('You can only approve normalization requests for your direct reports', 403)
     }
 
+    if (normalization.employee.id === manager.id) {
+      return errorResponse('You cannot approve your own normalization request', 403)
+    }
+
     if (normalization.status !== 'PENDING') {
       return errorResponse('This request is not pending', 400)
     }

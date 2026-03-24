@@ -131,8 +131,8 @@ export default function PLOutstandingEditPage() {
   if (loadingLead || !record) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-orange-50/40 p-6 flex items-center justify-center dark:from-slate-950 dark:via-amber-950/20 dark:to-slate-900">
+          <Loader2 className="h-8 w-8 animate-spin text-amber-600 dark:text-amber-400" />
         </div>
       </ProtectedRoute>
     )
@@ -141,9 +141,9 @@ export default function PLOutstandingEditPage() {
   if (!record.dischargeSheet) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-orange-50/40 p-6 dark:from-slate-950 dark:via-amber-950/20 dark:to-slate-900">
           <div className="mx-auto max-w-4xl">
-            <Card>
+            <Card className="border-amber-200/60 shadow-md dark:border-amber-800/40">
               <CardHeader>
                 <CardTitle>No Discharge Sheet</CardTitle>
                 <CardDescription>This case does not have a discharge sheet yet.</CardDescription>
@@ -162,17 +162,22 @@ export default function PLOutstandingEditPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/35 to-violet-50/30 p-6 dark:from-slate-950 dark:via-amber-950/20 dark:to-violet-950/15">
         <div className="mx-auto max-w-4xl space-y-6">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              asChild
+              className="text-amber-800 hover:bg-amber-100 dark:text-amber-200 dark:hover:bg-amber-950/40"
+            >
               <Link href="/pl/outstanding">
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <div>
               <nav className="text-sm text-muted-foreground">
-                <Link href="/pl/outstanding" className="hover:text-foreground">
+                <Link href="/pl/outstanding" className="font-medium text-violet-700 hover:text-violet-900 dark:text-violet-300 dark:hover:text-violet-100">
                   P/L Outstanding
                 </Link>
                 <span className="mx-2">/</span>
@@ -180,21 +185,23 @@ export default function PLOutstandingEditPage() {
                   Edit Outstanding — {record.leadRef ?? record.id}
                 </span>
               </nav>
-              <h1 className="text-2xl font-bold mt-0.5">Edit Outstanding Record</h1>
+              <h1 className="text-2xl font-bold mt-0.5 bg-gradient-to-r from-amber-800 to-violet-800 bg-clip-text text-transparent dark:from-amber-200 dark:to-violet-200">
+                Edit Outstanding Record
+              </h1>
             </div>
           </div>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <Card className="overflow-hidden border-violet-200/50 shadow-md dark:border-violet-800/40">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-gradient-to-r from-violet-500/10 to-amber-500/8">
               <div>
-                <CardTitle>Case context</CardTitle>
+                <CardTitle className="text-violet-950 dark:text-violet-100">Case context</CardTitle>
                 <CardDescription>Patient and case details (from lead)</CardDescription>
               </div>
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="outline" size="sm" asChild className="border-violet-200 dark:border-violet-700">
                 <Link href={`/patient/${leadId}`}>View patient</Link>
               </Button>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-muted/30 rounded-lg">
+            <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-violet-50/40 to-amber-50/20 dark:from-violet-950/20 dark:to-amber-950/10 rounded-b-lg">
               <div>
                 <Label className="text-xs text-muted-foreground">Lead Ref</Label>
                 <div className="flex items-center gap-1 mt-0.5">
@@ -224,9 +231,9 @@ export default function PLOutstandingEditPage() {
           </Card>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Payout Statuses</CardTitle>
+            <Card className="overflow-hidden border-teal-200/50 shadow-sm dark:border-teal-800/35">
+              <CardHeader className="border-b bg-gradient-to-r from-teal-500/10 to-cyan-500/8">
+                <CardTitle className="text-teal-950 dark:text-teal-100">Payout Statuses</CardTitle>
                 <CardDescription>Update the payout status for hospital, doctor, and invoice</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -272,9 +279,9 @@ export default function PLOutstandingEditPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Pending Amounts</CardTitle>
+            <Card className="overflow-hidden border-amber-200/50 shadow-sm dark:border-amber-800/35">
+              <CardHeader className="border-b bg-gradient-to-r from-amber-500/10 to-orange-500/8">
+                <CardTitle className="text-amber-950 dark:text-amber-100">Pending Amounts</CardTitle>
                 <CardDescription>Amounts still pending for hospital and doctor payouts</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -303,9 +310,9 @@ export default function PLOutstandingEditPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment & Remarks</CardTitle>
+            <Card className="overflow-hidden border-emerald-200/50 shadow-sm dark:border-emerald-800/35">
+              <CardHeader className="border-b bg-gradient-to-r from-emerald-500/10 to-green-500/8">
+                <CardTitle className="text-emerald-950 dark:text-emerald-100">Payment & Remarks</CardTitle>
                 <CardDescription>Mark payment received and add follow-up notes</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -335,11 +342,15 @@ export default function PLOutstandingEditPage() {
             </Card>
 
             <div className="flex gap-3">
-              <Button type="submit" disabled={updateMutation.isPending}>
+              <Button
+                type="submit"
+                disabled={updateMutation.isPending}
+                className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md hover:from-violet-700 hover:to-indigo-700"
+              >
                 {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Save Outstanding Record
               </Button>
-              <Button type="button" variant="outline" asChild>
+              <Button type="button" variant="outline" asChild className="border-violet-200 dark:border-violet-700">
                 <Link href="/pl/outstanding">Cancel</Link>
               </Button>
             </div>

@@ -65,6 +65,10 @@ export async function PATCH(
       return errorResponse('Employee record not found for approver', 404)
     }
 
+    if (hrEmployee.id === normalization.employee.id) {
+      return errorResponse('You cannot approve your own normalization request', 403)
+    }
+
     const updated = await prisma.attendanceNormalization.update({
       where: { id },
       data: {

@@ -31,6 +31,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts'
+import { cn } from '@/lib/utils'
 
 type Preset = 'today' | 'week' | 'mtd' | 'lastMonth' | 'custom'
 
@@ -132,20 +133,33 @@ export default function PLSurgeryDashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/40 to-violet-50/45 p-6 dark:from-slate-950 dark:via-indigo-950/25 dark:to-violet-950/20">
         <div className="mx-auto max-w-7xl space-y-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">P/L Surgery dashboard</h1>
-              <p className="text-muted-foreground mt-1">
-                Team-wise surgery analytics (Mediend share minus Mediend-paid expenses)
-              </p>
+            <div className="flex items-start gap-3">
+              <span
+                className="mt-1 inline-flex h-10 w-1.5 shrink-0 rounded-full bg-gradient-to-b from-indigo-500 to-violet-600 shadow-sm"
+                aria-hidden
+              />
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-800 via-violet-800 to-purple-800 bg-clip-text text-transparent dark:from-indigo-200 dark:via-violet-200 dark:to-purple-200">
+                  P/L Surgery dashboard
+                </h1>
+                <p className="text-muted-foreground mt-1">
+                  Team-wise surgery analytics (Mediend share minus Mediend-paid expenses)
+                </p>
+              </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <Button variant="outline" size="sm" asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="border-teal-200 bg-teal-50/80 text-teal-900 hover:bg-teal-100 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-100 dark:hover:bg-teal-950/60"
+              >
                 <Link href="/pl/dashboard">P/L Ledger</Link>
               </Button>
-              <div className="flex flex-wrap gap-1 rounded-md border bg-background p-1">
+              <div className="flex flex-wrap gap-1 rounded-lg border border-indigo-200/60 bg-indigo-50/70 p-1 shadow-sm dark:border-indigo-800/40 dark:bg-indigo-950/30">
                 {(
                   [
                     ['today', 'Today'],
@@ -188,12 +202,19 @@ export default function PLSurgeryDashboardPage() {
 
           <Tabs value={teamTab} onValueChange={setTeamTab} className="space-y-4">
             <div className="overflow-x-auto pb-1">
-              <TabsList className="inline-flex h-auto min-h-10 w-max flex-wrap justify-start gap-1 bg-muted/50 p-1">
-                <TabsTrigger value="all" className="text-xs sm:text-sm">
+              <TabsList className="inline-flex h-auto min-h-10 w-max flex-wrap justify-start gap-1 border border-indigo-200/50 bg-indigo-50/60 p-1 dark:border-indigo-800/40 dark:bg-indigo-950/40">
+                <TabsTrigger
+                  value="all"
+                  className="text-xs sm:text-sm data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md"
+                >
                   All teams
                 </TabsTrigger>
                 {data?.teams?.map((t) => (
-                  <TabsTrigger key={t.id} value={t.id} className="max-w-[200px] truncate text-xs sm:text-sm">
+                  <TabsTrigger
+                    key={t.id}
+                    value={t.id}
+                    className="max-w-[200px] truncate text-xs sm:text-sm data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-md"
+                  >
                     {t.name}
                   </TabsTrigger>
                 ))}
@@ -206,50 +227,86 @@ export default function PLSurgeryDashboardPage() {
               ) : (
                 <>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <Card>
+                    <Card
+                      className={cn(
+                        'overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500',
+                        'bg-gradient-to-br from-violet-50/90 to-card dark:from-violet-950/35 dark:to-card'
+                      )}
+                    >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Surgeries</CardTitle>
-                        <Stethoscope className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium text-violet-900/90 dark:text-violet-100/90">Surgeries</CardTitle>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-700 dark:text-violet-300">
+                          <Stethoscope className="h-4 w-4" />
+                        </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">{data?.surgeryCount ?? 0}</div>
-                        <p className="text-xs text-muted-foreground mt-1">With P/L record in range</p>
+                        <div className="text-2xl font-bold tabular-nums text-violet-950 dark:text-violet-50">
+                          {data?.surgeryCount ?? 0}
+                        </div>
+                        <p className="text-xs text-violet-800/70 dark:text-violet-200/70 mt-1">With P/L record in range</p>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card
+                      className={cn(
+                        'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500',
+                        'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card'
+                      )}
+                    >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Mediend share</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">
+                          Mediend share
+                        </CardTitle>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                          <DollarSign className="h-4 w-4" />
+                        </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">
+                        <div className="text-2xl font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
                           ₹{(data?.totalRevenue ?? 0).toLocaleString('en-IN')}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">Gross share amount</p>
+                        <p className="text-xs text-emerald-800/70 dark:text-emerald-200/70 mt-1">Gross share amount</p>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card
+                      className={cn(
+                        'overflow-hidden border-0 shadow-md border-l-4 border-l-orange-500',
+                        'bg-gradient-to-br from-orange-50/90 to-card dark:from-orange-950/35 dark:to-card'
+                      )}
+                    >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Mediend expenses</CardTitle>
-                        <Wallet className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium text-orange-900/90 dark:text-orange-100/90">
+                          Mediend expenses
+                        </CardTitle>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/15 text-orange-700 dark:text-orange-300">
+                          <Wallet className="h-4 w-4" />
+                        </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">
+                        <div className="text-2xl font-bold tabular-nums text-orange-950 dark:text-orange-50">
                           ₹{(data?.totalExpenses ?? 0).toLocaleString('en-IN')}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">Cab, D&amp;C, referral, etc.</p>
+                        <p className="text-xs text-orange-800/70 dark:text-orange-200/70 mt-1">Cab, D&amp;C, referral, etc.</p>
                       </CardContent>
                     </Card>
-                    <Card>
+                    <Card
+                      className={cn(
+                        'overflow-hidden border-0 shadow-md border-l-4 border-l-indigo-600',
+                        'bg-gradient-to-br from-indigo-50/90 to-card dark:from-indigo-950/40 dark:to-card'
+                      )}
+                    >
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Net (avg / case)</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                        <CardTitle className="text-sm font-medium text-indigo-900/90 dark:text-indigo-100/90">
+                          Net (avg / case)
+                        </CardTitle>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600/15 text-indigo-700 dark:text-indigo-300">
+                          <TrendingUp className="h-4 w-4" />
+                        </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold">
+                        <div className="text-2xl font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
                           ₹{(data?.netProfit ?? 0).toLocaleString('en-IN')}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
+                        <p className="text-xs text-indigo-800/70 dark:text-indigo-200/70 mt-1">
                           Avg ₹
                           {(data?.avgRevenuePerSurgery ?? 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}{' '}
                           / surgery
@@ -259,10 +316,10 @@ export default function PLSurgeryDashboardPage() {
                   </div>
 
                   <div className="grid gap-6 lg:grid-cols-2">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-lg">
-                          <PieChartIcon className="h-5 w-5" />
+                    <Card className="overflow-hidden border-fuchsia-200/50 shadow-md dark:border-fuchsia-800/35">
+                      <CardHeader className="border-b bg-gradient-to-r from-fuchsia-500/12 via-pink-500/8 to-transparent">
+                        <CardTitle className="flex items-center gap-2 text-lg text-fuchsia-950 dark:text-fuchsia-100">
+                          <PieChartIcon className="h-5 w-5 text-fuchsia-600 dark:text-fuchsia-400" />
                           Disease distribution
                         </CardTitle>
                         <CardDescription>By case count</CardDescription>
@@ -294,10 +351,10 @@ export default function PLSurgeryDashboardPage() {
                       </CardContent>
                     </Card>
 
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-lg">
-                          <BarChart3 className="h-5 w-5" />
+                    <Card className="overflow-hidden border-indigo-200/50 shadow-md dark:border-indigo-800/35">
+                      <CardHeader className="border-b bg-gradient-to-r from-indigo-500/12 via-blue-500/8 to-transparent">
+                        <CardTitle className="flex items-center gap-2 text-lg text-indigo-950 dark:text-indigo-100">
+                          <BarChart3 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                           Hospital distribution
                         </CardTitle>
                         <CardDescription>Surgeries per hospital</CardDescription>
@@ -311,7 +368,7 @@ export default function PLSurgeryDashboardPage() {
                               <XAxis dataKey="name" angle={-35} textAnchor="end" height={70} interval={0} fontSize={11} />
                               <YAxis allowDecimals={false} />
                               <Tooltip />
-                              <Bar dataKey="surgeries" fill="#6366f1" name="Surgeries" radius={[4, 4, 0, 0]} />
+                              <Bar dataKey="surgeries" fill="#4f46e5" name="Surgeries" radius={[4, 4, 0, 0]} />
                             </BarChart>
                           </ResponsiveContainer>
                         )}
@@ -319,10 +376,10 @@ export default function PLSurgeryDashboardPage() {
                     </Card>
                   </div>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Table2 className="h-5 w-5" />
+                  <Card className="overflow-hidden border-violet-200/50 shadow-lg dark:border-violet-800/40">
+                    <CardHeader className="border-b bg-gradient-to-r from-violet-500/12 via-indigo-500/8 to-transparent">
+                      <CardTitle className="flex items-center gap-2 text-lg text-violet-950 dark:text-violet-100">
+                        <Table2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
                         BD breakdown
                       </CardTitle>
                       <CardDescription>Revenue = Mediend share; net = share − Mediend expenses</CardDescription>
