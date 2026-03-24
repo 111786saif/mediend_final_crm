@@ -1,14 +1,16 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useFileUpload } from '@/hooks/use-file-upload'
-import { apiPost } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { toast } from 'sonner'
 import { File } from 'lucide-react'
+import { differenceInYears, format, isValid, parse } from 'date-fns'
 import { useAuth } from '@/hooks/use-auth'
 import { canViewPhoneNumber } from '@/lib/case-permissions'
 import CITIES from '@/data/indian-cities'
@@ -22,13 +24,34 @@ import {
 } from '@/components/ui/combobox'
 import { cn } from '@/lib/utils'
 import { validateAadhaar, validatePAN } from '@/lib/validations'
-import { MasterCombobox } from '@/components/ui/master-combobox'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+
+function parseDobString(s: string): Date | undefined {
+  if (!s?.trim()) return undefined
+  const d = parse(s.trim(), 'yyyy-MM-dd', new Date())
+  return isValid(d) ? d : undefined
+}
+
+function ageFromDobString(dobStr: string): number | undefined {
+  const birth = parseDobString(dobStr)
+  if (!birth) return undefined
+  return differenceInYears(new Date(), birth)
+}
+
+function useDebouncedValue<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(t)
+  }, [value, delay])
+  return debounced
+}
 
 interface KYPBasicFormProps {
   leadId: string
   initialPatientName?: string
   initialPhone?: string
-  initialAge?: number
   initialDob?: string
   initialSex?: string
   initialCity?: string
@@ -41,7 +64,6 @@ export function KYPBasicForm({
   leadId,
   initialPatientName = '',
   initialPhone = '',
-  initialAge,
   initialDob = '',
   initialSex = '',
   initialCity = '',
@@ -56,7 +78,6 @@ export function KYPBasicForm({
     area: '',
     patientName: initialPatientName,
     phone: initialPhone,
-    age: initialAge || '',
     dob: initialDob,
     sex: initialSex,
     disease: initialTreatment,
@@ -68,9 +89,10 @@ export function KYPBasicForm({
     pan: '',
   })
   const [insuranceFiles, setInsuranceFiles] = useState<{ name: string; url: string }[]>([])
-  const [aadharFile, setAadharFile] = useState<{ name: string; url: string } | null>(null)
-  const [panFile, setPanFile] = useState<{ name: string; url: string } | null>(null)
+  const [aadharFiles, setAadharFiles] = useState<{ name: string; url: string }[]>([])
+  const [panFiles, setPanFiles] = useState<{ name: string; url: string }[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [dobPopoverOpen, setDobPopoverOpen] = useState(false)
   const { uploadFile, uploading } = useFileUpload()
 
   // Fuzzy search function - checks if search term is contained in the city name
@@ -87,6 +109,38 @@ export function KYPBasicForm({
     return CITIES.filter((city) => fuzzyMatch(city, formData.location)).slice(0, 10)
   }, [formData.location])
 
+  const debouncedInsuranceSearch = useDebouncedValue(formData.insuranceName, 250)
+  const debouncedDoctorSearch = useDebouncedValue(formData.doctorName, 250)
+
+  const { data: tpaSuggestData } = useQuery({
+    queryKey: ['masters', 'tpas', 'kyp-suggest', debouncedInsuranceSearch],
+    queryFn: () =>
+      apiGet<{ items: { id: string; name: string }[] }>(
+        `/api/masters/tpas?search=${encodeURIComponent(debouncedInsuranceSearch.trim())}`
+      ),
+    enabled: debouncedInsuranceSearch.trim().length >= 1,
+    staleTime: 30_000,
+  })
+
+  const { data: doctorSuggestData } = useQuery({
+    queryKey: ['masters', 'doctors', 'kyp-suggest', debouncedDoctorSearch],
+    queryFn: () =>
+      apiGet<{ items: { id: string; name: string }[] }>(
+        `/api/masters/doctors?search=${encodeURIComponent(debouncedDoctorSearch.trim())}`
+      ),
+    enabled: debouncedDoctorSearch.trim().length >= 1,
+    staleTime: 30_000,
+  })
+
+  const tpaSuggestions = useMemo(() => (tpaSuggestData?.items ?? []).slice(0, 25), [tpaSuggestData])
+
+  const doctorSuggestions = useMemo(
+    () => (doctorSuggestData?.items ?? []).slice(0, 25),
+    [doctorSuggestData]
+  )
+
+  const computedAge = useMemo(() => ageFromDobString(formData.dob), [formData.dob])
+
   const handleInsuranceCardsChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files || files.length === 0) return
@@ -101,21 +155,29 @@ export function KYPBasicForm({
   }
 
   const handleAadharChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const result = await uploadFile(file)
-    if (result) {
-      setAadharFile({ name: file.name, url: result.url })
+    const files = e.target.files
+    if (!files || files.length === 0) return
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const result = await uploadFile(file)
+      if (result) {
+        setAadharFiles((prev) => [...prev, { name: file.name, url: result.url }])
+      }
     }
+    e.target.value = ''
   }
 
   const handlePanChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const result = await uploadFile(file)
-    if (result) {
-      setPanFile({ name: file.name, url: result.url })
+    const files = e.target.files
+    if (!files || files.length === 0) return
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const result = await uploadFile(file)
+      if (result) {
+        setPanFiles((prev) => [...prev, { name: file.name, url: result.url }])
+      }
     }
+    e.target.value = ''
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -164,7 +226,7 @@ export function KYPBasicForm({
         leadId,
         patientName: formData.patientName.trim(),
         phone: formData.phone.trim(),
-        age: formData.age ? parseInt(formData.age as string) : undefined,
+        age: computedAge,
         dateOfBirth: formData.dob?.trim() || undefined,
         sex: formData.sex,
         location: formData.location.trim(),
@@ -176,8 +238,8 @@ export function KYPBasicForm({
         aadhar: formData.aadhar.trim(),
         pan: formData.pan.trim(),
         insuranceCardFiles: insuranceFiles,
-        aadharFileUrl: aadharFile?.url,
-        panFileUrl: panFile?.url,
+        aadharFiles: aadharFiles.length > 0 ? aadharFiles : undefined,
+        panFiles: panFiles.length > 0 ? panFiles : undefined,
         remark: formData.remark.trim() || undefined,
       })
       toast.success('Card Details submitted. Insurance will suggest hospitals.')
@@ -268,24 +330,80 @@ export function KYPBasicForm({
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="insuranceName">Insurance Name</Label>
-          <Input
-            id="insuranceName"
-            value={formData.insuranceName}
-            onChange={(e) => setFormData({ ...formData, insuranceName: e.target.value })}
-            placeholder="Enter insurance company name"
-          />
+          <Combobox
+            value={formData.insuranceName || ''}
+            onValueChange={(value) => {
+              if (value) {
+                setFormData({ ...formData, insuranceName: value })
+              }
+            }}
+          >
+            <ComboboxInput
+              id="insuranceName"
+              placeholder="Search TPA master or type any insurer name"
+              className={cn('w-full')}
+              value={formData.insuranceName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, insuranceName: e.target.value })
+              }
+            />
+            {formData.insuranceName.trim() && (
+              <ComboboxContent>
+                <ComboboxList>
+                  {tpaSuggestions.length > 0 ? (
+                    tpaSuggestions.map((item) => (
+                      <ComboboxItem key={item.id} value={item.name}>
+                        {item.name}
+                      </ComboboxItem>
+                    ))
+                  ) : (
+                    <ComboboxEmpty>No TPA matches. Keep typing to use your own text.</ComboboxEmpty>
+                  )}
+                </ComboboxList>
+              </ComboboxContent>
+            )}
+          </Combobox>
         </div>
         <div>
-          <MasterCombobox
-            id="doctorName"
-            label="Surgeon/Doctor Name"
-            masterType="doctors"
-            value={formData.doctorName}
-            onChange={(doctorName) => setFormData({ ...formData, doctorName })}
-            placeholder="Search or type doctor name"
-            required
-            error={errors.doctorName}
-          />
+          <Label htmlFor="doctorName">
+            Surgeon/Doctor Name <span className="text-destructive">*</span>
+          </Label>
+          <Combobox
+            value={formData.doctorName || ''}
+            onValueChange={(value) => {
+              if (value) {
+                setFormData({ ...formData, doctorName: value })
+              }
+            }}
+          >
+            <ComboboxInput
+              id="doctorName"
+              placeholder="Search doctor master or type any name"
+              className={cn('w-full', errors.doctorName && 'border-destructive')}
+              value={formData.doctorName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFormData({ ...formData, doctorName: e.target.value })
+              }
+            />
+            {formData.doctorName.trim() && (
+              <ComboboxContent>
+                <ComboboxList>
+                  {doctorSuggestions.length > 0 ? (
+                    doctorSuggestions.map((item) => (
+                      <ComboboxItem key={item.id} value={item.name}>
+                        {item.name}
+                      </ComboboxItem>
+                    ))
+                  ) : (
+                    <ComboboxEmpty>No doctor matches. Keep typing to use your own text.</ComboboxEmpty>
+                  )}
+                </ComboboxList>
+              </ComboboxContent>
+            )}
+          </Combobox>
+          {errors.doctorName && (
+            <p className="text-xs text-destructive mt-1">{errors.doctorName}</p>
+          )}
         </div>
       </div>
 
@@ -298,8 +416,6 @@ export function KYPBasicForm({
             onChange={(e) => setFormData({ ...formData, disease: e.target.value })}
             placeholder="Describe the disease or treatment needed"
             required
-            readOnly
-            className="bg-muted"
           />
           {errors.disease && <p className="text-xs text-destructive mt-1">{errors.disease}</p>}
         </div>
@@ -323,26 +439,54 @@ export function KYPBasicForm({
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
+        <div className="space-y-2">
           <Label htmlFor="dob">Date of Birth *</Label>
-          <Input
-            id="dob"
-            type="date"
-            value={formData.dob}
-            onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-          />
+          <Popover open={dobPopoverOpen} onOpenChange={setDobPopoverOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                id="dob"
+                className={cn(
+                  'w-full justify-start font-normal',
+                  !formData.dob && 'text-muted-foreground',
+                  errors.dob && 'border-destructive'
+                )}
+              >
+                {(() => {
+                  const d = parseDobString(formData.dob)
+                  return d ? format(d, 'dd MMM yyyy') : 'Select date'
+                })()}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={parseDobString(formData.dob)}
+                defaultMonth={parseDobString(formData.dob) ?? new Date()}
+                captionLayout="dropdown"
+                fromYear={1920}
+                toYear={new Date().getFullYear()}
+                onSelect={(date) => {
+                  if (date) {
+                    setFormData((prev) => ({ ...prev, dob: format(date, 'yyyy-MM-dd') }))
+                  }
+                  setDobPopoverOpen(false)
+                }}
+              />
+            </PopoverContent>
+          </Popover>
           {errors.dob && <p className="text-xs text-destructive mt-1">{errors.dob}</p>}
         </div>
         <div>
           <Label htmlFor="age">Age</Label>
           <Input
             id="age"
-            type="number"
-            min="0"
-            max="150"
-            value={formData.age}
-            onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-            placeholder="Optional"
+            readOnly
+            tabIndex={-1}
+            value={computedAge !== undefined ? String(computedAge) : ''}
+            placeholder="From date of birth"
+            className="bg-muted"
           />
         </div>
         <div>
@@ -417,35 +561,67 @@ export function KYPBasicForm({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label>Aadhaar Card (upload)</Label>
+            <Label>Aadhaar (front &amp; back — multiple)</Label>
+            <p className="text-muted-foreground text-xs mt-0.5 mb-1">Optional. Upload one or two files.</p>
             <div className="mt-2">
               <Input
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
+                multiple
                 onChange={handleAadharChange}
               />
-              {aadharFile && (
-                <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                  <File className="h-4 w-4" />
-                  <span>{aadharFile.name}</span>
-                </div>
-              )}
+              <div className="mt-2 flex flex-wrap gap-2">
+                {aadharFiles.map((file, index) => (
+                  <div
+                    key={`${file.url}-${index}`}
+                    className="flex items-center gap-2 text-sm bg-muted p-2 rounded-md"
+                  >
+                    <File className="h-4 w-4 shrink-0" />
+                    <span className="max-w-[140px] truncate">{file.name}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-destructive shrink-0"
+                      onClick={() => setAadharFiles((prev) => prev.filter((_, i) => i !== index))}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div>
-            <Label>PAN Card (upload)</Label>
+            <Label>PAN (front &amp; back — multiple)</Label>
+            <p className="text-muted-foreground text-xs mt-0.5 mb-1">Optional. Upload one or two files.</p>
             <div className="mt-2">
               <Input
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
+                multiple
                 onChange={handlePanChange}
               />
-              {panFile && (
-                <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                  <File className="h-4 w-4" />
-                  <span>{panFile.name}</span>
-                </div>
-              )}
+              <div className="mt-2 flex flex-wrap gap-2">
+                {panFiles.map((file, index) => (
+                  <div
+                    key={`${file.url}-${index}`}
+                    className="flex items-center gap-2 text-sm bg-muted p-2 rounded-md"
+                  >
+                    <File className="h-4 w-4 shrink-0" />
+                    <span className="max-w-[140px] truncate">{file.name}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-destructive shrink-0"
+                      onClick={() => setPanFiles((prev) => prev.filter((_, i) => i !== index))}
+                    >
+                      ×
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

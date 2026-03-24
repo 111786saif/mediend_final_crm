@@ -83,6 +83,8 @@ export type KYPSubmissionCountAggregateOutputType = {
   insuranceType: number
   aadharFileUrl: number
   panFileUrl: number
+  aadharFiles: number
+  panFiles: number
   insuranceCardFileUrl: number
   prescriptionFileUrl: number
   diseasePhotos: number
@@ -156,6 +158,8 @@ export type KYPSubmissionCountAggregateInputType = {
   insuranceType?: true
   aadharFileUrl?: true
   panFileUrl?: true
+  aadharFiles?: true
+  panFiles?: true
   insuranceCardFileUrl?: true
   prescriptionFileUrl?: true
   diseasePhotos?: true
@@ -254,6 +258,8 @@ export type KYPSubmissionGroupByOutputType = {
   insuranceType: $Enums.InsuranceType | null
   aadharFileUrl: string | null
   panFileUrl: string | null
+  aadharFiles: runtime.JsonValue | null
+  panFiles: runtime.JsonValue | null
   insuranceCardFileUrl: string | null
   prescriptionFileUrl: string | null
   diseasePhotos: runtime.JsonValue | null
@@ -300,6 +306,8 @@ export type KYPSubmissionWhereInput = {
   insuranceType?: Prisma.EnumInsuranceTypeNullableFilter<"KYPSubmission"> | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   panFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
+  aadharFiles?: Prisma.JsonNullableFilter<"KYPSubmission">
+  panFiles?: Prisma.JsonNullableFilter<"KYPSubmission">
   insuranceCardFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   prescriptionFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   diseasePhotos?: Prisma.JsonNullableFilter<"KYPSubmission">
@@ -329,6 +337,8 @@ export type KYPSubmissionOrderByWithRelationInput = {
   insuranceType?: Prisma.SortOrderInput | Prisma.SortOrder
   aadharFileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   panFileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  aadharFiles?: Prisma.SortOrderInput | Prisma.SortOrder
+  panFiles?: Prisma.SortOrderInput | Prisma.SortOrder
   insuranceCardFileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   prescriptionFileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   diseasePhotos?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -361,6 +371,8 @@ export type KYPSubmissionWhereUniqueInput = Prisma.AtLeast<{
   insuranceType?: Prisma.EnumInsuranceTypeNullableFilter<"KYPSubmission"> | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   panFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
+  aadharFiles?: Prisma.JsonNullableFilter<"KYPSubmission">
+  panFiles?: Prisma.JsonNullableFilter<"KYPSubmission">
   insuranceCardFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   prescriptionFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   diseasePhotos?: Prisma.JsonNullableFilter<"KYPSubmission">
@@ -390,6 +402,8 @@ export type KYPSubmissionOrderByWithAggregationInput = {
   insuranceType?: Prisma.SortOrderInput | Prisma.SortOrder
   aadharFileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   panFileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  aadharFiles?: Prisma.SortOrderInput | Prisma.SortOrder
+  panFiles?: Prisma.SortOrderInput | Prisma.SortOrder
   insuranceCardFileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   prescriptionFileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   diseasePhotos?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -421,6 +435,8 @@ export type KYPSubmissionScalarWhereWithAggregatesInput = {
   insuranceType?: Prisma.EnumInsuranceTypeNullableWithAggregatesFilter<"KYPSubmission"> | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.StringNullableWithAggregatesFilter<"KYPSubmission"> | string | null
   panFileUrl?: Prisma.StringNullableWithAggregatesFilter<"KYPSubmission"> | string | null
+  aadharFiles?: Prisma.JsonNullableWithAggregatesFilter<"KYPSubmission">
+  panFiles?: Prisma.JsonNullableWithAggregatesFilter<"KYPSubmission">
   insuranceCardFileUrl?: Prisma.StringNullableWithAggregatesFilter<"KYPSubmission"> | string | null
   prescriptionFileUrl?: Prisma.StringNullableWithAggregatesFilter<"KYPSubmission"> | string | null
   diseasePhotos?: Prisma.JsonNullableWithAggregatesFilter<"KYPSubmission">
@@ -445,6 +461,8 @@ export type KYPSubmissionCreateInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -473,6 +491,8 @@ export type KYPSubmissionUncheckedCreateInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -499,6 +519,8 @@ export type KYPSubmissionUpdateInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -527,6 +549,8 @@ export type KYPSubmissionUncheckedUpdateInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -554,6 +578,8 @@ export type KYPSubmissionCreateManyInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -578,6 +604,8 @@ export type KYPSubmissionUpdateManyMutationInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -602,6 +630,8 @@ export type KYPSubmissionUncheckedUpdateManyInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -642,6 +672,8 @@ export type KYPSubmissionCountOrderByAggregateInput = {
   insuranceType?: Prisma.SortOrder
   aadharFileUrl?: Prisma.SortOrder
   panFileUrl?: Prisma.SortOrder
+  aadharFiles?: Prisma.SortOrder
+  panFiles?: Prisma.SortOrder
   insuranceCardFileUrl?: Prisma.SortOrder
   prescriptionFileUrl?: Prisma.SortOrder
   diseasePhotos?: Prisma.SortOrder
@@ -829,6 +861,8 @@ export type KYPSubmissionCreateWithoutSubmittedByInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -856,6 +890,8 @@ export type KYPSubmissionUncheckedCreateWithoutSubmittedByInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -911,6 +947,8 @@ export type KYPSubmissionScalarWhereInput = {
   insuranceType?: Prisma.EnumInsuranceTypeNullableFilter<"KYPSubmission"> | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   panFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
+  aadharFiles?: Prisma.JsonNullableFilter<"KYPSubmission">
+  panFiles?: Prisma.JsonNullableFilter<"KYPSubmission">
   insuranceCardFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   prescriptionFileUrl?: Prisma.StringNullableFilter<"KYPSubmission"> | string | null
   diseasePhotos?: Prisma.JsonNullableFilter<"KYPSubmission">
@@ -935,6 +973,8 @@ export type KYPSubmissionCreateWithoutLeadInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -961,6 +1001,8 @@ export type KYPSubmissionUncheckedCreateWithoutLeadInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1003,6 +1045,8 @@ export type KYPSubmissionUpdateWithoutLeadInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1029,6 +1073,8 @@ export type KYPSubmissionUncheckedUpdateWithoutLeadInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1055,6 +1101,8 @@ export type KYPSubmissionCreateWithoutPreAuthDataInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1082,6 +1130,8 @@ export type KYPSubmissionUncheckedCreateWithoutPreAuthDataInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1123,6 +1173,8 @@ export type KYPSubmissionUpdateWithoutPreAuthDataInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1150,6 +1202,8 @@ export type KYPSubmissionUncheckedUpdateWithoutPreAuthDataInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1175,6 +1229,8 @@ export type KYPSubmissionCreateWithoutDischargeSheetInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1202,6 +1258,8 @@ export type KYPSubmissionUncheckedCreateWithoutDischargeSheetInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1243,6 +1301,8 @@ export type KYPSubmissionUpdateWithoutDischargeSheetInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1270,6 +1330,8 @@ export type KYPSubmissionUncheckedUpdateWithoutDischargeSheetInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1296,6 +1358,8 @@ export type KYPSubmissionCreateManySubmittedByInput = {
   insuranceType?: $Enums.InsuranceType | null
   aadharFileUrl?: string | null
   panFileUrl?: string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: string | null
   prescriptionFileUrl?: string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1319,6 +1383,8 @@ export type KYPSubmissionUpdateWithoutSubmittedByInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1346,6 +1412,8 @@ export type KYPSubmissionUncheckedUpdateWithoutSubmittedByInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1372,6 +1440,8 @@ export type KYPSubmissionUncheckedUpdateManyWithoutSubmittedByInput = {
   insuranceType?: Prisma.NullableEnumInsuranceTypeFieldUpdateOperationsInput | $Enums.InsuranceType | null
   aadharFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  panFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   insuranceCardFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   prescriptionFileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   diseasePhotos?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1398,6 +1468,8 @@ export type KYPSubmissionSelect<ExtArgs extends runtime.Types.Extensions.Interna
   insuranceType?: boolean
   aadharFileUrl?: boolean
   panFileUrl?: boolean
+  aadharFiles?: boolean
+  panFiles?: boolean
   insuranceCardFileUrl?: boolean
   prescriptionFileUrl?: boolean
   diseasePhotos?: boolean
@@ -1427,6 +1499,8 @@ export type KYPSubmissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   insuranceType?: boolean
   aadharFileUrl?: boolean
   panFileUrl?: boolean
+  aadharFiles?: boolean
+  panFiles?: boolean
   insuranceCardFileUrl?: boolean
   prescriptionFileUrl?: boolean
   diseasePhotos?: boolean
@@ -1454,6 +1528,8 @@ export type KYPSubmissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   insuranceType?: boolean
   aadharFileUrl?: boolean
   panFileUrl?: boolean
+  aadharFiles?: boolean
+  panFiles?: boolean
   insuranceCardFileUrl?: boolean
   prescriptionFileUrl?: boolean
   diseasePhotos?: boolean
@@ -1481,6 +1557,8 @@ export type KYPSubmissionSelectScalar = {
   insuranceType?: boolean
   aadharFileUrl?: boolean
   panFileUrl?: boolean
+  aadharFiles?: boolean
+  panFiles?: boolean
   insuranceCardFileUrl?: boolean
   prescriptionFileUrl?: boolean
   diseasePhotos?: boolean
@@ -1493,7 +1571,7 @@ export type KYPSubmissionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type KYPSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "aadhar" | "pan" | "insuranceCard" | "disease" | "location" | "area" | "remark" | "insuranceType" | "aadharFileUrl" | "panFileUrl" | "insuranceCardFileUrl" | "prescriptionFileUrl" | "diseasePhotos" | "otherFiles" | "patientConsent" | "status" | "submittedById" | "submittedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["kYPSubmission"]>
+export type KYPSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "aadhar" | "pan" | "insuranceCard" | "disease" | "location" | "area" | "remark" | "insuranceType" | "aadharFileUrl" | "panFileUrl" | "aadharFiles" | "panFiles" | "insuranceCardFileUrl" | "prescriptionFileUrl" | "diseasePhotos" | "otherFiles" | "patientConsent" | "status" | "submittedById" | "submittedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["kYPSubmission"]>
 export type KYPSubmissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   submittedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1530,6 +1608,14 @@ export type $KYPSubmissionPayload<ExtArgs extends runtime.Types.Extensions.Inter
     insuranceType: $Enums.InsuranceType | null
     aadharFileUrl: string | null
     panFileUrl: string | null
+    /**
+     * Multiple Aadhaar images (e.g. front & back): [{ name, url }]
+     */
+    aadharFiles: runtime.JsonValue | null
+    /**
+     * Multiple PAN images (e.g. front & back): [{ name, url }]
+     */
+    panFiles: runtime.JsonValue | null
     insuranceCardFileUrl: string | null
     prescriptionFileUrl: string | null
     diseasePhotos: runtime.JsonValue | null
@@ -1979,6 +2065,8 @@ export interface KYPSubmissionFieldRefs {
   readonly insuranceType: Prisma.FieldRef<"KYPSubmission", 'InsuranceType'>
   readonly aadharFileUrl: Prisma.FieldRef<"KYPSubmission", 'String'>
   readonly panFileUrl: Prisma.FieldRef<"KYPSubmission", 'String'>
+  readonly aadharFiles: Prisma.FieldRef<"KYPSubmission", 'Json'>
+  readonly panFiles: Prisma.FieldRef<"KYPSubmission", 'Json'>
   readonly insuranceCardFileUrl: Prisma.FieldRef<"KYPSubmission", 'String'>
   readonly prescriptionFileUrl: Prisma.FieldRef<"KYPSubmission", 'String'>
   readonly diseasePhotos: Prisma.FieldRef<"KYPSubmission", 'Json'>

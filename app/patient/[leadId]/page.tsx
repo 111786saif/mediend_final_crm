@@ -56,6 +56,49 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+type KypUploadedFile = { name?: string; url?: string }
+
+/** URLs for KYP id docs: prefers JSON arrays, falls back to legacy single URL. */
+function kypMultiDocUrls(
+  files: unknown,
+  legacyUrl: string | null | undefined
+): string[] {
+  const arr = Array.isArray(files) ? files : []
+  const urls = arr
+    .map((p: KypUploadedFile | string) => (typeof p === 'string' ? p : p?.url))
+    .filter((u): u is string => Boolean(u && typeof u === 'string'))
+  const dedup = [...new Set(urls)]
+  if (dedup.length > 0) return dedup
+  if (legacyUrl?.trim()) return [legacyUrl.trim()]
+  return []
+}
+
+function kypMultiDocList(
+  files: unknown,
+  legacyUrl: string | null | undefined
+): { name: string; url: string }[] {
+  const arr = Array.isArray(files) ? files : []
+  const out: { name: string; url: string }[] = []
+  for (const p of arr) {
+    const url = typeof p === 'string' ? p : p?.url
+    if (!url) continue
+    const name =
+      typeof p === 'object' && p && typeof p.name === 'string' && p.name.trim()
+        ? p.name.trim()
+        : 'Document'
+    out.push({ name, url })
+  }
+  const seen = new Set<string>()
+  const unique = out.filter((x) => {
+    if (seen.has(x.url)) return false
+    seen.add(x.url)
+    return true
+  })
+  if (unique.length > 0) return unique
+  if (legacyUrl?.trim()) return [{ name: 'Document', url: legacyUrl.trim() }]
+  return []
+}
+
 interface Lead {
   id: string
   leadRef: string
@@ -104,6 +147,8 @@ interface Lead {
       patientConsent?: boolean
       aadharFileUrl?: string | null
       panFileUrl?: string | null
+      aadharFiles?: Array<{ name: string; url: string }> | null
+      panFiles?: Array<{ name: string; url: string }> | null
       insuranceCardFileUrl?: string | null
       prescriptionFileUrl?: string | null
       diseasePhotos?: Array<{ name: string; url: string }> | null
@@ -200,6 +245,8 @@ interface KYPSubmission {
   remark: string | null
   aadharFileUrl: string | null
   panFileUrl: string | null
+  aadharFiles?: Array<{ name: string; url: string }> | null
+  panFiles?: Array<{ name: string; url: string }> | null
   insuranceCardFileUrl: string | null
   prescriptionFileUrl: string | null
   diseasePhotos: Array<{ name: string; url: string }> | null
@@ -475,8 +522,12 @@ export default function PatientDetailsPage() {
     }
 
     if (kyp.insuranceCardFileUrl) add('Insurance Card', kyp.insuranceCardFileUrl)
-    if (kyp.aadharFileUrl) add('Aadhar', kyp.aadharFileUrl)
-    if (kyp.panFileUrl) add('PAN', kyp.panFileUrl)
+    kypMultiDocUrls(kyp.aadharFiles, kyp.aadharFileUrl).forEach((url, i, a) => {
+      add(a.length > 1 ? `Aadhaar ${i + 1}` : 'Aadhaar', url)
+    })
+    kypMultiDocUrls(kyp.panFiles, kyp.panFileUrl).forEach((url, i, a) => {
+      add(a.length > 1 ? `PAN ${i + 1}` : 'PAN', url)
+    })
     if (kyp.prescriptionFileUrl) add('Prescription', kyp.prescriptionFileUrl)
 
     const processFiles = (files: any, typeLabel: string) => {
@@ -1179,26 +1230,48 @@ export default function PatientDetailsPage() {
                       <Label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Aadhar Number</Label>
                       <div className="flex items-center justify-between mt-1">
                         <p className="text-sm font-semibold">{kypSubmission.aadhar || '-'}</p>
-                        {kypSubmission.aadharFileUrl && (
-                          <Button asChild variant="link" size="sm" className="h-auto p-0 text-blue-600">
-                            <a href={kypSubmission.aadharFileUrl} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-3 h-3 mr-1" /> View
-                            </a>
-                          </Button>
-                        )}
+                        <div className="flex flex-col items-end gap-1">
+                          {kypMultiDocList(kypSubmission.aadharFiles, kypSubmission.aadharFileUrl).map(
+                            (doc, i, list) => (
+                              <Button
+                                key={doc.url}
+                                asChild
+                                variant="link"
+                                size="sm"
+                                className="h-auto p-0 text-blue-600"
+                              >
+                                <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  {list.length > 1 ? doc.name || `Part ${i + 1}` : 'View'}
+                                </a>
+                              </Button>
+                            )
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
                       <Label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">PAN Number</Label>
                       <div className="flex items-center justify-between mt-1">
                         <p className="text-sm font-semibold">{kypSubmission.pan || '-'}</p>
-                        {kypSubmission.panFileUrl && (
-                          <Button asChild variant="link" size="sm" className="h-auto p-0 text-blue-600">
-                            <a href={kypSubmission.panFileUrl} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-3 h-3 mr-1" /> View
-                            </a>
-                          </Button>
-                        )}
+                        <div className="flex flex-col items-end gap-1">
+                          {kypMultiDocList(kypSubmission.panFiles, kypSubmission.panFileUrl).map(
+                            (doc, i, list) => (
+                              <Button
+                                key={doc.url}
+                                asChild
+                                variant="link"
+                                size="sm"
+                                className="h-auto p-0 text-blue-600"
+                              >
+                                <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  {list.length > 1 ? doc.name || `Part ${i + 1}` : 'View'}
+                                </a>
+                              </Button>
+                            )
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

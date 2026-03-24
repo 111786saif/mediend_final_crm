@@ -5,7 +5,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { z } from 'zod'
-import { UserRole, CaseStage, InsuranceType } from '@/generated/prisma/client'
+import { CaseStage, InsuranceType, Prisma } from '@/generated/prisma/client'
 
 const submitKYPSchema = z.object({
   leadId: z.string(),
@@ -26,6 +26,8 @@ const submitKYPSchema = z.object({
   remark: z.string().optional(),
   aadharFileUrl: z.string().optional(),
   panFileUrl: z.string().optional(),
+  aadharFiles: z.array(z.object({ name: z.string(), url: z.string() })).optional(),
+  panFiles: z.array(z.object({ name: z.string(), url: z.string() })).optional(),
   insuranceCardFileUrl: z.string().optional(),
   insuranceCardFiles: z.array(z.object({ name: z.string(), url: z.string() })).optional(),
   prescriptionFileUrl: z.string().optional(),
@@ -95,7 +97,14 @@ export async function POST(request: NextRequest) {
       return errorResponse('KYP submission already exists for this lead', 400)
     }
 
-    // Create KYP submission
+    const aadharFiles =
+      data.aadharFiles && data.aadharFiles.length > 0 ? data.aadharFiles : undefined
+    const panFiles = data.panFiles && data.panFiles.length > 0 ? data.panFiles : undefined
+    const aadharFileUrl =
+      aadharFiles?.[0]?.url ?? data.aadharFileUrl ?? undefined
+    const panFileUrl = panFiles?.[0]?.url ?? data.panFileUrl ?? undefined
+
+    // Create KYP submission (assert payload so builds stay valid if TS cache lags `prisma generate`)
     const kypSubmission = await prisma.kYPSubmission.create({
       data: {
         leadId: data.leadId,
@@ -107,8 +116,10 @@ export async function POST(request: NextRequest) {
         location: data.location ?? undefined,
         area: data.area ?? undefined,
         remark: data.remark,
-        aadharFileUrl: data.aadharFileUrl,
-        panFileUrl: data.panFileUrl,
+        aadharFileUrl,
+        panFileUrl,
+        aadharFiles: aadharFiles ?? undefined,
+        panFiles: panFiles ?? undefined,
         insuranceCardFileUrl: data.insuranceCardFileUrl ?? (data.insuranceCardFiles?.[0]?.url || undefined),
         prescriptionFileUrl: data.prescriptionFileUrl,
         diseasePhotos: data.diseasePhotos ?? undefined,
@@ -116,7 +127,7 @@ export async function POST(request: NextRequest) {
         otherFiles: data.otherFiles || data.insuranceCardFiles || [],
         submittedById: user.id,
         status: 'PENDING',
-      },
+      } as Prisma.KYPSubmissionUncheckedCreateInput,
       include: {
         lead: {
           select: {

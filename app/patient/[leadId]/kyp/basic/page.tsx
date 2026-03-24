@@ -1,7 +1,6 @@
 'use client'
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
-import { useAuth } from '@/hooks/use-auth'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,14 +15,14 @@ interface Lead {
   leadRef: string
   patientName: string
   phoneNumber: string
+  /** City / region from lead (synced from MySQL circle) */
+  circle?: string
   treatment?: string
-  age?: number
   dateOfBirth?: string | null
   sex?: string
 }
 
 export default function KYPBasicSubmitPage() {
-  const { user } = useAuth()
   const router = useRouter()
   const params = useParams()
   const queryClient = useQueryClient()
@@ -94,8 +93,8 @@ export default function KYPBasicSubmitPage() {
               leadId={leadId}
               initialPatientName={lead.patientName}
               initialPhone={lead.phoneNumber}
+              initialCity={lead.circle?.trim() || ''}
               initialTreatment={lead.treatment}
-              initialAge={lead.age}
               initialDob={lead.dateOfBirth ? format(new Date(lead.dateOfBirth), 'yyyy-MM-dd') : undefined}
               initialSex={lead.sex}
               onSuccess={() => {

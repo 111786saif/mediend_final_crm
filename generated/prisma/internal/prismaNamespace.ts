@@ -7610,6 +7610,8 @@ export const KYPSubmissionScalarFieldEnum = {
   insuranceType: 'insuranceType',
   aadharFileUrl: 'aadharFileUrl',
   panFileUrl: 'panFileUrl',
+  aadharFiles: 'aadharFiles',
+  panFiles: 'panFiles',
   insuranceCardFileUrl: 'insuranceCardFileUrl',
   prescriptionFileUrl: 'prescriptionFileUrl',
   diseasePhotos: 'diseasePhotos',

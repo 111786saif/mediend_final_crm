@@ -1695,6 +1695,10 @@ model KYPSubmission {
   // File URLs (stored in S3)
   aadharFileUrl        String?
   panFileUrl           String?
+  /// Multiple Aadhaar images (e.g. front & back): [{ name, url }]
+  aadharFiles          Json?
+  /// Multiple PAN images (e.g. front & back): [{ name, url }]
+  panFiles             Json?
   insuranceCardFileUrl String?
   prescriptionFileUrl  String?
   diseasePhotos        Json?   // Array of {name, url}
