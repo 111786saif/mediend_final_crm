@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
+import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { PipelineStage, Prisma } from '@/generated/prisma/client'
+import { Prisma } from '@/generated/prisma/client'
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,8 +12,7 @@ export async function GET(request: NextRequest) {
       return unauthorizedResponse()
     }
 
-    // Only OUTSTANDING_HEAD and ADMIN can access
-    if (user.role !== 'OUTSTANDING_HEAD' && user.role !== 'ADMIN') {
+    if (!hasPermission(user, 'pl:read')) {
       return errorResponse('Forbidden', 403)
     }
 

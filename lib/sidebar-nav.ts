@@ -151,10 +151,10 @@ export const navItems: NavItem[] = [
     permission: 'pl:read',
   },
   {
-    title: 'Outstanding',
-    url: '/outstanding/dashboard',
+    title: 'P/L Outstanding',
+    url: '/pl/outstanding',
     icon: CreditCard,
-    roles: ['OUTSTANDING_HEAD', 'ADMIN'],
+    permission: 'pl:read',
   },
   {
     title: 'Reports',

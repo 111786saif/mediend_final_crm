@@ -219,8 +219,6 @@ const rolePermissions: Record<UserRole, Permission[]> = {
   ],
   OUTSTANDING_HEAD: [
     'leads:read',
-    'pl:read',
-    'pl:write',
     'analytics:read',
     'reports:export',
     'departments:create',

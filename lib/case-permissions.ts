@@ -1,4 +1,6 @@
 import { CaseStage, UserRole, FlowType } from '@/generated/prisma/enums'
+import { hasPermission } from '@/lib/rbac'
+import type { SessionUser } from '@/lib/auth'
 
 interface User {
   id: string
@@ -181,12 +183,12 @@ export function canShowInsuranceActions(user: User, lead: Lead): boolean {
   return isInsurance && canAccessStages.includes(lead.caseStage)
 }
 
-// Outstanding Head can edit payout statuses and pending amounts only when discharge sheet exists
+// P/L (pl:write) can edit payout statuses and pending amounts only when discharge sheet exists
 export function canEditOutstanding(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  const isOutstandingHead = ['OUTSTANDING_HEAD', 'ADMIN'].includes(user.role)
+  const sessionLike = user as SessionUser
   const hasDischargeSheet = !!lead.dischargeSheet
-  return isOutstandingHead && hasDischargeSheet
+  return hasPermission(sessionLike, 'pl:write') && hasDischargeSheet
 }
 
 // Only INSURANCE_HEAD and ADMIN can view patient phone numbers
@@ -216,7 +218,7 @@ export function isDischargeBlockedByInitiateForm(user: User, lead: Lead): boolea
 // Insurance, PL, Outstanding, BD, Admin can view initiate form details
 export function canViewInitiateForm(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  const allowedRoles = ['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'OUTSTANDING_HEAD', 'ADMIN', 'FINANCE_HEAD', 'BD', 'TEAM_LEAD']
+  const allowedRoles = ['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN', 'FINANCE_HEAD', 'BD', 'TEAM_LEAD']
   return allowedRoles.includes(user.role)
 }
 
