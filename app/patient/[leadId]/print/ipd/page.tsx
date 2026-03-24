@@ -7,7 +7,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { format } from 'date-fns'
-import { PrinterIcon, ArrowLeft } from 'lucide-react'
+import { PrinterIcon, ArrowLeft, FileText } from 'lucide-react'
 import { getIpdStatusLabel } from '@/lib/ipd-status-labels'
 
 interface Lead {
@@ -16,12 +16,9 @@ interface Lead {
   leadRef: string
   age?: number | null
   sex?: string | null
-  phoneNumber: string
-  circle?: string | null
   hospitalName: string
   treatment?: string | null
   ipdDrName?: string | null
-  insuranceName?: string | null
   admissionRecord?: {
     id: string
     admissionDate?: string
@@ -31,7 +28,6 @@ interface Lead {
     admittingHospital?: string
     hospitalAddress?: string
     googleMapLocation?: string
-    tpa?: string
     instrument?: string
     implantConsumables?: string
     notes?: string
@@ -42,19 +38,19 @@ interface Lead {
     newSurgeryDate?: string
     ipdDischargeDate?: string
   } | null
-  bd?: { name?: string | null; manager?: { name?: string | null } | null; team?: { salesHead?: { name?: string | null } | null } | null } | null
   kypSubmission?: {
-    insuranceType?: string | null
+    aadharFileUrl?: string | null
+    aadharFiles?: unknown
+    panFileUrl?: string | null
+    panFiles?: unknown
+    insuranceCardFileUrl?: string | null
+    prescriptionFileUrl?: string | null
+    diseasePhotos?: unknown
+    otherFiles?: unknown
     preAuthData?: {
-      sumInsured?: string | null
-      balanceInsured?: string | null
-      copay?: string | null
-      capping?: number | string | null
-      roomRent?: string | null
-      tpa?: string | null
-      requestedHospitalName?: string | null
-      requestedRoomType?: string | null
-      roomTypes?: Array<{ name: string; rent: string }> | null
+      diseaseImages?: unknown
+      investigationFileUrls?: unknown
+      prescriptionFiles?: unknown
     } | null
   } | null
 }
@@ -68,11 +64,64 @@ const formatDate = (dateStr: string | null | undefined) => {
   }
 }
 
-const fmtCurr = (v: number | string | null | undefined) => {
-  if (v == null || v === '') return null
-  const n = typeof v === 'number' ? v : Number(v)
-  if (Number.isNaN(n)) return null
-  return `₹${n.toLocaleString('en-IN')}`
+/** URLs for KYP id docs: prefers JSON arrays, falls back to legacy single URL. */
+function kypMultiDocUrls(files: unknown, legacyUrl: string | null | undefined): string[] {
+  const arr = Array.isArray(files) ? files : []
+  const urls = arr
+    .map((p: { url?: string } | string) => (typeof p === 'string' ? p : p?.url))
+    .filter((u): u is string => Boolean(u && typeof u === 'string'))
+  const dedup = [...new Set(urls)]
+  if (dedup.length > 0) return dedup
+  if (legacyUrl?.trim()) return [legacyUrl.trim()]
+  return []
+}
+
+type DocItem = { title: string; url: string; isImage: boolean }
+
+function isImageDocUrl(url: string): boolean {
+  const u = url.toLowerCase()
+  return /\.(jpg|jpeg|png|gif|webp)$/i.test(u) || u.includes('jpg') || u.includes('png')
+}
+
+function buildUploadedDocuments(kyp: Lead['kypSubmission']): DocItem[] {
+  const items: DocItem[] = []
+  const add = (title: string, url: string | null | undefined) => {
+    if (!url?.trim()) return
+    const u = url.trim()
+    items.push({ title, url: u, isImage: isImageDocUrl(u) })
+  }
+
+  if (!kyp) return []
+
+  if (kyp.insuranceCardFileUrl) add('Insurance Card', kyp.insuranceCardFileUrl)
+  kypMultiDocUrls(kyp.aadharFiles, kyp.aadharFileUrl).forEach((url, i, a) => {
+    add(a.length > 1 ? `Aadhaar ${i + 1}` : 'Aadhaar', url)
+  })
+  kypMultiDocUrls(kyp.panFiles, kyp.panFileUrl).forEach((url, i, a) => {
+    add(a.length > 1 ? `PAN ${i + 1}` : 'PAN', url)
+  })
+  if (kyp.prescriptionFileUrl) add('Prescription', kyp.prescriptionFileUrl)
+
+  const processFiles = (files: unknown, typeLabel: string) => {
+    if (!files) return
+    const fileList = Array.isArray(files) ? files : []
+    fileList.forEach((p: unknown, index: number) => {
+      const url = typeof p === 'string' ? p : (p as { url?: string })?.url
+      if (!url) return
+      const title = fileList.length > 1 ? `${typeLabel} ${index + 1}` : typeLabel
+      add(title, url)
+    })
+  }
+
+  processFiles(kyp.diseasePhotos, 'Disease photo')
+  processFiles(kyp.otherFiles, 'Additional document')
+  processFiles(kyp.preAuthData?.diseaseImages, 'Disease image')
+  processFiles(kyp.preAuthData?.investigationFileUrls, 'Investigation')
+  processFiles(kyp.preAuthData?.prescriptionFiles, 'Pre-auth prescription')
+
+  return items.filter(
+    (item, index, self) => index === self.findIndex((t) => t.url === item.url)
+  )
 }
 
 export default function IPDPrintPage() {
@@ -140,14 +189,7 @@ export default function IPDPrintPage() {
   }
 
   const rec = lead.admissionRecord
-  const preAuth = lead.kypSubmission?.preAuthData
-  const bdManagerName = lead.bd?.manager?.name ?? lead.bd?.team?.salesHead?.name ?? null
-
-  // Room rent for selected room: from preAuth roomRent or lookup requestedRoomType in roomTypes
-  const selectedRoomRent =
-    preAuth?.requestedRoomType && preAuth?.roomTypes?.length
-      ? preAuth.roomTypes.find((r) => r.name === preAuth.requestedRoomType)?.rent ?? preAuth.roomRent
-      : preAuth?.roomRent
+  const uploadedDocuments = buildUploadedDocuments(lead.kypSubmission)
 
   // Split implantConsumables into Implants and Consumables lines
   const implantConsumablesStr = rec.implantConsumables || ''
@@ -160,9 +202,7 @@ export default function IPDPrintPage() {
       <div className="print:hidden border-b border-teal-200 bg-teal-50/50 p-4 flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-teal-800">IPD Admission Details</h1>
-          <p className="text-slate-600">
-            {lead.leadRef} - {lead.patientName}
-          </p>
+          <p className="text-slate-600">{lead.patientName}</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => router.back()}>
@@ -179,22 +219,16 @@ export default function IPDPrintPage() {
       <div className="p-6 max-w-4xl mx-auto">
         <div className="hidden print:block mb-6 print:break-after-avoid">
           <h1 className="text-2xl font-bold mb-2 text-teal-700">IPD Admission Details</h1>
-          <p className="text-sm text-slate-600">
-            {lead.leadRef} - {lead.patientName}
-          </p>
+          <p className="text-sm text-slate-600">{lead.patientName}</p>
         </div>
 
-        {/* 1. Patient details: name, age, sex, leadId */}
+        {/* Patient details: name, age, sex */}
         <div className="mb-6 p-4 rounded-lg bg-slate-50/80 print:bg-white print:break-inside-avoid border-l-4 border-teal-500">
           <h2 className="text-lg font-semibold mb-3 text-teal-700 border-b border-teal-200 pb-2">Patient Details</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-semibold text-gray-600">Patient Name</p>
               <p className="text-base">{lead.patientName}</p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Lead ID / Reference</p>
-              <p className="text-base">{lead.leadRef}</p>
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-600">Age</p>
@@ -207,7 +241,7 @@ export default function IPDPrintPage() {
           </div>
         </div>
 
-        {/* 2. Date and time of admission and surgery */}
+        {/* Admission & Surgery */}
         <div className="mb-6 p-4 rounded-lg bg-blue-50/80 print:bg-white print:break-inside-avoid border-l-4 border-blue-500">
           <h2 className="text-lg font-semibold mb-3 text-blue-700 border-b border-blue-200 pb-2">Admission & Surgery</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -230,19 +264,19 @@ export default function IPDPrintPage() {
           </div>
         </div>
 
-        {/* 3. Treatment / surgery */}
+        {/* Treatment / Surgery */}
         <div className="mb-6 p-4 rounded-lg bg-violet-50/80 print:bg-white print:break-inside-avoid border-l-4 border-violet-500">
           <h2 className="text-lg font-semibold mb-3 text-violet-700 border-b border-violet-200 pb-2">Treatment / Surgery</h2>
           <p className="text-base">{lead.treatment ?? '-'}</p>
         </div>
 
-        {/* 4. Surgeon (IPD doctor name) */}
+        {/* Surgeon */}
         <div className="mb-6 p-4 rounded-lg bg-amber-50/80 print:bg-white print:break-inside-avoid border-l-4 border-amber-500">
           <h2 className="text-lg font-semibold mb-3 text-amber-800 border-b border-amber-200 pb-2">Surgeon</h2>
           <p className="text-base">{lead.ipdDrName ?? '-'}</p>
         </div>
 
-        {/* 5. Hospital name, address, Google Map link */}
+        {/* Hospital */}
         <div className="mb-6 p-4 rounded-lg bg-emerald-50/80 print:bg-white print:break-inside-avoid border-l-4 border-emerald-500">
           <h2 className="text-lg font-semibold mb-3 text-emerald-700 border-b border-emerald-200 pb-2">Hospital</h2>
           <div className="space-y-2">
@@ -269,74 +303,7 @@ export default function IPDPrintPage() {
           </div>
         </div>
 
-        {/* 6. Type of insurance, name of insurance */}
-        <div className="mb-6 p-4 rounded-lg bg-sky-50/80 print:bg-white print:break-inside-avoid border-l-4 border-sky-500">
-          <h2 className="text-lg font-semibold mb-3 text-sky-700 border-b border-sky-200 pb-2">Insurance</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Type of Insurance</p>
-              <p className="text-base">
-                {lead.kypSubmission?.insuranceType != null
-                  ? String(lead.kypSubmission.insuranceType).replace(/_/g, ' ')
-                  : '-'}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Name of Insurance</p>
-              <p className="text-base">{lead.insuranceName ?? '-'}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 7. TPA, sum insured, balance insured */}
-        <div className="mb-6 p-4 rounded-lg bg-indigo-50/80 print:bg-white print:break-inside-avoid border-l-4 border-indigo-500">
-          <h2 className="text-lg font-semibold mb-3 text-indigo-700 border-b border-indigo-200 pb-2">TPA & Coverage</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm font-semibold text-gray-600">TPA</p>
-              <p className="text-base">{rec.tpa ?? preAuth?.tpa ?? '-'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Sum Insured</p>
-              <p className="text-base">{preAuth?.sumInsured ?? '-'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Balance Insured</p>
-              <p className="text-base">{preAuth?.balanceInsured ?? '-'}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 8. Copay, disease capping, room rent (selected room from pre-auth) */}
-        <div className="mb-6 p-4 rounded-lg bg-green-50/80 print:bg-white print:break-inside-avoid border-l-4 border-green-500">
-          <h2 className="text-lg font-semibold mb-3 text-green-700 border-b border-green-200 pb-2">Pre-Auth Financials</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Copay</p>
-              <p className="text-base">{preAuth?.copay != null ? `${preAuth.copay}%` : '-'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Disease Capping</p>
-              <p className="text-base">
-                {preAuth?.capping != null && preAuth.capping !== ''
-                  ? (typeof preAuth.capping === 'string' && !Number.isNaN(Number(preAuth.capping))
-                      ? fmtCurr(Number(preAuth.capping))
-                      : preAuth.capping) ?? '-'
-                  : '-'}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Room Type (Pre-Auth)</p>
-              <p className="text-base">{preAuth?.requestedRoomType ?? '-'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-600">Room Rent</p>
-              <p className="text-base">{selectedRoomRent ?? preAuth?.roomRent ?? '-'}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 9. Instruments with amount */}
+        {/* Instruments */}
         {(rec.instrument?.trim() ?? '') && (
           <div className="mb-6 p-4 rounded-lg bg-orange-50/80 print:bg-white print:break-inside-avoid border-l-4 border-orange-500">
             <h2 className="text-lg font-semibold mb-3 text-orange-700 border-b border-orange-200 pb-2">Instruments</h2>
@@ -344,7 +311,7 @@ export default function IPDPrintPage() {
           </div>
         )}
 
-        {/* 10. Implants with amounts */}
+        {/* Implants */}
         {implantLine && (
           <div className="mb-6 p-4 rounded-lg bg-rose-50/80 print:bg-white print:break-inside-avoid border-l-4 border-rose-500">
             <h2 className="text-lg font-semibold mb-3 text-rose-700 border-b border-rose-200 pb-2">Implants</h2>
@@ -352,7 +319,7 @@ export default function IPDPrintPage() {
           </div>
         )}
 
-        {/* 11. Consumables with amounts */}
+        {/* Consumables */}
         {consumablesLine && (
           <div className="mb-6 p-4 rounded-lg bg-pink-50/80 print:bg-white print:break-inside-avoid border-l-4 border-pink-500">
             <h2 className="text-lg font-semibold mb-3 text-pink-700 border-b border-pink-200 pb-2">Consumables</h2>
@@ -360,22 +327,7 @@ export default function IPDPrintPage() {
           </div>
         )}
 
-        {/* 12. BD and BD Manager name */}
-        <div className="mb-6 p-4 rounded-lg bg-cyan-50/80 print:bg-white print:break-inside-avoid border-l-4 border-cyan-500">
-          <h2 className="text-lg font-semibold mb-3 text-cyan-700 border-b border-cyan-200 pb-2">BD & Manager</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-semibold text-gray-600">BD Name</p>
-              <p className="text-base">{lead.bd?.name ?? '-'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-600">BD Manager</p>
-              <p className="text-base">{bdManagerName ?? '-'}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Optional: IPD Status, Notes */}
+        {/* IPD Status, Notes */}
         {rec.ipdStatus && (
           <div className="mb-6 p-4 rounded-lg bg-slate-100 print:bg-white print:break-inside-avoid border-l-4 border-slate-400">
             <h3 className="font-semibold mb-2 text-slate-700">IPD Status</h3>
@@ -391,6 +343,63 @@ export default function IPDPrintPage() {
           <div className="mb-6 p-4 rounded-lg bg-slate-50/80 print:bg-white print:break-inside-avoid border-l-4 border-slate-400">
             <h2 className="text-lg font-semibold mb-3 text-slate-700 border-b border-slate-200 pb-2">Additional Notes</h2>
             <p className="text-sm whitespace-pre-line">{rec.notes}</p>
+          </div>
+        )}
+
+        {/* Documents (KYP + pre-auth uploads) */}
+        {uploadedDocuments.length > 0 && (
+          <div className="mb-6 p-4 rounded-lg bg-teal-50/80 print:bg-white print:break-inside-avoid border-l-4 border-teal-600">
+            <h2 className="text-lg font-semibold mb-3 text-teal-800 border-b border-teal-200 pb-2">Documents</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {uploadedDocuments.map((doc, index) => (
+                <div
+                  key={`${doc.url}-${index}`}
+                  className="flex flex-col rounded-lg border-2 border-gray-200 overflow-hidden print:break-inside-avoid"
+                >
+                  <div className="w-full h-[200px] shrink-0 overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {doc.isImage ? (
+                      <>
+                        <img
+                          src={doc.url}
+                          alt={doc.title}
+                          className="max-h-full max-w-full object-contain hidden print:block"
+                        />
+                        <iframe
+                          src={doc.url}
+                          title={doc.title}
+                          className="w-full h-full border-0 pointer-events-none select-none print:hidden"
+                          style={{ overflow: 'hidden' }}
+                        />
+                      </>
+                    ) : (
+                      <a
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center justify-center gap-2 text-gray-500 hover:text-blue-600 p-4 no-underline"
+                      >
+                        <FileText className="w-12 h-12" />
+                        <span className="text-xs text-center line-clamp-2">{doc.title}</span>
+                        <span className="text-xs font-medium">Open in new tab</span>
+                      </a>
+                    )}
+                  </div>
+                  <div className="p-2 border-t border-gray-200 bg-white shrink-0">
+                    <p className="text-sm font-medium text-gray-900 truncate" title={doc.title}>
+                      {doc.title}
+                    </p>
+                    <a
+                      href={doc.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:underline mt-0.5 inline-block"
+                    >
+                      Open
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

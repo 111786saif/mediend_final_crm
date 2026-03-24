@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { SessionUser } from './auth'
 import jwt from 'jsonwebtoken'
+import { prisma } from './prisma'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
 const SESSION_COOKIE_NAME = 'mediend_session'
@@ -55,6 +56,24 @@ export async function getSession(): Promise<SessionUser | null> {
     }
   } catch {
     return null
+  }
+}
+
+/** Session with current role/teamId from DB (JWT can be stale after admin assigns team or role). */
+export async function getSessionWithFreshUser(): Promise<SessionUser | null> {
+  const session = await getSession()
+  if (!session) return null
+  const row = await prisma.user.findUnique({
+    where: { id: session.id },
+    select: { id: true, email: true, name: true, role: true, teamId: true },
+  })
+  if (!row) return null
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    role: row.role,
+    teamId: row.teamId,
   }
 }
 

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
+import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { z } from 'zod'
@@ -39,6 +40,7 @@ export async function POST(
         patientName: true,
         leadRef: true,
         bdId: true,
+        bd: { select: { teamId: true } },
       },
     })
 
@@ -50,8 +52,8 @@ export async function POST(
       return errorResponse('Case is already marked as lost', 400)
     }
 
-    if (lead.bdId !== user.id && user.role !== 'ADMIN') {
-      return errorResponse('You can only mark your own cases as lost', 403)
+    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+      return errorResponse('You do not have permission to mark this case as lost', 403)
     }
 
     const fullReason = data.lostReasonDetail?.trim()

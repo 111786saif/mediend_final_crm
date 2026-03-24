@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { CallNotesPopover } from '@/components/pipeline/call-notes-popover'
@@ -22,6 +22,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { apiGet } from '@/lib/api-client'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
+import { formatLeadAgeSex } from '@/lib/lead-display'
 import { getStatusColor } from '@/lib/lead-status-colors'
 import {
   getLeadReceiptDate,
@@ -37,7 +38,7 @@ import { format } from 'date-fns'
 import { CalendarIcon, ExternalLink, Search } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react'
 
 interface Target {
   id: string
@@ -299,7 +300,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const padTop = virtualItems.length > 0 ? virtualItems[0].start : 0
   const padBottom = virtualItems.length > 0 ? virtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end : 0
 
-  const colCount = variant === 'team-lead' ? 10 : 9
+  const colCount = variant === 'team-lead' ? 15 : 9
 
   return (
     <AuthenticatedLayout>
@@ -501,24 +502,47 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                   ) : (
                     <table className="w-full caption-bottom text-sm">
                       <thead className="sticky top-0 z-10 bg-muted/50 [&_tr]:border-b">
-                        <tr className="border-b transition-colors hover:bg-muted/50">
-                          <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            Lead ref
-                          </th>
-                          <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Patient</th>
-                          <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Treatment</th>
-                          <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
-                          <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Age</th>
-                          <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
-                          <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stage</th>
-                          {variant === 'team-lead' && (
+                        {variant === 'team-lead' ? (
+                          <tr className="border-b transition-colors hover:bg-muted/50">
+                            <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              Lead ref
+                            </th>
+                            <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              Date
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Patient</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Age/Sex</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Circle</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Treatment</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">BDM</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Hospital</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stage</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Recency</th>
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">BD</th>
-                          )}
-                          <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                            Notes
-                          </th>
-                          <th className="h-10 w-[80px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
-                        </tr>
+                            <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              Notes
+                            </th>
+                            <th className="h-10 w-[80px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
+                          </tr>
+                        ) : (
+                          <tr className="border-b transition-colors hover:bg-muted/50">
+                            <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              Lead ref
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Patient</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Treatment</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Age</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stage</th>
+                            <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              Notes
+                            </th>
+                            <th className="h-10 w-[80px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
+                          </tr>
+                        )}
                       </thead>
                       <tbody>
                         {padTop > 0 && (
@@ -557,8 +581,6 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   )
 }
 
-import { memo } from 'react'
-
 const PipelineRow = memo(function PipelineRow({
   lead,
   variant,
@@ -574,6 +596,62 @@ const PipelineRow = memo(function PipelineRow({
   const st = normalizeLeadStatus(lead.status)
   const sc = getStatusColor(st)
   const statusClass = `${sc.bg} ${sc.text}`
+
+  if (variant === 'team-lead') {
+    const receipt = getLeadReceiptDate(lead)
+    const dateStr = receipt ? format(receipt, 'MMM d, yyyy') : '—'
+    return (
+      <tr
+        className="cursor-pointer border-b border-border/60 transition-colors hover:bg-muted/50"
+        onClick={() => onClick(lead.id)}
+      >
+        <td className="px-3 py-2 font-medium">
+          <div className="flex items-center gap-0.5">
+            <span className="truncate max-w-[120px] sm:max-w-[160px]" title={String(lead.leadRef)}>
+              {lead.leadRef}
+            </span>
+            {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
+          </div>
+        </td>
+        <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">{dateStr}</td>
+        <td className="max-w-[140px] truncate px-3 py-2">{typeof lead.patientName === 'string' ? lead.patientName : '—'}</td>
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatLeadAgeSex(lead)}</td>
+        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{normalizedText(lead.circle, '—')}</td>
+        <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{typeof lead.treatment === 'string' ? lead.treatment : '—'}</td>
+        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{(lead.plRecord?.bdmName ?? '').trim() || '—'}</td>
+        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{typeof lead.hospitalName === 'string' ? lead.hospitalName : '—'}</td>
+        <td className="px-3 py-2">{typeof lead.category === 'string' ? lead.category : '—'}</td>
+        <td className="px-3 py-2">
+          <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${statusClass}`}>{st}</span>
+        </td>
+        <td className="px-3 py-2">
+          {stage ? (
+            <Badge variant="secondary" className={`text-[11px] ${stage.className}`}>
+              {stage.label}
+            </Badge>
+          ) : (
+            '—'
+          )}
+        </td>
+        <td className="px-3 py-2">
+          <LeadAgeBadge lead={lead} />
+        </td>
+        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>
+        <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
+          <div className="flex justify-center">
+            <CallNotesPopover leadId={lead.id} onRowClickStop noteCount={noteCount} />
+          </div>
+        </td>
+        <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
+          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+            <Link href={`/patient/${lead.id}`} aria-label="Open lead">
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </Button>
+        </td>
+      </tr>
+    )
+  }
 
   return (
     <tr
@@ -603,12 +681,9 @@ const PipelineRow = memo(function PipelineRow({
             {stage.label}
           </Badge>
         ) : (
-          'â€”'
+          '—'
         )}
       </td>
-      {variant === 'team-lead' && (
-        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? 'â€”'}</td>
-      )}
       <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-center">
           <CallNotesPopover leadId={lead.id} onRowClickStop noteCount={noteCount} />

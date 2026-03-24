@@ -23,6 +23,7 @@ import {
   ComboboxEmpty,
 } from '@/components/ui/combobox'
 import { cn } from '@/lib/utils'
+import { KYP_UPLOAD_MAX_BYTES } from '@/lib/upload-limits'
 import { validateAadhaar, validatePAN } from '@/lib/validations'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -93,7 +94,9 @@ export function KYPBasicForm({
   const [panFiles, setPanFiles] = useState<{ name: string; url: string }[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [dobPopoverOpen, setDobPopoverOpen] = useState(false)
-  const { uploadFile, uploading } = useFileUpload()
+  const { uploadFile, uploading } = useFileUpload({
+    maxFileSizeBytes: KYP_UPLOAD_MAX_BYTES,
+  })
 
   // Fuzzy search function - checks if search term is contained in the city name
   // Case insensitive and handles partial matches (e.g., "DEL" matches "West Delhi")
@@ -531,6 +534,9 @@ export function KYPBasicForm({
       <div className="space-y-4">
         <div>
           <Label>Insurance Cards (Multiple) *</Label>
+          <p className="text-muted-foreground text-xs mt-0.5 mb-1">
+            PDF or image, up to 20 MB per file.
+          </p>
           <div className="mt-2">
             <Input
               type="file"
@@ -594,7 +600,9 @@ export function KYPBasicForm({
           </div>
           <div>
             <Label>PAN (front &amp; back — multiple)</Label>
-            <p className="text-muted-foreground text-xs mt-0.5 mb-1">Optional. Upload one or two files.</p>
+            <p className="text-muted-foreground text-xs mt-0.5 mb-1">
+              Optional. Up to 20 MB per file.
+            </p>
             <div className="mt-2">
               <Input
                 type="file"

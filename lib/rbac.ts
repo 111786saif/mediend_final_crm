@@ -121,6 +121,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:team:read',
     'hierarchy:leave:approve',
   ],
+  // Same lead pipeline permissions as BD; access is scoped by canAccessLead (own team / subordinates).
   TEAM_LEAD: [
     'leads:read',
     'leads:write',
@@ -341,7 +342,7 @@ export function canAccessLead(
     return true
   }
 
-  // Team Lead: own leads + subordinates' leads (hierarchy) or legacy teamId
+  // Team Lead: same mutation scope as BD on accessible leads — own team BDs' leads (subordinates + legacy teamId match)
   if (user.role === 'TEAM_LEAD') {
     if (leadBdId === user.id) return true
     if (subordinateUserIds && subordinateUserIds.includes(leadBdId)) return true

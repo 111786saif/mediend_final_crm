@@ -3,6 +3,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { uploadFileToS3 } from '@/lib/s3-client'
+import { KYP_UPLOAD_MAX_BYTES } from '@/lib/upload-limits'
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,6 +22,13 @@ export async function POST(request: NextRequest) {
 
     if (!file) {
       return errorResponse('No file provided', 400)
+    }
+
+    if (file.size > KYP_UPLOAD_MAX_BYTES) {
+      return errorResponse(
+        `File too large (max ${KYP_UPLOAD_MAX_BYTES / (1024 * 1024)} MB)`,
+        413
+      )
     }
 
     // Convert file to buffer

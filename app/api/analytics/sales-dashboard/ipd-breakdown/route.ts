@@ -1,12 +1,12 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
-import { getSession } from '@/lib/session'
+import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getSession()
+    const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
 
     if (

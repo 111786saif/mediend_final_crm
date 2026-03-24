@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
+import { canMutateLead } from '@/lib/lead-access-api'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
@@ -83,8 +84,7 @@ export async function POST(request: NextRequest) {
       return errorResponse('Lead not found', 404)
     }
 
-    // Check if user is the BD assigned to this lead or has TL/admin permissions
-    if (lead.bdId !== user.id && user.role !== 'ADMIN' && user.role !== 'TEAM_LEAD' && user.role !== 'SALES_HEAD' && user.role !== 'TESTER') {
+    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
       return errorResponse('You do not have permission to submit KYP for this lead', 403)
     }
 

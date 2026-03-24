@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
   output: "standalone",
   // PWA plugin uses webpack; use `next build --webpack` so build uses webpack. Empty turbopack silences config check.
   turbopack: {},
+  experimental: {
+    // Allows larger multipart bodies for Server Actions; pair with `/api/kyp/upload` + useFileUpload 20 MB cap.
+    serverActions: {
+      bodySizeLimit: "20mb",
+    },
+  },
   images: {
     remotePatterns: [
       {

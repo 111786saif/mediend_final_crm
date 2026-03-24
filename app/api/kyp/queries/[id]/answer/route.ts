@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
+import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 
@@ -41,6 +42,7 @@ export async function POST(
                     leadRef: true,
                     patientName: true,
                     bdId: true,
+                    bd: { select: { teamId: true } },
                   },
                 },
               },
@@ -60,8 +62,8 @@ export async function POST(
       return errorResponse('Query not found', 404)
     }
 
-    // Check if BD is assigned to this lead
-    if (user.role === 'BD' && query.preAuthorization.kypSubmission.lead.bdId !== user.id) {
+    const leadRow = query.preAuthorization.kypSubmission.lead
+    if (!(await canMutateLead(user, leadRow.bdId, leadRow.bd?.teamId))) {
       return errorResponse('Forbidden: You are not assigned to this lead', 403)
     }
 

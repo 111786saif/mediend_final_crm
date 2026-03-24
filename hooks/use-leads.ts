@@ -24,8 +24,9 @@ import { CaseStage } from '@/generated/prisma/enums'
 
 export interface Lead {
   id: string
-  patientName?: string
-  age?: number
+    patientName?: string
+    age?: number
+    sex?: string | null
   phoneNumber?: string
   city?: string
   circle?: string | null

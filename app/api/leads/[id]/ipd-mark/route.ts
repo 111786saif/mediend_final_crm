@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
+import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { z } from 'zod'
@@ -35,11 +36,18 @@ export async function POST(
     // Check if lead exists
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
-      include: { admissionRecord: true },
+      include: {
+        bd: { select: { teamId: true } },
+        admissionRecord: true,
+      },
     })
 
     if (!lead) {
       return errorResponse('Lead not found', 404)
+    }
+
+    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+      return errorResponse('Forbidden', 403)
     }
 
     if (lead.caseStage !== CaseStage.INITIATED) {

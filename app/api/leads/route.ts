@@ -86,6 +86,8 @@ export async function GET(request: NextRequest) {
       id: true,
       leadRef: true,
       patientName: true,
+      age: true,
+      sex: true,
       phoneNumber: true,
       treatment: true,
       category: true,
@@ -103,6 +105,7 @@ export async function GET(request: NextRequest) {
       flowType: true,
       bd: { select: { id: true, name: true, team: { select: { id: true } } } },
       kypSubmission: { select: { id: true, status: true } },
+      plRecord: { select: { bdmName: true } },
     } satisfies Prisma.LeadSelect
 
     const fullInclude = {

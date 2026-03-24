@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
@@ -12,6 +12,7 @@ import { KYPBasicForm } from '@/components/kyp/kyp-basic-form'
 import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
+import { formatLeadAgeSex } from '@/lib/lead-display'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
@@ -212,19 +213,21 @@ export default function CaseTrackerPage() {
                     <TableHeader>
                       <TableRow className="bg-muted/50">
                         <TableHead>Lead ref</TableHead>
+                        <TableHead>Date</TableHead>
                         <TableHead>Patient</TableHead>
+                        <TableHead>Age/Sex</TableHead>
+                        <TableHead>Circle</TableHead>
                         <TableHead>Treatment</TableHead>
+                        <TableHead>BDM</TableHead>
                         <TableHead>Hospital</TableHead>
                         <TableHead>Stage</TableHead>
-                        <TableHead>Circle</TableHead>
-                        <TableHead>Date</TableHead>
                         <TableHead className="w-[100px]" />
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredRows.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={8} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
                             No leads match
                           </TableCell>
                         </TableRow>
@@ -244,8 +247,16 @@ export default function CaseTrackerPage() {
                                   {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
                                 </div>
                               </TableCell>
+                              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                                {d ? format(new Date(d as string), 'MMM d, yyyy') : 'â€”'}
+                              </TableCell>
                               <TableCell>{lead.patientName}</TableCell>
+                              <TableCell className="whitespace-nowrap text-sm">{formatLeadAgeSex(lead)}</TableCell>
+                              <TableCell>{typeof lead.circle === 'string' ? lead.circle : '—'}</TableCell>
                               <TableCell className="max-w-[140px] truncate">{lead.treatment ?? 'â€”'}</TableCell>
+                              <TableCell className="max-w-[120px] truncate">
+                                {(lead.plRecord?.bdmName ?? '').trim() || '—'}
+                              </TableCell>
                               <TableCell className="max-w-[160px] truncate">{lead.hospitalName}</TableCell>
                               <TableCell>
                                 {cfg ? (
@@ -255,10 +266,6 @@ export default function CaseTrackerPage() {
                                 ) : (
                                   'â€”'
                                 )}
-                              </TableCell>
-                              <TableCell>{typeof lead.circle === 'string' ? lead.circle : '—'}</TableCell>
-                              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                {d ? format(new Date(d as string), 'MMM d, yyyy') : 'â€”'}
                               </TableCell>
                               <TableCell onClick={(e) => e.stopPropagation()}>
                                 <Button size="sm" variant="outline" asChild>

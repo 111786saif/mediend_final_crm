@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
+import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 import { CaseStage, FlowType, NotificationType } from '@/generated/prisma/client'
@@ -62,10 +63,17 @@ export async function POST(
 
     const lead = await prisma.lead.findUnique({
       where: { id },
+      include: {
+        bd: { select: { teamId: true } },
+      },
     })
 
     if (!lead) {
       return errorResponse('Lead not found', 404)
+    }
+
+    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+      return errorResponse('Forbidden', 403)
     }
 
     // Check if admission record already exists
@@ -207,10 +215,17 @@ export async function PATCH(
 
     const lead = await prisma.lead.findUnique({
       where: { id },
+      include: {
+        bd: { select: { teamId: true } },
+      },
     })
 
     if (!lead) {
       return errorResponse('Lead not found', 404)
+    }
+
+    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+      return errorResponse('Forbidden', 403)
     }
 
     // Can only update if ON_HOLD

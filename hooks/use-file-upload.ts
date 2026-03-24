@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { apiPost } from '@/lib/api-client'
+import { KYP_UPLOAD_MAX_BYTES } from '@/lib/upload-limits'
 import { toast } from 'sonner'
 
 interface UploadFileResult {
@@ -11,6 +12,8 @@ interface UseFileUploadOptions {
   folder?: string
   /** Custom upload endpoint. Use for home-banners (any user) instead of default kyp/upload (leads:write). */
   endpoint?: string
+  /** Reject files larger than this (bytes). Default 20 MB. */
+  maxFileSizeBytes?: number
   onSuccess?: (result: UploadFileResult) => void
   onError?: (error: Error) => void
 }
@@ -22,6 +25,14 @@ export function useFileUpload(options: UseFileUploadOptions = {}) {
   const uploadFile = async (file: File): Promise<UploadFileResult | null> => {
     if (!file) {
       toast.error('No file selected')
+      return null
+    }
+
+    const maxBytes = options.maxFileSizeBytes ?? KYP_UPLOAD_MAX_BYTES
+    if (file.size > maxBytes) {
+      const mb = maxBytes / (1024 * 1024)
+      const mbLabel = Number.isInteger(mb) ? String(mb) : mb.toFixed(1).replace(/\.0$/, '')
+      toast.error(`File too large (max ${mbLabel} MB): ${file.name}`)
       return null
     }
 

@@ -277,7 +277,7 @@ export function AttendanceHeatmap({ attendance, fromDate, toDate, leaveDays = []
     )
   }
 
-  const MAX_ENTRIES_PER_ROW = 10
+  const MAX_ENTRIES_PER_ROW = 7
   const rows = useMemo(() => {
     const result: typeof heatmapCells[] = []
     for (let i = 0; i < heatmapCells.length; i += MAX_ENTRIES_PER_ROW) {
