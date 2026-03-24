@@ -227,6 +227,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
             href: '/md/md-approvals',
             label: 'MD Approvals',
             icon: UserCheck,
+            badge: badgeCounts?.pendingMDApprovals ?? 0,
             matchPrefixes: ['/md/md-approvals'],
           }
         : {

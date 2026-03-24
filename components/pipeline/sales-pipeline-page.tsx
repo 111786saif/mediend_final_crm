@@ -24,6 +24,7 @@ import { apiGet } from '@/lib/api-client'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { getStatusColor } from '@/lib/lead-status-colors'
 import {
+  getLeadReceiptDate,
   getLeadPipelineBucket,
   matchesLeadAgeFilter,
   normalizeLeadStatus,
@@ -231,11 +232,9 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
 
     if (startDate || endDate) {
       result = result.filter((lead) => {
-        const raw = lead.createdDate
-        if (!raw) return false
-        const leadDate = typeof raw === 'string' ? new Date(raw) : raw instanceof Date ? raw : null
-        if (!leadDate || Number.isNaN(leadDate.getTime())) return false
-        const leadOnly = new Date(leadDate.getFullYear(), leadDate.getMonth(), leadDate.getDate())
+        const receiptDate = getLeadReceiptDate(lead)
+        if (!receiptDate) return false
+        const leadOnly = new Date(receiptDate.getFullYear(), receiptDate.getMonth(), receiptDate.getDate())
         const startOnly = startDate ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()) : null
         const endOnly = endDate ? new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) : null
         if (startOnly && endOnly) return leadOnly >= startOnly && leadOnly <= endOnly
@@ -246,8 +245,8 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     }
 
     return [...result].sort((a, b) => {
-      const ta = a.createdDate ? new Date(a.createdDate as string).getTime() : 0
-      const tb = b.createdDate ? new Date(b.createdDate as string).getTime() : 0
+      const ta = getLeadReceiptDate(a)?.getTime() ?? 0
+      const tb = getLeadReceiptDate(b)?.getTime() ?? 0
       return tb - ta
     })
   }, [

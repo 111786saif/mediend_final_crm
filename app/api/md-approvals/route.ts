@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { hasFeaturePermission } from '@/lib/permissions'
+import { sendAuthkeyTemplate } from '@/lib/whatsapp/authkey'
 import { z } from 'zod'
 import { MDApprovalStatus, type Prisma } from '@/generated/prisma/client'
 
@@ -18,6 +19,9 @@ const createSchema = z.object({
   amount: z.number().optional().nullable(),
   attachments: z.array(attachmentSchema).optional(),
 })
+
+const MD_APPROVAL_WHATSAPP_MOBILE = '9582895954'
+const MD_APPROVAL_WHATSAPP_TEMPLATE_ID = '29363'
 
 export async function POST(request: NextRequest) {
   try {
@@ -62,6 +66,16 @@ export async function POST(request: NextRequest) {
         })),
       })
     }
+
+    // Non-blocking WhatsApp ping for MD approvals.
+    // This should never fail request creation.
+    void sendAuthkeyTemplate({
+      mobile: MD_APPROVAL_WHATSAPP_MOBILE,
+      wid: MD_APPROVAL_WHATSAPP_TEMPLATE_ID,
+      param1: user.name,
+    }).catch((err) => {
+      console.error('Failed to send MD approval WhatsApp notification:', err)
+    })
 
     return successResponse(approval, 'Request submitted successfully')
   } catch (error) {

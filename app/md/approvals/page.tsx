@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, type ReactNode } from 'react'
+import { cn } from '@/lib/utils'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
@@ -20,8 +21,8 @@ import { toast } from 'sonner'
 import Link from 'next/link'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { AttachmentCarousel } from '@/components/finance/attachment-carousel'
-import { useSwipeable } from 'react-swipeable'
 import confetti from 'canvas-confetti'
+import { animate, motion, useMotionValue, useTransform, type PanInfo } from 'framer-motion'
 
 interface LedgerEntry {
   id: string
@@ -347,138 +348,222 @@ function HistoryCard({ entry, onUndo }: HistoryCardProps) {
   )
 }
 
-function SwipeCard({ entry, onApprove, onReject }: SwipeCardProps) {
-  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null)
-  const [swipeOffset, setSwipeOffset] = useState(0)
+const SWIPE_THRESHOLD = 96
+const SWIPE_VELOCITY = 420
+const SWIPE_EXIT_X = 520
 
-  const handlers = useSwipeable({
-    onSwiping: (eventData) => {
-      setSwipeOffset(eventData.deltaX)
-      if (eventData.deltaX > 50) {
-        setSwipeDirection('right')
-      } else if (eventData.deltaX < -50) {
-        setSwipeDirection('left')
-      } else {
-        setSwipeDirection(null)
-      }
-    },
-    onSwiped: (eventData) => {
-      if (eventData.deltaX > 100) {
+function DebitCardFace({
+  entry,
+  footer,
+  className,
+}: {
+  entry: LedgerEntry
+  footer: ReactNode
+  className?: string
+}) {
+  return (
+    <Card className={cn('border-2 border-blue-200/80 bg-card shadow-lg dark:border-blue-900/50', className)}>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <Badge variant="outline" className="font-mono">
+            {entry.serialNumber}
+          </Badge>
+          <span className="text-sm text-muted-foreground">
+            {format(new Date(entry.transactionDate), 'dd MMM yyyy')}
+          </span>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div>
+          <div className="font-semibold text-lg">{entry.party.name}</div>
+          <div className="text-xs text-muted-foreground">{entry.party.partyType}</div>
+        </div>
+
+        {entry.attachments && entry.attachments.length > 0 && (
+          <AttachmentCarousel attachments={entry.attachments} />
+        )}
+
+        <div>
+          <div className="text-xs text-muted-foreground mb-1">Description</div>
+          <div className="text-sm wrap-break-word">{entry.description}</div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <div className="text-muted-foreground text-xs">Head</div>
+            <div className="font-medium">{entry.head?.name || 'N/A'}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground text-xs">Payment Mode</div>
+            <Badge variant="outline">{entry.paymentMode?.name || 'N/A'}</Badge>
+          </div>
+        </div>
+
+        <div className="border-t pt-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs text-muted-foreground">Created by</div>
+              <div className="text-sm">{entry.createdBy?.name ?? '—'}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-red-600">
+                -{formatCurrency(entry.paymentAmount || 0)}
+              </div>
+            </div>
+          </div>
+        </div>
+        {footer}
+      </CardContent>
+    </Card>
+  )
+}
+
+function DebitStackPreviewCard({ entry, depth }: { entry: LedgerEntry; depth: number }) {
+  const scale = 1 - depth * 0.045
+  const y = depth * 12
+  return (
+    <div
+      className="pointer-events-none absolute inset-x-0 top-0 origin-top select-none"
+      style={{
+        transform: `translateY(${y}px) scale(${scale})`,
+        opacity: Math.max(0.35, 1 - depth * 0.22),
+        zIndex: 20 - depth,
+      }}
+      aria-hidden
+    >
+      <DebitCardFace
+        entry={entry}
+        className="ring-1 ring-blue-200/50 dark:ring-blue-900/40"
+        footer={
+          <div className="mt-4 h-10 rounded-md bg-muted/40" />
+        }
+      />
+    </div>
+  )
+}
+
+function MotionSwipeCard({ entry, onApprove, onReject }: SwipeCardProps) {
+  const x = useMotionValue(0)
+  const rotate = useTransform(x, [-280, 280], [-16, 16])
+  const approveTint = useTransform(x, [0, 120], [0, 1])
+  const rejectTint = useTransform(x, [-120, 0], [1, 0])
+
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    const { offset, velocity } = info
+    if (offset.x > SWIPE_THRESHOLD || velocity.x > SWIPE_VELOCITY) {
+      void animate(x, SWIPE_EXIT_X, { duration: 0.32, ease: [0.22, 1, 0.36, 1] }).then(() => {
         onApprove()
-      } else if (eventData.deltaX < -100) {
-        onReject()
-      }
-      setSwipeOffset(0)
-      setSwipeDirection(null)
-    },
-    trackMouse: true,
-  })
-
-  const backgroundColor =
-    swipeDirection === 'right'
-      ? 'bg-green-100 dark:bg-green-900/20'
-      : swipeDirection === 'left'
-      ? 'bg-red-100 dark:bg-red-900/20'
-      : 'bg-white dark:bg-slate-800'
+        x.set(0)
+      })
+      return
+    }
+    if (offset.x < -SWIPE_THRESHOLD || velocity.x < -SWIPE_VELOCITY) {
+      onReject()
+      void animate(x, 0, { type: 'spring', stiffness: 420, damping: 32 })
+      return
+    }
+    void animate(x, 0, { type: 'spring', stiffness: 380, damping: 28 })
+  }
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Swipe hints */}
-      <div className="absolute inset-y-0 left-0 w-16 bg-green-500/20 flex items-center justify-center">
-        <ChevronRight className={`h-8 w-8 text-green-600 transition-opacity ${swipeDirection === 'right' ? 'opacity-100' : 'opacity-30'}`} />
+    <div className="relative z-30 touch-pan-y [overflow-anchor:none]">
+      <motion.div
+        style={{ opacity: approveTint }}
+        className="pointer-events-none absolute inset-0 rounded-xl bg-green-500/15 ring-2 ring-green-500/25"
+      />
+      <motion.div
+        style={{ opacity: rejectTint }}
+        className="pointer-events-none absolute inset-0 rounded-xl bg-red-500/15 ring-2 ring-red-500/25"
+      />
+      <div className="pointer-events-none absolute inset-y-4 left-2 flex items-center">
+        <ChevronLeft className="h-10 w-10 text-red-500/35" />
       </div>
-      <div className="absolute inset-y-0 right-0 w-16 bg-red-500/20 flex items-center justify-center">
-        <ChevronLeft className={`h-8 w-8 text-red-600 transition-opacity ${swipeDirection === 'left' ? 'opacity-100' : 'opacity-30'}`} />
+      <div className="pointer-events-none absolute inset-y-4 right-2 flex items-center">
+        <ChevronRight className="h-10 w-10 text-green-500/35" />
       </div>
 
-      <div
-        {...handlers}
-        className={`transition-all duration-200 ${backgroundColor}`}
-        style={{ transform: `translateX(${swipeOffset}px)` }}
+      <motion.div
+        style={{ x, rotate }}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.92}
+        dragMomentum={false}
+        onDragEnd={handleDragEnd}
+        className="relative cursor-grab active:cursor-grabbing"
       >
-        <Card className="border-2 cursor-grab active:cursor-grabbing">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline" className="font-mono">
-                {entry.serialNumber}
-              </Badge>
-              <span className="text-sm text-muted-foreground">
-                {format(new Date(entry.transactionDate), 'dd MMM yyyy')}
-              </span>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <div className="font-semibold text-lg">{entry.party.name}</div>
-              <div className="text-xs text-muted-foreground">{entry.party.partyType}</div>
-            </div>
-
-            {entry.attachments && entry.attachments.length > 0 && (
-              <AttachmentCarousel attachments={entry.attachments} />
-            )}
-
-            <div>
-              <div className="text-xs text-muted-foreground mb-1">Description</div>
-              <div className="text-sm wrap-break-word">{entry.description}</div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div>
-                <div className="text-muted-foreground text-xs">Head</div>
-                <div className="font-medium">{entry.head?.name || 'N/A'}</div>
+        <DebitCardFace
+          entry={entry}
+          footer={
+            <>
+              <div className="flex gap-2 mt-4">
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  className="flex-1"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onReject()
+                  }}
+                >
+                  <X className="h-4 w-4 mr-1" />
+                  Reject
+                </Button>
+                <Button
+                  size="sm"
+                  className="flex-1 bg-green-600 hover:bg-green-700"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    void animate(x, SWIPE_EXIT_X, { duration: 0.28, ease: [0.22, 1, 0.36, 1] }).then(() => {
+                      onApprove()
+                      x.set(0)
+                    })
+                  }}
+                >
+                  <Check className="h-4 w-4 mr-1" />
+                  Approve
+                </Button>
               </div>
-              <div>
-                <div className="text-muted-foreground text-xs">Payment Mode</div>
-                <Badge variant="outline">{entry.paymentMode?.name || 'N/A'}</Badge>
-              </div>
-            </div>
+              <p className="text-center text-xs text-muted-foreground mt-2">
+                Swipe right to approve · Swipe left to reject
+              </p>
+            </>
+          }
+        />
+      </motion.div>
+    </div>
+  )
+}
 
-            <div className="border-t pt-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xs text-muted-foreground">Created by</div>
-                  <div className="text-sm">{entry.createdBy?.name ?? '—'}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-red-600">
-                    -{formatCurrency(entry.paymentAmount || 0)}
-                  </div>
-                </div>
-              </div>
-            </div>
+function DebitSwipeStack({
+  entries,
+  onApprove,
+  onReject,
+}: {
+  entries: LedgerEntry[]
+  onApprove: (e: LedgerEntry) => void
+  onReject: (e: LedgerEntry) => void
+}) {
+  const top = entries[0]
+  const under = entries.slice(1, 3)
 
-            <div className="flex gap-2 mt-4">
-              <Button
-                size="sm"
-                variant="destructive"
-                className="flex-1"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onReject()
-                }}
-              >
-                <X className="h-4 w-4 mr-1" />
-                Reject
-              </Button>
-              <Button
-                size="sm"
-                className="flex-1 bg-green-600 hover:bg-green-700"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onApprove()
-                }}
-              >
-                <Check className="h-4 w-4 mr-1" />
-                Approve
-              </Button>
-            </div>
+  if (!top) return null
 
-            <div className="text-center text-xs text-muted-foreground mt-2">
-              Swipe right to approve • Swipe left to reject
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+  return (
+    <div
+      className="relative mx-auto w-full max-w-lg min-h-[min(72vh,560px)] overscroll-y-contain [overflow-anchor:none]"
+      style={{ touchAction: 'pan-y' }}
+    >
+      {under.map((entry, i) => (
+        <DebitStackPreviewCard key={entry.id} entry={entry} depth={i + 1} />
+      ))}
+      <MotionSwipeCard
+        key={top.id}
+        entry={top}
+        onApprove={() => onApprove(top)}
+        onReject={() => onReject(top)}
+      />
     </div>
   )
 }
@@ -520,13 +605,6 @@ export default function ApprovalsPage() {
   const { data: editRequestsData, isLoading: isLoadingEdits } = useQuery<LedgerResponse>({
     queryKey: ['pending-edit-requests'],
     queryFn: () => apiGet<LedgerResponse>('/api/finance/ledger?editRequestStatus=PENDING&status=APPROVED&limit=1000'),
-  })
-
-  // Fetch approved debit entries for summary
-  const { data: approvedData } = useQuery<LedgerResponse>({
-    queryKey: ['approved-debits-summary'],
-    queryFn: () => apiGet<LedgerResponse>('/api/finance/ledger?status=APPROVED&transactionType=DEBIT&limit=1000'),
-    staleTime: 30000, // Cache for 30 seconds
   })
 
   // Fetch approved and rejected entries for history tab
@@ -611,7 +689,6 @@ export default function ApprovalsPage() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['pending-debits'] })
-      queryClient.invalidateQueries({ queryKey: ['approved-debits-summary'] })
       queryClient.invalidateQueries({ queryKey: ['ledger'] })
       queryClient.invalidateQueries({ queryKey: ['payment-modes'] })
       queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
@@ -631,7 +708,6 @@ export default function ApprovalsPage() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['pending-debits'] })
-      queryClient.invalidateQueries({ queryKey: ['approved-debits-summary'] })
       queryClient.invalidateQueries({ queryKey: ['pending-edit-requests'] })
       queryClient.invalidateQueries({ queryKey: ['ledger'] })
       queryClient.invalidateQueries({ queryKey: ['payment-modes'] })
@@ -681,7 +757,6 @@ export default function ApprovalsPage() {
     mutationFn: (id: string) => apiPost(`/api/finance/ledger/${id}/undo`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pending-debits'] })
-      queryClient.invalidateQueries({ queryKey: ['approved-debits-summary'] })
       queryClient.invalidateQueries({ queryKey: ['approved-debits-history'] })
       queryClient.invalidateQueries({ queryKey: ['pending-edit-requests'] })
       queryClient.invalidateQueries({ queryKey: ['ledger'] })
@@ -774,7 +849,6 @@ export default function ApprovalsPage() {
 
   const pendingCount = filteredPendingData.length
   const totalPendingAmount = filteredPendingData.reduce((sum, e) => sum + (e.paymentAmount || 0), 0)
-  const totalApprovedAmount = approvedData?.data?.reduce((sum, e) => sum + (e.paymentAmount || 0), 0) || 0
   const editRequestsCount = editRequestsData?.pagination.total || 0
 
   // Trigger confetti when all approvals are done
@@ -832,49 +906,31 @@ export default function ApprovalsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Finance Approvals</h1>
-          <p className="text-muted-foreground mt-1">Review and approve pending transactions and edit requests</p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setViewMode(viewMode === 'table' ? 'cards' : 'table')}
-        >
-          {viewMode === 'table' ? (
-            <>
-              <LayoutGrid className="h-4 w-4 mr-2" />
-              Card View
-            </>
-          ) : (
-            <>
-              <LayoutList className="h-4 w-4 mr-2" />
-              Table View
-            </>
-          )}
-        </Button>
-      </div>
-
       <Tabs defaultValue="debits" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="debits">
-            Debit Approvals
+        <TabsList className="grid h-auto min-h-10 w-full grid-cols-3 gap-0.5">
+          <TabsTrigger value="debits" className="min-w-0 px-1.5 sm:px-3">
+            <span className="truncate sm:whitespace-normal">Debit Approvals</span>
             {pendingCount > 0 && (
-              <Badge variant="secondary" className="ml-2">
+              <Badge
+                variant="secondary"
+                className="ml-1 shrink-0 group-data-[state=active]:border-white/40 group-data-[state=active]:bg-white/20 group-data-[state=active]:text-white"
+              >
                 {pendingCount}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="edits">
-            Edit Requests
+          <TabsTrigger value="edits" className="min-w-0 px-1.5 sm:px-3">
+            <span className="truncate sm:whitespace-normal">Edit Requests</span>
             {editRequestsCount > 0 && (
-              <Badge variant="secondary" className="ml-2">
+              <Badge
+                variant="secondary"
+                className="ml-1 shrink-0 group-data-[state=active]:border-white/40 group-data-[state=active]:bg-white/20 group-data-[state=active]:text-white"
+              >
                 {editRequestsCount}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="history">
+          <TabsTrigger value="history" className="min-w-0 px-1.5 sm:px-3">
             History
           </TabsTrigger>
         </TabsList>
@@ -912,37 +968,26 @@ export default function ApprovalsPage() {
           </Card>
 
           {/* Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="border-amber-200 bg-amber-50 dark:bg-amber-900/10 dark:border-amber-800">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Card className="border-blue-200/80 bg-blue-50/80 dark:border-blue-800/60 dark:bg-blue-950/25">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-amber-600 dark:text-amber-400">Pending Approvals</p>
-                    <p className="text-3xl font-bold">{pendingCount}</p>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">Pending Approvals</p>
+                    <p className="text-3xl font-bold text-blue-950 dark:text-blue-50">{pendingCount}</p>
                   </div>
-                  <Clock className="h-10 w-10 text-amber-400" />
+                  <Clock className="h-10 w-10 text-blue-400" />
                 </div>
               </CardContent>
             </Card>
-            <Card className="border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-800">
+            <Card className="border-blue-200/80 bg-blue-50/80 dark:border-blue-800/60 dark:bg-blue-950/25">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-red-600 dark:text-red-400">Total Pending Amount</p>
-                    <p className="text-3xl font-bold">{formatCurrency(totalPendingAmount)}</p>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">Total Pending Amount</p>
+                    <p className="text-3xl font-bold text-blue-950 dark:text-blue-50">{formatCurrency(totalPendingAmount)}</p>
                   </div>
-                  <ArrowDownCircle className="h-10 w-10 text-red-400" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-green-200 bg-green-50 dark:bg-green-900/10 dark:border-green-800">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-green-600 dark:text-green-400">Approved Amount</p>
-                    <p className="text-3xl font-bold">{formatCurrency(totalApprovedAmount)}</p>
-                  </div>
-                  <Check className="h-10 w-10 text-green-400" />
+                  <ArrowDownCircle className="h-10 w-10 text-blue-400" />
                 </div>
               </CardContent>
             </Card>
@@ -997,16 +1042,11 @@ export default function ApprovalsPage() {
               <p className="text-muted-foreground">No pending debit entries to approve.</p>
             </div>
           ) : viewMode === 'cards' ? (
-            <div className="space-y-4">
-              {filteredPendingData.map((entry) => (
-                <SwipeCard
-                  key={entry.id}
-                  entry={entry}
-                  onApprove={() => handleApprove(entry, 'debit')}
-                  onReject={() => handleReject(entry, 'debit')}
-                />
-              ))}
-            </div>
+            <DebitSwipeStack
+              entries={filteredPendingData}
+              onApprove={(entry) => handleApprove(entry, 'debit')}
+              onReject={(entry) => handleReject(entry, 'debit')}
+            />
           ) : (
             <Table>
               <TableHeader>
