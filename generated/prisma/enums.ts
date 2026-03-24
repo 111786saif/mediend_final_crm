@@ -330,6 +330,14 @@ export const IpdStatus = {
 export type IpdStatus = (typeof IpdStatus)[keyof typeof IpdStatus]
 
 
+export const PaidByParty = {
+  MEDIEND: 'MEDIEND',
+  HOSPITAL: 'HOSPITAL'
+} as const
+
+export type PaidByParty = (typeof PaidByParty)[keyof typeof PaidByParty]
+
+
 export const CaseStage = {
   NEW_LEAD: 'NEW_LEAD',
   KYP_BASIC_COMPLETE: 'KYP_BASIC_COMPLETE',

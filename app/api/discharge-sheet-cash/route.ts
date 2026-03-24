@@ -51,8 +51,9 @@ export async function POST(request: NextRequest) {
               }
             }
           }
-        }
-      }
+        },
+        admissionRecord: { select: { admissionDate: true } },
+      },
     })
 
     if (!lead) {
@@ -64,10 +65,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Create discharge sheet
+    const admissionDate = lead.admissionRecord?.admissionDate ?? null
+    const instrumentsCostNum = validatedData.instrumentsAmount ?? 0
+
     const dischargeSheet = await prisma.dischargeSheet.create({
       data: {
         leadId: validatedData.leadId,
         dischargeDate: new Date(validatedData.dischargeDate),
+        admissionDate,
+        surgeryDate: lead.surgeryDate,
         finalAmount: validatedData.finalAmount,
         remarks: validatedData.remarks,
         
@@ -82,6 +88,7 @@ export async function POST(request: NextRequest) {
         consumablesAmount: validatedData.consumablesAmount,
         implantsAmount: validatedData.implantsAmount,
         instrumentsAmount: validatedData.instrumentsAmount,
+        instrumentsCost: instrumentsCostNum,
         totalFinalBill: validatedData.totalFinalBill,
         
         createdById: user.id,
@@ -119,35 +126,44 @@ export async function POST(request: NextRequest) {
     })
 
     // Create PL Record (Auto-create)
-    await prisma.pLRecord.create({
+    const plRecord = await prisma.pLRecord.create({
       data: {
         leadId: validatedData.leadId,
-        month: new Date(), // Current month
+        month: new Date(),
+        admissionDate,
         surgeryDate: lead.surgeryDate,
         status: 'DISCHARGED',
-        paymentType: 'CASH', // Cash flow
+        paymentType: 'CASH',
         approvedOrCash: 'CASH',
         patientName: lead.patientName,
         patientPhone: lead.phoneNumber,
         hospitalName: lead.hospitalName,
+        category: lead.category,
         treatment: lead.treatment,
         circle: lead.circle,
         totalAmount: validatedData.totalFinalBill,
         billAmount: validatedData.finalAmount,
-        cashPaidByPatient: validatedData.finalAmount, 
-        
-        // Additional info
+        cashPaidByPatient: validatedData.finalAmount,
+        instrumentsCost: instrumentsCostNum,
         bdmName: lead.bd.name,
         managerName: lead.bd.team?.salesHead?.name,
         doctorName: lead.surgeonName || lead.ipdDrName,
-        
-        // Revenue split (defaults)
         hospitalSharePct: 0,
         hospitalShareAmount: 0,
         mediendSharePct: 0,
         mediendShareAmount: 0,
         mediendNetProfit: 0,
+        finalProfit: 0,
+        hospitalPayoutStatus: 'PENDING',
+        doctorPayoutStatus: 'PENDING',
+        mediendInvoiceStatus: 'PENDING',
+        handledById: user.id,
       },
+    })
+
+    await prisma.dischargeSheet.update({
+      where: { id: dischargeSheet.id },
+      data: { plRecordId: plRecord.id },
     })
 
     // Notify BD

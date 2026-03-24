@@ -52,6 +52,7 @@ export async function POST(
       data: {
         leadId: dischargeSheet.leadId,
         month: dischargeSheet.month,
+        admissionDate: dischargeSheet.admissionDate,
         surgeryDate: dischargeSheet.surgeryDate,
         status: dischargeSheet.status,
         paymentType: dischargeSheet.paymentType,
@@ -75,6 +76,9 @@ export async function POST(
         referralAmount: dischargeSheet.referralAmount,
         cabCharges: dischargeSheet.cabCharges,
         implantCost: dischargeSheet.implantCost,
+        instrumentsCost: dischargeSheet.instrumentsCost,
+        implantPaidBy: dischargeSheet.implantPaidBy,
+        instrumentsPaidBy: dischargeSheet.instrumentsPaidBy,
         dcCharges: dischargeSheet.dcCharges,
         doctorCharges: dischargeSheet.doctorCharges,
         hospitalSharePct: dischargeSheet.hospitalSharePct,
@@ -85,6 +89,9 @@ export async function POST(
         finalProfit: dischargeSheet.mediendNetProfit, // Alias
         remarks: dischargeSheet.remarks,
         handledById: user.id,
+        hospitalPayoutStatus: 'PENDING',
+        doctorPayoutStatus: 'PENDING',
+        mediendInvoiceStatus: 'PENDING',
       },
       include: {
         lead: {

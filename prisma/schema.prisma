@@ -244,6 +244,11 @@ enum IpdStatus {
   DISCHARGED
 }
 
+enum PaidByParty {
+  MEDIEND
+  HOSPITAL
+}
+
 enum CaseStage {
   NEW_LEAD
   KYP_BASIC_COMPLETE
@@ -652,6 +657,7 @@ model PLRecord {
 
   // Core Identification
   month              DateTime? // Reporting month
+  admissionDate      DateTime? // Date of admission (from AdmissionRecord when available)
   surgeryDate        DateTime? // Date of surgery
   status             String? // Case status
   paymentType        String? // Payment mode
@@ -676,11 +682,14 @@ model PLRecord {
   // Financials (Raw)
   totalAmount       Float @default(0) // Total case value
   billAmount        Float @default(0) // Hospital bill
-  cashPaidByPatient Float @default(0) // Direct patient cash
-  cashOrDedPaid     Float @default(0) // Cash / deduction
+  cashPaidByPatient Float @default(0) // Direct patient cash (legacy; use cashOrDedPaid for patient deduction)
+  cashOrDedPaid     Float @default(0) // Deduction / amount paid by patient
   referralAmount    Float @default(0) // Referral payout
   cabCharges        Float @default(0) // Logistics cost
   implantCost       Float @default(0) // Implant
+  instrumentsCost   Float @default(0) // Instruments (separate from implant)
+  implantPaidBy     PaidByParty? // Who paid for implants (affects Mediend expense)
+  instrumentsPaidBy PaidByParty? // Who paid for instruments (affects Mediend expense)
   dcCharges         Float @default(0) // D&C
   doctorCharges     Float @default(0) // Doctor fee
 
@@ -2120,6 +2129,7 @@ model DischargeSheet {
   // Core Identification
   month              DateTime? // Reporting month
   dischargeDate      DateTime? // Date of discharge
+  admissionDate      DateTime? // Date of admission (from AdmissionRecord when available)
   surgeryDate        DateTime? // Date of surgery
   status             String? // Case status
   paymentType        String? // Payment mode
@@ -2175,11 +2185,14 @@ model DischargeSheet {
   // Financials (Raw) — legacy
   totalAmount       Float @default(0) // Total case value
   billAmount        Float @default(0) // Hospital bill
-  cashPaidByPatient Float @default(0) // Direct patient cash
-  cashOrDedPaid     Float @default(0) // Cash / deduction
+  cashPaidByPatient Float @default(0) // Direct patient cash (legacy)
+  cashOrDedPaid     Float @default(0) // Deduction / amount paid by patient
   referralAmount    Float @default(0) // Referral payout
   cabCharges        Float @default(0) // Logistics cost
   implantCost       Float @default(0) // Implant
+  instrumentsCost   Float @default(0) // Instruments (mirrors PLRecord)
+  implantPaidBy     PaidByParty?
+  instrumentsPaidBy PaidByParty?
   dcCharges         Float @default(0) // D&C
   doctorCharges     Float @default(0) // Doctor fee
 

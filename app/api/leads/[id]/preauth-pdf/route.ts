@@ -41,6 +41,23 @@ function escapeHtml(s: string): string {
     .replace(/"/g, '&quot;')
 }
 
+/** Numeric zero (and common formatted variants) — omit from PDF; empty/null is not treated as zero. */
+function isZeroLike(s: string | null | undefined): boolean {
+  if (s == null) return false
+  const t = String(s).trim()
+  if (t === '') return false
+  const normalized = t.replace(/[₹,\s%]/g, '')
+  if (normalized === '') return false
+  if (/^-?0+\.?0*$/.test(normalized)) return true
+  const n = Number(normalized)
+  return !Number.isNaN(n) && n === 0
+}
+
+function nzString(n: number | null | undefined): string | null {
+  if (n == null || n === 0) return null
+  return String(n)
+}
+
 type FileEntry = { name?: string; url?: string }
 
 function pushJsonFileUrls(arr: unknown, out: string[]) {
@@ -80,19 +97,20 @@ function getSelectedHospitalRoomRent(
   )
   if (!selected) return null
   const rt = (requestedRoomType || '').toLowerCase().replace(/\s+/g, ' ')
-  if (rt.includes('single') && selected.roomRentSingle != null) return String(selected.roomRentSingle)
+  if (rt.includes('single') && selected.roomRentSingle != null)
+    return nzString(selected.roomRentSingle)
   if ((rt.includes('semi') || rt.includes('private')) && selected.roomRentSemiPrivate != null)
-    return String(selected.roomRentSemiPrivate)
-  if (rt.includes('deluxe') && selected.roomRentDeluxe != null) return String(selected.roomRentDeluxe)
-  if (rt.includes('general') && selected.roomRentGeneral != null) return String(selected.roomRentGeneral)
+    return nzString(selected.roomRentSemiPrivate)
+  if (rt.includes('deluxe') && selected.roomRentDeluxe != null) return nzString(selected.roomRentDeluxe)
+  if (rt.includes('general') && selected.roomRentGeneral != null) return nzString(selected.roomRentGeneral)
   return selected.roomRentSingle != null
-    ? String(selected.roomRentSingle)
+    ? nzString(selected.roomRentSingle)
     : selected.roomRentSemiPrivate != null
-      ? String(selected.roomRentSemiPrivate)
+      ? nzString(selected.roomRentSemiPrivate)
       : selected.roomRentDeluxe != null
-        ? String(selected.roomRentDeluxe)
+        ? nzString(selected.roomRentDeluxe)
         : selected.roomRentGeneral != null
-          ? String(selected.roomRentGeneral)
+          ? nzString(selected.roomRentGeneral)
           : null
 }
 
@@ -114,27 +132,57 @@ function buildPreAuthHtml(params: {
   pdfBase64List: string[]
 }): string {
   const { patientName, preAuth, imageDataUrls, pdfBase64List } = params
-  const v = (s: string | null | undefined) => (s && String(s).trim()) || '—'
-  const diseaseText = (preAuth.diseaseDescription && String(preAuth.diseaseDescription).trim()) || '—'
-  const diseaseDisplay = escapeHtml(diseaseText.slice(0, 2000))
 
-  const cards: Array<{ label: string; value: string; fullWidth?: boolean }> = [
-    { label: 'Insurance', value: escapeHtml(v(preAuth.insurance)) },
-    { label: 'TPA', value: escapeHtml(v(preAuth.tpa)) },
-    { label: 'Sum Insured', value: escapeHtml(v(preAuth.sumInsured)) },
-    { label: 'Room Rent', value: escapeHtml(v(preAuth.roomRent)) },
-    { label: 'Capping', value: escapeHtml(v(preAuth.capping)) },
-    { label: 'Copay', value: escapeHtml(v(preAuth.copay)) },
-    { label: 'ICU', value: escapeHtml(v(preAuth.icu)) },
-    { label: 'Requested Hospital', value: escapeHtml(v(preAuth.requestedHospitalName)) },
-    { label: 'Requested Room Type', value: escapeHtml(v(preAuth.requestedRoomType)) },
-    { label: 'Disease Description', value: diseaseDisplay, fullWidth: true },
+  /** hide = omit card; dash = show —; else show escaped text */
+  function fieldCell(raw: string | null | undefined): 'hide' | 'dash' | string {
+    if (raw == null) return 'dash'
+    const t = String(raw).trim()
+    if (t === '') return 'dash'
+    if (isZeroLike(t)) return 'hide'
+    return escapeHtml(t)
+  }
+
+  const diseaseRaw = preAuth.diseaseDescription != null ? String(preAuth.diseaseDescription).trim() : ''
+  const diseaseCell =
+    diseaseRaw === ''
+      ? ('dash' as const)
+      : isZeroLike(diseaseRaw)
+        ? ('hide' as const)
+        : ('text' as const)
+
+  const patientCell = fieldCell(patientName)
+  const patientHeadingHtml =
+    patientCell === 'hide'
+      ? ''
+      : `<h1 class="patient-name">${patientCell === 'dash' ? escapeHtml('—') : patientCell}</h1>`
+
+  const cardDefs: Array<{ label: string; cell: 'hide' | 'dash' | string; fullWidth?: boolean }> = [
+    { label: 'Insurance', cell: fieldCell(preAuth.insurance) },
+    { label: 'TPA', cell: fieldCell(preAuth.tpa) },
+    { label: 'Sum Insured', cell: fieldCell(preAuth.sumInsured) },
+    { label: 'Room Rent', cell: fieldCell(preAuth.roomRent) },
+    { label: 'Capping', cell: fieldCell(preAuth.capping) },
+    { label: 'Copay', cell: fieldCell(preAuth.copay) },
+    { label: 'ICU', cell: fieldCell(preAuth.icu) },
+    { label: 'Requested Hospital', cell: fieldCell(preAuth.requestedHospitalName) },
+    { label: 'Requested Room Type', cell: fieldCell(preAuth.requestedRoomType) },
+    {
+      label: 'Disease Description',
+      cell:
+        diseaseCell === 'hide'
+          ? 'hide'
+          : diseaseCell === 'dash'
+            ? 'dash'
+            : escapeHtml(diseaseRaw.slice(0, 2000)),
+      fullWidth: true,
+    },
   ]
 
-  const cardHtml = cards
+  const cardHtml = cardDefs
+    .filter((c) => c.cell !== 'hide')
     .map(
       (c) =>
-        `<div class="card${c.fullWidth ? ' card-full' : ''}"><div class="card-label">${escapeHtml(c.label)}</div><div class="card-value">${c.value}</div></div>`
+        `<div class="card${c.fullWidth ? ' card-full' : ''}"><div class="card-label">${escapeHtml(c.label)}</div><div class="card-value">${c.cell === 'dash' ? escapeHtml('—') : c.cell}</div></div>`
     )
     .join('')
 
@@ -191,7 +239,7 @@ function buildPreAuthHtml(params: {
     <p class="header-title">Pre-Authorization Summary</p>
   </div>
   <div class="content">
-    <h1 class="patient-name">${escapeHtml(patientName)}</h1>
+    ${patientHeadingHtml}
     <div class="preauth-grid">${cardHtml}</div>
 
     ${hasDocs ? '<h2>Documents &amp; Images</h2>' : ''}
@@ -347,14 +395,21 @@ export async function GET(
       preAuth.requestedHospitalName,
       preAuth.requestedRoomType
     )
-    const roomRentDisplay =
-      selectedRoomRent != null
-        ? `₹${Number(selectedRoomRent).toLocaleString('en-IN')}`
-        : preAuth.roomRent != null && preAuth.roomRent !== ''
-          ? Number.isNaN(Number(preAuth.roomRent))
-            ? String(preAuth.roomRent)
-            : `₹${Number(preAuth.roomRent).toLocaleString('en-IN')}`
-          : null
+    const roomRentDisplay = (() => {
+      if (selectedRoomRent != null) {
+        const n = Number(selectedRoomRent)
+        if (!Number.isNaN(n) && n === 0) return null
+        return `₹${n.toLocaleString('en-IN')}`
+      }
+      if (preAuth.roomRent == null || preAuth.roomRent === '') return null
+      if (Number.isNaN(Number(preAuth.roomRent))) {
+        const s = String(preAuth.roomRent).trim()
+        return isZeroLike(s) ? null : s
+      }
+      const n = Number(preAuth.roomRent)
+      if (n === 0) return null
+      return `₹${n.toLocaleString('en-IN')}`
+    })()
     const insuranceDisplay =
       (preAuth.insurance || lead.insuranceName || kyp.insuranceCard || null) ?? null
 

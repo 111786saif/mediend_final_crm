@@ -53,6 +53,7 @@ export type DischargeSheetAvgAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
+  instrumentsCost: number | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -89,6 +90,7 @@ export type DischargeSheetSumAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
+  instrumentsCost: number | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -104,6 +106,7 @@ export type DischargeSheetMinAggregateOutputType = {
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
+  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -150,6 +153,9 @@ export type DischargeSheetMinAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
+  instrumentsCost: number | null
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsPaidBy: $Enums.PaidByParty | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -170,6 +176,7 @@ export type DischargeSheetMaxAggregateOutputType = {
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
+  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -216,6 +223,9 @@ export type DischargeSheetMaxAggregateOutputType = {
   referralAmount: number | null
   cabCharges: number | null
   implantCost: number | null
+  instrumentsCost: number | null
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsPaidBy: $Enums.PaidByParty | null
   dcCharges: number | null
   doctorCharges: number | null
   hospitalSharePct: number | null
@@ -236,6 +246,7 @@ export type DischargeSheetCountAggregateOutputType = {
   kypSubmissionId: number
   month: number
   dischargeDate: number
+  admissionDate: number
   surgeryDate: number
   status: number
   paymentType: number
@@ -282,6 +293,9 @@ export type DischargeSheetCountAggregateOutputType = {
   referralAmount: number
   cabCharges: number
   implantCost: number
+  instrumentsCost: number
+  implantPaidBy: number
+  instrumentsPaidBy: number
   dcCharges: number
   doctorCharges: number
   hospitalSharePct: number
@@ -325,6 +339,7 @@ export type DischargeSheetAvgAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
+  instrumentsCost?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -361,6 +376,7 @@ export type DischargeSheetSumAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
+  instrumentsCost?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -376,6 +392,7 @@ export type DischargeSheetMinAggregateInputType = {
   kypSubmissionId?: true
   month?: true
   dischargeDate?: true
+  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -422,6 +439,9 @@ export type DischargeSheetMinAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
+  instrumentsCost?: true
+  implantPaidBy?: true
+  instrumentsPaidBy?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -442,6 +462,7 @@ export type DischargeSheetMaxAggregateInputType = {
   kypSubmissionId?: true
   month?: true
   dischargeDate?: true
+  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -488,6 +509,9 @@ export type DischargeSheetMaxAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
+  instrumentsCost?: true
+  implantPaidBy?: true
+  instrumentsPaidBy?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -508,6 +532,7 @@ export type DischargeSheetCountAggregateInputType = {
   kypSubmissionId?: true
   month?: true
   dischargeDate?: true
+  admissionDate?: true
   surgeryDate?: true
   status?: true
   paymentType?: true
@@ -554,6 +579,9 @@ export type DischargeSheetCountAggregateInputType = {
   referralAmount?: true
   cabCharges?: true
   implantCost?: true
+  instrumentsCost?: true
+  implantPaidBy?: true
+  instrumentsPaidBy?: true
   dcCharges?: true
   doctorCharges?: true
   hospitalSharePct?: true
@@ -661,6 +689,7 @@ export type DischargeSheetGroupByOutputType = {
   kypSubmissionId: string | null
   month: Date | null
   dischargeDate: Date | null
+  admissionDate: Date | null
   surgeryDate: Date | null
   status: string | null
   paymentType: string | null
@@ -707,6 +736,9 @@ export type DischargeSheetGroupByOutputType = {
   referralAmount: number
   cabCharges: number
   implantCost: number
+  instrumentsCost: number
+  implantPaidBy: $Enums.PaidByParty | null
+  instrumentsPaidBy: $Enums.PaidByParty | null
   dcCharges: number
   doctorCharges: number
   hospitalSharePct: number | null
@@ -750,6 +782,7 @@ export type DischargeSheetWhereInput = {
   kypSubmissionId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
+  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   status?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   paymentType?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -796,6 +829,9 @@ export type DischargeSheetWhereInput = {
   referralAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   cabCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   doctorCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
@@ -820,6 +856,7 @@ export type DischargeSheetOrderByWithRelationInput = {
   kypSubmissionId?: Prisma.SortOrderInput | Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
   dischargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   surgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -866,6 +903,9 @@ export type DischargeSheetOrderByWithRelationInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -894,6 +934,7 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DischargeSheetWhereInput | Prisma.DischargeSheetWhereInput[]
   month?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
+  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   status?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   paymentType?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -940,6 +981,9 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   referralAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   cabCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   doctorCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
@@ -963,6 +1007,7 @@ export type DischargeSheetOrderByWithAggregationInput = {
   kypSubmissionId?: Prisma.SortOrderInput | Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
   dischargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   surgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentType?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1009,6 +1054,9 @@ export type DischargeSheetOrderByWithAggregationInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrderInput | Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1037,6 +1085,7 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   kypSubmissionId?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
+  admissionDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"DischargeSheet"> | Date | string | null
   status?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   paymentType?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
@@ -1083,6 +1132,9 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   referralAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   cabCharges?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   implantCost?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  instrumentsCost?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableWithAggregatesFilter<"DischargeSheet"> | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   doctorCharges?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   hospitalSharePct?: Prisma.FloatNullableWithAggregatesFilter<"DischargeSheet"> | number | null
@@ -1101,6 +1153,7 @@ export type DischargeSheetCreateInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1147,6 +1200,9 @@ export type DischargeSheetCreateInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1169,6 +1225,7 @@ export type DischargeSheetUncheckedCreateInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1215,6 +1272,9 @@ export type DischargeSheetUncheckedCreateInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1233,6 +1293,7 @@ export type DischargeSheetUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1279,6 +1340,9 @@ export type DischargeSheetUpdateInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1301,6 +1365,7 @@ export type DischargeSheetUncheckedUpdateInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1347,6 +1412,9 @@ export type DischargeSheetUncheckedUpdateInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1367,6 +1435,7 @@ export type DischargeSheetCreateManyInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -1413,6 +1482,9 @@ export type DischargeSheetCreateManyInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -1431,6 +1503,7 @@ export type DischargeSheetUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1477,6 +1550,9 @@ export type DischargeSheetUpdateManyMutationInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1495,6 +1571,7 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1541,6 +1618,9 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1576,6 +1656,7 @@ export type DischargeSheetCountOrderByAggregateInput = {
   kypSubmissionId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   dischargeDate?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -1622,6 +1703,9 @@ export type DischargeSheetCountOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1663,6 +1747,7 @@ export type DischargeSheetAvgOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1678,6 +1763,7 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   kypSubmissionId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   dischargeDate?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -1724,6 +1810,9 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1744,6 +1833,7 @@ export type DischargeSheetMinOrderByAggregateInput = {
   kypSubmissionId?: Prisma.SortOrder
   month?: Prisma.SortOrder
   dischargeDate?: Prisma.SortOrder
+  admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   paymentType?: Prisma.SortOrder
@@ -1790,6 +1880,9 @@ export type DischargeSheetMinOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
+  implantPaidBy?: Prisma.SortOrder
+  instrumentsPaidBy?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1831,6 +1924,7 @@ export type DischargeSheetSumOrderByAggregateInput = {
   referralAmount?: Prisma.SortOrder
   cabCharges?: Prisma.SortOrder
   implantCost?: Prisma.SortOrder
+  instrumentsCost?: Prisma.SortOrder
   dcCharges?: Prisma.SortOrder
   doctorCharges?: Prisma.SortOrder
   hospitalSharePct?: Prisma.SortOrder
@@ -1982,6 +2076,7 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2028,6 +2123,9 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2049,6 +2147,7 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2095,6 +2194,9 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2143,6 +2245,7 @@ export type DischargeSheetScalarWhereInput = {
   kypSubmissionId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   month?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   dischargeDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
+  admissionDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"DischargeSheet"> | Date | string | null
   status?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   paymentType?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -2189,6 +2292,9 @@ export type DischargeSheetScalarWhereInput = {
   referralAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   cabCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  instrumentsCost?: Prisma.FloatFilter<"DischargeSheet"> | number
+  implantPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.EnumPaidByPartyNullableFilter<"DischargeSheet"> | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   doctorCharges?: Prisma.FloatFilter<"DischargeSheet"> | number
   hospitalSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
@@ -2207,6 +2313,7 @@ export type DischargeSheetCreateWithoutLeadInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2253,6 +2360,9 @@ export type DischargeSheetCreateWithoutLeadInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2273,6 +2383,7 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2319,6 +2430,9 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2353,6 +2467,7 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2399,6 +2514,9 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2419,6 +2537,7 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2465,6 +2584,9 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2483,6 +2605,7 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2529,6 +2652,9 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2550,6 +2676,7 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2596,6 +2723,9 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2629,6 +2759,7 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2675,6 +2806,9 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2696,6 +2830,7 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2742,6 +2877,9 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2759,6 +2897,7 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   id?: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2805,6 +2944,9 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2825,6 +2967,7 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   leadId: string
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -2871,6 +3014,9 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -2905,6 +3051,7 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2951,6 +3098,9 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2971,6 +3121,7 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3017,6 +3168,9 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3037,6 +3191,7 @@ export type DischargeSheetCreateManyCreatedByInput = {
   kypSubmissionId?: string | null
   month?: Date | string | null
   dischargeDate?: Date | string | null
+  admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
   status?: string | null
   paymentType?: string | null
@@ -3083,6 +3238,9 @@ export type DischargeSheetCreateManyCreatedByInput = {
   referralAmount?: number
   cabCharges?: number
   implantCost?: number
+  instrumentsCost?: number
+  implantPaidBy?: $Enums.PaidByParty | null
+  instrumentsPaidBy?: $Enums.PaidByParty | null
   dcCharges?: number
   doctorCharges?: number
   hospitalSharePct?: number | null
@@ -3100,6 +3258,7 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3146,6 +3305,9 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3167,6 +3329,7 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3213,6 +3376,9 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3232,6 +3398,7 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   kypSubmissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   dischargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3278,6 +3445,9 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   referralAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   cabCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   implantCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrumentsCost?: Prisma.FloatFieldUpdateOperationsInput | number
+  implantPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
+  instrumentsPaidBy?: Prisma.NullableEnumPaidByPartyFieldUpdateOperationsInput | $Enums.PaidByParty | null
   dcCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorCharges?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3299,6 +3469,7 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   kypSubmissionId?: boolean
   month?: boolean
   dischargeDate?: boolean
+  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -3345,6 +3516,9 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
+  instrumentsCost?: boolean
+  implantPaidBy?: boolean
+  instrumentsPaidBy?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -3369,6 +3543,7 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   kypSubmissionId?: boolean
   month?: boolean
   dischargeDate?: boolean
+  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -3415,6 +3590,9 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
+  instrumentsCost?: boolean
+  implantPaidBy?: boolean
+  instrumentsPaidBy?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -3439,6 +3617,7 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   kypSubmissionId?: boolean
   month?: boolean
   dischargeDate?: boolean
+  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -3485,6 +3664,9 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
+  instrumentsCost?: boolean
+  implantPaidBy?: boolean
+  instrumentsPaidBy?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -3509,6 +3691,7 @@ export type DischargeSheetSelectScalar = {
   kypSubmissionId?: boolean
   month?: boolean
   dischargeDate?: boolean
+  admissionDate?: boolean
   surgeryDate?: boolean
   status?: boolean
   paymentType?: boolean
@@ -3555,6 +3738,9 @@ export type DischargeSheetSelectScalar = {
   referralAmount?: boolean
   cabCharges?: boolean
   implantCost?: boolean
+  instrumentsCost?: boolean
+  implantPaidBy?: boolean
+  instrumentsPaidBy?: boolean
   dcCharges?: boolean
   doctorCharges?: boolean
   hospitalSharePct?: boolean
@@ -3569,7 +3755,7 @@ export type DischargeSheetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "remarks" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
+export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "remarks" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
 export type DischargeSheetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
@@ -3603,6 +3789,7 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     kypSubmissionId: string | null
     month: Date | null
     dischargeDate: Date | null
+    admissionDate: Date | null
     surgeryDate: Date | null
     status: string | null
     paymentType: string | null
@@ -3649,6 +3836,9 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     referralAmount: number
     cabCharges: number
     implantCost: number
+    instrumentsCost: number
+    implantPaidBy: $Enums.PaidByParty | null
+    instrumentsPaidBy: $Enums.PaidByParty | null
     dcCharges: number
     doctorCharges: number
     hospitalSharePct: number | null
@@ -4093,6 +4283,7 @@ export interface DischargeSheetFieldRefs {
   readonly kypSubmissionId: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly month: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
   readonly dischargeDate: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
+  readonly admissionDate: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
   readonly surgeryDate: Prisma.FieldRef<"DischargeSheet", 'DateTime'>
   readonly status: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly paymentType: Prisma.FieldRef<"DischargeSheet", 'String'>
@@ -4139,6 +4330,9 @@ export interface DischargeSheetFieldRefs {
   readonly referralAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly cabCharges: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly implantCost: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly instrumentsCost: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly implantPaidBy: Prisma.FieldRef<"DischargeSheet", 'PaidByParty'>
+  readonly instrumentsPaidBy: Prisma.FieldRef<"DischargeSheet", 'PaidByParty'>
   readonly dcCharges: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly doctorCharges: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly hospitalSharePct: Prisma.FieldRef<"DischargeSheet", 'Float'>

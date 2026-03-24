@@ -6884,6 +6884,7 @@ export const PLRecordScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
   month: 'month',
+  admissionDate: 'admissionDate',
   surgeryDate: 'surgeryDate',
   status: 'status',
   paymentType: 'paymentType',
@@ -6907,6 +6908,9 @@ export const PLRecordScalarFieldEnum = {
   referralAmount: 'referralAmount',
   cabCharges: 'cabCharges',
   implantCost: 'implantCost',
+  instrumentsCost: 'instrumentsCost',
+  implantPaidBy: 'implantPaidBy',
+  instrumentsPaidBy: 'instrumentsPaidBy',
   dcCharges: 'dcCharges',
   doctorCharges: 'doctorCharges',
   hospitalSharePct: 'hospitalSharePct',
@@ -7887,6 +7891,7 @@ export const DischargeSheetScalarFieldEnum = {
   kypSubmissionId: 'kypSubmissionId',
   month: 'month',
   dischargeDate: 'dischargeDate',
+  admissionDate: 'admissionDate',
   surgeryDate: 'surgeryDate',
   status: 'status',
   paymentType: 'paymentType',
@@ -7933,6 +7938,9 @@ export const DischargeSheetScalarFieldEnum = {
   referralAmount: 'referralAmount',
   cabCharges: 'cabCharges',
   implantCost: 'implantCost',
+  instrumentsCost: 'instrumentsCost',
+  implantPaidBy: 'implantPaidBy',
+  instrumentsPaidBy: 'instrumentsPaidBy',
   dcCharges: 'dcCharges',
   doctorCharges: 'doctorCharges',
   hospitalSharePct: 'hospitalSharePct',
@@ -8476,6 +8484,20 @@ export type EnumInsuranceCaseStatusFieldRefInput<$PrismaModel> = FieldRefInputTy
  * Reference to a field of type 'InsuranceCaseStatus[]'
  */
 export type ListEnumInsuranceCaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsuranceCaseStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PaidByParty'
+ */
+export type EnumPaidByPartyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaidByParty'>
+    
+
+
+/**
+ * Reference to a field of type 'PaidByParty[]'
+ */
+export type ListEnumPaidByPartyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaidByParty[]'>
     
 
 

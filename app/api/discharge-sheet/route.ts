@@ -72,6 +72,8 @@ const createDischargeSheetSchema = z.object({
   mediendSharePct: z.number().optional(),
   mediendShareAmount: z.number().optional(),
   mediendNetProfit: z.number().optional(),
+  implantPaidBy: z.enum(['MEDIEND', 'HOSPITAL']).optional(),
+  instrumentsPaidBy: z.enum(['MEDIEND', 'HOSPITAL']).optional(),
   // Meta
   remarks: z.string().optional(),
 })
@@ -186,6 +188,9 @@ export async function POST(request: NextRequest) {
             name: true,
           },
         },
+        admissionRecord: {
+          select: { admissionDate: true },
+        },
       },
     })
 
@@ -203,12 +208,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare data for creation
+    const admissionDate =
+      lead.admissionRecord?.admissionDate ?? null
+    const instrumentsCostNum =
+      data.instrumentsAmount != null ? Number(data.instrumentsAmount) : 0
+
     const dischargeData: any = {
       leadId: data.leadId,
       createdById: user.id,
       month: data.month ? new Date(data.month) : null,
       dischargeDate: data.dischargeDate ? new Date(data.dischargeDate) : null,
-      surgeryDate: data.surgeryDate ? new Date(data.surgeryDate) : null,
+      admissionDate,
+      surgeryDate: data.surgeryDate
+        ? new Date(data.surgeryDate)
+        : lead.surgeryDate ?? null,
       status: data.status,
       paymentType: data.paymentType,
       approvedOrCash: data.approvedOrCash,
@@ -254,6 +267,9 @@ export async function POST(request: NextRequest) {
       referralAmount: data.referralAmount || 0,
       cabCharges: data.cabCharges || 0,
       implantCost: data.implantCost || lead.implantAmount || 0,
+      instrumentsCost: instrumentsCostNum,
+      implantPaidBy: data.implantPaidBy ?? null,
+      instrumentsPaidBy: data.instrumentsPaidBy ?? null,
       dcCharges: data.dcCharges || 0,
       doctorCharges: data.doctorCharges || 0,
       hospitalSharePct: data.hospitalSharePct,
@@ -298,6 +314,7 @@ export async function POST(request: NextRequest) {
         data: {
           leadId: dischargeSheet.leadId,
           month: dischargeSheet.month,
+          admissionDate: dischargeSheet.admissionDate,
           surgeryDate: dischargeSheet.surgeryDate,
           status: dischargeSheet.status,
           paymentType: dischargeSheet.paymentType,
@@ -321,6 +338,9 @@ export async function POST(request: NextRequest) {
           referralAmount: dischargeSheet.referralAmount,
           cabCharges: dischargeSheet.cabCharges,
           implantCost: dischargeSheet.implantCost,
+          instrumentsCost: dischargeSheet.instrumentsCost,
+          implantPaidBy: dischargeSheet.implantPaidBy,
+          instrumentsPaidBy: dischargeSheet.instrumentsPaidBy,
           dcCharges: dischargeSheet.dcCharges,
           doctorCharges: dischargeSheet.doctorCharges,
           hospitalSharePct: dischargeSheet.hospitalSharePct,

@@ -139,9 +139,15 @@ export const navItems: NavItem[] = [
     roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER'],
   },
   {
-    title: 'P/L',
+    title: 'P/L Ledger',
     url: '/pl/dashboard',
     icon: DollarSign,
+    permission: 'pl:read',
+  },
+  {
+    title: 'P/L Surgery',
+    url: '/pl/surgery-dashboard',
+    icon: BarChart3,
     permission: 'pl:read',
   },
   {

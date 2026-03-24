@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
     const campaignName = searchParams.get('campaignName')
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
+    const dateField = searchParams.get('dateField')
 
     const where: Prisma.LeadWhereInput = {}
     let subordinateUserIds: string[] | undefined
@@ -73,9 +74,28 @@ export async function GET(request: NextRequest) {
     if (campaignName) where.campaignName = campaignName
 
     if (startDate || endDate) {
-      where.createdDate = {}
-      if (startDate) where.createdDate.gte = new Date(startDate)
-      if (endDate) where.createdDate.lte = new Date(endDate)
+      const range: Prisma.DateTimeFilter = {}
+      if (startDate) range.gte = new Date(startDate)
+      if (endDate) {
+        const end = new Date(endDate)
+        end.setHours(23, 59, 59, 999)
+        range.lte = end
+      }
+      if (dateField === 'surgery') {
+        const surgeryOr: Prisma.LeadWhereInput[] = [
+          { surgeryDate: range },
+          { plRecord: { surgeryDate: range } },
+        ]
+        if (where.OR) {
+          const insuranceOr = where.OR
+          delete where.OR
+          where.AND = [{ OR: insuranceOr }, { OR: surgeryOr }]
+        } else {
+          where.OR = surgeryOr
+        }
+      } else {
+        where.createdDate = range
+      }
     }
 
     const view = searchParams.get('view')

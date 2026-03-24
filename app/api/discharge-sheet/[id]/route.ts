@@ -8,6 +8,7 @@ const updateDischargeSheetSchema = z.object({
   // Core Identification
   month: z.string().optional(),
   dischargeDate: z.string().optional(),
+  admissionDate: z.string().optional(),
   surgeryDate: z.string().optional(),
   status: z.string().optional(),
   paymentType: z.string().optional(),
@@ -38,6 +39,7 @@ const updateDischargeSheetSchema = z.object({
   investigationAmount: z.number().optional(),
   consumablesAmount: z.number().optional(),
   implantsAmount: z.number().optional(),
+  instrumentsAmount: z.number().optional(),
   totalFinalBill: z.number().optional(),
   finalApprovedAmount: z.number().optional(),
   deductionAmount: z.number().optional(),
@@ -55,6 +57,9 @@ const updateDischargeSheetSchema = z.object({
   referralAmount: z.number().optional(),
   cabCharges: z.number().optional(),
   implantCost: z.number().optional(),
+  instrumentsCost: z.number().optional(),
+  implantPaidBy: z.enum(['MEDIEND', 'HOSPITAL']).optional(),
+  instrumentsPaidBy: z.enum(['MEDIEND', 'HOSPITAL']).optional(),
   dcCharges: z.number().optional(),
   doctorCharges: z.number().optional(),
   // Revenue Split
@@ -164,6 +169,7 @@ export async function PATCH(
     const updateData: any = {}
     if (data.month !== undefined) updateData.month = data.month ? new Date(data.month) : null
     if (data.dischargeDate !== undefined) updateData.dischargeDate = data.dischargeDate ? new Date(data.dischargeDate) : null
+    if (data.admissionDate !== undefined) updateData.admissionDate = data.admissionDate ? new Date(data.admissionDate) : null
     if (data.surgeryDate !== undefined) updateData.surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : null
     if (data.status !== undefined) updateData.status = data.status
     if (data.paymentType !== undefined) updateData.paymentType = data.paymentType
@@ -187,6 +193,9 @@ export async function PATCH(
     if (data.referralAmount !== undefined) updateData.referralAmount = data.referralAmount
     if (data.cabCharges !== undefined) updateData.cabCharges = data.cabCharges
     if (data.implantCost !== undefined) updateData.implantCost = data.implantCost
+    if (data.instrumentsCost !== undefined) updateData.instrumentsCost = data.instrumentsCost
+    if (data.implantPaidBy !== undefined) updateData.implantPaidBy = data.implantPaidBy
+    if (data.instrumentsPaidBy !== undefined) updateData.instrumentsPaidBy = data.instrumentsPaidBy
     if (data.dcCharges !== undefined) updateData.dcCharges = data.dcCharges
     if (data.doctorCharges !== undefined) updateData.doctorCharges = data.doctorCharges
     if (data.hospitalSharePct !== undefined) updateData.hospitalSharePct = data.hospitalSharePct
@@ -207,6 +216,7 @@ export async function PATCH(
     if (data.investigationAmount !== undefined) updateData.investigationAmount = data.investigationAmount
     if (data.consumablesAmount !== undefined) updateData.consumablesAmount = data.consumablesAmount
     if (data.implantsAmount !== undefined) updateData.implantsAmount = data.implantsAmount
+    if (data.instrumentsAmount !== undefined) updateData.instrumentsAmount = data.instrumentsAmount
     if (data.totalFinalBill !== undefined) updateData.totalFinalBill = data.totalFinalBill
     if (data.finalApprovedAmount !== undefined) updateData.finalApprovedAmount = data.finalApprovedAmount
     if (data.deductionAmount !== undefined) updateData.deductionAmount = data.deductionAmount

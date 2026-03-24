@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useState, useEffect, useRef } from 'react'
+import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 
 interface Lead {
   id: string
@@ -25,8 +26,11 @@ interface Lead {
   circle?: string
   source?: string
   billAmount?: number
+  netProfit?: number
   surgeryDate?: string | Date
+  surgeonName?: string
   bd?: { name?: string }
+  admissionRecord?: { admissionDate?: string }
   plRecord?: Record<string, unknown> & {
     finalProfit?: number
     hospitalPayoutStatus?: string
@@ -45,6 +49,8 @@ function getMonthFromDate(date: string | Date | null | undefined): string {
   return `${y}-${m}-01`
 }
 
+type PaidBy = '' | 'MEDIEND' | 'HOSPITAL'
+
 export default function PLRecordEditPage() {
   const params = useParams()
   const router = useRouter()
@@ -59,6 +65,7 @@ export default function PLRecordEditPage() {
 
   const [formData, setFormData] = useState({
     month: '',
+    admissionDate: '',
     surgeryDate: '',
     managerRole: '',
     managerName: '',
@@ -69,13 +76,15 @@ export default function PLRecordEditPage() {
     paymentCollectedAt: '',
     totalAmount: '',
     billAmount: '',
-    cashPaidByPatient: '',
     cashOrDedPaid: '',
     referralAmount: '',
     cabCharges: '',
     dcCharges: '',
     doctorCharges: '',
     implantCost: '',
+    instrumentsCost: '',
+    implantPaidBy: '' as PaidBy,
+    instrumentsPaidBy: '' as PaidBy,
     hospitalSharePct: '',
     hospitalShareAmount: '',
     mediendSharePct: '',
@@ -85,6 +94,8 @@ export default function PLRecordEditPage() {
     hospitalPayoutStatus: 'PENDING',
     doctorPayoutStatus: 'PENDING',
     mediendInvoiceStatus: 'PENDING',
+    hospitalAmountPending: '',
+    doctorAmountPending: '',
   })
 
   const initialized = useRef(false)
@@ -94,12 +105,24 @@ export default function PLRecordEditPage() {
     const surgeryDate = record.surgeryDate || (pl?.surgeryDate as string | Date | null | undefined)
     const monthFromSurgery = getMonthFromDate(surgeryDate)
     const monthValue = (pl?.month ? new Date(pl.month as string).toISOString().slice(0, 10) : null) || monthFromSurgery
-    
+
+    const admissionFromPl = pl?.admissionDate as string | undefined
+    const admissionFromLead = record.admissionRecord?.admissionDate
+    const admissionRaw = admissionFromPl || admissionFromLead
+
+    const dedPatient =
+      pl?.cashOrDedPaid != null && Number(pl.cashOrDedPaid) !== 0
+        ? String(pl.cashOrDedPaid)
+        : pl?.cashPaidByPatient != null && Number(pl.cashPaidByPatient) !== 0
+          ? String(pl.cashPaidByPatient)
+          : ''
+
     const timer = setTimeout(() => {
       setFormData((prev) => {
         const next = {
           ...prev,
           month: monthValue ? monthValue.slice(0, 7) : '',
+          admissionDate: admissionRaw ? new Date(admissionRaw as string).toISOString().slice(0, 10) : '',
           surgeryDate: surgeryDate ? new Date(surgeryDate as string).toISOString().slice(0, 10) : '',
           managerRole: (pl?.managerRole as string) || '',
           managerName: (pl?.managerName as string) || '',
@@ -110,22 +133,34 @@ export default function PLRecordEditPage() {
           paymentCollectedAt: (pl?.paymentCollectedAt as string) || '',
           totalAmount: pl?.totalAmount != null ? String(pl.totalAmount) : '',
           billAmount: pl?.billAmount != null ? String(pl.billAmount) : (record.billAmount != null ? String(record.billAmount) : ''),
-          cashPaidByPatient: pl?.cashPaidByPatient != null ? String(pl.cashPaidByPatient) : '',
-          cashOrDedPaid: pl?.cashOrDedPaid != null ? String(pl.cashOrDedPaid) : '',
+          cashOrDedPaid: dedPatient,
           referralAmount: pl?.referralAmount != null ? String(pl.referralAmount) : '',
           cabCharges: pl?.cabCharges != null ? String(pl.cabCharges) : '',
           dcCharges: pl?.dcCharges != null ? String(pl.dcCharges) : '',
           doctorCharges: pl?.doctorCharges != null ? String(pl.doctorCharges) : '',
           implantCost: pl?.implantCost != null ? String(pl.implantCost) : '',
+          instrumentsCost: pl?.instrumentsCost != null ? String(pl.instrumentsCost) : '',
+          implantPaidBy: ((pl?.implantPaidBy as string) || '') as PaidBy,
+          instrumentsPaidBy: ((pl?.instrumentsPaidBy as string) || '') as PaidBy,
           hospitalSharePct: pl?.hospitalSharePct != null ? String(pl.hospitalSharePct) : '',
           hospitalShareAmount: pl?.hospitalShareAmount != null ? String(pl.hospitalShareAmount) : '',
           mediendSharePct: pl?.mediendSharePct != null ? String(pl.mediendSharePct) : '',
           mediendShareAmount: pl?.mediendShareAmount != null ? String(pl.mediendShareAmount) : '',
-          mediendNetProfit: pl?.mediendNetProfit != null ? String(pl.mediendNetProfit) : (record.plRecord?.finalProfit != null ? String(record.plRecord.finalProfit) : (record.netProfit != null ? String(record.netProfit) : '')),
+          mediendNetProfit:
+            pl?.mediendNetProfit != null
+              ? String(pl.mediendNetProfit)
+              : record.plRecord?.finalProfit != null
+                ? String(record.plRecord.finalProfit)
+                : record.netProfit != null
+                  ? String(record.netProfit)
+                  : '',
           remarks: (pl?.remarks as string) || '',
           hospitalPayoutStatus: (record.plRecord?.hospitalPayoutStatus as string) || 'PENDING',
           doctorPayoutStatus: (record.plRecord?.doctorPayoutStatus as string) || 'PENDING',
           mediendInvoiceStatus: (record.plRecord?.mediendInvoiceStatus as string) || 'PENDING',
+          hospitalAmountPending:
+            pl?.hospitalAmountPending != null ? String(pl.hospitalAmountPending) : '',
+          doctorAmountPending: pl?.doctorAmountPending != null ? String(pl.doctorAmountPending) : '',
         }
         if (JSON.stringify(prev) === JSON.stringify(next)) return prev
         return next
@@ -161,12 +196,24 @@ export default function PLRecordEditPage() {
     const medPct = parseFloat(formData.mediendSharePct) || 0
     const hospAmount = bill > 0 && hospPct > 0 ? (bill * hospPct) / 100 : parseFloat(formData.hospitalShareAmount) || 0
     const medAmount = bill > 0 && medPct > 0 ? (bill * medPct) / 100 : parseFloat(formData.mediendShareAmount) || 0
-    const costs = (parseFloat(formData.referralAmount) || 0) + (parseFloat(formData.cabCharges) || 0) + (parseFloat(formData.dcCharges) || 0) + (parseFloat(formData.doctorCharges) || 0) + (parseFloat(formData.implantCost) || 0)
+
+    const referral = parseFloat(formData.referralAmount) || 0
+    const cab = parseFloat(formData.cabCharges) || 0
+    const dc = parseFloat(formData.dcCharges) || 0
+    const doctor = parseFloat(formData.doctorCharges) || 0
+    const implant = parseFloat(formData.implantCost) || 0
+    const instruments = parseFloat(formData.instrumentsCost) || 0
+
+    let costs = referral + cab + dc + doctor
+    if (formData.implantPaidBy !== 'HOSPITAL') costs += implant
+    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += instruments
+
     const netProfit = medAmount - costs
     const mediendNet = parseFloat(formData.mediendNetProfit) || netProfit
 
     const payload: Record<string, unknown> = {
       month: formData.month ? new Date(`${formData.month}-01`).toISOString() : undefined,
+      admissionDate: formData.admissionDate ? new Date(formData.admissionDate).toISOString() : undefined,
       surgeryDate: formData.surgeryDate ? new Date(formData.surgeryDate).toISOString() : undefined,
       managerRole: formData.managerRole || undefined,
       managerName: formData.managerName || undefined,
@@ -177,13 +224,16 @@ export default function PLRecordEditPage() {
       paymentCollectedAt: formData.paymentCollectedAt || undefined,
       totalAmount: parseFloat(formData.totalAmount) || 0,
       billAmount: parseFloat(formData.billAmount) || 0,
-      cashPaidByPatient: parseFloat(formData.cashPaidByPatient) || 0,
+      cashPaidByPatient: 0,
       cashOrDedPaid: parseFloat(formData.cashOrDedPaid) || 0,
-      referralAmount: parseFloat(formData.referralAmount) || 0,
-      cabCharges: parseFloat(formData.cabCharges) || 0,
-      dcCharges: parseFloat(formData.dcCharges) || 0,
-      doctorCharges: parseFloat(formData.doctorCharges) || 0,
-      implantCost: parseFloat(formData.implantCost) || 0,
+      referralAmount: referral,
+      cabCharges: cab,
+      dcCharges: dc,
+      doctorCharges: doctor,
+      implantCost: implant,
+      instrumentsCost: instruments,
+      implantPaidBy: formData.implantPaidBy ? formData.implantPaidBy : null,
+      instrumentsPaidBy: formData.instrumentsPaidBy ? formData.instrumentsPaidBy : null,
       hospitalSharePct: parseFloat(formData.hospitalSharePct) || undefined,
       hospitalShareAmount: hospAmount,
       mediendSharePct: parseFloat(formData.mediendSharePct) || undefined,
@@ -194,7 +244,12 @@ export default function PLRecordEditPage() {
       hospitalPayoutStatus: formData.hospitalPayoutStatus,
       doctorPayoutStatus: formData.doctorPayoutStatus,
       mediendInvoiceStatus: formData.mediendInvoiceStatus,
-      closedAt: formData.hospitalPayoutStatus === 'PAID' && formData.doctorPayoutStatus === 'PAID' ? new Date().toISOString() : undefined,
+      hospitalAmountPending: parseFloat(formData.hospitalAmountPending) || 0,
+      doctorAmountPending: parseFloat(formData.doctorAmountPending) || 0,
+      closedAt:
+        formData.hospitalPayoutStatus === 'PAID' && formData.doctorPayoutStatus === 'PAID'
+          ? new Date().toISOString()
+          : undefined,
     }
     updateMutation.mutate(payload)
   }
@@ -215,17 +270,19 @@ export default function PLRecordEditPage() {
         <div className="mx-auto max-w-4xl space-y-6">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/pl/dashboard">
+              <Link href="/pl/dashboard" aria-label="Back to P/L ledger">
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <div>
               <nav className="text-sm text-muted-foreground">
-                <Link href="/pl/dashboard" className="hover:text-foreground">P/L Dashboard</Link>
+                <Link href="/pl/dashboard" className="hover:text-foreground">
+                  P/L Ledger
+                </Link>
                 <span className="mx-2">/</span>
                 <span className="text-foreground">Edit P/L — {record.leadRef ?? record.id}</span>
               </nav>
-              <h1 className="text-2xl font-bold mt-0.5">Edit P/L Record</h1>
+              <h1 className="text-2xl font-bold mt-0.5">Edit P/L record</h1>
             </div>
           </div>
 
@@ -240,9 +297,12 @@ export default function PLRecordEditPage() {
               </Button>
             </CardHeader>
             <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-muted/30 rounded-lg">
-              <div>
-                <Label className="text-xs text-muted-foreground">Lead Ref</Label>
-                <p className="font-medium">{record.leadRef ?? '—'}</p>
+              <div className="sm:col-span-2">
+                <Label className="text-xs text-muted-foreground">Lead ref</Label>
+                <div className="flex items-center gap-1 mt-1">
+                  <span className="font-medium">{record.leadRef ?? '—'}</span>
+                  {record.leadRef && <CopyLeadRefButton leadRef={String(record.leadRef)} />}
+                </div>
               </div>
               <div>
                 <Label className="text-xs text-muted-foreground">Patient</Label>
@@ -257,7 +317,15 @@ export default function PLRecordEditPage() {
                 <p className="font-medium">{record.treatment ?? '—'}</p>
               </div>
               <div>
-                <Label className="text-xs text-muted-foreground">Surgery date</Label>
+                <Label className="text-xs text-muted-foreground">Admission (lead)</Label>
+                <p className="font-medium">
+                  {record.admissionRecord?.admissionDate
+                    ? new Date(record.admissionRecord.admissionDate).toLocaleDateString()
+                    : '—'}
+                </p>
+              </div>
+              <div>
+                <Label className="text-xs text-muted-foreground">Surgery date (lead)</Label>
                 <p className="font-medium">
                   {record.surgeryDate ? new Date(record.surgeryDate as string).toLocaleDateString() : '—'}
                 </p>
@@ -268,7 +336,7 @@ export default function PLRecordEditPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Reporting & people</CardTitle>
+                <CardTitle>Reporting &amp; people</CardTitle>
                 <CardDescription>Month is prefilled from surgery date when available</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -278,6 +346,15 @@ export default function PLRecordEditPage() {
                     type="month"
                     value={formData.month}
                     onChange={(e) => update('month', e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Admission date</Label>
+                  <Input
+                    type="date"
+                    value={formData.admissionDate}
+                    onChange={(e) => update('admissionDate', e.target.value)}
                     className="mt-1"
                   />
                 </div>
@@ -309,19 +386,34 @@ export default function PLRecordEditPage() {
                 </div>
                 <div>
                   <Label>Payment type</Label>
-                  <Input value={formData.paymentType} onChange={(e) => update('paymentType', e.target.value)} placeholder="e.g. Cashless" className="mt-1" />
+                  <Input
+                    value={formData.paymentType}
+                    onChange={(e) => update('paymentType', e.target.value)}
+                    placeholder="e.g. Cashless"
+                    className="mt-1"
+                  />
                 </div>
                 <div>
                   <Label>Status</Label>
-                  <Input value={formData.status} onChange={(e) => update('status', e.target.value)} placeholder="e.g. IPD Done" className="mt-1" />
+                  <Input
+                    value={formData.status}
+                    onChange={(e) => update('status', e.target.value)}
+                    placeholder="e.g. IPD Done"
+                    className="mt-1"
+                  />
                 </div>
                 <div>
                   <Label>Approved / Cash</Label>
                   <Input value={formData.approvedOrCash} onChange={(e) => update('approvedOrCash', e.target.value)} className="mt-1" />
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <Label>Payment collected at</Label>
-                  <Input value={formData.paymentCollectedAt} onChange={(e) => update('paymentCollectedAt', e.target.value)} placeholder="e.g. Collected By Hospital" className="mt-1" />
+                  <Input
+                    value={formData.paymentCollectedAt}
+                    onChange={(e) => update('paymentCollectedAt', e.target.value)}
+                    placeholder="e.g. Collected By Hospital"
+                    className="mt-1"
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -329,40 +421,121 @@ export default function PLRecordEditPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Amounts</CardTitle>
+                <CardDescription>Total bill = hospital bill; approved amount = negotiated / case total</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[
-                  { key: 'totalAmount', label: 'Total amount' },
-                  { key: 'billAmount', label: 'Bill amount' },
-                  { key: 'cashPaidByPatient', label: 'Cash paid by patient' },
-                  { key: 'cashOrDedPaid', label: 'Cash / Ded paid' },
-                ].map(({ key, label }) => (
-                  <div key={key}>
-                    <Label>{label}</Label>
-                    <Input type="number" step="0.01" value={formData[key as keyof typeof formData]} onChange={(e) => update(key, e.target.value)} className="mt-1" />
-                  </div>
-                ))}
+                <div>
+                  <Label>Total bill</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.billAmount}
+                    onChange={(e) => update('billAmount', e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Approved amount</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.totalAmount}
+                    onChange={(e) => update('totalAmount', e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label>Deduction (paid by patient)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.cashOrDedPaid}
+                    onChange={(e) => update('cashOrDedPaid', e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
                 <CardTitle>Cost breakdown</CardTitle>
-                <CardDescription>Referral, cab, D&C, doctor charges, implant</CardDescription>
+                <CardDescription>Who pays implant / instruments affects Mediend net (hospital = excluded from Mediend costs)</CardDescription>
               </CardHeader>
-              <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
                   { key: 'referralAmount', label: 'Referral amount' },
                   { key: 'cabCharges', label: 'Cab charges' },
                   { key: 'dcCharges', label: 'D&C charges' },
                   { key: 'doctorCharges', label: 'Doctor charges' },
-                  { key: 'implantCost', label: 'Implant cost' },
                 ].map(({ key, label }) => (
                   <div key={key}>
                     <Label>{label}</Label>
-                    <Input type="number" step="0.01" value={formData[key as keyof typeof formData]} onChange={(e) => update(key, e.target.value)} className="mt-1" />
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData[key as keyof typeof formData]}
+                      onChange={(e) => update(key, e.target.value)}
+                      className="mt-1"
+                    />
                   </div>
                 ))}
+                <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Implant cost</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.implantCost}
+                      onChange={(e) => update('implantCost', e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label>Paid by</Label>
+                    <Select
+                      value={formData.implantPaidBy || 'unset'}
+                      onValueChange={(v) => update('implantPaidBy', v === 'unset' ? '' : v)}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Default: Mediend" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unset">Not set (Mediend)</SelectItem>
+                        <SelectItem value="MEDIEND">Mediend</SelectItem>
+                        <SelectItem value="HOSPITAL">Hospital</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Instrument cost</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.instrumentsCost}
+                      onChange={(e) => update('instrumentsCost', e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label>Paid by</Label>
+                    <Select
+                      value={formData.instrumentsPaidBy || 'unset'}
+                      onValueChange={(v) => update('instrumentsPaidBy', v === 'unset' ? '' : v)}
+                    >
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Default: Mediend" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unset">Not set (Mediend)</SelectItem>
+                        <SelectItem value="MEDIEND">Mediend</SelectItem>
+                        <SelectItem value="HOSPITAL">Hospital</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -374,23 +547,120 @@ export default function PLRecordEditPage() {
               <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                   <Label>Hospital share %</Label>
-                  <Input type="number" step="0.01" value={formData.hospitalSharePct} onChange={(e) => update('hospitalSharePct', e.target.value)} className="mt-1" />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.hospitalSharePct}
+                    onChange={(e) => update('hospitalSharePct', e.target.value)}
+                    className="mt-1"
+                  />
                 </div>
                 <div>
                   <Label>Hospital share amount</Label>
-                  <Input type="number" step="0.01" value={formData.hospitalShareAmount} onChange={(e) => update('hospitalShareAmount', e.target.value)} className="mt-1" />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.hospitalShareAmount}
+                    onChange={(e) => update('hospitalShareAmount', e.target.value)}
+                    className="mt-1"
+                  />
                 </div>
                 <div>
                   <Label>Mediend share %</Label>
-                  <Input type="number" step="0.01" value={formData.mediendSharePct} onChange={(e) => update('mediendSharePct', e.target.value)} className="mt-1" />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.mediendSharePct}
+                    onChange={(e) => update('mediendSharePct', e.target.value)}
+                    className="mt-1"
+                  />
                 </div>
                 <div>
                   <Label>Mediend share amount</Label>
-                  <Input type="number" step="0.01" value={formData.mediendShareAmount} onChange={(e) => update('mediendShareAmount', e.target.value)} className="mt-1" />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.mediendShareAmount}
+                    onChange={(e) => update('mediendShareAmount', e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label>Mediend net profit</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.mediendNetProfit}
+                    onChange={(e) => update('mediendNetProfit', e.target.value)}
+                    className="mt-1 font-medium"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Payout &amp; invoice</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <Label>Hospital payout</Label>
+                  <Select value={formData.hospitalPayoutStatus} onValueChange={(v) => update('hospitalPayoutStatus', v)}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="PENDING">PENDING</SelectItem>
+                      <SelectItem value="PARTIAL">PARTIAL</SelectItem>
+                      <SelectItem value="PAID">PAID</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
-                  <Label>Mediend net profit</Label>
-                  <Input type="number" step="0.01" value={formData.mediendNetProfit} onChange={(e) => update('mediendNetProfit', e.target.value)} className="mt-1 font-medium" />
+                  <Label>Doctor payout</Label>
+                  <Select value={formData.doctorPayoutStatus} onValueChange={(v) => update('doctorPayoutStatus', v)}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="PENDING">PENDING</SelectItem>
+                      <SelectItem value="PARTIAL">PARTIAL</SelectItem>
+                      <SelectItem value="PAID">PAID</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Mediend invoice</Label>
+                  <Select value={formData.mediendInvoiceStatus} onValueChange={(v) => update('mediendInvoiceStatus', v)}>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="PENDING">PENDING</SelectItem>
+                      <SelectItem value="SENT">SENT</SelectItem>
+                      <SelectItem value="PAID">PAID</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Hospital amount pending</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.hospitalAmountPending}
+                    onChange={(e) => update('hospitalAmountPending', e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Doctor amount pending</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.doctorAmountPending}
+                    onChange={(e) => update('doctorAmountPending', e.target.value)}
+                    className="mt-1"
+                  />
                 </div>
               </CardContent>
             </Card>

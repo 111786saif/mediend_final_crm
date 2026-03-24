@@ -409,6 +409,23 @@ export type EnumInsuranceCaseStatusWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumInsuranceCaseStatusFilter<$PrismaModel>
 }
 
+export type EnumPaidByPartyNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PaidByParty | Prisma.EnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel> | $Enums.PaidByParty | null
+}
+
+export type EnumPaidByPartyNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PaidByParty | Prisma.EnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPaidByPartyNullableWithAggregatesFilter<$PrismaModel> | $Enums.PaidByParty | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel>
+}
+
 export type JsonFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -1524,6 +1541,23 @@ export type NestedEnumInsuranceCaseStatusWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumInsuranceCaseStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumInsuranceCaseStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumPaidByPartyNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PaidByParty | Prisma.EnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel> | $Enums.PaidByParty | null
+}
+
+export type NestedEnumPaidByPartyNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PaidByParty | Prisma.EnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPaidByPartyNullableWithAggregatesFilter<$PrismaModel> | $Enums.PaidByParty | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel>
 }
 
 export type NestedJsonFilter<$PrismaModel = never> =

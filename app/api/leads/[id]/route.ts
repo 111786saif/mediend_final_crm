@@ -413,20 +413,21 @@ export async function PATCH(
       const raw = body.plRecord as Record<string, unknown>
       const plData = (raw.update && typeof raw.update === 'object' ? raw.update : raw) as Record<string, unknown>
       const plAllowed = [
-        'month', 'surgeryDate', 'status', 'paymentType', 'approvedOrCash', 'paymentCollectedAt',
+        'month', 'admissionDate', 'surgeryDate', 'status', 'paymentType', 'approvedOrCash', 'paymentCollectedAt',
         'managerRole', 'managerName', 'bdmName', 'patientName', 'patientPhone', 'doctorName', 'hospitalName',
         'category', 'treatment', 'circle', 'leadSource',
         'totalAmount', 'billAmount', 'cashPaidByPatient', 'cashOrDedPaid', 'referralAmount', 'cabCharges',
-        'implantCost', 'dcCharges', 'doctorCharges',
+        'implantCost', 'instrumentsCost', 'implantPaidBy', 'instrumentsPaidBy', 'dcCharges', 'doctorCharges',
         'hospitalSharePct', 'hospitalShareAmount', 'mediendSharePct', 'mediendShareAmount', 'mediendNetProfit',
         'finalProfit', 'hospitalPayoutStatus', 'doctorPayoutStatus', 'mediendInvoiceStatus',
+        'hospitalAmountPending', 'doctorAmountPending',
         'remarks', 'closedAt',
       ]
       const plUpdate: Record<string, unknown> = {}
       for (const key of plAllowed) {
         if (plData[key] !== undefined) {
           const v = plData[key]
-          if (key === 'month' || key === 'surgeryDate' || key === 'closedAt') {
+          if (key === 'month' || key === 'admissionDate' || key === 'surgeryDate' || key === 'closedAt') {
             plUpdate[key] = v ? new Date(v as string) : null
           } else {
             plUpdate[key] = v
