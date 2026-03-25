@@ -50,6 +50,7 @@ export interface AttendanceClassification {
 /**
  * Classify attendance for a single day based on punch-in time, work hours, and department timing.
  * Uses UTC getters for time comparison (no timezone conversion).
+ * Rule: Under 9 hours worked is always half-day (including in the late-penalty window).
  * Rule: After the penalty window ends, it is always half-day regardless of hours worked.
  */
 export function classifyAttendance(
@@ -90,7 +91,7 @@ export function classifyAttendance(
     return {
       status: 'late-penalty',
       penalty: timing.penaltyAmount,
-      isHalfDay: false,
+      isHalfDay: !hasEnoughHours,
       isLate: true,
     }
   }

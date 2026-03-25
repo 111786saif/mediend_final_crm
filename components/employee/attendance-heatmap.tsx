@@ -137,6 +137,14 @@ function getStatusConfig(
         tooltipText: `${dateKey} - Grace\n${entryExit}`,
       }
     }
+    if (status === 'late-penalty' && attendanceRecord.isHalfDay) {
+      return {
+        status: 'half-day',
+        bgColor: 'bg-pink-400',
+        textColor: 'text-white',
+        tooltipText: `${dateKey} - Half day (under 9 hours) + Late penalty ₹${attendanceRecord.penalty ?? 0}\n${entryExit}`,
+      }
+    }
     if (status === 'late-penalty') {
       return {
         status: 'late-penalty',
