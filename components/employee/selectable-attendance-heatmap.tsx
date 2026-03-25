@@ -15,7 +15,6 @@ import {
   type AttendanceStatusType,
   type LeaveDay,
 } from './attendance-heatmap'
-import { MIN_FULL_DAY_HOURS } from '@/lib/hrms/attendance-utils'
 
 function formatTime(date: Date | string | null) {
   if (!date) return 'N/A'
@@ -63,16 +62,11 @@ function getStatusConfig(
     const entryExit = `Entry: ${formatTime(attendanceRecord.inTime)}\nExit: ${formatTime(attendanceRecord.outTime)}`
 
     if (shouldShowHalfDayPink(attendanceRecord)) {
-      const penalty = attendanceRecord.penalty ?? 0
-      const label =
-        penalty > 0 && attendanceRecord.status === 'late-penalty'
-          ? `Half day (under ${MIN_FULL_DAY_HOURS} hours) + Late penalty ₹${penalty}`
-          : 'Half day'
       return {
         status: 'half-day',
         bgColor: 'bg-pink-400',
         textColor: 'text-white',
-        tooltipText: `${dateKey} - ${label}\n${entryExit}`,
+        tooltipText: `${dateKey} - Half day\n${entryExit}`,
       }
     }
 

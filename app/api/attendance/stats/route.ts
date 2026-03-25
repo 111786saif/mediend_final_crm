@@ -121,7 +121,6 @@ export async function GET(request: NextRequest) {
       else if (day.status === 'late-penalty') {
         latePenaltyCount++
         totalPenalty += day.penalty ?? 0
-        if (day.isHalfDay) halfDayCount++
       } else if (day.isHalfDay) halfDayCount++
     }
 
