@@ -1,4 +1,5 @@
 import { AttendanceLog, PunchDirection, type Department } from '@/generated/prisma/client'
+import { MIN_FULL_DAY_HOURS } from './attendance-constants'
 
 export type AttendanceStatus =
   | 'on-time'
@@ -38,8 +39,7 @@ export function getDepartmentTiming(department: Department | null | undefined): 
   }
 }
 
-/** Minimum worked hours to count as a full day (payroll + heatmap must stay aligned). */
-export const MIN_FULL_DAY_HOURS = 9
+export { MIN_FULL_DAY_HOURS } from './attendance-constants'
 
 export interface AttendanceClassification {
   status: AttendanceStatus

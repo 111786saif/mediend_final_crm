@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { MIN_FULL_DAY_HOURS } from '@/lib/hrms/attendance-utils'
+import { MIN_FULL_DAY_HOURS } from '@/lib/hrms/attendance-constants'
 
 export type AttendanceStatusType =
   | 'on-time'
