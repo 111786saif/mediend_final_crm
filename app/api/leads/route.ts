@@ -7,7 +7,7 @@ import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { FlowType, Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { last10DigitsFromStored } from '@/lib/phone-search'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
   try {
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     if (user.role === 'BD') {
       where.bdId = user.id
     } else if (user.role === 'TEAM_LEAD') {
-      subordinateUserIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      subordinateUserIds = await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId)
       where.bdId = { in: [user.id, ...subordinateUserIds] }
     }
     // Note: INSURANCE_HEAD can access all leads via canAccessLead, so we don't filter by bdId

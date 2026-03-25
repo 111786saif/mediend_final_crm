@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canAccessLead } from '@/lib/rbac'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 import { ChatMessageType } from '@/generated/prisma/client'
@@ -31,7 +31,8 @@ export async function GET(
       select: { id: true, bdId: true, bd: { select: { teamId: true } } },
     })
     if (!lead) return errorResponse('Lead not found', 404)
-    const subordinateIds = user.role === 'TEAM_LEAD' ? await getSubordinateUserIdsForLeadAccess(user.id) : undefined
+    const subordinateIds =
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
     if (!canAccessLead(user, lead.bdId, lead.bd?.teamId, subordinateIds))
       return errorResponse('Forbidden', 403)
 
@@ -76,7 +77,8 @@ export async function POST(
       select: { id: true, bdId: true, bd: { select: { teamId: true } } },
     })
     if (!lead) return errorResponse('Lead not found', 404)
-    const subordinateIds = user.role === 'TEAM_LEAD' ? await getSubordinateUserIdsForLeadAccess(user.id) : undefined
+    const subordinateIds =
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
     if (!canAccessLead(user, lead.bdId, lead.bd?.teamId, subordinateIds))
       return errorResponse('Forbidden', 403)
 

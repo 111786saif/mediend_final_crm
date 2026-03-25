@@ -35,6 +35,7 @@ import { AttendanceHeatmap, type AttendanceDay as HeatmapAttendanceDay } from '@
 import { LeaveApplicationForm } from '@/components/hrms/LeaveApplicationForm'
 import { useRouter } from 'next/navigation'
 import { Textarea } from '@/components/ui/textarea'
+import { NORMALIZATION_REASON_MIN_CHARS } from '@/lib/hrms/normalization-deadline'
 
 const CORE_HR_TAB_VALUES = [
   { value: 'attendance', label: 'Attendance' },
@@ -188,7 +189,7 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
   const queryClient = useQueryClient()
 
   const requestMutation = useMutation({
-    mutationFn: (payload: { dates: string[]; reason?: string }) =>
+    mutationFn: (payload: { dates: string[]; reason: string }) =>
       apiPost<{ created?: number; skipped?: number }>('/api/attendance/normalize/request', payload),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['attendance', 'my'] })
@@ -204,13 +205,20 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
     onError: (error: Error) => toast.error(error.message || 'Failed to request normalization'),
   })
 
+  const reasonTrimmed = reason.trim()
+  const reasonOk = reasonTrimmed.length >= NORMALIZATION_REASON_MIN_CHARS
+
   const handleSubmit = () => {
     const validDates = dates.filter((d) => d.trim())
     if (validDates.length === 0) {
       toast.error('Add at least one date')
       return
     }
-    requestMutation.mutate({ dates: validDates, reason: reason.trim() || undefined })
+    if (!reasonOk) {
+      toast.error(`Reason must be at least ${NORMALIZATION_REASON_MIN_CHARS} characters`)
+      return
+    }
+    requestMutation.mutate({ dates: validDates, reason: reasonTrimmed })
   }
 
   return (
@@ -261,20 +269,23 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
             </Button>
           </div>
           <div>
-            <Label>Reason (optional)</Label>
+            <Label>Reason (required, min {NORMALIZATION_REASON_MIN_CHARS} characters)</Label>
             <Textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="e.g. Official travel, client visit"
-              rows={2}
+              placeholder="Explain why you need normalization for these day(s)…"
+              rows={4}
               className="mt-1"
             />
+            <p className="text-xs text-muted-foreground mt-1">
+              {reasonTrimmed.length}/{NORMALIZATION_REASON_MIN_CHARS} characters (minimum)
+            </p>
           </div>
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
             <Button
               onClick={handleSubmit}
-              disabled={!dates.some((d) => d.trim()) || requestMutation.isPending}
+              disabled={!dates.some((d) => d.trim()) || !reasonOk || requestMutation.isPending}
             >
               {requestMutation.isPending ? 'Submitting...' : 'Submit request'}
             </Button>
@@ -293,6 +304,7 @@ function AttendanceTab() {
   const [normalizeDialogOpen, setNormalizeDialogOpen] = useState(false)
   const [normalizeDate, setNormalizeDate] = useState('')
   const [normalizeHours, setNormalizeHours] = useState<1 | 2 | 3>(1)
+  const [normalizeReason, setNormalizeReason] = useState('')
   const queryClient = useQueryClient()
 
   const { data: attendanceData, isLoading } = useQuery<AttendanceMyResponse>({
@@ -311,15 +323,26 @@ function AttendanceTab() {
       ),
   })
 
+  const normalizeReasonTrimmed = normalizeReason.trim()
+  const normalizeReasonOk = normalizeReasonTrimmed.length >= NORMALIZATION_REASON_MIN_CHARS
+
   const normalizeMutation = useMutation({
-    mutationFn: ({ date, hours }: { date: string; hours: 1 | 2 | 3 }) =>
-      apiPost<unknown>('/api/attendance/normalize', { date, hours }),
+    mutationFn: ({
+      date,
+      hours,
+      reason,
+    }: {
+      date: string
+      hours: 1 | 2 | 3
+      reason: string
+    }) => apiPost<unknown>('/api/attendance/normalize', { date, hours, reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['attendance', 'my'] })
       queryClient.invalidateQueries({ queryKey: ['attendance', 'stats'] })
       setNormalizeDialogOpen(false)
       setNormalizeDate('')
       setNormalizeHours(1)
+      setNormalizeReason('')
       toast.success('Attendance normalized successfully')
     },
     onError: (error: Error) => {
@@ -393,7 +416,17 @@ function AttendanceTab() {
               queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'my'] })
             }}
           />
-          <Dialog open={normalizeDialogOpen} onOpenChange={setNormalizeDialogOpen}>
+          <Dialog
+            open={normalizeDialogOpen}
+            onOpenChange={(open) => {
+              setNormalizeDialogOpen(open)
+              if (!open) {
+                setNormalizeDate('')
+                setNormalizeHours(1)
+                setNormalizeReason('')
+              }
+            }}
+          >
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">Normalize attendance</Button>
             </DialogTrigger>
@@ -428,14 +461,38 @@ function AttendanceTab() {
                   ))}
                 </div>
               </div>
+              <div>
+                <Label>Reason (required, min {NORMALIZATION_REASON_MIN_CHARS} characters)</Label>
+                <Textarea
+                  value={normalizeReason}
+                  onChange={(e) => setNormalizeReason(e.target.value)}
+                  placeholder="Explain why you are using your normalization allowance for this day…"
+                  rows={4}
+                  className="mt-1"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {normalizeReasonTrimmed.length}/{NORMALIZATION_REASON_MIN_CHARS} characters (minimum)
+                </p>
+              </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setNormalizeDialogOpen(false)}>Cancel</Button>
                 <Button
                   onClick={() => {
-                    if (normalizeDate) normalizeMutation.mutate({ date: normalizeDate, hours: normalizeHours })
-                    else toast.error('Select a date')
+                    if (!normalizeDate) {
+                      toast.error('Select a date')
+                      return
+                    }
+                    if (!normalizeReasonOk) {
+                      toast.error(`Reason must be at least ${NORMALIZATION_REASON_MIN_CHARS} characters`)
+                      return
+                    }
+                    normalizeMutation.mutate({
+                      date: normalizeDate,
+                      hours: normalizeHours,
+                      reason: normalizeReasonTrimmed,
+                    })
                   }}
-                  disabled={!normalizeDate || normalizeMutation.isPending}
+                  disabled={!normalizeDate || !normalizeReasonOk || normalizeMutation.isPending}
                 >
                   {normalizeMutation.isPending ? 'Normalizing...' : 'Normalize'}
                 </Button>

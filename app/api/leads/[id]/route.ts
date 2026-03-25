@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canAccessLead, hasPermission } from '@/lib/rbac'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
@@ -229,7 +229,8 @@ export async function GET(
 
     console.log('[DEBUG] Full lead with relations fetched successfully')
 
-    const subordinateIds = user.role === 'TEAM_LEAD' ? await getSubordinateUserIdsForLeadAccess(user.id) : undefined
+    const subordinateIds =
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
     if (!canAccessLead(user, fullLead.bdId, fullLead.bd?.team?.id, subordinateIds)) {
       console.log('[DEBUG] Access denied by canAccessLead', {
         userId: user.id,
@@ -294,7 +295,8 @@ export async function PATCH(
       return errorResponse('Lead not found', 404)
     }
 
-    const subordinateIds = user.role === 'TEAM_LEAD' ? await getSubordinateUserIdsForLeadAccess(user.id) : undefined
+    const subordinateIds =
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
     if (!canAccessLead(user, lead.bdId, lead.bd.team?.id, subordinateIds)) {
       return errorResponse('Forbidden', 403)
     }

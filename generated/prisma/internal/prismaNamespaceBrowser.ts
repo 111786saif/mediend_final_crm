@@ -133,6 +133,14 @@ export const ModelName = {
   TPAMaster: 'TPAMaster',
   AnesthesiaMaster: 'AnesthesiaMaster',
   AppSetting: 'AppSetting',
+  ITProject: 'ITProject',
+  ITFreelancer: 'ITFreelancer',
+  ITProjectResource: 'ITProjectResource',
+  ITProjectBooking: 'ITProjectBooking',
+  DepartmentRevenue: 'DepartmentRevenue',
+  PnLCategory: 'PnLCategory',
+  PnLConfig: 'PnLConfig',
+  PnLEntry: 'PnLEntry',
   RequestLog: 'RequestLog'
 } as const
 
@@ -1713,6 +1721,134 @@ export const AppSettingScalarFieldEnum = {
 } as const
 
 export type AppSettingScalarFieldEnum = (typeof AppSettingScalarFieldEnum)[keyof typeof AppSettingScalarFieldEnum]
+
+
+export const ITProjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  clientName: 'clientName',
+  description: 'description',
+  projectValue: 'projectValue',
+  billingType: 'billingType',
+  monthlyBilling: 'monthlyBilling',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ITProjectScalarFieldEnum = (typeof ITProjectScalarFieldEnum)[keyof typeof ITProjectScalarFieldEnum]
+
+
+export const ITFreelancerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  skill: 'skill',
+  isActive: 'isActive',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ITFreelancerScalarFieldEnum = (typeof ITFreelancerScalarFieldEnum)[keyof typeof ITFreelancerScalarFieldEnum]
+
+
+export const ITProjectResourceScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  resourceType: 'resourceType',
+  employeeId: 'employeeId',
+  freelancerId: 'freelancerId',
+  allocationPercent: 'allocationPercent',
+  paymentType: 'paymentType',
+  monthlyCost: 'monthlyCost',
+  oneTimeCost: 'oneTimeCost',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ITProjectResourceScalarFieldEnum = (typeof ITProjectResourceScalarFieldEnum)[keyof typeof ITProjectResourceScalarFieldEnum]
+
+
+export const ITProjectBookingScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ITProjectBookingScalarFieldEnum = (typeof ITProjectBookingScalarFieldEnum)[keyof typeof ITProjectBookingScalarFieldEnum]
+
+
+export const DepartmentRevenueScalarFieldEnum = {
+  id: 'id',
+  department: 'department',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  description: 'description',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DepartmentRevenueScalarFieldEnum = (typeof DepartmentRevenueScalarFieldEnum)[keyof typeof DepartmentRevenueScalarFieldEnum]
+
+
+export const PnLCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  isSystem: 'isSystem',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  sourceKey: 'sourceKey',
+  departmentKey: 'departmentKey',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PnLCategoryScalarFieldEnum = (typeof PnLCategoryScalarFieldEnum)[keyof typeof PnLCategoryScalarFieldEnum]
+
+
+export const PnLConfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PnLConfigScalarFieldEnum = (typeof PnLConfigScalarFieldEnum)[keyof typeof PnLConfigScalarFieldEnum]
+
+
+export const PnLEntryScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  notes: 'notes',
+  isAutoFilled: 'isAutoFilled',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PnLEntryScalarFieldEnum = (typeof PnLEntryScalarFieldEnum)[keyof typeof PnLEntryScalarFieldEnum]
 
 
 export const RequestLogScalarFieldEnum = {

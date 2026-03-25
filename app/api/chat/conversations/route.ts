@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canAccessLead } from '@/lib/rbac'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { Prisma } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
@@ -21,17 +21,8 @@ export async function GET(request: NextRequest) {
     if (user.role === 'BD') {
       where.bdId = user.id
     } else if (user.role === 'TEAM_LEAD') {
-      const subordinateUserIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      const teamMemberIds = user.teamId
-        ? (
-            await prisma.user.findMany({
-              where: { teamId: user.teamId, role: 'BD' },
-              select: { id: true },
-            })
-          ).map((member) => member.id)
-        : []
-
-      where.bdId = { in: Array.from(new Set([user.id, ...subordinateUserIds, ...teamMemberIds])) }
+      const accessBdIds = await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId)
+      where.bdId = { in: [user.id, ...accessBdIds] }
     }
     // Insurance users see leads with KYP submissions
     if (user.role === 'INSURANCE_HEAD') {
@@ -97,7 +88,8 @@ export async function GET(request: NextRequest) {
     })
 
     // Filter leads based on access control and get unread counts
-    const subordinateIds = user.role === 'TEAM_LEAD' ? await getSubordinateUserIdsForLeadAccess(user.id) : undefined
+    const subordinateIds =
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
     const conversations = await Promise.all(
       leads
         .filter((lead) => canAccessLead(user, lead.bdId, lead.bd?.team?.id, subordinateIds))

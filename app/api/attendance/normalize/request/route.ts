@@ -2,12 +2,21 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { isWithinNormalizationWindow } from '@/lib/hrms/normalization-deadline'
+import {
+  isWithinNormalizationWindow,
+  NORMALIZATION_REASON_MIN_CHARS,
+} from '@/lib/hrms/normalization-deadline'
 import { z } from 'zod'
 
 const bodySchema = z.object({
   dates: z.array(z.string().transform((s) => new Date(s))).min(1),
-  reason: z.string().optional(),
+  reason: z
+    .string()
+    .trim()
+    .min(
+      NORMALIZATION_REASON_MIN_CHARS,
+      `Reason must be at least ${NORMALIZATION_REASON_MIN_CHARS} characters`
+    ),
 })
 
 function toDayStart(d: Date): Date {
@@ -86,7 +95,7 @@ export async function POST(request: NextRequest) {
         type: 'EMPLOYEE_REQUEST',
         requestedById: employee.id,
         status: 'PENDING',
-        reason: reason ?? null,
+        reason,
       })),
     })
 
@@ -109,7 +118,7 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return errorResponse('Invalid request data', 400)
+      return errorResponse(error.issues[0]?.message ?? 'Invalid request data', 400)
     }
     console.error('Error creating normalization request:', error)
     return errorResponse('Failed to request normalization', 500)

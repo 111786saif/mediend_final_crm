@@ -1,4 +1,4 @@
-import { AttendanceLog, PunchDirection } from '@/generated/prisma/client'
+import { AttendanceLog, PunchDirection, type Department } from '@/generated/prisma/client'
 
 export type AttendanceStatus =
   | 'on-time'
@@ -23,6 +23,19 @@ export const DEFAULT_DEPARTMENT_TIMING: DepartmentTiming = {
   grace2Minutes: 15,
   penaltyMinutes: 30,
   penaltyAmount: 200,
+}
+
+/** Map a DB Department row (or null) to attendance classification timing. */
+export function getDepartmentTiming(department: Department | null | undefined): DepartmentTiming {
+  if (!department) return DEFAULT_DEPARTMENT_TIMING
+  return {
+    shiftStartHour: department.shiftStartHour,
+    shiftStartMinute: department.shiftStartMinute,
+    grace1Minutes: department.grace1Minutes,
+    grace2Minutes: department.grace2Minutes,
+    penaltyMinutes: department.penaltyMinutes,
+    penaltyAmount: department.penaltyAmount,
+  }
 }
 
 const MIN_FULL_DAY_HOURS = 9

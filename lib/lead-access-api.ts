@@ -1,5 +1,5 @@
 import type { SessionUser } from '@/lib/auth'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
 import { canAccessLead } from '@/lib/rbac'
 
 /**
@@ -12,6 +12,6 @@ export async function canMutateLead(
   leadBdTeamId: string | null | undefined
 ): Promise<boolean> {
   const subordinateUserIds =
-    user.role === 'TEAM_LEAD' ? await getSubordinateUserIdsForLeadAccess(user.id) : undefined
+    user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
   return canAccessLead(user, leadBdId, leadBdTeamId ?? undefined, subordinateUserIds)
 }

@@ -452,6 +452,46 @@ export type AnesthesiaMaster = Prisma.AnesthesiaMasterModel
  */
 export type AppSetting = Prisma.AppSettingModel
 /**
+ * Model ITProject
+ * 
+ */
+export type ITProject = Prisma.ITProjectModel
+/**
+ * Model ITFreelancer
+ * 
+ */
+export type ITFreelancer = Prisma.ITFreelancerModel
+/**
+ * Model ITProjectResource
+ * 
+ */
+export type ITProjectResource = Prisma.ITProjectResourceModel
+/**
+ * Model ITProjectBooking
+ * 
+ */
+export type ITProjectBooking = Prisma.ITProjectBookingModel
+/**
+ * Model DepartmentRevenue
+ * 
+ */
+export type DepartmentRevenue = Prisma.DepartmentRevenueModel
+/**
+ * Model PnLCategory
+ * 
+ */
+export type PnLCategory = Prisma.PnLCategoryModel
+/**
+ * Model PnLConfig
+ * Key-value P&L settings (e.g. default seat cost per employee per month)
+ */
+export type PnLConfig = Prisma.PnLConfigModel
+/**
+ * Model PnLEntry
+ * 
+ */
+export type PnLEntry = Prisma.PnLEntryModel
+/**
  * Model RequestLog
  * 
  */

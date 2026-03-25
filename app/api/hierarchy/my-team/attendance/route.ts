@@ -5,29 +5,11 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getEmployeeByUserId, getSubordinates } from '@/lib/hierarchy'
 import {
-  groupAttendanceByDate,
   DEFAULT_DEPARTMENT_TIMING,
+  getDepartmentTiming,
+  groupAttendanceByDate,
   type DepartmentTiming,
 } from '@/lib/hrms/attendance-utils'
-
-function getDepartmentTiming(department: {
-  shiftStartHour: number
-  shiftStartMinute: number
-  grace1Minutes: number
-  grace2Minutes: number
-  penaltyMinutes: number
-  penaltyAmount: number
-} | null): DepartmentTiming {
-  if (!department) return DEFAULT_DEPARTMENT_TIMING
-  return {
-    shiftStartHour: department.shiftStartHour,
-    shiftStartMinute: department.shiftStartMinute,
-    grace1Minutes: department.grace1Minutes,
-    grace2Minutes: department.grace2Minutes,
-    penaltyMinutes: department.penaltyMinutes,
-    penaltyAmount: department.penaltyAmount,
-  }
-}
 
 export async function GET(request: NextRequest) {
   try {

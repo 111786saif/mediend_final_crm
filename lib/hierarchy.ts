@@ -172,6 +172,68 @@ export async function getSubordinateUserIdsForLeadAccess(userId: string): Promis
   return subordinates.map((s) => s.userId)
 }
 
+/** BDs assigned to a CRM sales team (`User.teamId`), used with hierarchy for TL visibility. */
+export async function getSalesTeamBdUserIds(teamId: string): Promise<string[]> {
+  const users = await prisma.user.findMany({
+    where: { teamId, role: 'BD' },
+    select: { id: true },
+  })
+  return users.map((u) => u.id)
+}
+
+/**
+ * CRM team id for a team lead: `User.teamId` when set, else the `Team` row where they are `teamLeadId`.
+ * Sales Heads sometimes set teamLead on the Team without syncing `user.teamId`.
+ */
+export async function getSalesTeamIdForTeamLeadUser(
+  userId: string,
+  sessionTeamId: string | null | undefined
+): Promise<string | null> {
+  if (sessionTeamId) return sessionTeamId
+  const team = await prisma.team.findFirst({
+    where: { teamLeadId: userId },
+    select: { id: true },
+  })
+  return team?.id ?? null
+}
+
+/**
+ * TEAM_LEAD lead visibility: HR org subordinates plus BDs on the same sales team (Sales Teams UI).
+ * The latter may not appear under the TL in the employee tree.
+ */
+export async function getTeamLeadLeadAccessBdUserIds(
+  userId: string,
+  teamId: string | null | undefined
+): Promise<string[]> {
+  const resolvedTeamId = await getSalesTeamIdForTeamLeadUser(userId, teamId)
+  const [hierarchyIds, teamBdIds] = await Promise.all([
+    getSubordinateUserIdsForLeadAccess(userId),
+    resolvedTeamId ? getSalesTeamBdUserIds(resolvedTeamId) : Promise.resolve([] as string[]),
+  ])
+  return Array.from(new Set([...hierarchyIds, ...teamBdIds]))
+}
+
+/** Employee rows for sales-team BDs (attendance, etc.). */
+export async function getSalesTeamBdEmployeeIds(teamId: string): Promise<string[]> {
+  const userIds = await getSalesTeamBdUserIds(teamId)
+  if (userIds.length === 0) return []
+  const employees = await prisma.employee.findMany({
+    where: { userId: { in: userIds } },
+    select: { id: true },
+  })
+  return employees.map((e) => e.id)
+}
+
+/** Same as getSalesTeamBdEmployeeIds but resolves team from TL session / Team.teamLeadId. */
+export async function getSalesTeamBdEmployeeIdsForTeamLead(
+  userId: string,
+  sessionTeamId: string | null | undefined
+): Promise<string[]> {
+  const teamId = await getSalesTeamIdForTeamLeadUser(userId, sessionTeamId)
+  if (!teamId) return []
+  return getSalesTeamBdEmployeeIds(teamId)
+}
+
 /**
  * Build org chart tree: root employees (no manager) and their recursive subordinates.
  */

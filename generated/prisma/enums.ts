@@ -24,6 +24,7 @@ export const UserRole = {
   FINANCE_HEAD: 'FINANCE_HEAD',
   DIGITAL_MARKETING_HEAD: 'DIGITAL_MARKETING_HEAD',
   IT_HEAD: 'IT_HEAD',
+  LOAN_DEMAT_HEAD: 'LOAN_DEMAT_HEAD',
   ADMIN: 'ADMIN',
   USER: 'USER',
   TESTER: 'TESTER'
@@ -392,6 +393,58 @@ export const EmployeeStatus = {
 } as const
 
 export type EmployeeStatus = (typeof EmployeeStatus)[keyof typeof EmployeeStatus]
+
+
+export const ITProjectStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  ON_HOLD: 'ON_HOLD',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ITProjectStatus = (typeof ITProjectStatus)[keyof typeof ITProjectStatus]
+
+
+export const ITBillingType = {
+  FIXED: 'FIXED',
+  MONTHLY: 'MONTHLY',
+  MILESTONE: 'MILESTONE'
+} as const
+
+export type ITBillingType = (typeof ITBillingType)[keyof typeof ITBillingType]
+
+
+export const ITResourceType = {
+  SALARIED: 'SALARIED',
+  FREELANCE: 'FREELANCE'
+} as const
+
+export type ITResourceType = (typeof ITResourceType)[keyof typeof ITResourceType]
+
+
+export const ITResourcePaymentType = {
+  MONTHLY: 'MONTHLY',
+  ONE_TIME: 'ONE_TIME',
+  BOTH: 'BOTH'
+} as const
+
+export type ITResourcePaymentType = (typeof ITResourcePaymentType)[keyof typeof ITResourcePaymentType]
+
+
+export const RevenueDepartment = {
+  LOAN_DEMAT: 'LOAN_DEMAT',
+  GOOGLE_ADS: 'GOOGLE_ADS'
+} as const
+
+export type RevenueDepartment = (typeof RevenueDepartment)[keyof typeof RevenueDepartment]
+
+
+export const PnLCategoryType = {
+  REVENUE: 'REVENUE',
+  EXPENSE: 'EXPENSE'
+} as const
+
+export type PnLCategoryType = (typeof PnLCategoryType)[keyof typeof PnLCategoryType]
 
 
 export const NormalizationType = {

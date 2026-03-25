@@ -40,6 +40,12 @@ export type Permission =
   | 'hierarchy:team:read'
   | 'hierarchy:leave:approve'
   | 'it:permissions'
+  | 'it:pnl:read'
+  | 'it:pnl:write'
+  | 'loan-demat:read'
+  | 'loan-demat:write'
+  | 'pnl:read'
+  | 'pnl:write'
   | 'masters:read'
   | 'masters:write'
 
@@ -67,6 +73,12 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:team:read',
     'hierarchy:leave:approve',
     'it:permissions',
+    'pnl:read',
+    'pnl:write',
+    'it:pnl:read',
+    'it:pnl:write',
+    'loan-demat:read',
+    'loan-demat:write',
     'masters:read',
     'masters:write',
   ],
@@ -100,6 +112,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:leave:approve',
     'hrms:employees:read',
     'hrms:employees:write',
+    'pnl:read',
+    'it:pnl:read',
   ],
   CATEGORY_MANAGER: [
     'leads:read',
@@ -158,12 +172,14 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'pl:read',
     'pl:write',
     'analytics:read',
+    'pnl:read',
     'departments:create',
     'users:create_tl',
     'users:create_user',
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
+    'it:pnl:read',
   ],
   HR_HEAD: [
     'users:read',
@@ -189,6 +205,14 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:team:read',
     'hierarchy:leave:approve',
   ],
+  LOAN_DEMAT_HEAD: [
+    'analytics:read',
+    'loan-demat:read',
+    'loan-demat:write',
+    'pnl:read',
+    'hierarchy:read',
+    'hierarchy:team:read',
+  ],
   FINANCE_HEAD: [
     'analytics:read',
     'finance:read',
@@ -203,6 +227,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
+    'pnl:read',
+    'pnl:write',
   ],
   DIGITAL_MARKETING_HEAD: [
     'analytics:read',
@@ -214,6 +240,10 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'users:read',
     'users:write',
     'it:permissions',
+    'it:pnl:read',
+    'it:pnl:write',
+    'pnl:read',
+    'hrms:employees:read',
     'hierarchy:read',
     'hierarchy:team:read',
   ],
@@ -269,6 +299,12 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:leave:approve',
     'masters:read',
     'masters:write',
+    'pnl:read',
+    'pnl:write',
+    'it:pnl:read',
+    'it:pnl:write',
+    'loan-demat:read',
+    'loan-demat:write',
   ],
   USER: [
     'hrms:read',
@@ -317,6 +353,12 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:leave:approve',
     'masters:read',
     'masters:write',
+    'pnl:read',
+    'pnl:write',
+    'it:pnl:read',
+    'it:pnl:write',
+    'loan-demat:read',
+    'loan-demat:write',
   ],
 }
 
@@ -372,7 +414,17 @@ export function canManageTeam(user: SessionUser | null, teamSalesHeadId?: string
 
 // Hierarchy validation functions
 
-const DEPT_HEAD_ROLES: UserRole[] = ['INSURANCE_HEAD', 'PL_HEAD', 'SALES_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD']
+const DEPT_HEAD_ROLES: UserRole[] = [
+  'INSURANCE_HEAD',
+  'PL_HEAD',
+  'SALES_HEAD',
+  'HR_HEAD',
+  'FINANCE_HEAD',
+  'OUTSTANDING_HEAD',
+  'DIGITAL_MARKETING_HEAD',
+  'IT_HEAD',
+  'LOAN_DEMAT_HEAD',
+]
 
 export function isDepartmentHead(role: UserRole): boolean {
   return DEPT_HEAD_ROLES.includes(role)
@@ -423,7 +475,25 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
   if (!user) return []
 
   // MD cannot be created
-  const allRolesExceptMD: UserRole[] = ['EXECUTIVE_ASSISTANT', 'SALES_HEAD', 'CATEGORY_MANAGER', 'ASSISTANT_CATEGORY_MANAGER', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'ADMIN', 'USER', 'TESTER']
+  const allRolesExceptMD: UserRole[] = [
+    'EXECUTIVE_ASSISTANT',
+    'SALES_HEAD',
+    'CATEGORY_MANAGER',
+    'ASSISTANT_CATEGORY_MANAGER',
+    'TEAM_LEAD',
+    'BD',
+    'INSURANCE_HEAD',
+    'PL_HEAD',
+    'OUTSTANDING_HEAD',
+    'HR_HEAD',
+    'FINANCE_HEAD',
+    'DIGITAL_MARKETING_HEAD',
+    'IT_HEAD',
+    'LOAN_DEMAT_HEAD',
+    'ADMIN',
+    'USER',
+    'TESTER',
+  ]
 
   if (user.role === 'MD' || user.role === 'ADMIN' || user.role === 'TESTER') {
     return allRolesExceptMD
@@ -431,7 +501,23 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
 
   // HR_HEAD can create department head roles
   if (user.role === 'HR_HEAD') {
-    return ['INSURANCE_HEAD', 'PL_HEAD', 'SALES_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'EXECUTIVE_ASSISTANT', 'CATEGORY_MANAGER', 'ASSISTANT_CATEGORY_MANAGER', 'TEAM_LEAD', 'USER', 'BD']
+    return [
+      'INSURANCE_HEAD',
+      'PL_HEAD',
+      'SALES_HEAD',
+      'HR_HEAD',
+      'FINANCE_HEAD',
+      'OUTSTANDING_HEAD',
+      'DIGITAL_MARKETING_HEAD',
+      'IT_HEAD',
+      'LOAN_DEMAT_HEAD',
+      'EXECUTIVE_ASSISTANT',
+      'CATEGORY_MANAGER',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'TEAM_LEAD',
+      'USER',
+      'BD',
+    ]
   }
 
   if (isDepartmentHead(user.role)) {

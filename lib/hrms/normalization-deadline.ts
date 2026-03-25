@@ -4,6 +4,9 @@
  * - Before April 1, 2026: deadline is end of 5th of next month
  */
 
+/** Minimum characters for employee normalization reason (request to manager / self-normalize). */
+export const NORMALIZATION_REASON_MIN_CHARS = 50
+
 const WEEK_RULE_START = new Date(Date.UTC(2026, 3, 1, 0, 0, 0, 0)) // April 1, 2026 UTC
 
 function toDayStart(d: Date): Date {

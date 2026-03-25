@@ -65,6 +65,12 @@ export async function GET(request: NextRequest) {
             user: { select: { name: true, email: true } },
           },
         },
+        managerApprovedBy: {
+          select: {
+            id: true,
+            user: { select: { name: true, email: true } },
+          },
+        },
         approvedBy: {
           select: {
             id: true,
@@ -75,22 +81,37 @@ export async function GET(request: NextRequest) {
     })
 
     return successResponse({
-      list: list.map((n) => ({
-        id: n.id,
-        employeeId: n.employeeId,
-        employeeName: n.employee.user.name,
-        employeeCode: n.employee.employeeCode,
-        employeeEmail: n.employee.user.email,
-        date: n.date.toISOString().split('T')[0],
-        type: n.type,
-        status: n.status,
-        reason: n.reason,
-        normalizeAs: n.normalizeAs ?? null,
-        createdAt: n.createdAt.toISOString(),
-        requestedBy: n.requestedBy?.user?.name ?? null,
-        requestedByEmail: n.requestedBy?.user?.email ?? null,
-        approvedBy: n.approvedBy?.user?.name ?? null,
-      })),
+      list: list.map((n) => {
+        // Employee-initiated requests: after manager approval, HR cares who approved on behalf of the team.
+        const useManagerAsRequester =
+          n.type === 'EMPLOYEE_REQUEST' && n.managerApprovedBy != null
+        const requestedByName = useManagerAsRequester
+          ? n.managerApprovedBy!.user.name
+          : (n.requestedBy?.user?.name ?? null)
+        const requestedByEmail = useManagerAsRequester
+          ? n.managerApprovedBy!.user.email
+          : (n.requestedBy?.user?.email ?? null)
+
+        return {
+          id: n.id,
+          employeeId: n.employeeId,
+          employeeName: n.employee.user.name,
+          employeeCode: n.employee.employeeCode,
+          employeeEmail: n.employee.user.email,
+          date: n.date.toISOString().split('T')[0],
+          type: n.type,
+          status: n.status,
+          reason: n.reason,
+          normalizeAs: n.normalizeAs ?? null,
+          createdAt: n.createdAt.toISOString(),
+          requestedBy: requestedByName,
+          requestedByEmail,
+          /** Employee who submitted (differs from requestedBy after manager approval for EMPLOYEE_REQUEST) */
+          submittedByEmployeeName: n.requestedBy?.user?.name ?? null,
+          submittedByEmployeeEmail: n.requestedBy?.user?.email ?? null,
+          approvedBy: n.approvedBy?.user?.name ?? null,
+        }
+      }),
     })
   } catch (error) {
     console.error('Error fetching HR normalizations:', error)

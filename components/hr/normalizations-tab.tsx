@@ -27,6 +27,9 @@ interface NormalizationRow {
   createdAt: string
   requestedBy: string | null
   requestedByEmail: string | null
+  /** Who filed the request (employee); may differ from requestedBy when that column shows the approving manager */
+  submittedByEmployeeName?: string | null
+  submittedByEmployeeEmail?: string | null
   approvedBy: string | null
 }
 
@@ -147,7 +150,19 @@ export function NormalizationsTab() {
                     </TableCell>
                     <TableCell>
                       {row.requestedBy ?? '—'}
-                      {row.requestedByEmail && <span className="block text-xs text-muted-foreground">{row.requestedByEmail}</span>}
+                      {row.requestedByEmail && (
+                        <span className="block text-xs text-muted-foreground">{row.requestedByEmail}</span>
+                      )}
+                      {row.type === 'EMPLOYEE_REQUEST' &&
+                        row.submittedByEmployeeName &&
+                        row.submittedByEmployeeName !== row.requestedBy && (
+                          <span className="block text-xs text-muted-foreground mt-1 pt-1 border-t border-border/60">
+                            Employee: {row.submittedByEmployeeName}
+                            {row.submittedByEmployeeEmail ? (
+                              <span className="block opacity-90">{row.submittedByEmployeeEmail}</span>
+                            ) : null}
+                          </span>
+                        )}
                     </TableCell>
                     <TableCell className="max-w-[200px] truncate">{row.reason || '—'}</TableCell>
                     <TableCell>

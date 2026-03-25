@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { canAccessLead, hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     }
 
     const subordinateUserIds =
-      user.role === 'TEAM_LEAD' ? await getSubordinateUserIdsForLeadAccess(user.id) : undefined
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
     if (!canAccessLead(user, lead.bdId, lead.bd?.team?.id, subordinateUserIds)) {
       return errorResponse('Forbidden', 403)
     }
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
 
     const subordinateUserIds =
-      user.role === 'TEAM_LEAD' ? await getSubordinateUserIdsForLeadAccess(user.id) : undefined
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
     if (!canAccessLead(user, lead.bdId, lead.bd?.team?.id, subordinateUserIds)) {
       return errorResponse('Forbidden', 403)
     }

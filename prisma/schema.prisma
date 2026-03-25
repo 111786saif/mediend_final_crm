@@ -25,6 +25,7 @@ enum UserRole {
   FINANCE_HEAD
   DIGITAL_MARKETING_HEAD
   IT_HEAD
+  LOAN_DEMAT_HEAD
   ADMIN
   USER
   TESTER
@@ -295,6 +296,41 @@ enum EmployeeStatus {
   TERMINATED
 }
 
+// Company-wide P&L (IT projects, department revenue, dynamic finance table)
+enum ITProjectStatus {
+  ACTIVE
+  COMPLETED
+  ON_HOLD
+  CANCELLED
+}
+
+enum ITBillingType {
+  FIXED
+  MONTHLY
+  MILESTONE
+}
+
+enum ITResourceType {
+  SALARIED
+  FREELANCE
+}
+
+enum ITResourcePaymentType {
+  MONTHLY
+  ONE_TIME
+  BOTH
+}
+
+enum RevenueDepartment {
+  LOAN_DEMAT
+  GOOGLE_ADS
+}
+
+enum PnLCategoryType {
+  REVENUE
+  EXPENSE
+}
+
 model User {
   id             String   @id @default(cuid())
   email          String   @unique
@@ -400,6 +436,14 @@ model User {
   fnfCompletedForEmployees Employee[] @relation("FnFCompletedBy")
 
   leadCallNotes CallNote[] @relation("LeadCallNoteAuthor")
+
+  // Company P&L / IT project tracking
+  itProjectsCreated       ITProject[]           @relation("ITProjectCreator")
+  itFreelancersCreated    ITFreelancer[]        @relation("ITFreelancerCreator")
+  itProjectBookingsCreated ITProjectBooking[]   @relation("ITProjectBookingCreator")
+  departmentRevenuesCreated DepartmentRevenue[] @relation("DepartmentRevenueCreator")
+  pnlCategoriesCreated    PnLCategory[]         @relation("PnLCategoryCreator")
+  pnlEntriesCreated       PnLEntry[]            @relation("PnLEntryCreator")
 
   @@index([email])
   @@index([role])
@@ -843,6 +887,7 @@ model Employee {
   ijpApplications      IJPApplication[]
   mdTaskTeamMemberships MDTaskTeamMember[]
   mdWatchlistMemberships MDWatchlistEmployee[]
+  itProjectResources     ITProjectResource[]
 
   @@index([userId])
   @@index([employeeCode])
@@ -2576,6 +2621,156 @@ model AppSetting {
   value     String   @db.Text
   updatedAt DateTime @updatedAt
   updatedBy String?
+}
+
+// --- Company P&L: IT projects, freelancers, department revenue, dynamic P&L entries ---
+
+model ITProject {
+  id              String          @id @default(cuid())
+  name            String
+  clientName      String?
+  description     String?         @db.Text
+  projectValue    Float           @default(0)
+  billingType     ITBillingType   @default(MONTHLY)
+  monthlyBilling  Float?
+  startDate       DateTime?
+  endDate         DateTime?
+  status          ITProjectStatus @default(ACTIVE)
+  createdById     String
+  createdBy       User            @relation("ITProjectCreator", fields: [createdById], references: [id])
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  resources ITProjectResource[]
+  bookings  ITProjectBooking[]
+
+  @@index([status])
+  @@index([createdById])
+}
+
+model ITFreelancer {
+  id          String   @id @default(cuid())
+  name        String
+  email       String?
+  phone       String?
+  skill       String?
+  isActive    Boolean  @default(true)
+  createdById String
+  createdBy   User     @relation("ITFreelancerCreator", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectResources ITProjectResource[]
+
+  @@index([isActive])
+  @@index([createdById])
+}
+
+model ITProjectResource {
+  id                String               @id @default(cuid())
+  projectId         String
+  project           ITProject            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  resourceType      ITResourceType
+  employeeId        String?
+  employee          Employee?            @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+  freelancerId      String?
+  freelancer        ITFreelancer?        @relation(fields: [freelancerId], references: [id], onDelete: SetNull)
+  allocationPercent Float                @default(0) // 0-100 for salaried split
+  paymentType       ITResourcePaymentType @default(MONTHLY)
+  monthlyCost       Float                @default(0)
+  oneTimeCost       Float                @default(0)
+  startDate         DateTime?
+  endDate           DateTime?
+  isActive          Boolean              @default(true)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  @@index([projectId])
+  @@index([employeeId])
+  @@index([freelancerId])
+}
+
+model ITProjectBooking {
+  id          String    @id @default(cuid())
+  projectId String
+  project     ITProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  month       Int
+  year        Int
+  amount      Float     @default(0)
+  notes       String?   @db.Text
+  createdById String
+  createdBy   User      @relation("ITProjectBookingCreator", fields: [createdById], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([projectId, month, year])
+  @@index([month, year])
+}
+
+model DepartmentRevenue {
+  id          String            @id @default(cuid())
+  department  RevenueDepartment
+  month       Int
+  year        Int
+  amount      Float             @default(0)
+  description String?
+  notes       String?           @db.Text
+  createdById String
+  createdBy   User              @relation("DepartmentRevenueCreator", fields: [createdById], references: [id])
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([department, month, year])
+}
+
+model PnLCategory {
+  id          String           @id @default(cuid())
+  name        String
+  type        PnLCategoryType
+  isSystem    Boolean          @default(false)
+  sortOrder   Int              @default(0)
+  isActive    Boolean          @default(true)
+  /// Stable key for revenue sync: SURGERY, IT, LOAN_DEMAT, GOOGLE_ADS; expense: SALARY, SEAT_COST, etc.
+  sourceKey   String?
+  /// SURGERY | IT | LOAN_DEMAT | GOOGLE_ADS for department-scoped expenses; null for revenue rows and ad-hoc categories
+  departmentKey String?
+  createdById String?
+  createdBy   User?            @relation("PnLCategoryCreator", fields: [createdById], references: [id])
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  entries PnLEntry[]
+
+  @@unique([sourceKey, departmentKey])
+  @@index([type])
+  @@index([isActive])
+  @@index([departmentKey])
+}
+
+/// Key-value P&L settings (e.g. default seat cost per employee per month)
+model PnLConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Float
+  updatedAt DateTime @updatedAt
+}
+
+model PnLEntry {
+  id           String      @id @default(cuid())
+  categoryId   String
+  category     PnLCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  month        Int
+  year         Int
+  amount       Float       @default(0)
+  notes        String?     @db.Text
+  isAutoFilled Boolean     @default(false)
+  createdById  String?
+  createdBy    User?       @relation("PnLEntryCreator", fields: [createdById], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([categoryId, month, year])
+  @@index([month, year])
 }
 
 // Observability: API request logs
