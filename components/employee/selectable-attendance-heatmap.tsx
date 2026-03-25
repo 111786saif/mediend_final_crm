@@ -9,7 +9,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import type { AttendanceDay, AttendanceStatusType, LeaveDay } from './attendance-heatmap'
+import {
+  shouldShowHalfDayPink,
+  type AttendanceDay,
+  type AttendanceStatusType,
+  type LeaveDay,
+} from './attendance-heatmap'
+import { MIN_FULL_DAY_HOURS } from '@/lib/hrms/attendance-utils'
 
 function formatTime(date: Date | string | null) {
   if (!date) return 'N/A'
@@ -54,8 +60,23 @@ function getStatusConfig(
         baseBgColor: base.bgColor,
       }
     }
-    const status = attendanceRecord.status
     const entryExit = `Entry: ${formatTime(attendanceRecord.inTime)}\nExit: ${formatTime(attendanceRecord.outTime)}`
+
+    if (shouldShowHalfDayPink(attendanceRecord)) {
+      const penalty = attendanceRecord.penalty ?? 0
+      const label =
+        penalty > 0 && attendanceRecord.status === 'late-penalty'
+          ? `Half day (under ${MIN_FULL_DAY_HOURS} hours) + Late penalty ₹${penalty}`
+          : 'Half day'
+      return {
+        status: 'half-day',
+        bgColor: 'bg-pink-400',
+        textColor: 'text-white',
+        tooltipText: `${dateKey} - ${label}\n${entryExit}`,
+      }
+    }
+
+    const status = attendanceRecord.status
     if (status === 'on-time') {
       return { status: 'on-time', bgColor: 'bg-green-600', textColor: 'text-white', tooltipText: `${dateKey} - On time\n${entryExit}` }
     }
@@ -65,14 +86,6 @@ function getStatusConfig(
     if (status === 'grace-2') {
       return { status: 'grace-2', bgColor: 'bg-green-400', textColor: 'text-white', tooltipText: `${dateKey} - Grace\n${entryExit}` }
     }
-    if (status === 'late-penalty' && attendanceRecord.isHalfDay) {
-      return {
-        status: 'half-day',
-        bgColor: 'bg-pink-400',
-        textColor: 'text-white',
-        tooltipText: `${dateKey} - Half day (under 9 hours) + Late penalty ₹${attendanceRecord.penalty ?? 0}\n${entryExit}`,
-      }
-    }
     if (status === 'late-penalty') {
       return {
         status: 'late-penalty',
@@ -80,9 +93,6 @@ function getStatusConfig(
         textColor: 'text-gray-900',
         tooltipText: `${dateKey} - Late (penalty ₹${attendanceRecord.penalty ?? 0})\n${entryExit}`,
       }
-    }
-    if (status === 'half-day' || attendanceRecord.isHalfDay) {
-      return { status: 'half-day', bgColor: 'bg-pink-400', textColor: 'text-white', tooltipText: `${dateKey} - Half day\n${entryExit}` }
     }
     if (attendanceRecord.isLate) {
       return { status: 'late', bgColor: 'bg-yellow-500', textColor: 'text-gray-900', tooltipText: `${dateKey} - Late\n${entryExit}` }

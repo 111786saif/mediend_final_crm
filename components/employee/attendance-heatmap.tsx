@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { MIN_FULL_DAY_HOURS } from '@/lib/hrms/attendance-utils'
 
 export type AttendanceStatusType =
   | 'on-time'
@@ -30,6 +31,8 @@ export interface AttendanceDay {
   date: Date
   inTime: Date | null
   outTime: Date | null
+  /** Present when API sends grouped attendance (same as server `calculateWorkHours`). */
+  workHours?: number | null
   isLate: boolean
   status?: AttendanceStatusType
   penalty?: number
@@ -78,6 +81,32 @@ function getExitTimeDisplay(inTime: Date | string | null, outTime: Date | string
   return formatTime(outTime)
 }
 
+function getWorkHoursFromRecord(record: AttendanceDay): number | null {
+  if (record.workHours != null && typeof record.workHours === 'number' && !Number.isNaN(record.workHours)) {
+    return record.workHours
+  }
+  const a = toDate(record.inTime)
+  const b = toDate(record.outTime)
+  if (!a || !b) return null
+  const diffMs = b.getTime() - a.getTime()
+  if (diffMs <= 0) return null
+  return diffMs / (1000 * 60 * 60)
+}
+
+/**
+ * Half-day (pink) when server says so, or when 9h are not completed (matches payroll rule).
+ * Used so the grid stays correct even if `status` / `isHalfDay` are missing on the client.
+ */
+export function shouldShowHalfDayPink(record: AttendanceDay): boolean {
+  if (record.status === 'half-day') return true
+  if (record.isHalfDay === true) return true
+  const wh = getWorkHoursFromRecord(record)
+  if (wh === null) {
+    return record.inTime != null
+  }
+  return wh < MIN_FULL_DAY_HOURS
+}
+
 function getStatusConfig(
   attendanceRecord: AttendanceDay | undefined,
   leaveInfo: LeaveDay | undefined,
@@ -111,8 +140,23 @@ function getStatusConfig(
         baseBgColor: base.bgColor,
       }
     }
-    const status = attendanceRecord.status
     const entryExit = `Entry: ${formatTime(attendanceRecord.inTime)}\nExit: ${getExitTimeDisplay(attendanceRecord.inTime, attendanceRecord.outTime)}`
+
+    if (shouldShowHalfDayPink(attendanceRecord)) {
+      const penalty = attendanceRecord.penalty ?? 0
+      const label =
+        penalty > 0 && attendanceRecord.status === 'late-penalty'
+          ? `Half day (under ${MIN_FULL_DAY_HOURS} hours) + Late penalty ₹${penalty}`
+          : 'Half day'
+      return {
+        status: 'half-day',
+        bgColor: 'bg-pink-400',
+        textColor: 'text-white',
+        tooltipText: `${dateKey} - ${label}\n${entryExit}`,
+      }
+    }
+
+    const status = attendanceRecord.status
     if (status === 'on-time') {
       return {
         status: 'on-time',
@@ -137,28 +181,12 @@ function getStatusConfig(
         tooltipText: `${dateKey} - Grace\n${entryExit}`,
       }
     }
-    if (status === 'late-penalty' && attendanceRecord.isHalfDay) {
-      return {
-        status: 'half-day',
-        bgColor: 'bg-pink-400',
-        textColor: 'text-white',
-        tooltipText: `${dateKey} - Half day (under 9 hours) + Late penalty ₹${attendanceRecord.penalty ?? 0}\n${entryExit}`,
-      }
-    }
     if (status === 'late-penalty') {
       return {
         status: 'late-penalty',
         bgColor: 'bg-yellow-500',
         textColor: 'text-gray-900',
         tooltipText: `${dateKey} - Late (penalty ₹${attendanceRecord.penalty ?? 0})\n${entryExit}`,
-      }
-    }
-    if (status === 'half-day' || attendanceRecord.isHalfDay) {
-      return {
-        status: 'half-day',
-        bgColor: 'bg-pink-400',
-        textColor: 'text-white',
-        tooltipText: `${dateKey} - Half day\n${entryExit}`,
       }
     }
     if (attendanceRecord.isLate) {

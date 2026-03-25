@@ -38,7 +38,8 @@ export function getDepartmentTiming(department: Department | null | undefined): 
   }
 }
 
-const MIN_FULL_DAY_HOURS = 9
+/** Minimum worked hours to count as a full day (payroll + heatmap must stay aligned). */
+export const MIN_FULL_DAY_HOURS = 9
 
 export interface AttendanceClassification {
   status: AttendanceStatus
