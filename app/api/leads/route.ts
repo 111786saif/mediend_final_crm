@@ -6,6 +6,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { FlowType, Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
+import { last10DigitsFromStored } from '@/lib/phone-search'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
@@ -102,13 +103,32 @@ export async function GET(request: NextRequest) {
 
     const isPipelineView = view === 'pipeline'
 
+    const phoneSearchParam = searchParams.get('phoneSearch')
+    const phoneLast10 =
+      phoneSearchParam && /^\d{10}$/.test(phoneSearchParam) ? phoneSearchParam : null
+
+    let finalWhere: Prisma.LeadWhereInput = where
+    if (phoneLast10) {
+      finalWhere = {
+        AND: [
+          where,
+          {
+            OR: [
+              { phoneNumber: { contains: phoneLast10 } },
+              { alternateNumber: { contains: phoneLast10 } },
+            ],
+          },
+        ],
+      }
+    }
+
     const pipelineSelect = {
       id: true,
       leadRef: true,
       patientName: true,
       age: true,
+      dateOfBirth: true,
       sex: true,
-      phoneNumber: true,
       treatment: true,
       category: true,
       status: true,
@@ -126,6 +146,7 @@ export async function GET(request: NextRequest) {
       bd: { select: { id: true, name: true, team: { select: { id: true } } } },
       kypSubmission: { select: { id: true, status: true } },
       plRecord: { select: { bdmName: true } },
+      ...(phoneLast10 ? { phoneNumber: true, alternateNumber: true } : {}),
     } satisfies Prisma.LeadSelect
 
     const fullInclude = {
@@ -218,14 +239,14 @@ export async function GET(request: NextRequest) {
 
     const leads = isPipelineView
       ? await prisma.lead.findMany({
-          where,
+          where: finalWhere,
           select: pipelineSelect,
           orderBy: {
             createdDate: 'desc',
           },
         })
       : await prisma.lead.findMany({
-          where,
+          where: finalWhere,
           include: fullInclude,
           orderBy: {
             createdDate: 'desc',
@@ -233,9 +254,17 @@ export async function GET(request: NextRequest) {
         })
 
     // Filter leads based on access control
-    const accessibleLeads = leads.filter((lead) =>
+    let accessibleLeads = leads.filter((lead) =>
       canAccessLead(user, lead.bdId, lead.bd?.team?.id, subordinateUserIds)
     )
+
+    if (phoneLast10) {
+      accessibleLeads = accessibleLeads.filter((lead) => {
+        const p = last10DigitsFromStored(lead.phoneNumber)
+        const a = last10DigitsFromStored(lead.alternateNumber)
+        return p === phoneLast10 || a === phoneLast10
+      })
+    }
 
     // Debug logging for insurance users
     if (user.role === 'INSURANCE_HEAD') {
@@ -251,12 +280,23 @@ export async function GET(request: NextRequest) {
     // Map status and source codes to text values for display
     // Mask phone numbers if user is not INSURANCE_HEAD or ADMIN
     const canViewPhone = user.role === 'INSURANCE_HEAD' || user.role === 'ADMIN'
-    const mappedLeads = accessibleLeads.map((lead) => ({
-      ...lead,
-      status: mapStatusCode(lead.status),
-      source: lead.source ? mapSourceCode(lead.source) : lead.source,
-      phoneNumber: canViewPhone ? lead.phoneNumber : (lead.phoneNumber ? maskPhoneNumber(lead.phoneNumber) : null),
-    }))
+    const mappedLeads = accessibleLeads.map((lead) => {
+      const base = {
+        ...lead,
+        status: mapStatusCode(lead.status),
+        source: lead.source ? mapSourceCode(lead.source) : lead.source,
+      }
+      if (isPipelineView) {
+        const rest = { ...base } as Record<string, unknown>
+        delete rest.phoneNumber
+        delete rest.alternateNumber
+        return rest as typeof base
+      }
+      return {
+        ...base,
+        phoneNumber: canViewPhone ? lead.phoneNumber : (lead.phoneNumber ? maskPhoneNumber(lead.phoneNumber) : null),
+      }
+    })
 
     return successResponse(mappedLeads)
   } catch (error) {

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { parseDepartmentTargets } from '../dept-target-utils'
 
 const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD'] as const
 
@@ -16,7 +17,8 @@ function getMonthBounds(monthOffset: number) {
 async function computeAchievement(
   metric: string,
   start: Date,
-  end: Date
+  end: Date,
+  headCountDepartmentIds?: string[] | null
 ): Promise<number> {
   switch (metric) {
     case 'IPD_DONE': {
@@ -43,6 +45,14 @@ async function computeAchievement(
       })
     }
     case 'HEAD_COUNT': {
+      if (headCountDepartmentIds && headCountDepartmentIds.length > 0) {
+        return prisma.employee.count({
+          where: {
+            departmentId: { in: headCountDepartmentIds },
+            createdAt: { gte: start, lte: end },
+          },
+        })
+      }
       return prisma.employee.count({
         where: { createdAt: { gte: start, lte: end } },
       })
@@ -125,56 +135,90 @@ export async function GET(request: NextRequest) {
       getMonthBounds(-3),
     ]
 
-    const [targets, ...achievements] = await Promise.all([
-      prisma.target.findMany({
-        where: {
-          targetType: 'DEPARTMENT_HEAD',
-          targetForId: headUserId,
-          OR: months.map((m) => ({
-            periodStartDate: { lte: m.end },
-            periodEndDate: { gte: m.start },
-          })),
-        },
-        orderBy: { periodStartDate: 'desc' },
-      }),
-      ...months.map((m) => computeAchievement(metric, m.start, m.end)),
-    ])
+    const targets = await prisma.target.findMany({
+      where: {
+        targetType: 'DEPARTMENT_HEAD',
+        targetForId: headUserId,
+        OR: months.map((m) => ({
+          periodStartDate: { lte: m.end },
+          periodEndDate: { gte: m.start },
+        })),
+      },
+      orderBy: { periodStartDate: 'desc' },
+    })
 
-    const targetByMonth = new Map<string, { targetValue: number; targetId: string }>()
+    const targetByMonth = new Map<
+      string,
+      { targetValue: number; targetId: string; departmentTargets: unknown }
+    >()
     for (const t of targets) {
       const key = `${t.periodStartDate.getFullYear()}-${String(t.periodStartDate.getMonth() + 1).padStart(2, '0')}`
+      const parsed = parseDepartmentTargets(t.departmentTargets)
+      const targetValue =
+        metric === 'HEAD_COUNT' && parsed?.length
+          ? parsed.reduce((s, d) => s + d.addCount, 0)
+          : t.targetValue
       targetByMonth.set(key, {
-        targetValue: t.targetValue,
+        targetValue,
         targetId: t.id,
+        departmentTargets: t.departmentTargets,
       })
     }
 
-    const history = months.map((m, i) => {
-      const key = `${m.start.getFullYear()}-${String(m.start.getMonth() + 1).padStart(2, '0')}`
-      const targetInfo = targetByMonth.get(key)
-      const actual = achievements[i] ?? 0
-      const targetValue = targetInfo?.targetValue ?? 0
-      const percentage = targetValue > 0 ? Math.round((actual / targetValue) * 100) : 0
+    const history = await Promise.all(
+      months.map(async (m) => {
+        const key = `${m.start.getFullYear()}-${String(m.start.getMonth() + 1).padStart(2, '0')}`
+        const targetInfo = targetByMonth.get(key)
+        const deptParsed = parseDepartmentTargets(targetInfo?.departmentTargets)
+        const headCountDeptIds =
+          metric === 'HEAD_COUNT' && deptParsed?.length
+            ? deptParsed.map((d) => d.departmentId)
+            : null
+        const actual = await computeAchievement(
+          metric,
+          m.start,
+          m.end,
+          headCountDeptIds
+        )
+        const targetValue = targetInfo?.targetValue ?? 0
+        const percentage =
+          targetValue > 0 ? Math.round((actual / targetValue) * 100) : 0
 
-      return {
-        month: m.label,
-        monthKey: key,
-        start: m.start.toISOString(),
-        end: m.end.toISOString(),
-        targetValue,
-        targetId: targetInfo?.targetId ?? null,
-        actual,
-        percentage,
-      }
-    })
+        return {
+          month: m.label,
+          monthKey: key,
+          start: m.start.toISOString(),
+          end: m.end.toISOString(),
+          targetValue,
+          targetId: targetInfo?.targetId ?? null,
+          actual,
+          percentage,
+        }
+      })
+    )
 
-    let departmentBreakdown: { departmentId: string; departmentName: string; currentCount: number; addedInPeriod: number }[] = []
+    let departmentBreakdown: {
+      departmentId: string
+      departmentName: string
+      currentCount: number
+      addedInPeriod: number
+      monthlyTarget: number
+    }[] = []
 
     if (headUser.role === 'HR_HEAD') {
       const departments = await prisma.department.findMany({
         select: { id: true, name: true },
         orderBy: { name: 'asc' },
       })
+
+      const currentMonthKey = `${months[0].start.getFullYear()}-${String(months[0].start.getMonth() + 1).padStart(2, '0')}`
+      const currentTargetRow = targetByMonth.get(currentMonthKey)
+      const targetByDept = new Map(
+        parseDepartmentTargets(currentTargetRow?.departmentTargets)?.map((r) => [
+          r.departmentId,
+          r.addCount,
+        ]) ?? []
+      )
 
       const [currentCounts, addedCounts] = await Promise.all([
         prisma.employee.groupBy({
@@ -200,6 +244,7 @@ export async function GET(request: NextRequest) {
         departmentName: d.name,
         currentCount: currentMap.get(d.id) ?? 0,
         addedInPeriod: addedMap.get(d.id) ?? 0,
+        monthlyTarget: targetByDept.get(d.id) ?? 0,
       }))
     }
 

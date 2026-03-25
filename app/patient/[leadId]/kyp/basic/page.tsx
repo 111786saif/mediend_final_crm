@@ -8,19 +8,51 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter, useParams } from 'next/navigation'
 import { format } from 'date-fns'
-import { KYPBasicForm } from '@/components/kyp/kyp-basic-form'
+import { useMemo } from 'react'
+import Link from 'next/link'
+import {
+  KYPBasicForm,
+  type KYPBasicPrefill,
+  parseJsonFileList,
+  parseOtherFilesForInsurance,
+} from '@/components/kyp/kyp-basic-form'
+import { CaseStage, FlowType } from '@/generated/prisma/enums'
 
 interface Lead {
   id: string
   leadRef: string
   patientName: string
   phoneNumber: string
-  /** City / region from lead (synced from MySQL circle) */
   circle?: string
   treatment?: string
   dateOfBirth?: string | null
   sex?: string
+  caseStage: CaseStage
+  flowType?: FlowType | null
+  insuranceName?: string | null
+  ipdDrName?: string | null
 }
+
+interface KypForBasic {
+  id: string
+  location?: string | null
+  area?: string | null
+  disease?: string | null
+  remark?: string | null
+  insuranceType?: string | null
+  aadhar?: string | null
+  pan?: string | null
+  otherFiles?: unknown
+  aadharFiles?: unknown
+  panFiles?: unknown
+  insuranceCardFileUrl?: string | null
+}
+
+const ALLOWED_STAGES: CaseStage[] = [
+  CaseStage.NEW_LEAD,
+  CaseStage.KYP_BASIC_PENDING,
+  CaseStage.KYP_BASIC_COMPLETE,
+]
 
 export default function KYPBasicSubmitPage() {
   const router = useRouter()
@@ -34,7 +66,47 @@ export default function KYPBasicSubmitPage() {
     enabled: !!leadId,
   })
 
-  if (isLoading) {
+  const needsKypPrefill = lead?.caseStage === CaseStage.KYP_BASIC_COMPLETE
+
+  const { data: kypSubmission, isLoading: kypLoading } = useQuery<KypForBasic | null>({
+    queryKey: ['kyp-submission', leadId],
+    queryFn: async () => {
+      const submissions = await apiGet<KypForBasic[]>(`/api/kyp?leadId=${leadId}`)
+      if (!Array.isArray(submissions)) return null
+      return submissions[0] ?? null
+    },
+    enabled: !!leadId && !!needsKypPrefill,
+  })
+
+  const prefill = useMemo((): KYPBasicPrefill | null => {
+    if (!lead || lead.caseStage !== CaseStage.KYP_BASIC_COMPLETE || !kypSubmission) return null
+    const k = kypSubmission
+    return {
+      kypId: k.id,
+      location: k.location?.trim() ?? '',
+      area: k.area?.trim() ?? '',
+      patientName: lead.patientName,
+      phone: lead.phoneNumber ?? '',
+      dob: lead.dateOfBirth ? format(new Date(lead.dateOfBirth), 'yyyy-MM-dd') : '',
+      sex: lead.sex ?? '',
+      disease: k.disease?.trim() ?? '',
+      insuranceType: k.insuranceType ?? '',
+      remark: k.remark?.trim() ?? '',
+      insuranceName: lead.insuranceName?.trim() ?? '',
+      doctorName: lead.ipdDrName?.trim() ?? '',
+      aadhar: k.aadhar?.trim() ?? '',
+      pan: k.pan?.trim() ?? '',
+      insuranceFiles: parseOtherFilesForInsurance(k.otherFiles, k.insuranceCardFileUrl),
+      aadharFiles: parseJsonFileList(k.aadharFiles),
+      panFiles: parseJsonFileList(k.panFiles),
+    }
+  }, [lead, kypSubmission])
+
+  const isEditMode = Boolean(prefill)
+
+  const showLoading = isLoading || (needsKypPrefill && kypLoading)
+
+  if (showLoading) {
     return (
       <AuthenticatedLayout>
         <div className="flex items-center justify-center min-h-[400px]">
@@ -55,6 +127,74 @@ export default function KYPBasicSubmitPage() {
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
               Patient not found.
+            </CardContent>
+          </Card>
+        </div>
+      </AuthenticatedLayout>
+    )
+  }
+
+  if (lead.flowType === FlowType.CASH) {
+    return (
+      <AuthenticatedLayout>
+        <div className="space-y-6">
+          <Button variant="ghost" onClick={() => router.push(`/patient/${leadId}`)}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle>Card Details</CardTitle>
+              <CardDescription>This patient is on the Cash flow.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild variant="outline">
+                <Link href={`/patient/${leadId}`}>Back to patient</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </AuthenticatedLayout>
+    )
+  }
+
+  if (!ALLOWED_STAGES.includes(lead.caseStage)) {
+    return (
+      <AuthenticatedLayout>
+        <div className="space-y-6">
+          <Button variant="ghost" onClick={() => router.push(`/patient/${leadId}`)}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle>Card Details locked</CardTitle>
+              <CardDescription>
+                Card details can no longer be edited after hospitals have been suggested or the case has moved forward.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild variant="outline">
+                <Link href={`/patient/${leadId}`}>Back to patient</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </AuthenticatedLayout>
+    )
+  }
+
+  if (needsKypPrefill && !prefill) {
+    return (
+      <AuthenticatedLayout>
+        <div className="space-y-6">
+          <Button variant="ghost" onClick={() => router.push(`/patient/${leadId}`)}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              Could not load card details for this patient.
             </CardContent>
           </Card>
         </div>
@@ -83,9 +223,11 @@ export default function KYPBasicSubmitPage() {
 
         <Card className="">
           <CardHeader>
-            <CardTitle>Submit Card Details</CardTitle>
+            <CardTitle>{isEditMode ? 'Update Card Details' : 'Submit Card Details'}</CardTitle>
             <CardDescription>
-              Insurance card, city and area required. Insurance will then suggest hospitals.
+              {isEditMode
+                ? 'You can edit and save until insurance suggests hospitals.'
+                : 'Insurance card, city and area required. Insurance will then suggest hospitals.'}
             </CardDescription>
           </CardHeader>
           <CardContent className="">
@@ -97,10 +239,13 @@ export default function KYPBasicSubmitPage() {
               initialTreatment={lead.treatment}
               initialDob={lead.dateOfBirth ? format(new Date(lead.dateOfBirth), 'yyyy-MM-dd') : undefined}
               initialSex={lead.sex}
+              prefill={prefill}
+              isEditMode={isEditMode}
               onSuccess={() => {
                 queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
                 queryClient.invalidateQueries({ queryKey: ['kyp-submission', leadId] })
                 queryClient.invalidateQueries({ queryKey: ['case-chat', leadId] })
+                queryClient.invalidateQueries({ queryKey: ['stage-history', leadId] })
                 router.push(`/patient/${leadId}`)
               }}
               onCancel={() => router.push(`/patient/${leadId}`)}

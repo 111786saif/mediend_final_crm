@@ -605,6 +605,8 @@ model Target {
   periodEndDate   DateTime
   metric          TargetMetric
   targetValue     Float
+  /// For HR head count: [{ departmentId, addCount }, ...]
+  departmentTargets Json?
   createdById     String
   createdBy       User         @relation("TargetCreator", fields: [createdById], references: [id])
   bonusRules      BonusRule[]

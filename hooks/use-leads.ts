@@ -18,6 +18,8 @@ export interface LeadFilters {
   startDate?: string
   endDate?: string
   view?: string
+  /** Last 10 digits — server-only filter; omit from list responses */
+  phoneSearch?: string
 }
 
 import { CaseStage } from '@/generated/prisma/enums'

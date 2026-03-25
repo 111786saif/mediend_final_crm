@@ -67,6 +67,7 @@ interface HeadTargetItem {
     id: string
     metric: string
     targetValue: number
+    departmentTargets?: { departmentId: string; addCount: number }[] | null
     periodStartDate: string
     periodEndDate: string
     periodType: string

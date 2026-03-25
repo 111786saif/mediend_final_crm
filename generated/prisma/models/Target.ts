@@ -74,6 +74,7 @@ export type TargetCountAggregateOutputType = {
   periodEndDate: number
   metric: number
   targetValue: number
+  departmentTargets: number
   createdById: number
   createdAt: number
   updatedAt: number
@@ -129,6 +130,7 @@ export type TargetCountAggregateInputType = {
   periodEndDate?: true
   metric?: true
   targetValue?: true
+  departmentTargets?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -231,6 +233,7 @@ export type TargetGroupByOutputType = {
   periodEndDate: Date
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets: runtime.JsonValue | null
   createdById: string
   createdAt: Date
   updatedAt: Date
@@ -269,6 +272,7 @@ export type TargetWhereInput = {
   periodEndDate?: Prisma.DateTimeFilter<"Target"> | Date | string
   metric?: Prisma.EnumTargetMetricFilter<"Target"> | $Enums.TargetMetric
   targetValue?: Prisma.FloatFilter<"Target"> | number
+  departmentTargets?: Prisma.JsonNullableFilter<"Target">
   createdById?: Prisma.StringFilter<"Target"> | string
   createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string
@@ -287,6 +291,7 @@ export type TargetOrderByWithRelationInput = {
   periodEndDate?: Prisma.SortOrder
   metric?: Prisma.SortOrder
   targetValue?: Prisma.SortOrder
+  departmentTargets?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -308,6 +313,7 @@ export type TargetWhereUniqueInput = Prisma.AtLeast<{
   periodEndDate?: Prisma.DateTimeFilter<"Target"> | Date | string
   metric?: Prisma.EnumTargetMetricFilter<"Target"> | $Enums.TargetMetric
   targetValue?: Prisma.FloatFilter<"Target"> | number
+  departmentTargets?: Prisma.JsonNullableFilter<"Target">
   createdById?: Prisma.StringFilter<"Target"> | string
   createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string
@@ -326,6 +332,7 @@ export type TargetOrderByWithAggregationInput = {
   periodEndDate?: Prisma.SortOrder
   metric?: Prisma.SortOrder
   targetValue?: Prisma.SortOrder
+  departmentTargets?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -349,6 +356,7 @@ export type TargetScalarWhereWithAggregatesInput = {
   periodEndDate?: Prisma.DateTimeWithAggregatesFilter<"Target"> | Date | string
   metric?: Prisma.EnumTargetMetricWithAggregatesFilter<"Target"> | $Enums.TargetMetric
   targetValue?: Prisma.FloatWithAggregatesFilter<"Target"> | number
+  departmentTargets?: Prisma.JsonNullableWithAggregatesFilter<"Target">
   createdById?: Prisma.StringWithAggregatesFilter<"Target"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Target"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Target"> | Date | string
@@ -363,6 +371,7 @@ export type TargetCreateInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   team?: Prisma.TeamCreateNestedOneWithoutTargetsInput
@@ -380,6 +389,7 @@ export type TargetUncheckedCreateInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -395,6 +405,7 @@ export type TargetUpdateInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   team?: Prisma.TeamUpdateOneWithoutTargetsNestedInput
@@ -412,6 +423,7 @@ export type TargetUncheckedUpdateInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -428,6 +440,7 @@ export type TargetCreateManyInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -442,6 +455,7 @@ export type TargetUpdateManyMutationInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -456,6 +470,7 @@ export type TargetUncheckedUpdateManyInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -481,6 +496,7 @@ export type TargetCountOrderByAggregateInput = {
   periodEndDate?: Prisma.SortOrder
   metric?: Prisma.SortOrder
   targetValue?: Prisma.SortOrder
+  departmentTargets?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -648,6 +664,7 @@ export type TargetCreateWithoutCreatedByInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   team?: Prisma.TeamCreateNestedOneWithoutTargetsInput
@@ -664,6 +681,7 @@ export type TargetUncheckedCreateWithoutCreatedByInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   bonusRules?: Prisma.BonusRuleUncheckedCreateNestedManyWithoutTargetInput
@@ -708,6 +726,7 @@ export type TargetScalarWhereInput = {
   periodEndDate?: Prisma.DateTimeFilter<"Target"> | Date | string
   metric?: Prisma.EnumTargetMetricFilter<"Target"> | $Enums.TargetMetric
   targetValue?: Prisma.FloatFilter<"Target"> | number
+  departmentTargets?: Prisma.JsonNullableFilter<"Target">
   createdById?: Prisma.StringFilter<"Target"> | string
   createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string
@@ -722,6 +741,7 @@ export type TargetCreateWithoutTeamInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTargetsInput
@@ -737,6 +757,7 @@ export type TargetUncheckedCreateWithoutTeamInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -778,6 +799,7 @@ export type TargetCreateWithoutBonusRulesInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   team?: Prisma.TeamCreateNestedOneWithoutTargetsInput
@@ -794,6 +816,7 @@ export type TargetUncheckedCreateWithoutBonusRulesInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -824,6 +847,7 @@ export type TargetUpdateWithoutBonusRulesInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   team?: Prisma.TeamUpdateOneWithoutTargetsNestedInput
@@ -840,6 +864,7 @@ export type TargetUncheckedUpdateWithoutBonusRulesInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -855,6 +880,7 @@ export type TargetCreateManyCreatedByInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -868,6 +894,7 @@ export type TargetUpdateWithoutCreatedByInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   team?: Prisma.TeamUpdateOneWithoutTargetsNestedInput
@@ -884,6 +911,7 @@ export type TargetUncheckedUpdateWithoutCreatedByInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bonusRules?: Prisma.BonusRuleUncheckedUpdateManyWithoutTargetNestedInput
@@ -899,6 +927,7 @@ export type TargetUncheckedUpdateManyWithoutCreatedByInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -912,6 +941,7 @@ export type TargetCreateManyTeamInput = {
   periodEndDate: Date | string
   metric: $Enums.TargetMetric
   targetValue: number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -926,6 +956,7 @@ export type TargetUpdateWithoutTeamInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTargetsNestedInput
@@ -941,6 +972,7 @@ export type TargetUncheckedUpdateWithoutTeamInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -956,6 +988,7 @@ export type TargetUncheckedUpdateManyWithoutTeamInput = {
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
+  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1002,6 +1035,7 @@ export type TargetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   periodEndDate?: boolean
   metric?: boolean
   targetValue?: boolean
+  departmentTargets?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1021,6 +1055,7 @@ export type TargetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   periodEndDate?: boolean
   metric?: boolean
   targetValue?: boolean
+  departmentTargets?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1038,6 +1073,7 @@ export type TargetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   periodEndDate?: boolean
   metric?: boolean
   targetValue?: boolean
+  departmentTargets?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1055,12 +1091,13 @@ export type TargetSelectScalar = {
   periodEndDate?: boolean
   metric?: boolean
   targetValue?: boolean
+  departmentTargets?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TargetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "targetType" | "targetForId" | "teamId" | "periodType" | "periodStartDate" | "periodEndDate" | "metric" | "targetValue" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["target"]>
+export type TargetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "targetType" | "targetForId" | "teamId" | "periodType" | "periodStartDate" | "periodEndDate" | "metric" | "targetValue" | "departmentTargets" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["target"]>
 export type TargetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   team?: boolean | Prisma.Target$teamArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1093,6 +1130,10 @@ export type $TargetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     periodEndDate: Date
     metric: $Enums.TargetMetric
     targetValue: number
+    /**
+     * For HR head count: [{ departmentId, addCount }, ...]
+     */
+    departmentTargets: runtime.JsonValue | null
     createdById: string
     createdAt: Date
     updatedAt: Date
@@ -1531,6 +1572,7 @@ export interface TargetFieldRefs {
   readonly periodEndDate: Prisma.FieldRef<"Target", 'DateTime'>
   readonly metric: Prisma.FieldRef<"Target", 'TargetMetric'>
   readonly targetValue: Prisma.FieldRef<"Target", 'Float'>
+  readonly departmentTargets: Prisma.FieldRef<"Target", 'Json'>
   readonly createdById: Prisma.FieldRef<"Target", 'String'>
   readonly createdAt: Prisma.FieldRef<"Target", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Target", 'DateTime'>

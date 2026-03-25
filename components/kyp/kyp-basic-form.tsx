@@ -49,6 +49,68 @@ function useDebouncedValue<T>(value: T, delay: number): T {
   return debounced
 }
 
+/** Prefill when editing Card Details before hospitals are suggested (KYP_BASIC_COMPLETE). */
+export type KYPBasicPrefill = {
+  kypId: string
+  location: string
+  area: string
+  patientName: string
+  phone: string
+  dob: string
+  sex: string
+  disease: string
+  insuranceType: string
+  remark: string
+  insuranceName: string
+  doctorName: string
+  aadhar: string
+  pan: string
+  insuranceFiles: { name: string; url: string }[]
+  aadharFiles: { name: string; url: string }[]
+  panFiles: { name: string; url: string }[]
+}
+
+export function parseOtherFilesForInsurance(
+  otherFiles: unknown,
+  insuranceCardFileUrl: string | null | undefined
+): { name: string; url: string }[] {
+  const arr = Array.isArray(otherFiles) ? otherFiles : []
+  const out: { name: string; url: string }[] = []
+  for (const p of arr) {
+    const url = typeof p === 'string' ? p : (p as { url?: string })?.url
+    if (!url) continue
+    const name =
+      typeof p === 'object' && p && typeof (p as { name?: string }).name === 'string' && (p as { name: string }).name.trim()
+        ? (p as { name: string }).name.trim()
+        : 'Document'
+    out.push({ name, url })
+  }
+  const seen = new Set<string>()
+  const unique = out.filter((x) => {
+    if (seen.has(x.url)) return false
+    seen.add(x.url)
+    return true
+  })
+  if (unique.length > 0) return unique
+  if (insuranceCardFileUrl?.trim()) return [{ name: 'Document', url: insuranceCardFileUrl.trim() }]
+  return []
+}
+
+export function parseJsonFileList(raw: unknown): { name: string; url: string }[] {
+  if (!Array.isArray(raw)) return []
+  const out: { name: string; url: string }[] = []
+  for (const p of raw) {
+    const url = typeof p === 'string' ? p : (p as { url?: string })?.url
+    if (!url || typeof url !== 'string') continue
+    const name =
+      typeof p === 'object' && p && typeof (p as { name?: string }).name === 'string' && (p as { name: string }).name.trim()
+        ? (p as { name: string }).name.trim()
+        : 'Document'
+    out.push({ name, url })
+  }
+  return out
+}
+
 interface KYPBasicFormProps {
   leadId: string
   initialPatientName?: string
@@ -57,6 +119,9 @@ interface KYPBasicFormProps {
   initialSex?: string
   initialCity?: string
   initialTreatment?: string
+  /** When set, form fields and files are hydrated for resubmit (KYP_BASIC_COMPLETE). */
+  prefill?: KYPBasicPrefill | null
+  isEditMode?: boolean
   onSuccess?: () => void
   onCancel?: () => void
 }
@@ -69,6 +134,8 @@ export function KYPBasicForm({
   initialSex = '',
   initialCity = '',
   initialTreatment = '',
+  prefill = null,
+  isEditMode = false,
   onSuccess,
   onCancel,
 }: KYPBasicFormProps) {
@@ -97,6 +164,29 @@ export function KYPBasicForm({
   const { uploadFile, uploading } = useFileUpload({
     maxFileSizeBytes: KYP_UPLOAD_MAX_BYTES,
   })
+
+  useEffect(() => {
+    if (!prefill) return
+    setFormData({
+      location: prefill.location,
+      area: prefill.area,
+      patientName: prefill.patientName,
+      phone: prefill.phone,
+      dob: prefill.dob,
+      sex: prefill.sex,
+      disease: prefill.disease,
+      insuranceType: prefill.insuranceType,
+      remark: prefill.remark,
+      insuranceName: prefill.insuranceName,
+      doctorName: prefill.doctorName,
+      aadhar: prefill.aadhar,
+      pan: prefill.pan,
+    })
+    setInsuranceFiles([...prefill.insuranceFiles])
+    setAadharFiles([...prefill.aadharFiles])
+    setPanFiles([...prefill.panFiles])
+    setErrors({})
+  }, [prefill?.kypId])
 
   // Fuzzy search function - checks if search term is contained in the city name
   // Case insensitive and handles partial matches (e.g., "DEL" matches "West Delhi")
@@ -245,7 +335,11 @@ export function KYPBasicForm({
         panFiles: panFiles.length > 0 ? panFiles : undefined,
         remark: formData.remark.trim() || undefined,
       })
-      toast.success('Card Details submitted. Insurance will suggest hospitals.')
+      toast.success(
+        isEditMode
+          ? 'Card Details saved.'
+          : 'Card Details submitted. Insurance will suggest hospitals.'
+      )
       onSuccess?.()
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to submit KYP')
@@ -653,7 +747,7 @@ export function KYPBasicForm({
           </Button>
         )}
         <Button type="submit" disabled={uploading}>
-          {uploading ? 'Uploading...' : 'Submit Card Details'}
+          {uploading ? 'Uploading...' : isEditMode ? 'Save changes' : 'Submit Card Details'}
         </Button>
       </div>
     </form>

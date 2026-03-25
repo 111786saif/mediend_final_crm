@@ -32,6 +32,7 @@ import {
   type LeadAgeFilter,
   type PipelineStatusBucket,
 } from '@/lib/pipeline-lead-buckets'
+import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { useQuery } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { format } from 'date-fns'
@@ -116,6 +117,8 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const [startDate, setStartDate] = useState<Date | undefined>(undefined)
   const [endDate, setEndDate] = useState<Date | undefined>(undefined)
 
+  const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
+
   const leadFilters = useMemo(() => {
     const f: Record<string, string> = { view: 'pipeline' }
     if (variant === 'bd' && user?.id) f.bdId = user.id
@@ -123,8 +126,9 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     // keeps the client/query cache isolated per team lead instead of sharing one
     // generic "pipeline" cache across all team-lead sessions.
     if (variant === 'team-lead' && user?.id) f.teamId = user.id
+    if (phoneParsed) f.phoneSearch = phoneParsed.last10
     return f
-  }, [variant, user?.id])
+  }, [variant, user?.id, phoneParsed])
 
   const { leads, isLoading } = useLeads(leadFilters)
 
@@ -204,13 +208,12 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
       result = result.filter((l) => (l.bdId || l.bd?.id) === bdFilter)
     }
 
-    if (debouncedSearch.trim()) {
+    if (debouncedSearch.trim() && !phoneParsed) {
       const q = debouncedSearch.toLowerCase()
       result = result.filter(
         (lead) =>
           String(lead.patientName ?? '').toLowerCase().includes(q) ||
           String(lead.leadRef ?? '').toLowerCase().includes(q) ||
-          String(lead.phoneNumber ?? '').includes(q) ||
           String(lead.circle ?? '').toLowerCase().includes(q) ||
           String(lead.hospitalName ?? '').toLowerCase().includes(q) ||
           String(lead.treatment ?? '').toLowerCase().includes(q) ||
@@ -255,6 +258,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     statusBucket,
     bdFilter,
     debouncedSearch,
+    phoneParsed,
     categoryBar,
     circleBar,
     leadAgeFilter,
@@ -395,7 +399,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                 <div className="relative min-w-[200px] flex-1">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search name, ref, phone, hospitalâ€¦"
+                    placeholder="Name, ref, hospital… — or full mobile (10 digits or 91…)"
                     className="pl-9"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}

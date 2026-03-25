@@ -14,7 +14,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { NotificationBell } from '@/components/notifications/notification-bell'
 import { Button } from '@/components/ui/button'
-import { CalendarIcon, CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, UserCheck, UserCircle, Wallet } from 'lucide-react'
+import { CalendarIcon, CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, Target, UserCheck, UserCircle, Wallet } from 'lucide-react'
 import { useAI } from '@/components/ai/ai-provider'
 import { CommandPalette } from '@/components/command-palette'
 import { PageTransition } from '@/components/page-transition'
@@ -187,12 +187,19 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
 
     const rightCandidates: (BottomNavItem & { show: boolean })[] = [
       {
+        href: '/md/targets',
+        label: 'Targets',
+        icon: Target,
+        matchPrefixes: ['/md/targets'],
+        show: u.role === 'MD',
+      },
+      {
         href: u.role === 'MD' || u.role === 'ADMIN' ? '/md/anonymous-messages' : '/chat',
         label: 'Messages',
         icon: MessageSquare,
         badge: hasMessages ? messagesBadge : undefined,
         matchPrefixes: ['/md/anonymous-messages', '/chat'],
-        show: hasMessages,
+        show: hasMessages && u.role !== 'MD',
       },
       {
         href: '/employee/dashboard/support-services',

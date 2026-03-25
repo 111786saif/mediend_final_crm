@@ -87,6 +87,8 @@ export function AddTargetDrawer({
     departmentLabel: string
   } | null>(null)
   const [targetValue, setTargetValue] = useState('')
+  /** HR headcount: departmentId → input string */
+  const [deptTargets, setDeptTargets] = useState<Record<string, string>>({})
 
   const { start, end } = getMonthBounds(0)
 
@@ -105,13 +107,24 @@ export function AddTargetDrawer({
         metric: string
         currentMonth: { month: string; actual: number; targetValue: number }
         history: Array<{ month: string; actual: number; targetValue: number }>
-        departmentBreakdown: Array<{ departmentId: string; departmentName: string; currentCount: number; addedInPeriod: number }>
+        departmentBreakdown: Array<{
+          departmentId: string
+          departmentName: string
+          currentCount: number
+          addedInPeriod: number
+          monthlyTarget: number
+        }>
       }>(`/api/md/head-targets/achievement?headUserId=${selectedHead?.id}`),
     enabled: !!selectedHead?.id && open && step === 2,
   })
 
   const createMutation = useMutation({
-    mutationFn: (data: { headUserId: string; metric: string; targetValue: number }) =>
+    mutationFn: (data: {
+      headUserId: string
+      metric: string
+      targetValue: number
+      departmentBreakdown?: { departmentId: string; addCount: number }[]
+    }) =>
       apiPost('/api/md/head-targets', {
         ...data,
         periodStartDate: start.toISOString(),
@@ -145,6 +158,7 @@ export function AddTargetDrawer({
       setStep(1)
       setSelectedHead(null)
       setTargetValue('')
+      setDeptTargets({})
     }
   }, [open])
 
@@ -153,28 +167,70 @@ export function AddTargetDrawer({
     setStep(1)
     setSelectedHead(null)
     setTargetValue('')
+    setDeptTargets({})
   }
 
   const handleSelectHead = (head: (typeof heads)[0]) => {
     setSelectedHead(head)
     setStep(2)
     setTargetValue('')
+    setDeptTargets({})
   }
 
   const handleBack = () => {
     setStep(1)
     setSelectedHead(null)
     setTargetValue('')
+    setDeptTargets({})
   }
+
+  const parseDeptInput = (id: string) => {
+    const raw = deptTargets[id] ?? ''
+    if (raw.trim() === '') return 0
+    const n = parseInt(raw, 10)
+    return Number.isNaN(n) ? NaN : Math.max(0, n)
+  }
+
+  const metric = selectedHead ? ROLE_METRICS[selectedHead.role] ?? 'IPD_DONE' : 'IPD_DONE'
+  const history = achievementData?.history ?? []
+  const currentMonth = achievementData?.currentMonth
+  const departmentBreakdown = achievementData?.departmentBreakdown ?? []
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const val = metric === 'REVENUE' ? parseFloat(targetValue.replace(/,/g, '')) : parseInt(targetValue, 10)
+    if (!selectedHead) return
+
+    if (metric === 'HEAD_COUNT') {
+      const breakdown = departmentBreakdown.map((d) => ({
+        departmentId: d.departmentId,
+        addCount: parseDeptInput(d.departmentId),
+      }))
+      if (breakdown.some((b) => Number.isNaN(b.addCount))) {
+        toast.error('Enter valid numbers for each department')
+        return
+      }
+      const sum = breakdown.reduce((s, b) => s + b.addCount, 0)
+      if (sum <= 0) {
+        toast.error('Set at least one department to a positive target')
+        return
+      }
+      createMutation.mutate({
+        headUserId: selectedHead.id,
+        metric,
+        targetValue: sum,
+        departmentBreakdown: breakdown,
+      })
+      return
+    }
+
+    const val =
+      metric === 'REVENUE'
+        ? parseFloat(targetValue.replace(/,/g, ''))
+        : parseInt(targetValue, 10)
     if (isNaN(val) || val <= 0) {
       toast.error('Enter a valid target value')
       return
     }
-    if (!selectedHead) return
     createMutation.mutate({
       headUserId: selectedHead.id,
       metric,
@@ -182,17 +238,38 @@ export function AddTargetDrawer({
     })
   }
 
-  const metric = selectedHead ? ROLE_METRICS[selectedHead.role] ?? 'IPD_DONE' : 'IPD_DONE'
-  const history = achievementData?.history ?? []
-  const currentMonth = achievementData?.currentMonth
-  const departmentBreakdown = achievementData?.departmentBreakdown ?? []
+  useEffect(() => {
+    if (metric !== 'HEAD_COUNT' || step !== 2) return
+    if (!achievementData?.departmentBreakdown?.length) return
+    setDeptTargets((prev) => {
+      if (Object.keys(prev).length > 0) return prev
+      const next: Record<string, string> = {}
+      for (const d of achievementData.departmentBreakdown) {
+        next[d.departmentId] =
+          d.monthlyTarget > 0 ? String(d.monthlyTarget) : ''
+      }
+      return next
+    })
+  }, [achievementData, metric, step])
+
+  const hrDeptValues = departmentBreakdown.map((d) => parseDeptInput(d.departmentId))
+  const hrDeptInvalid = hrDeptValues.some((n) => Number.isNaN(n))
+  const hrDeptSum = hrDeptValues.reduce((a, b) => a + (Number.isNaN(b) ? 0 : b), 0)
+  const hrFormReady =
+    departmentBreakdown.length > 0 && !hrDeptInvalid && hrDeptSum > 0
+
   const recentMonths = [currentMonth, ...history].filter(
     (m): m is { month: string; actual: number; targetValue: number } => m != null
   ).slice(0, 3)
 
   return (
     <Drawer open={open} onOpenChange={(o) => !o && handleClose()} direction="bottom">
-      <DrawerContent className="max-h-[90dvh] rounded-t-2xl flex flex-col">
+      <DrawerContent
+        className={cn(
+          'max-h-[100dvh] rounded-t-2xl flex flex-col w-full',
+          'sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[60vw] sm:max-w-[min(60vw,800px)]'
+        )}
+      >
         <div className="mx-auto mt-2 h-1.5 w-12 shrink-0 rounded-full bg-muted" />
         <DrawerHeader className="flex flex-row items-center gap-4 border-b px-6 py-4">
           {step === 2 && (
@@ -301,37 +378,66 @@ export function AddTargetDrawer({
                     </>
                   )}
 
-                  {/* HR: Department breakdown + total input */}
+                  {/* HR: per-department hiring targets */}
                   {metric === 'HEAD_COUNT' && (
                     <>
                       {departmentBreakdown.length > 0 && (
-                        <div className="space-y-2">
-                          <Label className="text-muted-foreground">Current headcount by department</Label>
-                          <div className="space-y-2 max-h-32 overflow-y-auto">
+                        <div className="space-y-3">
+                          <Label className="text-muted-foreground">
+                            Current headcount &amp; target new hires by department
+                          </Label>
+                          <div className="space-y-3 max-h-[min(50vh,320px)] overflow-y-auto pr-1">
                             {departmentBreakdown.map((d) => (
                               <div
                                 key={d.departmentId}
-                                className="flex justify-between rounded-lg border px-3 py-2 text-sm"
+                                className="rounded-lg border bg-muted/20 p-3 space-y-2"
                               >
-                                <span>{d.departmentName}</span>
-                                <span className="font-medium">{d.currentCount}</span>
+                                <div className="flex justify-between gap-2 text-sm">
+                                  <span className="font-medium">{d.departmentName}</span>
+                                  <span className="text-muted-foreground">
+                                    {d.currentCount} now
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Label
+                                    htmlFor={`dept-${d.departmentId}`}
+                                    className="text-xs text-muted-foreground shrink-0 w-28"
+                                  >
+                                    Target hires
+                                  </Label>
+                                  <Input
+                                    id={`dept-${d.departmentId}`}
+                                    type="number"
+                                    min={0}
+                                    inputMode="numeric"
+                                    placeholder="0"
+                                    className="max-w-[120px]"
+                                    value={deptTargets[d.departmentId] ?? ''}
+                                    onChange={(e) =>
+                                      setDeptTargets((prev) => ({
+                                        ...prev,
+                                        [d.departmentId]: e.target.value,
+                                      }))
+                                    }
+                                  />
+                                </div>
                               </div>
                             ))}
                           </div>
+                          <p className="text-xs text-muted-foreground">
+                            Total monthly target:{' '}
+                            <span className="font-medium text-foreground">
+                              {hrDeptInvalid ? '—' : hrDeptSum}
+                            </span>{' '}
+                            new hires
+                          </p>
                         </div>
                       )}
-                      <div className="space-y-2">
-                        <Label htmlFor="target">Target new hires this month</Label>
-                        <Input
-                          id="target"
-                          type="number"
-                          min={1}
-                          placeholder="e.g. 8"
-                          value={targetValue}
-                          onChange={(e) => setTargetValue(e.target.value)}
-                          required
-                        />
-                      </div>
+                      {departmentBreakdown.length === 0 && (
+                        <p className="text-sm text-muted-foreground py-4">
+                          Loading departments…
+                        </p>
+                      )}
                     </>
                   )}
 
@@ -413,7 +519,12 @@ export function AddTargetDrawer({
             <Button
               type="submit"
               form="add-target-form"
-              disabled={createMutation.isPending || !targetValue.trim()}
+              disabled={
+                createMutation.isPending ||
+                (metric === 'HEAD_COUNT'
+                  ? !hrFormReady
+                  : !targetValue.trim())
+              }
             >
               {createMutation.isPending ? 'Setting...' : 'Set Target'}
             </Button>

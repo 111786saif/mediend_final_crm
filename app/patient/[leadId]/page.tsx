@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -1010,6 +1010,17 @@ export default function PatientDetailsPage() {
                     <Link href={`/patient/${leadId}/kyp/basic`}>
                       <Plus className="h-4 w-4" />
                       Fill Card Details
+                    </Link>
+                  </Button>
+                )}
+                {lead.flowType !== FlowType.CASH && (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN') && lead.caseStage === CaseStage.KYP_BASIC_COMPLETE && (
+                  <Button
+                    asChild
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white border-0"
+                  >
+                    <Link href={`/patient/${leadId}/kyp/basic`}>
+                      <Pencil className="h-4 w-4" />
+                      Edit Card Details
                     </Link>
                   </Button>
                 )}

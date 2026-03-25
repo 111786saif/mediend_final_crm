@@ -13,13 +13,23 @@ import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { formatLeadAgeSex } from '@/lib/lead-display'
+import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { Plus, Search } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+
+function useDebouncedValue<T>(value: T, ms: number): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const id = setTimeout(() => setDebounced(value), ms)
+    return () => clearTimeout(id)
+  }, [value, ms])
+  return debounced
+}
 
 type StageFilterKey =
   | 'all'
@@ -63,11 +73,23 @@ export default function CaseTrackerPage() {
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null)
   const [stageFilter, setStageFilter] = useState<StageFilterKey>('all')
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebouncedValue(search, 250)
+  const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
 
   const leadFilters = useMemo(() => {
-    if (user?.role === 'BD' && user.id) return { bdId: user.id }
-    return {}
-  }, [user?.role, user?.id])
+    // view=pipeline uses a slim Lead select on /api/leads (avoids heavy KYP/preAuth joins that caused 60s+ loads)
+    if (user?.role === 'BD' && user.id) {
+      return {
+        bdId: user.id,
+        view: 'pipeline' as const,
+        ...(phoneParsed ? { phoneSearch: phoneParsed.last10 } : {}),
+      }
+    }
+    return {
+      view: 'pipeline' as const,
+      ...(phoneParsed ? { phoneSearch: phoneParsed.last10 } : {}),
+    }
+  }, [user?.role, user?.id, phoneParsed])
 
   const { leads, isLoading } = useLeads(leadFilters)
 
@@ -106,7 +128,7 @@ export default function CaseTrackerPage() {
     } else if (stageFilter !== 'all') {
       rows = rows.filter((l) => l.caseStage === stageFilter)
     }
-    if (search.trim()) {
+    if (search.trim() && !phoneParsed) {
       const q = search.toLowerCase()
       rows = rows.filter(
         (l) =>
@@ -122,7 +144,7 @@ export default function CaseTrackerPage() {
       return tb - ta
     })
     return rows
-  }, [activeLeads, stageFilter, search])
+  }, [activeLeads, stageFilter, search, phoneParsed])
 
   const pickerLeads = useMemo(() => leads.filter((l) => l.caseStage === CaseStage.NEW_LEAD), [leads])
 
@@ -200,7 +222,12 @@ export default function CaseTrackerPage() {
                 </div>
                 <div className="relative max-w-sm flex-1">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input className="pl-9" placeholder="Searchâ€¦" value={search} onChange={(e) => setSearch(e.target.value)} />
+                  <Input
+                    className="pl-9"
+                    placeholder="Name, ref, hospital… — or full mobile (10 digits or 91…)"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
                 </div>
               </div>
             </CardHeader>

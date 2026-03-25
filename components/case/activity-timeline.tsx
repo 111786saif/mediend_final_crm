@@ -52,6 +52,19 @@ const STAGE_LABELS: Record<CaseStage, string> = {
   [CaseStage.CASH_DISCHARGED]: 'Cash Discharged',
 }
 
+function getTimelineBadgeLabel(entry: StageHistoryEntry): string {
+  const note = entry.note?.toLowerCase() ?? ''
+  if (
+    entry.fromStage != null &&
+    entry.fromStage === entry.toStage &&
+    entry.toStage === CaseStage.KYP_BASIC_COMPLETE &&
+    note.includes('updated')
+  ) {
+    return 'Card Details updated'
+  }
+  return STAGE_LABELS[entry.toStage]
+}
+
 function getStageColor(stage: CaseStage): { bg: string; border: string; text: string; dot: string; connector: string; icon: React.ReactNode } {
   const colors: Record<CaseStage, { bg: string; border: string; text: string; dot: string; connector: string; icon: React.ReactNode }> = {
     [CaseStage.NEW_LEAD]: {
@@ -279,7 +292,7 @@ export function ActivityTimeline({ history, className }: ActivityTimelineProps) 
                     )}>
                       <div className="flex items-center gap-2 mb-2">
                         <Badge className={cn('border-0', stageColor.bg, stageColor.text)}>
-                          {STAGE_LABELS[entry.toStage]}
+                          {getTimelineBadgeLabel(entry)}
                         </Badge>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
                           {formatDistanceToNow(new Date(entry.changedAt), { addSuffix: true })}

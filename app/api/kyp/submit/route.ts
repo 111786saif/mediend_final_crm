@@ -93,10 +93,6 @@ export async function POST(request: NextRequest) {
       include: { lead: { select: { caseStage: true } } },
     })
 
-    if (existingKYP) {
-      return errorResponse('KYP submission already exists for this lead', 400)
-    }
-
     const aadharFiles =
       data.aadharFiles && data.aadharFiles.length > 0 ? data.aadharFiles : undefined
     const panFiles = data.panFiles && data.panFiles.length > 0 ? data.panFiles : undefined
@@ -104,46 +100,97 @@ export async function POST(request: NextRequest) {
       aadharFiles?.[0]?.url ?? data.aadharFileUrl ?? undefined
     const panFileUrl = panFiles?.[0]?.url ?? data.panFileUrl ?? undefined
 
+    const kypDataPayload = {
+      aadhar: data.aadhar,
+      pan: data.pan,
+      insuranceCard: data.insuranceCard,
+      disease: data.disease,
+      insuranceType: data.insuranceType as InsuranceType,
+      location: data.location ?? undefined,
+      area: data.area ?? undefined,
+      remark: data.remark,
+      aadharFileUrl,
+      panFileUrl,
+      aadharFiles: aadharFiles ?? undefined,
+      panFiles: panFiles ?? undefined,
+      insuranceCardFileUrl: data.insuranceCardFileUrl ?? (data.insuranceCardFiles?.[0]?.url || undefined),
+      prescriptionFileUrl: data.prescriptionFileUrl,
+      diseasePhotos: data.diseasePhotos ?? undefined,
+      otherFiles: data.otherFiles || data.insuranceCardFiles || [],
+    }
+
+    const leadUpdateFromForm = {
+      ...(data.patientName?.trim() ? { patientName: data.patientName.trim() } : {}),
+      ...(data.phone?.trim() ? { phoneNumber: data.phone.trim() } : {}),
+      ...(data.age ? { age: data.age } : {}),
+      ...(data.sex?.trim() ? { sex: data.sex.trim() } : {}),
+      ...(data.insuranceName?.trim() ? { insuranceName: data.insuranceName.trim() } : {}),
+      ...(data.doctorName?.trim() ? { ipdDrName: data.doctorName.trim() } : {}),
+      ...(data.dateOfBirth ? { dateOfBirth: new Date(data.dateOfBirth) } : {}),
+    }
+
+    const kypInclude = {
+      lead: {
+        select: {
+          id: true,
+          leadRef: true,
+          patientName: true,
+          caseStage: true,
+        },
+      },
+      submittedBy: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    } as const
+
+    if (existingKYP) {
+      if (existingKYP.lead.caseStage !== CaseStage.KYP_BASIC_COMPLETE) {
+        return errorResponse(
+          'Card details cannot be changed after hospitals have been suggested',
+          400
+        )
+      }
+
+      const kypSubmission = await prisma.kYPSubmission.update({
+        where: { id: existingKYP.id },
+        data: {
+          ...kypDataPayload,
+          patientConsent: data.patientConsent ?? existingKYP.patientConsent,
+        },
+        include: kypInclude,
+      })
+
+      await prisma.lead.update({
+        where: { id: data.leadId },
+        data: leadUpdateFromForm,
+      })
+
+      await prisma.caseStageHistory.create({
+        data: {
+          leadId: data.leadId,
+          fromStage: CaseStage.KYP_BASIC_COMPLETE,
+          toStage: CaseStage.KYP_BASIC_COMPLETE,
+          changedById: user.id,
+          note: 'Card Details updated',
+        },
+      })
+
+      return successResponse(kypSubmission, 'Card Details updated')
+    }
+
     // Create KYP submission (assert payload so builds stay valid if TS cache lags `prisma generate`)
     const kypSubmission = await prisma.kYPSubmission.create({
       data: {
         leadId: data.leadId,
-        aadhar: data.aadhar,
-        pan: data.pan,
-        insuranceCard: data.insuranceCard,
-        disease: data.disease,
-        insuranceType: data.insuranceType as InsuranceType,
-        location: data.location ?? undefined,
-        area: data.area ?? undefined,
-        remark: data.remark,
-        aadharFileUrl,
-        panFileUrl,
-        aadharFiles: aadharFiles ?? undefined,
-        panFiles: panFiles ?? undefined,
-        insuranceCardFileUrl: data.insuranceCardFileUrl ?? (data.insuranceCardFiles?.[0]?.url || undefined),
-        prescriptionFileUrl: data.prescriptionFileUrl,
-        diseasePhotos: data.diseasePhotos ?? undefined,
+        ...kypDataPayload,
         patientConsent: data.patientConsent ?? false,
-        otherFiles: data.otherFiles || data.insuranceCardFiles || [],
         submittedById: user.id,
         status: 'PENDING',
       } as Prisma.KYPSubmissionUncheckedCreateInput,
-      include: {
-        lead: {
-          select: {
-            id: true,
-            leadRef: true,
-            patientName: true,
-            caseStage: true,
-          },
-        },
-        submittedBy: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
+      include: kypInclude,
     })
 
     const targetStage = CaseStage.KYP_BASIC_COMPLETE
@@ -152,13 +199,7 @@ export async function POST(request: NextRequest) {
       where: { id: data.leadId },
       data: {
         caseStage: targetStage,
-        ...(data.patientName?.trim() ? { patientName: data.patientName.trim() } : {}),
-        ...(data.phone?.trim() ? { phoneNumber: data.phone.trim() } : {}),
-        ...(data.age ? { age: data.age } : {}),
-        ...(data.sex?.trim() ? { sex: data.sex.trim() } : {}),
-        ...(data.insuranceName?.trim() ? { insuranceName: data.insuranceName.trim() } : {}),
-        ...(data.doctorName?.trim() ? { ipdDrName: data.doctorName.trim() } : {}),
-        ...(data.dateOfBirth ? { dateOfBirth: new Date(data.dateOfBirth) } : {}),
+        ...leadUpdateFromForm,
       },
     })
 

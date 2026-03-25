@@ -15,11 +15,9 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   BarChart3,
+  ChevronLeft,
   Target,
   Users,
-  TrendingUp,
-  Zap,
-  IndianRupee,
 } from 'lucide-react'
 import {
   BarChart,
@@ -88,7 +86,13 @@ export function HeadTargetDetailDrawer({
         metric: string
         currentMonth: { month: string; targetValue: number; actual: number; percentage: number }
         history: Array<{ month: string; targetValue: number; actual: number; percentage: number }>
-        departmentBreakdown: Array<{ departmentId: string; departmentName: string; currentCount: number; addedInPeriod: number }>
+        departmentBreakdown: Array<{
+          departmentId: string
+          departmentName: string
+          currentCount: number
+          addedInPeriod: number
+          monthlyTarget: number
+        }>
       }>(`/api/md/head-targets/achievement?headUserId=${headUserId}`),
     enabled: !!headUserId && open,
   })
@@ -111,23 +115,35 @@ export function HeadTargetDetailDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction="right">
-      <DrawerContent className="h-full max-h-dvh w-full max-w-md sm:max-w-lg ml-auto rounded-l-2xl rounded-r-none flex flex-col overflow-hidden">
-        <DrawerHeader className="shrink-0 border-b px-6 py-5">
-          <div className="flex items-center gap-4">
-            <Avatar className={cn('size-14 shrink-0', avatarColor)}>
-              <AvatarImage src={head?.profilePicture ?? undefined} />
-              <AvatarFallback className="text-lg font-semibold">
-                {getInitials(head?.name ?? '')}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <DrawerTitle className="text-lg font-semibold truncate">
-                {head?.name ?? 'Loading...'}
-              </DrawerTitle>
-              <div className="flex flex-wrap items-center gap-2 mt-1">
-                <Badge variant="outline" className={cn('text-xs', roleColor)}>
-                  {head?.department?.name ?? head?.role?.replace(/_/g, ' ')}
-                </Badge>
+      <DrawerContent className="h-full max-h-dvh w-full max-w-full md:w-[60vw] md:max-w-[min(60vw,56rem)] ml-auto rounded-none md:rounded-l-2xl rounded-r-none flex flex-col overflow-hidden">
+        <DrawerHeader className="shrink-0 border-b px-4 py-4 sm:px-6 sm:py-5">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="shrink-0 -ml-1"
+              onClick={() => onOpenChange(false)}
+              aria-label="Back"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
+              <Avatar className={cn('size-12 shrink-0 sm:size-14', avatarColor)}>
+                <AvatarImage src={head?.profilePicture ?? undefined} />
+                <AvatarFallback className="text-lg font-semibold">
+                  {getInitials(head?.name ?? '')}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <DrawerTitle className="text-lg font-semibold truncate">
+                  {head?.name ?? 'Loading...'}
+                </DrawerTitle>
+                <div className="flex flex-wrap items-center gap-2 mt-1">
+                  <Badge variant="outline" className={cn('text-xs', roleColor)}>
+                    {head?.department?.name ?? head?.role?.replace(/_/g, ' ')}
+                  </Badge>
+                </div>
               </div>
             </div>
           </div>
@@ -234,15 +250,16 @@ export function HeadTargetDetailDrawer({
                       {departmentBreakdown.map((d) => (
                         <div
                           key={d.departmentId}
-                          className="flex items-center justify-between rounded-lg border px-4 py-3"
+                          className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between rounded-lg border px-4 py-3"
                         >
                           <span className="font-medium">{d.departmentName}</span>
-                          <div className="flex items-center gap-4">
-                            <span className="text-sm">
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm">
+                            <span className="text-muted-foreground">
                               {d.currentCount} total
                             </span>
                             <Badge variant="secondary" className="text-xs">
-                              +{d.addedInPeriod} this month
+                              +{d.addedInPeriod} /{' '}
+                              {d.monthlyTarget > 0 ? d.monthlyTarget : '—'} target
                             </Badge>
                           </div>
                         </div>

@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
+import { parseDepartmentTargets } from './dept-target-utils'
+
 const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD'] as const
 
 function getMonthBounds(monthOffset = 0) {
@@ -16,7 +18,8 @@ function getMonthBounds(monthOffset = 0) {
 async function computeAchievement(
   metric: string,
   start: Date,
-  end: Date
+  end: Date,
+  headCountDepartmentIds?: string[] | null
 ): Promise<number> {
   switch (metric) {
     case 'IPD_DONE': {
@@ -44,12 +47,19 @@ async function computeAchievement(
       return count
     }
     case 'HEAD_COUNT': {
-      const count = await prisma.employee.count({
+      if (headCountDepartmentIds && headCountDepartmentIds.length > 0) {
+        return prisma.employee.count({
+          where: {
+            departmentId: { in: headCountDepartmentIds },
+            createdAt: { gte: start, lte: end },
+          },
+        })
+      }
+      return prisma.employee.count({
         where: {
           createdAt: { gte: start, lte: end },
         },
       })
-      return count
     }
     case 'LEADS_GENERATED': {
       const count = await prisma.incomingLead.count({
@@ -152,8 +162,16 @@ export async function GET(request: NextRequest) {
       heads.map(async (head) => {
         const target = targetByHead.get(head.id)
         const metric = target?.metric ?? getMetricForRole(head.role)
-        const targetValue = target?.targetValue ?? 0
-        const actual = await computeAchievement(metric, start, end)
+        const deptTargets = parseDepartmentTargets(target?.departmentTargets)
+        const targetValue =
+          metric === 'HEAD_COUNT' && deptTargets?.length
+            ? deptTargets.reduce((s, d) => s + d.addCount, 0)
+            : (target?.targetValue ?? 0)
+        const headCountDeptIds =
+          metric === 'HEAD_COUNT' && deptTargets?.length
+            ? deptTargets.map((d) => d.departmentId)
+            : null
+        const actual = await computeAchievement(metric, start, end, headCountDeptIds)
         const percentage =
           targetValue > 0 ? Math.round((actual / targetValue) * 100) : 0
 
@@ -172,6 +190,7 @@ export async function GET(request: NextRequest) {
                 id: target.id,
                 metric: target.metric,
                 targetValue: target.targetValue,
+                departmentTargets: parseDepartmentTargets(target.departmentTargets),
                 periodStartDate: target.periodStartDate.toISOString(),
                 periodEndDate: target.periodEndDate.toISOString(),
                 periodType: target.periodType,
@@ -235,8 +254,36 @@ export async function POST(request: NextRequest) {
       return errorResponse('User is not a department head', 400)
     }
 
+    const isHrHeadCount =
+      headUser.role === 'HR_HEAD' && data.metric === 'HEAD_COUNT'
+
+    if (isHrHeadCount) {
+      if (!data.departmentBreakdown?.length) {
+        return errorResponse(
+          'Set a target for each department (department-wise headcount)',
+          400
+        )
+      }
+      const sum = data.departmentBreakdown.reduce((s, d) => s + d.addCount, 0)
+      if (sum <= 0) {
+        return errorResponse(
+          'At least one department must have a positive hiring target',
+          400
+        )
+      }
+    } else if (data.departmentBreakdown?.length) {
+      return errorResponse(
+        'Department breakdown is only used for HR headcount targets',
+        400
+      )
+    }
+
     const periodStart = new Date(data.periodStartDate)
     const periodEnd = new Date(data.periodEndDate)
+
+    const targetValueToStore = isHrHeadCount
+      ? data.departmentBreakdown!.reduce((s, d) => s + d.addCount, 0)
+      : data.targetValue
 
     await prisma.target.deleteMany({
       where: {
@@ -255,7 +302,10 @@ export async function POST(request: NextRequest) {
         periodStartDate: periodStart,
         periodEndDate: periodEnd,
         metric: data.metric,
-        targetValue: data.targetValue,
+        targetValue: targetValueToStore,
+        departmentTargets: isHrHeadCount
+          ? data.departmentBreakdown!.filter((d) => d.addCount > 0)
+          : undefined,
         createdById: user.id,
       },
       include: {
