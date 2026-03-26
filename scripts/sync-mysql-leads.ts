@@ -15,6 +15,7 @@ import {
 } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
+import { syncStaffFromMySQL } from '@/lib/sync/mysql-staff-sync'
 import { Prisma, UserRole } from '@/generated/prisma/client'
 
 interface MySQLRemarkRow {
@@ -436,6 +437,10 @@ async function syncLeads() {
       `✅ Lookups loaded — sources: ${lookups.source.size}, campaigns: ${lookups.campaign.size}, ` +
         `treatments: ${lookups.treatment.size}, circles: ${lookups.circle.size}, statuses: ${lookups.status.size}`
     )
+
+    // Sync staff first so BD numbers and team structure are available for lead mapping
+    console.log('👥 Syncing staff from tblstaff (BDs, TLs, hierarchy)...')
+    await syncStaffFromMySQL()
 
     console.log('📋 Loading BD users map...')
     const bdMap = await fetchBDUsersMap()
