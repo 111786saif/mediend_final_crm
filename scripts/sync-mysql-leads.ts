@@ -343,12 +343,16 @@ async function syncOneBatch(
     }
   }
 
-  const allDates = [...leadDates.map((d) => d.getTime()), ...updateDates.map((d) => d.getTime())]
-  const maxDate =
-    allDates.length > 0
-      ? new Date(Math.max(...allDates, lastSyncedDate.getTime()))
+  // Advance cursor using Lead_Date only — NOT update_date.
+  // update_date can be far in the future (e.g. a 2025-01 lead edited in 2026-03),
+  // which would cause the cursor to skip over tens of thousands of unsynced leads.
+  const maxLeadDate =
+    leadDates.length > 0
+      ? new Date(Math.max(...leadDates.map((d) => d.getTime())))
       : lastSyncedDate
+  const maxDate = maxLeadDate > lastSyncedDate ? maxLeadDate : lastSyncedDate
   const maxId = leadIds.length > 0 ? Math.max(...leadIds) : null
+  console.log(`   Cursor: Lead_Date max=${maxLeadDate.toISOString().slice(0,10)}, advancing to ${maxDate.toISOString().slice(0,10)}`)
 
   // Batch create
   if (leadsToCreate.length > 0) {
