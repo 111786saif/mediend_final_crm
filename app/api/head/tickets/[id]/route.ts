@@ -4,7 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 
-const HEAD_ROLES = ['HR_HEAD', 'FINANCE_HEAD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD']
+const HEAD_ROLES = ['HR_HEAD', 'FINANCE_HEAD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'ADMIN']
 
 const updateTicketSchema = z.object({
   status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED']),
@@ -36,7 +36,10 @@ export async function PATCH(
       return errorResponse('Ticket not found', 404)
     }
 
-    if (ticket.targetHeadRole !== user.role) {
+    const canRespond =
+      ticket.targetHeadRole === user.role ||
+      (user.role === 'FINANCE_HEAD' && ticket.targetHeadRole === 'ADMIN')
+    if (!canRespond) {
       return errorResponse('You can only respond to tickets targeted at you', 403)
     }
 

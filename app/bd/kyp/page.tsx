@@ -41,6 +41,11 @@ type StageFilterKey =
   | 'INITIATED'
   | 'ADMITTED'
   | 'DISCHARGED'
+  | 'CASH_IPD_PENDING'
+  | 'CASH_IPD_SUBMITTED'
+  | 'CASH_APPROVED'
+  | 'CASH_ON_HOLD'
+  | 'CASH_DISCHARGED'
 
 const KYP_RAISED_STAGES: CaseStage[] = [
   CaseStage.KYP_BASIC_COMPLETE,
@@ -57,6 +62,11 @@ const CARD_DEFS: { key: Exclude<StageFilterKey, 'all' | 'KYP_RAISED'>; label: st
   { key: 'INITIATED', label: 'Initiated', stage: CaseStage.INITIATED },
   { key: 'ADMITTED', label: 'Admitted', stage: CaseStage.ADMITTED },
   { key: 'DISCHARGED', label: 'Discharged', stage: CaseStage.DISCHARGED },
+  { key: 'CASH_IPD_PENDING', label: 'Cash IPD pending', stage: CaseStage.CASH_IPD_PENDING },
+  { key: 'CASH_IPD_SUBMITTED', label: 'Cash IPD submitted', stage: CaseStage.CASH_IPD_SUBMITTED },
+  { key: 'CASH_APPROVED', label: 'Cash approved', stage: CaseStage.CASH_APPROVED },
+  { key: 'CASH_ON_HOLD', label: 'Cash on hold', stage: CaseStage.CASH_ON_HOLD },
+  { key: 'CASH_DISCHARGED', label: 'Cash discharged', stage: CaseStage.CASH_DISCHARGED },
 ]
 
 function isActivePipelineLead(lead: Lead): boolean {
@@ -105,6 +115,11 @@ export default function CaseTrackerPage() {
       INITIATED: 0,
       ADMITTED: 0,
       DISCHARGED: 0,
+      CASH_IPD_PENDING: 0,
+      CASH_IPD_SUBMITTED: 0,
+      CASH_APPROVED: 0,
+      CASH_ON_HOLD: 0,
+      CASH_DISCHARGED: 0,
     }
     for (const l of activeLeads) {
       const cs = l.caseStage as CaseStage | undefined
@@ -117,6 +132,11 @@ export default function CaseTrackerPage() {
       if (cs === CaseStage.INITIATED) base.INITIATED++
       if (cs === CaseStage.ADMITTED) base.ADMITTED++
       if (cs === CaseStage.DISCHARGED) base.DISCHARGED++
+      if (cs === CaseStage.CASH_IPD_PENDING) base.CASH_IPD_PENDING++
+      if (cs === CaseStage.CASH_IPD_SUBMITTED) base.CASH_IPD_SUBMITTED++
+      if (cs === CaseStage.CASH_APPROVED) base.CASH_APPROVED++
+      if (cs === CaseStage.CASH_ON_HOLD) base.CASH_ON_HOLD++
+      if (cs === CaseStage.CASH_DISCHARGED) base.CASH_DISCHARGED++
     }
     return base
   }, [activeLeads])
@@ -165,7 +185,7 @@ export default function CaseTrackerPage() {
             </Button>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-8">
             <button
               type="button"
               onClick={() => setStageFilter('all')}
@@ -196,19 +216,26 @@ export default function CaseTrackerPage() {
               <p className="text-[11px] font-medium text-muted-foreground">KYP raised</p>
               <p className="mt-1 text-2xl font-bold tabular-nums text-sky-600">{counts.KYP_RAISED}</p>
             </button>
-            {CARD_DEFS.filter((c) => c.key !== 'IPD_DONE').map(({ key, label, stage }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setStageFilter(key)}
-                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
-                  stageFilter === key ? 'ring-2 ring-primary' : ''
-                }`}
-              >
-                <p className="line-clamp-2 text-[11px] font-medium text-muted-foreground">{label}</p>
-                <p className="mt-1 text-2xl font-bold tabular-nums">{counts[key as keyof typeof counts]}</p>
-              </button>
-            ))}
+            {CARD_DEFS.filter((c) => c.key !== 'IPD_DONE').map(({ key, label }) => {
+              const isCash = key.startsWith('CASH_')
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setStageFilter(key)}
+                  className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
+                    stageFilter === key ? 'ring-2 ring-primary' : ''
+                  }`}
+                >
+                  <p className="line-clamp-2 text-[11px] font-medium text-muted-foreground">{label}</p>
+                  <p
+                    className={`mt-1 text-2xl font-bold tabular-nums ${isCash ? 'text-orange-600' : ''}`}
+                  >
+                    {counts[key as keyof typeof counts]}
+                  </p>
+                </button>
+              )
+            })}
           </div>
 
           <Card className="border-border/80 shadow-sm">

@@ -70,6 +70,7 @@ const HEAD_ROLE_OPTIONS = [
   { value: 'OUTSTANDING_HEAD', label: 'Outstanding Head' },
   { value: 'DIGITAL_MARKETING_HEAD', label: 'Digital Marketing Head' },
   { value: 'IT_HEAD', label: 'IT Head' },
+  { value: 'ADMIN', label: 'Admin' },
 ]
 
 interface Feedback {

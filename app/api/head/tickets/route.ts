@@ -4,7 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { TicketStatus } from '@/generated/prisma/client'
 
-const HEAD_ROLES = ['HR_HEAD', 'FINANCE_HEAD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD']
+const HEAD_ROLES = ['HR_HEAD', 'FINANCE_HEAD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'ADMIN']
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,8 +18,11 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') as TicketStatus | null
 
-    const where: { targetHeadRole: string; status?: TicketStatus } = {
-      targetHeadRole: user.role,
+    const targetRoles =
+      user.role === 'FINANCE_HEAD' ? (['FINANCE_HEAD', 'ADMIN'] as const) : ([user.role] as const)
+
+    const where: { targetHeadRole: { in: readonly string[] } | string; status?: TicketStatus } = {
+      targetHeadRole: targetRoles.length > 1 ? { in: [...targetRoles] } : targetRoles[0],
     }
     if (status) where.status = status
 
