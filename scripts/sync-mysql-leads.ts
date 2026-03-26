@@ -240,31 +240,39 @@ async function syncLeadRemarks(leadIds: number[]) {
 
 /**
  * Sync a single batch of leads. Returns the count of leads fetched (0 = done).
+ * Uses id-based keyset pagination to guarantee forward progress.
  */
 async function syncOneBatch(
   lastSyncedDate: Date,
+  lastMaxId: number,
   systemUserId: string,
   totalSyncedSoFar: number,
   lookups: Awaited<ReturnType<typeof loadLookupMaps>>,
   bdMap: Map<string, { id: string }>,
   assignmentDateColumn: string | null
-): Promise<{ fetched: number; maxDate: Date; maxId: number | null; synced: number; updated: number; errors: number }> {
+): Promise<{ fetched: number; maxDate: Date; maxId: number; synced: number; updated: number; errors: number }> {
   console.log(`\n📥 Fetching leads from MySQL (batch size: ${BATCH_SIZE})...`)
   const assignmentDateSelect = assignmentDateColumn ? `, \`${assignmentDateColumn}\` AS assignedDate` : ''
   const assignmentDateWhere = assignmentDateColumn ? ` OR (\`${assignmentDateColumn}\` IS NOT NULL AND \`${assignmentDateColumn}\` >= ?)` : ''
-  const queryParams = assignmentDateColumn
-    ? [lastSyncedDate, lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
-    : [lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
+
+  // id > lastMaxId ensures we never re-fetch the same batch (prevents infinite loops).
+  // Date conditions filter to new/modified leads; for full re-sync they match everything.
+  const baseParams = assignmentDateColumn
+    ? [lastMaxId, lastSyncedDate, lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
+    : [lastMaxId, lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
   const leads = await queryMySQL<MySQLLeadRow>(
     `SELECT lead.*${assignmentDateSelect} FROM lead
-     WHERE (Lead_Date >= ? OR (Lead_Date IS NULL AND COALESCE(LeadEntryDate, create_date) >= ?))
-        OR (update_date IS NOT NULL AND update_date >= ?)${assignmentDateWhere}
-     ORDER BY COALESCE(Lead_Date, LeadEntryDate, create_date) ASC, id ASC
+     WHERE id > ?
+       AND (
+         (Lead_Date >= ? OR (Lead_Date IS NULL AND COALESCE(LeadEntryDate, create_date) >= ?))
+         OR (update_date IS NOT NULL AND update_date >= ?)${assignmentDateWhere}
+       )
+     ORDER BY id ASC
      LIMIT ?`,
-    queryParams
+    baseParams
   )
 
-  if (leads.length === 0) return { fetched: 0, maxDate: lastSyncedDate, maxId: null, synced: 0, updated: 0, errors: 0 }
+  if (leads.length === 0) return { fetched: 0, maxDate: lastSyncedDate, maxId: lastMaxId, synced: 0, updated: 0, errors: 0 }
 
   console.log(`✅ Found ${leads.length} leads to sync`)
   const dateRange = {
@@ -343,16 +351,15 @@ async function syncOneBatch(
     }
   }
 
-  // Advance cursor using Lead_Date only — NOT update_date.
-  // update_date can be far in the future (e.g. a 2025-01 lead edited in 2026-03),
-  // which would cause the cursor to skip over tens of thousands of unsynced leads.
+  // Cursor advances by max(id) — guaranteed unique and forward-progressing.
+  // maxDate is computed for the final sync state record only.
+  const maxId = Math.max(...leadIds)
   const maxLeadDate =
     leadDates.length > 0
       ? new Date(Math.max(...leadDates.map((d) => d.getTime())))
       : lastSyncedDate
   const maxDate = maxLeadDate > lastSyncedDate ? maxLeadDate : lastSyncedDate
-  const maxId = leadIds.length > 0 ? Math.max(...leadIds) : null
-  console.log(`   Cursor: Lead_Date max=${maxLeadDate.toISOString().slice(0,10)}, advancing to ${maxDate.toISOString().slice(0,10)}`)
+  console.log(`   Cursor: id ${lastMaxId} → ${maxId}, Lead_Date max=${maxLeadDate.toISOString().slice(0,10)}`)
 
   // Batch create
   if (leadsToCreate.length > 0) {
@@ -457,14 +464,18 @@ async function syncLeads() {
     let totalErrors = 0
     let batchNum = 0
 
+    const syncState = await getSyncState()
+    const syncFromDate = syncState.lastSyncedDate
+    let lastMaxId = 0 // always start from id 0 so we scan all matching leads
+
     // Loop: keep fetching batches until MySQL returns fewer than BATCH_SIZE rows
     while (true) {
       batchNum++
-      const syncState = await getSyncState()
-      console.log(`\n--- Batch ${batchNum} (from ${syncState.lastSyncedDate.toISOString().slice(0, 10)}) ---`)
+      console.log(`\n--- Batch ${batchNum} (date >= ${syncFromDate.toISOString().slice(0, 10)}, id > ${lastMaxId}) ---`)
 
       const result = await syncOneBatch(
-        syncState.lastSyncedDate,
+        syncFromDate,
+        lastMaxId,
         systemUser.id,
         totalSynced + totalUpdated,
         lookups,
@@ -474,12 +485,16 @@ async function syncLeads() {
       totalSynced += result.synced
       totalUpdated += result.updated
       totalErrors += result.errors
+      lastMaxId = result.maxId
 
       if (result.fetched < BATCH_SIZE) {
         console.log('\nAll batches processed.')
         break
       }
     }
+
+    // Store final sync state: date = now so next incremental picks up from here
+    await updateSyncState(new Date(), lastMaxId, 0)
 
     const seconds = ((Date.now() - startTime) / 1000).toFixed(2)
     console.log(`\n${'='.repeat(60)}`)
