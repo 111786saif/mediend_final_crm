@@ -18,13 +18,16 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') as TicketStatus | null
 
-    const targetRoles =
-      user.role === 'FINANCE_HEAD' ? (['FINANCE_HEAD', 'ADMIN'] as const) : ([user.role] as const)
-
-    const where: { targetHeadRole: { in: readonly string[] } | string; status?: TicketStatus } = {
-      targetHeadRole: targetRoles.length > 1 ? { in: [...targetRoles] } : targetRoles[0],
-    }
-    if (status) where.status = status
+    const where =
+      user.role === 'FINANCE_HEAD'
+        ? {
+            targetHeadRole: { in: ['FINANCE_HEAD', 'ADMIN'] },
+            ...(status ? { status } : {}),
+          }
+        : {
+            targetHeadRole: user.role,
+            ...(status ? { status } : {}),
+          }
 
     const tickets = await prisma.supportTicket.findMany({
       where,
