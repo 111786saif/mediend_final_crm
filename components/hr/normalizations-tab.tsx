@@ -6,6 +6,15 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { useState } from 'react'
@@ -23,6 +32,7 @@ interface NormalizationRow {
   type: string
   status: string
   reason: string | null
+  hrRejectionReason: string | null
   normalizeAs: string | null
   createdAt: string
   requestedBy: string | null
@@ -37,11 +47,16 @@ interface HRNormalizationsResponse {
   list: NormalizationRow[]
 }
 
+const MIN_REJECTION_LENGTH = 15
+
 export function NormalizationsTab() {
   const queryClient = useQueryClient()
   const [statusFilter, setStatusFilter] = useState<'PENDING' | 'APPROVED' | 'REJECTED'>('PENDING')
   const [fromDate, setFromDate] = useState(() => format(subMonths(new Date(), 1), 'yyyy-MM-dd'))
   const [toDate, setToDate] = useState(() => format(new Date(), 'yyyy-MM-dd'))
+  const [rejectOpen, setRejectOpen] = useState(false)
+  const [rejectRowId, setRejectRowId] = useState<string | null>(null)
+  const [rejectRemarks, setRejectRemarks] = useState('')
 
   const queryParams = new URLSearchParams({ status: statusFilter })
   if (fromDate) queryParams.set('fromDate', fromDate)
@@ -53,8 +68,19 @@ export function NormalizationsTab() {
   })
 
   const approveMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'APPROVED' | 'REJECTED' }) =>
-      apiPatch(`/api/attendance/normalize/${id}/approve`, { status }),
+    mutationFn: ({
+      id,
+      status,
+      remarks,
+    }: {
+      id: string
+      status: 'APPROVED' | 'REJECTED'
+      remarks?: string
+    }) =>
+      apiPatch(`/api/attendance/normalize/${id}/approve`, {
+        status,
+        ...(status === 'REJECTED' && remarks != null ? { remarks } : {}),
+      }),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['hr', 'normalizations'] })
       queryClient.invalidateQueries({ queryKey: ['hierarchy', 'my-team', 'attendance'] })
@@ -64,10 +90,74 @@ export function NormalizationsTab() {
     onError: (e: Error) => toast.error(e.message || 'Failed to update'),
   })
 
+  const openRejectDialog = (id: string) => {
+    setRejectRowId(id)
+    setRejectRemarks('')
+    setRejectOpen(true)
+  }
+
+  const closeRejectDialog = () => {
+    setRejectOpen(false)
+    setRejectRowId(null)
+    setRejectRemarks('')
+  }
+
+  const trimmedRejectRemarks = rejectRemarks.trim()
+  const rejectRemarksValid = trimmedRejectRemarks.length >= MIN_REJECTION_LENGTH
+
+  const confirmReject = () => {
+    if (!rejectRowId || !rejectRemarksValid) return
+    approveMutation.mutate(
+      { id: rejectRowId, status: 'REJECTED', remarks: trimmedRejectRemarks },
+      { onSuccess: () => closeRejectDialog() }
+    )
+  }
+
   const list = data?.list ?? []
 
   return (
     <div className="space-y-6">
+      <Dialog open={rejectOpen} onOpenChange={(o) => !o && closeRejectDialog()}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reject normalization</DialogTitle>
+            <DialogDescription>
+              Provide a reason for the employee and their manager (minimum {MIN_REJECTION_LENGTH} characters).
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="hr-reject-remarks">Rejection reason</Label>
+            <Textarea
+              id="hr-reject-remarks"
+              value={rejectRemarks}
+              onChange={(e) => setRejectRemarks(e.target.value)}
+              placeholder="Explain why this request cannot be approved..."
+              rows={4}
+              className="resize-y min-h-[100px]"
+            />
+            <p className="text-xs text-muted-foreground">
+              {trimmedRejectRemarks.length}/{MIN_REJECTION_LENGTH} characters minimum
+              {!rejectRemarksValid && trimmedRejectRemarks.length > 0 && (
+                <span className="text-destructive"> — need {MIN_REJECTION_LENGTH - trimmedRejectRemarks.length} more</span>
+              )}
+            </p>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button type="button" variant="outline" onClick={closeRejectDialog} disabled={approveMutation.isPending}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={confirmReject}
+              disabled={!rejectRemarksValid || approveMutation.isPending}
+            >
+              Reject request
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div>
         <h1 className="text-3xl font-bold">Attendance Normalizations</h1>
         <p className="text-muted-foreground mt-1">
@@ -130,6 +220,7 @@ export function NormalizationsTab() {
                   <TableHead>Normalize as</TableHead>
                   <TableHead>Requested by</TableHead>
                   <TableHead>Reason</TableHead>
+                  {statusFilter === 'REJECTED' && <TableHead>HR rejection</TableHead>}
                   <TableHead>Status</TableHead>
                   {statusFilter === 'PENDING' && <TableHead>Actions</TableHead>}
                 </TableRow>
@@ -165,6 +256,11 @@ export function NormalizationsTab() {
                         )}
                     </TableCell>
                     <TableCell className="max-w-[200px] truncate">{row.reason || '—'}</TableCell>
+                    {statusFilter === 'REJECTED' && (
+                      <TableCell className="max-w-[220px] text-sm text-muted-foreground">
+                        {row.hrRejectionReason || '—'}
+                      </TableCell>
+                    )}
                     <TableCell>
                       {row.status === 'PENDING' && <Badge variant="secondary">Pending</Badge>}
                       {row.status === 'APPROVED' && <Badge variant="default">Approved</Badge>}
@@ -177,7 +273,7 @@ export function NormalizationsTab() {
                             <Check className="h-4 w-4 mr-1" />
                             Approve
                           </Button>
-                          <Button size="sm" variant="destructive" onClick={() => approveMutation.mutate({ id: row.id, status: 'REJECTED' })} disabled={approveMutation.isPending}>
+                          <Button size="sm" variant="destructive" onClick={() => openRejectDialog(row.id)} disabled={approveMutation.isPending}>
                             <X className="h-4 w-4 mr-1" />
                             Reject
                           </Button>

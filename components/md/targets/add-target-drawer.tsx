@@ -266,12 +266,13 @@ export function AddTargetDrawer({
     <Drawer open={open} onOpenChange={(o) => !o && handleClose()} direction="bottom">
       <DrawerContent
         className={cn(
-          'max-h-[100dvh] rounded-t-2xl flex flex-col w-full',
-          'sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[60vw] sm:max-w-[min(60vw,800px)]'
+          'z-[60] flex w-[100vw] max-w-[100vw] flex-col rounded-t-2xl border-0',
+          'max-h-[min(92dvh,100%)]',
+          'sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[min(92vw,800px)] sm:max-w-[min(92vw,800px)]'
         )}
       >
-        <div className="mx-auto mt-2 h-1.5 w-12 shrink-0 rounded-full bg-muted" />
-        <DrawerHeader className="flex flex-row items-center gap-4 border-b px-6 py-4">
+        <div className="mx-auto mt-2 h-1.5 w-12 shrink-0 rounded-full bg-muted" aria-hidden />
+        <DrawerHeader className="flex flex-row items-center gap-3 border-b px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
           {step === 2 && (
             <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
               <ChevronLeft className="h-5 w-5" />
@@ -282,8 +283,8 @@ export function AddTargetDrawer({
           </DrawerTitle>
         </DrawerHeader>
 
-        <ScrollArea className="flex-1 min-h-0">
-          <div className="px-6 pb-6">
+        <ScrollArea className="min-h-0 flex-1">
+          <div className="px-4 pb-4 pt-1 sm:px-6 sm:pb-6">
             <AnimatePresence mode="wait">
               {step === 1 ? (
                 <motion.div
@@ -515,7 +516,7 @@ export function AddTargetDrawer({
         </ScrollArea>
 
         {step === 2 && (
-          <DrawerFooter className="border-t px-6 py-4">
+          <DrawerFooter className="border-t px-4 pb-[max(1rem,calc(4.5rem+env(safe-area-inset-bottom)))] pt-3 sm:px-6 sm:pb-4 sm:pt-4 md:pb-4">
             <Button
               type="submit"
               form="add-target-form"

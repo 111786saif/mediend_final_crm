@@ -5,10 +5,23 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 
-const bodySchema = z.object({
-  status: z.enum(['APPROVED', 'REJECTED']),
-  remarks: z.string().optional(),
-})
+const bodySchema = z
+  .object({
+    status: z.enum(['APPROVED', 'REJECTED']),
+    remarks: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.status === 'REJECTED') {
+      const r = (data.remarks ?? '').trim()
+      if (r.length < 15) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Rejection reason must be at least 15 characters',
+          path: ['remarks'],
+        })
+      }
+    }
+  })
 
 export async function PATCH(
   request: NextRequest,
@@ -26,7 +39,10 @@ export async function PATCH(
 
     const { id } = await params
     const body = await request.json()
-    const { status } = bodySchema.parse(body)
+    const parsed = bodySchema.parse(body)
+    const { status } = parsed
+    const rejectionRemarks =
+      status === 'REJECTED' ? (parsed.remarks ?? '').trim() : null
 
     const normalization = await prisma.attendanceNormalization.findUnique({
       where: { id },
@@ -74,6 +90,7 @@ export async function PATCH(
       data: {
         status,
         approvedById: status === 'APPROVED' ? hrEmployee.id : null,
+        hrRejectionReason: status === 'REJECTED' ? rejectionRemarks : null,
       },
       include: {
         employee: {
@@ -104,7 +121,8 @@ export async function PATCH(
     )
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return errorResponse('Invalid request data', 400)
+      const msg = error.issues[0]?.message ?? 'Invalid request data'
+      return errorResponse(msg, 400)
     }
     console.error('Error approving normalization:', error)
     return errorResponse('Failed to update normalization', 500)

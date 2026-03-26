@@ -125,31 +125,26 @@ export default function MDTargetsPage() {
 
   return (
     <AuthenticatedLayout>
-      <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-              {isHead ? 'My Target' : 'Department Targets'}
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              {isHead
-                ? 'Your current target and progress'
-                : 'Set and track targets for department heads'}
-            </p>
-          </div>
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6">
+        <header className="flex items-center justify-between gap-3">
+          <h1 className="min-w-0 text-lg font-semibold leading-tight tracking-tight sm:text-xl md:text-2xl">
+            {isHead ? 'My target' : 'Department targets'}
+          </h1>
           {isMdOrAdmin && (
             <Button
+              size="sm"
+              className="h-9 shrink-0 gap-1.5 px-3 sm:px-4"
               onClick={() => {
                 setEditHeadId(null)
                 setAddDrawerOpen(true)
               }}
-              className="shrink-0"
+              aria-label="Add target"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Target
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Add target</span>
             </Button>
           )}
-        </div>
+        </header>
 
         {isHead && showMyTarget && (
           <Card
@@ -159,13 +154,13 @@ export default function MDTargetsPage() {
               setDetailOpen(true)
             }}
           >
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">
                     {METRIC_LABELS[myAchievement.metric] ?? myAchievement.metric}
                   </p>
-                  <p className="text-2xl font-bold mt-1">
+                  <p className="mt-1 text-xl font-bold sm:text-2xl">
                     {formatValue(myAchievement.currentMonth.actual, myAchievement.metric)} /{' '}
                     {formatValue(myAchievement.currentMonth.targetValue, myAchievement.metric)}
                   </p>
@@ -239,7 +234,7 @@ export default function MDTargetsPage() {
                   className="cursor-pointer transition-all hover:shadow-md hover:border-primary/20 active:scale-[0.99]"
                   onClick={() => handleCardClick(head.id)}
                 >
-                  <CardContent className="p-5">
+                  <CardContent className="p-4 sm:p-5">
                     <div className="flex gap-4">
                       <Avatar
                         className={cn(

@@ -5,7 +5,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { z } from 'zod'
 
 const incrementSchema = z.object({
-  reason: z.string().min(50, 'Please provide a detailed reason (at least 50 characters)'),
+  reason: z.string().min(15, 'Please provide a detailed reason (at least 15 characters)'),
   achievements: z.string().optional(),
   requestedAmount: z.number().optional(),
   documents: z.array(z.string().url()).max(5).optional(),

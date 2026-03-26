@@ -7637,6 +7637,7 @@ export const AttendanceNormalizationScalarFieldEnum = {
   managerApprovedAt: 'managerApprovedAt',
   status: 'status',
   reason: 'reason',
+  hrRejectionReason: 'hrRejectionReason',
   hoursUsed: 'hoursUsed',
   normalizeAs: 'normalizeAs',
   createdAt: 'createdAt',

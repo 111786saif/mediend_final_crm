@@ -102,6 +102,7 @@ export async function GET(request: NextRequest) {
           type: n.type,
           status: n.status,
           reason: n.reason,
+          hrRejectionReason: n.hrRejectionReason ?? null,
           normalizeAs: n.normalizeAs ?? null,
           createdAt: n.createdAt.toISOString(),
           requestedBy: requestedByName,

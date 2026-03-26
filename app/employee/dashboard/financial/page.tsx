@@ -282,8 +282,8 @@ function IncrementTab() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (reason.trim().length < 50) {
-      toast.error('Please provide a detailed reason (at least 50 characters)')
+    if (reason.trim().length < 15) {
+      toast.error('Please provide a detailed reason (at least 15 characters)')
       return
     }
     submitMutation.mutate({
@@ -335,7 +335,7 @@ function IncrementTab() {
                 className="mt-2"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Minimum 50 characters ({reason.length}/50)
+                Minimum 15 characters ({reason.length}/15)
               </p>
             </div>
             <div>
@@ -400,7 +400,7 @@ function IncrementTab() {
             </div>
             <Button
               type="submit"
-              disabled={submitMutation.isPending || reason.length < 50}
+              disabled={submitMutation.isPending || reason.length < 15}
             >
               <Send className="h-4 w-4 mr-2" />
               {submitMutation.isPending ? 'Submitting...' : 'Submit request'}

@@ -204,12 +204,13 @@ export function HospitalSuggestionForm({
           />
         </div>
         <div>
-          <Label htmlFor="tpa">TPA</Label>
-          <Input
+          <MasterCombobox
             id="tpa"
+            label="TPA"
+            masterType="tpas"
             value={tpa}
-            onChange={(e) => setTpa(e.target.value)}
-            placeholder="e.g. TPA Name"
+            onChange={setTpa}
+            placeholder="Search TPAMaster or type any TPA name"
           />
         </div>
         <div>

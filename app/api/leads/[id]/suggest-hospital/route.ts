@@ -5,11 +5,73 @@ import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { z } from 'zod'
-import { CaseStage } from '@/generated/prisma/client'
+import { CaseStage, Prisma } from '@/generated/prisma/client'
 
 const suggestHospitalSchema = z.object({
   suggestedHospitalName: z.string().min(1, 'Hospital name is required'),
+  tpa: z.string().max(500).optional(),
 })
+
+/** Minimal lead gate for GET (TPA list): role + mutate access only. */
+async function gateSuggestHospitalList(
+  user: NonNullable<ReturnType<typeof getSessionFromRequest>>,
+  leadId: string
+) {
+  if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
+    return errorResponse('Forbidden: Only BD or Team Lead can suggest new hospitals', 403)
+  }
+
+  const lead = await prisma.lead.findUnique({
+    where: { id: leadId },
+    include: { bd: { select: { teamId: true } } },
+  })
+
+  if (!lead) {
+    return errorResponse('Lead not found', 404)
+  }
+
+  if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+    return errorResponse('Forbidden', 403)
+  }
+
+  return null
+}
+
+/** Active TPAs from TPAMaster for the suggest-hospital flow (same access as POST). */
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) {
+      return unauthorizedResponse()
+    }
+
+    const { id: leadId } = await params
+    const gate = await gateSuggestHospitalList(user, leadId)
+    if (gate) {
+      return gate
+    }
+
+    const { searchParams } = new URL(request.url)
+    const search = searchParams.get('search')?.trim() || ''
+
+    const where: Prisma.TPAMasterWhereInput = { isActive: true }
+    if (search) {
+      where.name = { contains: search, mode: 'insensitive' }
+    }
+
+    const items = await prisma.tPAMaster.findMany({
+      where,
+      orderBy: { name: 'asc' },
+      take: 200,
+      select: { id: true, name: true },
+    })
+
+    return successResponse({ items })
+  } catch (error) {
+    console.error('Error listing TPAs for suggest-hospital:', error)
+    return errorResponse('Failed to load TPAs', 500)
+  }
+}
 
 export async function POST(
   request: NextRequest,
@@ -21,15 +83,14 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
-      return errorResponse('Forbidden: Only BD or Team Lead can suggest new hospitals', 403)
-    }
-
     const { id: leadId } = await params
     const body = await request.json()
     const data = suggestHospitalSchema.parse(body)
 
-    // Check if lead exists and get KYP submission
+    if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
+      return errorResponse('Forbidden: Only BD or Team Lead can suggest new hospitals', 403)
+    }
+
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
       include: {
@@ -70,12 +131,14 @@ export async function POST(
     }
 
     // Update pre-auth with the suggested hospital name
+    const tpaTrimmed = data.tpa?.trim()
     const preAuth = await prisma.preAuthorization.update({
       where: { kypSubmissionId: lead.kypSubmission.id },
       data: {
         bdSuggestedHospital: data.suggestedHospitalName,
         // We also store who raised it so we can notify them back later
-        preAuthRaisedById: user.id, 
+        preAuthRaisedById: user.id,
+        ...(tpaTrimmed ? { tpa: tpaTrimmed } : {}),
       },
     })
 

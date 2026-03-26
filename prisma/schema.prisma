@@ -174,6 +174,8 @@ enum NotificationType {
   FEEDBACK_SUBMITTED
   INCREMENT_REQUESTED
   NORMALIZATION_REQUESTED
+  NORMALIZATION_APPROVED
+  NORMALIZATION_REJECTED
   TICKET_CREATED
   TICKET_RESPONDED
   NOTICE_PUBLISHED
@@ -940,6 +942,8 @@ model AttendanceNormalization {
   managerApprovedAt    DateTime?
   status               NormalizationStatus @default(APPROVED)
   reason               String?
+  /** Filled when HR rejects (min length enforced in API). */
+  hrRejectionReason    String?
   /** For SELF type: 1, 2, or 3 hours of monthly allowance used. MANAGER/EMPLOYEE_REQUEST: null. */
   hoursUsed            Int?
   /** FULL_DAY or HALF_DAY - set by manager when approving. */

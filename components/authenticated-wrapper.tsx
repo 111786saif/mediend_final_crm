@@ -14,7 +14,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { NotificationBell } from '@/components/notifications/notification-bell'
 import { Button } from '@/components/ui/button'
-import { CalendarIcon, CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, Target, UserCheck, UserCircle, Wallet } from 'lucide-react'
+import { CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, Target, UserCheck, UserCircle, Wallet } from 'lucide-react'
 import { useAI } from '@/components/ai/ai-provider'
 import { CommandPalette } from '@/components/command-palette'
 import { PageTransition } from '@/components/page-transition'
@@ -24,6 +24,7 @@ import { hasPermission } from '@/lib/rbac'
 import type { SessionUser } from '@/lib/auth'
 import { usePushSubscription } from '@/hooks/use-push-subscription'
 import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
+import { BMICalculator } from '@/components/bmi-calculator'
 
 function AIHeaderButton() {
   const { user } = useAuth()
@@ -283,11 +284,9 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
                   <Search className="h-5 w-5" />
                 </Button>
                 <AIHeaderButton />
-                <Button variant="ghost" size="icon" asChild>
-                  <Link href="/calendar" title="Calendar">
-                    <CalendarIcon className="h-5 w-5" />
-                  </Link>
-                </Button>
+                {(user?.role === 'BD' || user?.role === 'TEAM_LEAD') && (
+                  <BMICalculator />
+                )}
                 <NotificationBell />
               </div>
             </header>

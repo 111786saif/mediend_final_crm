@@ -80,6 +80,12 @@ export const navItems: NavItem[] = [
     roles: ['MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
+    title: 'MD Attendance',
+    url: '/md/attendance',
+    icon: CalendarCheck,
+    roles: ['MD', 'ADMIN'],
+  },
+  {
     title: 'Master Data',
     url: '/master-data',
     icon: Database,

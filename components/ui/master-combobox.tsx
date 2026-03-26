@@ -81,7 +81,44 @@ export function MasterCombobox({
     staleTime: 30_000,
   })
 
-  const items = data?.items ?? []
+  const items = React.useMemo(() => data?.items ?? [], [data])
+  const [highlightedIndex, setHighlightedIndex] = React.useState(-1)
+  const prevDebouncedSearch = React.useRef(debouncedSearch)
+  const itemKey = React.useMemo(() => items.map((x) => x.id).join('|'), [items])
+  const listInstanceId = React.useId().replace(/:/g, '')
+
+  React.useEffect(() => {
+    if (!open) return
+    if (prevDebouncedSearch.current !== debouncedSearch) {
+      prevDebouncedSearch.current = debouncedSearch
+      setHighlightedIndex(items.length > 0 ? 0 : -1)
+      return
+    }
+    setHighlightedIndex((hi) => {
+      if (items.length === 0) return -1
+      return Math.min(Math.max(hi, 0), items.length - 1)
+    })
+  }, [open, debouncedSearch, itemKey, items.length])
+
+  React.useEffect(() => {
+    if (!open) {
+      setHighlightedIndex(-1)
+      return
+    }
+    setHighlightedIndex((hi) => {
+      if (items.length === 0) return -1
+      if (hi >= 0 && hi < items.length) return hi
+      return 0
+    })
+  }, [open, items.length, itemKey])
+
+  React.useLayoutEffect(() => {
+    if (!open || highlightedIndex < 0) return
+    const el = document.querySelector(
+      `[data-master-combobox-option="${listInstanceId}-${highlightedIndex}"]`
+    )
+    el?.scrollIntoView({ block: 'nearest' })
+  }, [open, highlightedIndex, listInstanceId, itemKey])
 
   const commitFreeText = React.useCallback(() => {
     const v = inputValue.trim()
@@ -123,10 +160,48 @@ export function MasterCombobox({
                 }, 150)
               }}
               onKeyDown={(e) => {
+                if (e.key === 'ArrowDown') {
+                  e.preventDefault()
+                  if (!open) {
+                    setOpen(true)
+                    setHighlightedIndex(items.length > 0 ? 0 : -1)
+                    return
+                  }
+                  if (items.length === 0) return
+                  setHighlightedIndex((i) => {
+                    const cur = i < 0 ? -1 : i
+                    return (cur + 1) % items.length
+                  })
+                  return
+                }
+                if (e.key === 'ArrowUp') {
+                  e.preventDefault()
+                  if (!open) {
+                    setOpen(true)
+                    setHighlightedIndex(items.length > 0 ? items.length - 1 : -1)
+                    return
+                  }
+                  if (items.length === 0) return
+                  setHighlightedIndex((i) => {
+                    const cur = i < 0 ? 0 : i
+                    return (cur - 1 + items.length) % items.length
+                  })
+                  return
+                }
                 if (e.key === 'Enter') {
                   e.preventDefault()
+                  if (
+                    open &&
+                    highlightedIndex >= 0 &&
+                    highlightedIndex < items.length &&
+                    items[highlightedIndex]
+                  ) {
+                    selectItem(items[highlightedIndex])
+                    return
+                  }
                   if (items[0]) selectItem(items[0])
                   else commitFreeText()
+                  return
                 }
                 if (e.key === 'Escape') {
                   setOpen(false)
@@ -152,22 +227,39 @@ export function MasterCombobox({
                   No matches. Press Enter to use your text.
                 </p>
               )}
-              {items.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  className="hover:bg-accent flex w-full flex-col items-start rounded-sm px-2 py-1.5 text-left text-sm"
-                  onMouseDown={(e) => {
-                    e.preventDefault()
-                    selectItem(item)
-                  }}
-                >
-                  <span className="font-medium">{item.name}</span>
-                  {masterType === 'hospitals' && item.address && (
-                    <span className="text-muted-foreground line-clamp-1 text-xs">{item.address}</span>
-                  )}
-                </button>
-              ))}
+              {items.map((item, index) => {
+                const isHighlighted = index === highlightedIndex
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    data-master-combobox-option={`${listInstanceId}-${index}`}
+                    className={cn(
+                      'flex w-full flex-col items-start rounded-sm px-2 py-1.5 text-left text-sm outline-none',
+                      isHighlighted
+                        ? 'bg-blue-600 text-white'
+                        : 'hover:bg-accent'
+                    )}
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      selectItem(item)
+                    }}
+                  >
+                    <span className="font-medium">{item.name}</span>
+                    {masterType === 'hospitals' && item.address && (
+                      <span
+                        className={cn(
+                          'line-clamp-1 text-xs',
+                          isHighlighted ? 'text-white/80' : 'text-muted-foreground'
+                        )}
+                      >
+                        {item.address}
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
             </div>
           </ScrollArea>
         </PopoverContent>

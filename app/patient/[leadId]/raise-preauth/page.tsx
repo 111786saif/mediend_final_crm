@@ -5,11 +5,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, AlertCircle } from 'lucide-react'
+import { ArrowLeft, AlertCircle, Loader2 } from 'lucide-react'
 import { useRouter, useParams } from 'next/navigation'
 import { PreAuthRaiseForm } from '@/components/case/preauth-raise-form'
-import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,24 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from 'sonner'
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from '@/components/ui/combobox'
+import { cn } from '@/lib/utils'
+
+function useDebouncedValue<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(t)
+  }, [value, delay])
+  return debounced
+}
 
 interface HospitalSuggestionItem {
   id: string
@@ -89,7 +106,9 @@ export default function RaisePreAuthPage() {
   const leadId = params.leadId as string
   const [isSuggestDialogOpen, setIsSuggestDialogOpen] = useState(false)
   const [suggestedHospitalName, setSuggestedHospitalName] = useState('')
+  const [suggestedTpa, setSuggestedTpa] = useState('')
   const [isSubmittingSuggestion, setIsSubmittingSuggestion] = useState(false)
+  const debouncedTpaSearch = useDebouncedValue(suggestedTpa, 250)
 
   const { data: kypSubmission, isLoading } = useQuery<KYPSubmission | null>({
     queryKey: ['kyp-submission', leadId],
@@ -99,6 +118,16 @@ export default function RaisePreAuthPage() {
     },
     enabled: !!leadId,
   })
+
+  const { data: tpaSuggestData } = useQuery({
+    queryKey: ['suggest-hospital-tpas', leadId, debouncedTpaSearch],
+    queryFn: () =>
+      apiGet<{ items: { id: string; name: string }[] }>(
+        `/api/leads/${leadId}/suggest-hospital?search=${encodeURIComponent(debouncedTpaSearch)}`
+      ),
+    enabled: !!leadId && isSuggestDialogOpen,
+  })
+  const tpaSuggestions = tpaSuggestData?.items ?? []
 
   const handleSuggestHospital = async () => {
     if (!suggestedHospitalName.trim()) {
@@ -110,10 +139,12 @@ export default function RaisePreAuthPage() {
       setIsSubmittingSuggestion(true)
       await apiPost(`/api/leads/${leadId}/suggest-hospital`, {
         suggestedHospitalName: suggestedHospitalName.trim(),
+        ...(suggestedTpa.trim() ? { tpa: suggestedTpa.trim() } : {}),
       })
       toast.success('Hospital suggestion submitted. Insurance team will be notified.')
       setIsSuggestDialogOpen(false)
       setSuggestedHospitalName('')
+      setSuggestedTpa('')
       queryClient.invalidateQueries({ queryKey: ['kyp-submission', leadId] })
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to suggest hospital')
@@ -197,7 +228,18 @@ export default function RaisePreAuthPage() {
                   Upload required documents and provide disease details.
                 </CardDescription>
               </div>
-              <Dialog open={isSuggestDialogOpen} onOpenChange={setIsSuggestDialogOpen}>
+              <Dialog
+                open={isSuggestDialogOpen}
+                onOpenChange={(open) => {
+                  setIsSuggestDialogOpen(open)
+                  if (open) {
+                    setSuggestedTpa(kypSubmission?.preAuthData?.tpa ?? '')
+                  } else {
+                    setSuggestedHospitalName('')
+                    setSuggestedTpa('')
+                  }
+                }}
+              >
                 <DialogTrigger asChild>
                   <Button variant="outline" className="border-dashed border-2">
                     Suggest New Hospital
@@ -219,6 +261,41 @@ export default function RaisePreAuthPage() {
                         onChange={(e) => setSuggestedHospitalName(e.target.value)}
                         placeholder="Enter hospital name"
                       />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="suggest-tpa">TPA (optional)</Label>
+                      <Combobox
+                        autoHighlight
+                        value={suggestedTpa || ''}
+                        onValueChange={(value) => {
+                          if (value) setSuggestedTpa(value)
+                        }}
+                      >
+                        <ComboboxInput
+                          id="suggest-tpa"
+                          placeholder="Search TPAMaster or type any TPA name"
+                          className={cn('w-full')}
+                          value={suggestedTpa}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setSuggestedTpa(e.target.value)
+                          }
+                        />
+                        <ComboboxContent>
+                          <ComboboxList>
+                            {tpaSuggestions.length > 0 ? (
+                              tpaSuggestions.map((item) => (
+                                <ComboboxItem key={item.id} value={item.name}>
+                                  {item.name}
+                                </ComboboxItem>
+                              ))
+                            ) : (
+                              <ComboboxEmpty>
+                                No TPA matches. Keep typing to use your own text.
+                              </ComboboxEmpty>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
                     </div>
                   </div>
                   <DialogFooter>

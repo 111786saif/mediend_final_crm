@@ -211,7 +211,6 @@ export function KYPBasicForm({
       apiGet<{ items: { id: string; name: string }[] }>(
         `/api/masters/tpas?search=${encodeURIComponent(debouncedInsuranceSearch.trim())}`
       ),
-    enabled: debouncedInsuranceSearch.trim().length >= 1,
     staleTime: 30_000,
   })
 
@@ -221,7 +220,6 @@ export function KYPBasicForm({
       apiGet<{ items: { id: string; name: string }[] }>(
         `/api/masters/doctors?search=${encodeURIComponent(debouncedDoctorSearch.trim())}`
       ),
-    enabled: debouncedDoctorSearch.trim().length >= 1,
     staleTime: 30_000,
   })
 
@@ -376,6 +374,7 @@ export function KYPBasicForm({
         <div>
           <Label htmlFor="location">City *</Label>
           <Combobox
+            autoHighlight
             value={formData.location || ''}
             onValueChange={(value) => {
               if (value) {
@@ -392,23 +391,23 @@ export function KYPBasicForm({
               value={formData.location}
             />
             {errors.location && <p className="text-xs text-destructive mt-1">{errors.location}</p>}
-            {formData.location.trim() && (
-              <ComboboxContent>
-                <ComboboxList>
-                  {filteredCities.length > 0 ? (
-                    filteredCities.map((city) => (
-                      <ComboboxItem key={city} value={city}>
-                        {city}
-                      </ComboboxItem>
-                    ))
-                  ) : (
-                    <ComboboxEmpty>
-                      No cities found. You can enter manually.
-                    </ComboboxEmpty>
-                  )}
-                </ComboboxList>
-              </ComboboxContent>
-            )}
+            <ComboboxContent>
+              <ComboboxList>
+                {filteredCities.length > 0 ? (
+                  filteredCities.map((city) => (
+                    <ComboboxItem key={city} value={city}>
+                      {city}
+                    </ComboboxItem>
+                  ))
+                ) : (
+                  <ComboboxEmpty>
+                    {formData.location.trim()
+                      ? 'No cities found. You can enter manually.'
+                      : 'Type to search cities, or enter manually.'}
+                  </ComboboxEmpty>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
           </Combobox>
         </div>
         <div>
@@ -428,6 +427,7 @@ export function KYPBasicForm({
         <div>
           <Label htmlFor="insuranceName">Insurance Name</Label>
           <Combobox
+            autoHighlight
             value={formData.insuranceName || ''}
             onValueChange={(value) => {
               if (value) {
@@ -444,21 +444,19 @@ export function KYPBasicForm({
                 setFormData({ ...formData, insuranceName: e.target.value })
               }
             />
-            {formData.insuranceName.trim() && (
-              <ComboboxContent>
-                <ComboboxList>
-                  {tpaSuggestions.length > 0 ? (
-                    tpaSuggestions.map((item) => (
-                      <ComboboxItem key={item.id} value={item.name}>
-                        {item.name}
-                      </ComboboxItem>
-                    ))
-                  ) : (
-                    <ComboboxEmpty>No TPA matches. Keep typing to use your own text.</ComboboxEmpty>
-                  )}
-                </ComboboxList>
-              </ComboboxContent>
-            )}
+            <ComboboxContent>
+              <ComboboxList>
+                {tpaSuggestions.length > 0 ? (
+                  tpaSuggestions.map((item) => (
+                    <ComboboxItem key={item.id} value={item.name}>
+                      {item.name}
+                    </ComboboxItem>
+                  ))
+                ) : (
+                  <ComboboxEmpty>No TPA matches. Keep typing to use your own text.</ComboboxEmpty>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
           </Combobox>
         </div>
         <div>
@@ -466,6 +464,7 @@ export function KYPBasicForm({
             Surgeon/Doctor Name <span className="text-destructive">*</span>
           </Label>
           <Combobox
+            autoHighlight
             value={formData.doctorName || ''}
             onValueChange={(value) => {
               if (value) {
@@ -482,21 +481,19 @@ export function KYPBasicForm({
                 setFormData({ ...formData, doctorName: e.target.value })
               }
             />
-            {formData.doctorName.trim() && (
-              <ComboboxContent>
-                <ComboboxList>
-                  {doctorSuggestions.length > 0 ? (
-                    doctorSuggestions.map((item) => (
-                      <ComboboxItem key={item.id} value={item.name}>
-                        {item.name}
-                      </ComboboxItem>
-                    ))
-                  ) : (
-                    <ComboboxEmpty>No doctor matches. Keep typing to use your own text.</ComboboxEmpty>
-                  )}
-                </ComboboxList>
-              </ComboboxContent>
-            )}
+            <ComboboxContent>
+              <ComboboxList>
+                {doctorSuggestions.length > 0 ? (
+                  doctorSuggestions.map((item) => (
+                    <ComboboxItem key={item.id} value={item.name}>
+                      {item.name}
+                    </ComboboxItem>
+                  ))
+                ) : (
+                  <ComboboxEmpty>No doctor matches. Keep typing to use your own text.</ComboboxEmpty>
+                )}
+              </ComboboxList>
+            </ComboboxContent>
           </Combobox>
           {errors.doctorName && (
             <p className="text-xs text-destructive mt-1">{errors.doctorName}</p>

@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
+import { useIsMobile } from '@/hooks/use-mobile'
 import {
   Drawer,
   DrawerContent,
@@ -78,6 +79,7 @@ export function HeadTargetDetailDrawer({
   onOpenChange,
   onEditTarget,
 }: HeadTargetDetailDrawerProps) {
+  const isMobile = useIsMobile()
   const { data, isLoading } = useQuery({
     queryKey: ['head-target-achievement', headUserId],
     queryFn: () =>
@@ -114,9 +116,23 @@ export function HeadTargetDetailDrawer({
   const avatarColor = AVATAR_COLORS[head?.role ?? ''] ?? 'bg-muted text-muted-foreground'
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange} direction="right">
-      <DrawerContent className="h-full max-h-dvh w-full max-w-full md:w-[60vw] md:max-w-[min(60vw,56rem)] ml-auto rounded-none md:rounded-l-2xl rounded-r-none flex flex-col overflow-hidden">
-        <DrawerHeader className="shrink-0 border-b px-4 py-4 sm:px-6 sm:py-5">
+    <Drawer
+      open={open}
+      onOpenChange={onOpenChange}
+      direction={isMobile ? 'bottom' : 'right'}
+    >
+      <DrawerContent
+        className={cn(
+          'flex flex-col overflow-hidden',
+          isMobile
+            ? 'z-[60] max-h-[min(90dvh,100%)] w-[100vw] max-w-[100vw] rounded-t-2xl border-0'
+            : 'ml-auto h-full max-h-dvh w-full max-w-full rounded-none rounded-r-none md:w-[60vw] md:max-w-[min(60vw,56rem)] md:rounded-l-2xl'
+        )}
+      >
+        {isMobile ? (
+          <div className="mx-auto mt-2 h-1.5 w-12 shrink-0 rounded-full bg-muted" aria-hidden />
+        ) : null}
+        <DrawerHeader className="shrink-0 border-b px-4 py-3 sm:px-6 sm:py-4 md:py-5">
           <div className="flex items-center gap-3 sm:gap-4">
             <Button
               type="button"
@@ -149,8 +165,15 @@ export function HeadTargetDetailDrawer({
           </div>
         </DrawerHeader>
 
-        <ScrollArea className="flex-1 min-h-0">
-          <div className="p-6 space-y-6">
+        <ScrollArea className="min-h-0 flex-1">
+          <div
+            className={cn(
+              'space-y-4 sm:space-y-6',
+              isMobile
+                ? 'p-4 pb-[max(1.5rem,calc(4.5rem+env(safe-area-inset-bottom)))]'
+                : 'p-6'
+            )}
+          >
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
