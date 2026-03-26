@@ -380,8 +380,12 @@ async function syncOneBatch(
       const chunk = leadsToUpdate.slice(i, i + UPDATE_CHUNK_SIZE)
       try {
         await prisma.$transaction(
-          chunk.map((item) => prisma.lead.update({ where: { leadRef: item.leadRef }, data: item.data })),
-          { timeout: 30000 }
+          async (tx) => {
+            for (const item of chunk) {
+              await tx.lead.update({ where: { leadRef: item.leadRef }, data: item.data })
+            }
+          },
+          { timeout: 60_000 }
         )
         updated += chunk.length
       } catch {
