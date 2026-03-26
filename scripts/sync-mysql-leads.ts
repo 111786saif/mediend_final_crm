@@ -31,7 +31,7 @@ interface MySQLRemarkRow {
 const BATCH_SIZE = 5000
 const SYNC_SOURCE_TYPE = 'mysql_leads'
 const CREATE_CHUNK_SIZE = 2000
-const UPDATE_CHUNK_SIZE = 100
+const UPDATE_CHUNK_SIZE = 50
 
 /** Parse --from YYYY-MM-DD from argv; returns null if absent. */
 function parseFromArg(): Date | null {
@@ -380,7 +380,8 @@ async function syncOneBatch(
       const chunk = leadsToUpdate.slice(i, i + UPDATE_CHUNK_SIZE)
       try {
         await prisma.$transaction(
-          chunk.map((item) => prisma.lead.update({ where: { leadRef: item.leadRef }, data: item.data }))
+          chunk.map((item) => prisma.lead.update({ where: { leadRef: item.leadRef }, data: item.data })),
+          { timeout: 30000 }
         )
         updated += chunk.length
       } catch {
@@ -448,6 +449,10 @@ async function syncLeads() {
       `✅ Lookups loaded — sources: ${lookups.source.size}, campaigns: ${lookups.campaign.size}, ` +
         `treatments: ${lookups.treatment.size}, circles: ${lookups.circle.size}, statuses: ${lookups.status.size}`
     )
+
+    // Count total leads in MySQL for progress tracking
+    const [{ total: mysqlLeadCount }] = await queryMySQL<{ total: number }>('SELECT COUNT(*) AS total FROM lead')
+    console.log(`📊 Total leads in MySQL: ${mysqlLeadCount.toLocaleString()}`)
 
     // Sync staff first so BD numbers and team structure are available for lead mapping
     console.log('👥 Syncing staff from tblstaff (BDs, TLs, hierarchy)...')
