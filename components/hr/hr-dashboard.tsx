@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useState, useMemo } from 'react'
 import {
-  Users,
   UserCheck,
   Wallet,
   MessageSquare,
@@ -18,6 +17,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import {
   BarChart,
@@ -147,7 +147,10 @@ function formatHours(h: number | null) {
 
 interface HRDashboardProps {
   title?: string
+  /** When omitted, a default is chosen from `audience`. */
   description?: string
+  /** `md` uses a shorter default description for the leadership route. */
+  audience?: 'md' | 'hr'
 }
 
 interface KpiCardProps {
@@ -173,7 +176,17 @@ function KpiCard({ title, value, sub, color, icon }: KpiCardProps) {
   )
 }
 
-export function HRDashboard({ title = 'HR Dashboard', description = 'Strength, salary, and ticket analytics' }: HRDashboardProps) {
+const DEFAULT_DESCRIPTION_HR = 'Strength, salary, and ticket analytics'
+const DEFAULT_DESCRIPTION_MD = 'Headcount, payroll, and ticket snapshot'
+
+export function HRDashboard({
+  title = 'HR Dashboard',
+  description: descriptionProp,
+  audience = 'hr',
+}: HRDashboardProps) {
+  const description =
+    descriptionProp ??
+    (audience === 'md' ? DEFAULT_DESCRIPTION_MD : DEFAULT_DESCRIPTION_HR)
   const now = new Date()
   const [period, setPeriod] = useState<'thisMonth' | 'lastMonth' | 'custom'>('thisMonth')
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
@@ -360,7 +373,7 @@ export function HRDashboard({ title = 'HR Dashboard', description = 'Strength, s
 
       {isLoading ? (
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-          {Array.from({ length: 9 }).map((_, i) => (
+          {Array.from({ length: 8 }).map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardHeader className="pb-2"><div className="h-3 w-20 bg-muted rounded" /></CardHeader>
               <CardContent><div className="h-7 w-24 bg-muted rounded" /></CardContent>
@@ -372,11 +385,11 @@ export function HRDashboard({ title = 'HR Dashboard', description = 'Strength, s
           {/* ─── KPI Cards Row 1: Today ─── */}
           <div>
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">Today</p>
-            <div className="grid gap-3 grid-cols-2 sm:grid-cols-4">
+            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
               <KpiCard
                 title="Strength"
                 value={`${mergedAnalytics.kpis.todayStrength} / ${mergedAnalytics.kpis.totalHeadcount}`}
-                sub="Present / Total"
+                sub="Present of total roster"
                 color="border-l-emerald-500"
                 icon={<UserCheck className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400" />}
               />
@@ -393,13 +406,6 @@ export function HRDashboard({ title = 'HR Dashboard', description = 'Strength, s
                 sub={`of ${mergedAnalytics.kpis.todayStrength} present`}
                 color="border-l-orange-500"
                 icon={<AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-orange-600 dark:text-orange-400" />}
-              />
-              <KpiCard
-                title="Headcount"
-                value={String(mergedAnalytics.kpis.totalHeadcount)}
-                sub="All employees"
-                color="border-l-blue-500"
-                icon={<Users className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400" />}
               />
             </div>
           </div>
@@ -579,98 +585,94 @@ export function HRDashboard({ title = 'HR Dashboard', description = 'Strength, s
             </Card>
           )}
 
-          {/* ─── Salary Charts ─── */}
+          {/* ─── Salary (by department / by team) ─── */}
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-            {/* Department salary */}
             <Card className="overflow-hidden">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-violet-500" />
-                  <CardTitle className="text-base">Department Salary</CardTitle>
-                </div>
-                <CardDescription>
-                  {mergedAnalytics.kpis.hasPayrollData ? 'Net payable' : 'CTC estimate'} — {MONTHS[month - 1]} {year}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="px-2 sm:px-4">
-                <ChartContainer
-                  config={{ amount: { label: 'Amount', color: '#8b5cf6' } }}
-                  className="w-full"
-                  style={{ height: Math.max(160, mergedAnalytics.departmentSalaryBreakdown.length * 36) }}
-                >
-                  <BarChart
-                    data={mergedAnalytics.departmentSalaryBreakdown}
-                    layout="vertical"
-                    margin={{ top: 0, right: 60, left: 0, bottom: 0 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis
-                      type="number"
-                      tickFormatter={(v) => formatCurrency(v)}
-                      tick={{ fontSize: 10 }}
-                    />
-                    <YAxis
-                      dataKey="departmentName"
-                      type="category"
-                      width={110}
-                      tick={{ fontSize: 11 }}
-                      tickLine={false}
-                    />
-                    <ChartTooltip content={<ChartTooltipContent formatter={(v) => formatCurrencyFull(Number(v))} />} />
-                    <Bar dataKey="amount" radius={[0, 4, 4, 0]} maxBarSize={22}>
-                      {mergedAnalytics.departmentSalaryBreakdown.map((_, i) => (
-                        <Cell key={i} fill={CHART_PALETTE[i % CHART_PALETTE.length]} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-
-            {/* Team salary */}
-            <Card className="overflow-hidden">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-indigo-500" />
-                  <CardTitle className="text-base">Team Salary</CardTitle>
-                </div>
-                <CardDescription>
-                  {mergedAnalytics.kpis.hasPayrollData ? 'Net payable' : 'CTC estimate'} by department team
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="px-2 sm:px-4">
-                <ChartContainer
-                  config={{ amount: { label: 'Amount', color: '#6366f1' } }}
-                  className="w-full"
-                  style={{ height: Math.max(160, mergedAnalytics.teamSalaryBreakdown.length * 36) }}
-                >
-                  <BarChart
-                    data={mergedAnalytics.teamSalaryBreakdown}
-                    layout="vertical"
-                    margin={{ top: 0, right: 60, left: 0, bottom: 0 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis
-                      type="number"
-                      tickFormatter={(v) => formatCurrency(v)}
-                      tick={{ fontSize: 10 }}
-                    />
-                    <YAxis
-                      dataKey="teamName"
-                      type="category"
-                      width={110}
-                      tick={{ fontSize: 11 }}
-                      tickLine={false}
-                    />
-                    <ChartTooltip content={<ChartTooltipContent formatter={(v) => formatCurrencyFull(Number(v))} />} />
-                    <Bar dataKey="amount" radius={[0, 4, 4, 0]} maxBarSize={22}>
-                      {mergedAnalytics.teamSalaryBreakdown.map((_, i) => (
-                        <Cell key={i} fill={CHART_PALETTE[(i + 2) % CHART_PALETTE.length]} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ChartContainer>
-              </CardContent>
+              <Tabs defaultValue="department" className="gap-0">
+                <CardHeader className="space-y-3">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-violet-500" />
+                      <CardTitle className="text-base">Salary breakdown</CardTitle>
+                    </div>
+                    <TabsList className="w-full sm:w-auto shrink-0">
+                      <TabsTrigger value="department">By department</TabsTrigger>
+                      <TabsTrigger value="team">By team</TabsTrigger>
+                    </TabsList>
+                  </div>
+                  <CardDescription>
+                    {mergedAnalytics.kpis.hasPayrollData ? 'Net payable' : 'CTC estimate'} — {MONTHS[month - 1]} {year}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="px-2 sm:px-4 pt-0">
+                  <TabsContent value="department" className="mt-0 outline-none">
+                    <ChartContainer
+                      config={{ amount: { label: 'Amount', color: '#8b5cf6' } }}
+                      className="w-full"
+                      style={{ height: Math.max(160, mergedAnalytics.departmentSalaryBreakdown.length * 36) }}
+                    >
+                      <BarChart
+                        data={mergedAnalytics.departmentSalaryBreakdown}
+                        layout="vertical"
+                        margin={{ top: 0, right: 60, left: 0, bottom: 0 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                        <XAxis
+                          type="number"
+                          tickFormatter={(v) => formatCurrency(v)}
+                          tick={{ fontSize: 10 }}
+                        />
+                        <YAxis
+                          dataKey="departmentName"
+                          type="category"
+                          width={110}
+                          tick={{ fontSize: 11 }}
+                          tickLine={false}
+                        />
+                        <ChartTooltip content={<ChartTooltipContent formatter={(v) => formatCurrencyFull(Number(v))} />} />
+                        <Bar dataKey="amount" radius={[0, 4, 4, 0]} maxBarSize={22}>
+                          {mergedAnalytics.departmentSalaryBreakdown.map((_, i) => (
+                            <Cell key={i} fill={CHART_PALETTE[i % CHART_PALETTE.length]} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ChartContainer>
+                  </TabsContent>
+                  <TabsContent value="team" className="mt-0 outline-none">
+                    <ChartContainer
+                      config={{ amount: { label: 'Amount', color: '#6366f1' } }}
+                      className="w-full"
+                      style={{ height: Math.max(160, mergedAnalytics.teamSalaryBreakdown.length * 36) }}
+                    >
+                      <BarChart
+                        data={mergedAnalytics.teamSalaryBreakdown}
+                        layout="vertical"
+                        margin={{ top: 0, right: 60, left: 0, bottom: 0 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                        <XAxis
+                          type="number"
+                          tickFormatter={(v) => formatCurrency(v)}
+                          tick={{ fontSize: 10 }}
+                        />
+                        <YAxis
+                          dataKey="teamName"
+                          type="category"
+                          width={110}
+                          tick={{ fontSize: 11 }}
+                          tickLine={false}
+                        />
+                        <ChartTooltip content={<ChartTooltipContent formatter={(v) => formatCurrencyFull(Number(v))} />} />
+                        <Bar dataKey="amount" radius={[0, 4, 4, 0]} maxBarSize={22}>
+                          {mergedAnalytics.teamSalaryBreakdown.map((_, i) => (
+                            <Cell key={i} fill={CHART_PALETTE[(i + 2) % CHART_PALETTE.length]} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ChartContainer>
+                  </TabsContent>
+                </CardContent>
+              </Tabs>
             </Card>
 
             {/* Department headcount - horizontal bar (replaces pie) */}
@@ -680,7 +682,9 @@ export function HRDashboard({ title = 'HR Dashboard', description = 'Strength, s
                   <div className="h-2 w-2 rounded-full bg-blue-500" />
                   <CardTitle className="text-base">Department Headcount</CardTitle>
                 </div>
-                <CardDescription>Employees per department</CardDescription>
+                <CardDescription>
+                  {mergedAnalytics.kpis.totalHeadcount} employees total — breakdown by department
+                </CardDescription>
               </CardHeader>
               <CardContent className="px-2 sm:px-4">
                 <ChartContainer
@@ -773,9 +777,6 @@ export function HRDashboard({ title = 'HR Dashboard', description = 'Strength, s
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-teal-500" />
                   <CardTitle className="text-base">New Joiners</CardTitle>
-                  <Badge variant="secondary" className="ml-auto text-teal-700 dark:text-teal-300 bg-teal-100 dark:bg-teal-900/30">
-                    {mergedAnalytics.newJoiners.length}
-                  </Badge>
                 </div>
                 <CardDescription>Joined in {MONTHS[month - 1]} {year}</CardDescription>
               </CardHeader>

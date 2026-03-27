@@ -6,10 +6,7 @@ import { HRDashboard } from '@/components/hr/hr-dashboard'
 export default function HRDashboardPage() {
   return (
     <AuthenticatedLayout>
-      <HRDashboard
-        title="HR Dashboard"
-        description="Strength, salary, and ticket analytics"
-      />
+      <HRDashboard title="HR Dashboard" audience="hr" />
     </AuthenticatedLayout>
   )
 }
