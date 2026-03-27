@@ -105,7 +105,7 @@ export default function MDAppointmentPage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="preferredDate">Suggested day (optional)</Label>
+                <Label htmlFor="preferredDate">Scheduled day (optional)</Label>
                 <Input
                   id="preferredDate"
                   type="date"
@@ -167,7 +167,7 @@ export default function MDAppointmentPage() {
                         {appointment.preferredDate && (
                           <p className="text-sm flex items-center gap-1 mt-1">
                             <Calendar className="h-3 w-3" />
-                            Suggested day: {format(new Date(appointment.preferredDate), 'PPP')}
+                            Scheduled: {format(new Date(appointment.preferredDate), 'PPP')}
                           </p>
                         )}
                       </div>

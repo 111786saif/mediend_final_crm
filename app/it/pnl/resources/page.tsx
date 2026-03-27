@@ -76,7 +76,7 @@ export default function ItResourcesPage() {
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6 p-4 md:p-6 max-w-4xl mx-auto">
+      <div className="space-y-6 p-4 md:p-6 w-full min-w-0">
         <Button variant="ghost" asChild><Link href="/it/pnl">← IT P&amp;L</Link></Button>
         <h1 className="text-2xl font-bold">IT Resources</h1>
 

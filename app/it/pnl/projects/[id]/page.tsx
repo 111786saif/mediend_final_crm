@@ -137,7 +137,7 @@ export default function ItProjectDetailPage({ params }: { params: Promise<{ id: 
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6 p-4 md:p-6 max-w-5xl mx-auto">
+      <div className="space-y-6 p-4 md:p-6 w-full min-w-0">
         <Button variant="ghost" asChild><Link href="/it/pnl/projects">← Projects</Link></Button>
 
         {!can || isLoading || !project ? (

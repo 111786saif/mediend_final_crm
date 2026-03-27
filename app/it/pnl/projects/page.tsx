@@ -79,7 +79,7 @@ export default function ItProjectsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6 p-4 md:p-6 max-w-6xl mx-auto">
+      <div className="space-y-6 p-4 md:p-6 w-full min-w-0">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">IT Projects</h1>

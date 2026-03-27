@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { format, isThisWeek, isToday, isTomorrow } from 'date-fns'
 import { apiGet } from '@/lib/api-client'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
+import { CreateMeetDrawer } from '@/components/meets/create-meet-drawer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -17,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-import { ArrowLeft, MapPin, Video, CalendarDays } from 'lucide-react'
+import { ArrowLeft, MapPin, Video, CalendarDays, Plus } from 'lucide-react'
 
 type MeetRow = {
   id: string
@@ -53,8 +54,16 @@ function moduleBadgeClass(m: MeetRow['module']) {
   }
 }
 
+type CanCreateResponse = { canCreate: boolean }
+
 export default function MeetsPage() {
   const [moduleFilter, setModuleFilter] = useState<string>('all')
+  const [createOpen, setCreateOpen] = useState(false)
+
+  const { data: createEligibility } = useQuery<CanCreateResponse>({
+    queryKey: ['meets', 'can-create'],
+    queryFn: () => apiGet<CanCreateResponse>('/api/meets/can-create'),
+  })
 
   const { data: meets = [], isLoading } = useQuery<MeetRow[]>({
     queryKey: ['meets', 'all', moduleFilter],
@@ -92,9 +101,11 @@ export default function MeetsPage() {
     return { today, tomorrow, thisWeek, later }
   }, [meets])
 
+  const canCreateMeet = createEligibility?.canCreate === true
+
   return (
     <AuthenticatedLayout>
-      <div className="space-y-4 max-w-3xl mx-auto px-0">
+      <div className="space-y-4 w-full min-w-0 relative">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="shrink-0 rounded-full" asChild>
             <Link href="/home" aria-label="Back">
@@ -106,9 +117,6 @@ export default function MeetsPage() {
               <CalendarDays className="h-6 w-6 text-indigo-600" />
               Meets
             </h1>
-            <p className="text-xs md:text-sm text-muted-foreground">
-              Your schedule across interviews, MD appointments, and more.
-            </p>
           </div>
         </div>
 
@@ -219,6 +227,21 @@ export default function MeetsPage() {
                 )
             )}
           </div>
+        )}
+
+        {canCreateMeet && (
+          <>
+            <Button
+              type="button"
+              size="icon"
+              className="fixed z-40 h-14 w-14 rounded-full shadow-lg bg-indigo-600 hover:bg-indigo-700 text-white bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 md:bottom-8 md:right-6"
+              aria-label="New meet"
+              onClick={() => setCreateOpen(true)}
+            >
+              <Plus className="h-7 w-7" />
+            </Button>
+            <CreateMeetDrawer open={createOpen} onOpenChange={setCreateOpen} />
+          </>
         )}
       </div>
     </AuthenticatedLayout>

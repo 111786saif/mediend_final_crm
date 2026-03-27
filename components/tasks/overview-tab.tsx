@@ -4,7 +4,6 @@ import { useState, useMemo } from "react"
 import { startOfDay } from "date-fns"
 import { useTaskStats, useTasks, useWarnings } from "@/hooks/use-tasks"
 import { useAuth } from "@/hooks/use-auth"
-import { Progress } from "@/components/ui/progress"
 import { StatCard } from "@/components/ui/stat-card"
 import { TaskRow } from "./task-row"
 import { getTaskCardClass } from "./task-card-class"
@@ -46,7 +45,8 @@ export function OverviewTab() {
   const [expandedAssigneeId, setExpandedAssigneeId] = useState<string | null>(null)
   const [detailTaskId, setDetailTaskId] = useState<string | null>(null)
   const [taskToComplete, setTaskToComplete] = useState<Task | null>(null)
-  const [statDrawer, setStatDrawer] = useState<"total" | "completed" | "pending" | "pendingReview" | "overdue" | null>(null)
+  const [statDrawer, setStatDrawer] = useState<"completed" | "pending" | "pendingReview" | "overdue" | null>(null)
+  const [overdueExpanded, setOverdueExpanded] = useState(false)
   const isMobile = useIsMobile()
 
   const canMarkComplete = (task: Task) =>
@@ -76,8 +76,6 @@ export function OverviewTab() {
   const statDrawerTasks = useMemo(() => {
     if (!statDrawer) return []
     switch (statDrawer) {
-      case "total":
-        return tasks.filter((t) => t.status !== "CANCELLED")
       case "completed":
         return tasks.filter((t) => t.status === "COMPLETED")
       case "pending":
@@ -107,6 +105,37 @@ export function OverviewTab() {
     )
   }
 
+  const taskTotal = stats.total
+  const pctOfTotal = (count: number) => {
+    if (taskTotal <= 0) {
+      return {
+        main: count === 0 ? "0%" : "—",
+        sub: `${count} task${count === 1 ? "" : "s"}`,
+      }
+    }
+    return {
+      main: `${Math.round((count / taskTotal) * 100)}%`,
+      sub: `${count} task${count === 1 ? "" : "s"}`,
+    }
+  }
+  const assigneeCount = stats.employeeWise.length
+  const warnN = stats.employeesWithWarnings ?? 0
+  const warningsPct =
+    assigneeCount <= 0
+      ? {
+          main: warnN === 0 ? "0%" : "—",
+          sub: `${warnN} employee${warnN === 1 ? "" : "s"}`,
+        }
+      : {
+          main: `${Math.round((warnN / assigneeCount) * 100)}%`,
+          sub: `${warnN} employee${warnN === 1 ? "" : "s"}`,
+        }
+
+  const completedPct = pctOfTotal(stats.completed)
+  const pendingPct = pctOfTotal(stats.pending)
+  const pendingReviewPct = pctOfTotal(stats.pendingReview ?? 0)
+  const overduePct = pctOfTotal(stats.overdue)
+
   const projectTasks = expandedProjectId
     ? tasks.filter((t) => (t.projectId ?? null) === expandedProjectId)
     : []
@@ -115,33 +144,25 @@ export function OverviewTab() {
     : []
 
   const statDrawerTitle =
-    statDrawer === "total"
-      ? "All tasks"
-      : statDrawer === "completed"
-        ? "Completed"
-        : statDrawer === "pending"
-          ? "Pending"
-          : statDrawer === "pendingReview"
-            ? "Needs review"
-            : statDrawer === "overdue"
-              ? "Overdue"
-              : ""
+    statDrawer === "completed"
+      ? "Completed"
+      : statDrawer === "pending"
+        ? "Pending"
+        : statDrawer === "pendingReview"
+          ? "Needs review"
+          : statDrawer === "overdue"
+            ? "Overdue"
+            : ""
 
   return (
     <div className="space-y-6">
-      <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
         {isMobile ? (
           <>
             <StatCard
-              label="Total"
-              value={stats.total}
-              accent="blue"
-              className="cursor-pointer active:opacity-80"
-              onClick={() => setStatDrawer("total")}
-            />
-            <StatCard
               label="Completed"
-              value={stats.completed}
+              value={completedPct.main}
+              subValue={completedPct.sub}
               accent="green"
               valueAccent
               className="cursor-pointer active:opacity-80"
@@ -149,14 +170,16 @@ export function OverviewTab() {
             />
             <StatCard
               label="Pending"
-              value={stats.pending}
+              value={pendingPct.main}
+              subValue={pendingPct.sub}
               accent="amber"
               className="cursor-pointer active:opacity-80"
               onClick={() => setStatDrawer("pending")}
             />
             <StatCard
               label="Pending review"
-              value={stats.pendingReview ?? 0}
+              value={pendingReviewPct.main}
+              subValue={pendingReviewPct.sub}
               accent="purple"
               valueAccent
               className="cursor-pointer active:opacity-80"
@@ -164,7 +187,8 @@ export function OverviewTab() {
             />
             <StatCard
               label="Overdue"
-              value={stats.overdue}
+              value={overduePct.main}
+              subValue={overduePct.sub}
               accent="red"
               valueAccent
               className="cursor-pointer active:opacity-80"
@@ -173,12 +197,40 @@ export function OverviewTab() {
           </>
         ) : (
           <>
-            <StatCard label="Total" value={stats.total} accent="blue" />
-            <StatCard label="Completed" value={stats.completed} accent="green" valueAccent />
-            <StatCard label="Pending" value={stats.pending} accent="amber" />
-            <StatCard label="Pending review" value={stats.pendingReview ?? 0} accent="purple" valueAccent />
-            <StatCard label="Overdue" value={stats.overdue} accent="red" valueAccent />
-            <StatCard label="Employees w/ warnings" value={stats.employeesWithWarnings ?? 0} accent="orange" valueAccent />
+            <StatCard
+              label="Completed"
+              value={completedPct.main}
+              subValue={completedPct.sub}
+              accent="green"
+              valueAccent
+            />
+            <StatCard
+              label="Pending"
+              value={pendingPct.main}
+              subValue={pendingPct.sub}
+              accent="amber"
+            />
+            <StatCard
+              label="Pending review"
+              value={pendingReviewPct.main}
+              subValue={pendingReviewPct.sub}
+              accent="purple"
+              valueAccent
+            />
+            <StatCard
+              label="Overdue"
+              value={overduePct.main}
+              subValue={overduePct.sub}
+              accent="red"
+              valueAccent
+            />
+            <StatCard
+              label="Employees w/ warnings"
+              value={warningsPct.main}
+              subValue={warningsPct.sub}
+              accent="orange"
+              valueAccent
+            />
           </>
         )}
       </section>
@@ -228,28 +280,41 @@ export function OverviewTab() {
       )}
 
       {overdueTasks.length > 0 && (
-        <section>
-          <h2 className="text-sm font-semibold text-red-600 mb-2">
-            Overdue ({overdueTasks.length})
-          </h2>
-          <div className="space-y-2">
-            {overdueTasks.map((task) => (
-              <div key={task.id} className={getTaskCardClass(task, { isOverdue: true })}>
-                <TaskRow
-                  task={task}
-                  onClick={() => setDetailTaskId(task.id)}
-                  showAssignee
-                  showProject
-                  warningCount={taskWarningCountMap[task.id] ?? 0}
-                  extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                  activityCount={task.unseenActivityCount ?? 0}
-                  isAssignee={task.assigneeId === user?.id}
-                  canMarkComplete={canMarkComplete(task)}
-                  onMarkCompleteRequest={() => setTaskToComplete(task)}
-                />
-              </div>
-            ))}
-          </div>
+        <section className="rounded-xl border border-border border-l-4 border-l-red-500 overflow-hidden">
+          <button
+            type="button"
+            className="flex w-full items-center gap-2 px-3 py-3 text-left text-sm hover:bg-muted/50"
+            onClick={() => setOverdueExpanded((v) => !v)}
+          >
+            {overdueExpanded ? (
+              <ChevronDown className="h-4 w-4 shrink-0 text-red-600" />
+            ) : (
+              <ChevronRight className="h-4 w-4 shrink-0 text-red-600" />
+            )}
+            <h2 className="text-sm font-semibold text-red-600 flex-1">
+              Overdue ({overdueTasks.length})
+            </h2>
+          </button>
+          {overdueExpanded && (
+            <div className="border-t px-2 py-2 space-y-2">
+              {overdueTasks.map((task) => (
+                <div key={task.id} className={getTaskCardClass(task, { isOverdue: true })}>
+                  <TaskRow
+                    task={task}
+                    onClick={() => setDetailTaskId(task.id)}
+                    showAssignee
+                    showProject
+                    warningCount={taskWarningCountMap[task.id] ?? 0}
+                    extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+                    activityCount={task.unseenActivityCount ?? 0}
+                    isAssignee={task.assigneeId === user?.id}
+                    canMarkComplete={canMarkComplete(task)}
+                    onMarkCompleteRequest={() => setTaskToComplete(task)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
 

@@ -62,6 +62,8 @@ export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string
   /** Main value to display (number, string, or ReactNode) */
   value: React.ReactNode
+  /** Smaller secondary line under the value (e.g. absolute count) */
+  subValue?: React.ReactNode
   /** Accent color for the left border and optional value color */
   accent?: StatCardAccent
   /** If true, the value uses the accent color; if false, uses default foreground */
@@ -73,6 +75,7 @@ export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
 function StatCard({
   label,
   value,
+  subValue,
   accent = "neutral",
   valueAccent = false,
   href,
@@ -91,12 +94,15 @@ function StatCard({
       <p className="text-sm md:text-xs text-muted-foreground">{label}</p>
       <p
         className={cn(
-          "text-2xl font-semibold",
+          "text-2xl font-semibold leading-tight",
           valueAccent ? styles.value : "text-foreground"
         )}
       >
         {value}
       </p>
+      {subValue != null && subValue !== "" && (
+        <p className="text-xs text-muted-foreground mt-1 tabular-nums">{subValue}</p>
+      )}
     </>
   )
   if (href) {

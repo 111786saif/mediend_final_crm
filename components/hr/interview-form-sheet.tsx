@@ -27,6 +27,8 @@ import { apiGet, apiPost } from '@/lib/api-client'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Users, Upload, Video, MapPin, CalendarClock, History } from 'lucide-react'
+import { isValid } from 'date-fns'
+import { DateTimePicker } from '@/components/ui/date-time-picker'
 
 const ROLE_PRESETS = [
   'Software Engineer',
@@ -65,7 +67,7 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
   const [round, setRound] = useState(1)
   const [meetLink, setMeetLink] = useState('')
   const [location, setLocation] = useState('')
-  const [scheduledAt, setScheduledAt] = useState('')
+  const [scheduledAt, setScheduledAt] = useState<Date | undefined>(undefined)
   const [notes, setNotes] = useState('')
   const [participantIds, setParticipantIds] = useState<Set<string>>(new Set())
   const [empSearch, setEmpSearch] = useState('')
@@ -104,7 +106,7 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
     mutationFn: async () => {
       if (!candidateName.trim()) throw new Error('Candidate name is required')
       if (!resolvedRole) throw new Error('Role is required')
-      if (!scheduledAt) throw new Error('Date & time is required')
+      if (!scheduledAt || !isValid(scheduledAt)) throw new Error('Date & time is required')
       if (meetType === 'OFFLINE' && !location.trim()) {
         throw new Error('Location is required for walk-in interviews')
       }
@@ -131,7 +133,7 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
         type: meetType,
         meetLink: meetType === 'VIRTUAL' ? meetLink.trim() || null : null,
         location: meetType === 'OFFLINE' ? location.trim() : null,
-        scheduledAt: new Date(scheduledAt).toISOString(),
+        scheduledAt: scheduledAt.toISOString(),
         notes: notes.trim() || null,
         participantUserIds: Array.from(participantIds),
         isRecorded: mode === 'record',
@@ -158,7 +160,7 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
     setRound(1)
     setMeetLink('')
     setLocation('')
-    setScheduledAt('')
+    setScheduledAt(undefined)
     setNotes('')
     setParticipantIds(new Set())
     setEmpSearch('')
@@ -273,7 +275,7 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-2">
             <div className="space-y-1.5">
               <Label>Round</Label>
               <Input
@@ -285,13 +287,14 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
                 className="rounded-xl"
               />
             </div>
-            <div className="space-y-1.5">
-              <Label>When</Label>
-              <Input
-                type="datetime-local"
+            <div className="space-y-1.5 sm:col-span-2">
+              <Label id="interview-when-label">When</Label>
+              <DateTimePicker
+                nested
                 value={scheduledAt}
-                onChange={(e) => setScheduledAt(e.target.value)}
-                className="rounded-xl"
+                onChange={setScheduledAt}
+                aria-labelledby="interview-when-label"
+                className="rounded-xl min-h-11 h-auto py-2.5"
               />
             </div>
           </div>

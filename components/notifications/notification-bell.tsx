@@ -27,8 +27,15 @@ export function NotificationBell() {
   const markAsRead = useMarkNotificationRead()
   const queryClient = useQueryClient()
 
-  const handleNotificationClick = async (notification: any) => {
+  const handleNotificationClick = async (notification: { id: string; link: string | null; isRead: boolean }) => {
     if (notification.link) {
+      if (!notification.isRead) {
+        try {
+          await markAsRead.mutateAsync(notification.id)
+        } catch {
+          /* still navigate */
+        }
+      }
       router.push(notification.link)
     }
     setOpen(false)

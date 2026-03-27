@@ -482,9 +482,19 @@ function NavCard({
 function NavCards() {
   const { user } = useAuth()
   const { data: badgeCounts } = useBadgeCounts()
+  const { data: unreadNotifications = [] } = useNotifications(true)
   const navItems = useMemo(() => getFilteredNavItemsWithUrls(user ?? null), [user])
 
+  const meetUnreadCount = useMemo(
+    () =>
+      unreadNotifications.filter(
+        (n) => n.type === 'MEET_SCHEDULED' || n.type === 'MEET_REMINDER'
+      ).length,
+    [unreadNotifications]
+  )
+
   const getBadge = (title: string) => {
+    if (title === 'Meets') return meetUnreadCount > 0 ? meetUnreadCount : undefined
     if (!badgeCounts) return undefined
     if (title === 'Tasks') return (badgeCounts.pendingTaskReviews ?? 0) + (badgeCounts.pendingDueDateApprovals ?? 0)
     if (title === 'MD Messages') return badgeCounts.unreadMessages

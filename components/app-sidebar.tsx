@@ -13,6 +13,7 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 import { useBadgeCounts } from '@/hooks/use-badge-counts'
+import { useNotifications } from '@/hooks/use-notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useSidebar } from '@/components/ui/sidebar'
 import { getFilteredNavItemsWithUrls } from '@/lib/sidebar-nav'
@@ -95,6 +96,14 @@ export function AppSidebar() {
   const pathname = usePathname()
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
+  const { data: unreadNotifications = [] } = useNotifications(true)
+  const meetNotificationBadge = React.useMemo(
+    () =>
+      unreadNotifications.filter(
+        (n) => n.type === 'MEET_SCHEDULED' || n.type === 'MEET_REMINDER'
+      ).length,
+    [unreadNotifications]
+  )
   const isMdOrAdmin = user?.role === 'MD' || user?.role === 'ADMIN'
 
   const closeSidebarOnMobile = React.useCallback(() => {
@@ -131,6 +140,7 @@ export function AppSidebar() {
           (item) =>
             item.title === 'Home' ||
             item.title === 'Tasks' ||
+            item.title === 'Meets' ||
             item.title === 'Sales Dashboard' ||
             item.title === 'Finance Dashboard' ||
             item.title === 'MD HR Dashboard' ||
@@ -141,6 +151,7 @@ export function AppSidebar() {
             (item) =>
               item.title === 'Home' ||
               item.title === 'Tasks' ||
+              item.title === 'Meets' ||
               item.title === 'Sales Dashboard' ||
               item.title === 'Finance Dashboard' ||
               item.title === 'MD HR Dashboard' ||
@@ -155,6 +166,7 @@ export function AppSidebar() {
               (item) =>
                 item.title === 'Home' ||
                 item.title === 'Tasks' ||
+                item.title === 'Meets' ||
                 item.title === 'Sales Dashboard' ||
                 item.title === 'MD HR Dashboard' ||
                 item.title.startsWith('My ') ||
@@ -171,6 +183,7 @@ export function AppSidebar() {
               (item) =>
                 item.title === 'Home' ||
                 item.title === 'Tasks' ||
+                item.title === 'Meets' ||
                 item.title.startsWith('My ')
             )
           : itemsWithUrls.filter(
@@ -236,7 +249,10 @@ export function AppSidebar() {
                 const Icon = item.icon
                 const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
                 const label = item.title.startsWith('MD ') ? item.title.replace('MD ', '') : item.title
-                const badgeCount = getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
+                const badgeCount =
+                  item.title === 'Meets'
+                    ? meetNotificationBadge
+                    : getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={isActive} tooltip={label}>

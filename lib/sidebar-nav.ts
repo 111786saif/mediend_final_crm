@@ -377,7 +377,8 @@ export function getDashboardUrl(role: string): string {
 function filterNavItems(user: SessionUser | null): NavItem[] {
   if (!user) return []
   return navItems.filter((item) => {
-    if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Meets') return true
+    if (item.title === 'Home' || item.title === 'Tasks') return true
+    if (item.title === 'Meets') return user.role !== 'BD'
     if (user.role === 'MD') {
       return (
         item.title === 'Sales Dashboard' ||

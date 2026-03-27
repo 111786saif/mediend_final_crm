@@ -5,6 +5,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { z } from 'zod'
 import { MeetModule, MeetType } from '@/generated/prisma/client'
 import { meetWithRelationsInclude, userMeetAccessWhere } from '@/lib/meets'
+import { canUserCreateMeet, getMeetInviteableUserIds } from '@/lib/hierarchy'
 import { format } from 'date-fns'
 
 const createMeetSchema = z.object({
@@ -72,10 +73,21 @@ export async function POST(request: NextRequest) {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
 
+    if (!(await canUserCreateMeet(user))) {
+      return errorResponse('Forbidden', 403)
+    }
+
     const body = await request.json()
     const data = createMeetSchema.parse(body)
 
     const participantUserIds = [...new Set(data.participantUserIds)].filter((id) => id !== user.id)
+
+    const inviteable = await getMeetInviteableUserIds(user)
+    for (const pid of participantUserIds) {
+      if (!inviteable.has(pid)) {
+        return errorResponse('Invalid participant', 400)
+      }
+    }
 
     const meet = await prisma.meet.create({
       data: {

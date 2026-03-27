@@ -299,6 +299,41 @@ export async function isUserInMDManagedCohort(userId: string): Promise<boolean> 
 }
 
 /**
+ * MD / Admin, or anyone whose immediate manager is an MD (direct MD team in hierarchy).
+ */
+export async function canUserCreateMeet(user: { id: string; role: string }): Promise<boolean> {
+  if (user.role === 'MD' || user.role === 'ADMIN') return true
+  const employee = await getEmployeeByUserId(user.id)
+  return employee?.manager?.user?.role === 'MD'
+}
+
+/**
+ * User IDs the creator may add as meet participants (same rules as task assignable-users).
+ */
+export async function getMeetInviteableUserIds(user: { id: string; role: string }): Promise<Set<string>> {
+  const isMDOrAdmin = user.role === 'MD' || user.role === 'ADMIN'
+  const inCohort = !isMDOrAdmin && (await isUserInMDManagedCohort(user.id))
+  if (isMDOrAdmin || inCohort) {
+    const all = await prisma.user.findMany({
+      where: { role: { notIn: ['MD', 'ADMIN'] } },
+      select: { id: true },
+    })
+    return new Set(all.map((u) => u.id))
+  }
+  const ids = new Set<string>([user.id])
+  const employee = await getEmployeeByUserId(user.id)
+  if (employee) {
+    const directReports = await getSubordinates(employee.id, false)
+    for (const sub of directReports) {
+      if (sub.user?.role !== 'MD' && sub.user?.role !== 'ADMIN') {
+        ids.add(sub.userId)
+      }
+    }
+  }
+  return ids
+}
+
+/**
  * Get user IDs of employees in an MD's task teams and watchlist.
  * Used to restrict MD tasks/stats to only their team + watchlist (not all subordinates).
  */

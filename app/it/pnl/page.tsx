@@ -49,7 +49,7 @@ export default function ItPnlOverviewPage() {
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6 p-4 md:p-6 max-w-[1400px] mx-auto">
+      <div className="space-y-6 p-4 md:p-6 w-full min-w-0">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold">IT P&amp;L</h1>

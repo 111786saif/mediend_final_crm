@@ -783,7 +783,7 @@ function MDAppointmentSection() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="pref-date">Suggested day (optional)</Label>
+              <Label htmlFor="pref-date">Scheduled day (optional)</Label>
               <Input
                 id="pref-date"
                 type="date"
@@ -834,7 +834,7 @@ function MDAppointmentSection() {
                       {apt.preferredDate && (
                         <p className="text-sm flex items-center gap-1 mt-1">
                           <Calendar className="h-3 w-3" />
-                          Suggested day: {format(new Date(apt.preferredDate), 'PPP')}
+                          Scheduled: {format(new Date(apt.preferredDate), 'PPP')}
                         </p>
                       )}
                     </div>
