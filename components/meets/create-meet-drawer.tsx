@@ -54,7 +54,7 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [scheduledAt, setScheduledAt] = useState('')
+  const [scheduledAt, setScheduledAt] = useState<Date | undefined>(undefined)
   const [meetType, setMeetType] = useState<'VIRTUAL' | 'OFFLINE'>('OFFLINE')
   const [location, setLocation] = useState('')
   const [meetLink, setMeetLink] = useState('')

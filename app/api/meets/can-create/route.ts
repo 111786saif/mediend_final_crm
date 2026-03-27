@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getSessionFromRequest } from '@/lib/session'
 import { successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { canUserCreateMeet } from '@/lib/hierarchy'
+import { canUserCreateMeet } from '@/lib/permissions'
 
 export async function GET(_request: NextRequest) {
   const user = getSessionFromRequest(_request)

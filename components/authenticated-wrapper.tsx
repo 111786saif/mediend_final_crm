@@ -14,7 +14,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { NotificationBell } from '@/components/notifications/notification-bell'
 import { Button } from '@/components/ui/button'
-import { CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, Target, UserCheck, UserCircle, Wallet } from 'lucide-react'
+import { Calendar, CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, UserCheck, UserCircle, Wallet } from 'lucide-react'
 import { useAI } from '@/components/ai/ai-provider'
 import { CommandPalette } from '@/components/command-palette'
 import { PageTransition } from '@/components/page-transition'
@@ -189,10 +189,10 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
 
     const rightCandidates: (BottomNavItem & { show: boolean })[] = [
       {
-        href: '/md/targets',
-        label: 'Targets',
-        icon: Target,
-        matchPrefixes: ['/md/targets'],
+        href: '/meets',
+        label: 'Meets',
+        icon: Calendar,
+        matchPrefixes: ['/meets'],
         show: u.role === 'MD',
       },
       {

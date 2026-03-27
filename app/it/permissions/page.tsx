@@ -39,6 +39,7 @@ interface UserWithPermissions {
     [FEATURE_KEYS.MD_APPROVAL_REQUEST]: boolean | null
     [FEATURE_KEYS.CREATE_NOTICE]: boolean | null
     [FEATURE_KEYS.WORKLOG_ENFORCEMENT]: boolean | null
+    [FEATURE_KEYS.CREATE_MEET]: boolean | null
   }
 }
 
@@ -46,6 +47,7 @@ const FEATURE_LABELS: Record<string, string> = {
   [FEATURE_KEYS.MD_APPROVAL_REQUEST]: 'Ask MD Approval',
   [FEATURE_KEYS.CREATE_NOTICE]: 'Create Notice',
   [FEATURE_KEYS.WORKLOG_ENFORCEMENT]: 'Work Log Enforcement',
+  [FEATURE_KEYS.CREATE_MEET]: 'Create Meet',
 }
 
 export default function ITPermissionsPage() {
@@ -164,12 +166,13 @@ export default function ITPermissionsPage() {
                   <TableHead>{FEATURE_LABELS[FEATURE_KEYS.MD_APPROVAL_REQUEST]}</TableHead>
                   <TableHead>{FEATURE_LABELS[FEATURE_KEYS.CREATE_NOTICE]}</TableHead>
                   <TableHead>{FEATURE_LABELS[FEATURE_KEYS.WORKLOG_ENFORCEMENT]}</TableHead>
+                  <TableHead>{FEATURE_LABELS[FEATURE_KEYS.CREATE_MEET]}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                       Loading...
                     </TableCell>
                   </TableRow>
@@ -231,6 +234,19 @@ export default function ITPermissionsPage() {
                               u.id,
                               FEATURE_KEYS.WORKLOG_ENFORCEMENT,
                               u.permissions[FEATURE_KEYS.WORKLOG_ENFORCEMENT]
+                            )
+                          }
+                          disabled={toggleMutation.isPending}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Switch
+                          checked={u.permissions[FEATURE_KEYS.CREATE_MEET] ?? false}
+                          onCheckedChange={() =>
+                            handleToggle(
+                              u.id,
+                              FEATURE_KEYS.CREATE_MEET,
+                              u.permissions[FEATURE_KEYS.CREATE_MEET]
                             )
                           }
                           disabled={toggleMutation.isPending}

@@ -5,7 +5,8 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { z } from 'zod'
 import { MeetModule, MeetType } from '@/generated/prisma/client'
 import { meetWithRelationsInclude, userMeetAccessWhere } from '@/lib/meets'
-import { canUserCreateMeet, getMeetInviteableUserIds } from '@/lib/hierarchy'
+import { getMeetInviteableUserIds } from '@/lib/hierarchy'
+import { canUserCreateMeet } from '@/lib/permissions'
 import { format } from 'date-fns'
 
 const createMeetSchema = z.object({

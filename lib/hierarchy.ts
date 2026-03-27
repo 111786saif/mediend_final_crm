@@ -299,15 +299,6 @@ export async function isUserInMDManagedCohort(userId: string): Promise<boolean> 
 }
 
 /**
- * MD / Admin, or anyone whose immediate manager is an MD (direct MD team in hierarchy).
- */
-export async function canUserCreateMeet(user: { id: string; role: string }): Promise<boolean> {
-  if (user.role === 'MD' || user.role === 'ADMIN') return true
-  const employee = await getEmployeeByUserId(user.id)
-  return employee?.manager?.user?.role === 'MD'
-}
-
-/**
  * User IDs the creator may add as meet participants (same rules as task assignable-users).
  */
 export async function getMeetInviteableUserIds(user: { id: string; role: string }): Promise<Set<string>> {

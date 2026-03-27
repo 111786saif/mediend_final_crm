@@ -13,6 +13,7 @@ const toggleSchema = z.object({
     FEATURE_KEYS.MD_APPROVAL_REQUEST,
     FEATURE_KEYS.CREATE_NOTICE,
     FEATURE_KEYS.WORKLOG_ENFORCEMENT,
+    FEATURE_KEYS.CREATE_MEET,
   ]),
   enabled: z.boolean(),
 })
@@ -74,6 +75,7 @@ export async function GET(request: NextRequest) {
         [FEATURE_KEYS.MD_APPROVAL_REQUEST]: permMap.get(u.id)?.[FEATURE_KEYS.MD_APPROVAL_REQUEST] ?? null,
         [FEATURE_KEYS.CREATE_NOTICE]: permMap.get(u.id)?.[FEATURE_KEYS.CREATE_NOTICE] ?? null,
         [FEATURE_KEYS.WORKLOG_ENFORCEMENT]: permMap.get(u.id)?.[FEATURE_KEYS.WORKLOG_ENFORCEMENT] ?? null,
+        [FEATURE_KEYS.CREATE_MEET]: permMap.get(u.id)?.[FEATURE_KEYS.CREATE_MEET] ?? null,
       },
     }))
 

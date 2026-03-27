@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { getMDTeamAndWatchlistUserIds } from '@/lib/hierarchy'
+import { getEmployeeByUserId, getMDTeamAndWatchlistUserIds } from '@/lib/hierarchy'
 import { FEATURE_KEYS } from '@/lib/feature-keys'
 
 export { FEATURE_KEYS } from '@/lib/feature-keys'
@@ -48,7 +48,20 @@ export async function hasFeaturePermission(
       if (user.role === 'MD' || user.role === 'ADMIN') return true
       return isUserInMDTeamOrWatchlist(userId)
     }
+    case FEATURE_KEYS.CREATE_MEET: {
+      if (user.role === 'MD' || user.role === 'ADMIN') return true
+      const employee = await getEmployeeByUserId(userId)
+      return employee?.manager?.user?.role === 'MD'
+    }
     default:
       return false
   }
+}
+
+/**
+ * Whether the user may create meets (general module or interview-linked).
+ * Explicit IT toggle on `CREATE_MEET` overrides; otherwise MD / Admin or direct report of MD.
+ */
+export async function canUserCreateMeet(user: { id: string; role: string }): Promise<boolean> {
+  return hasFeaturePermission(user.id, FEATURE_KEYS.CREATE_MEET)
 }

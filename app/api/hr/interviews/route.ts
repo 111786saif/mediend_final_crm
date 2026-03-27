@@ -6,6 +6,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { z } from 'zod'
 import { MeetType } from '@/generated/prisma/client'
 import { meetWithRelationsInclude } from '@/lib/meets'
+import { canUserCreateMeet } from '@/lib/permissions'
 import { format } from 'date-fns'
 
 const interviewCreateSchema = z.object({
@@ -75,6 +76,10 @@ export async function POST(request: NextRequest) {
 
     if (!hasPermission(user, 'hrms:recruitment:write')) {
       return errorResponse('Forbidden', 403)
+    }
+
+    if (!(await canUserCreateMeet(user))) {
+      return errorResponse('You do not have permission to create meets', 403)
     }
 
     const body = await request.json()
