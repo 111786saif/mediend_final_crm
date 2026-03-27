@@ -56,7 +56,7 @@ import { toast } from 'sonner'
 const SUPPORT_TAB_VALUES = [
   { value: 'feedback', label: 'Feedback' },
   { value: 'tickets', label: 'Tickets' },
-  { value: 'md-services', label: 'MD Services' },
+  { value: 'md-connect', label: 'MD Connect' },
   { value: 'mental-health', label: 'Mental Health' },
   { value: 'job-postings', label: 'Job Postings' },
 ] as const
@@ -209,7 +209,7 @@ export default function SupportServicesPage() {
         let badge: number | undefined
         if (t.value === 'feedback') badge = badges?.pendingFeedback
         else if (t.value === 'tickets' && isHead) badge = badges?.pendingTickets
-        else if (t.value === 'md-services') badge = badges?.pendingMDAppointments
+        else if (t.value === 'md-connect') badge = badges?.pendingMDAppointments
         else if (t.value === 'mental-health') badge = badges?.pendingMentalHealth
         return { ...t, badge }
       }),
@@ -231,7 +231,7 @@ export default function SupportServicesPage() {
       <div className="mt-6">
         {activeTab === 'feedback' && <FeedbackTab />}
         {activeTab === 'tickets' && <TicketsTab />}
-        {activeTab === 'md-services' && <MDServicesTab />}
+        {activeTab === 'md-connect' && <MDServicesTab />}
         {activeTab === 'mental-health' && <MentalHealthTab />}
         {activeTab === 'job-postings' && <JobPostingsTab />}
       </div>
