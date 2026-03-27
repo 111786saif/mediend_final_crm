@@ -379,6 +379,10 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
   return navItems.filter((item) => {
     if (item.title === 'Home' || item.title === 'Tasks') return true
     if (item.title === 'Meets') return user.role !== 'BD'
+    // Company P&L (/finance/pnl): Finance Head, MD, Admin only (not TESTER / other roles with broad nav)
+    if (item.title === 'Company P&L') {
+      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
+    }
     if (user.role === 'MD') {
       return (
         item.title === 'Sales Dashboard' ||
