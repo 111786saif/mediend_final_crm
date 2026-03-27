@@ -5,7 +5,15 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { z } from 'zod'
 
 const appointmentSchema = z.object({
-  preferredDate: z.string().transform((str) => new Date(str)).optional(),
+  preferredDate: z
+    .string()
+    .optional()
+    .transform((s) => {
+      if (!s?.trim()) return undefined
+      const t = s.trim()
+      if (/^\d{4}-\d{2}-\d{2}$/.test(t)) return new Date(`${t}T12:00:00.000Z`)
+      return new Date(t)
+    }),
   reason: z.string().min(10, 'Reason must be at least 10 characters'),
 })
 
@@ -75,6 +83,19 @@ export async function GET(request: NextRequest) {
     const appointments = await prisma.mDAppointment.findMany({
       where: { employeeId: employee.id },
       orderBy: { createdAt: 'desc' },
+      include: {
+        meet: {
+          select: {
+            id: true,
+            title: true,
+            scheduledAt: true,
+            type: true,
+            meetLink: true,
+            location: true,
+            module: true,
+          },
+        },
+      },
     })
 
     return successResponse(appointments)

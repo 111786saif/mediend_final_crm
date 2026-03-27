@@ -24,6 +24,7 @@ import { hasPermission } from '@/lib/rbac'
 import type { SessionUser } from '@/lib/auth'
 import { usePushSubscription } from '@/hooks/use-push-subscription'
 import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
+import { MeetReminderPopup } from '@/components/meets/meet-reminder-popup'
 import { BMICalculator } from '@/components/bmi-calculator'
 
 function AIHeaderButton() {
@@ -265,6 +266,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
 
   return (
     <ProtectedRoute>
+      <MeetReminderPopup />
       <WorkLogEnforcer />
       {shouldShowSidebar ? (
         <SidebarProvider defaultOpen={true}>

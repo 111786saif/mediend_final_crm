@@ -20,6 +20,15 @@ interface Appointment {
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'COMPLETED'
   remarks: string | null
   createdAt: string
+  meet?: {
+    id: string
+    title: string
+    scheduledAt: string
+    type: 'VIRTUAL' | 'OFFLINE'
+    meetLink: string | null
+    location: string | null
+    module: string
+  } | null
 }
 
 const STATUS_CONFIG = {
@@ -60,7 +69,7 @@ export default function MDAppointmentPage() {
       return
     }
     submitMutation.mutate({
-      preferredDate: preferredDate || undefined,
+      preferredDate: preferredDate.trim() || undefined,
       reason,
     })
   }
@@ -96,17 +105,17 @@ export default function MDAppointmentPage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="preferredDate">Preferred Date (Optional)</Label>
+                <Label htmlFor="preferredDate">Suggested day (optional)</Label>
                 <Input
                   id="preferredDate"
-                  type="datetime-local"
+                  type="date"
                   value={preferredDate}
                   onChange={(e) => setPreferredDate(e.target.value)}
-                  min={new Date().toISOString().slice(0, 16)}
-                  className="mt-2"
+                  min={new Date().toISOString().slice(0, 10)}
+                  className="mt-2 rounded-xl"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Leave empty if you&apos;re flexible with timing
+                  Suggest a day; MD will confirm the exact time. Leave empty if flexible.
                 </p>
               </div>
 
@@ -158,7 +167,7 @@ export default function MDAppointmentPage() {
                         {appointment.preferredDate && (
                           <p className="text-sm flex items-center gap-1 mt-1">
                             <Calendar className="h-3 w-3" />
-                            Preferred: {format(new Date(appointment.preferredDate), 'PPP p')}
+                            Suggested day: {format(new Date(appointment.preferredDate), 'PPP')}
                           </p>
                         )}
                       </div>
@@ -175,6 +184,24 @@ export default function MDAppointmentPage() {
                       <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
                         <p className="text-sm font-medium text-blue-700">MD Remarks:</p>
                         <p className="text-sm text-blue-600">{appointment.remarks}</p>
+                      </div>
+                    )}
+                    {appointment.status === 'APPROVED' && appointment.meet && (
+                      <div className="mt-3 p-3 rounded-xl border-2 border-emerald-200 bg-emerald-50/80">
+                        <p className="text-sm font-semibold text-emerald-800">Scheduled meet</p>
+                        <p className="text-sm mt-1">
+                          {format(new Date(appointment.meet.scheduledAt), 'PPP p')}
+                        </p>
+                        {appointment.meet.location && (
+                          <p className="text-xs text-muted-foreground mt-1">{appointment.meet.location}</p>
+                        )}
+                        {appointment.meet.meetLink && (
+                          <Button size="sm" className="mt-2 rounded-lg" asChild>
+                            <a href={appointment.meet.meetLink} target="_blank" rel="noreferrer">
+                              Join link
+                            </a>
+                          </Button>
+                        )}
                       </div>
                     )}
                   </div>

@@ -698,6 +698,40 @@ export type EnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel>
 }
 
+export type EnumMeetTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.MeetType | Prisma.EnumMeetTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.MeetType[] | Prisma.ListEnumMeetTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MeetType[] | Prisma.ListEnumMeetTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMeetTypeFilter<$PrismaModel> | $Enums.MeetType
+}
+
+export type EnumMeetModuleFilter<$PrismaModel = never> = {
+  equals?: $Enums.MeetModule | Prisma.EnumMeetModuleFieldRefInput<$PrismaModel>
+  in?: $Enums.MeetModule[] | Prisma.ListEnumMeetModuleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MeetModule[] | Prisma.ListEnumMeetModuleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMeetModuleFilter<$PrismaModel> | $Enums.MeetModule
+}
+
+export type EnumMeetTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MeetType | Prisma.EnumMeetTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.MeetType[] | Prisma.ListEnumMeetTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MeetType[] | Prisma.ListEnumMeetTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMeetTypeWithAggregatesFilter<$PrismaModel> | $Enums.MeetType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMeetTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMeetTypeFilter<$PrismaModel>
+}
+
+export type EnumMeetModuleWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MeetModule | Prisma.EnumMeetModuleFieldRefInput<$PrismaModel>
+  in?: $Enums.MeetModule[] | Prisma.ListEnumMeetModuleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MeetModule[] | Prisma.ListEnumMeetModuleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMeetModuleWithAggregatesFilter<$PrismaModel> | $Enums.MeetModule
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMeetModuleFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMeetModuleFilter<$PrismaModel>
+}
+
 export type EnumRequestStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.RequestStatus | Prisma.EnumRequestStatusFieldRefInput<$PrismaModel>
   in?: $Enums.RequestStatus[] | Prisma.ListEnumRequestStatusFieldRefInput<$PrismaModel>
@@ -1878,6 +1912,40 @@ export type NestedEnumAppointmentStatusWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAppointmentStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumMeetTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.MeetType | Prisma.EnumMeetTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.MeetType[] | Prisma.ListEnumMeetTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MeetType[] | Prisma.ListEnumMeetTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMeetTypeFilter<$PrismaModel> | $Enums.MeetType
+}
+
+export type NestedEnumMeetModuleFilter<$PrismaModel = never> = {
+  equals?: $Enums.MeetModule | Prisma.EnumMeetModuleFieldRefInput<$PrismaModel>
+  in?: $Enums.MeetModule[] | Prisma.ListEnumMeetModuleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MeetModule[] | Prisma.ListEnumMeetModuleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMeetModuleFilter<$PrismaModel> | $Enums.MeetModule
+}
+
+export type NestedEnumMeetTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MeetType | Prisma.EnumMeetTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.MeetType[] | Prisma.ListEnumMeetTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MeetType[] | Prisma.ListEnumMeetTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMeetTypeWithAggregatesFilter<$PrismaModel> | $Enums.MeetType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMeetTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMeetTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumMeetModuleWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MeetModule | Prisma.EnumMeetModuleFieldRefInput<$PrismaModel>
+  in?: $Enums.MeetModule[] | Prisma.ListEnumMeetModuleFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MeetModule[] | Prisma.ListEnumMeetModuleFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMeetModuleWithAggregatesFilter<$PrismaModel> | $Enums.MeetModule
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMeetModuleFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMeetModuleFilter<$PrismaModel>
 }
 
 export type NestedEnumRequestStatusFilter<$PrismaModel = never> = {

@@ -106,6 +106,15 @@ interface Appointment {
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'COMPLETED'
   remarks: string | null
   createdAt: string
+  meet?: {
+    id: string
+    title: string
+    scheduledAt: string
+    type: 'VIRTUAL' | 'OFFLINE'
+    meetLink: string | null
+    location: string | null
+    module: string
+  } | null
 }
 
 interface MentalHealthRequest {
@@ -753,7 +762,10 @@ function MDAppointmentSection() {
       toast.error('Reason must be at least 10 characters')
       return
     }
-    submitMutation.mutate({ preferredDate: preferredDate || undefined, reason })
+    submitMutation.mutate({
+      preferredDate: preferredDate.trim() || undefined,
+      reason,
+    })
   }
 
   const hasPending = appointments?.some((a) => a.status === 'PENDING')
@@ -771,15 +783,18 @@ function MDAppointmentSection() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="pref-date">Preferred date (optional)</Label>
+              <Label htmlFor="pref-date">Suggested day (optional)</Label>
               <Input
                 id="pref-date"
-                type="datetime-local"
+                type="date"
                 value={preferredDate}
                 onChange={(e) => setPreferredDate(e.target.value)}
-                min={new Date().toISOString().slice(0, 16)}
-                className="mt-2"
+                min={new Date().toISOString().slice(0, 10)}
+                className="mt-2 rounded-xl"
               />
+              <p className="text-xs text-muted-foreground mt-1">
+                You suggest a day; MD will confirm the exact date and time.
+              </p>
             </div>
             <div>
               <Label htmlFor="reason-md">Reason for appointment *</Label>
@@ -819,7 +834,7 @@ function MDAppointmentSection() {
                       {apt.preferredDate && (
                         <p className="text-sm flex items-center gap-1 mt-1">
                           <Calendar className="h-3 w-3" />
-                          Preferred: {format(new Date(apt.preferredDate), 'PPP p')}
+                          Suggested day: {format(new Date(apt.preferredDate), 'PPP')}
                         </p>
                       )}
                     </div>
@@ -834,6 +849,28 @@ function MDAppointmentSection() {
                     <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                       <p className="text-sm font-medium text-blue-700">MD remarks:</p>
                       <p className="text-sm text-blue-600">{apt.remarks}</p>
+                    </div>
+                  )}
+                  {apt.status === 'APPROVED' && apt.meet && (
+                    <div className="mt-3 p-3 rounded-xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20">
+                      <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">
+                        Scheduled meet
+                      </p>
+                      <p className="text-sm mt-1">
+                        {format(new Date(apt.meet.scheduledAt), 'PPP p')}
+                      </p>
+                      {apt.meet.location && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                          📍 {apt.meet.location}
+                        </p>
+                      )}
+                      {apt.meet.meetLink && (
+                        <Button size="sm" className="mt-2 rounded-lg" asChild>
+                          <a href={apt.meet.meetLink} target="_blank" rel="noreferrer">
+                            Join link
+                          </a>
+                        </Button>
+                      )}
                     </div>
                   )}
                 </div>

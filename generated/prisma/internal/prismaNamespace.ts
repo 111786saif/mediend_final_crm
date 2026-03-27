@@ -411,6 +411,8 @@ export const ModelName = {
   Feedback: 'Feedback',
   AnonymousMessage: 'AnonymousMessage',
   MDAppointment: 'MDAppointment',
+  Meet: 'Meet',
+  MeetParticipant: 'MeetParticipant',
   MentalHealthRequest: 'MentalHealthRequest',
   SupportTicket: 'SupportTicket',
   IncrementRequest: 'IncrementRequest',
@@ -490,7 +492,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "team" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
+    modelProps: "user" | "team" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2489,6 +2491,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MDAppointmentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MDAppointmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    Meet: {
+      payload: Prisma.$MeetPayload<ExtArgs>
+      fields: Prisma.MeetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MeetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MeetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>
+        }
+        findFirst: {
+          args: Prisma.MeetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MeetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>
+        }
+        findMany: {
+          args: Prisma.MeetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>[]
+        }
+        create: {
+          args: Prisma.MeetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>
+        }
+        createMany: {
+          args: Prisma.MeetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MeetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>[]
+        }
+        delete: {
+          args: Prisma.MeetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>
+        }
+        update: {
+          args: Prisma.MeetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>
+        }
+        deleteMany: {
+          args: Prisma.MeetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MeetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MeetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>[]
+        }
+        upsert: {
+          args: Prisma.MeetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetPayload>
+        }
+        aggregate: {
+          args: Prisma.MeetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMeet>
+        }
+        groupBy: {
+          args: Prisma.MeetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MeetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MeetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MeetCountAggregateOutputType> | number
+        }
+      }
+    }
+    MeetParticipant: {
+      payload: Prisma.$MeetParticipantPayload<ExtArgs>
+      fields: Prisma.MeetParticipantFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MeetParticipantFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MeetParticipantFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>
+        }
+        findFirst: {
+          args: Prisma.MeetParticipantFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MeetParticipantFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>
+        }
+        findMany: {
+          args: Prisma.MeetParticipantFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>[]
+        }
+        create: {
+          args: Prisma.MeetParticipantCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>
+        }
+        createMany: {
+          args: Prisma.MeetParticipantCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MeetParticipantCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>[]
+        }
+        delete: {
+          args: Prisma.MeetParticipantDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>
+        }
+        update: {
+          args: Prisma.MeetParticipantUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>
+        }
+        deleteMany: {
+          args: Prisma.MeetParticipantDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MeetParticipantUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MeetParticipantUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>[]
+        }
+        upsert: {
+          args: Prisma.MeetParticipantUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MeetParticipantPayload>
+        }
+        aggregate: {
+          args: Prisma.MeetParticipantAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMeetParticipant>
+        }
+        groupBy: {
+          args: Prisma.MeetParticipantGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MeetParticipantGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MeetParticipantCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MeetParticipantCountAggregateOutputType> | number
         }
       }
     }
@@ -7858,6 +8008,41 @@ export const MDAppointmentScalarFieldEnum = {
 export type MDAppointmentScalarFieldEnum = (typeof MDAppointmentScalarFieldEnum)[keyof typeof MDAppointmentScalarFieldEnum]
 
 
+export const MeetScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  meetLink: 'meetLink',
+  location: 'location',
+  scheduledAt: 'scheduledAt',
+  endTime: 'endTime',
+  module: 'module',
+  interviewRound: 'interviewRound',
+  candidateName: 'candidateName',
+  candidateRole: 'candidateRole',
+  departmentId: 'departmentId',
+  notes: 'notes',
+  resumeUrl: 'resumeUrl',
+  isRecorded: 'isRecorded',
+  createdById: 'createdById',
+  mdAppointmentId: 'mdAppointmentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MeetScalarFieldEnum = (typeof MeetScalarFieldEnum)[keyof typeof MeetScalarFieldEnum]
+
+
+export const MeetParticipantScalarFieldEnum = {
+  id: 'id',
+  meetId: 'meetId',
+  userId: 'userId'
+} as const
+
+export type MeetParticipantScalarFieldEnum = (typeof MeetParticipantScalarFieldEnum)[keyof typeof MeetParticipantScalarFieldEnum]
+
+
 export const MentalHealthRequestScalarFieldEnum = {
   id: 'id',
   employeeId: 'employeeId',
@@ -9386,6 +9571,34 @@ export type ListEnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInput
 
 
 /**
+ * Reference to a field of type 'MeetType'
+ */
+export type EnumMeetTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetType'>
+    
+
+
+/**
+ * Reference to a field of type 'MeetType[]'
+ */
+export type ListEnumMeetTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MeetModule'
+ */
+export type EnumMeetModuleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetModule'>
+    
+
+
+/**
+ * Reference to a field of type 'MeetModule[]'
+ */
+export type ListEnumMeetModuleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MeetModule[]'>
+    
+
+
+/**
  * Reference to a field of type 'RequestStatus'
  */
 export type EnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus'>
@@ -9940,6 +10153,8 @@ export type GlobalOmitConfig = {
   feedback?: Prisma.FeedbackOmit
   anonymousMessage?: Prisma.AnonymousMessageOmit
   mDAppointment?: Prisma.MDAppointmentOmit
+  meet?: Prisma.MeetOmit
+  meetParticipant?: Prisma.MeetParticipantOmit
   mentalHealthRequest?: Prisma.MentalHealthRequestOmit
   supportTicket?: Prisma.SupportTicketOmit
   incrementRequest?: Prisma.IncrementRequestOmit

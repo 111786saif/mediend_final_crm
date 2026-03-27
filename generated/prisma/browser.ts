@@ -153,6 +153,16 @@ export type AnonymousMessage = Prisma.AnonymousMessageModel
  */
 export type MDAppointment = Prisma.MDAppointmentModel
 /**
+ * Model Meet
+ * 
+ */
+export type Meet = Prisma.MeetModel
+/**
+ * Model MeetParticipant
+ * 
+ */
+export type MeetParticipant = Prisma.MeetParticipantModel
+/**
  * Model MentalHealthRequest
  * 
  */

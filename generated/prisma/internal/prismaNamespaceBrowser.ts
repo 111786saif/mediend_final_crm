@@ -78,6 +78,8 @@ export const ModelName = {
   Feedback: 'Feedback',
   AnonymousMessage: 'AnonymousMessage',
   MDAppointment: 'MDAppointment',
+  Meet: 'Meet',
+  MeetParticipant: 'MeetParticipant',
   MentalHealthRequest: 'MentalHealthRequest',
   SupportTicket: 'SupportTicket',
   IncrementRequest: 'IncrementRequest',
@@ -749,6 +751,41 @@ export const MDAppointmentScalarFieldEnum = {
 } as const
 
 export type MDAppointmentScalarFieldEnum = (typeof MDAppointmentScalarFieldEnum)[keyof typeof MDAppointmentScalarFieldEnum]
+
+
+export const MeetScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  meetLink: 'meetLink',
+  location: 'location',
+  scheduledAt: 'scheduledAt',
+  endTime: 'endTime',
+  module: 'module',
+  interviewRound: 'interviewRound',
+  candidateName: 'candidateName',
+  candidateRole: 'candidateRole',
+  departmentId: 'departmentId',
+  notes: 'notes',
+  resumeUrl: 'resumeUrl',
+  isRecorded: 'isRecorded',
+  createdById: 'createdById',
+  mdAppointmentId: 'mdAppointmentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MeetScalarFieldEnum = (typeof MeetScalarFieldEnum)[keyof typeof MeetScalarFieldEnum]
+
+
+export const MeetParticipantScalarFieldEnum = {
+  id: 'id',
+  meetId: 'meetId',
+  userId: 'userId'
+} as const
+
+export type MeetParticipantScalarFieldEnum = (typeof MeetParticipantScalarFieldEnum)[keyof typeof MeetParticipantScalarFieldEnum]
 
 
 export const MentalHealthRequestScalarFieldEnum = {

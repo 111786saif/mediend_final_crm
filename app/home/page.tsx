@@ -39,7 +39,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { THOUGHTS_OF_THE_DAY } from '@/data/thoughts-of-the-day'
-import { formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import { usePushSubscription } from '@/hooks/use-push-subscription'
 import { useWorkLogCheck } from '@/hooks/use-work-logs'
 import { AddWorkLogButton } from '@/components/calendar/add-work-log-button'
@@ -95,6 +95,8 @@ const ICON_COLOR_MAP: Record<string, string> = {
   Finance: 'bg-yellow-100 text-yellow-600',
   'Finance Ledger': 'bg-lime-100 text-lime-600',
   Calendar: 'bg-teal-100 text-teal-600',
+  Meets: 'bg-indigo-100 text-indigo-600',
+  Recruitment: 'bg-fuchsia-100 text-fuchsia-600',
 }
 
 function getNavIconColor(title: string) {
@@ -189,6 +191,81 @@ function ThoughtOfTheDay({ thought }: { thought: string }) {
 }
 
 // ─── Notifications panel ───────────────────────────────────────────────────────
+
+function TodaysMeetsSection() {
+  type HomeMeet = {
+    id: string
+    title: string
+    scheduledAt: string
+    type: 'VIRTUAL' | 'OFFLINE'
+    meetLink: string | null
+    module: string
+  }
+
+  const { data: meets = [], isLoading } = useQuery<HomeMeet[]>({
+    queryKey: ['meets-today-home'],
+    queryFn: () => apiGet<HomeMeet[]>('/api/meets?today=true'),
+  })
+
+  if (isLoading) {
+    return (
+      <div className="rounded-xl border border-border bg-card p-3 animate-pulse h-20" />
+    )
+  }
+
+  if (meets.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-indigo-200 dark:border-indigo-900 bg-gradient-to-br from-indigo-50/50 to-violet-50/30 dark:from-indigo-950/20 p-3 text-center text-xs text-muted-foreground">
+        No meetings scheduled for today.{' '}
+        <Link href="/meets" className="text-indigo-600 font-medium underline-offset-2 hover:underline">
+          View all meets
+        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <div className="rounded-xl border-2 border-indigo-200/70 dark:border-indigo-900/50 bg-gradient-to-br from-indigo-50/90 via-white to-fuchsia-50/40 dark:from-indigo-950/30 dark:via-card dark:to-fuchsia-950/20 shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-indigo-100/80 dark:border-indigo-900/50">
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-indigo-600" />
+          <span className="font-semibold text-sm">Today&apos;s meets</span>
+        </div>
+        <Link
+          href="/meets"
+          className="text-xs font-medium text-indigo-600 hover:underline"
+        >
+          All meets
+        </Link>
+      </div>
+      <ul className="divide-y divide-indigo-100/60 dark:divide-indigo-900/40">
+        {meets.map((m) => (
+          <li key={m.id} className="px-3 py-2 flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium truncate">{m.title}</p>
+              <p className="text-[11px] text-muted-foreground">
+                {format(new Date(m.scheduledAt), 'h:mm a')}
+                {m.module === 'INTERVIEW' && (
+                  <span className="ml-1 text-violet-600">· Interview</span>
+                )}
+                {m.module === 'MD_APPOINTMENT' && (
+                  <span className="ml-1 text-amber-600">· MD</span>
+                )}
+              </p>
+            </div>
+            {m.meetLink && (
+              <Button size="sm" className="h-8 rounded-lg shrink-0 text-xs" asChild>
+                <a href={m.meetLink} target="_blank" rel="noreferrer">
+                  Join
+                </a>
+              </Button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 function RecentNotifications() {
   const { data: notifications = [] } = useNotifications(true)
@@ -595,6 +672,14 @@ export default function HomePage() {
           At a Glance
         </h2>
         <KPISection />
+      </div>
+
+      {/* Today's meets */}
+      <div>
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+          Today
+        </h2>
+        <TodaysMeetsSection />
       </div>
 
       {/* Recent Notifications */}

@@ -207,6 +207,7 @@ export type MDAppointmentWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"MDAppointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MDAppointment"> | Date | string
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
+  meet?: Prisma.XOR<Prisma.MeetNullableScalarRelationFilter, Prisma.MeetWhereInput> | null
 }
 
 export type MDAppointmentOrderByWithRelationInput = {
@@ -219,6 +220,7 @@ export type MDAppointmentOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   employee?: Prisma.EmployeeOrderByWithRelationInput
+  meet?: Prisma.MeetOrderByWithRelationInput
 }
 
 export type MDAppointmentWhereUniqueInput = Prisma.AtLeast<{
@@ -234,6 +236,7 @@ export type MDAppointmentWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"MDAppointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MDAppointment"> | Date | string
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
+  meet?: Prisma.XOR<Prisma.MeetNullableScalarRelationFilter, Prisma.MeetWhereInput> | null
 }, "id">
 
 export type MDAppointmentOrderByWithAggregationInput = {
@@ -273,6 +276,7 @@ export type MDAppointmentCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   employee: Prisma.EmployeeCreateNestedOneWithoutMdAppointmentsInput
+  meet?: Prisma.MeetCreateNestedOneWithoutMdAppointmentInput
 }
 
 export type MDAppointmentUncheckedCreateInput = {
@@ -284,6 +288,7 @@ export type MDAppointmentUncheckedCreateInput = {
   remarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  meet?: Prisma.MeetUncheckedCreateNestedOneWithoutMdAppointmentInput
 }
 
 export type MDAppointmentUpdateInput = {
@@ -295,6 +300,7 @@ export type MDAppointmentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutMdAppointmentsNestedInput
+  meet?: Prisma.MeetUpdateOneWithoutMdAppointmentNestedInput
 }
 
 export type MDAppointmentUncheckedUpdateInput = {
@@ -306,6 +312,7 @@ export type MDAppointmentUncheckedUpdateInput = {
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meet?: Prisma.MeetUncheckedUpdateOneWithoutMdAppointmentNestedInput
 }
 
 export type MDAppointmentCreateManyInput = {
@@ -383,6 +390,11 @@ export type MDAppointmentMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type MDAppointmentNullableScalarRelationFilter = {
+  is?: Prisma.MDAppointmentWhereInput | null
+  isNot?: Prisma.MDAppointmentWhereInput | null
+}
+
 export type MDAppointmentCreateNestedManyWithoutEmployeeInput = {
   create?: Prisma.XOR<Prisma.MDAppointmentCreateWithoutEmployeeInput, Prisma.MDAppointmentUncheckedCreateWithoutEmployeeInput> | Prisma.MDAppointmentCreateWithoutEmployeeInput[] | Prisma.MDAppointmentUncheckedCreateWithoutEmployeeInput[]
   connectOrCreate?: Prisma.MDAppointmentCreateOrConnectWithoutEmployeeInput | Prisma.MDAppointmentCreateOrConnectWithoutEmployeeInput[]
@@ -429,6 +441,22 @@ export type EnumAppointmentStatusFieldUpdateOperationsInput = {
   set?: $Enums.AppointmentStatus
 }
 
+export type MDAppointmentCreateNestedOneWithoutMeetInput = {
+  create?: Prisma.XOR<Prisma.MDAppointmentCreateWithoutMeetInput, Prisma.MDAppointmentUncheckedCreateWithoutMeetInput>
+  connectOrCreate?: Prisma.MDAppointmentCreateOrConnectWithoutMeetInput
+  connect?: Prisma.MDAppointmentWhereUniqueInput
+}
+
+export type MDAppointmentUpdateOneWithoutMeetNestedInput = {
+  create?: Prisma.XOR<Prisma.MDAppointmentCreateWithoutMeetInput, Prisma.MDAppointmentUncheckedCreateWithoutMeetInput>
+  connectOrCreate?: Prisma.MDAppointmentCreateOrConnectWithoutMeetInput
+  upsert?: Prisma.MDAppointmentUpsertWithoutMeetInput
+  disconnect?: Prisma.MDAppointmentWhereInput | boolean
+  delete?: Prisma.MDAppointmentWhereInput | boolean
+  connect?: Prisma.MDAppointmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MDAppointmentUpdateToOneWithWhereWithoutMeetInput, Prisma.MDAppointmentUpdateWithoutMeetInput>, Prisma.MDAppointmentUncheckedUpdateWithoutMeetInput>
+}
+
 export type MDAppointmentCreateWithoutEmployeeInput = {
   id?: string
   preferredDate?: Date | string | null
@@ -437,6 +465,7 @@ export type MDAppointmentCreateWithoutEmployeeInput = {
   remarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  meet?: Prisma.MeetCreateNestedOneWithoutMdAppointmentInput
 }
 
 export type MDAppointmentUncheckedCreateWithoutEmployeeInput = {
@@ -447,6 +476,7 @@ export type MDAppointmentUncheckedCreateWithoutEmployeeInput = {
   remarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  meet?: Prisma.MeetUncheckedCreateNestedOneWithoutMdAppointmentInput
 }
 
 export type MDAppointmentCreateOrConnectWithoutEmployeeInput = {
@@ -489,6 +519,66 @@ export type MDAppointmentScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"MDAppointment"> | Date | string
 }
 
+export type MDAppointmentCreateWithoutMeetInput = {
+  id?: string
+  preferredDate?: Date | string | null
+  reason: string
+  status?: $Enums.AppointmentStatus
+  remarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employee: Prisma.EmployeeCreateNestedOneWithoutMdAppointmentsInput
+}
+
+export type MDAppointmentUncheckedCreateWithoutMeetInput = {
+  id?: string
+  employeeId: string
+  preferredDate?: Date | string | null
+  reason: string
+  status?: $Enums.AppointmentStatus
+  remarks?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type MDAppointmentCreateOrConnectWithoutMeetInput = {
+  where: Prisma.MDAppointmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.MDAppointmentCreateWithoutMeetInput, Prisma.MDAppointmentUncheckedCreateWithoutMeetInput>
+}
+
+export type MDAppointmentUpsertWithoutMeetInput = {
+  update: Prisma.XOR<Prisma.MDAppointmentUpdateWithoutMeetInput, Prisma.MDAppointmentUncheckedUpdateWithoutMeetInput>
+  create: Prisma.XOR<Prisma.MDAppointmentCreateWithoutMeetInput, Prisma.MDAppointmentUncheckedCreateWithoutMeetInput>
+  where?: Prisma.MDAppointmentWhereInput
+}
+
+export type MDAppointmentUpdateToOneWithWhereWithoutMeetInput = {
+  where?: Prisma.MDAppointmentWhereInput
+  data: Prisma.XOR<Prisma.MDAppointmentUpdateWithoutMeetInput, Prisma.MDAppointmentUncheckedUpdateWithoutMeetInput>
+}
+
+export type MDAppointmentUpdateWithoutMeetInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employee?: Prisma.EmployeeUpdateOneRequiredWithoutMdAppointmentsNestedInput
+}
+
+export type MDAppointmentUncheckedUpdateWithoutMeetInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  preferredDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAppointmentStatusFieldUpdateOperationsInput | $Enums.AppointmentStatus
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type MDAppointmentCreateManyEmployeeInput = {
   id?: string
   preferredDate?: Date | string | null
@@ -507,6 +597,7 @@ export type MDAppointmentUpdateWithoutEmployeeInput = {
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meet?: Prisma.MeetUpdateOneWithoutMdAppointmentNestedInput
 }
 
 export type MDAppointmentUncheckedUpdateWithoutEmployeeInput = {
@@ -517,6 +608,7 @@ export type MDAppointmentUncheckedUpdateWithoutEmployeeInput = {
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meet?: Prisma.MeetUncheckedUpdateOneWithoutMdAppointmentNestedInput
 }
 
 export type MDAppointmentUncheckedUpdateManyWithoutEmployeeInput = {
@@ -541,6 +633,7 @@ export type MDAppointmentSelect<ExtArgs extends runtime.Types.Extensions.Interna
   createdAt?: boolean
   updatedAt?: boolean
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  meet?: boolean | Prisma.MDAppointment$meetArgs<ExtArgs>
 }, ExtArgs["result"]["mDAppointment"]>
 
 export type MDAppointmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -581,6 +674,7 @@ export type MDAppointmentSelectScalar = {
 export type MDAppointmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "preferredDate" | "reason" | "status" | "remarks" | "createdAt" | "updatedAt", ExtArgs["result"]["mDAppointment"]>
 export type MDAppointmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
+  meet?: boolean | Prisma.MDAppointment$meetArgs<ExtArgs>
 }
 export type MDAppointmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
@@ -593,6 +687,7 @@ export type $MDAppointmentPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "MDAppointment"
   objects: {
     employee: Prisma.$EmployeePayload<ExtArgs>
+    meet: Prisma.$MeetPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -998,6 +1093,7 @@ readonly fields: MDAppointmentFieldRefs;
 export interface Prisma__MDAppointmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   employee<T extends Prisma.EmployeeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  meet<T extends Prisma.MDAppointment$meetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MDAppointment$meetArgs<ExtArgs>>): Prisma.Prisma__MeetClient<runtime.Types.Result.GetResult<Prisma.$MeetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1433,6 +1529,25 @@ export type MDAppointmentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many MDAppointments to delete.
    */
   limit?: number
+}
+
+/**
+ * MDAppointment.meet
+ */
+export type MDAppointment$meetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Meet
+   */
+  select?: Prisma.MeetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Meet
+   */
+  omit?: Prisma.MeetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MeetInclude<ExtArgs> | null
+  where?: Prisma.MeetWhereInput
 }
 
 /**

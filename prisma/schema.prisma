@@ -121,6 +121,17 @@ enum AppointmentStatus {
   COMPLETED
 }
 
+enum MeetType {
+  VIRTUAL
+  OFFLINE
+}
+
+enum MeetModule {
+  INTERVIEW
+  MD_APPOINTMENT
+  GENERAL
+}
+
 enum TicketPriority {
   LOW
   MEDIUM
@@ -182,6 +193,8 @@ enum NotificationType {
   MD_APPROVAL_REQUESTED
   MD_APPROVAL_RESPONDED
   MD_APPROVAL_FINANCE_ACK
+  MEET_SCHEDULED
+  MEET_REMINDER
 }
 
 enum NoticeTargetType {
@@ -446,6 +459,10 @@ model User {
   departmentRevenuesCreated DepartmentRevenue[] @relation("DepartmentRevenueCreator")
   pnlCategoriesCreated    PnLCategory[]         @relation("PnLCategoryCreator")
   pnlEntriesCreated       PnLEntry[]            @relation("PnLEntryCreator")
+
+  // Meets (calendar / interviews / MD appointments)
+  meetsCreated            Meet[]                @relation("MeetsCreated")
+  meetParticipations      MeetParticipant[]
 
   @@index([email])
   @@index([role])
@@ -809,6 +826,7 @@ model Department {
   teams          DepartmentTeam[]
   supportTickets SupportTicket[]
   notices        Notice[]
+  meets          Meet[]
 
   @@index([headId])
   @@index([name])
@@ -1200,10 +1218,58 @@ model MDAppointment {
   remarks       String?
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
+  meet          Meet?
 
   @@index([employeeId])
   @@index([status])
   @@index([createdAt])
+}
+
+model Meet {
+  id              String      @id @default(cuid())
+  title           String
+  description     String?
+  type            MeetType    @default(OFFLINE)
+  meetLink        String?
+  location        String?
+  scheduledAt     DateTime
+  endTime         DateTime?
+  module          MeetModule  @default(GENERAL)
+
+  interviewRound  Int?
+  candidateName   String?
+  candidateRole   String?
+  departmentId    String?
+  department      Department? @relation(fields: [departmentId], references: [id])
+  notes           String?
+  resumeUrl       String?
+  isRecorded      Boolean     @default(false)
+
+  createdById     String
+  createdBy       User        @relation("MeetsCreated", fields: [createdById], references: [id])
+
+  mdAppointmentId String?     @unique
+  mdAppointment   MDAppointment? @relation(fields: [mdAppointmentId], references: [id], onDelete: SetNull)
+
+  participants    MeetParticipant[]
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([scheduledAt])
+  @@index([module])
+  @@index([createdById])
+}
+
+model MeetParticipant {
+  id     String @id @default(cuid())
+  meetId String
+  meet   Meet   @relation(fields: [meetId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([meetId, userId])
+  @@index([userId])
 }
 
 // Mental Health Support Requests (48hr SLA)

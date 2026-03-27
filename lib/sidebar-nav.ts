@@ -56,6 +56,11 @@ export const navItems: NavItem[] = [
     icon: ClipboardList,
   },
   {
+    title: 'Meets',
+    url: '/meets',
+    icon: Calendar,
+  },
+  {
     title: 'Dashboard',
     url: '/dashboard',
     icon: LayoutDashboard,
@@ -102,6 +107,12 @@ export const navItems: NavItem[] = [
     url: '/hr/dashboard',
     icon: Users,
     roles: ['HR_HEAD'],
+  },
+  {
+    title: 'Recruitment',
+    url: '/hr/recruitment',
+    icon: UserCheck,
+    permission: 'hrms:recruitment:read',
   },
   {
     title: 'Pipeline',
@@ -366,12 +377,13 @@ export function getDashboardUrl(role: string): string {
 function filterNavItems(user: SessionUser | null): NavItem[] {
   if (!user) return []
   return navItems.filter((item) => {
-    if (item.title === 'Home' || item.title === 'Tasks') return true
+    if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Meets') return true
     if (user.role === 'MD') {
       return (
         item.title === 'Sales Dashboard' ||
         item.title === 'Finance Dashboard' ||
         item.title === 'MD HR Dashboard' ||
+        item.title === 'Recruitment' ||
         item.title.startsWith('MD ') ||
         (item.title === 'Master Data' && item.roles?.includes('MD'))
       )

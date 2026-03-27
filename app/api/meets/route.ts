@@ -1,0 +1,120 @@
+import { NextRequest } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { getSessionFromRequest } from '@/lib/session'
+import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { z } from 'zod'
+import { MeetModule, MeetType } from '@/generated/prisma/client'
+import { meetWithRelationsInclude, userMeetAccessWhere } from '@/lib/meets'
+import { format } from 'date-fns'
+
+const createMeetSchema = z.object({
+  title: z.string().min(1).max(500),
+  description: z.string().max(5000).optional().nullable(),
+  type: z.enum(['VIRTUAL', 'OFFLINE']).default('OFFLINE'),
+  meetLink: z.string().url().optional().nullable().or(z.literal('')),
+  location: z.string().max(500).optional().nullable(),
+  scheduledAt: z.string().transform((s) => new Date(s)),
+  endTime: z.string().transform((s) => new Date(s)).optional().nullable(),
+  module: z.enum(['INTERVIEW', 'MD_APPOINTMENT', 'GENERAL']).default('GENERAL'),
+  participantUserIds: z.array(z.string()).default([]),
+})
+
+export async function GET(request: NextRequest) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) return unauthorizedResponse()
+
+    const { searchParams } = new URL(request.url)
+    const today = searchParams.get('today') === 'true'
+    const fromParam = searchParams.get('from')
+    const toParam = searchParams.get('to')
+    const moduleFilter = searchParams.get('module') as MeetModule | null
+
+    const baseWhere = userMeetAccessWhere(user.id)
+
+    const moduleWhere: { module?: MeetModule } = {}
+    if (moduleFilter && ['INTERVIEW', 'MD_APPOINTMENT', 'GENERAL'].includes(moduleFilter)) {
+      moduleWhere.module = moduleFilter
+    }
+
+    let dateWhere: { scheduledAt?: { gte?: Date; lte?: Date } } = {}
+    if (today) {
+      const now = new Date()
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)
+      dateWhere = { scheduledAt: { gte: start, lte: end } }
+    } else if (fromParam || toParam) {
+      const gte = fromParam ? new Date(fromParam) : undefined
+      const lte = toParam ? new Date(toParam) : undefined
+      if (gte || lte) {
+        dateWhere = { scheduledAt: { ...(gte ? { gte } : {}), ...(lte ? { lte } : {}) } }
+      }
+    }
+
+    const meets = await prisma.meet.findMany({
+      where: {
+        AND: [baseWhere, moduleWhere, dateWhere],
+      },
+      include: meetWithRelationsInclude,
+      orderBy: { scheduledAt: 'asc' },
+      take: 300,
+    })
+
+    return successResponse(meets)
+  } catch (error) {
+    console.error('Error fetching meets:', error)
+    return errorResponse('Failed to fetch meets', 500)
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) return unauthorizedResponse()
+
+    const body = await request.json()
+    const data = createMeetSchema.parse(body)
+
+    const participantUserIds = [...new Set(data.participantUserIds)].filter((id) => id !== user.id)
+
+    const meet = await prisma.meet.create({
+      data: {
+        title: data.title.trim(),
+        description: data.description?.trim() || null,
+        type: data.type as MeetType,
+        meetLink: data.type === 'VIRTUAL' && data.meetLink ? data.meetLink.trim() : null,
+        location: data.type === 'OFFLINE' && data.location ? data.location.trim() : null,
+        scheduledAt: data.scheduledAt,
+        endTime: data.endTime ?? null,
+        module: data.module as MeetModule,
+        createdById: user.id,
+        participants: {
+          create: participantUserIds.map((userId) => ({ userId })),
+        },
+      },
+      include: meetWithRelationsInclude,
+    })
+
+    const when = format(data.scheduledAt, 'MMM d, yyyy h:mm a')
+    if (participantUserIds.length > 0) {
+      await prisma.notification.createMany({
+        data: participantUserIds.map((userId) => ({
+          userId,
+          type: 'MEET_SCHEDULED',
+          title: 'New meeting scheduled',
+          message: `${user.name} scheduled "${data.title.trim()}" on ${when}`,
+          link: '/meets',
+          relatedId: meet.id,
+        })),
+      })
+    }
+
+    return successResponse(meet, 'Meet created')
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return errorResponse(error.errors[0]?.message || 'Invalid input', 400)
+    }
+    console.error('Error creating meet:', error)
+    return errorResponse('Failed to create meet', 500)
+  }
+}

@@ -165,6 +165,23 @@ export const AppointmentStatus = {
 export type AppointmentStatus = (typeof AppointmentStatus)[keyof typeof AppointmentStatus]
 
 
+export const MeetType = {
+  VIRTUAL: 'VIRTUAL',
+  OFFLINE: 'OFFLINE'
+} as const
+
+export type MeetType = (typeof MeetType)[keyof typeof MeetType]
+
+
+export const MeetModule = {
+  INTERVIEW: 'INTERVIEW',
+  MD_APPOINTMENT: 'MD_APPOINTMENT',
+  GENERAL: 'GENERAL'
+} as const
+
+export type MeetModule = (typeof MeetModule)[keyof typeof MeetModule]
+
+
 export const TicketPriority = {
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
@@ -237,7 +254,9 @@ export const NotificationType = {
   NOTICE_PUBLISHED: 'NOTICE_PUBLISHED',
   MD_APPROVAL_REQUESTED: 'MD_APPROVAL_REQUESTED',
   MD_APPROVAL_RESPONDED: 'MD_APPROVAL_RESPONDED',
-  MD_APPROVAL_FINANCE_ACK: 'MD_APPROVAL_FINANCE_ACK'
+  MD_APPROVAL_FINANCE_ACK: 'MD_APPROVAL_FINANCE_ACK',
+  MEET_SCHEDULED: 'MEET_SCHEDULED',
+  MEET_REMINDER: 'MEET_REMINDER'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

@@ -27,6 +27,7 @@ import {
   CartesianGrid,
   Cell,
 } from 'recharts'
+import { HRDashboardRecruitmentStrip } from '@/components/hr/hr-dashboard-recruitment-strip'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -446,6 +447,8 @@ export function HRDashboard({ title = 'HR Dashboard', description = 'Strength, s
               />
             </div>
           </div>
+
+          <HRDashboardRecruitmentStrip />
 
           {/* ─── Today's Latecomers + Absent Today ─── */}
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2">

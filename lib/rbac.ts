@@ -25,6 +25,8 @@ export type Permission =
   | 'hrms:payroll:write'
   | 'hrms:employees:read'
   | 'hrms:employees:write'
+  | 'hrms:recruitment:read'
+  | 'hrms:recruitment:write'
   | 'finance:read'
   | 'finance:write'
   | 'finance:masters:write'
@@ -68,6 +70,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'users:create_user',
     'hrms:attendance:read',
     'hrms:employees:read',
+    'hrms:recruitment:read',
+    'hrms:recruitment:write',
     'hierarchy:read',
     'hierarchy:write',
     'hierarchy:team:read',
@@ -195,6 +199,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hrms:payroll:write',
     'hrms:employees:read',
     'hrms:employees:write',
+    'hrms:recruitment:read',
+    'hrms:recruitment:write',
     'finance:payroll:read',
     'finance:payroll:write',
     'departments:create',
@@ -283,6 +289,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hrms:payroll:write',
     'hrms:employees:read',
     'hrms:employees:write',
+    'hrms:recruitment:read',
+    'hrms:recruitment:write',
     'finance:read',
     'finance:write',
     'finance:masters:write',
