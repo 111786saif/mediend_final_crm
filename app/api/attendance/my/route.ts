@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
               }
             : {}),
         },
-        select: { startDate: true, endDate: true, isUnpaid: true },
+        select: { startDate: true, endDate: true, isUnpaid: true, days: true },
       }),
     ])
 
@@ -144,7 +144,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const leaveDays: { date: string; isUnpaid: boolean }[] = []
+    const leaveDays: { date: string; isUnpaid: boolean; isHalfDay?: boolean }[] = []
     const rangeStartStr = rangeStart?.toISOString().split('T')[0]
     const rangeEndStr = rangeEnd?.toISOString().split('T')[0]
     for (const leave of leaves) {
@@ -152,13 +152,23 @@ export async function GET(request: NextRequest) {
       const end = new Date(leave.endDate)
       start.setUTCHours(0, 0, 0, 0)
       end.setUTCHours(0, 0, 0, 0)
+      const sameCalendarDay =
+        start.getUTCFullYear() === end.getUTCFullYear() &&
+        start.getUTCMonth() === end.getUTCMonth() &&
+        start.getUTCDate() === end.getUTCDate()
+      const isHalfDayLeave = sameCalendarDay && leave.days === 0.5
+
       for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
         const dateKey = d.toISOString().split('T')[0]
         if (
           (!rangeStartStr || dateKey >= rangeStartStr) &&
           (!rangeEndStr || dateKey <= rangeEndStr)
         ) {
-          leaveDays.push({ date: dateKey, isUnpaid: leave.isUnpaid })
+          leaveDays.push({
+            date: dateKey,
+            isUnpaid: leave.isUnpaid,
+            ...(isHalfDayLeave ? { isHalfDay: true } : {}),
+          })
         }
       }
     }

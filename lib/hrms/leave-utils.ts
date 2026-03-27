@@ -1,5 +1,25 @@
 import { LeaveRequest, LeaveBalance, LeaveTypeMaster } from '@/generated/prisma/client'
 
+const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/
+
+/** Parse YYYY-MM-DD as a calendar date in the server (or runtime) local timezone. */
+export function parseDateOnlyLocal(isoDate: string): Date {
+  const m = DATE_ONLY.exec(isoDate.trim())
+  if (!m) {
+    throw new Error('Invalid date format, expected YYYY-MM-DD')
+  }
+  const y = Number(m[1])
+  const mo = Number(m[2])
+  const d = Number(m[3])
+  return new Date(y, mo - 1, d)
+}
+
+export function startOfLocalDay(d: Date): Date {
+  const x = new Date(d)
+  x.setHours(0, 0, 0, 0)
+  return x
+}
+
 export interface LeaveBalanceWithType extends LeaveBalance {
   leaveType: LeaveTypeMaster
 }

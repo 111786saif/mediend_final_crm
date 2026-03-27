@@ -2,16 +2,23 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { calculateLeaveDays, checkDateConflict } from '@/lib/hrms/leave-utils'
+import {
+  calculateLeaveDays,
+  checkDateConflict,
+  parseDateOnlyLocal,
+  startOfLocalDay,
+} from '@/lib/hrms/leave-utils'
 import { getComputedBalancesForEmployee, validateComputedBalance } from '@/lib/hrms/leave-policy-calculator'
 import { findLeaveApprover } from '@/lib/hierarchy'
 import { z } from 'zod'
 
 const applyLeaveSchema = z.object({
   leaveTypeId: z.string(),
-  startDate: z.string().transform((str) => new Date(str)),
-  endDate: z.string().transform((str) => new Date(str)),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   reason: z.string().optional(),
+  /** Single calendar day only; counts as 0.5 against balance */
+  isHalfDay: z.boolean().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -46,15 +53,46 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { leaveTypeId, startDate, endDate, reason } = applyLeaveSchema.parse(body)
+    const {
+      leaveTypeId,
+      startDate: startDateStr,
+      endDate: endDateStr,
+      reason,
+      isHalfDay,
+    } = applyLeaveSchema.parse(body)
 
-    // Validate dates
-    if (startDate > endDate) {
-      return errorResponse('Start date must be before end date', 400)
+    let startDate: Date
+    let endDate: Date
+    try {
+      startDate = parseDateOnlyLocal(startDateStr)
+      endDate = parseDateOnlyLocal(endDateStr)
+    } catch {
+      return errorResponse('Invalid date format', 400)
     }
 
-    if (startDate < new Date()) {
-      return errorResponse('Cannot apply for leave in the past', 400)
+    const startDay = startOfLocalDay(startDate)
+    const endDay = startOfLocalDay(endDate)
+    const today = startOfLocalDay(new Date())
+
+    if (startDay > today || endDay > today) {
+      return errorResponse('Leave cannot be applied for future dates', 400)
+    }
+
+    if (startDay > endDay) {
+      return errorResponse('Start date must be before or equal to end date', 400)
+    }
+
+    const twoYearsAgo = startOfLocalDay(new Date())
+    twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2)
+    if (startDay < twoYearsAgo) {
+      return errorResponse('Leave cannot be applied more than two years in the past', 400)
+    }
+
+    if (employee.joinDate) {
+      const joinDay = startOfLocalDay(new Date(employee.joinDate))
+      if (startDay < joinDay) {
+        return errorResponse('Leave cannot start before your date of joining', 400)
+      }
     }
 
     // Check leave type exists
@@ -66,8 +104,14 @@ export async function POST(request: NextRequest) {
       return errorResponse('Invalid leave type', 400)
     }
 
-    // Calculate days
-    const days = calculateLeaveDays(startDate, endDate)
+    if (isHalfDay) {
+      if (startDateStr !== endDateStr) {
+        return errorResponse('Half-day leave must use the same start and end date', 400)
+      }
+    }
+
+    // Calculate days (0.5 for single-day half leave; otherwise inclusive calendar days)
+    const days = isHalfDay ? 0.5 : calculateLeaveDays(startDate, endDate)
 
     // Validate against policy-computed balance
     const balances = await getComputedBalancesForEmployee(employee.id)
@@ -136,7 +180,7 @@ export async function POST(request: NextRequest) {
         userId,
         type: 'LEAVE_REQUESTED',
         title: 'Leave Request Submitted',
-        message: `${empName} has applied for ${leaveTypeName} (${days} day(s))`,
+        message: `${empName} has applied for ${leaveTypeName} (${days === 0.5 ? '0.5' : days} day(s))`,
         link: '/hr/attendance-leaves',
         relatedId: leaveRequest.id,
       })),

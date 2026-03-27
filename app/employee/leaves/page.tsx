@@ -75,11 +75,15 @@ export default function EmployeeLeavesPage() {
       startDate: Date
       endDate: Date
       reason?: string
-    }) => apiPost<LeaveRequest>('/api/leaves/apply', {
-      ...data,
-      startDate: data.startDate.toISOString(),
-      endDate: data.endDate.toISOString(),
-    }),
+      isHalfDay?: boolean
+    }) =>
+      apiPost<LeaveRequest>('/api/leaves/apply', {
+        leaveTypeId: data.leaveTypeId,
+        startDate: format(data.startDate, 'yyyy-MM-dd'),
+        endDate: format(data.endDate, 'yyyy-MM-dd'),
+        reason: data.reason,
+        ...(data.isHalfDay ? { isHalfDay: true } : {}),
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leaves', 'my'] })
       setIsDialogOpen(false)
@@ -206,7 +210,17 @@ export default function EmployeeLeavesPage() {
                         {format(new Date(request.endDate), 'PPP')}
                       </div>
                     </TableCell>
-                    <TableCell><strong>{request.days}</strong> days</TableCell>
+                    <TableCell>
+                      {request.days === 0.5 ? (
+                        <Badge className="bg-cyan-600 text-white hover:bg-cyan-600 font-medium border-0">
+                          ½ day (0.5)
+                        </Badge>
+                      ) : (
+                        <span>
+                          <strong>{request.days}</strong> days
+                        </span>
+                      )}
+                    </TableCell>
                     <TableCell>{request.reason || 'N/A'}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">

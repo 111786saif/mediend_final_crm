@@ -29,7 +29,7 @@ interface AttendanceDay {
 
 interface AttendanceMyResponse {
   attendance: AttendanceDay[]
-  leaveDays: { date: string; isUnpaid: boolean }[]
+  leaveDays: { date: string; isUnpaid: boolean; isHalfDay?: boolean }[]
 }
 
 export default function EmployeeAttendancePage() {

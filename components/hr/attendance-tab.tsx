@@ -72,6 +72,7 @@ interface LeaveRequestItem {
   employeeId: string
   startDate: string
   endDate: string
+  days?: number
   isUnpaid?: boolean
 }
 
@@ -296,15 +297,24 @@ export function AttendanceTab() {
 
   const heatmapLeaveDays = useMemo(() => {
     if (!approvedLeavesData?.data || !heatmapEmployeeId || heatmapEmployeeId === 'all') return []
-    const days: { date: string; isUnpaid: boolean }[] = []
+    const days: { date: string; isUnpaid: boolean; isHalfDay?: boolean }[] = []
     approvedLeavesData.data
       .filter((lr) => lr.employeeId === heatmapEmployeeId)
       .forEach((lr) => {
         const start = typeof lr.startDate === 'string' ? new Date(lr.startDate.slice(0, 10)) : new Date(lr.startDate)
         const end = typeof lr.endDate === 'string' ? new Date(lr.endDate.slice(0, 10)) : new Date(lr.endDate)
+        const sameCalendarDay =
+          start.getFullYear() === end.getFullYear() &&
+          start.getMonth() === end.getMonth() &&
+          start.getDate() === end.getDate()
+        const isHalfDayLeave = sameCalendarDay && lr.days === 0.5
         const range = eachDayOfInterval({ start, end })
         range.forEach((d) => {
-          days.push({ date: format(d, 'yyyy-MM-dd'), isUnpaid: lr.isUnpaid ?? false })
+          days.push({
+            date: format(d, 'yyyy-MM-dd'),
+            isUnpaid: lr.isUnpaid ?? false,
+            ...(isHalfDayLeave ? { isHalfDay: true } : {}),
+          })
         })
       })
     return days

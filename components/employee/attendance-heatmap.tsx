@@ -26,6 +26,8 @@ export type AttendanceStatusType =
   | 'pending-normalization'
   | 'paid-leave'
   | 'unpaid-leave'
+  | 'paid-leave-half'
+  | 'unpaid-leave-half'
 
 export interface AttendanceDay {
   date: Date
@@ -44,6 +46,8 @@ export interface AttendanceDay {
 export interface LeaveDay {
   date: string
   isUnpaid: boolean
+  /** Approved leave for 0.5 day on this calendar date */
+  isHalfDay?: boolean
 }
 
 interface AttendanceHeatmapProps {
@@ -140,6 +144,24 @@ function getStatusConfig(
         baseBgColor: base.bgColor,
       }
     }
+    if (leaveInfo?.isHalfDay) {
+      const entryExit = `Entry: ${formatTime(attendanceRecord.inTime)}\nExit: ${getExitTimeDisplay(attendanceRecord.inTime, attendanceRecord.outTime)}`
+      const suffix = attendanceRecord.inTime ? `\n${entryExit}` : ''
+      if (leaveInfo.isUnpaid) {
+        return {
+          status: 'unpaid-leave-half',
+          bgColor: 'bg-rose-400',
+          textColor: 'text-white',
+          tooltipText: `${dateKey} - Unpaid half-day leave (0.5 day)${suffix}`,
+        }
+      }
+      return {
+        status: 'paid-leave-half',
+        bgColor: 'bg-cyan-500',
+        textColor: 'text-white',
+        tooltipText: `${dateKey} - Paid half-day leave (0.5 day)${suffix}`,
+      }
+    }
     const entryExit = `Entry: ${formatTime(attendanceRecord.inTime)}\nExit: ${getExitTimeDisplay(attendanceRecord.inTime, attendanceRecord.outTime)}`
 
     if (shouldShowHalfDayPink(attendanceRecord)) {
@@ -201,6 +223,22 @@ function getStatusConfig(
   }
 
   if (leaveInfo) {
+    if (leaveInfo.isHalfDay) {
+      if (leaveInfo.isUnpaid) {
+        return {
+          status: 'unpaid-leave-half',
+          bgColor: 'bg-rose-400',
+          textColor: 'text-white',
+          tooltipText: `${dateKey} - Unpaid half-day leave (0.5 day)`,
+        }
+      }
+      return {
+        status: 'paid-leave-half',
+        bgColor: 'bg-cyan-500',
+        textColor: 'text-white',
+        tooltipText: `${dateKey} - Paid half-day leave (0.5 day)`,
+      }
+    }
     if (leaveInfo.isUnpaid) {
       return {
         status: 'unpaid-leave',
@@ -329,7 +367,10 @@ export function AttendanceHeatmap({ attendance, fromDate, toDate, leaveDays = []
                     <div
                       className={cn(
                         'w-12 h-12 rounded-md flex flex-col items-center justify-center text-xs font-medium transition-colors cursor-pointer hover:opacity-80 shrink-0 relative overflow-hidden',
-                        !('pendingNormalization' in cell && cell.pendingNormalization) && cell.bgColor,
+                        !('pendingNormalization' in cell && cell.pendingNormalization) &&
+                          cell.status !== 'paid-leave-half' &&
+                          cell.status !== 'unpaid-leave-half' &&
+                          cell.bgColor,
                         cell.textColor
                       )}
                     >
@@ -338,6 +379,20 @@ export function AttendanceHeatmap({ attendance, fromDate, toDate, leaveDays = []
                           <div className="absolute inset-0 flex">
                             <div className="w-1/2 bg-blue-400" />
                             <div className={cn('w-1/2', cell.baseBgColor ?? cell.bgColor)} />
+                          </div>
+                          <span className="relative z-10 text-[10px] opacity-90">{cell.dayAbbr}</span>
+                          <span className="relative z-10 font-semibold text-sm">{cell.dateNum}</span>
+                        </>
+                      ) : cell.status === 'paid-leave-half' || cell.status === 'unpaid-leave-half' ? (
+                        <>
+                          <div className="absolute inset-0 flex">
+                            <div
+                              className={cn(
+                                'w-1/2',
+                                cell.status === 'unpaid-leave-half' ? 'bg-rose-400' : 'bg-cyan-500'
+                              )}
+                            />
+                            <div className="w-1/2 bg-slate-200 dark:bg-slate-700" />
                           </div>
                           <span className="relative z-10 text-[10px] opacity-90">{cell.dayAbbr}</span>
                           <span className="relative z-10 font-semibold text-sm">{cell.dateNum}</span>
@@ -391,6 +446,20 @@ export function AttendanceHeatmap({ attendance, fromDate, toDate, leaveDays = []
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-blue-400" />
           <span>Paid leave</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded flex overflow-hidden">
+            <div className="w-1/2 bg-cyan-500" />
+            <div className="w-1/2 bg-slate-200 dark:bg-slate-700" />
+          </div>
+          <span>Paid half-day leave</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded flex overflow-hidden">
+            <div className="w-1/2 bg-rose-400" />
+            <div className="w-1/2 bg-slate-200 dark:bg-slate-700" />
+          </div>
+          <span>Unpaid half-day leave</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-red-500" />

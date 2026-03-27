@@ -58,7 +58,7 @@ interface AttendanceDay {
 
 interface AttendanceMyResponse {
   attendance: AttendanceDay[]
-  leaveDays: { date: string; isUnpaid: boolean }[]
+  leaveDays: { date: string; isUnpaid: boolean; isHalfDay?: boolean }[]
   holidayDays?: { date: string; name: string }[]
 }
 
@@ -548,11 +548,14 @@ function LeavesTab() {
       startDate: Date
       endDate: Date
       reason?: string
+      isHalfDay?: boolean
     }) =>
       apiPost<LeaveRequest>('/api/leaves/apply', {
-        ...data,
-        startDate: data.startDate.toISOString(),
-        endDate: data.endDate.toISOString(),
+        leaveTypeId: data.leaveTypeId,
+        startDate: format(data.startDate, 'yyyy-MM-dd'),
+        endDate: format(data.endDate, 'yyyy-MM-dd'),
+        reason: data.reason,
+        ...(data.isHalfDay ? { isHalfDay: true } : {}),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['leaves', 'my'] })
@@ -717,7 +720,17 @@ function LeavesTab() {
                       {format(new Date(req.endDate), 'PPP')}
                     </div>
                   </TableCell>
-                  <TableCell><strong>{req.days}</strong> days</TableCell>
+                  <TableCell>
+                    {req.days === 0.5 ? (
+                      <Badge className="bg-cyan-600 text-white hover:bg-cyan-600 font-medium border-0">
+                        ½ day (0.5)
+                      </Badge>
+                    ) : (
+                      <span>
+                        <strong>{req.days}</strong> days
+                      </span>
+                    )}
+                  </TableCell>
                   <TableCell>{req.reason || 'N/A'}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
