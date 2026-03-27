@@ -1,5 +1,6 @@
 import { Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
+import { MEET_MD_INVITE_EMPLOYEE_CODE } from '@/lib/meets'
 
 const employeeSelect = {
   id: true,
@@ -304,23 +305,30 @@ export async function isUserInMDManagedCohort(userId: string): Promise<boolean> 
 export async function getMeetInviteableUserIds(user: { id: string; role: string }): Promise<Set<string>> {
   const isMDOrAdmin = user.role === 'MD' || user.role === 'ADMIN'
   const inCohort = !isMDOrAdmin && (await isUserInMDManagedCohort(user.id))
+  let ids: Set<string>
   if (isMDOrAdmin || inCohort) {
     const all = await prisma.user.findMany({
       where: { role: { notIn: ['MD', 'ADMIN'] } },
       select: { id: true },
     })
-    return new Set(all.map((u) => u.id))
-  }
-  const ids = new Set<string>([user.id])
-  const employee = await getEmployeeByUserId(user.id)
-  if (employee) {
-    const directReports = await getSubordinates(employee.id, false)
-    for (const sub of directReports) {
-      if (sub.user?.role !== 'MD' && sub.user?.role !== 'ADMIN') {
-        ids.add(sub.userId)
+    ids = new Set(all.map((u) => u.id))
+  } else {
+    ids = new Set<string>([user.id])
+    const employee = await getEmployeeByUserId(user.id)
+    if (employee) {
+      const directReports = await getSubordinates(employee.id, false)
+      for (const sub of directReports) {
+        if (sub.user?.role !== 'MD' && sub.user?.role !== 'ADMIN') {
+          ids.add(sub.userId)
+        }
       }
     }
   }
+  const mdRow = await prisma.employee.findFirst({
+    where: { employeeCode: MEET_MD_INVITE_EMPLOYEE_CODE },
+    select: { userId: true },
+  })
+  if (mdRow?.userId) ids.add(mdRow.userId)
   return ids
 }
 

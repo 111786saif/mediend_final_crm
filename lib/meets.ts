@@ -1,5 +1,8 @@
 import { Prisma } from '@/generated/prisma/client'
 
+/** Employee code whose linked user is always inviteable as a meet participant (org MD). */
+export const MEET_MD_INVITE_EMPLOYEE_CODE = '1000'
+
 export const meetWithRelationsInclude = {
   createdBy: { select: { id: true, name: true, email: true } },
   department: { select: { id: true, name: true } },
