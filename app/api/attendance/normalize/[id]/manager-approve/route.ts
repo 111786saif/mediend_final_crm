@@ -39,6 +39,7 @@ export async function PATCH(
         employee: {
           select: {
             id: true,
+            userId: true,
             managerId: true,
             user: { select: { name: true } },
           },

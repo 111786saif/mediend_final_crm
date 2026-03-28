@@ -112,6 +112,12 @@ interface HRNormalizationsResponse {
   list: NormalizationRow[]
 }
 
+interface EmployeeHeatmapPayload {
+  attendance: AttendanceDay[]
+  leaveDays: { date: string; isUnpaid: boolean; isHalfDay?: boolean }[]
+  holidayDays: { date: string; name: string }[]
+}
+
 const MIN_REJECTION_LENGTH = 15
 
 export function NormalizationsTab() {

@@ -337,6 +337,7 @@ export function AttendanceHeatmap({
   leaveDays = [],
   holidayDays = [],
   showLegend = true,
+  highlightDateKeys = [],
 }: AttendanceHeatmapProps) {
   const attendanceMap = useMemo(() => {
     const map = new Map<string, AttendanceDay>()
