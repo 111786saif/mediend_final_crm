@@ -57,21 +57,26 @@ interface IpdComparison {
 interface LeaderboardEntry {
   bdId?: string
   bdName?: string
-  teamId?: string
-  teamName?: string
+  managerId?: string
+  managerName?: string
   name?: string
+  /** Department team (BD rows) or synthetic team label (team rows) */
+  teamName?: string | null
+  teamLeadId?: string
+  teamLeadName?: string
   closedLeads: number
   totalLeads: number
   ipdDone: number
   conversionRate: number
   netProfit: number
-  avgTicketSize: number
+  avgTicketSize?: number
+  revenue?: number
 }
 
 interface TodayAssignments {
   date: string
   totalLeads: number
-  assignments: Array<{ bdId: string; bdName: string; teamName: string | null; leadCount: number }>
+  assignments: Array<{ bdId: string; bdName: string; managerName: string | null; leadCount: number }>
 }
 
 interface BdMonthly {
@@ -79,8 +84,8 @@ interface BdMonthly {
   bds: Array<{
     bdId: string
     bdName: string
-    teamId: string | null
-    teamName: string | null
+    managerId: string | null
+    managerName: string | null
     leads: Record<string, number>
     ipd: Record<string, number>
     totalLeads: number
@@ -90,23 +95,22 @@ interface BdMonthly {
 }
 
 interface BdDetail {
-  bd: { id: string; name: string; profilePicture: string | null; team: { id: string; name: string; teamLead?: { name: string } | null } | null }
+  bd: { id: string; name: string; profilePicture: string | null; managerName: string | null }
   kpis: { totalLeads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number; avgTicketSize: number }
   surgeries: Array<{ id: string; patientName: string; treatment: string; hospitalName: string; surgeonName: string | null; date: string; billAmount: number; netProfit: number; circle: string }>
   monthWise: Array<{ month: string; leadCount: number; ipdCount: number }>
   treatmentBreakdown: Array<{ treatment: string; count: number }>
 }
 
-interface TeamSummary {
-  id: string
-  name: string
-  teamLead?: { id: string; name: string } | null
-  members: Array<{ id: string; name: string; role: string }>
-  salesHead: { id: string; name: string } | null
+interface ManagerGroup {
+  managerId: string
+  managerName: string
+  totalIpd: number
+  totalLeads: number
 }
 
 interface TeamDetail {
-  team: { id: string; name: string; salesHead: { id: string; name: string; profilePicture: string | null } | null; teamLead: { id: string; name: string; profilePicture: string | null } | null }
+  team: { id: string; name: string; manager: { id: string; name: string; profilePicture: string | null } | null }
   kpis: { totalLeads: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
   members: Array<{ id: string; name: string; profilePicture: string | null; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
   monthWise: { months: string[]; rows: Array<{ month: string; bdId: string; bdName: string; leadCount: number; ipdCount: number }> }
@@ -265,10 +269,9 @@ function BdDetailSheet({
                     <UserAvatar name={data.bd.name} picture={data.bd.profilePicture} size="md" />
                     <div>
                       <SheetTitle className="text-xl">{data.bd.name}</SheetTitle>
-                      {data.bd.team && (
+                      {data.bd.managerName && (
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge variant="secondary">{data.bd.team.name}</Badge>
-                          {data.bd.team.teamLead && <Badge variant="outline">Lead: {data.bd.team.teamLead.name}</Badge>}
+                          <Badge variant="secondary">Manager: {data.bd.managerName}</Badge>
                         </div>
                       )}
                     </div>
@@ -373,7 +376,7 @@ function TeamDetailSheet({
 }) {
   const { data, isLoading } = useQuery<TeamDetail>({
     queryKey: ['sales-dashboard', variant, 'team-detail', teamId, dateParams],
-    queryFn: () => apiGet<TeamDetail>(`/api/analytics/sales-dashboard/team-detail?teamId=${teamId}${dateParams ? '&' + dateParams : ''}`),
+    queryFn: () => apiGet<TeamDetail>(`/api/analytics/sales-dashboard/team-detail?managerId=${teamId}${dateParams ? '&' + dateParams : ''}`),
     enabled: !!teamId && open,
   })
 
@@ -389,8 +392,7 @@ function TeamDetailSheet({
                   <div>
                     <SheetTitle className="text-xl">{data.team.name}</SheetTitle>
                     <div className="flex items-center gap-2 mt-1">
-                      {data.team.teamLead && <Badge variant="secondary">Lead: {data.team.teamLead.name}</Badge>}
-                      {data.team.salesHead && <span className="text-sm text-muted-foreground">Head: {data.team.salesHead.name}</span>}
+                      {data.team.manager && <Badge variant="secondary">Manager: {data.team.manager.name}</Badge>}
                     </div>
                   </div>
                 </SheetHeader>
@@ -623,9 +625,9 @@ function OverviewTab({
           <CardContent className="p-0">
             <div className="divide-y">
               {(teamLeaderboard ?? []).slice(0, 8).map((team, i) => {
-                const displayName = team.teamName ?? team.name ?? 'Unknown'
+                const displayName = team.teamName ?? team.managerName ?? team.name ?? 'Unknown'
                 return (
-                  <div key={team.teamId ?? displayName} className="flex items-center gap-3 px-4 py-3">
+                  <div key={team.managerId ?? displayName} className="flex items-center gap-3 px-4 py-3">
                     <RankBadge rank={i + 1} />
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate">{displayName}</p>
@@ -659,7 +661,7 @@ function OverviewTab({
                 <UserAvatar name={a.bdName} />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm truncate">{a.bdName}</p>
-                  {a.teamName && <p className="text-xs text-muted-foreground">{a.teamName}</p>}
+                  {a.managerName && <p className="text-xs text-muted-foreground">{a.managerName}</p>}
                 </div>
                 <Badge>{a.leadCount}</Badge>
               </div>
@@ -680,61 +682,60 @@ function TeamPerformanceTab({
   variant,
 }: {
   dateParams: string
-  onSelectTeam: (teamId: string) => void
+  onSelectTeam: (managerId: string) => void
   variant: DashboardVariant
 }) {
-  const { data: teams } = useQuery<TeamSummary[]>({
-    queryKey: ['sales-dashboard', variant, 'teams-list'],
-    queryFn: () => apiGet('/api/teams'),
-  })
-
   const { data: bdMonthly } = useQuery<BdMonthly>({
     queryKey: ['sales-dashboard', variant, 'bd-monthly', dateParams],
     queryFn: () => apiGet<BdMonthly>(`/api/analytics/sales-dashboard/bd-monthly${dateParams ? '?' + dateParams : ''}`),
   })
 
-  // Build team-level IPD sums from bd-monthly
-  const teamIpdMap = new Map<string, number>()
-  const teamLeadsMap = new Map<string, number>()
+  // Build manager groups from bd-monthly data
+  const managerGroups = new Map<string, ManagerGroup>()
   if (bdMonthly) {
     for (const bd of bdMonthly.bds) {
-      if (!bd.teamId) continue
-      const key = bd.teamId
-      teamIpdMap.set(key, (teamIpdMap.get(key) ?? 0) + bd.totalIpd)
-      teamLeadsMap.set(key, (teamLeadsMap.get(key) ?? 0) + bd.totalLeads)
+      if (!bd.managerId || !bd.managerName) continue
+      const existing = managerGroups.get(bd.managerId)
+      if (existing) {
+        existing.totalIpd += bd.totalIpd
+        existing.totalLeads += bd.totalLeads
+      } else {
+        managerGroups.set(bd.managerId, {
+          managerId: bd.managerId,
+          managerName: bd.managerName,
+          totalIpd: bd.totalIpd,
+          totalLeads: bd.totalLeads,
+        })
+      }
     }
   }
+  const groups = [...managerGroups.values()].sort((a, b) => b.totalIpd - a.totalIpd)
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {(teams ?? []).map((team) => {
-          const ipd = teamIpdMap.get(team.id) ?? 0
-          const leads = teamLeadsMap.get(team.id) ?? 0
-          const conv = leads > 0 ? ((ipd / leads) * 100).toFixed(1) : '0.0'
+        {groups.map((group) => {
+          const conv = group.totalLeads > 0 ? ((group.totalIpd / group.totalLeads) * 100).toFixed(1) : '0.0'
           return (
             <button
-              key={team.id}
-              onClick={() => onSelectTeam(team.id)}
+              key={group.managerId}
+              onClick={() => onSelectTeam(group.managerId)}
               className="text-left rounded-xl border-l-4 border-blue-500 bg-card shadow-sm hover:shadow-md transition-shadow p-4 w-full"
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="font-semibold text-sm">{team.name}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {team.teamLead?.name ?? 'No lead'} · {team.members?.filter(m => m.role === 'BD').length ?? 0} BDs
-                  </p>
-                  {team.salesHead && <p className="text-xs text-muted-foreground">Head: {team.salesHead.name}</p>}
+                  <p className="font-semibold text-sm">{group.managerName}&apos;s Team</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Manager: {group.managerName}</p>
                 </div>
                 <ChevronRight className="h-4 w-4 text-muted-foreground mt-1" />
               </div>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 <div>
-                  <p className="text-lg font-bold text-emerald-600">{ipd}</p>
+                  <p className="text-lg font-bold text-emerald-600">{group.totalIpd}</p>
                   <p className="text-[10px] text-muted-foreground uppercase">IPD</p>
                 </div>
                 <div>
-                  <p className="text-lg font-bold">{leads}</p>
+                  <p className="text-lg font-bold">{group.totalLeads}</p>
                   <p className="text-[10px] text-muted-foreground uppercase">Leads</p>
                 </div>
                 <div>
@@ -746,6 +747,7 @@ function TeamPerformanceTab({
             </button>
           )
         })}
+        {groups.length === 0 && <p className="col-span-full text-center text-muted-foreground py-6 text-sm">No team data in selected range</p>}
       </div>
     </div>
   )
@@ -806,7 +808,7 @@ function BdPerformanceTab({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-semibold text-sm">{bd.bdName}</p>
-                  {bd.teamName && <Badge variant="secondary" className="text-[10px] h-4 px-1.5">{bd.teamName}</Badge>}
+                  {bd.managerName && <Badge variant="secondary" className="text-[10px] h-4 px-1.5">{bd.managerName}</Badge>}
                 </div>
                 <div className="flex items-center gap-3 mt-1">
                   <span className="text-xs text-muted-foreground">{bd.totalLeads} leads</span>

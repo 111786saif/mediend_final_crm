@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { PNL_DEPARTMENT_KEYS, type PnlDepartmentKey } from '@/lib/pnl/constants'
 import type { MonthYear } from '@/lib/pnl/aggregate-revenue'
+import { getManagerGroups } from '@/lib/hierarchy'
 
 /** Map HR department name → P&L bucket (first match wins; each employee counted at most once) */
 export function classifyEmployeeDepartment(deptName: string | null): PnlDepartmentKey | null {
@@ -63,20 +64,13 @@ export type SalesTeamSeatRow = {
   seatCost: number
 }
 
-/** Sales `Team` member counts × seat rate (for surgery team drill-down) */
+/** Manager group member counts × seat rate (for surgery team drill-down) */
 export async function getSalesTeamSeatCosts(seatCostPerEmployee: number): Promise<SalesTeamSeatRow[]> {
-  const teams = await prisma.team.findMany({
-    select: {
-      id: true,
-      name: true,
-      _count: { select: { members: true } },
-    },
-    orderBy: { name: 'asc' },
-  })
-  return teams.map((t) => ({
-    teamId: t.id,
-    teamName: t.name,
-    memberCount: t._count.members,
-    seatCost: t._count.members * seatCostPerEmployee,
+  const groups = await getManagerGroups()
+  return groups.map((g) => ({
+    teamId: g.managerId,
+    teamName: `${g.managerName}'s Team`,
+    memberCount: g.subordinates.length,
+    seatCost: g.subordinates.length * seatCostPerEmployee,
   }))
 }

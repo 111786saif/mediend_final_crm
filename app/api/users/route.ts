@@ -31,22 +31,12 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const role = searchParams.get('role')
-    const teamId = searchParams.get('teamId')
 
     const where: Prisma.UserWhereInput = {}
-    // if (role) where.role = role 
-    if (teamId) where.teamId = teamId
 
     const users = await prisma.user.findMany({
       where,
       include: {
-        team: {
-          select: {
-            id: true,
-            name: true,
-            teamLead: { select: { name: true } },
-          },
-        },
         employee: {
           include: {
             department: {
@@ -103,36 +93,18 @@ export async function POST(request: NextRequest) {
 
     const passwordHash = await hashPassword(data.password)
 
-    // Auto-assign team for BD and TEAM_LEAD roles
-    let teamId: string | null = null
-    if (data.role === 'BD' || data.role === 'TEAM_LEAD') {
-      // Find first available team
-      const firstTeam = await prisma.team.findFirst({
-        orderBy: {
-          createdAt: 'asc',
-        },
-      })
-      if (firstTeam) {
-        teamId = firstTeam.id
-      }
-    }
-
     const newUser = await prisma.user.create({
       data: {
         email: normalizedEmail,
         passwordHash,
         name: data.name,
         role: data.role,
-        teamId,
       },
-      include: {
-        team: {
-          select: {
-            id: true,
-            name: true,
-            teamLead: { select: { name: true } },
-          },
-        },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
       },
     })
 
@@ -179,9 +151,7 @@ export async function POST(request: NextRequest) {
     await initializeLeaveBalances(employee.id)
     clearBdNumberCache()
 
-    const { passwordHash: _passwordHash, ...safeUser } = newUser
-
-    return successResponse(safeUser, 'User created successfully')
+    return successResponse(newUser, 'User created successfully')
   } catch (error) {
     if (error instanceof z.ZodError) {
       return errorResponse('Invalid request data', 400)

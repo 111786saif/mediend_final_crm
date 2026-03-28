@@ -37,7 +37,6 @@ export async function GET(request: NextRequest) {
         name: true,
         email: true,
         role: true,
-        teamId: true,
         phoneNumber: true,
         address: true,
         profilePicture: true,

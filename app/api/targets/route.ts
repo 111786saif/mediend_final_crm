@@ -23,6 +23,8 @@ const targetSchema = z.object({
   })).optional(),
 })
 
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -41,14 +43,15 @@ export async function GET(request: NextRequest) {
 
     const where: Prisma.TargetWhereInput = {}
 
-    // Role-based filtering
+    // Role-based filtering: TEAM targets now use manager's Employee.id as targetForId
     if (user.role === 'BD') {
       where.targetType = 'BD'
       where.targetForId = user.id
-    } else if (user.role === 'TEAM_LEAD' && user.teamId) {
+    } else if (user.role === 'TEAM_LEAD') {
+      const employee = await prisma.employee.findUnique({ where: { userId: user.id }, select: { id: true } })
       where.OR = [
         { targetType: 'BD', targetForId: user.id },
-        { targetType: 'TEAM', targetForId: user.teamId },
+        ...(employee ? [{ targetType: 'TEAM' as TargetType, targetForId: employee.id }] : []),
       ]
     }
 

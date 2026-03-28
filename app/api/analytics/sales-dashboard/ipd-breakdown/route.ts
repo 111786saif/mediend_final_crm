@@ -4,6 +4,8 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+
 export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
@@ -17,9 +19,6 @@ export async function GET(request: NextRequest) {
       user.role !== 'TEAM_LEAD'
     ) {
       return errorResponse('Forbidden', 403)
-    }
-    if (user.role === 'TEAM_LEAD' && !user.teamId) {
-      return errorResponse('No team assigned', 403)
     }
 
     const { searchParams } = new URL(request.url)
@@ -38,8 +37,11 @@ export async function GET(request: NextRequest) {
       dateFilter.lte = end
     }
 
-    const teamScope: Prisma.LeadWhereInput =
-      user.role === 'TEAM_LEAD' && user.teamId ? { bd: { teamId: user.teamId } } : {}
+    let teamScope: Prisma.LeadWhereInput = {}
+    if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      teamScope = { bdId: { in: [user.id, ...subIds] } }
+    }
 
     const completedWhere: Prisma.LeadWhereInput = {
       pipelineStage: 'COMPLETED',

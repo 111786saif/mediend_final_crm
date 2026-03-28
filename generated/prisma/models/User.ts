@@ -30,7 +30,6 @@ export type UserMinAggregateOutputType = {
   passwordHash: string | null
   name: string | null
   role: $Enums.UserRole | null
-  teamId: string | null
   phoneNumber: string | null
   address: string | null
   profilePicture: string | null
@@ -44,7 +43,6 @@ export type UserMaxAggregateOutputType = {
   passwordHash: string | null
   name: string | null
   role: $Enums.UserRole | null
-  teamId: string | null
   phoneNumber: string | null
   address: string | null
   profilePicture: string | null
@@ -58,7 +56,6 @@ export type UserCountAggregateOutputType = {
   passwordHash: number
   name: number
   role: number
-  teamId: number
   phoneNumber: number
   address: number
   profilePicture: number
@@ -74,7 +71,6 @@ export type UserMinAggregateInputType = {
   passwordHash?: true
   name?: true
   role?: true
-  teamId?: true
   phoneNumber?: true
   address?: true
   profilePicture?: true
@@ -88,7 +84,6 @@ export type UserMaxAggregateInputType = {
   passwordHash?: true
   name?: true
   role?: true
-  teamId?: true
   phoneNumber?: true
   address?: true
   profilePicture?: true
@@ -102,7 +97,6 @@ export type UserCountAggregateInputType = {
   passwordHash?: true
   name?: true
   role?: true
-  teamId?: true
   phoneNumber?: true
   address?: true
   profilePicture?: true
@@ -189,7 +183,6 @@ export type UserGroupByOutputType = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId: string | null
   phoneNumber: string | null
   address: string | null
   profilePicture: string | null
@@ -224,20 +217,16 @@ export type UserWhereInput = {
   passwordHash?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
-  teamId?: Prisma.StringNullableFilter<"User"> | string | null
   phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
   address?: Prisma.StringNullableFilter<"User"> | string | null
   profilePicture?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   createdLeads?: Prisma.LeadListRelationFilter
   assignedLeads?: Prisma.LeadListRelationFilter
   updatedLeads?: Prisma.LeadListRelationFilter
   leadStageEvents?: Prisma.LeadStageEventListRelationFilter
   createdTargets?: Prisma.TargetListRelationFilter
-  salesHeadTeams?: Prisma.TeamListRelationFilter
-  teamLeadOf?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   insuranceCases?: Prisma.InsuranceCaseListRelationFilter
   plRecords?: Prisma.PLRecordListRelationFilter
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
@@ -308,20 +297,16 @@ export type UserOrderByWithRelationInput = {
   passwordHash?: Prisma.SortOrder
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePicture?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  team?: Prisma.TeamOrderByWithRelationInput
   createdLeads?: Prisma.LeadOrderByRelationAggregateInput
   assignedLeads?: Prisma.LeadOrderByRelationAggregateInput
   updatedLeads?: Prisma.LeadOrderByRelationAggregateInput
   leadStageEvents?: Prisma.LeadStageEventOrderByRelationAggregateInput
   createdTargets?: Prisma.TargetOrderByRelationAggregateInput
-  salesHeadTeams?: Prisma.TeamOrderByRelationAggregateInput
-  teamLeadOf?: Prisma.TeamOrderByWithRelationInput
   insuranceCases?: Prisma.InsuranceCaseOrderByRelationAggregateInput
   plRecords?: Prisma.PLRecordOrderByRelationAggregateInput
   employee?: Prisma.EmployeeOrderByWithRelationInput
@@ -395,20 +380,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   passwordHash?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
-  teamId?: Prisma.StringNullableFilter<"User"> | string | null
   phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
   address?: Prisma.StringNullableFilter<"User"> | string | null
   profilePicture?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   createdLeads?: Prisma.LeadListRelationFilter
   assignedLeads?: Prisma.LeadListRelationFilter
   updatedLeads?: Prisma.LeadListRelationFilter
   leadStageEvents?: Prisma.LeadStageEventListRelationFilter
   createdTargets?: Prisma.TargetListRelationFilter
-  salesHeadTeams?: Prisma.TeamListRelationFilter
-  teamLeadOf?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   insuranceCases?: Prisma.InsuranceCaseListRelationFilter
   plRecords?: Prisma.PLRecordListRelationFilter
   employee?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
@@ -479,7 +460,6 @@ export type UserOrderByWithAggregationInput = {
   passwordHash?: Prisma.SortOrder
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePicture?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -499,7 +479,6 @@ export type UserScalarWhereWithAggregatesInput = {
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
-  teamId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   profilePicture?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -518,14 +497,11 @@ export type UserCreateInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -596,7 +572,6 @@ export type UserUncheckedCreateInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -607,8 +582,6 @@ export type UserUncheckedCreateInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -684,14 +657,11 @@ export type UserUpdateInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -762,7 +732,6 @@ export type UserUncheckedUpdateInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -773,8 +742,6 @@ export type UserUncheckedUpdateInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -845,7 +812,6 @@ export type UserCreateManyInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -872,7 +838,6 @@ export type UserUncheckedUpdateManyInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -886,7 +851,6 @@ export type UserCountOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  teamId?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   profilePicture?: Prisma.SortOrder
@@ -900,7 +864,6 @@ export type UserMaxOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  teamId?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   profilePicture?: Prisma.SortOrder
@@ -914,7 +877,6 @@ export type UserMinOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   name?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  teamId?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   profilePicture?: Prisma.SortOrder
@@ -932,16 +894,6 @@ export type UserNullableScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput | null
 }
 
-export type UserListRelationFilter = {
-  every?: Prisma.UserWhereInput
-  some?: Prisma.UserWhereInput
-  none?: Prisma.UserWhereInput
-}
-
-export type UserOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -956,78 +908,6 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
-}
-
-export type UserCreateNestedOneWithoutSalesHeadTeamsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSalesHeadTeamsInput, Prisma.UserUncheckedCreateWithoutSalesHeadTeamsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSalesHeadTeamsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserCreateNestedOneWithoutTeamLeadOfInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTeamLeadOfInput, Prisma.UserUncheckedCreateWithoutTeamLeadOfInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTeamLeadOfInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserCreateNestedManyWithoutTeamInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTeamInput, Prisma.UserUncheckedCreateWithoutTeamInput> | Prisma.UserCreateWithoutTeamInput[] | Prisma.UserUncheckedCreateWithoutTeamInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTeamInput | Prisma.UserCreateOrConnectWithoutTeamInput[]
-  createMany?: Prisma.UserCreateManyTeamInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUncheckedCreateNestedManyWithoutTeamInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTeamInput, Prisma.UserUncheckedCreateWithoutTeamInput> | Prisma.UserCreateWithoutTeamInput[] | Prisma.UserUncheckedCreateWithoutTeamInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTeamInput | Prisma.UserCreateOrConnectWithoutTeamInput[]
-  createMany?: Prisma.UserCreateManyTeamInputEnvelope
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-}
-
-export type UserUpdateOneRequiredWithoutSalesHeadTeamsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSalesHeadTeamsInput, Prisma.UserUncheckedCreateWithoutSalesHeadTeamsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSalesHeadTeamsInput
-  upsert?: Prisma.UserUpsertWithoutSalesHeadTeamsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSalesHeadTeamsInput, Prisma.UserUpdateWithoutSalesHeadTeamsInput>, Prisma.UserUncheckedUpdateWithoutSalesHeadTeamsInput>
-}
-
-export type UserUpdateOneWithoutTeamLeadOfNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTeamLeadOfInput, Prisma.UserUncheckedCreateWithoutTeamLeadOfInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTeamLeadOfInput
-  upsert?: Prisma.UserUpsertWithoutTeamLeadOfInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTeamLeadOfInput, Prisma.UserUpdateWithoutTeamLeadOfInput>, Prisma.UserUncheckedUpdateWithoutTeamLeadOfInput>
-}
-
-export type UserUpdateManyWithoutTeamNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTeamInput, Prisma.UserUncheckedCreateWithoutTeamInput> | Prisma.UserCreateWithoutTeamInput[] | Prisma.UserUncheckedCreateWithoutTeamInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTeamInput | Prisma.UserCreateOrConnectWithoutTeamInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutTeamInput | Prisma.UserUpsertWithWhereUniqueWithoutTeamInput[]
-  createMany?: Prisma.UserCreateManyTeamInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutTeamInput | Prisma.UserUpdateWithWhereUniqueWithoutTeamInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutTeamInput | Prisma.UserUpdateManyWithWhereWithoutTeamInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-}
-
-export type UserUncheckedUpdateManyWithoutTeamNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTeamInput, Prisma.UserUncheckedCreateWithoutTeamInput> | Prisma.UserCreateWithoutTeamInput[] | Prisma.UserUncheckedCreateWithoutTeamInput[]
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTeamInput | Prisma.UserCreateOrConnectWithoutTeamInput[]
-  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutTeamInput | Prisma.UserUpsertWithWhereUniqueWithoutTeamInput[]
-  createMany?: Prisma.UserCreateManyTeamInputEnvelope
-  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
-  update?: Prisma.UserUpdateWithWhereUniqueWithoutTeamInput | Prisma.UserUpdateWithWhereUniqueWithoutTeamInput[]
-  updateMany?: Prisma.UserUpdateManyWithWhereWithoutTeamInput | Prisma.UserUpdateManyWithWhereWithoutTeamInput[]
-  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
 export type UserCreateNestedOneWithoutAssignedLeadsInput = {
@@ -2008,901 +1888,6 @@ export type UserUpdateOneWithoutPnlEntriesCreatedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPnlEntriesCreatedInput, Prisma.UserUpdateWithoutPnlEntriesCreatedInput>, Prisma.UserUncheckedUpdateWithoutPnlEntriesCreatedInput>
 }
 
-export type UserCreateWithoutSalesHeadTeamsInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
-  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
-  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
-  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
-  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
-  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
-  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
-  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutSalesHeadTeamsInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  teamId?: string | null
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
-  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutSalesHeadTeamsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSalesHeadTeamsInput, Prisma.UserUncheckedCreateWithoutSalesHeadTeamsInput>
-}
-
-export type UserCreateWithoutTeamLeadOfInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
-  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
-  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
-  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
-  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
-  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
-  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutTeamLeadOfInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  teamId?: string | null
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
-  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutTeamLeadOfInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTeamLeadOfInput, Prisma.UserUncheckedCreateWithoutTeamLeadOfInput>
-}
-
-export type UserCreateWithoutTeamInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
-  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
-  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
-  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
-  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
-  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
-  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutTeamInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
-  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
-  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
-  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
-  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
-  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
-  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
-  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
-  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
-  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
-  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
-  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
-  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutTeamInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTeamInput, Prisma.UserUncheckedCreateWithoutTeamInput>
-}
-
-export type UserCreateManyTeamInputEnvelope = {
-  data: Prisma.UserCreateManyTeamInput | Prisma.UserCreateManyTeamInput[]
-  skipDuplicates?: boolean
-}
-
-export type UserUpsertWithoutSalesHeadTeamsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSalesHeadTeamsInput, Prisma.UserUncheckedUpdateWithoutSalesHeadTeamsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSalesHeadTeamsInput, Prisma.UserUncheckedCreateWithoutSalesHeadTeamsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutSalesHeadTeamsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSalesHeadTeamsInput, Prisma.UserUncheckedUpdateWithoutSalesHeadTeamsInput>
-}
-
-export type UserUpdateWithoutSalesHeadTeamsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
-  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
-  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
-  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutSalesHeadTeamsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
-  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUpsertWithoutTeamLeadOfInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTeamLeadOfInput, Prisma.UserUncheckedUpdateWithoutTeamLeadOfInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTeamLeadOfInput, Prisma.UserUncheckedCreateWithoutTeamLeadOfInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutTeamLeadOfInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTeamLeadOfInput, Prisma.UserUncheckedUpdateWithoutTeamLeadOfInput>
-}
-
-export type UserUpdateWithoutTeamLeadOfInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
-  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
-  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
-  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTeamLeadOfInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
-  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUpsertWithWhereUniqueWithoutTeamInput = {
-  where: Prisma.UserWhereUniqueInput
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTeamInput, Prisma.UserUncheckedUpdateWithoutTeamInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTeamInput, Prisma.UserUncheckedCreateWithoutTeamInput>
-}
-
-export type UserUpdateWithWhereUniqueWithoutTeamInput = {
-  where: Prisma.UserWhereUniqueInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTeamInput, Prisma.UserUncheckedUpdateWithoutTeamInput>
-}
-
-export type UserUpdateManyWithWhereWithoutTeamInput = {
-  where: Prisma.UserScalarWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutTeamInput>
-}
-
-export type UserScalarWhereInput = {
-  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  OR?: Prisma.UserScalarWhereInput[]
-  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
-  id?: Prisma.StringFilter<"User"> | string
-  email?: Prisma.StringFilter<"User"> | string
-  passwordHash?: Prisma.StringFilter<"User"> | string
-  name?: Prisma.StringFilter<"User"> | string
-  role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
-  teamId?: Prisma.StringNullableFilter<"User"> | string | null
-  phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
-  address?: Prisma.StringNullableFilter<"User"> | string | null
-  profilePicture?: Prisma.StringNullableFilter<"User"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-}
-
 export type UserCreateWithoutAssignedLeadsInput = {
   id?: string
   email: string
@@ -2914,13 +1899,10 @@ export type UserCreateWithoutAssignedLeadsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -2991,7 +1973,6 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -3001,8 +1982,6 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -3083,13 +2062,10 @@ export type UserCreateWithoutCreatedLeadsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -3160,7 +2136,6 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -3170,8 +2145,6 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -3252,13 +2225,10 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -3329,7 +2299,6 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -3339,8 +2308,6 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -3432,13 +2399,10 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -3509,7 +2473,6 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3519,8 +2482,6 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -3607,13 +2568,10 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -3684,7 +2642,6 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3694,8 +2651,6 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -3782,13 +2737,10 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -3859,7 +2811,6 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3869,8 +2820,6 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -3946,14 +2895,11 @@ export type UserCreateWithoutLeadCallNotesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -4023,7 +2969,6 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -4034,8 +2979,6 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -4126,14 +3069,11 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -4203,7 +3143,6 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4214,8 +3153,6 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -4290,13 +3227,10 @@ export type UserCreateWithoutLeadStageEventsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -4367,7 +3301,6 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -4377,8 +3310,6 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -4470,13 +3401,10 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -4547,7 +3475,6 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4557,8 +3484,6 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -4634,13 +3559,10 @@ export type UserCreateWithoutCreatedTargetsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -4711,7 +3633,6 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -4721,8 +3642,6 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -4814,13 +3733,10 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -4891,7 +3807,6 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4901,8 +3816,6 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -4978,14 +3891,11 @@ export type UserCreateWithoutInsuranceCasesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
@@ -5055,7 +3965,6 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -5066,8 +3975,6 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
@@ -5158,14 +4065,11 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
@@ -5235,7 +4139,6 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5246,8 +4149,6 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -5322,14 +4223,11 @@ export type UserCreateWithoutPlRecordsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
@@ -5399,7 +4297,6 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -5410,8 +4307,6 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
@@ -5502,14 +4397,11 @@ export type UserUpdateWithoutPlRecordsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
@@ -5579,7 +4471,6 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5590,8 +4481,6 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -5666,14 +4555,11 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -5743,7 +4629,6 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -5754,8 +4639,6 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -5846,14 +4729,11 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -5923,7 +4803,6 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5934,8 +4813,6 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -6010,14 +4887,11 @@ export type UserCreateWithoutEmployeeInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
@@ -6087,7 +4961,6 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -6098,8 +4971,6 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
@@ -6179,14 +5050,11 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -6256,7 +5124,6 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -6267,8 +5134,6 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -6359,14 +5224,11 @@ export type UserUpdateWithoutEmployeeInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
@@ -6436,7 +5298,6 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6447,8 +5308,6 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -6534,14 +5393,11 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -6611,7 +5467,6 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6622,8 +5477,6 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -6698,14 +5551,11 @@ export type UserCreateWithoutApprovedLeavesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -6775,7 +5625,6 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -6786,8 +5635,6 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -6878,14 +5725,11 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -6955,7 +5799,6 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6966,8 +5809,6 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -7042,14 +5883,11 @@ export type UserCreateWithoutMeetsCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -7119,7 +5957,6 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -7130,8 +5967,6 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -7222,14 +6057,11 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -7299,7 +6131,6 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7310,8 +6141,6 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -7386,14 +6215,11 @@ export type UserCreateWithoutMeetParticipationsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -7463,7 +6289,6 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -7474,8 +6299,6 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -7566,14 +6389,11 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -7643,7 +6463,6 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7654,8 +6473,6 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -7730,14 +6547,11 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -7807,7 +6621,6 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -7818,8 +6631,6 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -7899,14 +6710,11 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -7976,7 +6784,6 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -7987,8 +6794,6 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -8068,14 +6873,11 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -8145,7 +6947,6 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -8156,8 +6957,6 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -8237,14 +7036,11 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -8314,7 +7110,6 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -8325,8 +7120,6 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -8406,14 +7199,11 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -8483,7 +7273,6 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -8494,8 +7283,6 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -8586,14 +7373,11 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -8663,7 +7447,6 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8674,8 +7457,6 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -8761,14 +7542,11 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -8838,7 +7616,6 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8849,8 +7626,6 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -8936,14 +7711,11 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -9013,7 +7785,6 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9024,8 +7795,6 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -9111,14 +7880,11 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -9188,7 +7954,6 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9199,8 +7964,6 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -9286,14 +8049,11 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -9363,7 +8123,6 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9374,8 +8133,6 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -9450,14 +8207,11 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -9527,7 +8281,6 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -9538,8 +8291,6 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -9630,14 +8381,11 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -9707,7 +8455,6 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9718,8 +8465,6 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -9794,14 +8539,11 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -9871,7 +8613,6 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -9882,8 +8623,6 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -9974,14 +8713,11 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -10051,7 +8787,6 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10062,8 +8797,6 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -10138,14 +8871,11 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -10215,7 +8945,6 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -10226,8 +8955,6 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -10318,14 +9045,11 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -10395,7 +9119,6 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10406,8 +9129,6 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -10482,14 +9203,11 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -10559,7 +9277,6 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -10570,8 +9287,6 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -10662,14 +9377,11 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -10739,7 +9451,6 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10750,8 +9461,6 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -10826,14 +9535,11 @@ export type UserCreateWithoutIssuesReceivedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -10903,7 +9609,6 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -10914,8 +9619,6 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -10995,14 +9698,11 @@ export type UserCreateWithoutIssuesCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -11072,7 +9772,6 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -11083,8 +9782,6 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -11175,14 +9872,11 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -11252,7 +9946,6 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11263,8 +9956,6 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -11350,14 +10041,11 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -11427,7 +10115,6 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11438,8 +10125,6 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -11514,14 +10199,11 @@ export type UserCreateWithoutKypSubmissionsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -11591,7 +10273,6 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -11602,8 +10283,6 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -11694,14 +10373,11 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -11771,7 +10447,6 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11782,8 +10457,6 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -11858,14 +10531,11 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -11935,7 +10605,6 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -11946,8 +10615,6 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -12027,14 +10694,11 @@ export type UserCreateWithoutPreAuthHandledInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -12104,7 +10768,6 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -12115,8 +10778,6 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -12207,14 +10868,11 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -12284,7 +10942,6 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12295,8 +10952,6 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -12382,14 +11037,11 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -12459,7 +11111,6 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12470,8 +11121,6 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -12546,14 +11195,11 @@ export type UserCreateWithoutNotificationsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -12623,7 +11269,6 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -12634,8 +11279,6 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -12726,14 +11369,11 @@ export type UserUpdateWithoutNotificationsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -12803,7 +11443,6 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12814,8 +11453,6 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -12890,14 +11527,11 @@ export type UserCreateWithoutNoticesCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -12967,7 +11601,6 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -12978,8 +11611,6 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -13070,14 +11701,11 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -13147,7 +11775,6 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -13158,8 +11785,6 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -13234,14 +11859,11 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -13311,7 +11933,6 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -13322,8 +11943,6 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -13414,14 +12033,11 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -13491,7 +12107,6 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -13502,8 +12117,6 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -13578,14 +12191,11 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -13655,7 +12265,6 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -13666,8 +12275,6 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -13747,14 +12354,11 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -13824,7 +12428,6 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -13835,8 +12438,6 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -13916,14 +12517,11 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -13993,7 +12591,6 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -14004,8 +12601,6 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -14096,14 +12691,11 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -14173,7 +12765,6 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14184,8 +12775,6 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -14271,14 +12860,11 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -14348,7 +12934,6 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14359,8 +12944,6 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -14446,14 +13029,11 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -14523,7 +13103,6 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -14534,8 +13113,6 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -14610,14 +13187,11 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -14687,7 +13261,6 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -14698,8 +13271,6 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -14779,14 +13350,11 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -14856,7 +13424,6 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -14867,8 +13434,6 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -14959,14 +13524,11 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -15036,7 +13598,6 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15047,8 +13608,6 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -15134,14 +13693,11 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -15211,7 +13767,6 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15222,8 +13777,6 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -15298,14 +13851,11 @@ export type UserCreateWithoutQueriesRaisedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -15375,7 +13925,6 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -15386,8 +13935,6 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -15467,14 +14014,11 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -15544,7 +14088,6 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -15555,8 +14098,6 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -15647,14 +14188,11 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -15724,7 +14262,6 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15735,8 +14272,6 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -15822,14 +14357,11 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -15899,7 +14431,6 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -15910,8 +14441,6 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -15986,14 +14515,11 @@ export type UserCreateWithoutPdfsCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -16063,7 +14589,6 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -16074,8 +14599,6 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -16166,14 +14689,11 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -16243,7 +14763,6 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16254,8 +14773,6 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -16330,14 +14847,11 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -16407,7 +14921,6 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -16418,8 +14931,6 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -16510,14 +15021,11 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -16587,7 +15095,6 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16598,8 +15105,6 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -16674,14 +15179,11 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -16751,7 +15253,6 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -16762,8 +15263,6 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -16854,14 +15353,11 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -16931,7 +15427,6 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -16942,8 +15437,6 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -17018,14 +15511,11 @@ export type UserCreateWithoutCaseStageChangesInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -17095,7 +15585,6 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -17106,8 +15595,6 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -17198,14 +15685,11 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -17275,7 +15759,6 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17286,8 +15769,6 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -17362,14 +15843,11 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -17439,7 +15917,6 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -17450,8 +15927,6 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -17542,14 +16017,11 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -17619,7 +16091,6 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17630,8 +16101,6 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -17706,14 +16175,11 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -17783,7 +16249,6 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -17794,8 +16259,6 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -17886,14 +16349,11 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -17963,7 +16423,6 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -17974,8 +16433,6 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -18050,14 +16507,11 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -18127,7 +16581,6 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -18138,8 +16591,6 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -18230,14 +16681,11 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -18307,7 +16755,6 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -18318,8 +16765,6 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -18394,14 +16839,11 @@ export type UserCreateWithoutTasksAssignedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -18471,7 +16913,6 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -18482,8 +16923,6 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -18563,14 +17002,11 @@ export type UserCreateWithoutTasksCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -18640,7 +17076,6 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -18651,8 +17086,6 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -18732,14 +17165,11 @@ export type UserCreateWithoutTasksCompletedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -18809,7 +17239,6 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -18820,8 +17249,6 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -18912,14 +17339,11 @@ export type UserUpdateWithoutTasksAssignedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -18989,7 +17413,6 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -19000,8 +17423,6 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -19087,14 +17508,11 @@ export type UserUpdateWithoutTasksCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -19164,7 +17582,6 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -19175,8 +17592,6 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -19262,14 +17677,11 @@ export type UserUpdateWithoutTasksCompletedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -19339,7 +17751,6 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -19350,8 +17761,6 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -19426,14 +17835,11 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -19503,7 +17909,6 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -19514,8 +17919,6 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -19606,14 +18009,11 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -19683,7 +18083,6 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -19694,8 +18093,6 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -19770,14 +18167,11 @@ export type UserCreateWithoutUserTaskSeenInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -19847,7 +18241,6 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -19858,8 +18251,6 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -19950,14 +18341,11 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -20027,7 +18415,6 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -20038,8 +18425,6 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -20114,14 +18499,11 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -20191,7 +18573,6 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -20202,8 +18583,6 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -20283,14 +18662,11 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -20360,7 +18736,6 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -20371,8 +18746,6 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -20463,14 +18836,11 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -20540,7 +18910,6 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -20551,8 +18920,6 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -20638,14 +19005,11 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -20715,7 +19079,6 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -20726,8 +19089,6 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -20802,14 +19163,11 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -20879,7 +19237,6 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -20890,8 +19247,6 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -20982,14 +19337,11 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -21059,7 +19411,6 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21070,8 +19421,6 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -21146,14 +19495,11 @@ export type UserCreateWithoutTaskCommentsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -21223,7 +19569,6 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -21234,8 +19579,6 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -21326,14 +19669,11 @@ export type UserUpdateWithoutTaskCommentsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -21403,7 +19743,6 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21414,8 +19753,6 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -21490,14 +19827,11 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -21567,7 +19901,6 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -21578,8 +19911,6 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -21670,14 +20001,11 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -21747,7 +20075,6 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -21758,8 +20085,6 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -21834,14 +20159,11 @@ export type UserCreateWithoutWarningsReceivedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -21911,7 +20233,6 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -21922,8 +20243,6 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -22003,14 +20322,11 @@ export type UserCreateWithoutWarningsIssuedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -22080,7 +20396,6 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -22091,8 +20406,6 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -22183,14 +20496,11 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -22260,7 +20570,6 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22271,8 +20580,6 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -22358,14 +20665,11 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -22435,7 +20739,6 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22446,8 +20749,6 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -22522,14 +20823,11 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -22599,7 +20897,6 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -22610,8 +20907,6 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -22702,14 +20997,11 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -22779,7 +21071,6 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -22790,8 +21081,6 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -22866,14 +21155,11 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -22943,7 +21229,6 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -22954,8 +21239,6 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -23046,14 +21329,11 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -23123,7 +21403,6 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -23134,8 +21413,6 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -23210,14 +21487,11 @@ export type UserCreateWithoutWorkLogsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -23287,7 +21561,6 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -23298,8 +21571,6 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -23390,14 +21661,11 @@ export type UserUpdateWithoutWorkLogsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -23467,7 +21735,6 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -23478,8 +21745,6 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -23554,14 +21819,11 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -23631,7 +21893,6 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -23642,8 +21903,6 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -23734,14 +21993,11 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -23811,7 +22067,6 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -23822,8 +22077,6 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -23898,14 +22151,11 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -23975,7 +22225,6 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -23986,8 +22235,6 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -24078,14 +22325,11 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -24155,7 +22399,6 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -24166,8 +22409,6 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -24242,14 +22483,11 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -24319,7 +22557,6 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -24330,8 +22567,6 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -24422,14 +22657,11 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -24499,7 +22731,6 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -24510,8 +22741,6 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -24586,14 +22815,11 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -24663,7 +22889,6 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -24674,8 +22899,6 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -24766,14 +22989,11 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -24843,7 +23063,6 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -24854,8 +23073,6 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -24930,14 +23147,11 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -25007,7 +23221,6 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -25018,8 +23231,6 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -25110,14 +23321,11 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -25187,7 +23395,6 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -25198,8 +23405,6 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -25274,14 +23479,11 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -25351,7 +23553,6 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -25362,8 +23563,6 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -25454,14 +23653,11 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -25531,7 +23727,6 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -25542,8 +23737,6 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -25618,14 +23811,11 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   profilePicture?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutMembersInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
   updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
@@ -25695,7 +23885,6 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   passwordHash: string
   name: string
   role: $Enums.UserRole
-  teamId?: string | null
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
@@ -25706,8 +23895,6 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
   createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
-  salesHeadTeams?: Prisma.TeamUncheckedCreateNestedManyWithoutSalesHeadInput
-  teamLeadOf?: Prisma.TeamUncheckedCreateNestedOneWithoutTeamLeadInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
   plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
   employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
@@ -25798,14 +23985,11 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutMembersNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
@@ -25875,7 +24059,6 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -25886,8 +24069,6 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
   createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -25949,196 +24130,6 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserCreateManyTeamInput = {
-  id?: string
-  email: string
-  passwordHash: string
-  name: string
-  role: $Enums.UserRole
-  phoneNumber?: string | null
-  address?: string | null
-  profilePicture?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type UserUpdateWithoutTeamInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUpdateOneWithoutTeamLeadNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
-  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
-  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTeamInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
-  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
-  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
-  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
-  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
-  salesHeadTeams?: Prisma.TeamUncheckedUpdateManyWithoutSalesHeadNestedInput
-  teamLeadOf?: Prisma.TeamUncheckedUpdateOneWithoutTeamLeadNestedInput
-  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
-  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
-  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
-  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
-  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
-  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
-  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
-  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
-  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
-  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
-  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
-  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
-  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
-  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
-  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
-  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
-  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
-  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
-  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
-  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
-  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
-  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
-  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
-  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
-  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
-  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
-  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
-  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
-  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
-  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
-  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
-  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
-  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
-  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
-  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
-  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
-  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
-  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
-  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
-  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
-  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
-  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
-  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
-  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
-  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
-  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
-  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
-  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateManyWithoutTeamInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -26152,7 +24143,6 @@ export type UserCountOutputType = {
   updatedLeads: number
   leadStageEvents: number
   createdTargets: number
-  salesHeadTeams: number
   insuranceCases: number
   plRecords: number
   approvedLeaves: number
@@ -26222,7 +24212,6 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   updatedLeads?: boolean | UserCountOutputTypeCountUpdatedLeadsArgs
   leadStageEvents?: boolean | UserCountOutputTypeCountLeadStageEventsArgs
   createdTargets?: boolean | UserCountOutputTypeCountCreatedTargetsArgs
-  salesHeadTeams?: boolean | UserCountOutputTypeCountSalesHeadTeamsArgs
   insuranceCases?: boolean | UserCountOutputTypeCountInsuranceCasesArgs
   plRecords?: boolean | UserCountOutputTypeCountPlRecordsArgs
   approvedLeaves?: boolean | UserCountOutputTypeCountApprovedLeavesArgs
@@ -26329,13 +24318,6 @@ export type UserCountOutputTypeCountLeadStageEventsArgs<ExtArgs extends runtime.
  */
 export type UserCountOutputTypeCountCreatedTargetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TargetWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountSalesHeadTeamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TeamWhereInput
 }
 
 /**
@@ -26772,20 +24754,16 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   passwordHash?: boolean
   name?: boolean
   role?: boolean
-  teamId?: boolean
   phoneNumber?: boolean
   address?: boolean
   profilePicture?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  team?: boolean | Prisma.User$teamArgs<ExtArgs>
   createdLeads?: boolean | Prisma.User$createdLeadsArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
   updatedLeads?: boolean | Prisma.User$updatedLeadsArgs<ExtArgs>
   leadStageEvents?: boolean | Prisma.User$leadStageEventsArgs<ExtArgs>
   createdTargets?: boolean | Prisma.User$createdTargetsArgs<ExtArgs>
-  salesHeadTeams?: boolean | Prisma.User$salesHeadTeamsArgs<ExtArgs>
-  teamLeadOf?: boolean | Prisma.User$teamLeadOfArgs<ExtArgs>
   insuranceCases?: boolean | Prisma.User$insuranceCasesArgs<ExtArgs>
   plRecords?: boolean | Prisma.User$plRecordsArgs<ExtArgs>
   employee?: boolean | Prisma.User$employeeArgs<ExtArgs>
@@ -26857,13 +24835,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   passwordHash?: boolean
   name?: boolean
   role?: boolean
-  teamId?: boolean
   phoneNumber?: boolean
   address?: boolean
   profilePicture?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  team?: boolean | Prisma.User$teamArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -26872,13 +24848,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   passwordHash?: boolean
   name?: boolean
   role?: boolean
-  teamId?: boolean
   phoneNumber?: boolean
   address?: boolean
   profilePicture?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  team?: boolean | Prisma.User$teamArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -26887,7 +24861,6 @@ export type UserSelectScalar = {
   passwordHash?: boolean
   name?: boolean
   role?: boolean
-  teamId?: boolean
   phoneNumber?: boolean
   address?: boolean
   profilePicture?: boolean
@@ -26895,16 +24868,13 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "role" | "teamId" | "phoneNumber" | "address" | "profilePicture" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "role" | "phoneNumber" | "address" | "profilePicture" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.User$teamArgs<ExtArgs>
   createdLeads?: boolean | Prisma.User$createdLeadsArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
   updatedLeads?: boolean | Prisma.User$updatedLeadsArgs<ExtArgs>
   leadStageEvents?: boolean | Prisma.User$leadStageEventsArgs<ExtArgs>
   createdTargets?: boolean | Prisma.User$createdTargetsArgs<ExtArgs>
-  salesHeadTeams?: boolean | Prisma.User$salesHeadTeamsArgs<ExtArgs>
-  teamLeadOf?: boolean | Prisma.User$teamLeadOfArgs<ExtArgs>
   insuranceCases?: boolean | Prisma.User$insuranceCasesArgs<ExtArgs>
   plRecords?: boolean | Prisma.User$plRecordsArgs<ExtArgs>
   employee?: boolean | Prisma.User$employeeArgs<ExtArgs>
@@ -26969,24 +24939,17 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   meetParticipations?: boolean | Prisma.User$meetParticipationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.User$teamArgs<ExtArgs>
-}
-export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.User$teamArgs<ExtArgs>
-}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    team: Prisma.$TeamPayload<ExtArgs> | null
     createdLeads: Prisma.$LeadPayload<ExtArgs>[]
     assignedLeads: Prisma.$LeadPayload<ExtArgs>[]
     updatedLeads: Prisma.$LeadPayload<ExtArgs>[]
     leadStageEvents: Prisma.$LeadStageEventPayload<ExtArgs>[]
     createdTargets: Prisma.$TargetPayload<ExtArgs>[]
-    salesHeadTeams: Prisma.$TeamPayload<ExtArgs>[]
-    teamLeadOf: Prisma.$TeamPayload<ExtArgs> | null
     insuranceCases: Prisma.$InsuranceCasePayload<ExtArgs>[]
     plRecords: Prisma.$PLRecordPayload<ExtArgs>[]
     employee: Prisma.$EmployeePayload<ExtArgs> | null
@@ -27056,7 +25019,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     passwordHash: string
     name: string
     role: $Enums.UserRole
-    teamId: string | null
     phoneNumber: string | null
     address: string | null
     profilePicture: string | null
@@ -27456,14 +25418,11 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  team<T extends Prisma.User$teamArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$teamArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdLeads<T extends Prisma.User$createdLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedLeads<T extends Prisma.User$assignedLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   updatedLeads<T extends Prisma.User$updatedLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$updatedLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadStageEvents<T extends Prisma.User$leadStageEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadStageEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadStageEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdTargets<T extends Prisma.User$createdTargetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  salesHeadTeams<T extends Prisma.User$salesHeadTeamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$salesHeadTeamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  teamLeadOf<T extends Prisma.User$teamLeadOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$teamLeadOfArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   insuranceCases<T extends Prisma.User$insuranceCasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$insuranceCasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceCasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   plRecords<T extends Prisma.User$plRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$plRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PLRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employee<T extends Prisma.User$employeeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$employeeArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -27560,7 +25519,6 @@ export interface UserFieldRefs {
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
-  readonly teamId: Prisma.FieldRef<"User", 'String'>
   readonly phoneNumber: Prisma.FieldRef<"User", 'String'>
   readonly address: Prisma.FieldRef<"User", 'String'>
   readonly profilePicture: Prisma.FieldRef<"User", 'String'>
@@ -27820,10 +25778,6 @@ export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -27894,10 +25848,6 @@ export type UserUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Users to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -27964,25 +25914,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
-}
-
-/**
- * User.team
- */
-export type User$teamArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Team
-   */
-  select?: Prisma.TeamSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Team
-   */
-  omit?: Prisma.TeamOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TeamInclude<ExtArgs> | null
-  where?: Prisma.TeamWhereInput
 }
 
 /**
@@ -28103,49 +26034,6 @@ export type User$createdTargetsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.TargetScalarFieldEnum | Prisma.TargetScalarFieldEnum[]
-}
-
-/**
- * User.salesHeadTeams
- */
-export type User$salesHeadTeamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Team
-   */
-  select?: Prisma.TeamSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Team
-   */
-  omit?: Prisma.TeamOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TeamInclude<ExtArgs> | null
-  where?: Prisma.TeamWhereInput
-  orderBy?: Prisma.TeamOrderByWithRelationInput | Prisma.TeamOrderByWithRelationInput[]
-  cursor?: Prisma.TeamWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TeamScalarFieldEnum | Prisma.TeamScalarFieldEnum[]
-}
-
-/**
- * User.teamLeadOf
- */
-export type User$teamLeadOfArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Team
-   */
-  select?: Prisma.TeamSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Team
-   */
-  omit?: Prisma.TeamOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TeamInclude<ExtArgs> | null
-  where?: Prisma.TeamWhereInput
 }
 
 /**

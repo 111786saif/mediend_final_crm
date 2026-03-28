@@ -42,7 +42,7 @@ export async function POST(
                     leadRef: true,
                     patientName: true,
                     bdId: true,
-                    bd: { select: { teamId: true } },
+                    bd: { select: { id: true } },
                   },
                 },
               },
@@ -63,7 +63,7 @@ export async function POST(
     }
 
     const leadRow = query.preAuthorization.kypSubmission.lead
-    if (!(await canMutateLead(user, leadRow.bdId, leadRow.bd?.teamId))) {
+    if (!(await canMutateLead(user, leadRow.bdId))) {
       return errorResponse('Forbidden: You are not assigned to this lead', 403)
     }
 

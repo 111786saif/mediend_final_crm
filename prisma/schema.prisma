@@ -353,8 +353,6 @@ model User {
   passwordHash   String
   name           String
   role           UserRole
-  teamId         String?
-  team           Team?    @relation("TeamMembers", fields: [teamId], references: [id])
   phoneNumber    String?
   address        String?  @db.Text
   profilePicture String?
@@ -367,8 +365,6 @@ model User {
   updatedLeads    Lead[]           @relation("LeadUpdater")
   leadStageEvents LeadStageEvent[]
   createdTargets  Target[]         @relation("TargetCreator")
-  salesHeadTeams  Team[]           @relation("SalesHead")
-  teamLeadOf      Team?            @relation("TeamLead")
   insuranceCases  InsuranceCase[]
   plRecords       PLRecord[]
   employee        Employee?
@@ -467,23 +463,6 @@ model User {
 
   @@index([email])
   @@index([role])
-  @@index([teamId])
-}
-
-model Team {
-  id          String   @id @default(cuid())
-  name        String
-  salesHeadId String
-  salesHead   User     @relation("SalesHead", fields: [salesHeadId], references: [id])
-  teamLeadId  String?  @unique
-  teamLead    User?    @relation("TeamLead", fields: [teamLeadId], references: [id])
-  members     User[]   @relation("TeamMembers")
-  targets     Target[] @relation
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([salesHeadId])
-  @@index([teamLeadId])
 }
 
 model Lead {
@@ -661,9 +640,7 @@ model LeadStageEvent {
 model Target {
   id              String       @id @default(cuid())
   targetType      TargetType
-  targetForId     String // Can be User.id or Team.id depending on targetType
-  teamId          String?
-  team            Team?        @relation(fields: [teamId], references: [id])
+  targetForId     String // User.id for BD/DEPARTMENT_HEAD; Employee.id for TEAM (manager group)
   periodType      PeriodType
   periodStartDate DateTime
   periodEndDate   DateTime
@@ -679,7 +656,6 @@ model Target {
 
   @@index([targetType, targetForId])
   @@index([periodStartDate, periodEndDate])
-  @@index([teamId])
 }
 
 model BonusRule {

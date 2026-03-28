@@ -5,6 +5,8 @@ import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { startOfMonth, startOfDay, endOfDay, subMonths, setDate, getDaysInMonth } from 'date-fns'
 
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+
 export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
@@ -19,12 +21,12 @@ export async function GET(request: NextRequest) {
     ) {
       return errorResponse('Forbidden', 403)
     }
-    if (user.role === 'TEAM_LEAD' && !user.teamId) {
-      return errorResponse('No team assigned', 403)
-    }
 
-    const teamScope: Prisma.LeadWhereInput =
-      user.role === 'TEAM_LEAD' && user.teamId ? { bd: { teamId: user.teamId } } : {}
+    let teamScope: import('@/generated/prisma/client').Prisma.LeadWhereInput = {}
+    if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      teamScope = { bdId: { in: [user.id, ...subIds] } }
+    }
 
     const { searchParams } = new URL(request.url)
     const startParam = searchParams.get('startDate')

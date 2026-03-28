@@ -22,12 +22,10 @@ interface StaffSyncResult {
   usersUpdated: number
   employeesCreated: number
   employeesUpdated: number
-  teamsCreated: number
-  teamsUpdated: number
 }
 
 /**
- * Syncs tblstaff from MySQL CRM to Prisma User + Employee + Team
+ * Syncs tblstaff from MySQL CRM to Prisma User + Employee.
  * Uses staffid as bdNumber for reliable BD resolution during lead sync.
  */
 export async function syncStaffFromMySQL(): Promise<StaffSyncResult> {
@@ -38,8 +36,6 @@ export async function syncStaffFromMySQL(): Promise<StaffSyncResult> {
     usersUpdated: 0,
     employeesCreated: 0,
     employeesUpdated: 0,
-    teamsCreated: 0,
-    teamsUpdated: 0,
   }
 
   try {
@@ -70,11 +66,7 @@ export async function syncStaffFromMySQL(): Promise<StaffSyncResult> {
       return result
     }
 
-    // Get existing teams for reference
-    const existingTeams = await prisma.team.findMany({
-      select: { id: true, name: true, teamLeadId: true, salesHeadId: true }
-    })
-    const teamMap = new Map(existingTeams.map(t => [t.id, t]))
+    // Get existing teams for reference (removed - using org chart hierarchy now)
 
     // Process each staff member
     for (const staff of staffRows) {
@@ -169,45 +161,13 @@ export async function syncStaffFromMySQL(): Promise<StaffSyncResult> {
         }
       }
 
-      // 3. Handle team relationships (for next phase)
-      // We'll create teams based on team_leader relationships in phase 2
-    }
-
-    // Phase 2: Create teams based on team_leader hierarchy
-    // This is a simplified version - we'll expand this in future iterations
-    if (staffRows.length > 0) {
-      const teamLeads = staffRows.filter(s => s.level === 1 || s.team_leader > 0)
-      for (const tl of teamLeads) {
-        const tlUser = await prisma.user.findFirst({
-          where: { employee: { bdNumber: tl.staffid } }
-        })
-        
-        if (tlUser) {
-          const teamName = `${tl.firstname} ${tl.lastname}'s Team`
-          
-          let team = await prisma.team.findFirst({
-            where: { teamLeadId: tlUser.id }
-          })
-
-          if (!team) {
-            team = await prisma.team.create({
-              data: {
-                name: teamName,
-                salesHeadId: tlUser.id, // For now, TL is also sales head
-                teamLeadId: tlUser.id,
-              }
-            })
-            result.teamsCreated++
-            console.log(`✅ Created team: ${teamName}`)
-          }
-        }
-      }
+      // 3. Hierarchy relationships are managed via Employee.managerId (org chart)
+      // Team assignment removed - manager hierarchy drives team structure
     }
 
     console.log(`✅ Staff sync completed: 
       Users: ${result.usersCreated} created, ${result.usersUpdated} updated
-      Employees: ${result.employeesCreated} created, ${result.employeesUpdated} updated
-      Teams: ${result.teamsCreated} created, ${result.teamsUpdated} updated`)
+      Employees: ${result.employeesCreated} created, ${result.employeesUpdated} updated`)
 
     return result
 

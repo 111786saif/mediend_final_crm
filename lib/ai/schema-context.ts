@@ -25,14 +25,14 @@ export const SCHEMA_CONTEXT: Record<string, TableInfo> = {
   User: {
     name: 'User',
     description: 'System users - BDs, team leads, department heads, etc.',
-    keyFields: ['id', 'email', 'name', 'role', 'teamId'],
-    relationships: ['team', 'createdLeads', 'assignedLeads']
+    keyFields: ['id', 'email', 'name', 'role'],
+    relationships: ['employee (Employee?)', 'createdLeads', 'assignedLeads']
   },
-  Team: {
-    name: 'Team',
-    description: 'Sales teams organized by circle (North, South, East, West, Central)',
-    keyFields: ['id', 'name', 'circle', 'salesHeadId'],
-    relationships: ['salesHead (User)', 'members (User[])', 'targets']
+  DepartmentTeam: {
+    name: 'DepartmentTeam',
+    description: 'Team within a department; BDs are linked via Employee.teamId',
+    keyFields: ['id', 'name', 'departmentId', 'teamLeadId'],
+    relationships: ['department', 'teamLead (Employee)', 'members (Employee[])']
   },
   InsuranceCase: {
     name: 'InsuranceCase',

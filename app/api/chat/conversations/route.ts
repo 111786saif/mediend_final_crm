@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     if (user.role === 'BD') {
       where.bdId = user.id
     } else if (user.role === 'TEAM_LEAD') {
-      const accessBdIds = await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId)
+      const accessBdIds = await getTeamLeadLeadAccessBdUserIds(user.id)
       where.bdId = { in: [user.id, ...accessBdIds] }
     }
     // Insurance users see leads with KYP submissions
@@ -46,12 +46,6 @@ export async function GET(request: NextRequest) {
             id: true,
             name: true,
             email: true,
-            teamId: true,
-            team: {
-              select: {
-                id: true,
-              },
-            },
           },
         },
         kypSubmission: {
@@ -89,10 +83,10 @@ export async function GET(request: NextRequest) {
 
     // Filter leads based on access control and get unread counts
     const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
     const conversations = await Promise.all(
       leads
-        .filter((lead) => canAccessLead(user, lead.bdId, lead.bd?.team?.id, subordinateIds))
+        .filter((lead) => canAccessLead(user, lead.bdId, subordinateIds))
         .map(async (lead) => {
           // Get unread message count (messages after user's last read or all if never read)
           // For now, we'll count all messages as potential unread
@@ -150,3 +144,4 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to fetch conversations', 500)
   }
 }
+

@@ -27,16 +27,16 @@ export async function GET(request: NextRequest) {
     }
 
     const subordinateUserIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
 
     const leads = await prisma.lead.findMany({
       where: { id: { in: leadIds } },
-      select: { id: true, bdId: true, bd: { select: { team: { select: { id: true } } } } },
+      select: { id: true, bdId: true },
     })
 
     const allowedIds = new Set(
       leads
-        .filter((l) => canAccessLead(user, l.bdId, l.bd?.team?.id, subordinateUserIds))
+        .filter((l) => canAccessLead(user, l.bdId, subordinateUserIds))
         .map((l) => l.id)
     )
 
@@ -61,3 +61,4 @@ export async function GET(request: NextRequest) {
     return errorResponse('Failed to fetch note counts', 500)
   }
 }
+

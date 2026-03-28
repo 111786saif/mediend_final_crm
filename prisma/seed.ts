@@ -69,21 +69,6 @@ async function main() {
     console.log(`   Password: ${salesHeadPassword}`)
   }
 
-  // Create a sample Team
-  const existingTeam = await prisma.team.findFirst({
-    where: { name: 'North Team' },
-  })
-
-  if (!existingTeam && existingSalesHead) {
-    await prisma.team.create({
-      data: {
-        name: 'North Team',
-        salesHeadId: (await prisma.user.findUnique({ where: { email: salesHeadEmail } }))!.id,
-      },
-    })
-    console.log('✅ Created sample team: North Team')
-  }
-
   // Create a sample BD user
   const bdEmail = 'bd@mediend.com'
   const bdPassword = 'BD@123'
@@ -94,7 +79,6 @@ async function main() {
 
   if (!existingBD) {
     const passwordHash = await bcrypt.hash(bdPassword, 10)
-    const team = await prisma.team.findFirst({ where: { name: 'North Team' } })
     
     await prisma.user.create({
       data: {
@@ -102,7 +86,6 @@ async function main() {
         passwordHash,
         name: 'Sample BD',
         role: 'BD',
-        teamId: team?.id || null,
       },
     })
     

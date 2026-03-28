@@ -160,7 +160,7 @@ export async function getEmployeeByUserId(userId: string) {
 }
 
 /**
- * Get user IDs of all BDs that report to this user (for TEAM_LEAD lead access).
+ * Get user IDs of all subordinates that report to this user (recursively).
  * Returns empty array if user has no employee record or no subordinates.
  */
 export async function getSubordinateUserIdsForLeadAccess(userId: string): Promise<string[]> {
@@ -173,66 +173,66 @@ export async function getSubordinateUserIdsForLeadAccess(userId: string): Promis
   return subordinates.map((s) => s.userId)
 }
 
-/** BDs assigned to a CRM sales team (`User.teamId`), used with hierarchy for TL visibility. */
-export async function getSalesTeamBdUserIds(teamId: string): Promise<string[]> {
-  const users = await prisma.user.findMany({
-    where: { teamId, role: 'BD' },
-    select: { id: true },
-  })
-  return users.map((u) => u.id)
+/**
+ * TEAM_LEAD / manager lead visibility: all recursive subordinates' user IDs.
+ * This replaces the old dual-source (HR org + sales Team) lookup.
+ */
+export async function getTeamLeadLeadAccessBdUserIds(userId: string): Promise<string[]> {
+  return getSubordinateUserIdsForLeadAccess(userId)
 }
 
 /**
- * CRM team id for a team lead: `User.teamId` when set, else the `Team` row where they are `teamLeadId`.
- * Sales Heads sometimes set teamLead on the Team without syncing `user.teamId`.
+ * Returns manager groups (manager + direct subordinates) for analytics / team performance views.
+ * Each entry represents a "team" derived purely from the org chart.
+ * Optionally filter by departmentId.
  */
-export async function getSalesTeamIdForTeamLeadUser(
-  userId: string,
-  sessionTeamId: string | null | undefined
-): Promise<string | null> {
-  if (sessionTeamId) return sessionTeamId
-  const team = await prisma.team.findFirst({
-    where: { teamLeadId: userId },
-    select: { id: true },
+export async function getManagerGroups(departmentId?: string): Promise<Array<{
+  managerId: string
+  managerUserId: string
+  managerName: string
+  managerRole: string
+  departmentId: string | null
+  departmentName: string | null
+  subordinates: Array<{ employeeId: string; userId: string; name: string; role: string }>
+}>> {
+  const whereClause: Prisma.EmployeeWhereInput = {
+    subordinates: { some: {} }, // only employees who have at least one direct report
+  }
+  if (departmentId) whereClause.departmentId = departmentId
+
+  const managers = await prisma.employee.findMany({
+    where: whereClause,
+    select: {
+      id: true,
+      userId: true,
+      departmentId: true,
+      user: { select: { id: true, name: true, role: true } },
+      department: { select: { name: true } },
+      subordinates: {
+        select: {
+          id: true,
+          userId: true,
+          user: { select: { id: true, name: true, role: true } },
+        },
+      },
+    },
+    orderBy: { user: { name: 'asc' } },
   })
-  return team?.id ?? null
-}
 
-/**
- * TEAM_LEAD lead visibility: HR org subordinates plus BDs on the same sales team (Sales Teams UI).
- * The latter may not appear under the TL in the employee tree.
- */
-export async function getTeamLeadLeadAccessBdUserIds(
-  userId: string,
-  teamId: string | null | undefined
-): Promise<string[]> {
-  const resolvedTeamId = await getSalesTeamIdForTeamLeadUser(userId, teamId)
-  const [hierarchyIds, teamBdIds] = await Promise.all([
-    getSubordinateUserIdsForLeadAccess(userId),
-    resolvedTeamId ? getSalesTeamBdUserIds(resolvedTeamId) : Promise.resolve([] as string[]),
-  ])
-  return Array.from(new Set([...hierarchyIds, ...teamBdIds]))
-}
-
-/** Employee rows for sales-team BDs (attendance, etc.). */
-export async function getSalesTeamBdEmployeeIds(teamId: string): Promise<string[]> {
-  const userIds = await getSalesTeamBdUserIds(teamId)
-  if (userIds.length === 0) return []
-  const employees = await prisma.employee.findMany({
-    where: { userId: { in: userIds } },
-    select: { id: true },
-  })
-  return employees.map((e) => e.id)
-}
-
-/** Same as getSalesTeamBdEmployeeIds but resolves team from TL session / Team.teamLeadId. */
-export async function getSalesTeamBdEmployeeIdsForTeamLead(
-  userId: string,
-  sessionTeamId: string | null | undefined
-): Promise<string[]> {
-  const teamId = await getSalesTeamIdForTeamLeadUser(userId, sessionTeamId)
-  if (!teamId) return []
-  return getSalesTeamBdEmployeeIds(teamId)
+  return managers.map((m) => ({
+    managerId: m.id,
+    managerUserId: m.userId,
+    managerName: m.user.name,
+    managerRole: m.user.role,
+    departmentId: m.departmentId,
+    departmentName: m.department?.name ?? null,
+    subordinates: m.subordinates.map((s) => ({
+      employeeId: s.id,
+      userId: s.userId,
+      name: s.user.name,
+      role: s.user.role,
+    })),
+  }))
 }
 
 /**
@@ -272,9 +272,6 @@ export async function getEmployeeWithSubordinates(employeeId: string) {
 /**
  * Returns true if the user is a direct MD team member: direct report of MD,
  * explicitly in any MD's task team, or in MD's watchlist.
- * Used to grant expanded task-assignment scope (assign to anyone except MD/ADMIN).
- * NOTE: Indirect descendants of MD (e.g. reports-to-reports) are NOT included —
- * they can only assign tasks to themselves and their own direct subordinates.
  */
 export async function isUserInMDManagedCohort(userId: string): Promise<boolean> {
   const employee = await getEmployeeByUserId(userId)
@@ -334,7 +331,6 @@ export async function getMeetInviteableUserIds(user: { id: string; role: string 
 
 /**
  * Get user IDs of employees in an MD's task teams and watchlist.
- * Used to restrict MD tasks/stats to only their team + watchlist (not all subordinates).
  */
 export async function getMDTeamAndWatchlistUserIds(ownerId: string): Promise<string[]> {
   const [teamMembers, watchlistEntries] = await Promise.all([

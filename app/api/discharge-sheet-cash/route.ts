@@ -45,12 +45,17 @@ export async function POST(request: NextRequest) {
       include: {
         bd: {
           include: {
-            team: {
+            employee: {
               include: {
-                salesHead: true
-              }
-            }
-          }
+                team: {
+                  include: {
+                    teamLead: { include: { user: { select: { name: true } } } },
+                    department: { include: { head: { select: { name: true } } } },
+                  },
+                },
+              },
+            },
+          },
         },
         admissionRecord: { select: { admissionDate: true } },
       },
@@ -146,7 +151,10 @@ export async function POST(request: NextRequest) {
         cashPaidByPatient: validatedData.finalAmount,
         instrumentsCost: instrumentsCostNum,
         bdmName: lead.bd.name,
-        managerName: lead.bd.team?.salesHead?.name,
+        managerName:
+          lead.bd.employee?.team?.teamLead?.user?.name
+          ?? lead.bd.employee?.team?.department?.head?.name
+          ?? null,
         doctorName: lead.surgeonName || lead.ipdDrName,
         hospitalSharePct: 0,
         hospitalShareAmount: 0,

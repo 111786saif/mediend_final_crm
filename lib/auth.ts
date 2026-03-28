@@ -7,7 +7,6 @@ export interface SessionUser {
   email: string
   name: string
   role: UserRole
-  teamId: string | null
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -40,7 +39,6 @@ export async function authenticateUser(email: string, password: string): Promise
     email: user.email,
     name: user.name,
     role: user.role,
-    teamId: user.teamId,
   }
 }
 
@@ -52,7 +50,6 @@ export async function getUserById(id: string): Promise<SessionUser | null> {
       email: true,
       name: true,
       role: true,
-      teamId: true,
     },
   })
 

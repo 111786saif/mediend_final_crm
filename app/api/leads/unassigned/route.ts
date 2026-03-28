@@ -20,18 +20,16 @@ export async function GET(request: NextRequest) {
     const circle = searchParams.get('circle')
     const limit = parseInt(searchParams.get('limit') || '100')
 
-    // Get all BD IDs that are assigned to teams
-    const bdsWithTeams = await prisma.user.findMany({
+    // BDs who are on a department team (have teamId) — pool is for leads on BDs not on a team
+    const bdsWithTeams = await prisma.employee.findMany({
       where: {
-        role: 'BD',
         teamId: { not: null },
+        user: { role: 'BD' },
       },
-      select: {
-        id: true,
-      },
+      select: { userId: true },
     })
 
-    const assignedBdIds = bdsWithTeams.map((bd) => bd.id)
+    const assignedBdIds = bdsWithTeams.map((e) => e.userId)
 
     // Get unassigned leads (leads assigned to BDs without teams, or leads not assigned to any BD)
     // Actually, based on schema, all leads must have a bdId, so we'll get leads assigned to BDs without teams
@@ -52,10 +50,9 @@ export async function GET(request: NextRequest) {
             id: true,
             name: true,
             email: true,
-            team: {
+            employee: {
               select: {
-                id: true,
-                name: true,
+                team: { select: { id: true, name: true } },
               },
             },
           },
@@ -67,12 +64,23 @@ export async function GET(request: NextRequest) {
       take: limit,
     })
 
-    // Map status and source codes to text values for display
-    const mappedLeads = unassignedLeads.map((lead) => ({
-      ...lead,
-      status: mapStatusCode(lead.status),
-      source: lead.source ? mapSourceCode(lead.source) : lead.source,
-    }))
+    // Map status/source; keep bd.team at top level (team lives on employee in DB)
+    const mappedLeads = unassignedLeads.map((lead) => {
+      const bd = lead.bd
+        ? {
+            id: lead.bd.id,
+            name: lead.bd.name,
+            email: lead.bd.email,
+            team: lead.bd.employee?.team ?? null,
+          }
+        : lead.bd
+      return {
+        ...lead,
+        bd,
+        status: mapStatusCode(lead.status),
+        source: lead.source ? mapSourceCode(lead.source) : lead.source,
+      }
+    })
 
     return successResponse(mappedLeads)
   } catch (error) {

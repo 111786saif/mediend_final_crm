@@ -38,7 +38,6 @@ export type TargetMinAggregateOutputType = {
   id: string | null
   targetType: $Enums.TargetType | null
   targetForId: string | null
-  teamId: string | null
   periodType: $Enums.PeriodType | null
   periodStartDate: Date | null
   periodEndDate: Date | null
@@ -53,7 +52,6 @@ export type TargetMaxAggregateOutputType = {
   id: string | null
   targetType: $Enums.TargetType | null
   targetForId: string | null
-  teamId: string | null
   periodType: $Enums.PeriodType | null
   periodStartDate: Date | null
   periodEndDate: Date | null
@@ -68,7 +66,6 @@ export type TargetCountAggregateOutputType = {
   id: number
   targetType: number
   targetForId: number
-  teamId: number
   periodType: number
   periodStartDate: number
   periodEndDate: number
@@ -94,7 +91,6 @@ export type TargetMinAggregateInputType = {
   id?: true
   targetType?: true
   targetForId?: true
-  teamId?: true
   periodType?: true
   periodStartDate?: true
   periodEndDate?: true
@@ -109,7 +105,6 @@ export type TargetMaxAggregateInputType = {
   id?: true
   targetType?: true
   targetForId?: true
-  teamId?: true
   periodType?: true
   periodStartDate?: true
   periodEndDate?: true
@@ -124,7 +119,6 @@ export type TargetCountAggregateInputType = {
   id?: true
   targetType?: true
   targetForId?: true
-  teamId?: true
   periodType?: true
   periodStartDate?: true
   periodEndDate?: true
@@ -227,7 +221,6 @@ export type TargetGroupByOutputType = {
   id: string
   targetType: $Enums.TargetType
   targetForId: string
-  teamId: string | null
   periodType: $Enums.PeriodType
   periodStartDate: Date
   periodEndDate: Date
@@ -266,7 +259,6 @@ export type TargetWhereInput = {
   id?: Prisma.StringFilter<"Target"> | string
   targetType?: Prisma.EnumTargetTypeFilter<"Target"> | $Enums.TargetType
   targetForId?: Prisma.StringFilter<"Target"> | string
-  teamId?: Prisma.StringNullableFilter<"Target"> | string | null
   periodType?: Prisma.EnumPeriodTypeFilter<"Target"> | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeFilter<"Target"> | Date | string
   periodEndDate?: Prisma.DateTimeFilter<"Target"> | Date | string
@@ -276,7 +268,6 @@ export type TargetWhereInput = {
   createdById?: Prisma.StringFilter<"Target"> | string
   createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string
-  team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   bonusRules?: Prisma.BonusRuleListRelationFilter
 }
@@ -285,7 +276,6 @@ export type TargetOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   targetType?: Prisma.SortOrder
   targetForId?: Prisma.SortOrder
-  teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   periodType?: Prisma.SortOrder
   periodStartDate?: Prisma.SortOrder
   periodEndDate?: Prisma.SortOrder
@@ -295,7 +285,6 @@ export type TargetOrderByWithRelationInput = {
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  team?: Prisma.TeamOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
   bonusRules?: Prisma.BonusRuleOrderByRelationAggregateInput
 }
@@ -307,7 +296,6 @@ export type TargetWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TargetWhereInput | Prisma.TargetWhereInput[]
   targetType?: Prisma.EnumTargetTypeFilter<"Target"> | $Enums.TargetType
   targetForId?: Prisma.StringFilter<"Target"> | string
-  teamId?: Prisma.StringNullableFilter<"Target"> | string | null
   periodType?: Prisma.EnumPeriodTypeFilter<"Target"> | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeFilter<"Target"> | Date | string
   periodEndDate?: Prisma.DateTimeFilter<"Target"> | Date | string
@@ -317,7 +305,6 @@ export type TargetWhereUniqueInput = Prisma.AtLeast<{
   createdById?: Prisma.StringFilter<"Target"> | string
   createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string
-  team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   bonusRules?: Prisma.BonusRuleListRelationFilter
 }, "id">
@@ -326,7 +313,6 @@ export type TargetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   targetType?: Prisma.SortOrder
   targetForId?: Prisma.SortOrder
-  teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   periodType?: Prisma.SortOrder
   periodStartDate?: Prisma.SortOrder
   periodEndDate?: Prisma.SortOrder
@@ -350,7 +336,6 @@ export type TargetScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Target"> | string
   targetType?: Prisma.EnumTargetTypeWithAggregatesFilter<"Target"> | $Enums.TargetType
   targetForId?: Prisma.StringWithAggregatesFilter<"Target"> | string
-  teamId?: Prisma.StringNullableWithAggregatesFilter<"Target"> | string | null
   periodType?: Prisma.EnumPeriodTypeWithAggregatesFilter<"Target"> | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeWithAggregatesFilter<"Target"> | Date | string
   periodEndDate?: Prisma.DateTimeWithAggregatesFilter<"Target"> | Date | string
@@ -374,7 +359,6 @@ export type TargetCreateInput = {
   departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutTargetsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTargetsInput
   bonusRules?: Prisma.BonusRuleCreateNestedManyWithoutTargetInput
 }
@@ -383,7 +367,6 @@ export type TargetUncheckedCreateInput = {
   id?: string
   targetType: $Enums.TargetType
   targetForId: string
-  teamId?: string | null
   periodType: $Enums.PeriodType
   periodStartDate: Date | string
   periodEndDate: Date | string
@@ -408,7 +391,6 @@ export type TargetUpdateInput = {
   departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutTargetsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTargetsNestedInput
   bonusRules?: Prisma.BonusRuleUpdateManyWithoutTargetNestedInput
 }
@@ -417,7 +399,6 @@ export type TargetUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   targetForId?: Prisma.StringFieldUpdateOperationsInput | string
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   periodType?: Prisma.EnumPeriodTypeFieldUpdateOperationsInput | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -434,7 +415,6 @@ export type TargetCreateManyInput = {
   id?: string
   targetType: $Enums.TargetType
   targetForId: string
-  teamId?: string | null
   periodType: $Enums.PeriodType
   periodStartDate: Date | string
   periodEndDate: Date | string
@@ -464,7 +444,6 @@ export type TargetUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   targetForId?: Prisma.StringFieldUpdateOperationsInput | string
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   periodType?: Prisma.EnumPeriodTypeFieldUpdateOperationsInput | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -490,7 +469,6 @@ export type TargetCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   targetType?: Prisma.SortOrder
   targetForId?: Prisma.SortOrder
-  teamId?: Prisma.SortOrder
   periodType?: Prisma.SortOrder
   periodStartDate?: Prisma.SortOrder
   periodEndDate?: Prisma.SortOrder
@@ -510,7 +488,6 @@ export type TargetMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   targetType?: Prisma.SortOrder
   targetForId?: Prisma.SortOrder
-  teamId?: Prisma.SortOrder
   periodType?: Prisma.SortOrder
   periodStartDate?: Prisma.SortOrder
   periodEndDate?: Prisma.SortOrder
@@ -525,7 +502,6 @@ export type TargetMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   targetType?: Prisma.SortOrder
   targetForId?: Prisma.SortOrder
-  teamId?: Prisma.SortOrder
   periodType?: Prisma.SortOrder
   periodStartDate?: Prisma.SortOrder
   periodEndDate?: Prisma.SortOrder
@@ -587,48 +563,6 @@ export type TargetUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.TargetScalarWhereInput | Prisma.TargetScalarWhereInput[]
 }
 
-export type TargetCreateNestedManyWithoutTeamInput = {
-  create?: Prisma.XOR<Prisma.TargetCreateWithoutTeamInput, Prisma.TargetUncheckedCreateWithoutTeamInput> | Prisma.TargetCreateWithoutTeamInput[] | Prisma.TargetUncheckedCreateWithoutTeamInput[]
-  connectOrCreate?: Prisma.TargetCreateOrConnectWithoutTeamInput | Prisma.TargetCreateOrConnectWithoutTeamInput[]
-  createMany?: Prisma.TargetCreateManyTeamInputEnvelope
-  connect?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-}
-
-export type TargetUncheckedCreateNestedManyWithoutTeamInput = {
-  create?: Prisma.XOR<Prisma.TargetCreateWithoutTeamInput, Prisma.TargetUncheckedCreateWithoutTeamInput> | Prisma.TargetCreateWithoutTeamInput[] | Prisma.TargetUncheckedCreateWithoutTeamInput[]
-  connectOrCreate?: Prisma.TargetCreateOrConnectWithoutTeamInput | Prisma.TargetCreateOrConnectWithoutTeamInput[]
-  createMany?: Prisma.TargetCreateManyTeamInputEnvelope
-  connect?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-}
-
-export type TargetUpdateManyWithoutTeamNestedInput = {
-  create?: Prisma.XOR<Prisma.TargetCreateWithoutTeamInput, Prisma.TargetUncheckedCreateWithoutTeamInput> | Prisma.TargetCreateWithoutTeamInput[] | Prisma.TargetUncheckedCreateWithoutTeamInput[]
-  connectOrCreate?: Prisma.TargetCreateOrConnectWithoutTeamInput | Prisma.TargetCreateOrConnectWithoutTeamInput[]
-  upsert?: Prisma.TargetUpsertWithWhereUniqueWithoutTeamInput | Prisma.TargetUpsertWithWhereUniqueWithoutTeamInput[]
-  createMany?: Prisma.TargetCreateManyTeamInputEnvelope
-  set?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-  disconnect?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-  delete?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-  connect?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-  update?: Prisma.TargetUpdateWithWhereUniqueWithoutTeamInput | Prisma.TargetUpdateWithWhereUniqueWithoutTeamInput[]
-  updateMany?: Prisma.TargetUpdateManyWithWhereWithoutTeamInput | Prisma.TargetUpdateManyWithWhereWithoutTeamInput[]
-  deleteMany?: Prisma.TargetScalarWhereInput | Prisma.TargetScalarWhereInput[]
-}
-
-export type TargetUncheckedUpdateManyWithoutTeamNestedInput = {
-  create?: Prisma.XOR<Prisma.TargetCreateWithoutTeamInput, Prisma.TargetUncheckedCreateWithoutTeamInput> | Prisma.TargetCreateWithoutTeamInput[] | Prisma.TargetUncheckedCreateWithoutTeamInput[]
-  connectOrCreate?: Prisma.TargetCreateOrConnectWithoutTeamInput | Prisma.TargetCreateOrConnectWithoutTeamInput[]
-  upsert?: Prisma.TargetUpsertWithWhereUniqueWithoutTeamInput | Prisma.TargetUpsertWithWhereUniqueWithoutTeamInput[]
-  createMany?: Prisma.TargetCreateManyTeamInputEnvelope
-  set?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-  disconnect?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-  delete?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-  connect?: Prisma.TargetWhereUniqueInput | Prisma.TargetWhereUniqueInput[]
-  update?: Prisma.TargetUpdateWithWhereUniqueWithoutTeamInput | Prisma.TargetUpdateWithWhereUniqueWithoutTeamInput[]
-  updateMany?: Prisma.TargetUpdateManyWithWhereWithoutTeamInput | Prisma.TargetUpdateManyWithWhereWithoutTeamInput[]
-  deleteMany?: Prisma.TargetScalarWhereInput | Prisma.TargetScalarWhereInput[]
-}
-
 export type EnumTargetTypeFieldUpdateOperationsInput = {
   set?: $Enums.TargetType
 }
@@ -667,7 +601,6 @@ export type TargetCreateWithoutCreatedByInput = {
   departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutTargetsInput
   bonusRules?: Prisma.BonusRuleCreateNestedManyWithoutTargetInput
 }
 
@@ -675,7 +608,6 @@ export type TargetUncheckedCreateWithoutCreatedByInput = {
   id?: string
   targetType: $Enums.TargetType
   targetForId: string
-  teamId?: string | null
   periodType: $Enums.PeriodType
   periodStartDate: Date | string
   periodEndDate: Date | string
@@ -720,7 +652,6 @@ export type TargetScalarWhereInput = {
   id?: Prisma.StringFilter<"Target"> | string
   targetType?: Prisma.EnumTargetTypeFilter<"Target"> | $Enums.TargetType
   targetForId?: Prisma.StringFilter<"Target"> | string
-  teamId?: Prisma.StringNullableFilter<"Target"> | string | null
   periodType?: Prisma.EnumPeriodTypeFilter<"Target"> | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeFilter<"Target"> | Date | string
   periodEndDate?: Prisma.DateTimeFilter<"Target"> | Date | string
@@ -730,64 +661,6 @@ export type TargetScalarWhereInput = {
   createdById?: Prisma.StringFilter<"Target"> | string
   createdAt?: Prisma.DateTimeFilter<"Target"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Target"> | Date | string
-}
-
-export type TargetCreateWithoutTeamInput = {
-  id?: string
-  targetType: $Enums.TargetType
-  targetForId: string
-  periodType: $Enums.PeriodType
-  periodStartDate: Date | string
-  periodEndDate: Date | string
-  metric: $Enums.TargetMetric
-  targetValue: number
-  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  createdBy: Prisma.UserCreateNestedOneWithoutCreatedTargetsInput
-  bonusRules?: Prisma.BonusRuleCreateNestedManyWithoutTargetInput
-}
-
-export type TargetUncheckedCreateWithoutTeamInput = {
-  id?: string
-  targetType: $Enums.TargetType
-  targetForId: string
-  periodType: $Enums.PeriodType
-  periodStartDate: Date | string
-  periodEndDate: Date | string
-  metric: $Enums.TargetMetric
-  targetValue: number
-  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdById: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  bonusRules?: Prisma.BonusRuleUncheckedCreateNestedManyWithoutTargetInput
-}
-
-export type TargetCreateOrConnectWithoutTeamInput = {
-  where: Prisma.TargetWhereUniqueInput
-  create: Prisma.XOR<Prisma.TargetCreateWithoutTeamInput, Prisma.TargetUncheckedCreateWithoutTeamInput>
-}
-
-export type TargetCreateManyTeamInputEnvelope = {
-  data: Prisma.TargetCreateManyTeamInput | Prisma.TargetCreateManyTeamInput[]
-  skipDuplicates?: boolean
-}
-
-export type TargetUpsertWithWhereUniqueWithoutTeamInput = {
-  where: Prisma.TargetWhereUniqueInput
-  update: Prisma.XOR<Prisma.TargetUpdateWithoutTeamInput, Prisma.TargetUncheckedUpdateWithoutTeamInput>
-  create: Prisma.XOR<Prisma.TargetCreateWithoutTeamInput, Prisma.TargetUncheckedCreateWithoutTeamInput>
-}
-
-export type TargetUpdateWithWhereUniqueWithoutTeamInput = {
-  where: Prisma.TargetWhereUniqueInput
-  data: Prisma.XOR<Prisma.TargetUpdateWithoutTeamInput, Prisma.TargetUncheckedUpdateWithoutTeamInput>
-}
-
-export type TargetUpdateManyWithWhereWithoutTeamInput = {
-  where: Prisma.TargetScalarWhereInput
-  data: Prisma.XOR<Prisma.TargetUpdateManyMutationInput, Prisma.TargetUncheckedUpdateManyWithoutTeamInput>
 }
 
 export type TargetCreateWithoutBonusRulesInput = {
@@ -802,7 +675,6 @@ export type TargetCreateWithoutBonusRulesInput = {
   departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  team?: Prisma.TeamCreateNestedOneWithoutTargetsInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedTargetsInput
 }
 
@@ -810,7 +682,6 @@ export type TargetUncheckedCreateWithoutBonusRulesInput = {
   id?: string
   targetType: $Enums.TargetType
   targetForId: string
-  teamId?: string | null
   periodType: $Enums.PeriodType
   periodStartDate: Date | string
   periodEndDate: Date | string
@@ -850,7 +721,6 @@ export type TargetUpdateWithoutBonusRulesInput = {
   departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutTargetsNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTargetsNestedInput
 }
 
@@ -858,7 +728,6 @@ export type TargetUncheckedUpdateWithoutBonusRulesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   targetForId?: Prisma.StringFieldUpdateOperationsInput | string
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   periodType?: Prisma.EnumPeriodTypeFieldUpdateOperationsInput | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -874,7 +743,6 @@ export type TargetCreateManyCreatedByInput = {
   id?: string
   targetType: $Enums.TargetType
   targetForId: string
-  teamId?: string | null
   periodType: $Enums.PeriodType
   periodStartDate: Date | string
   periodEndDate: Date | string
@@ -897,7 +765,6 @@ export type TargetUpdateWithoutCreatedByInput = {
   departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  team?: Prisma.TeamUpdateOneWithoutTargetsNestedInput
   bonusRules?: Prisma.BonusRuleUpdateManyWithoutTargetNestedInput
 }
 
@@ -905,7 +772,6 @@ export type TargetUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   targetForId?: Prisma.StringFieldUpdateOperationsInput | string
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   periodType?: Prisma.EnumPeriodTypeFieldUpdateOperationsInput | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -921,75 +787,12 @@ export type TargetUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
   targetForId?: Prisma.StringFieldUpdateOperationsInput | string
-  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   periodType?: Prisma.EnumPeriodTypeFieldUpdateOperationsInput | $Enums.PeriodType
   periodStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
   targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
   departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type TargetCreateManyTeamInput = {
-  id?: string
-  targetType: $Enums.TargetType
-  targetForId: string
-  periodType: $Enums.PeriodType
-  periodStartDate: Date | string
-  periodEndDate: Date | string
-  metric: $Enums.TargetMetric
-  targetValue: number
-  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdById: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type TargetUpdateWithoutTeamInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
-  targetForId?: Prisma.StringFieldUpdateOperationsInput | string
-  periodType?: Prisma.EnumPeriodTypeFieldUpdateOperationsInput | $Enums.PeriodType
-  periodStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
-  targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
-  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedTargetsNestedInput
-  bonusRules?: Prisma.BonusRuleUpdateManyWithoutTargetNestedInput
-}
-
-export type TargetUncheckedUpdateWithoutTeamInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
-  targetForId?: Prisma.StringFieldUpdateOperationsInput | string
-  periodType?: Prisma.EnumPeriodTypeFieldUpdateOperationsInput | $Enums.PeriodType
-  periodStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
-  targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
-  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  bonusRules?: Prisma.BonusRuleUncheckedUpdateManyWithoutTargetNestedInput
-}
-
-export type TargetUncheckedUpdateManyWithoutTeamInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  targetType?: Prisma.EnumTargetTypeFieldUpdateOperationsInput | $Enums.TargetType
-  targetForId?: Prisma.StringFieldUpdateOperationsInput | string
-  periodType?: Prisma.EnumPeriodTypeFieldUpdateOperationsInput | $Enums.PeriodType
-  periodStartDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  periodEndDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  metric?: Prisma.EnumTargetMetricFieldUpdateOperationsInput | $Enums.TargetMetric
-  targetValue?: Prisma.FloatFieldUpdateOperationsInput | number
-  departmentTargets?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1029,7 +832,6 @@ export type TargetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   id?: boolean
   targetType?: boolean
   targetForId?: boolean
-  teamId?: boolean
   periodType?: boolean
   periodStartDate?: boolean
   periodEndDate?: boolean
@@ -1039,7 +841,6 @@ export type TargetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  team?: boolean | Prisma.Target$teamArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   bonusRules?: boolean | Prisma.Target$bonusRulesArgs<ExtArgs>
   _count?: boolean | Prisma.TargetCountOutputTypeDefaultArgs<ExtArgs>
@@ -1049,7 +850,6 @@ export type TargetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   targetType?: boolean
   targetForId?: boolean
-  teamId?: boolean
   periodType?: boolean
   periodStartDate?: boolean
   periodEndDate?: boolean
@@ -1059,7 +859,6 @@ export type TargetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  team?: boolean | Prisma.Target$teamArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["target"]>
 
@@ -1067,7 +866,6 @@ export type TargetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   targetType?: boolean
   targetForId?: boolean
-  teamId?: boolean
   periodType?: boolean
   periodStartDate?: boolean
   periodEndDate?: boolean
@@ -1077,7 +875,6 @@ export type TargetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  team?: boolean | Prisma.Target$teamArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["target"]>
 
@@ -1085,7 +882,6 @@ export type TargetSelectScalar = {
   id?: boolean
   targetType?: boolean
   targetForId?: boolean
-  teamId?: boolean
   periodType?: boolean
   periodStartDate?: boolean
   periodEndDate?: boolean
@@ -1097,26 +893,22 @@ export type TargetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TargetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "targetType" | "targetForId" | "teamId" | "periodType" | "periodStartDate" | "periodEndDate" | "metric" | "targetValue" | "departmentTargets" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["target"]>
+export type TargetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "targetType" | "targetForId" | "periodType" | "periodStartDate" | "periodEndDate" | "metric" | "targetValue" | "departmentTargets" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["target"]>
 export type TargetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.Target$teamArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   bonusRules?: boolean | Prisma.Target$bonusRulesArgs<ExtArgs>
   _count?: boolean | Prisma.TargetCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TargetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.Target$teamArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type TargetIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  team?: boolean | Prisma.Target$teamArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $TargetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Target"
   objects: {
-    team: Prisma.$TeamPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
     bonusRules: Prisma.$BonusRulePayload<ExtArgs>[]
   }
@@ -1124,7 +916,6 @@ export type $TargetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     id: string
     targetType: $Enums.TargetType
     targetForId: string
-    teamId: string | null
     periodType: $Enums.PeriodType
     periodStartDate: Date
     periodEndDate: Date
@@ -1531,7 +1322,6 @@ readonly fields: TargetFieldRefs;
  */
 export interface Prisma__TargetClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  team<T extends Prisma.Target$teamArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Target$teamArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   bonusRules<T extends Prisma.Target$bonusRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Target$bonusRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BonusRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1566,7 +1356,6 @@ export interface TargetFieldRefs {
   readonly id: Prisma.FieldRef<"Target", 'String'>
   readonly targetType: Prisma.FieldRef<"Target", 'TargetType'>
   readonly targetForId: Prisma.FieldRef<"Target", 'String'>
-  readonly teamId: Prisma.FieldRef<"Target", 'String'>
   readonly periodType: Prisma.FieldRef<"Target", 'PeriodType'>
   readonly periodStartDate: Prisma.FieldRef<"Target", 'DateTime'>
   readonly periodEndDate: Prisma.FieldRef<"Target", 'DateTime'>
@@ -1974,25 +1763,6 @@ export type TargetDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Targets to delete.
    */
   limit?: number
-}
-
-/**
- * Target.team
- */
-export type Target$teamArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Team
-   */
-  select?: Prisma.TeamSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Team
-   */
-  omit?: Prisma.TeamOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TeamInclude<ExtArgs> | null
-  where?: Prisma.TeamWhereInput
 }
 
 /**

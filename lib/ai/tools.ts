@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
 import { SessionUser } from '@/lib/auth'
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 import { getTableInfo, getAllTables } from './schema-context'
 
 /**
@@ -31,8 +32,9 @@ export function createQueryLeadsTool(user: SessionUser) {
       // Role-based filtering
       if (user.role === 'BD') {
         where.bdId = user.id
-      } else if (user.role === 'TEAM_LEAD' && user.teamId) {
-        where.bd = { teamId: user.teamId }
+      } else if (user.role === 'TEAM_LEAD') {
+        const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+        where.bdId = { in: [user.id, ...subIds] }
       }
 
       if (status) where.status = status
@@ -117,8 +119,9 @@ export function createQueryAnalyticsTool(user: SessionUser) {
       // Role-based filtering
       if (user.role === 'BD') {
         where.bdId = user.id
-      } else if (user.role === 'TEAM_LEAD' && user.teamId) {
-        where.bd = { teamId: user.teamId }
+      } else if (user.role === 'TEAM_LEAD') {
+        const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+        where.bdId = { in: [user.id, ...subIds] }
       }
 
       switch (metric) {

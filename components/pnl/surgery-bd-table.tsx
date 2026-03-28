@@ -12,7 +12,9 @@ function formatInr(n: number) {
 export type BdRow = {
   bdId: string
   bdName: string
-  teamName: string | null
+  managerName: string | null
+  /** Department team name from Employee.team */
+  teamName?: string | null
   surgeries: number
   revenue: number
   expenses: number
@@ -39,7 +41,7 @@ export function SurgeryBdTable({
         <TableRow>
           <TableHead className="w-8" />
           <TableHead>BD</TableHead>
-          <TableHead>Team</TableHead>
+          <TableHead>Manager</TableHead>
           <TableHead className="text-right">Surgeries</TableHead>
           {showLeads && (
             <>
@@ -74,7 +76,7 @@ export function SurgeryBdTable({
                     {r.bdName}
                   </button>
                 </TableCell>
-                <TableCell>{r.teamName || '—'}</TableCell>
+                <TableCell>{r.managerName || '—'}</TableCell>
                 <TableCell className="text-right">{r.surgeries}</TableCell>
                 {showLeads && (
                   <>

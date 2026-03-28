@@ -5,6 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -53,16 +55,19 @@ export async function GET(request: NextRequest) {
     // Role-based filtering
     if (user.role === 'BD') {
       where.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD' && user.teamId) {
-      where.bd = {
-        teamId: user.teamId,
-      }
+    } else if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      where.bdId = { in: [user.id, ...subIds] }
     }
 
     const allLeadsWhere: Prisma.LeadWhereInput = { ...leadDateFilter }
     if (circle) allLeadsWhere.circle = circle
-    if (user.role === 'BD') allLeadsWhere.bdId = user.id
-    else if (user.role === 'TEAM_LEAD' && user.teamId) allLeadsWhere.bd = { teamId: user.teamId }
+    if (user.role === 'BD') {
+      allLeadsWhere.bdId = user.id
+    } else if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      allLeadsWhere.bdId = { in: [user.id, ...subIds] }
+    }
 
     const [totalSurgeries, totalProfit, avgTicketSize, totalLeads] = await Promise.all([
       prisma.lead.count({ where }),

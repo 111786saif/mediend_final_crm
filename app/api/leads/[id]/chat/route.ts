@@ -28,12 +28,12 @@ export async function GET(
     const { id: leadId } = await params
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
-      select: { id: true, bdId: true, bd: { select: { teamId: true } } },
+      select: { id: true, bdId: true },
     })
     if (!lead) return errorResponse('Lead not found', 404)
     const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
-    if (!canAccessLead(user, lead.bdId, lead.bd?.teamId, subordinateIds))
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    if (!canAccessLead(user, lead.bdId, subordinateIds))
       return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
@@ -74,12 +74,12 @@ export async function POST(
     const { id: leadId } = await params
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
-      select: { id: true, bdId: true, bd: { select: { teamId: true } } },
+      select: { id: true, bdId: true },
     })
     if (!lead) return errorResponse('Lead not found', 404)
     const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
-    if (!canAccessLead(user, lead.bdId, lead.bd?.teamId, subordinateIds))
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    if (!canAccessLead(user, lead.bdId, subordinateIds))
       return errorResponse('Forbidden', 403)
 
     const body = await request.json()

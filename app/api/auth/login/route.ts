@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
         email: user.email,
         name: user.name,
         role: user.role,
-        teamId: user.teamId,
       },
     })
   } catch (error) {
@@ -39,4 +38,3 @@ export async function POST(request: NextRequest) {
     return errorResponse('Internal server error', 500)
   }
 }
-

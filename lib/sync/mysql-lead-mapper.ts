@@ -143,17 +143,6 @@ async function createBDUser(
     counter++
   }
 
-  let team = await prisma.team.findFirst()
-  if (!team) {
-    const salesHead = await prisma.user.findFirst({
-      where: { role: UserRole.SALES_HEAD },
-    })
-    if (!salesHead) throw new Error('No sales head found. Cannot create team for BD user.')
-    team = await prisma.team.create({
-      data: { name: 'Default Team', salesHeadId: salesHead.id },
-    })
-  }
-
   const defaultPassword = await hashPassword('Temp@123')
   const newUser = await prisma.user.create({
     data: {
@@ -161,7 +150,6 @@ async function createBDUser(
       passwordHash: defaultPassword,
       name: name.trim(),
       role: UserRole.BD,
-      teamId: team.id,
     },
     select: { id: true },
   })

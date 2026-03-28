@@ -26,7 +26,11 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') as TicketStatus | null
     const departmentId = searchParams.get('departmentId')
 
+    // ADMIN and MD can see all tickets; every other role only sees tickets raised to them
+    const isGlobalViewer = user.role === 'ADMIN' || user.role === 'MD'
+
     const where: Record<string, unknown> = {}
+    if (!isGlobalViewer) where.targetHeadRole = user.role
     if (status) where.status = status
     if (departmentId) where.departmentId = departmentId
 
@@ -109,6 +113,12 @@ export async function PATCH(request: NextRequest) {
       where: { id: ticketId },
       include: { employee: { select: { userId: true } } },
     })
+
+    // Only ADMIN/MD can update any ticket; everyone else can only update tickets raised to their role
+    const isGlobalEditor = user.role === 'ADMIN' || user.role === 'MD'
+    if (!isGlobalEditor && existingTicket?.targetHeadRole !== user.role) {
+      return errorResponse('Forbidden', 403)
+    }
 
     const ticket = await prisma.supportTicket.update({
       where: { id: ticketId },

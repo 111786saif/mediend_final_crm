@@ -1,21 +1,17 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { useState, useCallback, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Switch } from '@/components/ui/switch'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Separator } from '@/components/ui/separator'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { toast } from 'sonner'
-import { Plus, Trash2, ArrowRight, ArrowLeft, Check, Users, UserPlus } from 'lucide-react'
+import { Plus, Trash2, ArrowRight, ArrowLeft, Check, Users, UserPlus, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type UserRole = 'SALES_HEAD' | 'CATEGORY_MANAGER' | 'ASSISTANT_CATEGORY_MANAGER' | 'TEAM_LEAD' | 'BD' | 'INSURANCE_HEAD' | 'PL_HEAD' | 'OUTSTANDING_HEAD' | 'HR_HEAD' | 'FINANCE_HEAD' | 'DIGITAL_MARKETING_HEAD' | 'IT_HEAD' | 'LOAN_DEMAT_HEAD' | 'EXECUTIVE_ASSISTANT' | 'ADMIN' | 'USER'
@@ -51,8 +47,6 @@ interface EmployeeFormData {
   managerId: string
   joinDate: string
   dateOfBirth: string
-  syncLeads: boolean
-  syncAttendance: boolean
 }
 
 function createEmptyEmployee(): EmployeeFormData {
@@ -68,8 +62,6 @@ function createEmptyEmployee(): EmployeeFormData {
     managerId: '',
     joinDate: '',
     dateOfBirth: '',
-    syncLeads: false,
-    syncAttendance: false,
   }
 }
 
@@ -137,10 +129,10 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
           const formEmp = formByCode.get(created.employeeCode.toLowerCase())
           return {
             employeeId: created.employeeId,
-            // Lead sync: form flag + bd number must actually exist on the created employee
-            syncLeads: (formEmp?.syncLeads ?? false) && created.bdNumber !== null,
-            // Attendance sync: form flag, driven by employeeCode
-            syncAttendance: formEmp?.syncAttendance ?? false,
+            // Auto sync leads if CRM number was provided
+            syncLeads: created.bdNumber !== null && !!formEmp?.bdNumber.trim(),
+            // Auto sync attendance if employee code was provided (always true here since it's required)
+            syncAttendance: !!formEmp?.employeeCode.trim(),
           }
         })
 
@@ -206,43 +198,71 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
   }
 
   const emp = employees[activeIdx]
-  const hasBd = emp?.bdNumber.trim() !== ''
+
+  // Lock body scroll while open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
+  if (!open) return null
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+    <div className="fixed inset-0 z-50 flex min-h-0 min-w-0 flex-col overflow-x-hidden bg-background">
+      {/* Top bar */}
+      <div className="relative flex shrink-0 flex-col gap-3 border-b border-primary/10 bg-gradient-to-r from-sky-600/12 via-background to-violet-600/12 px-4 py-3 dark:from-sky-500/20 dark:to-violet-500/20 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
+        <div className="flex min-w-0 items-start gap-3 pr-8 sm:pr-0">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-600 text-white shadow-sm dark:bg-sky-500">
             <UserPlus className="h-5 w-5" />
-            Add Employee{employees.length > 1 ? 's' : ''}
-          </DialogTitle>
-          <DialogDescription>
-            {step === 1 ? 'Fill in employee details. Click "Add Another" to onboard multiple at once.' : 'Review before creating. Sync will start automatically after.'}
-          </DialogDescription>
-        </DialogHeader>
-
-        {/* Step indicator */}
-        <div className="flex items-center gap-3 px-1 pb-1">
-          {[1, 2].map((s) => (
-            <div key={s} className="flex items-center gap-2 flex-1">
-              <div className={cn(
-                'h-7 w-7 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 transition-colors',
-                step === s ? 'bg-primary text-primary-foreground' : step > s ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'
-              )}>
-                {step > s ? <Check className="h-3.5 w-3.5" /> : s}
-              </div>
-              <span className={cn('text-sm', step === s ? 'font-medium' : 'text-muted-foreground')}>
-                {s === 1 ? 'Details' : 'Review & Create'}
-              </span>
-              {s < 2 && <div className={cn('flex-1 h-px', step > s ? 'bg-primary/30' : 'bg-border')} />}
-            </div>
-          ))}
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-base font-semibold leading-tight text-sky-950 dark:text-sky-100 sm:text-lg">
+              Add Employee{employees.length > 1 ? 's' : ''}
+            </h2>
+            <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+              {step === 1 ? 'Fill in employee details. Click "Add Another" to onboard multiple at once.' : 'Review before creating. Sync will start automatically after.'}
+            </p>
+          </div>
         </div>
+        <button
+          onClick={handleClose}
+          disabled={onboardMutation.isPending}
+          className="absolute right-3 top-3 rounded-md p-1.5 text-muted-foreground opacity-90 ring-offset-background hover:bg-muted hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none sm:static sm:right-auto sm:top-auto sm:p-0"
+        >
+          <X className="h-5 w-5" />
+          <span className="sr-only">Close</span>
+        </button>
+      </div>
 
-        <ScrollArea className="flex-1 min-h-0 pr-1">
+      {/* Step indicator */}
+      <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-sky-200/40 bg-sky-50/40 px-4 py-2.5 dark:border-sky-900/40 dark:bg-sky-950/20 sm:gap-3 sm:px-6 sm:py-3">
+        {[1, 2].map((s) => (
+          <div key={s} className="flex min-w-0 items-center gap-2">
+            <div className={cn(
+              'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors',
+              step === s ? 'bg-sky-600 text-white shadow-sm dark:bg-sky-500' : step > s ? 'bg-sky-200 text-sky-900 dark:bg-sky-800 dark:text-sky-100' : 'bg-muted text-muted-foreground'
+            )}>
+              {step > s ? <Check className="h-3.5 w-3.5" /> : s}
+            </div>
+            <span className={cn('truncate text-xs sm:text-sm', step === s ? 'font-medium text-sky-950 dark:text-sky-100' : 'text-muted-foreground')}>
+              {s === 1 ? 'Details' : 'Review & Create'}
+            </span>
+            {s < 2 && <div className={cn('mx-1 hidden h-px w-8 shrink-0 sm:block', step > s ? 'bg-sky-400/50' : 'bg-border')} />}
+          </div>
+        ))}
+      </div>
+
+      {/* Scrollable body */}
+      <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain">
+        <div className="mx-auto w-full max-w-2xl min-w-0 px-4 py-6 sm:px-6 sm:py-8">
+
           {/* ─── Step 1: Details ─── */}
           {step === 1 && (
-            <div className="space-y-5 py-1">
+            <div className="space-y-6">
               {/* Employee tabs when multiple */}
               {employees.length > 1 && (
                 <div className="flex flex-wrap gap-1.5">
@@ -266,9 +286,8 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
               )}
 
               {emp && (
-                <div className="space-y-4">
-                  {/* Core identity */}
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-5">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                     <div className="space-y-1.5">
                       <Label>Name *</Label>
                       <Input value={emp.name} onChange={(e) => updateEmployee(activeIdx, { name: e.target.value })} placeholder="Full name" />
@@ -279,18 +298,18 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                     <div className="space-y-1.5">
                       <Label>Password *</Label>
                       <Input type="password" value={emp.password} onChange={(e) => updateEmployee(activeIdx, { password: e.target.value })} placeholder="Min 6 characters" minLength={6} />
                     </div>
                     <div className="space-y-1.5">
                       <Label>Employee Code *</Label>
-                      <Input value={emp.employeeCode} onChange={(e) => updateEmployee(activeIdx, { employeeCode: e.target.value })} placeholder="e.g. EMP001" />
+                      <Input value={emp.employeeCode} onChange={(e) => updateEmployee(activeIdx, { employeeCode: e.target.value })} placeholder="e.g. 2578" />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                     <div className="space-y-1.5">
                       <Label>Role *</Label>
                       <Select value={emp.role} onValueChange={(v) => updateEmployee(activeIdx, { role: v as UserRole })}>
@@ -316,7 +335,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                     <div className="space-y-1.5">
                       <Label>Department</Label>
                       <Select value={emp.departmentId || 'none'} onValueChange={(v) => updateEmployee(activeIdx, { departmentId: v === 'none' ? '' : v })}>
@@ -343,7 +362,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
                     <div className="space-y-1.5">
                       <Label>Join Date</Label>
                       <Input type="date" value={emp.joinDate} onChange={(e) => updateEmployee(activeIdx, { joinDate: e.target.value })} />
@@ -353,42 +372,10 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                       <Input type="date" value={emp.dateOfBirth} onChange={(e) => updateEmployee(activeIdx, { dateOfBirth: e.target.value })} />
                     </div>
                   </div>
-
-                  {/* Sync toggles — part of the employee form, not a separate step */}
-                  <Separator />
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Historical sync (runs after creation)</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className={cn(
-                        'flex items-center justify-between rounded-lg border p-3 transition-colors',
-                        hasBd ? 'bg-card' : 'bg-muted/40 opacity-60'
-                      )}>
-                        <div>
-                          <p className="text-sm font-medium">Sync Leads</p>
-                          <p className="text-xs text-muted-foreground">{hasBd ? 'From Jan 2025' : 'Needs CRM number'}</p>
-                        </div>
-                        <Switch
-                          checked={emp.syncLeads}
-                          onCheckedChange={(v) => updateEmployee(activeIdx, { syncLeads: v })}
-                          disabled={!hasBd}
-                        />
-                      </div>
-                      <div className="flex items-center justify-between rounded-lg border bg-card p-3">
-                        <div>
-                          <p className="text-sm font-medium">Sync Attendance</p>
-                          <p className="text-xs text-muted-foreground">From Jan 2026</p>
-                        </div>
-                        <Switch
-                          checked={emp.syncAttendance}
-                          onCheckedChange={(v) => updateEmployee(activeIdx, { syncAttendance: v })}
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
 
-              <Button type="button" variant="outline" size="sm" onClick={addEmployee} className="gap-1.5 mt-2">
+              <Button type="button" variant="outline" size="sm" onClick={addEmployee} className="gap-1.5">
                 <Plus className="h-4 w-4" /> Add Another Employee
               </Button>
             </div>
@@ -396,9 +383,9 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
 
           {/* ─── Step 2: Review ─── */}
           {step === 2 && (
-            <div className="space-y-4 py-1">
-              <div className="rounded-lg border overflow-hidden">
-                <Table>
+            <div className="space-y-4">
+              <div className="-mx-1 min-w-0 overflow-x-auto rounded-lg border border-violet-200/70 bg-violet-50/30 dark:border-violet-900/50 dark:bg-violet-950/20 sm:mx-0">
+                <Table className="min-w-[640px] w-full">
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
@@ -406,7 +393,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                       <TableHead>Role</TableHead>
                       <TableHead>Code</TableHead>
                       <TableHead>CRM #</TableHead>
-                      <TableHead>Sync after create</TableHead>
+                      <TableHead>Auto-sync</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -421,9 +408,8 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                         <TableCell>{emp.bdNumber || <span className="text-muted-foreground">—</span>}</TableCell>
                         <TableCell>
                           <div className="flex gap-1">
-                            {emp.syncLeads && <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">Leads</Badge>}
-                            {emp.syncAttendance && <Badge variant="outline" className="text-xs border-violet-300 text-violet-700">Attendance</Badge>}
-                            {!emp.syncLeads && !emp.syncAttendance && <span className="text-xs text-muted-foreground">None</span>}
+                            {emp.bdNumber.trim() && <Badge variant="outline" className="text-xs border-blue-300 text-blue-700">Leads</Badge>}
+                            <Badge variant="outline" className="text-xs border-violet-300 text-violet-700">Attendance</Badge>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -436,43 +422,42 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                 Finance will be notified to set up payroll for {employees.length === 1 ? 'this employee' : 'these employees'}.
               </div>
 
-              {employees.some((e) => e.syncLeads || e.syncAttendance) && (
-                <div className="rounded-lg border border-blue-200 bg-blue-50/60 dark:bg-blue-950/20 dark:border-blue-800 p-3 text-sm text-blue-800 dark:text-blue-300">
-                  A sync progress window will open automatically after creation. Do not close or refresh your browser while syncing.
-                </div>
-              )}
+              <div className="rounded-lg border border-blue-200 bg-blue-50/60 dark:bg-blue-950/20 dark:border-blue-800 p-3 text-sm text-blue-800 dark:text-blue-300">
+                Historical sync will run automatically after creation — attendance for all employees, leads for those with a CRM number. Do not close or refresh your browser while syncing.
+              </div>
             </div>
           )}
-        </ScrollArea>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between border-t pt-4 mt-1">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Users className="h-4 w-4" />
-            {employees.length} employee{employees.length > 1 ? 's' : ''}
-          </div>
-          <div className="flex gap-2">
-            {step === 2 && (
-              <Button variant="outline" onClick={() => setStep(1)} disabled={onboardMutation.isPending}>
-                <ArrowLeft className="h-4 w-4 mr-1" /> Back
-              </Button>
-            )}
-            {step === 1 && (
-              <Button onClick={() => setStep(2)} disabled={!isStep1Valid()}>
-                Review <ArrowRight className="h-4 w-4 ml-1" />
-              </Button>
-            )}
-            {step === 2 && (
-              <Button onClick={handleCreate} disabled={onboardMutation.isPending}>
-                {onboardMutation.isPending
-                  ? <><span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent inline-block" />Creating...</>
-                  : `Create ${employees.length > 1 ? `${employees.length} Employees` : 'Employee'}`
-                }
-              </Button>
-            )}
-          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+
+      {/* Footer */}
+      <div className="flex shrink-0 flex-col gap-3 border-t border-sky-200/40 bg-muted/30 px-4 py-3 dark:border-sky-900/40 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Users className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+          {employees.length} employee{employees.length > 1 ? 's' : ''}
+        </div>
+        <div className="flex w-full flex-col-reverse gap-2 sm:w-auto sm:flex-row">
+          {step === 2 && (
+            <Button variant="outline" className="w-full sm:w-auto" onClick={() => setStep(1)} disabled={onboardMutation.isPending}>
+              <ArrowLeft className="mr-1 h-4 w-4" /> Back
+            </Button>
+          )}
+          {step === 1 && (
+            <Button className="w-full bg-sky-600 text-white hover:bg-sky-700 sm:w-auto" onClick={() => setStep(2)} disabled={!isStep1Valid()}>
+              Review <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          )}
+          {step === 2 && (
+            <Button className="w-full bg-violet-600 text-white hover:bg-violet-700 sm:w-auto" onClick={handleCreate} disabled={onboardMutation.isPending}>
+              {onboardMutation.isPending
+                ? <><span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent inline-block" />Creating...</>
+                : `Create ${employees.length > 1 ? `${employees.length} Employees` : 'Employee'}`
+              }
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }

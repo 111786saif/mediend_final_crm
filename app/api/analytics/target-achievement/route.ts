@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
     const periodStart = new Date(startDate)
     const periodEnd = new Date(endDate)
 
-    // Get all targets for the period
+    // Get all targets for the period (no team relation anymore)
     const targets = await prisma.target.findMany({
       where: {
         periodStartDate: { lte: periodEnd },
@@ -35,29 +36,30 @@ export async function GET(request: NextRequest) {
       },
       include: {
         bonusRules: true,
-        team: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
       },
     })
 
     // Get BD users for target lookup
     const bdUsers = await prisma.user.findMany({
-      where: {
-        role: 'BD',
-      },
-      include: {
-        team: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
+      where: { role: 'BD' },
+      select: { id: true, name: true },
     })
+
+    // For TEAM targets: targetForId = manager's Employee.id; get manager name
+    const managerEmployees = await prisma.employee.findMany({
+      where: { id: { in: targets.filter((t) => t.targetType === 'TEAM').map((t) => t.targetForId) } },
+      select: { id: true, user: { select: { name: true } } },
+    })
+    const managerMap = new Map(managerEmployees.map((e) => [e.id, e.user.name]))
+
+    // Role-based scoping
+    let roleFilter: Prisma.LeadWhereInput = {}
+    if (user.role === 'BD') {
+      roleFilter = { bdId: user.id }
+    } else if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      roleFilter = { bdId: { in: [user.id, ...subIds] } }
+    }
 
     // Calculate achievements for each target
     const targetAchievements = await Promise.all(
@@ -70,23 +72,21 @@ export async function GET(request: NextRequest) {
         const where: Prisma.LeadWhereInput = {
           pipelineStage: 'COMPLETED',
           conversionDate: dateFilter,
+          ...roleFilter,
         }
 
-        // Apply target-specific filtering
-        if (target.targetType === 'BD') {
+        // Apply target-specific filtering (but don't override role filter)
+        if (target.targetType === 'BD' && user.role !== 'BD') {
           where.bdId = target.targetForId
-        } else if (target.targetType === 'TEAM' && target.teamId) {
-          where.bd = {
-            teamId: target.teamId,
-          }
-        }
-
-        // Role-based filtering
-        if (user.role === 'BD') {
-          where.bdId = user.id
-        } else if (user.role === 'TEAM_LEAD' && user.teamId) {
-          where.bd = {
-            teamId: user.teamId,
+        } else if (target.targetType === 'TEAM') {
+          // targetForId = manager's Employee.id — resolve to subordinate user IDs
+          const managerEmp = await prisma.employee.findUnique({
+            where: { id: target.targetForId },
+            select: { userId: true },
+          })
+          if (managerEmp) {
+            const subIds = await getSubordinateUserIdsForLeadAccess(managerEmp.userId)
+            where.bdId = { in: [managerEmp.userId, ...subIds] }
           }
         }
 
@@ -94,36 +94,29 @@ export async function GET(request: NextRequest) {
 
         switch (target.metric) {
           case 'LEADS_CLOSED':
-            achieved = await prisma.lead.count({ where })
-            break
-          case 'NET_PROFIT':
-            const profitAgg = await prisma.lead.aggregate({
-              where,
-              _sum: { netProfit: true },
-            })
-            achieved = profitAgg._sum.netProfit || 0
-            break
-          case 'BILL_AMOUNT':
-            const billAgg = await prisma.lead.aggregate({
-              where,
-              _sum: { billAmount: true },
-            })
-            achieved = billAgg._sum.billAmount || 0
-            break
           case 'SURGERIES_DONE':
             achieved = await prisma.lead.count({ where })
             break
+          case 'NET_PROFIT': {
+            const agg = await prisma.lead.aggregate({ where, _sum: { netProfit: true } })
+            achieved = agg._sum.netProfit || 0
+            break
+          }
+          case 'BILL_AMOUNT': {
+            const agg = await prisma.lead.aggregate({ where, _sum: { billAmount: true } })
+            achieved = agg._sum.billAmount || 0
+            break
+          }
         }
 
         const percentage = target.targetValue > 0 ? (achieved / target.targetValue) * 100 : 0
 
-        // Get target entity name
         let entityName = 'Unknown'
         if (target.targetType === 'BD') {
           const bd = bdUsers.find((u) => u.id === target.targetForId)
           entityName = bd?.name || 'Unknown BD'
         } else if (target.targetType === 'TEAM') {
-          entityName = target.team?.name || 'Unknown Team'
+          entityName = managerMap.get(target.targetForId) ? `${managerMap.get(target.targetForId)}'s Team` : 'Unknown Team'
         }
 
         return {
@@ -149,7 +142,6 @@ export async function GET(request: NextRequest) {
       })
     )
 
-    // Group by entity and metric for summary
     const overallSummary = {
       leadsClosed: { target: 0, achieved: 0, percentage: 0 },
       netProfit: { target: 0, achieved: 0, percentage: 0 },

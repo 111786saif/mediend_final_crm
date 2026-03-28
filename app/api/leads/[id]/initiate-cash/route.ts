@@ -63,16 +63,13 @@ export async function POST(
 
     const lead = await prisma.lead.findUnique({
       where: { id },
-      include: {
-        bd: { select: { teamId: true } },
-      },
     })
 
     if (!lead) {
       return errorResponse('Lead not found', 404)
     }
 
-    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+    if (!(await canMutateLead(user, lead.bdId))) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -215,16 +212,13 @@ export async function PATCH(
 
     const lead = await prisma.lead.findUnique({
       where: { id },
-      include: {
-        bd: { select: { teamId: true } },
-      },
     })
 
     if (!lead) {
       return errorResponse('Lead not found', 404)
     }
 
-    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+    if (!(await canMutateLead(user, lead.bdId))) {
       return errorResponse('Forbidden', 403)
     }
 

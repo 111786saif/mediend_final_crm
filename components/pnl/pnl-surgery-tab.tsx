@@ -29,7 +29,7 @@ type PnlSurgery = {
   surgeryCount: number
   seatCostPerEmployee: number
   marketingCostPerBd?: Record<string, number>
-  marketingCostPerTeam?: Record<string, number>
+  marketingCostPerGroup?: Record<string, number>
 }
 
 export function PnlSurgeryTab({
@@ -173,7 +173,7 @@ export function PnlSurgeryTab({
           items={pnl.topBds.map((b) => ({
             id: b.bdId,
             name: b.bdName,
-            subtitle: b.teamName,
+            subtitle: b.managerName,
             value: b.netProfit,
             meta: `${b.surgeries} surgeries`,
           }))}
@@ -184,7 +184,7 @@ export function PnlSurgeryTab({
           items={pnl.bottomBds.map((b) => ({
             id: b.bdId,
             name: b.bdName,
-            subtitle: b.teamName,
+            subtitle: b.managerName,
             value: b.netProfit,
             meta: `${b.surgeries} surgeries`,
           }))}
@@ -193,8 +193,8 @@ export function PnlSurgeryTab({
           title="Top teams"
           variant="top"
           items={pnl.topTeams.map((t) => ({
-            id: t.teamId,
-            name: t.teamName,
+            id: t.groupId,
+            name: t.groupName,
             value: t.netProfit,
           }))}
         />
@@ -202,8 +202,8 @@ export function PnlSurgeryTab({
           title="Bottom teams"
           variant="bottom"
           items={pnl.bottomTeams.map((t) => ({
-            id: t.teamId,
-            name: t.teamName,
+            id: t.groupId,
+            name: t.groupName,
             value: t.netProfit,
           }))}
         />

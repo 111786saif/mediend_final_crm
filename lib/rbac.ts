@@ -368,7 +368,6 @@ export function hasPermission(user: SessionUser | null, permission: Permission):
 export function canAccessLead(
   user: SessionUser | null,
   leadBdId: string,
-  leadTeamId?: string | null,
   /** When provided for TEAM_LEAD, allow if leadBdId is in this list (hierarchy-based access) */
   subordinateUserIds?: string[]
 ): boolean {
@@ -379,30 +378,15 @@ export function canAccessLead(
     return true
   }
 
-  // Team Lead: same mutation scope as BD on accessible leads — own team BDs' leads (subordinates + legacy teamId match)
+  // Team Lead: own leads + hierarchy subordinates' leads
   if (user.role === 'TEAM_LEAD') {
     if (leadBdId === user.id) return true
     if (subordinateUserIds && subordinateUserIds.includes(leadBdId)) return true
-    if (leadTeamId && user.teamId === leadTeamId) return true
     return false
   }
 
   // BD can only access their own leads
   if (user.role === 'BD' && user.id === leadBdId) {
-    return true
-  }
-
-  return false
-}
-
-export function canManageTeam(user: SessionUser | null, teamSalesHeadId?: string): boolean {
-  if (!user) return false
-
-  if (['MD', 'ADMIN', 'TESTER'].includes(user.role)) {
-    return true
-  }
-
-  if (user.role === 'SALES_HEAD' && teamSalesHeadId === user.id) {
     return true
   }
 

@@ -10,7 +10,6 @@ export interface SessionToken {
   userId: string
   email: string
   role: string
-  teamId?: string | null
 }
 
 export async function createSession(user: SessionUser): Promise<string> {
@@ -19,7 +18,6 @@ export async function createSession(user: SessionUser): Promise<string> {
       userId: user.id,
       email: user.email,
       role: user.role,
-      teamId: user.teamId,
     },
     JWT_SECRET,
     { expiresIn: '7d' }
@@ -52,20 +50,19 @@ export async function getSession(): Promise<SessionUser | null> {
       email: decoded.email,
       name: '', // Will be fetched from DB if needed
       role: decoded.role as SessionUser['role'],
-      teamId: decoded.teamId || null,
     }
   } catch {
     return null
   }
 }
 
-/** Session with current role/teamId from DB (JWT can be stale after admin assigns team or role). */
+/** Session with current role from DB (JWT can be stale after admin changes role). */
 export async function getSessionWithFreshUser(): Promise<SessionUser | null> {
   const session = await getSession()
   if (!session) return null
   const row = await prisma.user.findUnique({
     where: { id: session.id },
-    select: { id: true, email: true, name: true, role: true, teamId: true },
+    select: { id: true, email: true, name: true, role: true },
   })
   if (!row) return null
   return {
@@ -73,7 +70,6 @@ export async function getSessionWithFreshUser(): Promise<SessionUser | null> {
     email: row.email,
     name: row.name,
     role: row.role,
-    teamId: row.teamId,
   }
 }
 
@@ -92,7 +88,7 @@ export function getSessionFromRequest(request: Request): SessionUser | null {
   if (authHeader?.startsWith('Bearer ')) {
     token = authHeader.substring(7)
   } else if (cookieHeader) {
-    const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+    const cookieMap = cookieHeader.split(';').reduce((acc, cookie) => {
       const eqIdx = cookie.indexOf('=')
       if (eqIdx === -1) return acc
       const key = cookie.slice(0, eqIdx).trim()
@@ -100,7 +96,7 @@ export function getSessionFromRequest(request: Request): SessionUser | null {
       acc[key] = value
       return acc
     }, {} as Record<string, string>)
-    token = cookies[SESSION_COOKIE_NAME] || null
+    token = cookieMap[SESSION_COOKIE_NAME] || null
   }
 
   if (!token) {
@@ -114,10 +110,8 @@ export function getSessionFromRequest(request: Request): SessionUser | null {
       email: decoded.email,
       name: '',
       role: decoded.role as SessionUser['role'],
-      teamId: decoded.teamId || null,
     }
   } catch {
     return null
   }
 }
-

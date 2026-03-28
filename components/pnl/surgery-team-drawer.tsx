@@ -25,23 +25,23 @@ export function SurgeryTeamDrawer({
   bdRows: BdRow[]
 }) {
   if (!team) return null
-  const bdsInTeam = bdRows.filter((b) => b.teamName === team.teamName || (team.teamName === 'Unassigned' && !b.teamName))
+  const bdsInTeam = bdRows.filter((b) => b.managerName === team.managerName || (team.groupId === 'unassigned' && !b.managerName))
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="sm:max-w-xl overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>{team.teamName}</SheetTitle>
+          <SheetTitle>{team.groupName}</SheetTitle>
           <SheetDescription>Team P&amp;L drill-down</SheetDescription>
         </SheetHeader>
 
         <div className="mt-4 px-4 pb-6 space-y-3 text-sm">
           <div className="rounded-lg border bg-card p-3 space-y-1">
             <p>
-              <span className="text-muted-foreground">Team lead:</span> {team.teamLeadName || '—'}
+              <span className="text-muted-foreground">Manager:</span> {team.managerName || '—'}
             </p>
             <p>
-              <span className="text-muted-foreground">Sales team members:</span> {team.memberCount ?? '—'}
+              <span className="text-muted-foreground">Team members:</span> {team.memberCount ?? '—'}
             </p>
             <p>
               <span className="text-muted-foreground">Seat cost @ {formatInr(seatCostPerEmployee)} / head:</span>{' '}

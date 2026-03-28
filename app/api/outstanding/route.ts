@@ -39,9 +39,9 @@ export async function GET(request: NextRequest) {
         bd: {
           select: {
             name: true,
-            team: {
+            employee: {
               select: {
-                id: true,
+                team: { select: { id: true } },
               },
             },
           },
@@ -81,7 +81,17 @@ export async function GET(request: NextRequest) {
       take: 1000,
     })
 
-    return successResponse(leads)
+    const mapped = leads.map((lead) => {
+      const bd = lead.bd
+        ? {
+            name: lead.bd.name,
+            team: lead.bd.employee?.team ?? null,
+          }
+        : lead.bd
+      return { ...lead, bd }
+    })
+
+    return successResponse(mapped)
   } catch (error) {
     console.error('Error fetching outstanding records:', error)
     return errorResponse('Failed to fetch outstanding records', 500)

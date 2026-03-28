@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       return errorResponse('Lead not found', 404)
     }
 
-    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+    if (!(await canMutateLead(user, lead.bdId))) {
       return errorResponse('You do not have permission to submit KYP for this lead', 403)
     }
 

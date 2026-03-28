@@ -69,6 +69,8 @@ const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
 interface EmployeeData {
   id: string
   employeeCode: string
+  managerId: string | null
+  manager: { id: string; user: { id: string; name: string } } | null
   bdNumber: number | null
   joinDate: string | null
   dateOfBirth: string | null
@@ -264,6 +266,9 @@ export function EmployeeDetailDrawer({
                         </div>
                         <div className="px-4">
                           <FieldRow icon={Building} label="Department" value={employee.department?.name ?? null} />
+                        </div>
+                        <div className="px-4">
+                          <FieldRow icon={User} label="Manager" value={employee.manager?.user?.name ?? null} />
                         </div>
                         <div className="px-4">
                           <FieldRow icon={Calendar} label="Join date" value={employee.joinDate ? format(new Date(employee.joinDate), 'PPP') : null} />

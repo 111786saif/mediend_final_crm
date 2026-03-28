@@ -4,6 +4,8 @@ import { UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+
 export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
@@ -34,8 +36,16 @@ export async function GET(request: NextRequest) {
           id: true,
           name: true,
           profilePicture: true,
-          teamId: true,
-          team: { select: { id: true, name: true, teamLead: { select: { name: true } } } },
+          employee: {
+            select: {
+              manager: {
+                select: {
+                  id: true,
+                  user: { select: { name: true } },
+                },
+              },
+            },
+          },
         },
       }),
       prisma.lead.findMany({
@@ -87,8 +97,10 @@ export async function GET(request: NextRequest) {
 
     if (!bdUser) return errorResponse('BD not found', 404)
 
+    // TEAM_LEAD gate: can only view BDs who are their subordinates
     if (user.role === UserRole.TEAM_LEAD) {
-      if (!user.teamId || bdUser.teamId !== user.teamId) {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      if (!subIds.includes(bdId) && bdId !== user.id) {
         return errorResponse('Forbidden', 403)
       }
     }
@@ -157,7 +169,7 @@ export async function GET(request: NextRequest) {
         id: bdUser.id,
         name: bdUser.name,
         profilePicture: bdUser.profilePicture ?? null,
-        team: bdUser.team,
+        managerName: bdUser.employee?.manager?.user?.name ?? null,
       },
       kpis: {
         totalLeads,

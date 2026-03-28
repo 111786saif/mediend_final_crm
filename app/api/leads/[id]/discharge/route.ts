@@ -25,16 +25,13 @@ export async function POST(
     // Check if lead exists
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
-      include: {
-        bd: { select: { teamId: true } },
-      },
     })
 
     if (!lead) {
       return errorResponse('Lead not found', 404)
     }
 
-    if (!(await canMutateLead(user, lead.bdId, lead.bd?.teamId))) {
+    if (!(await canMutateLead(user, lead.bdId))) {
       return errorResponse('Forbidden', 403)
     }
 

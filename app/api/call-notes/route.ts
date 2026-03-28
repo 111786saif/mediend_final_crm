@@ -20,15 +20,15 @@ export async function GET(request: NextRequest) {
 
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
-      select: { bdId: true, bd: { select: { team: { select: { id: true } } } } },
+      select: { bdId: true },
     })
     if (!lead) {
       return errorResponse('Lead not found', 404)
     }
 
     const subordinateUserIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
-    if (!canAccessLead(user, lead.bdId, lead.bd?.team?.id, subordinateUserIds)) {
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    if (!canAccessLead(user, lead.bdId, subordinateUserIds)) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -67,15 +67,15 @@ export async function POST(request: NextRequest) {
 
     const lead = await prisma.lead.findUnique({
       where: { id: leadId },
-      select: { bdId: true, bd: { select: { team: { select: { id: true } } } } },
+      select: { bdId: true },
     })
     if (!lead) {
       return errorResponse('Lead not found', 404)
     }
 
     const subordinateUserIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
-    if (!canAccessLead(user, lead.bdId, lead.bd?.team?.id, subordinateUserIds)) {
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    if (!canAccessLead(user, lead.bdId, subordinateUserIds)) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -96,3 +96,4 @@ export async function POST(request: NextRequest) {
     return errorResponse('Failed to create call note', 500)
   }
 }
+

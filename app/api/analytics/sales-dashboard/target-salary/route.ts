@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import { getSession } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
   try {
@@ -31,25 +32,29 @@ export async function GET(request: NextRequest) {
           periodStartDate: { lte: periodEnd },
           periodEndDate: { gte: periodStart },
         },
-        include: {
-          bonusRules: true,
-          team: { select: { id: true, name: true } },
-        },
+        include: { bonusRules: true },
       }),
       prisma.user.findMany({
         where: { role: 'BD' },
         select: {
           id: true,
           name: true,
-          teamId: true,
-          team: { select: { id: true, name: true } },
-          employee: { select: { salary: true, salaryStructures: { orderBy: { effectiveFrom: 'desc' }, take: 1, select: { monthlyGross: true } } } },
+          employee: {
+            select: {
+              id: true,
+              managerId: true,
+              manager: { select: { user: { select: { name: true } } } },
+              salary: true,
+              salaryStructures: { orderBy: { effectiveFrom: 'desc' }, take: 1, select: { monthlyGross: true } },
+            },
+          },
         },
       }),
     ])
 
+    // Team targets: targetForId = manager's Employee.id
     const teamTargetBreakdown: Array<{
-      teamId: string | null
+      managerId: string | null
       teamName: string
       targets: Array<{
         metric: string
@@ -59,14 +64,25 @@ export async function GET(request: NextRequest) {
       }>
     }> = []
 
-    const teamTargetsOnly = targets.filter((t) => t.targetType === 'TEAM' && t.teamId)
+    const teamTargetsOnly = targets.filter((t) => t.targetType === 'TEAM')
     for (const target of teamTargetsOnly) {
       const overlapStart = new Date(Math.max(periodStart.getTime(), target.periodStartDate.getTime()))
       const overlapEnd = new Date(Math.min(periodEnd.getTime(), target.periodEndDate.getTime()))
+
+      // Resolve manager's subordinate user IDs
+      const managerEmp = await prisma.employee.findUnique({
+        where: { id: target.targetForId },
+        select: { userId: true, user: { select: { name: true } } },
+      })
+      if (!managerEmp) continue
+
+      const subIds = await getSubordinateUserIdsForLeadAccess(managerEmp.userId)
+      const teamUserIds = [managerEmp.userId, ...subIds]
+
       const where: Prisma.LeadWhereInput = {
         pipelineStage: 'COMPLETED',
         conversionDate: { gte: overlapStart, lte: overlapEnd },
-        bd: { teamId: target.teamId! },
+        bdId: { in: teamUserIds },
       }
 
       let achieved = 0
@@ -87,10 +103,10 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      const teamName = target.team?.name ?? 'Unknown Team'
-      let teamEntry = teamTargetBreakdown.find((t) => t.teamId === target.teamId)
+      const teamName = `${managerEmp.user.name}'s Team`
+      let teamEntry = teamTargetBreakdown.find((t) => t.managerId === target.targetForId)
       if (!teamEntry) {
-        teamEntry = { teamId: target.teamId, teamName, targets: [] }
+        teamEntry = { managerId: target.targetForId, teamName, targets: [] }
         teamTargetBreakdown.push(teamEntry)
       }
       teamEntry.targets.push({
@@ -104,7 +120,7 @@ export async function GET(request: NextRequest) {
     const bdSalaryTarget: Array<{
       bdId: string
       bdName: string
-      teamName: string | null
+      managerName: string | null
       salary: number | null
       targetValue: number
       achieved: number
@@ -146,7 +162,7 @@ export async function GET(request: NextRequest) {
       bdSalaryTarget.push({
         bdId: bd.id,
         bdName: bd.name,
-        teamName: bd.team?.name ?? null,
+        managerName: bd.employee?.manager?.user?.name ?? null,
         salary: salary ?? null,
         targetValue,
         achieved,

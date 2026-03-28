@@ -6,6 +6,8 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } from 'date-fns'
 
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -39,10 +41,9 @@ export async function GET(request: NextRequest) {
     // Role-based filtering
     if (user.role === 'BD') {
       baseWhere.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD' && user.teamId) {
-      baseWhere.bd = {
-        teamId: user.teamId,
-      }
+    } else if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      baseWhere.bdId = { in: [user.id, ...subIds] }
     }
 
     const completedWhere: Prisma.LeadWhereInput = {

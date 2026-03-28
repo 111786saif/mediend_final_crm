@@ -383,7 +383,13 @@ export async function GET(request: NextRequest) {
     const bdIds = [...new Set(bdStats.map((b) => b.bdId))]
     const bds = await prisma.user.findMany({
       where: { id: { in: bdIds }, role: 'BD' },
-      include: { team: { select: { id: true, name: true } } },
+      include: {
+        employee: {
+          select: {
+            team: { select: { id: true, name: true } },
+          },
+        },
+      },
     })
 
     const bdPerformance = bdStats.map((stat) => {
@@ -393,7 +399,7 @@ export async function GET(request: NextRequest) {
       return {
         bdId: stat.bdId,
         bdName: bd?.name || 'Unknown',
-        teamName: bd?.team?.name || 'No Team',
+        teamName: bd?.employee?.team?.name || 'No Team',
         revenue: stat._sum.billAmount || 0,
         profit: stat._sum.netProfit || 0,
         closedLeads,
@@ -407,9 +413,10 @@ export async function GET(request: NextRequest) {
     const teamMap = new Map<string, { name: string; revenue: number; profit: number; closedLeads: number; totalLeads: number }>()
     bdPerformance.forEach((bd) => {
       const bdUser = bds.find((b) => b.id === bd.bdId)
-      if (bdUser?.team) {
-        const existing = teamMap.get(bdUser.team.id) || {
-          name: bdUser.team.name,
+      const deptTeam = bdUser?.employee?.team
+      if (deptTeam) {
+        const existing = teamMap.get(deptTeam.id) || {
+          name: deptTeam.name,
           revenue: 0,
           profit: 0,
           closedLeads: 0,
@@ -419,7 +426,7 @@ export async function GET(request: NextRequest) {
         existing.profit += bd.profit
         existing.closedLeads += bd.closedLeads
         existing.totalLeads += bd.totalLeads
-        teamMap.set(bdUser.team.id, existing)
+        teamMap.set(deptTeam.id, existing)
       }
     })
 

@@ -104,6 +104,14 @@ export function LeaveApplicationForm({
   const todayStr = format(new Date(), 'yyyy-MM-dd')
   const earliestSelectableStr = format(subYears(new Date(), 2), 'yyyy-MM-dd')
 
+  const selectedLeaveType = formData.leaveTypeId
+    ? activeLeaveTypes.find((lt) => lt.id === formData.leaveTypeId)
+    : null
+  const isSickLeave = selectedLeaveType
+    ? /sick/i.test(selectedLeaveType.name)
+    : false
+  const maxDateStr = isSickLeave ? todayStr : undefined
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -159,7 +167,7 @@ export function LeaveApplicationForm({
             }}
             required
             min={earliestSelectableStr}
-            max={todayStr}
+            max={maxDateStr}
           />
         </div>
 
@@ -186,7 +194,7 @@ export function LeaveApplicationForm({
                 ? format(formData.startDate, 'yyyy-MM-dd')
                 : earliestSelectableStr
             }
-            max={todayStr}
+            max={maxDateStr}
           />
         </div>
       </div>
@@ -222,7 +230,9 @@ export function LeaveApplicationForm({
       </div>
 
       <p className="text-xs text-muted-foreground">
-        You can select today or an earlier date if you need to record leave for a day you were absent.
+        {isSickLeave
+          ? 'Sick leave can only be applied for today or a past date.'
+          : 'You can apply for past, present, or future dates.'}
       </p>
 
       {formData.startDate && formData.endDate && (

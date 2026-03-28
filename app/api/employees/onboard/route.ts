@@ -87,12 +87,6 @@ export async function POST(request: NextRequest) {
 
         const passwordHash = await hashPassword(data.password)
 
-        let teamId: string | null = null
-        if (data.role === 'BD' || data.role === 'TEAM_LEAD') {
-          const firstTeam = await prisma.team.findFirst({ orderBy: { createdAt: 'asc' } })
-          if (firstTeam) teamId = firstTeam.id
-        }
-
         const result = await prisma.$transaction(async (tx) => {
           const newUser = await tx.user.create({
             data: {
@@ -100,7 +94,6 @@ export async function POST(request: NextRequest) {
               passwordHash,
               name: data.name,
               role: data.role,
-              teamId,
             },
           })
 

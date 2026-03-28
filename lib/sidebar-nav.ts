@@ -133,12 +133,6 @@ export const navItems: NavItem[] = [
     roles: ['SALES_HEAD'],
   },
   {
-    title: 'Teams',
-    url: '/sales/teams',
-    icon: Users,
-    roles: ['SALES_HEAD'],
-  },
-  {
     title: 'Sales P&L',
     url: '/sales/pnl',
     icon: PieChart,

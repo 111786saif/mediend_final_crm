@@ -48,7 +48,6 @@ export interface HRAnalytics {
     newJoinersCount: number
   }
   departmentSalaryBreakdown: Array<{ departmentName: string; amount: number }>
-  teamSalaryBreakdown: Array<{ teamName: string; amount: number }>
   departmentHeadcount: Array<{ departmentName: string; count: number }>
   ticketAnalytics: Array<{
     type: string
@@ -597,7 +596,6 @@ export function HRDashboard({
                     </div>
                     <TabsList className="w-full sm:w-auto shrink-0">
                       <TabsTrigger value="department">By department</TabsTrigger>
-                      <TabsTrigger value="team">By team</TabsTrigger>
                     </TabsList>
                   </div>
                   <CardDescription>
@@ -633,39 +631,6 @@ export function HRDashboard({
                         <Bar dataKey="amount" radius={[0, 4, 4, 0]} maxBarSize={22}>
                           {mergedAnalytics.departmentSalaryBreakdown.map((_, i) => (
                             <Cell key={i} fill={CHART_PALETTE[i % CHART_PALETTE.length]} />
-                          ))}
-                        </Bar>
-                      </BarChart>
-                    </ChartContainer>
-                  </TabsContent>
-                  <TabsContent value="team" className="mt-0 outline-none">
-                    <ChartContainer
-                      config={{ amount: { label: 'Amount', color: '#6366f1' } }}
-                      className="w-full"
-                      style={{ height: Math.max(160, mergedAnalytics.teamSalaryBreakdown.length * 36) }}
-                    >
-                      <BarChart
-                        data={mergedAnalytics.teamSalaryBreakdown}
-                        layout="vertical"
-                        margin={{ top: 0, right: 60, left: 0, bottom: 0 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                        <XAxis
-                          type="number"
-                          tickFormatter={(v) => formatCurrency(v)}
-                          tick={{ fontSize: 10 }}
-                        />
-                        <YAxis
-                          dataKey="teamName"
-                          type="category"
-                          width={110}
-                          tick={{ fontSize: 11 }}
-                          tickLine={false}
-                        />
-                        <ChartTooltip content={<ChartTooltipContent formatter={(v) => formatCurrencyFull(Number(v))} />} />
-                        <Bar dataKey="amount" radius={[0, 4, 4, 0]} maxBarSize={22}>
-                          {mergedAnalytics.teamSalaryBreakdown.map((_, i) => (
-                            <Cell key={i} fill={CHART_PALETTE[(i + 2) % CHART_PALETTE.length]} />
                           ))}
                         </Bar>
                       </BarChart>

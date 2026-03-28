@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { useState } from 'react'
-import { Building, Hash, Calendar, DollarSign, Search, Filter, X, Plus, Eye } from 'lucide-react'
+import { Building, Hash, Calendar, Search, Filter, X, Plus, Eye } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
@@ -30,7 +30,6 @@ interface Employee {
   id: string
   employeeCode: string
   joinDate: Date | null
-  salary: number | null
   designation: string | null
   status: string
   user: {
@@ -42,6 +41,10 @@ interface Employee {
   department: {
     id: string
     name: string
+  } | null
+  manager: {
+    id: string
+    user: { id: string; name: string }
   } | null
 }
 
@@ -95,10 +98,11 @@ export default function HREmployeesPage() {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { employeeCode?: string; joinDate?: string | null; salary?: number | null; departmentId?: string | null; designation?: string | null } }) =>
+    mutationFn: ({ id, data }: { id: string; data: { employeeCode?: string; joinDate?: string | null; departmentId?: string | null; designation?: string | null; managerId?: string | null } }) =>
       apiPatch<Employee>(`/api/employees/${id}`, data),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['employees'] })
+      queryClient.invalidateQueries({ queryKey: ['employee', variables.id] })
       setIsDialogOpen(false)
       setSelectedEmployee(null)
       toast.success('Employee updated successfully')
@@ -364,15 +368,17 @@ export default function HREmployeesPage() {
           </DialogHeader>
           {selectedEmployee && (
             <EmployeeEditForm
+              key={selectedEmployee.id}
               employee={selectedEmployee}
               departments={departments || []}
+              managerOptions={employees?.filter((e) => e.id !== selectedEmployee.id) ?? []}
               onSubmit={(data) => {
-                const updateData: { employeeCode?: string; joinDate?: string | null; salary?: number | null; departmentId?: string | null; designation?: string | null } = {}
+                const updateData: { employeeCode?: string; joinDate?: string | null; departmentId?: string | null; designation?: string | null; managerId?: string | null } = {}
                 if (data.employeeCode) updateData.employeeCode = data.employeeCode
                 if (data.joinDate !== undefined) updateData.joinDate = data.joinDate
-                if (data.salary !== undefined) updateData.salary = data.salary
                 if (data.departmentId !== undefined) updateData.departmentId = data.departmentId
                 if (data.designation !== undefined) updateData.designation = data.designation
+                if (data.managerId !== undefined) updateData.managerId = data.managerId
                 updateMutation.mutate({ id: selectedEmployee.id, data: updateData })
               }}
               isLoading={updateMutation.isPending}
@@ -408,26 +414,28 @@ export default function HREmployeesPage() {
 function EmployeeEditForm({
   employee,
   departments,
+  managerOptions,
   onSubmit,
   isLoading,
 }: {
   employee: Employee
   departments: Department[]
+  managerOptions: Employee[]
   onSubmit: (data: {
     employeeCode?: string
     joinDate?: string | null
-    salary?: number | null
     departmentId?: string | null
     designation?: string | null
+    managerId?: string | null
   }) => void
   isLoading: boolean
 }) {
   const [formData, setFormData] = useState({
     employeeCode: employee.employeeCode,
     joinDate: employee.joinDate ? format(new Date(employee.joinDate), 'yyyy-MM-dd') : '',
-    salary: employee.salary?.toString() || '',
     departmentId: employee.department?.id || 'none',
     designation: employee.designation || employee.user.role.replace('_', ' ') || '',
+    managerId: employee.manager?.id || 'none',
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -435,9 +443,9 @@ function EmployeeEditForm({
     onSubmit({
       employeeCode: formData.employeeCode,
       joinDate: formData.joinDate ? formData.joinDate : null,
-      salary: formData.salary ? parseFloat(formData.salary) : null,
       departmentId: formData.departmentId === 'none' ? null : formData.departmentId || null,
       designation: formData.designation || null,
+      managerId: formData.managerId === 'none' ? null : formData.managerId || null,
     })
   }
 
@@ -456,8 +464,20 @@ function EmployeeEditForm({
         <Input type="date" value={formData.joinDate} onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })} />
       </div>
       <div>
-        <Label>Salary</Label>
-        <Input type="number" value={formData.salary} onChange={(e) => setFormData({ ...formData, salary: e.target.value })} min={0} step="0.01" />
+        <Label>Manager</Label>
+        <Select value={formData.managerId} onValueChange={(value) => setFormData({ ...formData, managerId: value })}>
+          <SelectTrigger><SelectValue placeholder="Select manager" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">No manager</SelectItem>
+            {[...managerOptions]
+              .sort((a, b) => a.user.name.localeCompare(b.user.name))
+              .map((e) => (
+                <SelectItem key={e.id} value={e.id}>
+                  {e.user.name} ({e.employeeCode})
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
       </div>
       <div>
         <Label>Department</Label>

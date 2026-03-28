@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,40 +20,56 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const teamId = searchParams.get('teamId')
-    if (!teamId) return errorResponse('teamId is required', 400)
-
-    if (user.role === UserRole.TEAM_LEAD && user.teamId !== teamId) {
-      return errorResponse('Forbidden', 403)
-    }
+    // Accept managerId (Employee.id of the manager) to define the team
+    const managerId = searchParams.get('managerId') ?? searchParams.get('teamId')
+    if (!managerId) return errorResponse('managerId is required', 400)
 
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
     const start = startDate ? new Date(startDate + 'T00:00:00.000Z') : new Date(new Date().getFullYear(), 0, 1)
     const end = endDate ? new Date(endDate + 'T23:59:59.999Z') : new Date()
 
-    const team = await prisma.team.findUnique({
-      where: { id: teamId },
-      include: {
-        salesHead: { select: { id: true, name: true, profilePicture: true } },
-        teamLead: { select: { id: true, name: true, profilePicture: true } },
-        members: {
-          where: { role: UserRole.BD },
-          select: { id: true, name: true, profilePicture: true },
+    // Resolve the manager's employee record
+    const managerEmp = await prisma.employee.findUnique({
+      where: { id: managerId },
+      select: {
+        id: true,
+        user: { select: { id: true, name: true, profilePicture: true } },
+        subordinates: {
+          select: {
+            id: true,
+            userId: true,
+            user: { select: { id: true, name: true, profilePicture: true } },
+          },
+          where: { user: { role: UserRole.BD } },
         },
       },
     })
 
-    if (!team) return errorResponse('Team not found', 404)
+    if (!managerEmp) return errorResponse('Manager not found', 404)
 
-    const bdIds = team.members.map((m) => m.id)
+    // Gate: TEAM_LEAD can only view their own team
+    if (user.role === UserRole.TEAM_LEAD) {
+      const managerEmpForUser = await prisma.employee.findUnique({
+        where: { userId: user.id },
+        select: { id: true },
+      })
+      if (!managerEmpForUser || managerEmpForUser.id !== managerId) {
+        return errorResponse('Forbidden', 403)
+      }
+    }
 
-    // Aggregate leads and IPD for each member in the period
+    const bdMembers = managerEmp.subordinates
+    const bdIds = bdMembers.map((m) => m.userId)
+
+    // Include the manager themselves if they also do BD work
+    const allUserIds = [managerEmp.user.id, ...bdIds]
+
     const [allLeads, completedLeads] = await Promise.all([
       prisma.lead.groupBy({
         by: ['bdId'],
         where: {
-          bdId: { in: bdIds },
+          bdId: { in: allUserIds },
           OR: [
             { leadDate: { gte: start, lte: end } },
             { AND: [{ leadDate: null }, { createdDate: { gte: start, lte: end } }] },
@@ -64,7 +81,7 @@ export async function GET(request: NextRequest) {
       prisma.lead.groupBy({
         by: ['bdId'],
         where: {
-          bdId: { in: bdIds },
+          bdId: { in: allUserIds },
           pipelineStage: 'COMPLETED',
           OR: [
             { conversionDate: { gte: start, lte: end } },
@@ -80,15 +97,15 @@ export async function GET(request: NextRequest) {
     const leadsMap = new Map(allLeads.map((r) => [r.bdId, r]))
     const ipdMap = new Map(completedLeads.map((r) => [r.bdId, r]))
 
-    const members = team.members.map((m) => {
-      const leads = leadsMap.get(m.id)?._count.id ?? 0
-      const ipd = ipdMap.get(m.id)?._count.id ?? 0
-      const profit = ipdMap.get(m.id)?._sum.netProfit ?? 0
-      const bill = ipdMap.get(m.id)?._sum.billAmount ?? 0
+    const members = bdMembers.map((m) => {
+      const leads = leadsMap.get(m.userId)?._count.id ?? 0
+      const ipd = ipdMap.get(m.userId)?._count.id ?? 0
+      const profit = ipdMap.get(m.userId)?._sum.netProfit ?? 0
+      const bill = ipdMap.get(m.userId)?._sum.billAmount ?? 0
       return {
-        id: m.id,
-        name: m.name,
-        profilePicture: m.profilePicture ?? null,
+        id: m.userId,
+        name: m.user.name,
+        profilePicture: m.user.profilePicture ?? null,
         leads,
         ipdDone: ipd,
         conversionRate: leads > 0 ? (ipd / leads) * 100 : 0,
@@ -97,14 +114,11 @@ export async function GET(request: NextRequest) {
       }
     }).sort((a, b) => b.ipdDone - a.ipdDone)
 
-    // Team totals
     const totalLeads = members.reduce((s, m) => s + m.leads, 0)
     const totalIpd = members.reduce((s, m) => s + m.ipdDone, 0)
     const totalProfit = members.reduce((s, m) => s + m.netProfit, 0)
     const totalBill = members.reduce((s, m) => s + m.billAmount, 0)
 
-    // Month-wise breakdown for the whole team (all time)
-    // Leads bucketed by leadDate, IPDs bucketed by conversionDate (when done, not when received)
     const [leadsByMonth, ipdByMonth] = await Promise.all([
       prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
         SELECT
@@ -133,8 +147,6 @@ export async function GET(request: NextRequest) {
     ])
 
     const allMonths = [...new Set([...leadsByMonth.map((r) => r.month), ...ipdByMonth.map((r) => r.month)])].sort()
-
-    // Merge lead counts and ipd counts by (month, bdId) key
     const monthWiseMap = new Map<string, { month: string; bdId: string; bdName: string; leadCount: number; ipdCount: number }>()
     for (const r of leadsByMonth) {
       const key = `${r.month}|${r.bdId}`
@@ -153,10 +165,9 @@ export async function GET(request: NextRequest) {
 
     return successResponse({
       team: {
-        id: team.id,
-        name: team.name,
-        salesHead: team.salesHead,
-        teamLead: team.teamLead,
+        id: managerId,
+        name: `${managerEmp.user.name}'s Team`,
+        manager: managerEmp.user,
       },
       kpis: {
         totalLeads,

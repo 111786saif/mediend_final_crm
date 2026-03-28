@@ -19,24 +19,6 @@ import { useAuth } from '@/hooks/use-auth'
 
 type UserRole = 'MD' | 'SALES_HEAD' | 'TEAM_LEAD' | 'BD' | 'INSURANCE_HEAD' | 'PL_HEAD' | 'HR_HEAD' | 'FINANCE_HEAD' | 'ADMIN' | 'USER'
 
-interface Team {
-  id: string
-  name: string
-  circle: 'North' | 'South' | 'East' | 'West' | 'Central'
-  salesHeadId: string
-  salesHead?: {
-    id: string
-    name: string
-    email: string
-  }
-  members?: Array<{
-    id: string
-    name: string
-    email: string
-    role: UserRole
-  }>
-}
-
 interface Employee {
   id: string
   employeeCode: string
@@ -61,12 +43,6 @@ interface User {
   name: string
   email: string
   role: UserRole
-  teamId: string | null
-  team?: {
-    id: string
-    name: string
-    circle: 'North' | 'South' | 'East' | 'West' | 'Central'
-  }
   employee?: Employee | null
 }
 
@@ -93,11 +69,6 @@ export default function HRUsersPage() {
   const { data: departments } = useQuery<Array<{ id: string; name: string }>>({
     queryKey: ['departments'],
     queryFn: () => apiGet<Array<{ id: string; name: string }>>('/api/departments'),
-  })
-
-  const { data: teams } = useQuery<Team[]>({
-    queryKey: ['teams'],
-    queryFn: () => apiGet<Team[]>('/api/teams'),
   })
 
   const { data: employees } = useQuery<Array<{ id: string; employeeCode: string; user: { name: string } }>>({
@@ -180,15 +151,6 @@ export default function HRUsersPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Teams</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{teams?.length || 0}</div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Users Table */}
@@ -207,7 +169,6 @@ export default function HRUsersPage() {
                         <TableHead>Name</TableHead>
                         <TableHead>Email</TableHead>
                         <TableHead>Role</TableHead>
-                        <TableHead>Team</TableHead>
                         <TableHead>Employee Code</TableHead>
                         <TableHead>Department</TableHead>
                         <TableHead>Salary</TableHead>
@@ -223,7 +184,6 @@ export default function HRUsersPage() {
                         <TableCell>
                           <Badge variant="secondary">{user.role.replace('_', ' ')}</Badge>
                         </TableCell>
-                        <TableCell>{user.team?.name || 'No Team'}</TableCell>
                         <TableCell>
                           {user.employee ? (
                             <div className="flex items-center gap-2">
@@ -1042,11 +1002,6 @@ function DeleteUserDialog({
           <AlertDialogTitle>Delete User</AlertDialogTitle>
           <AlertDialogDescription>
             Are you sure you want to delete <strong>{user.name}</strong>? This action cannot be undone.
-            {user.team && (
-              <span className="block mt-2 text-amber-600">
-                This user is part of team: {user.team.name}
-              </span>
-            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

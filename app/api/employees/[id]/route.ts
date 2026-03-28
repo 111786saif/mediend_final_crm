@@ -59,6 +59,12 @@ export async function GET(
             name: true,
           },
         },
+        manager: {
+          select: {
+            id: true,
+            user: { select: { id: true, name: true } },
+          },
+        },
       },
     })
 

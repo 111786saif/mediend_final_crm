@@ -5,6 +5,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSeatCostPerEmployee } from '@/lib/pnl/pnl-config'
+import { getManagerGroups } from '@/lib/hierarchy'
 
 function mediendExpenseForPl(pl: {
   cabCharges: number
@@ -17,32 +18,23 @@ function mediendExpenseForPl(pl: {
   instrumentsPaidBy: PaidByParty | null
 }): number {
   let exp = pl.cabCharges + pl.dcCharges + pl.referralAmount + pl.doctorCharges
-  if (pl.implantPaidBy !== 'HOSPITAL') {
-    exp += pl.implantCost
-  }
-  if (pl.instrumentsPaidBy !== 'HOSPITAL') {
-    exp += pl.instrumentsCost
-  }
+  if (pl.implantPaidBy !== 'HOSPITAL') exp += pl.implantCost
+  if (pl.instrumentsPaidBy !== 'HOSPITAL') exp += pl.instrumentsCost
   return exp
 }
 
 type Bucket = { count: number; revenue: number }
 
-function bumpDisease(
-  map: Map<string, Map<string, Bucket>>,
-  teamId: string,
-  key: string,
-  share: number
-) {
-  if (!map.has(teamId)) map.set(teamId, new Map())
-  const inner = map.get(teamId)!
+function bumpDisease(map: Map<string, Map<string, Bucket>>, groupId: string, key: string, share: number) {
+  if (!map.has(groupId)) map.set(groupId, new Map())
+  const inner = map.get(groupId)!
   const prev = inner.get(key) ?? { count: 0, revenue: 0 }
   inner.set(key, { count: prev.count + 1, revenue: prev.revenue + share })
 }
 
-function bumpCount(map: Map<string, Map<string, number>>, teamId: string, key: string) {
-  if (!map.has(teamId)) map.set(teamId, new Map())
-  const inner = map.get(teamId)!
+function bumpCount(map: Map<string, Map<string, number>>, groupId: string, key: string) {
+  if (!map.has(groupId)) map.set(groupId, new Map())
+  const inner = map.get(groupId)!
   inner.set(key, (inner.get(key) ?? 0) + 1)
 }
 
@@ -72,7 +64,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
-    const view = searchParams.get('view') || 'all' // all | team | bd
+    const view = searchParams.get('view') || 'all'
 
     const surgeryRange: Prisma.DateTimeFilter = {}
     if (startDate) surgeryRange.gte = new Date(startDate)
@@ -88,9 +80,7 @@ export async function GET(request: NextRequest) {
         ? {
             OR: [
               { plRecord: { surgeryDate: surgeryRange } },
-              {
-                AND: [{ plRecord: { surgeryDate: null } }, { surgeryDate: surgeryRange }],
-              },
+              { AND: [{ plRecord: { surgeryDate: null } }, { surgeryDate: surgeryRange }] },
             ],
           }
         : {}),
@@ -112,8 +102,12 @@ export async function GET(request: NextRequest) {
               select: {
                 id: true,
                 name: true,
-                teamId: true,
-                team: { select: { id: true, name: true, teamLead: { select: { name: true } } } },
+                employee: {
+                  select: {
+                    manager: { select: { id: true, user: { select: { name: true } } } },
+                    team: { select: { name: true } },
+                  },
+                },
               },
             },
           },
@@ -121,44 +115,37 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    const diseaseByTeam = new Map<string, Map<string, Bucket>>()
-    const circleByTeam = new Map<string, Map<string, number>>()
-    const hospitalByTeam = new Map<string, Map<string, number>>()
-
-    const teamMap = new Map<
-      string,
-      {
-        teamId: string
-        teamName: string
-        teamLeadName: string | null
-        surgeries: number
-        revenue: number
-        expenses: number
-        netProfit: number
+    // Build manager groups lookup: bdUserId → managerId
+    const managerGroups = await getManagerGroups()
+    const bdToManagerId = new Map<string, string>()
+    const managerIdToGroup = new Map<string, typeof managerGroups[0]>()
+    for (const group of managerGroups) {
+      managerIdToGroup.set(group.managerId, group)
+      for (const sub of group.subordinates) {
+        bdToManagerId.set(sub.userId, group.managerId)
       }
-    >()
+    }
 
-    const bdList: {
-      bdId: string
-      bdName: string
-      teamName: string | null
-      surgeries: number
-      revenue: number
-      expenses: number
-      netProfit: number
-      patients: { leadId: string; leadRef: string; patientName: string; netProfit: number }[]
-    }[] = []
+    const diseaseByGroup = new Map<string, Map<string, Bucket>>()
+    const circleByGroup = new Map<string, Map<string, number>>()
+    const hospitalByGroup = new Map<string, Map<string, number>>()
+
+    const groupMap = new Map<
+      string,
+      { groupId: string; groupName: string; managerName: string; surgeries: number; revenue: number; expenses: number; netProfit: number }
+    >()
 
     const bdAgg = new Map<
       string,
       {
         bdId: string
         bdName: string
+        managerName: string | null
         teamName: string | null
         surgeries: number
         revenue: number
         expenses: number
-        patients: (typeof bdList)[0]['patients']
+        patients: { leadId: string; leadRef: string; patientName: string; netProfit: number }[]
       }
     >()
 
@@ -174,91 +161,69 @@ export async function GET(request: NextRequest) {
       totalExpenses += exp
       surgeryCount += 1
 
-      const teamId = pl.lead.bd?.team?.id || 'unassigned'
-      const teamName = pl.lead.bd?.team?.name || 'Unassigned'
+      const bdId = pl.lead.bdId
+      const bdName = pl.lead.bd?.name || 'Unknown'
+      const managerName = pl.lead.bd?.employee?.manager?.user?.name ?? null
+      const teamName = pl.lead.bd?.employee?.team?.name ?? null
+      const managerId = bdToManagerId.get(bdId) ?? 'unassigned'
+      const group = managerIdToGroup.get(managerId)
+      const groupName = group ? `${group.managerName}'s Team` : 'Unassigned'
+      const groupManagerName = group?.managerName ?? 'Unassigned'
 
       const diseaseKey = pl.category || pl.lead.category || 'Unknown'
       const circleKey = pl.circle || pl.lead.circle || 'Unknown'
       const hospitalKey = pl.hospitalName || pl.lead.hospitalName || 'Unknown'
 
-      bumpDisease(diseaseByTeam, teamId, diseaseKey, share)
-      bumpCount(circleByTeam, teamId, circleKey)
-      bumpCount(hospitalByTeam, teamId, hospitalKey)
+      bumpDisease(diseaseByGroup, managerId, diseaseKey, share)
+      bumpCount(circleByGroup, managerId, circleKey)
+      bumpCount(hospitalByGroup, managerId, hospitalKey)
 
-      const existingTeam = teamMap.get(teamId)
-      if (existingTeam) {
-        existingTeam.surgeries += 1
-        existingTeam.revenue += share
-        existingTeam.expenses += exp
-        existingTeam.netProfit += net
+      const existingGroup = groupMap.get(managerId)
+      if (existingGroup) {
+        existingGroup.surgeries += 1
+        existingGroup.revenue += share
+        existingGroup.expenses += exp
+        existingGroup.netProfit += net
       } else {
-        teamMap.set(teamId, {
-          teamId,
-          teamName,
-          teamLeadName: pl.lead.bd?.team?.teamLead?.name ?? null,
-          surgeries: 1,
-          revenue: share,
-          expenses: exp,
-          netProfit: net,
-        })
+        groupMap.set(managerId, { groupId: managerId, groupName, managerName: groupManagerName, surgeries: 1, revenue: share, expenses: exp, netProfit: net })
       }
 
-      const bdId = pl.lead.bdId
-      const bdName = pl.lead.bd?.name || 'Unknown'
-      const teamNameBd = pl.lead.bd?.team?.name ?? null
       const existingBd = bdAgg.get(bdId)
       if (existingBd) {
         existingBd.surgeries += 1
         existingBd.revenue += share
         existingBd.expenses += exp
-        existingBd.patients.push({
-          leadId: pl.lead.id,
-          leadRef: pl.lead.leadRef,
-          patientName: pl.lead.patientName,
-          netProfit: net,
-        })
+        existingBd.patients.push({ leadId: pl.lead.id, leadRef: pl.lead.leadRef, patientName: pl.lead.patientName, netProfit: net })
+        if (!existingBd.teamName && teamName) existingBd.teamName = teamName
       } else {
         bdAgg.set(bdId, {
           bdId,
           bdName,
-          teamName: teamNameBd,
+          managerName,
+          teamName,
           surgeries: 1,
           revenue: share,
           expenses: exp,
-          patients: [
-            {
-              leadId: pl.lead.id,
-              leadRef: pl.lead.leadRef,
-              patientName: pl.lead.patientName,
-              netProfit: net,
-            },
-          ],
+          patients: [{ leadId: pl.lead.id, leadRef: pl.lead.leadRef, patientName: pl.lead.patientName, netProfit: net }],
         })
       }
     }
 
-    for (const b of bdAgg.values()) {
-      bdList.push({
-        ...b,
-        netProfit: b.revenue - b.expenses,
-      })
-    }
-
+    const bdList = Array.from(bdAgg.values()).map((b) => ({ ...b, netProfit: b.revenue - b.expenses }))
     bdList.sort((a, b) => b.netProfit - a.netProfit)
-    const teamBreakdown = Array.from(teamMap.values()).sort((a, b) => b.netProfit - a.netProfit)
+    const groupBreakdown = Array.from(groupMap.values()).sort((a, b) => b.netProfit - a.netProfit)
 
     const seatRate = await getSeatCostPerEmployee()
-    const realTeamIds = teamBreakdown.map((t) => t.teamId).filter((id) => id && id !== 'unassigned')
-    const teamMemberCounts = await prisma.team.findMany({
-      where: { id: { in: realTeamIds } },
-      select: { id: true, _count: { select: { members: true } } },
-    })
-    const memberCountByTeam = new Map(teamMemberCounts.map((x) => [x.id, x._count.members]))
 
-    /** --- Marketing (Surgery PnL) + lead counts by BD / team --- */
+    // Member counts by manager group
+    const memberCountByGroup = new Map<string, number>()
+    for (const group of managerGroups) {
+      memberCountByGroup.set(group.managerId, group.subordinates.length)
+    }
+
     let totalSurgeryMarketing = 0
     const marketingCostPerBd: Record<string, number> = {}
-    const marketingCostPerTeam: Record<string, number> = {}
+    const marketingCostPerGroup: Record<string, number> = {}
 
     let monthsForPnL: { month: number; year: number }[] = []
     if (startDate && endDate) {
@@ -270,80 +235,53 @@ export async function GET(request: NextRequest) {
     })
     if (mktCat && monthsForPnL.length > 0) {
       const entries = await prisma.pnLEntry.findMany({
-        where: {
-          categoryId: mktCat.id,
-          OR: monthsForPnL.map((m) => ({ month: m.month, year: m.year })),
-        },
+        where: { categoryId: mktCat.id, OR: monthsForPnL.map((m) => ({ month: m.month, year: m.year })) },
       })
       totalSurgeryMarketing = entries.reduce((s, e) => s + e.amount, 0)
     }
 
     const leadDateWhere: Prisma.DateTimeFilter = {}
     if (startDate) leadDateWhere.gte = new Date(startDate)
-    if (endDate) {
-      const e = new Date(endDate)
-      e.setHours(23, 59, 59, 999)
-      leadDateWhere.lte = e
-    }
+    if (endDate) { const e = new Date(endDate); e.setHours(23, 59, 59, 999); leadDateWhere.lte = e }
 
-    const leadCounts =
-      Object.keys(leadDateWhere).length > 0
-        ? await prisma.lead.groupBy({
-            by: ['bdId'],
-            where: { leadDate: leadDateWhere },
-            _count: { _all: true },
-          })
-        : []
+    const leadCounts = Object.keys(leadDateWhere).length > 0
+      ? await prisma.lead.groupBy({ by: ['bdId'], where: { leadDate: leadDateWhere }, _count: { _all: true } })
+      : []
 
     const totalLeads = leadCounts.reduce((s, x) => s + x._count._all, 0)
-
-    const bdIdsForMarketing = leadCounts.map((x) => x.bdId)
-    const bdUsers =
-      bdIdsForMarketing.length > 0
-        ? await prisma.user.findMany({
-            where: { id: { in: bdIdsForMarketing } },
-            select: { id: true, teamId: true },
-          })
-        : []
-    const teamIdByBd = new Map(bdUsers.map((u) => [u.id, u.teamId]))
 
     for (const row of leadCounts) {
       const share = totalLeads > 0 ? row._count._all / totalLeads : 0
       marketingCostPerBd[row.bdId] = share * totalSurgeryMarketing
     }
 
-    const leadCountByTeam = new Map<string, number>()
+    const leadCountByGroup = new Map<string, number>()
     for (const row of leadCounts) {
-      const tid = teamIdByBd.get(row.bdId) ?? 'unassigned'
-      leadCountByTeam.set(tid, (leadCountByTeam.get(tid) ?? 0) + row._count._all)
-      const prev = marketingCostPerTeam[tid] ?? 0
-      marketingCostPerTeam[tid] = prev + (marketingCostPerBd[row.bdId] ?? 0)
+      const gid = bdToManagerId.get(row.bdId) ?? 'unassigned'
+      leadCountByGroup.set(gid, (leadCountByGroup.get(gid) ?? 0) + row._count._all)
+      marketingCostPerGroup[gid] = (marketingCostPerGroup[gid] ?? 0) + (marketingCostPerBd[row.bdId] ?? 0)
     }
 
     function distToDiseaseArr(m: Map<string, Bucket> | undefined) {
       if (!m) return []
-      return [...m.entries()]
-        .map(([label, v]) => ({ label, count: v.count, revenue: v.revenue }))
-        .sort((a, b) => b.revenue - a.revenue)
+      return [...m.entries()].map(([label, v]) => ({ label, count: v.count, revenue: v.revenue })).sort((a, b) => b.revenue - a.revenue)
     }
     function distToCountArr(m: Map<string, number> | undefined) {
       if (!m) return []
-      return [...m.entries()]
-        .map(([label, count]) => ({ label, count }))
-        .sort((a, b) => b.count - a.count)
+      return [...m.entries()].map(([label, count]) => ({ label, count })).sort((a, b) => b.count - a.count)
     }
 
-    const teamBreakdownEnriched = teamBreakdown.map((t) => {
-      const memberCount = t.teamId === 'unassigned' ? 0 : memberCountByTeam.get(t.teamId) ?? 0
+    const groupBreakdownEnriched = groupBreakdown.map((t) => {
+      const memberCount = t.groupId === 'unassigned' ? 0 : (memberCountByGroup.get(t.groupId) ?? 0)
       return {
         ...t,
         memberCount,
         seatCost: memberCount * seatRate,
-        leadCount: leadCountByTeam.get(t.teamId) ?? 0,
-        marketingCost: marketingCostPerTeam[t.teamId] ?? 0,
-        diseaseDistribution: distToDiseaseArr(diseaseByTeam.get(t.teamId)),
-        circleDistribution: distToCountArr(circleByTeam.get(t.teamId)),
-        hospitalDistribution: distToCountArr(hospitalByTeam.get(t.teamId)),
+        leadCount: leadCountByGroup.get(t.groupId) ?? 0,
+        marketingCost: marketingCostPerGroup[t.groupId] ?? 0,
+        diseaseDistribution: distToDiseaseArr(diseaseByGroup.get(t.groupId)),
+        circleDistribution: distToCountArr(circleByGroup.get(t.groupId)),
+        hospitalDistribution: distToCountArr(hospitalByGroup.get(t.groupId)),
       }
     })
 
@@ -353,11 +291,6 @@ export async function GET(request: NextRequest) {
       marketingCost: marketingCostPerBd[b.bdId] ?? 0,
     }))
 
-    const topTeams = teamBreakdownEnriched.slice(0, 3)
-    const bottomTeams = teamBreakdownEnriched.slice(-3).reverse()
-    const topBds = [...bdBreakdownEnriched].slice(0, 3)
-    const bottomBds = [...bdBreakdownEnriched].slice(-3).reverse()
-
     return successResponse({
       view,
       surgeryCount,
@@ -365,15 +298,15 @@ export async function GET(request: NextRequest) {
       totalExpenses,
       netProfit: totalRevenue - totalExpenses,
       avgPerCase: surgeryCount > 0 ? (totalRevenue - totalExpenses) / surgeryCount : 0,
-      teamBreakdown: teamBreakdownEnriched,
+      teamBreakdown: groupBreakdownEnriched,
       seatCostPerEmployee: seatRate,
       bdBreakdown: bdBreakdownEnriched,
-      topTeams,
-      bottomTeams,
-      topBds,
-      bottomBds,
+      topTeams: groupBreakdownEnriched.slice(0, 3),
+      bottomTeams: groupBreakdownEnriched.slice(-3).reverse(),
+      topBds: [...bdBreakdownEnriched].slice(0, 3),
+      bottomBds: [...bdBreakdownEnriched].slice(-3).reverse(),
       marketingCostPerBd,
-      marketingCostPerTeam,
+      marketingCostPerTeam: marketingCostPerGroup,
     })
   } catch (error) {
     console.error('pnl/surgery error:', error)

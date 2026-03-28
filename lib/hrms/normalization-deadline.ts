@@ -5,7 +5,7 @@
  */
 
 /** Minimum characters for employee normalization reason (request to manager / self-normalize). */
-export const NORMALIZATION_REASON_MIN_CHARS = 50
+export const NORMALIZATION_REASON_MIN_CHARS = 15
 
 const WEEK_RULE_START = new Date(Date.UTC(2026, 3, 1, 0, 0, 0, 0)) // April 1, 2026 UTC
 

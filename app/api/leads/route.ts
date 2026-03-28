@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     if (user.role === 'BD') {
       where.bdId = user.id
     } else if (user.role === 'TEAM_LEAD') {
-      subordinateUserIds = await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId)
+      subordinateUserIds = await getTeamLeadLeadAccessBdUserIds(user.id)
       where.bdId = { in: [user.id, ...subordinateUserIds] }
     }
     // Note: INSURANCE_HEAD can access all leads via canAccessLead, so we don't filter by bdId
@@ -143,7 +143,13 @@ export async function GET(request: NextRequest) {
       source: true,
       netProfit: true,
       flowType: true,
-      bd: { select: { id: true, name: true, team: { select: { id: true } } } },
+      bd: {
+        select: {
+          id: true,
+          name: true,
+          employee: { select: { team: { select: { id: true } } } },
+        },
+      },
       kypSubmission: { select: { id: true, status: true } },
       plRecord: { select: { bdmName: true } },
       ...(phoneLast10 ? { phoneNumber: true, alternateNumber: true } : {}),
@@ -155,11 +161,15 @@ export async function GET(request: NextRequest) {
           id: true,
           name: true,
           email: true,
-          team: {
+          employee: {
             select: {
-              id: true,
-              name: true,
-              teamLead: { select: { name: true } },
+              team: {
+                select: {
+                  id: true,
+                  name: true,
+                  teamLead: { select: { user: { select: { name: true } } } },
+                },
+              },
             },
           },
         },
@@ -255,7 +265,7 @@ export async function GET(request: NextRequest) {
 
     // Filter leads based on access control
     let accessibleLeads = leads.filter((lead) =>
-      canAccessLead(user, lead.bdId, lead.bd?.team?.id, subordinateUserIds)
+      canAccessLead(user, lead.bdId, subordinateUserIds)
     )
 
     if (phoneLast10) {

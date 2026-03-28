@@ -156,22 +156,18 @@ export async function GET(request: NextRequest) {
         employee: {
           include: {
             department: { select: { name: true } },
-            team: { select: { name: true } },
           },
         },
       },
     })
 
     const payrollByDept = new Map<string, number>()
-    const payrollByTeam = new Map<string, number>()
     let totalMonthlySalary = 0
 
     payrolls.forEach((p) => {
       totalMonthlySalary += p.netPayable
       const deptName = p.employee.department?.name || 'No Department'
-      const teamName = p.employee.team?.name || 'No Team'
       payrollByDept.set(deptName, (payrollByDept.get(deptName) || 0) + p.netPayable)
-      payrollByTeam.set(teamName, (payrollByTeam.get(teamName) || 0) + p.netPayable)
     })
 
     // Fallback: SalaryStructure when no payroll
@@ -189,7 +185,6 @@ export async function GET(request: NextRequest) {
           employee: {
             include: {
               department: { select: { name: true } },
-              team: { select: { name: true } },
             },
           },
         },
@@ -203,18 +198,12 @@ export async function GET(request: NextRequest) {
         const monthly = s.annualCtc / 12
         totalMonthlySalary += monthly
         const deptName = s.employee.department?.name || 'No Department'
-        const teamName = s.employee.team?.name || 'No Team'
         payrollByDept.set(deptName, (payrollByDept.get(deptName) || 0) + monthly)
-        payrollByTeam.set(teamName, (payrollByTeam.get(teamName) || 0) + monthly)
       })
     }
 
     const departmentSalaryBreakdown = Array.from(payrollByDept.entries())
       .map(([name, amount]) => ({ departmentName: name, amount }))
-      .sort((a, b) => b.amount - a.amount)
-
-    const teamSalaryBreakdown = Array.from(payrollByTeam.entries())
-      .map(([name, amount]) => ({ teamName: name, amount }))
       .sort((a, b) => b.amount - a.amount)
 
     // Department-wise headcount
@@ -377,7 +366,6 @@ export async function GET(request: NextRequest) {
         newJoinersCount: newJoiners.length,
       },
       departmentSalaryBreakdown,
-      teamSalaryBreakdown,
       departmentHeadcount,
       ticketAnalytics,
       latecomersToday,

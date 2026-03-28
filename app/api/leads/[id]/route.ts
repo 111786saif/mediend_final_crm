@@ -7,6 +7,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
+import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
 
 export async function GET(
   request: NextRequest,
@@ -19,7 +20,7 @@ export async function GET(
     }
 
     const { id } = await params
-    console.log('[DEBUG] GET /api/leads/[id]', { id, userId: user.id, userRole: user.role, userTeamId: user.teamId })
+    console.log('[DEBUG] GET /api/leads/[id]', { id, userId: user.id, userRole: user.role })
 
     const lead = await prisma.lead.findUnique({
       where: { id },
@@ -36,13 +37,14 @@ export async function GET(
     })
 
     // Fetch relations separately to identify which one is causing the "column not found" error
-    let bd = null;
+    let bd = null
     try {
-      bd = await prisma.user.findUnique({
+      const bdRow = await prisma.user.findUnique({
         where: { id: lead.bdId },
-        include: { team: { include: { salesHead: { select: { id: true, name: true } } } } }
-      });
-      console.log('[DEBUG] BD relation fetched successfully');
+        select: prismaBdEmployeeTeamSelect,
+      })
+      bd = toLegacyBdShape(bdRow)
+      console.log('[DEBUG] BD relation fetched successfully')
     } catch (e) {
       console.error('[DEBUG] Error fetching BD relation:', e);
     }
@@ -230,14 +232,12 @@ export async function GET(
     console.log('[DEBUG] Full lead with relations fetched successfully')
 
     const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
-    if (!canAccessLead(user, fullLead.bdId, fullLead.bd?.team?.id, subordinateIds)) {
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    if (!canAccessLead(user, fullLead.bdId, subordinateIds)) {
       console.log('[DEBUG] Access denied by canAccessLead', {
         userId: user.id,
         userRole: user.role,
-        userTeamId: user.teamId,
         leadBdId: fullLead.bdId,
-        leadBdTeamId: fullLead.bd?.team?.id
       })
       return errorResponse('Forbidden', 403)
     }
@@ -283,11 +283,7 @@ export async function PATCH(
     const lead = await prisma.lead.findUnique({
       where: { id },
       include: {
-        bd: {
-          include: {
-            team: true,
-          },
-        },
+        bd: { select: prismaBdEmployeeTeamSelect },
       },
     })
 
@@ -296,8 +292,8 @@ export async function PATCH(
     }
 
     const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id, user.teamId) : undefined
-    if (!canAccessLead(user, lead.bdId, lead.bd.team?.id, subordinateIds)) {
+      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
+    if (!canAccessLead(user, lead.bdId, subordinateIds)) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -386,13 +382,11 @@ export async function PATCH(
       if (user.role === 'BD' && body.bdId !== user.id) {
         return errorResponse('You can only assign leads to yourself', 403)
       }
-      if (user.role === 'TEAM_LEAD' && user.teamId) {
-        // Verify new BD is in the same team
-        const newBd = await prisma.user.findUnique({
-          where: { id: body.bdId },
-        })
-        if (!newBd || newBd.teamId !== user.teamId) {
-          return errorResponse('Can only reassign to BDs in your team', 403)
+      if (user.role === 'TEAM_LEAD') {
+        const allowed =
+          body.bdId === user.id || (subordinateIds?.includes(body.bdId) ?? false)
+        if (!allowed) {
+          return errorResponse('Can only reassign to your subordinates or yourself', 403)
         }
       }
       updateData.bd = { connect: { id: body.bdId } }
@@ -402,11 +396,7 @@ export async function PATCH(
       where: { id },
       data: updateData,
       include: {
-        bd: {
-          include: {
-            team: true,
-          },
-        },
+        bd: { select: prismaBdEmployeeTeamSelect },
         plRecord: true,
       },
     })
@@ -451,12 +441,18 @@ export async function PATCH(
     const leadWithPl = await prisma.lead.findUnique({
       where: { id },
       include: {
-        bd: { include: { team: true } },
+        bd: { select: prismaBdEmployeeTeamSelect },
         plRecord: true,
       },
     })
 
-    return successResponse(leadWithPl || updatedLead, 'Lead updated successfully')
+    const payload = leadWithPl || updatedLead
+    const mapped =
+      payload && payload.bd
+        ? { ...payload, bd: toLegacyBdShape(payload.bd) }
+        : payload
+
+    return successResponse(mapped, 'Lead updated successfully')
   } catch (error) {
     console.error('Error updating lead:', error)
     return errorResponse('Failed to update lead', 500)

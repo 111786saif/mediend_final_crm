@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { getSubordinateUserIdsForLeadAccess, getManagerGroups } from '@/lib/hierarchy'
 
 const LEAD_AGE_BUCKETS = {
   new: { label: 'New', maxDays: 7 },
@@ -33,12 +34,12 @@ export async function GET(request: NextRequest) {
     ) {
       return errorResponse('Forbidden', 403)
     }
-    if (user.role === 'TEAM_LEAD' && !user.teamId) {
-      return errorResponse('No team assigned', 403)
-    }
 
-    const teamScope: Prisma.LeadWhereInput =
-      user.role === 'TEAM_LEAD' && user.teamId ? { bd: { teamId: user.teamId } } : {}
+    let teamScope: Prisma.LeadWhereInput = {}
+    if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      teamScope = { bdId: { in: [user.id, ...subIds] } }
+    }
 
     const { searchParams } = new URL(request.url)
     const startDate = searchParams.get('startDate')
@@ -56,7 +57,6 @@ export async function GET(request: NextRequest) {
       dateFilter.lte = end
     }
 
-    // Use leadDate (MySQL Lead_Date) for filtering - canonical "when lead was received"
     const leadDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
         ? {
@@ -95,62 +95,19 @@ export async function GET(request: NextRequest) {
       bySourceCompleted,
       byCampaignAll,
       byCampaignCompleted,
-      allLeadsForTeamAndAge,
-      bdsWithTeams,
+      allLeadsForAge,
     ] = await Promise.all([
-      prisma.lead.groupBy({
-        by: ['circle'],
-        where: allLeadsWhere,
-        _count: { id: true },
-      }),
-      prisma.lead.groupBy({
-        by: ['circle'],
-        where: { ...completedWhere },
-        _count: { id: true },
-      }),
-      prisma.lead.groupBy({
-        by: ['treatment'],
-        where: { ...allLeadsWhere, treatment: { not: null } },
-        _count: { id: true },
-      }),
-      prisma.lead.groupBy({
-        by: ['treatment'],
-        where: { ...completedWhere, treatment: { not: null } },
-        _count: { id: true },
-      }),
-      prisma.lead.groupBy({
-        by: ['source'],
-        where: { ...allLeadsWhere, source: { not: null } },
-        _count: { id: true },
-      }),
-      prisma.lead.groupBy({
-        by: ['source'],
-        where: { ...completedWhere, source: { not: null } },
-        _count: { id: true },
-      }),
-      prisma.lead.groupBy({
-        by: ['campaignName'],
-        where: { ...allLeadsWhere, campaignName: { not: null } },
-        _count: { id: true },
-      }),
-      prisma.lead.groupBy({
-        by: ['campaignName'],
-        where: { ...completedWhere, campaignName: { not: null } },
-        _count: { id: true },
-      }),
+      prisma.lead.groupBy({ by: ['circle'], where: allLeadsWhere, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['circle'], where: { ...completedWhere }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['treatment'], where: { ...allLeadsWhere, treatment: { not: null } }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['treatment'], where: { ...completedWhere, treatment: { not: null } }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['source'], where: { ...allLeadsWhere, source: { not: null } }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['source'], where: { ...completedWhere, source: { not: null } }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['campaignName'], where: { ...allLeadsWhere, campaignName: { not: null } }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['campaignName'], where: { ...completedWhere, campaignName: { not: null } }, _count: { id: true } }),
       prisma.lead.findMany({
         where: allLeadsWhere,
-        select: {
-          id: true,
-          bdId: true,
-          pipelineStage: true,
-          leadDate: true,
-          createdDate: true,
-        },
-      }),
-      prisma.user.findMany({
-        where: { role: 'BD', teamId: { not: null } },
-        select: { id: true, name: true, teamId: true, team: { select: { id: true, name: true } } },
+        select: { id: true, bdId: true, pipelineStage: true, leadDate: true, createdDate: true },
       }),
     ])
 
@@ -158,61 +115,48 @@ export async function GET(request: NextRequest) {
     const byCircle = byCircleAll.map((c) => {
       const total = c._count.id
       const converted = completedCircleMap.get(c.circle) ?? 0
-      return {
-        circle: c.circle,
-        totalLeads: total,
-        converted,
-        conversionRate: total > 0 ? (converted / total) * 100 : 0,
-      }
+      return { circle: c.circle, totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
     })
 
     const completedTreatmentMap = new Map(byTreatmentCompleted.map((t) => [t.treatment, t._count.id]))
     const byDisease = byTreatmentAll.map((t) => {
       const total = t._count.id
       const converted = completedTreatmentMap.get(t.treatment) ?? 0
-      return {
-        disease: t.treatment ?? 'Unknown',
-        totalLeads: total,
-        converted,
-        conversionRate: total > 0 ? (converted / total) * 100 : 0,
-      }
+      return { disease: t.treatment ?? 'Unknown', totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
     }).sort((a, b) => b.totalLeads - a.totalLeads)
 
     const completedSourceMap = new Map(bySourceCompleted.map((s) => [s.source, s._count.id]))
     const bySource = bySourceAll.map((s) => {
       const total = s._count.id
       const converted = completedSourceMap.get(s.source) ?? 0
-      return {
-        source: s.source ?? 'Unknown',
-        totalLeads: total,
-        converted,
-        conversionRate: total > 0 ? (converted / total) * 100 : 0,
-      }
+      return { source: s.source ?? 'Unknown', totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
     }).sort((a, b) => b.totalLeads - a.totalLeads)
 
     const completedCampaignMap = new Map(byCampaignCompleted.map((c) => [c.campaignName, c._count.id]))
     const byCampaign = byCampaignAll.map((c) => {
       const total = c._count.id
       const converted = completedCampaignMap.get(c.campaignName) ?? 0
-      return {
-        campaign: c.campaignName ?? 'Unknown',
-        totalLeads: total,
-        converted,
-        conversionRate: total > 0 ? (converted / total) * 100 : 0,
-      }
+      return { campaign: c.campaignName ?? 'Unknown', totalLeads: total, converted, conversionRate: total > 0 ? (converted / total) * 100 : 0 }
     }).sort((a, b) => b.totalLeads - a.totalLeads)
 
+    // By-team breakdown: manager group (manager + direct subordinates) from org chart
+    const managerGroups = await getManagerGroups()
     const teamMap = new Map<string, { teamName: string; totalLeads: number; converted: number }>()
-    const bdToTeam = new Map(bdsWithTeams.map((b) => [b.id, b.team!]))
-    allLeadsForTeamAndAge.forEach((lead) => {
-      const team = bdToTeam.get(lead.bdId)
-      const teamId = team?.id ?? 'no-team'
-      const teamName = team?.name ?? 'No Team'
-      const cur = teamMap.get(teamId) ?? { teamName, totalLeads: 0, converted: 0 }
-      cur.totalLeads += 1
-      if (lead.pipelineStage === 'COMPLETED') cur.converted += 1
-      teamMap.set(teamId, cur)
-    })
+    for (const group of managerGroups) {
+      const groupUserIds = new Set([group.managerUserId, ...group.subordinates.map((s) => s.userId)])
+      const key = group.managerId
+      let totalLeads = 0
+      let converted = 0
+      for (const lead of allLeadsForAge) {
+        if (groupUserIds.has(lead.bdId)) {
+          totalLeads++
+          if (lead.pipelineStage === 'COMPLETED') converted++
+        }
+      }
+      if (totalLeads > 0) {
+        teamMap.set(key, { teamName: `${group.managerName}'s Team`, totalLeads, converted })
+      }
+    }
     const byTeam = Array.from(teamMap.values()).map((t) => ({
       teamName: t.teamName,
       totalLeads: t.totalLeads,
@@ -222,8 +166,7 @@ export async function GET(request: NextRequest) {
 
     const asOf = endDate ? new Date(endDate) : new Date()
     const ageBuckets = { new: { total: 0, converted: 0 }, oneMonth: { total: 0, converted: 0 }, twoMonths: { total: 0, converted: 0 }, old: { total: 0, converted: 0 } }
-    allLeadsForTeamAndAge.forEach((lead) => {
-      // Use leadDate (MySQL Lead_Date) for age - canonical "when lead was received"
+    allLeadsForAge.forEach((lead) => {
       const effectiveLeadDate = lead.leadDate ?? lead.createdDate
       const bucket = getLeadAgeBucket(effectiveLeadDate, asOf)
       ageBuckets[bucket].total += 1
@@ -236,14 +179,7 @@ export async function GET(request: NextRequest) {
       conversionRate: ageBuckets[key].total > 0 ? (ageBuckets[key].converted / ageBuckets[key].total) * 100 : 0,
     }))
 
-    return successResponse({
-      byCircle,
-      byDisease,
-      bySource,
-      byCampaign,
-      byTeam,
-      leadAgeBreakdown,
-    })
+    return successResponse({ byCircle, byDisease, bySource, byCampaign, byTeam, leadAgeBreakdown })
   } catch (error) {
     console.error('Leads breakdown error:', error)
     return errorResponse('Failed to fetch leads breakdown', 500)

@@ -3,7 +3,6 @@
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-// Table imports removed
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -12,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useState } from 'react'
-import type { Team, User } from '@/generated/prisma/client'
+import type { User } from '@/generated/prisma/client'
 import { Plus, Target } from 'lucide-react'
 import { toast } from 'sonner'
 import { Progress } from '@/components/ui/progress'
@@ -41,6 +40,12 @@ interface Target {
   }
 }
 
+interface ManagerEmployee {
+  id: string
+  employeeCode: string
+  user: { id: string; name: string; role: string }
+}
+
 export default function TargetsPage() {
   const [activeTab, setActiveTab] = useState<'team' | 'bd'>('team')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -51,9 +56,9 @@ export default function TargetsPage() {
     queryFn: () => apiGet<Target[]>(`/api/targets?targetType=${activeTab.toUpperCase()}`),
   })
 
-  const { data: teams } = useQuery<Team[]>({
-    queryKey: ['teams'],
-    queryFn: () => apiGet<Team[]>('/api/teams'),
+  const { data: managers } = useQuery<ManagerEmployee[]>({
+    queryKey: ['employees', 'managers'],
+    queryFn: () => apiGet<ManagerEmployee[]>('/api/employees?role=TEAM_LEAD&includeManagers=true'),
   })
 
   const { data: users } = useQuery<User[]>({
@@ -95,10 +100,10 @@ export default function TargetsPage() {
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>Create New Target</DialogTitle>
-                  <DialogDescription>Set targets for teams or individual BDs</DialogDescription>
+                  <DialogDescription>Set targets for manager groups or individual BDs</DialogDescription>
                 </DialogHeader>
                 <CreateTargetForm
-                  teams={teams || []}
+                  managers={managers || []}
                   users={users || []}
                   targetType={activeTab}
                   onSubmit={(data) => createTargetMutation.mutate(data)}
@@ -154,7 +159,6 @@ export default function TargetsPage() {
 
 function TargetCard({ target }: { target: Target }) {
   const progress = target.progress || { actual: 0, percentage: 0, status: 'on_track' as const }
-  // statusColors removed
 
   return (
     <Card>
@@ -206,13 +210,13 @@ function TargetCard({ target }: { target: Target }) {
 }
 
 function CreateTargetForm({
-  teams,
+  managers,
   users,
   targetType,
   onSubmit,
   isLoading,
 }: {
-  teams: Team[]
+  managers: ManagerEmployee[]
   users: User[]
   targetType: 'team' | 'bd'
   onSubmit: (data: Partial<Target>) => void
@@ -241,20 +245,20 @@ function CreateTargetForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <Label>{targetType === 'team' ? 'Team' : 'BD'}</Label>
+        <Label>{targetType === 'team' ? 'Manager (Team)' : 'BD'}</Label>
         <Select
           value={formData.targetForId}
           onValueChange={(value) => setFormData({ ...formData, targetForId: value })}
           required
         >
           <SelectTrigger>
-            <SelectValue placeholder={`Select ${targetType === 'team' ? 'team' : 'BD'}`} />
+            <SelectValue placeholder={`Select ${targetType === 'team' ? 'manager' : 'BD'}`} />
           </SelectTrigger>
           <SelectContent>
             {targetType === 'team'
-              ? teams.map((team) => (
-                  <SelectItem key={team.id} value={team.id}>
-                    {team.name}
+              ? managers.map((mgr) => (
+                  <SelectItem key={mgr.id} value={mgr.id}>
+                    {mgr.user.name} ({mgr.employeeCode})
                   </SelectItem>
                 ))
               : users.map((user) => (

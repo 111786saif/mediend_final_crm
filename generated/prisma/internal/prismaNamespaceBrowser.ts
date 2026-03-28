@@ -52,7 +52,6 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Team: 'Team',
   Lead: 'Lead',
   CallNote: 'CallNote',
   LeadStageEvent: 'LeadStageEvent',
@@ -168,7 +167,6 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   name: 'name',
   role: 'role',
-  teamId: 'teamId',
   phoneNumber: 'phoneNumber',
   address: 'address',
   profilePicture: 'profilePicture',
@@ -177,18 +175,6 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const TeamScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  salesHeadId: 'salesHeadId',
-  teamLeadId: 'teamLeadId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
 
 
 export const LeadScalarFieldEnum = {
@@ -330,7 +316,6 @@ export const TargetScalarFieldEnum = {
   id: 'id',
   targetType: 'targetType',
   targetForId: 'targetForId',
-  teamId: 'teamId',
   periodType: 'periodType',
   periodStartDate: 'periodStartDate',
   periodEndDate: 'periodEndDate',

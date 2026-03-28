@@ -9,9 +9,9 @@ function formatInr(n: number) {
 }
 
 export type TeamRow = {
-  teamId: string
-  teamName: string
-  teamLeadName: string | null
+  groupId: string
+  groupName: string
+  managerName: string | null
   surgeries: number
   revenue: number
   expenses: number
@@ -33,8 +33,8 @@ export function SurgeryTeamTable({
   onRowClick?: (row: TeamRow) => void
 }) {
   const sorted = [...rows].sort((a, b) => b.netProfit - a.netProfit)
-  const topId = sorted[0]?.teamId
-  const bottomId = sorted[sorted.length - 1]?.teamId
+  const topId = sorted[0]?.groupId
+  const bottomId = sorted[sorted.length - 1]?.groupId
 
   const showLeads = sorted.some((r) => r.leadCount != null)
 
@@ -43,7 +43,7 @@ export function SurgeryTeamTable({
       <TableHeader>
         <TableRow>
           <TableHead>Team</TableHead>
-          <TableHead>Team lead</TableHead>
+          <TableHead>Manager</TableHead>
           <TableHead className="text-right">Surgeries</TableHead>
           {showLeads && (
             <>
@@ -60,11 +60,11 @@ export function SurgeryTeamTable({
       <TableBody>
         {sorted.map((r) => {
           const avg = r.surgeries > 0 ? r.netProfit / r.surgeries : 0
-          const isTop = r.teamId === topId && sorted.length > 1
-          const isBottom = r.teamId === bottomId && sorted.length > 1 && r.teamId !== topId
+          const isTop = r.groupId === topId && sorted.length > 1
+          const isBottom = r.groupId === bottomId && sorted.length > 1 && r.groupId !== topId
           return (
             <TableRow
-              key={r.teamId}
+              key={r.groupId}
               className={cn(
                 onRowClick && 'cursor-pointer hover:bg-muted/60',
                 isTop && 'bg-amber-50/90 dark:bg-amber-950/25',
@@ -75,9 +75,9 @@ export function SurgeryTeamTable({
               <TableCell className="font-medium">
                 {isTop && <Trophy className="inline h-4 w-4 text-amber-500 mr-1" />}
                 {isBottom && <TrendingDown className="inline h-4 w-4 text-orange-500 mr-1" />}
-                {r.teamName}
+                {r.groupName}
               </TableCell>
-              <TableCell>{r.teamLeadName || '—'}</TableCell>
+              <TableCell>{r.managerName || '—'}</TableCell>
               <TableCell className="text-right">{r.surgeries}</TableCell>
               {showLeads && (
                 <>
