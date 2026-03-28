@@ -83,13 +83,12 @@ function LeaveRequestDrawer({ request, open, onOpenChange, onApprove }: LeaveReq
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
-        <DrawerHeader>
+      <DrawerContent className="max-h-[min(92dvh,100svh-1.25rem)] flex flex-col gap-0 overflow-hidden rounded-t-2xl pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
+        <DrawerHeader className="shrink-0 border-b px-6 pb-3 pt-2 text-left">
           <DrawerTitle>Leave Request</DrawerTitle>
-          <DrawerDescription>Review and take action</DrawerDescription>
         </DrawerHeader>
 
-        <div className="px-6 py-4 space-y-6">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-6 py-4 space-y-6">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
               <AvatarFallback>
@@ -140,7 +139,7 @@ function LeaveRequestDrawer({ request, open, onOpenChange, onApprove }: LeaveReq
           </div>
         </div>
 
-        <DrawerFooter className="flex flex-col-reverse gap-2 border-t p-4 sm:flex-row sm:gap-3">
+        <DrawerFooter className="shrink-0 mb-3 flex flex-col-reverse gap-2 border-t bg-background/95 p-4 pb-2 backdrop-blur-sm supports-[backdrop-filter]:bg-background/80 sm:mb-0 sm:flex-row sm:gap-3 sm:pb-4">
           <Button
             variant="outline"
             className="w-full flex-1 border-red-200 text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40"
@@ -192,13 +191,12 @@ function NormalizationRequestDrawer({ request, open, onOpenChange, onApprove }: 
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
-        <DrawerHeader>
+      <DrawerContent className="max-h-[min(92dvh,100svh-1.25rem)] flex flex-col gap-0 overflow-hidden rounded-t-2xl pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
+        <DrawerHeader className="shrink-0 border-b px-6 pb-3 pt-2 text-left">
           <DrawerTitle>Normalization Request</DrawerTitle>
-          <DrawerDescription>Review and take action</DrawerDescription>
         </DrawerHeader>
 
-        <div className="px-6 py-4 space-y-6">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-6 py-4 space-y-6">
           <div className="flex items-center gap-4">
             <Avatar className="h-12 w-12">
               <AvatarFallback>
@@ -243,7 +241,7 @@ function NormalizationRequestDrawer({ request, open, onOpenChange, onApprove }: 
           </div>
         </div>
 
-        <DrawerFooter className="flex flex-col-reverse gap-2 border-t p-4 sm:flex-row sm:gap-3">
+        <DrawerFooter className="shrink-0 mb-3 flex flex-col-reverse gap-2 border-t bg-background/95 p-4 pb-2 backdrop-blur-sm supports-[backdrop-filter]:bg-background/80 sm:mb-0 sm:flex-row sm:gap-3 sm:pb-4">
           <Button
             variant="outline"
             className="w-full flex-1 border-red-200 text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950/40"
