@@ -62,39 +62,57 @@ BEGIN
     RAISE EXCEPTION 'DepartmentTeam migration requires at least one row in "Department" to map legacy teams';
   END IF;
 
+  -- Several legacy teams can reference the same User as teamLeadId; DepartmentTeam.teamLeadId is unique.
+  -- Assign the lead on one row per employee (earliest team); others get NULL.
   INSERT INTO "DepartmentTeam" ("id", "name", "departmentId", "teamLeadId", "createdAt", "updatedAt")
   SELECT
-    t."id",
-    t."name",
-    COALESCE(
-      dept_from_member."departmentId",
-      dept_from_lead."departmentId",
-      fallback_dept
-    ) AS "departmentId",
-    lead_emp."id" AS "teamLeadId",
-    t."createdAt",
-    t."updatedAt"
-  FROM "Team" t
-  LEFT JOIN LATERAL (
-    SELECT e."departmentId"
-    FROM "Employee" e
-    INNER JOIN "User" u ON u."id" = e."userId"
-    WHERE u."teamId" = t."id" AND e."departmentId" IS NOT NULL
-    LIMIT 1
-  ) dept_from_member ON true
-  LEFT JOIN LATERAL (
-    SELECT e."departmentId"
-    FROM "Employee" e
-    WHERE t."teamLeadId" IS NOT NULL AND e."userId" = t."teamLeadId" AND e."departmentId" IS NOT NULL
-    LIMIT 1
-  ) dept_from_lead ON true
-  LEFT JOIN LATERAL (
-    SELECT e."id"
-    FROM "Employee" e
-    WHERE t."teamLeadId" IS NOT NULL AND e."userId" = t."teamLeadId"
-    LIMIT 1
-  ) lead_emp ON true
-  WHERE NOT EXISTS (SELECT 1 FROM "DepartmentTeam" dt WHERE dt."id" = t."id");
+    src."id",
+    src."name",
+    src."departmentId",
+    CASE
+      WHEN src."lead_emp_id" IS NOT NULL AND src."lead_slot" = 1 THEN src."lead_emp_id"
+      ELSE NULL
+    END AS "teamLeadId",
+    src."createdAt",
+    src."updatedAt"
+  FROM (
+    SELECT
+      t."id",
+      t."name",
+      COALESCE(
+        dept_from_member."departmentId",
+        dept_from_lead."departmentId",
+        fallback_dept
+      ) AS "departmentId",
+      lead_emp."id" AS "lead_emp_id",
+      ROW_NUMBER() OVER (
+        PARTITION BY CASE WHEN lead_emp."id" IS NULL THEN t."id" ELSE lead_emp."id" END
+        ORDER BY t."createdAt" ASC NULLS LAST, t."id" ASC
+      ) AS "lead_slot",
+      t."createdAt",
+      t."updatedAt"
+    FROM "Team" t
+    LEFT JOIN LATERAL (
+      SELECT e."departmentId"
+      FROM "Employee" e
+      INNER JOIN "User" u ON u."id" = e."userId"
+      WHERE u."teamId" = t."id" AND e."departmentId" IS NOT NULL
+      LIMIT 1
+    ) dept_from_member ON true
+    LEFT JOIN LATERAL (
+      SELECT e."departmentId"
+      FROM "Employee" e
+      WHERE t."teamLeadId" IS NOT NULL AND e."userId" = t."teamLeadId" AND e."departmentId" IS NOT NULL
+      LIMIT 1
+    ) dept_from_lead ON true
+    LEFT JOIN LATERAL (
+      SELECT e."id"
+      FROM "Employee" e
+      WHERE t."teamLeadId" IS NOT NULL AND e."userId" = t."teamLeadId"
+      LIMIT 1
+    ) lead_emp ON true
+  ) src
+  WHERE NOT EXISTS (SELECT 1 FROM "DepartmentTeam" dt WHERE dt."id" = src."id");
 END $$;
 
 -- 4) Move membership from User.teamId to Employee.teamId
