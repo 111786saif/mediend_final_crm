@@ -231,7 +231,7 @@ export function SyncProgressModal({ open, onOpenChange, jobId }: SyncProgressMod
   const handleClose = () => {
     if (job?.status === 'running') {
       closedWhileRunning.current = true
-      toast.info('Sync is running in the background. You'll be notified when it completes.')
+      toast.info("Sync is running in the background. You'll be notified when it completes.")
     }
     onOpenChange(false)
   }
