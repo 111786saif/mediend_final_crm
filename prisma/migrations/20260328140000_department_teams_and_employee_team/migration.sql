@@ -70,7 +70,12 @@ BEGIN
     src."name",
     src."departmentId",
     CASE
-      WHEN src."lead_emp_id" IS NOT NULL AND src."lead_slot" = 1 THEN src."lead_emp_id"
+      WHEN src."lead_emp_id" IS NOT NULL
+        AND src."lead_slot" = 1
+        AND NOT EXISTS (
+          SELECT 1 FROM "DepartmentTeam" dt0 WHERE dt0."teamLeadId" = src."lead_emp_id"
+        )
+      THEN src."lead_emp_id"
       ELSE NULL
     END AS "teamLeadId",
     src."createdAt",
