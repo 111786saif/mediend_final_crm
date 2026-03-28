@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { employees: employeesData } = onboardSchema.parse(body)
 
-    const results: Array<{ employeeId: string; userId: string; name: string; bdNumber: number | null }> = []
+    const results: Array<{ employeeId: string; userId: string; name: string; email: string; employeeCode: string; bdNumber: number | null }> = []
     const errors: Array<{ index: number; name: string; error: string }> = []
 
     for (let i = 0; i < employeesData.length; i++) {
@@ -123,6 +123,8 @@ export async function POST(request: NextRequest) {
           employeeId: result.employeeId,
           userId: result.userId,
           name: data.name,
+          email: normalizedEmail,
+          employeeCode: data.employeeCode.trim(),
           bdNumber: data.bdNumber ?? null,
         })
       } catch (err) {

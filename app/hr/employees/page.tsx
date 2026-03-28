@@ -18,7 +18,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
 import { cn } from '@/lib/utils'
 import { EmployeeDetailDrawer } from '@/components/hr/employee-detail-drawer'
-import { AddEmployeeDialog } from '@/components/hr/add-employee-dialog'
+import { AddEmployeeDialog, type OnboardResult } from '@/components/hr/add-employee-dialog'
 import { SyncProgressModal } from '@/components/hr/sync-progress-modal'
 
 interface Department {
@@ -132,7 +132,7 @@ export default function HREmployeesPage() {
   }
 
   const handleAddSuccess = (
-    result: { created: Array<{ employeeId: string; userId: string; name: string; bdNumber: number | null }> },
+    _result: OnboardResult,
     syncConfig: Array<{ employeeId: string; syncLeads: boolean; syncAttendance: boolean }>
   ) => {
     queryClient.invalidateQueries({ queryKey: ['employees'] })
