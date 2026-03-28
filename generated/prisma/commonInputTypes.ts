@@ -613,6 +613,23 @@ export type EnumLeaveRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumLeaveRequestStatusFilter<$PrismaModel>
 }
 
+export type EnumLeaveBalanceEditRequestStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeaveBalanceEditRequestStatus | Prisma.EnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LeaveBalanceEditRequestStatus[] | Prisma.ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeaveBalanceEditRequestStatus[] | Prisma.ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeaveBalanceEditRequestStatusFilter<$PrismaModel> | $Enums.LeaveBalanceEditRequestStatus
+}
+
+export type EnumLeaveBalanceEditRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeaveBalanceEditRequestStatus | Prisma.EnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LeaveBalanceEditRequestStatus[] | Prisma.ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeaveBalanceEditRequestStatus[] | Prisma.ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeaveBalanceEditRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeaveBalanceEditRequestStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeaveBalanceEditRequestStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeaveBalanceEditRequestStatusFilter<$PrismaModel>
+}
+
 export type EnumPayrollComponentTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.PayrollComponentType | Prisma.EnumPayrollComponentTypeFieldRefInput<$PrismaModel>
   in?: $Enums.PayrollComponentType[] | Prisma.ListEnumPayrollComponentTypeFieldRefInput<$PrismaModel>
@@ -1827,6 +1844,23 @@ export type NestedEnumLeaveRequestStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumLeaveRequestStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumLeaveRequestStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumLeaveBalanceEditRequestStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeaveBalanceEditRequestStatus | Prisma.EnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LeaveBalanceEditRequestStatus[] | Prisma.ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeaveBalanceEditRequestStatus[] | Prisma.ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeaveBalanceEditRequestStatusFilter<$PrismaModel> | $Enums.LeaveBalanceEditRequestStatus
+}
+
+export type NestedEnumLeaveBalanceEditRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeaveBalanceEditRequestStatus | Prisma.EnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.LeaveBalanceEditRequestStatus[] | Prisma.ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeaveBalanceEditRequestStatus[] | Prisma.ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeaveBalanceEditRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeaveBalanceEditRequestStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeaveBalanceEditRequestStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeaveBalanceEditRequestStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumPayrollComponentTypeFilter<$PrismaModel = never> = {

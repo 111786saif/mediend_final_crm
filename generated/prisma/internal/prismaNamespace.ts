@@ -401,6 +401,7 @@ export const ModelName = {
   LeaveTypeMaster: 'LeaveTypeMaster',
   LeaveRequest: 'LeaveRequest',
   LeaveBalance: 'LeaveBalance',
+  LeaveBalanceEditRequest: 'LeaveBalanceEditRequest',
   Holiday: 'Holiday',
   PayrollRecord: 'PayrollRecord',
   PayrollComponent: 'PayrollComponent',
@@ -491,7 +492,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
+    modelProps: "user" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1750,6 +1751,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LeaveBalanceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LeaveBalanceCountAggregateOutputType> | number
+        }
+      }
+    }
+    LeaveBalanceEditRequest: {
+      payload: Prisma.$LeaveBalanceEditRequestPayload<ExtArgs>
+      fields: Prisma.LeaveBalanceEditRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeaveBalanceEditRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeaveBalanceEditRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.LeaveBalanceEditRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeaveBalanceEditRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>
+        }
+        findMany: {
+          args: Prisma.LeaveBalanceEditRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>[]
+        }
+        create: {
+          args: Prisma.LeaveBalanceEditRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>
+        }
+        createMany: {
+          args: Prisma.LeaveBalanceEditRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeaveBalanceEditRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.LeaveBalanceEditRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>
+        }
+        update: {
+          args: Prisma.LeaveBalanceEditRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.LeaveBalanceEditRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeaveBalanceEditRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeaveBalanceEditRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.LeaveBalanceEditRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeaveBalanceEditRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.LeaveBalanceEditRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeaveBalanceEditRequest>
+        }
+        groupBy: {
+          args: Prisma.LeaveBalanceEditRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeaveBalanceEditRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeaveBalanceEditRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeaveBalanceEditRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -7759,6 +7834,28 @@ export const LeaveBalanceScalarFieldEnum = {
 export type LeaveBalanceScalarFieldEnum = (typeof LeaveBalanceScalarFieldEnum)[keyof typeof LeaveBalanceScalarFieldEnum]
 
 
+export const LeaveBalanceEditRequestScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  requestedByUserId: 'requestedByUserId',
+  prevCL: 'prevCL',
+  prevSL: 'prevSL',
+  prevEL: 'prevEL',
+  proposedCL: 'proposedCL',
+  proposedSL: 'proposedSL',
+  proposedEL: 'proposedEL',
+  reason: 'reason',
+  status: 'status',
+  reviewedByUserId: 'reviewedByUserId',
+  reviewedAt: 'reviewedAt',
+  reviewRemarks: 'reviewRemarks',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeaveBalanceEditRequestScalarFieldEnum = (typeof LeaveBalanceEditRequestScalarFieldEnum)[keyof typeof LeaveBalanceEditRequestScalarFieldEnum]
+
+
 export const HolidayScalarFieldEnum = {
   id: 'id',
   date: 'date',
@@ -9412,6 +9509,20 @@ export type ListEnumLeaveRequestStatusFieldRefInput<$PrismaModel> = FieldRefInpu
 
 
 /**
+ * Reference to a field of type 'LeaveBalanceEditRequestStatus'
+ */
+export type EnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveBalanceEditRequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'LeaveBalanceEditRequestStatus[]'
+ */
+export type ListEnumLeaveBalanceEditRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveBalanceEditRequestStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'PayrollComponentType'
  */
 export type EnumPayrollComponentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayrollComponentType'>
@@ -10054,6 +10165,7 @@ export type GlobalOmitConfig = {
   leaveTypeMaster?: Prisma.LeaveTypeMasterOmit
   leaveRequest?: Prisma.LeaveRequestOmit
   leaveBalance?: Prisma.LeaveBalanceOmit
+  leaveBalanceEditRequest?: Prisma.LeaveBalanceEditRequestOmit
   holiday?: Prisma.HolidayOmit
   payrollRecord?: Prisma.PayrollRecordOmit
   payrollComponent?: Prisma.PayrollComponentOmit

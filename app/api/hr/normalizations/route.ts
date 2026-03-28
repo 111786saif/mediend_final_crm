@@ -3,6 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import {
+  DEFAULT_DEPARTMENT_TIMING,
+  getDepartmentTiming,
+  groupAttendanceByDate,
+  type DepartmentTiming,
+} from '@/lib/hrms/attendance-utils'
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +28,6 @@ export async function GET(request: NextRequest) {
     const where: {
       type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] }
       status?: 'PENDING' | 'APPROVED' | 'REJECTED'
-      managerApprovedAt?: { not: null } | null
       date?: { gte?: Date; lte?: Date }
     } = {
       type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
@@ -30,10 +35,6 @@ export async function GET(request: NextRequest) {
 
     if (status) {
       where.status = status
-    }
-
-    if (status === 'PENDING') {
-      where.managerApprovedAt = { not: null }
     }
 
     if (fromDate || toDate) {
@@ -80,6 +81,63 @@ export async function GET(request: NextRequest) {
       },
     })
 
+    const employeeIds = [...new Set(list.map((n) => n.employeeId))]
+    let punchByEmployeeDate = new Map<string, { inIso: string | null; outIso: string | null }>()
+
+    if (employeeIds.length > 0) {
+      let minD = list[0]!.date
+      let maxD = list[0]!.date
+      for (const n of list) {
+        if (n.date < minD) minD = n.date
+        if (n.date > maxD) maxD = n.date
+      }
+      const logRangeStart = new Date(
+        Date.UTC(minD.getUTCFullYear(), minD.getUTCMonth(), minD.getUTCDate(), 0, 0, 0, 0)
+      )
+      const logRangeEnd = new Date(
+        Date.UTC(maxD.getUTCFullYear(), maxD.getUTCMonth(), maxD.getUTCDate(), 23, 59, 59, 999)
+      )
+
+      const [attendanceLogs, employeesWithDept] = await Promise.all([
+        prisma.attendanceLog.findMany({
+          where: {
+            employeeId: { in: employeeIds },
+            logDate: { gte: logRangeStart, lte: logRangeEnd },
+          },
+          orderBy: { logDate: 'asc' },
+        }),
+        prisma.employee.findMany({
+          where: { id: { in: employeeIds } },
+          select: { id: true, department: true },
+        }),
+      ])
+
+      const timingByEmployeeId = new Map<string, DepartmentTiming>()
+      for (const e of employeesWithDept) {
+        timingByEmployeeId.set(e.id, getDepartmentTiming(e.department))
+      }
+
+      const logsByEmployee = new Map<string, typeof attendanceLogs>()
+      for (const log of attendanceLogs) {
+        const arr = logsByEmployee.get(log.employeeId) ?? []
+        arr.push(log)
+        logsByEmployee.set(log.employeeId, arr)
+      }
+
+      punchByEmployeeDate = new Map()
+      for (const [empId, logs] of logsByEmployee) {
+        const timing = timingByEmployeeId.get(empId) ?? DEFAULT_DEPARTMENT_TIMING
+        const grouped = groupAttendanceByDate(logs, timing)
+        for (const day of grouped) {
+          const dateKey = day.date.toISOString().split('T')[0]
+          punchByEmployeeDate.set(`${empId}|${dateKey}`, {
+            inIso: day.inTime ? day.inTime.toISOString() : null,
+            outIso: day.outTime ? day.outTime.toISOString() : null,
+          })
+        }
+      }
+    }
+
     return successResponse({
       list: list.map((n) => {
         // Employee-initiated requests: after manager approval, HR cares who approved on behalf of the team.
@@ -92,19 +150,24 @@ export async function GET(request: NextRequest) {
           ? n.managerApprovedBy!.user.email
           : (n.requestedBy?.user?.email ?? null)
 
+        const dateKey = n.date.toISOString().split('T')[0]
+        const punch = punchByEmployeeDate.get(`${n.employeeId}|${dateKey}`)
+
         return {
           id: n.id,
           employeeId: n.employeeId,
           employeeName: n.employee.user.name,
           employeeCode: n.employee.employeeCode,
           employeeEmail: n.employee.user.email,
-          date: n.date.toISOString().split('T')[0],
+          date: dateKey,
           type: n.type,
           status: n.status,
           reason: n.reason,
           hrRejectionReason: n.hrRejectionReason ?? null,
           normalizeAs: n.normalizeAs ?? null,
           createdAt: n.createdAt.toISOString(),
+          attendanceIn: punch?.inIso ?? null,
+          attendanceOut: punch?.outIso ?? null,
           requestedBy: requestedByName,
           requestedByEmail,
           /** Employee who submitted (differs from requestedBy after manager approval for EMPLOYEE_REQUEST) */

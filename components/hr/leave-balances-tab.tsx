@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Sheet,
   SheetContent,
@@ -16,7 +17,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPatch } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { Users, Pencil, Loader2, Search } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
@@ -57,27 +58,36 @@ export function LeaveBalancesTab() {
     SL: 0,
     EL: 0,
   })
+  const [requestReason, setRequestReason] = useState('')
 
   const { data: list, isLoading } = useQuery<EmployeeBalance[]>({
     queryKey: ['hr', 'leave-balances'],
     queryFn: () => apiGet<EmployeeBalance[]>('/api/hr/leave-balances'),
   })
 
-  const updateMutation = useMutation({
-    mutationFn: (payload: { employeeId: string; balances: { CL: number; SL: number; EL: number } }) =>
-      apiPatch<{ message: string }>(`/api/hr/leave-balances/${payload.employeeId}`, {
+  const submitRequestMutation = useMutation({
+    mutationFn: (payload: {
+      employeeId: string
+      balances: { CL: number; SL: number; EL: number }
+      reason: string | null
+    }) =>
+      apiPost<{ id: string; message: string }>('/api/hr/leave-balance-edit-requests', {
+        employeeId: payload.employeeId,
         balances: payload.balances,
+        reason: payload.reason,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['hr', 'leave-balances'] })
       setEditingEmployee(null)
-      toast.success('Leave balances updated')
+      setRequestReason('')
+      toast.success('Request sent to MD for approval')
     },
-    onError: (e: Error) => toast.error(e.message ?? 'Update failed'),
+    onError: (e: Error) => toast.error(e.message ?? 'Request failed'),
   })
 
   const openEdit = (emp: EmployeeBalance) => {
     setEditingEmployee(emp)
+    setRequestReason('')
     setEditValues({
       CL: getBalanceByCode(emp.balances, 'CL'),
       SL: getBalanceByCode(emp.balances, 'SL'),
@@ -85,11 +95,12 @@ export function LeaveBalancesTab() {
     })
   }
 
-  const handleSave = () => {
+  const handleSubmitRequest = () => {
     if (!editingEmployee) return
-    updateMutation.mutate({
+    submitRequestMutation.mutate({
       employeeId: editingEmployee.id,
       balances: editValues,
+      reason: requestReason.trim() || null,
     })
   }
 
@@ -111,7 +122,7 @@ export function LeaveBalancesTab() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Leave Balances</h1>
         <p className="text-muted-foreground mt-1.5 max-w-2xl">
-          View and adjust leave balances per employee. Balances are based on Feb import + monthly accrual; CL/SL reset yearly, EL carries forward.
+          View leave balances per employee. To change CL/SL/EL baselines, submit a request; MD must approve before balances update. Policy: Feb import + monthly accrual; CL/SL reset yearly, EL carries forward.
         </p>
       </div>
 
@@ -123,9 +134,7 @@ export function LeaveBalancesTab() {
                 <Users className="h-5 w-5" />
                 Employees & balances
               </CardTitle>
-              <CardDescription>
-                Click Edit to adjust balance for any employee.
-              </CardDescription>
+              <CardDescription>Click Edit to propose new baselines; MD approves before they take effect.</CardDescription>
             </div>
             {list && list.length > 4 && (
               <div className="relative w-full sm:w-64">
@@ -222,7 +231,7 @@ export function LeaveBalancesTab() {
                         onClick={() => openEdit(emp)}
                       >
                         <Pencil className="h-4 w-4" />
-                        <span className="sr-only">Edit balance</span>
+                        <span className="sr-only">Request balance change</span>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -233,18 +242,27 @@ export function LeaveBalancesTab() {
         </CardContent>
       </Card>
 
-      <Sheet open={!!editingEmployee} onOpenChange={(open) => !open && setEditingEmployee(null)}>
+      <Sheet
+        open={!!editingEmployee}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditingEmployee(null)
+            setRequestReason('')
+          }
+        }}
+      >
         <SheetContent className="sm:max-w-md">
           <SheetHeader>
-            <SheetTitle>Edit leave balance</SheetTitle>
+            <SheetTitle>Request leave balance change</SheetTitle>
             <SheetDescription>
               {editingEmployee ? (
                 <>
-                  Set baseline balance for {editingEmployee.name}. March onward accrual is added automatically.
-                  Use 0.5 for half-days.
+                  Proposed values are sent to MD for approval. When approved, baselines update for{' '}
+                  {editingEmployee.name} (allocated = your values, used reset to 0). Accrual continues from policy
+                  after that. Use 0.5 for half-days.
                 </>
               ) : (
-                'Set baseline balance per leave type.'
+                'Propose baseline balance per leave type.'
               )}
             </SheetDescription>
           </SheetHeader>
@@ -293,26 +311,37 @@ export function LeaveBalancesTab() {
                 />
               </div>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="request-reason">Note to MD (optional)</Label>
+              <Textarea
+                id="request-reason"
+                value={requestReason}
+                onChange={(e) => setRequestReason(e.target.value)}
+                placeholder="Why this adjustment is needed…"
+                rows={3}
+                className="resize-none"
+              />
+            </div>
           </div>
           <SheetFooter className="flex flex-row gap-2 sm:gap-0">
             <Button
               variant="outline"
-              onClick={() => setEditingEmployee(null)}
-              disabled={updateMutation.isPending}
+              onClick={() => {
+                setEditingEmployee(null)
+                setRequestReason('')
+              }}
+              disabled={submitRequestMutation.isPending}
             >
               Cancel
             </Button>
-            <Button
-              onClick={handleSave}
-              disabled={updateMutation.isPending}
-            >
-              {updateMutation.isPending ? (
+            <Button onClick={handleSubmitRequest} disabled={submitRequestMutation.isPending}>
+              {submitRequestMutation.isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving…
+                  Submitting…
                 </>
               ) : (
-                'Save changes'
+                'Submit to MD'
               )}
             </Button>
           </SheetFooter>

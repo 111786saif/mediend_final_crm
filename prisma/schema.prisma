@@ -84,6 +84,12 @@ enum LeaveRequestStatus {
   REJECTED
 }
 
+enum LeaveBalanceEditRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum PunchDirection {
   IN
   OUT
@@ -196,6 +202,8 @@ enum NotificationType {
   MEET_SCHEDULED
   MEET_REMINDER
   EMPLOYEE_ONBOARDED
+  LEAVE_BALANCE_EDIT_REQUESTED
+  LEAVE_BALANCE_EDIT_RESOLVED
 }
 
 enum NoticeTargetType {
@@ -369,6 +377,8 @@ model User {
   plRecords       PLRecord[]
   employee        Employee?
   approvedLeaves  LeaveRequest[]   @relation("LeaveApprover")
+  leaveBalanceEditRequestsRequested LeaveBalanceEditRequest[] @relation("LeaveBalanceEditRequestedBy")
+  leaveBalanceEditRequestsReviewed  LeaveBalanceEditRequest[] @relation("LeaveBalanceEditReviewedBy")
 
   // Finance Ledger Relations
   createdLedgerEntries       LedgerEntry[]    @relation("LedgerCreator")
@@ -874,6 +884,7 @@ model Employee {
   leaveRequests        LeaveRequest[]
   leaveRequestsTargetApprover LeaveRequest[] @relation("LeaveTargetApprover")
   leaveBalances        LeaveBalance[]
+  leaveBalanceEditRequests LeaveBalanceEditRequest[]
   payrollRecords       PayrollRecord[]
   documents            EmployeeDocument[]
   feedbacks            Feedback[]
@@ -1016,6 +1027,33 @@ model LeaveBalance {
   @@unique([employeeId, leaveTypeId])
   @@index([employeeId])
   @@index([leaveTypeId])
+}
+
+// HR proposes baseline CL/SL/EL changes; MD approves before DB balances update.
+model LeaveBalanceEditRequest {
+  id                  String                        @id @default(cuid())
+  employeeId          String
+  employee            Employee                      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  requestedByUserId   String
+  requestedBy         User                          @relation("LeaveBalanceEditRequestedBy", fields: [requestedByUserId], references: [id])
+  prevCL              Float
+  prevSL              Float
+  prevEL              Float
+  proposedCL          Float
+  proposedSL          Float
+  proposedEL          Float
+  reason              String?                       @db.Text
+  status              LeaveBalanceEditRequestStatus @default(PENDING)
+  reviewedByUserId    String?
+  reviewedBy          User?                         @relation("LeaveBalanceEditReviewedBy", fields: [reviewedByUserId], references: [id])
+  reviewedAt          DateTime?
+  reviewRemarks       String?                       @db.Text
+  createdAt           DateTime                      @default(now())
+  updatedAt           DateTime                      @updatedAt
+
+  @@index([employeeId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Holiday {

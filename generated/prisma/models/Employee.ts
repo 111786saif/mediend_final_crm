@@ -445,6 +445,7 @@ export type EmployeeWhereInput = {
   leaveRequests?: Prisma.LeaveRequestListRelationFilter
   leaveRequestsTargetApprover?: Prisma.LeaveRequestListRelationFilter
   leaveBalances?: Prisma.LeaveBalanceListRelationFilter
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestListRelationFilter
   payrollRecords?: Prisma.PayrollRecordListRelationFilter
   documents?: Prisma.EmployeeDocumentListRelationFilter
   feedbacks?: Prisma.FeedbackListRelationFilter
@@ -507,6 +508,7 @@ export type EmployeeOrderByWithRelationInput = {
   leaveRequests?: Prisma.LeaveRequestOrderByRelationAggregateInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestOrderByRelationAggregateInput
   leaveBalances?: Prisma.LeaveBalanceOrderByRelationAggregateInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestOrderByRelationAggregateInput
   payrollRecords?: Prisma.PayrollRecordOrderByRelationAggregateInput
   documents?: Prisma.EmployeeDocumentOrderByRelationAggregateInput
   feedbacks?: Prisma.FeedbackOrderByRelationAggregateInput
@@ -572,6 +574,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   leaveRequests?: Prisma.LeaveRequestListRelationFilter
   leaveRequestsTargetApprover?: Prisma.LeaveRequestListRelationFilter
   leaveBalances?: Prisma.LeaveBalanceListRelationFilter
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestListRelationFilter
   payrollRecords?: Prisma.PayrollRecordListRelationFilter
   documents?: Prisma.EmployeeDocumentListRelationFilter
   feedbacks?: Prisma.FeedbackListRelationFilter
@@ -705,6 +708,7 @@ export type EmployeeCreateInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -762,6 +766,7 @@ export type EmployeeUncheckedCreateInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -819,6 +824,7 @@ export type EmployeeUpdateInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -876,6 +882,7 @@ export type EmployeeUncheckedUpdateInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -1472,6 +1479,20 @@ export type EmployeeUpdateOneRequiredWithoutLeaveBalancesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutLeaveBalancesInput, Prisma.EmployeeUpdateWithoutLeaveBalancesInput>, Prisma.EmployeeUncheckedUpdateWithoutLeaveBalancesInput>
 }
 
+export type EmployeeCreateNestedOneWithoutLeaveBalanceEditRequestsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutLeaveBalanceEditRequestsInput, Prisma.EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutLeaveBalanceEditRequestsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutLeaveBalanceEditRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutLeaveBalanceEditRequestsInput, Prisma.EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutLeaveBalanceEditRequestsInput
+  upsert?: Prisma.EmployeeUpsertWithoutLeaveBalanceEditRequestsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutLeaveBalanceEditRequestsInput, Prisma.EmployeeUpdateWithoutLeaveBalanceEditRequestsInput>, Prisma.EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput>
+}
+
 export type EmployeeCreateNestedOneWithoutPayrollRecordsInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutPayrollRecordsInput, Prisma.EmployeeUncheckedCreateWithoutPayrollRecordsInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutPayrollRecordsInput
@@ -1699,6 +1720,7 @@ export type EmployeeCreateWithoutUserInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -1755,6 +1777,7 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -1816,6 +1839,7 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -1872,6 +1896,7 @@ export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -1949,6 +1974,7 @@ export type EmployeeUpdateWithoutUserInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -2005,6 +2031,7 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -2114,6 +2141,7 @@ export type EmployeeCreateWithoutDepartmentInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -2170,6 +2198,7 @@ export type EmployeeUncheckedCreateWithoutDepartmentInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -2252,6 +2281,7 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -2308,6 +2338,7 @@ export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -2369,6 +2400,7 @@ export type EmployeeCreateWithoutTeamInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -2425,6 +2457,7 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -2502,6 +2535,7 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -2558,6 +2592,7 @@ export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -2630,6 +2665,7 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -2686,6 +2722,7 @@ export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -2747,6 +2784,7 @@ export type EmployeeCreateWithoutManagerInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -2803,6 +2841,7 @@ export type EmployeeUncheckedCreateWithoutManagerInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -2880,6 +2919,7 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -2936,6 +2976,7 @@ export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -3008,6 +3049,7 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -3064,6 +3106,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -3136,6 +3179,7 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -3192,6 +3236,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -3248,6 +3293,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -3304,6 +3350,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -3365,6 +3412,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -3421,6 +3469,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -3482,6 +3531,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -3538,6 +3588,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput 
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -3599,6 +3650,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -3655,6 +3707,7 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprove
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -3727,6 +3780,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -3783,6 +3837,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -3850,6 +3905,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -3906,6 +3962,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -3973,6 +4030,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -4029,6 +4087,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput 
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -4096,6 +4155,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -4152,6 +4212,7 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprove
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -4208,6 +4269,7 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -4264,6 +4326,7 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -4325,6 +4388,7 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -4381,6 +4445,7 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -4453,6 +4518,7 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -4509,6 +4575,7 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -4576,6 +4643,7 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -4632,6 +4700,7 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -4688,6 +4757,7 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -4744,6 +4814,7 @@ export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -4816,6 +4887,7 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -4872,6 +4944,251 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
   attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutLeaveBalanceEditRequestsInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutLeaveBalanceEditRequestsInput, Prisma.EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput>
+}
+
+export type EmployeeUpsertWithoutLeaveBalanceEditRequestsInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutLeaveBalanceEditRequestsInput, Prisma.EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutLeaveBalanceEditRequestsInput, Prisma.EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutLeaveBalanceEditRequestsInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutLeaveBalanceEditRequestsInput, Prisma.EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput>
+}
+
+export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -4929,6 +5246,7 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
   mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
@@ -4985,6 +5303,7 @@ export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
   mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
@@ -5057,6 +5376,7 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
   mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
@@ -5113,6 +5433,7 @@ export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
   mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -5168,6 +5489,7 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -5224,6 +5546,7 @@ export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -5296,6 +5619,7 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -5352,6 +5676,7 @@ export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -5408,6 +5733,7 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -5464,6 +5790,7 @@ export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -5536,6 +5863,7 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -5592,6 +5920,7 @@ export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -5649,6 +5978,7 @@ export type EmployeeCreateWithoutDocumentsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
   mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
@@ -5705,6 +6035,7 @@ export type EmployeeUncheckedCreateWithoutDocumentsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
   mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
@@ -5777,6 +6108,7 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
   mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
@@ -5833,6 +6165,7 @@ export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
   mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -5889,6 +6222,7 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
@@ -5945,6 +6279,7 @@ export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
@@ -6017,6 +6352,7 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
@@ -6073,6 +6409,7 @@ export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -6129,6 +6466,7 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -6185,6 +6523,7 @@ export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -6257,6 +6596,7 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -6313,6 +6653,7 @@ export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -6369,6 +6710,7 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -6425,6 +6767,7 @@ export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -6497,6 +6840,7 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -6553,6 +6897,7 @@ export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -6609,6 +6954,7 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -6665,6 +7011,7 @@ export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -6737,6 +7084,7 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -6793,6 +7141,7 @@ export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -6849,6 +7198,7 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -6905,6 +7255,7 @@ export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -6977,6 +7328,7 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -7033,6 +7385,7 @@ export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -7089,6 +7442,7 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -7145,6 +7499,7 @@ export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -7217,6 +7572,7 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -7273,6 +7629,7 @@ export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -7329,6 +7686,7 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -7385,6 +7743,7 @@ export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -7457,6 +7816,7 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -7513,6 +7873,7 @@ export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -7569,6 +7930,7 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -7625,6 +7987,7 @@ export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -7697,6 +8060,7 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -7753,6 +8117,7 @@ export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -7809,6 +8174,7 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
@@ -7865,6 +8231,7 @@ export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
   payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
   documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
@@ -7937,6 +8304,7 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -7993,6 +8361,7 @@ export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -8081,6 +8450,7 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -8137,6 +8507,7 @@ export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -8259,6 +8630,7 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -8315,6 +8687,7 @@ export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -8437,6 +8810,7 @@ export type EmployeeUpdateWithoutTeamInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -8493,6 +8867,7 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -8615,6 +8990,7 @@ export type EmployeeUpdateWithoutManagerInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
@@ -8671,6 +9047,7 @@ export type EmployeeUncheckedUpdateWithoutManagerInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
   leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
   payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
   documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
@@ -8734,6 +9111,7 @@ export type EmployeeCountOutputType = {
   leaveRequests: number
   leaveRequestsTargetApprover: number
   leaveBalances: number
+  leaveBalanceEditRequests: number
   payrollRecords: number
   documents: number
   feedbacks: number
@@ -8759,6 +9137,7 @@ export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   leaveRequests?: boolean | EmployeeCountOutputTypeCountLeaveRequestsArgs
   leaveRequestsTargetApprover?: boolean | EmployeeCountOutputTypeCountLeaveRequestsTargetApproverArgs
   leaveBalances?: boolean | EmployeeCountOutputTypeCountLeaveBalancesArgs
+  leaveBalanceEditRequests?: boolean | EmployeeCountOutputTypeCountLeaveBalanceEditRequestsArgs
   payrollRecords?: boolean | EmployeeCountOutputTypeCountPayrollRecordsArgs
   documents?: boolean | EmployeeCountOutputTypeCountDocumentsArgs
   feedbacks?: boolean | EmployeeCountOutputTypeCountFeedbacksArgs
@@ -8857,6 +9236,13 @@ export type EmployeeCountOutputTypeCountLeaveRequestsTargetApproverArgs<ExtArgs 
  */
 export type EmployeeCountOutputTypeCountLeaveBalancesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.LeaveBalanceWhereInput
+}
+
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountLeaveBalanceEditRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeaveBalanceEditRequestWhereInput
 }
 
 /**
@@ -8986,6 +9372,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   leaveRequests?: boolean | Prisma.Employee$leaveRequestsArgs<ExtArgs>
   leaveRequestsTargetApprover?: boolean | Prisma.Employee$leaveRequestsTargetApproverArgs<ExtArgs>
   leaveBalances?: boolean | Prisma.Employee$leaveBalancesArgs<ExtArgs>
+  leaveBalanceEditRequests?: boolean | Prisma.Employee$leaveBalanceEditRequestsArgs<ExtArgs>
   payrollRecords?: boolean | Prisma.Employee$payrollRecordsArgs<ExtArgs>
   documents?: boolean | Prisma.Employee$documentsArgs<ExtArgs>
   feedbacks?: boolean | Prisma.Employee$feedbacksArgs<ExtArgs>
@@ -9131,6 +9518,7 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   leaveRequests?: boolean | Prisma.Employee$leaveRequestsArgs<ExtArgs>
   leaveRequestsTargetApprover?: boolean | Prisma.Employee$leaveRequestsTargetApproverArgs<ExtArgs>
   leaveBalances?: boolean | Prisma.Employee$leaveBalancesArgs<ExtArgs>
+  leaveBalanceEditRequests?: boolean | Prisma.Employee$leaveBalanceEditRequestsArgs<ExtArgs>
   payrollRecords?: boolean | Prisma.Employee$payrollRecordsArgs<ExtArgs>
   documents?: boolean | Prisma.Employee$documentsArgs<ExtArgs>
   feedbacks?: boolean | Prisma.Employee$feedbacksArgs<ExtArgs>
@@ -9179,6 +9567,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     leaveRequests: Prisma.$LeaveRequestPayload<ExtArgs>[]
     leaveRequestsTargetApprover: Prisma.$LeaveRequestPayload<ExtArgs>[]
     leaveBalances: Prisma.$LeaveBalancePayload<ExtArgs>[]
+    leaveBalanceEditRequests: Prisma.$LeaveBalanceEditRequestPayload<ExtArgs>[]
     payrollRecords: Prisma.$PayrollRecordPayload<ExtArgs>[]
     documents: Prisma.$EmployeeDocumentPayload<ExtArgs>[]
     feedbacks: Prisma.$FeedbackPayload<ExtArgs>[]
@@ -9634,6 +10023,7 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   leaveRequests<T extends Prisma.Employee$leaveRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$leaveRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaveRequestsTargetApprover<T extends Prisma.Employee$leaveRequestsTargetApproverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$leaveRequestsTargetApproverArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leaveBalances<T extends Prisma.Employee$leaveBalancesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$leaveBalancesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveBalancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leaveBalanceEditRequests<T extends Prisma.Employee$leaveBalanceEditRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$leaveBalanceEditRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveBalanceEditRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payrollRecords<T extends Prisma.Employee$payrollRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$payrollRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayrollRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   documents<T extends Prisma.Employee$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   feedbacks<T extends Prisma.Employee$feedbacksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -10462,6 +10852,30 @@ export type Employee$leaveBalancesArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.LeaveBalanceScalarFieldEnum | Prisma.LeaveBalanceScalarFieldEnum[]
+}
+
+/**
+ * Employee.leaveBalanceEditRequests
+ */
+export type Employee$leaveBalanceEditRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeaveBalanceEditRequest
+   */
+  select?: Prisma.LeaveBalanceEditRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LeaveBalanceEditRequest
+   */
+  omit?: Prisma.LeaveBalanceEditRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeaveBalanceEditRequestInclude<ExtArgs> | null
+  where?: Prisma.LeaveBalanceEditRequestWhereInput
+  orderBy?: Prisma.LeaveBalanceEditRequestOrderByWithRelationInput | Prisma.LeaveBalanceEditRequestOrderByWithRelationInput[]
+  cursor?: Prisma.LeaveBalanceEditRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeaveBalanceEditRequestScalarFieldEnum | Prisma.LeaveBalanceEditRequestScalarFieldEnum[]
 }
 
 /**

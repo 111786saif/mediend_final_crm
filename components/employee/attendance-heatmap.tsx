@@ -56,6 +56,8 @@ interface AttendanceHeatmapProps {
   toDate: string
   leaveDays?: LeaveDay[]
   holidayDays?: { date: string; name: string }[]
+  /** When false, only the grid is shown (e.g. dense team views). Default true. */
+  showLegend?: boolean
 }
 
 function formatTime(date: Date | string | null) {
@@ -281,7 +283,59 @@ function getStatusConfig(
   }
 }
 
-export function AttendanceHeatmap({ attendance, fromDate, toDate, leaveDays = [], holidayDays = [] }: AttendanceHeatmapProps) {
+/** Count calendar days in range by heatmap status (matches grid + tooltips). */
+export function countAttendanceStatusesInPeriod(
+  attendance: AttendanceDay[],
+  leaveDays: LeaveDay[],
+  holidayDays: { date: string; name: string }[],
+  fromDate: string,
+  toDate: string
+): Partial<Record<AttendanceStatusType, number>> {
+  const attendanceMap = new Map<string, AttendanceDay>()
+  attendance.forEach((day) => {
+    const dateKey = format(new Date(day.date), 'yyyy-MM-dd')
+    attendanceMap.set(dateKey, day)
+  })
+  const leaveMap = new Map<string, LeaveDay>()
+  leaveDays.forEach((ld) => leaveMap.set(ld.date, ld))
+  const holidayMap = new Map<string, string>()
+  holidayDays.forEach((h) => holidayMap.set(h.date, h.name))
+
+  const [startYear, startMonth, startDay] = fromDate.split('-').map(Number)
+  const [endYear, endMonth, endDay] = toDate.split('-').map(Number)
+  const start = new Date(startYear, startMonth - 1, startDay)
+  const end = new Date(endYear, endMonth - 1, endDay)
+  const allDates = eachDayOfInterval({ start, end })
+
+  const counts: Partial<Record<AttendanceStatusType, number>> = {}
+  for (const date of allDates) {
+    const dateKey = format(date, 'yyyy-MM-dd')
+    const dayOfWeek = getDay(date)
+    const isSunday = dayOfWeek === 0
+    const attendanceRecord = attendanceMap.get(dateKey)
+    const leaveInfo = leaveMap.get(dateKey)
+    const holidayName = holidayMap.get(dateKey)
+    const officialHoliday = holidayName ? { name: holidayName } : undefined
+    const config = getStatusConfig(
+      attendanceRecord,
+      leaveInfo,
+      isSunday,
+      format(date, 'PPP'),
+      officialHoliday
+    )
+    counts[config.status] = (counts[config.status] ?? 0) + 1
+  }
+  return counts
+}
+
+export function AttendanceHeatmap({
+  attendance,
+  fromDate,
+  toDate,
+  leaveDays = [],
+  holidayDays = [],
+  showLegend = true,
+}: AttendanceHeatmapProps) {
   const attendanceMap = useMemo(() => {
     const map = new Map<string, AttendanceDay>()
     attendance.forEach((day) => {
@@ -415,6 +469,7 @@ export function AttendanceHeatmap({ attendance, fromDate, toDate, leaveDays = []
         </div>
       ))}
 
+      {showLegend && (
       <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-2 border-t">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-green-600" />
@@ -478,6 +533,7 @@ export function AttendanceHeatmap({ attendance, fromDate, toDate, leaveDays = []
           <span>Official Holiday</span>
         </div>
       </div>
+      )}
     </div>
   )
 }

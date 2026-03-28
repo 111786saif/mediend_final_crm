@@ -20,6 +20,7 @@ export interface BadgeCounts {
   pendingNotices: number
   pendingFinanceTeamApprovals: number
   pendingMDApprovals: number
+  pendingLeaveBalanceEditRequests: number
   // Granular counts for tab badges
   pendingLeaveRequests: number
   pendingFeedback: number
@@ -61,6 +62,7 @@ export async function GET(request: NextRequest) {
       pendingNotices: 0,
       pendingFinanceTeamApprovals: 0,
       pendingMDApprovals: 0,
+      pendingLeaveBalanceEditRequests: 0,
       pendingLeaveRequests: 0,
       pendingFeedback: 0,
       pendingIncrementRequests: 0,
@@ -162,7 +164,10 @@ export async function GET(request: NextRequest) {
     if (hasPermission(user, 'hrms:attendance:write')) {
       promises.push(
         prisma.attendanceNormalization.count({
-          where: { type: 'MANAGER', status: 'PENDING' },
+          where: {
+            type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
+            status: 'PENDING',
+          },
         }).then((c) => {
           counts.hrPendingNormalizations = c
         })
@@ -348,7 +353,10 @@ export async function GET(request: NextRequest) {
           prisma.feedback.count({ where: { status: 'PENDING' } }),
           prisma.incrementRequest.count({ where: { status: 'PENDING' } }),
           prisma.attendanceNormalization.count({
-            where: { type: 'MANAGER', status: 'PENDING' },
+            where: {
+              type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
+              status: 'PENDING',
+            },
           }),
         ]).then(([f, i, n]) => {
           counts.pendingHRActions = f + i + n
@@ -385,6 +393,11 @@ export async function GET(request: NextRequest) {
       promises.push(
         prisma.mDApprovalRequest.count({ where: { status: 'PENDING' } }).then((c) => {
           counts.pendingMDApprovals = c
+        })
+      )
+      promises.push(
+        prisma.leaveBalanceEditRequest.count({ where: { status: 'PENDING' } }).then((c) => {
+          counts.pendingLeaveBalanceEditRequests = c
         })
       )
     }

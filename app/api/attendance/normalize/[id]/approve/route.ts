@@ -9,6 +9,7 @@ const bodySchema = z
   .object({
     status: z.enum(['APPROVED', 'REJECTED']),
     remarks: z.string().optional(),
+    normalizeAs: z.enum(['FULL_DAY', 'HALF_DAY']).optional(),
   })
   .superRefine((data, ctx) => {
     if (data.status === 'REJECTED') {
@@ -40,7 +41,7 @@ export async function PATCH(
     const { id } = await params
     const body = await request.json()
     const parsed = bodySchema.parse(body)
-    const { status } = parsed
+    const { status, normalizeAs: normalizeAsBody } = parsed
     const rejectionRemarks =
       status === 'REJECTED' ? (parsed.remarks ?? '').trim() : null
 
@@ -69,10 +70,6 @@ export async function PATCH(
       return errorResponse('Only manager-initiated or employee-request normalizations can be approved by HR', 400)
     }
 
-    if (!normalization.managerApprovedAt) {
-      return errorResponse('Manager must approve this request before HR can finalize', 400)
-    }
-
     const hrEmployee = await prisma.employee.findUnique({
       where: { userId: user.id },
     })
@@ -85,12 +82,18 @@ export async function PATCH(
       return errorResponse('You cannot approve your own normalization request', 403)
     }
 
+    const resolvedNormalizeAs =
+      status === 'APPROVED'
+        ? normalizeAsBody ?? normalization.normalizeAs ?? 'FULL_DAY'
+        : null
+
     const updated = await prisma.attendanceNormalization.update({
       where: { id },
       data: {
         status,
         approvedById: status === 'APPROVED' ? hrEmployee.id : null,
         hrRejectionReason: status === 'REJECTED' ? rejectionRemarks : null,
+        normalizeAs: resolvedNormalizeAs,
       },
       include: {
         employee: {

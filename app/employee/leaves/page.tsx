@@ -19,6 +19,7 @@ interface LeaveType {
   name: string
   maxDays: number
   isActive: boolean
+  code?: string | null
 }
 
 interface LeaveRequest {
@@ -130,7 +131,7 @@ export default function EmployeeLeavesPage() {
             <DialogHeader>
               <DialogTitle>Apply for Leave</DialogTitle>
               <DialogDescription>
-                Submit a new leave request. Balances are computed from policy.
+                CL and EL are for today or future only; SL can be used for past dates. Balances follow policy.
               </DialogDescription>
             </DialogHeader>
             {isProbation ? (

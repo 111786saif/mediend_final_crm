@@ -35,16 +35,11 @@ export async function POST(request: NextRequest) {
       where: { userId: user.id },
       include: {
         user: { select: { name: true } },
-        manager: { select: { id: true, userId: true } },
       },
     })
 
     if (!employee) {
       return errorResponse('Employee record not found', 404)
-    }
-
-    if (!employee.managerId || !employee.manager) {
-      return errorResponse('You do not have a manager. Cannot request normalization.', 400)
     }
 
     const body = await request.json()
@@ -99,22 +94,27 @@ export async function POST(request: NextRequest) {
       })),
     })
 
-    if (employee.manager.userId) {
-      await prisma.notification.create({
-        data: {
-          userId: employee.manager.userId,
+    const hrHeads = await prisma.user.findMany({
+      where: { role: 'HR_HEAD' },
+      select: { id: true },
+    })
+    const empName = employee.user?.name ?? 'An employee'
+    if (hrHeads.length > 0) {
+      await prisma.notification.createMany({
+        data: hrHeads.map((h) => ({
+          userId: h.id,
           type: 'NORMALIZATION_REQUESTED',
           title: 'Normalization Request',
-          message: `${employee.user?.name ?? 'An employee'} has requested attendance normalization for ${toCreate.length} day(s)`,
-          link: '/employee/my-team?tab=normalization',
+          message: `${empName} has requested attendance normalization for ${toCreate.length} day(s)`,
+          link: '/hr/attendance-leaves?tab=normalizations',
           relatedId: employee.id,
-        },
+        })),
       })
     }
 
     return successResponse(
       { created: toCreate.length, skipped: dayStarts.length - toCreate.length },
-      `Requested normalization for ${toCreate.length} day(s). Pending manager approval.`
+      `Requested normalization for ${toCreate.length} day(s). Pending HR approval.`
     )
   } catch (error) {
     if (error instanceof z.ZodError) {

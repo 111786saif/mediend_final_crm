@@ -15,12 +15,19 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { useState } from 'react'
 import { UserCheck, Check, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { format, subMonths } from 'date-fns'
+import { format, parseISO, subMonths } from 'date-fns'
 
 interface NormalizationRow {
   id: string
@@ -35,12 +42,56 @@ interface NormalizationRow {
   hrRejectionReason: string | null
   normalizeAs: string | null
   createdAt: string
+  attendanceIn: string | null
+  attendanceOut: string | null
   requestedBy: string | null
   requestedByEmail: string | null
   /** Who filed the request (employee); may differ from requestedBy when that column shows the approving manager */
   submittedByEmployeeName?: string | null
   submittedByEmployeeEmail?: string | null
   approvedBy: string | null
+}
+
+function formatPunchUtc(iso: string | null | undefined): string {
+  if (!iso) return '—'
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return '—'
+  return new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'UTC',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(d)
+}
+
+function NormalizationAttendanceContext({ row }: { row: NormalizationRow }) {
+  return (
+    <div className="rounded-lg border bg-muted/40 p-3 text-sm space-y-2">
+      <p className="font-medium text-foreground">
+        {row.employeeName}{' '}
+        <span className="text-muted-foreground font-normal">({row.employeeCode})</span>
+      </p>
+      <p className="text-muted-foreground">
+        Date: <span className="text-foreground font-medium">{format(parseISO(row.date), 'PPP')}</span>
+      </p>
+      <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/60">
+        <div>
+          <span className="text-xs text-muted-foreground uppercase tracking-wide">Punch in (UTC)</span>
+          <p className="font-mono tabular-nums">{formatPunchUtc(row.attendanceIn)}</p>
+        </div>
+        <div>
+          <span className="text-xs text-muted-foreground uppercase tracking-wide">Punch out (UTC)</span>
+          <p className="font-mono tabular-nums">{formatPunchUtc(row.attendanceOut)}</p>
+        </div>
+      </div>
+      {row.reason ? (
+        <div className="pt-1 border-t border-border/60">
+          <span className="text-xs text-muted-foreground">Request reason</span>
+          <p className="mt-0.5 text-foreground">{row.reason}</p>
+        </div>
+      ) : null}
+    </div>
+  )
 }
 
 interface HRNormalizationsResponse {
@@ -55,8 +106,11 @@ export function NormalizationsTab() {
   const [fromDate, setFromDate] = useState(() => format(subMonths(new Date(), 1), 'yyyy-MM-dd'))
   const [toDate, setToDate] = useState(() => format(new Date(), 'yyyy-MM-dd'))
   const [rejectOpen, setRejectOpen] = useState(false)
-  const [rejectRowId, setRejectRowId] = useState<string | null>(null)
+  const [rejectRow, setRejectRow] = useState<NormalizationRow | null>(null)
   const [rejectRemarks, setRejectRemarks] = useState('')
+  const [approveOpen, setApproveOpen] = useState(false)
+  const [approveRow, setApproveRow] = useState<NormalizationRow | null>(null)
+  const [approveNormalizeAs, setApproveNormalizeAs] = useState<'FULL_DAY' | 'HALF_DAY'>('FULL_DAY')
 
   const queryParams = new URLSearchParams({ status: statusFilter })
   if (fromDate) queryParams.set('fromDate', fromDate)
@@ -72,14 +126,17 @@ export function NormalizationsTab() {
       id,
       status,
       remarks,
+      normalizeAs,
     }: {
       id: string
       status: 'APPROVED' | 'REJECTED'
       remarks?: string
+      normalizeAs?: 'FULL_DAY' | 'HALF_DAY'
     }) =>
       apiPatch(`/api/attendance/normalize/${id}/approve`, {
         status,
         ...(status === 'REJECTED' && remarks != null ? { remarks } : {}),
+        ...(status === 'APPROVED' && normalizeAs ? { normalizeAs } : {}),
       }),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['hr', 'normalizations'] })
@@ -90,15 +147,15 @@ export function NormalizationsTab() {
     onError: (e: Error) => toast.error(e.message || 'Failed to update'),
   })
 
-  const openRejectDialog = (id: string) => {
-    setRejectRowId(id)
+  const openRejectDialog = (row: NormalizationRow) => {
+    setRejectRow(row)
     setRejectRemarks('')
     setRejectOpen(true)
   }
 
   const closeRejectDialog = () => {
     setRejectOpen(false)
-    setRejectRowId(null)
+    setRejectRow(null)
     setRejectRemarks('')
   }
 
@@ -106,10 +163,29 @@ export function NormalizationsTab() {
   const rejectRemarksValid = trimmedRejectRemarks.length >= MIN_REJECTION_LENGTH
 
   const confirmReject = () => {
-    if (!rejectRowId || !rejectRemarksValid) return
+    if (!rejectRow || !rejectRemarksValid) return
     approveMutation.mutate(
-      { id: rejectRowId, status: 'REJECTED', remarks: trimmedRejectRemarks },
+      { id: rejectRow.id, status: 'REJECTED', remarks: trimmedRejectRemarks },
       { onSuccess: () => closeRejectDialog() }
+    )
+  }
+
+  const openApproveDialog = (row: NormalizationRow) => {
+    setApproveRow(row)
+    setApproveNormalizeAs(row.normalizeAs === 'HALF_DAY' ? 'HALF_DAY' : 'FULL_DAY')
+    setApproveOpen(true)
+  }
+
+  const closeApproveDialog = () => {
+    setApproveOpen(false)
+    setApproveRow(null)
+  }
+
+  const confirmApprove = () => {
+    if (!approveRow) return
+    approveMutation.mutate(
+      { id: approveRow.id, status: 'APPROVED', normalizeAs: approveNormalizeAs },
+      { onSuccess: () => closeApproveDialog() }
     )
   }
 
@@ -117,15 +193,55 @@ export function NormalizationsTab() {
 
   return (
     <div className="space-y-6">
+      <Dialog open={approveOpen} onOpenChange={(o) => !o && closeApproveDialog()}>
+        <DialogContent className="sm:max-w-md max-h-[min(90vh,640px)] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Approve normalization</DialogTitle>
+            <DialogDescription>
+              Review punch times for that day (UTC), then choose full or half day.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {approveRow ? <NormalizationAttendanceContext row={approveRow} /> : null}
+            <div className="space-y-2">
+            <Label htmlFor="hr-approve-normalize-as">Normalize as</Label>
+            <Select
+              value={approveNormalizeAs}
+              onValueChange={(v) => setApproveNormalizeAs(v as 'FULL_DAY' | 'HALF_DAY')}
+            >
+              <SelectTrigger id="hr-approve-normalize-as">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="FULL_DAY">Full day</SelectItem>
+                <SelectItem value="HALF_DAY">Half day</SelectItem>
+              </SelectContent>
+            </Select>
+            </div>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button type="button" variant="outline" onClick={closeApproveDialog} disabled={approveMutation.isPending}>
+              Cancel
+            </Button>
+            <Button type="button" onClick={confirmApprove} disabled={approveMutation.isPending}>
+              Approve
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={rejectOpen} onOpenChange={(o) => !o && closeRejectDialog()}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[min(90vh,640px)] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Reject normalization</DialogTitle>
             <DialogDescription>
-              Provide a reason for the employee and their manager (minimum {MIN_REJECTION_LENGTH} characters).
+              Check attendance for that day, then provide a rejection reason for the employee (minimum{' '}
+              {MIN_REJECTION_LENGTH} characters).
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
+          <div className="space-y-4">
+            {rejectRow ? <NormalizationAttendanceContext row={rejectRow} /> : null}
+            <div className="space-y-2">
             <Label htmlFor="hr-reject-remarks">Rejection reason</Label>
             <Textarea
               id="hr-reject-remarks"
@@ -141,6 +257,7 @@ export function NormalizationsTab() {
                 <span className="text-destructive"> — need {MIN_REJECTION_LENGTH - trimmedRejectRemarks.length} more</span>
               )}
             </p>
+            </div>
           </div>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button type="button" variant="outline" onClick={closeRejectDialog} disabled={approveMutation.isPending}>
@@ -161,7 +278,7 @@ export function NormalizationsTab() {
       <div>
         <h1 className="text-3xl font-bold">Attendance Normalizations</h1>
         <p className="text-muted-foreground mt-1">
-          Manager and employee normalization requests (manager-approved). Approve or reject to finalize.
+          Employee requests (direct to HR) and manager-submitted applications. Approve with full or half day, or reject.
         </p>
       </div>
 
@@ -216,6 +333,8 @@ export function NormalizationsTab() {
                 <TableRow>
                   <TableHead>Employee</TableHead>
                   <TableHead>Date</TableHead>
+                  <TableHead>In (UTC)</TableHead>
+                  <TableHead>Out (UTC)</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Normalize as</TableHead>
                   <TableHead>Requested by</TableHead>
@@ -232,7 +351,9 @@ export function NormalizationsTab() {
                       {row.employeeName}
                       <span className="block text-xs text-muted-foreground">{row.employeeCode} · {row.employeeEmail}</span>
                     </TableCell>
-                    <TableCell>{format(new Date(row.date), 'PPP')}</TableCell>
+                    <TableCell>{format(parseISO(row.date), 'PPP')}</TableCell>
+                    <TableCell className="tabular-nums text-sm font-mono">{formatPunchUtc(row.attendanceIn)}</TableCell>
+                    <TableCell className="tabular-nums text-sm font-mono">{formatPunchUtc(row.attendanceOut)}</TableCell>
                     <TableCell>
                       {row.type === 'EMPLOYEE_REQUEST' ? 'Employee Request' : 'Manager'}
                     </TableCell>
@@ -269,11 +390,11 @@ export function NormalizationsTab() {
                     {statusFilter === 'PENDING' && (
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button size="sm" onClick={() => approveMutation.mutate({ id: row.id, status: 'APPROVED' })} disabled={approveMutation.isPending}>
+                          <Button size="sm" onClick={() => openApproveDialog(row)} disabled={approveMutation.isPending}>
                             <Check className="h-4 w-4 mr-1" />
                             Approve
                           </Button>
-                          <Button size="sm" variant="destructive" onClick={() => openRejectDialog(row.id)} disabled={approveMutation.isPending}>
+                          <Button size="sm" variant="destructive" onClick={() => openRejectDialog(row)} disabled={approveMutation.isPending}>
                             <X className="h-4 w-4 mr-1" />
                             Reject
                           </Button>

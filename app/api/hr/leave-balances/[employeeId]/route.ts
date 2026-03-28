@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { applyLeaveBalanceBaseline } from '@/lib/hrms/apply-leave-balance-baseline'
 import { z } from 'zod'
 
 const patchSchema = z.object({
@@ -20,8 +20,12 @@ export async function PATCH(
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'hrms:leaves:write')) {
-      return errorResponse('Forbidden', 403)
+    // HR must use leave-balance edit requests; MD/Admin may still apply directly when needed.
+    if (user.role !== 'MD' && user.role !== 'ADMIN') {
+      return errorResponse(
+        'Direct balance updates are restricted to MD/Admin. Submit a request from HR Leave balances.',
+        403
+      )
     }
 
     const { employeeId } = await params
@@ -34,39 +38,15 @@ export async function PATCH(
     })
     if (!employee) return errorResponse('Employee not found', 404)
 
-    const codes = (Object.keys(balances) as (keyof typeof balances)[]).filter(
-      (k) => balances[k] != null
-    )
-    const leaveTypes = await prisma.leaveTypeMaster.findMany({
-      where: { code: { in: codes }, isActive: true },
-    })
-    const byCode = new Map(leaveTypes.map((lt) => [lt.code ?? lt.name, lt]))
-
-    for (const code of codes) {
-      const remaining = balances[code]!
-      const lt = byCode.get(code)
-      if (!lt) continue
-
-      const value = Math.round(remaining * 2) / 2 // allow 0.5 steps
-
-      await prisma.leaveBalance.upsert({
-        where: {
-          employeeId_leaveTypeId: { employeeId, leaveTypeId: lt.id },
-        },
-        create: {
-          employeeId,
-          leaveTypeId: lt.id,
-          allocated: value,
-          used: 0,
-          remaining: value,
-        },
-        update: {
-          allocated: value,
-          used: 0,
-          remaining: value,
-        },
-      })
+    const partial: Partial<{ CL: number; SL: number; EL: number }> = {}
+    for (const k of ['CL', 'SL', 'EL'] as const) {
+      const v = balances[k]
+      if (v != null) partial[k] = Math.round(v * 2) / 2
     }
+    if (Object.keys(partial).length === 0) {
+      return errorResponse('Provide at least one of CL, SL, EL', 400)
+    }
+    await applyLeaveBalanceBaseline(prisma, employeeId, partial)
 
     return successResponse({ message: 'Balances updated' })
   } catch (e) {

@@ -8,7 +8,6 @@ import {
   type DepartmentTiming,
 } from '@/lib/hrms/attendance-utils'
 import { z } from 'zod'
-import { NORMALIZATION_REASON_MIN_CHARS } from '@/lib/hrms/normalization-deadline'
 
 const SELF_NORMALIZATION_LIMIT_HOURS_PER_MONTH = 3
 const SELF_NORMALIZATION_LIMIT_DAYS_PER_MONTH = 3
@@ -19,13 +18,8 @@ const ELIGIBILITY_MIN_WORK_HOURS = 7
 const bodySchema = z.object({
   date: z.string().transform((s) => new Date(s)),
   hours: z.union([z.literal(1), z.literal(2), z.literal(3)]),
-  reason: z
-    .string()
-    .trim()
-    .min(
-      NORMALIZATION_REASON_MIN_CHARS,
-      `Reason must be at least ${NORMALIZATION_REASON_MIN_CHARS} characters`
-    ),
+  /** Optional; self-normalization does not require a reason */
+  reason: z.string().trim().optional(),
 })
 
 function getDepartmentTiming(department: {
@@ -64,7 +58,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { date, hours, reason } = bodySchema.parse(body)
+    const { date, hours, reason: reasonRaw } = bodySchema.parse(body)
+    const reason = reasonRaw?.length ? reasonRaw : null
 
     const dateKey = date.toISOString().split('T')[0]
     const [y, m, d] = dateKey.split('-').map(Number)

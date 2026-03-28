@@ -5,6 +5,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import {
   calculateLeaveDays,
   checkDateConflict,
+  isSickLeaveType,
   parseDateOnlyLocal,
   startOfLocalDay,
 } from '@/lib/hrms/leave-utils'
@@ -16,7 +17,7 @@ const applyLeaveSchema = z.object({
   leaveTypeId: z.string(),
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  reason: z.string().optional(),
+  reason: z.string().trim().min(1, 'Reason is required'),
   /** Single calendar day only; counts as 0.5 against balance */
   isHalfDay: z.boolean().optional(),
 })
@@ -74,10 +75,6 @@ export async function POST(request: NextRequest) {
     const endDay = startOfLocalDay(endDate)
     const today = startOfLocalDay(new Date())
 
-    if (startDay > today || endDay > today) {
-      return errorResponse('Leave cannot be applied for future dates', 400)
-    }
-
     if (startDay > endDay) {
       return errorResponse('Start date must be before or equal to end date', 400)
     }
@@ -95,13 +92,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check leave type exists
     const leaveType = await prisma.leaveTypeMaster.findUnique({
       where: { id: leaveTypeId },
     })
 
     if (!leaveType || !leaveType.isActive) {
       return errorResponse('Invalid leave type', 400)
+    }
+
+    const sick = isSickLeaveType(leaveType)
+    if (!sick) {
+      if (startDay < today || endDay < today) {
+        return errorResponse(
+          'Casual Leave and Earned Leave can only be applied for today or a future date. Use Sick Leave (SL) for past dates.',
+          400
+        )
+      }
     }
 
     if (isHalfDay) {

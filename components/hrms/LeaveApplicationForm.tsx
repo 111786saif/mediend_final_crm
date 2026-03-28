@@ -8,12 +8,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { format, subYears } from 'date-fns'
+import { toast } from 'sonner'
+import { isSickLeaveType } from '@/lib/hrms/leave-utils'
 
 interface LeaveType {
   id: string
   name: string
   maxDays: number
   isActive: boolean
+  code?: string | null
 }
 
 interface BalanceForType {
@@ -83,11 +86,29 @@ export function LeaveApplicationForm({
     if (formData.isHalfDay && !singleCalendarDay) {
       return
     }
+    const lt = activeLeaveTypes.find((x) => x.id === formData.leaveTypeId)
+    if (lt && !isSickLeaveType(lt)) {
+      const todayStart = new Date()
+      todayStart.setHours(0, 0, 0, 0)
+      const s = new Date(formData.startDate)
+      s.setHours(0, 0, 0, 0)
+      const en = new Date(formData.endDate)
+      en.setHours(0, 0, 0, 0)
+      if (s < todayStart || en < todayStart) {
+        toast.error('CL and EL cannot be applied for past dates. Use Sick Leave (SL).')
+        return
+      }
+    }
+    const reasonTrimmed = formData.reason.trim()
+    if (!reasonTrimmed) {
+      toast.error('Please enter a reason for your leave request')
+      return
+    }
     onSubmit({
       leaveTypeId: formData.leaveTypeId,
       startDate: formData.startDate,
       endDate: formData.endDate,
-      reason: formData.reason || undefined,
+      reason: reasonTrimmed,
       ...(formData.isHalfDay && singleCalendarDay ? { isHalfDay: true } : {}),
     })
     setFormData({
@@ -107,10 +128,20 @@ export function LeaveApplicationForm({
   const selectedLeaveType = formData.leaveTypeId
     ? activeLeaveTypes.find((lt) => lt.id === formData.leaveTypeId)
     : null
-  const isSickLeave = selectedLeaveType
-    ? /sick/i.test(selectedLeaveType.name)
-    : false
-  const maxDateStr = isSickLeave ? todayStr : undefined
+  const sickAllowsPast = selectedLeaveType ? isSickLeaveType(selectedLeaveType) : false
+  const startDateMinStr = sickAllowsPast ? earliestSelectableStr : todayStr
+
+  const clElPastInvalid = useMemo(() => {
+    if (!selectedLeaveType || !formData.startDate || !formData.endDate) return false
+    if (isSickLeaveType(selectedLeaveType)) return false
+    const t = new Date()
+    t.setHours(0, 0, 0, 0)
+    const s = new Date(formData.startDate)
+    s.setHours(0, 0, 0, 0)
+    const e = new Date(formData.endDate)
+    e.setHours(0, 0, 0, 0)
+    return s < t || e < t
+  }, [selectedLeaveType, formData.startDate, formData.endDate])
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,7 +154,15 @@ export function LeaveApplicationForm({
         ) : (
           <Select
             value={formData.leaveTypeId}
-            onValueChange={(value) => setFormData({ ...formData, leaveTypeId: value })}
+            onValueChange={(value) =>
+              setFormData((prev) => ({
+                ...prev,
+                leaveTypeId: value,
+                startDate: undefined,
+                endDate: undefined,
+                isHalfDay: false,
+              }))
+            }
             required
           >
             <SelectTrigger>
@@ -166,8 +205,7 @@ export function LeaveApplicationForm({
               }
             }}
             required
-            min={earliestSelectableStr}
-            max={maxDateStr}
+            min={startDateMinStr}
           />
         </div>
 
@@ -192,9 +230,8 @@ export function LeaveApplicationForm({
             min={
               formData.startDate
                 ? format(formData.startDate, 'yyyy-MM-dd')
-                : earliestSelectableStr
+                : startDateMinStr
             }
-            max={maxDateStr}
           />
         </div>
       </div>
@@ -230,9 +267,9 @@ export function LeaveApplicationForm({
       </div>
 
       <p className="text-xs text-muted-foreground">
-        {isSickLeave
-          ? 'Sick leave can only be applied for today or a past date.'
-          : 'You can apply for past, present, or future dates.'}
+        {sickAllowsPast
+          ? 'Sick leave (SL) can be applied for past, today, or future dates (within policy limits).'
+          : 'Casual Leave (CL) and Earned Leave (EL) can only be selected for today or a future date. For backdated leave, use Sick Leave (SL).'}
       </p>
 
       {formData.startDate && formData.endDate && (
@@ -258,12 +295,13 @@ export function LeaveApplicationForm({
       )}
 
       <div>
-        <Label>Reason (Optional)</Label>
+        <Label>Reason (required)</Label>
         <Textarea
           value={formData.reason}
           onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
           placeholder="Enter reason for leave..."
           rows={3}
+          required
         />
       </div>
 
@@ -275,7 +313,9 @@ export function LeaveApplicationForm({
             !formData.leaveTypeId ||
             !formData.startDate ||
             !formData.endDate ||
-            (formData.isHalfDay && !singleCalendarDay)
+            !formData.reason.trim() ||
+            (formData.isHalfDay && !singleCalendarDay) ||
+            clElPastInvalid
           }
         >
           {isLoading ? 'Submitting...' : 'Apply for Leave'}

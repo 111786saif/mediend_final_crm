@@ -20,6 +20,14 @@ export function startOfLocalDay(d: Date): Date {
   return x
 }
 
+/** Sick leave (code SL, or legacy rows with no code and "sick" in name) may be backdated. CL/EL cannot. */
+export function isSickLeaveType(leaveType: { code?: string | null; name: string }): boolean {
+  const c = leaveType.code?.trim().toUpperCase()
+  if (c === 'SL') return true
+  if (c) return false
+  return /sick/i.test(leaveType.name.trim())
+}
+
 export interface LeaveBalanceWithType extends LeaveBalance {
   leaveType: LeaveTypeMaster
 }

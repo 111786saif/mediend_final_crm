@@ -110,6 +110,15 @@ export const LeaveRequestStatus = {
 export type LeaveRequestStatus = (typeof LeaveRequestStatus)[keyof typeof LeaveRequestStatus]
 
 
+export const LeaveBalanceEditRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type LeaveBalanceEditRequestStatus = (typeof LeaveBalanceEditRequestStatus)[keyof typeof LeaveBalanceEditRequestStatus]
+
+
 export const PunchDirection = {
   IN: 'IN',
   OUT: 'OUT'
@@ -257,7 +266,9 @@ export const NotificationType = {
   MD_APPROVAL_FINANCE_ACK: 'MD_APPROVAL_FINANCE_ACK',
   MEET_SCHEDULED: 'MEET_SCHEDULED',
   MEET_REMINDER: 'MEET_REMINDER',
-  EMPLOYEE_ONBOARDED: 'EMPLOYEE_ONBOARDED'
+  EMPLOYEE_ONBOARDED: 'EMPLOYEE_ONBOARDED',
+  LEAVE_BALANCE_EDIT_REQUESTED: 'LEAVE_BALANCE_EDIT_REQUESTED',
+  LEAVE_BALANCE_EDIT_RESOLVED: 'LEAVE_BALANCE_EDIT_RESOLVED'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

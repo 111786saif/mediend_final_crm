@@ -5,6 +5,7 @@ import {
   Briefcase,
   Building2,
   Calendar,
+  CalendarDays,
   CalendarCheck,
   CheckCircle,
   ClipboardList,
@@ -88,6 +89,12 @@ export const navItems: NavItem[] = [
     title: 'MD Attendance',
     url: '/md/attendance',
     icon: CalendarCheck,
+    roles: ['MD', 'ADMIN'],
+  },
+  {
+    title: 'MD Leave balances',
+    url: '/md/leave-balances',
+    icon: CalendarDays,
     roles: ['MD', 'ADMIN'],
   },
   {

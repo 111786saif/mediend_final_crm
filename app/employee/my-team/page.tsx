@@ -2,6 +2,7 @@
 
 import {
   AttendanceHeatmap,
+  countAttendanceStatusesInPeriod,
   type AttendanceDay,
 } from '@/components/employee/attendance-heatmap'
 import { SelectableAttendanceHeatmap } from '@/components/employee/selectable-attendance-heatmap'
@@ -29,11 +30,23 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { getDisabledNormalizationDateKeys } from '@/lib/hrms/normalization-deadline'
 import { Calendar, Check, Clock, Users, X, UserCheck, ChevronRight } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { toast } from 'sonner'
+import { ManagerMarkLeavePanel } from '@/components/hrms/ManagerMarkLeavePanel'
+
+interface LeaveDayRow {
+  date: string
+  isUnpaid: boolean
+  isHalfDay?: boolean
+}
+
+interface LeaveByTypeRow {
+  code: string
+  days: number
+}
 
 interface AttendanceEntry {
   employeeId: string
@@ -41,10 +54,13 @@ interface AttendanceEntry {
   email: string
   role: string
   attendance: AttendanceDay[]
+  leaveDays: LeaveDayRow[]
+  leaveByType: LeaveByTypeRow[]
 }
 
 interface TeamAttendanceResponse {
   entries: AttendanceEntry[]
+  holidayDays: { date: string; name: string }[]
   fromDate: string | null
   toDate: string | null
 }
@@ -92,14 +108,132 @@ interface NormalizationRecord {
   type: string
   status: string
   reason: string | null
+  normalizeAs: string | null
+  hrRejectionReason: string | null
+  createdAt: string
+  attendanceIn: string | null
+  attendanceOut: string | null
   employee: { id: string; employeeCode: string; user: { name: string; email: string } }
   requestedBy?: { id: string; user: { name: string } }
   approvedBy?: { id: string; user: { name: string } } | null
 }
 
+function formatPunchUtc(iso: string | null | undefined): string {
+  if (!iso) return '—'
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return '—'
+  return new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'UTC',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(d)
+}
+
+function normalizationTypeLabel(type: string): string {
+  switch (type) {
+    case 'EMPLOYEE_REQUEST':
+      return 'Employee → HR'
+    case 'MANAGER':
+      return 'Manager → HR'
+    case 'SELF':
+      return 'Self'
+    default:
+      return type
+  }
+}
+
 interface TeamNormalizationResponse {
   list: NormalizationRecord[]
   subordinates: { id: string; employeeCode: string; name: string; email: string }[]
+}
+
+const PRIMARY_LEAVE_CODES = ['CL', 'SL', 'EL'] as const
+
+function formatLeaveTypeDays(n: number | undefined): string {
+  if (n === undefined || n === 0) return '—'
+  return Number.isInteger(n) ? String(n) : String(Math.round(n * 10) / 10)
+}
+
+function LeaveTypeBreakdown({ rows }: { rows: LeaveByTypeRow[] }) {
+  const map = new Map(rows.map((r) => [r.code, r.days]))
+  const extra = rows.filter((r) => !PRIMARY_LEAVE_CODES.includes(r.code as (typeof PRIMARY_LEAVE_CODES)[number]))
+  return (
+    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground border-b border-border/40 pb-2.5 mb-2.5">
+      <span className="text-[10px] uppercase tracking-wide text-muted-foreground/80 shrink-0">
+        Leave (days)
+      </span>
+      {PRIMARY_LEAVE_CODES.map((code) => (
+        <span key={code} className="whitespace-nowrap">
+          <span className="font-medium text-foreground/75">{code}</span>{' '}
+          <span className="tabular-nums">{formatLeaveTypeDays(map.get(code))}</span>
+        </span>
+      ))}
+      {extra.map((r) => (
+        <span key={r.code} className="whitespace-nowrap">
+          <span className="font-medium text-foreground/75">{r.code}</span>{' '}
+          <span className="tabular-nums">{formatLeaveTypeDays(r.days)}</span>
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function AttendancePeriodStats({
+  attendance,
+  leaveDays,
+  holidayDays,
+  fromDate,
+  toDate,
+}: {
+  attendance: AttendanceDay[]
+  leaveDays: LeaveDayRow[]
+  holidayDays: { date: string; name: string }[]
+  fromDate: string
+  toDate: string
+}): ReactNode {
+  const segments = useMemo(() => {
+    const counts = countAttendanceStatusesInPeriod(
+      attendance,
+      leaveDays,
+      holidayDays,
+      fromDate,
+      toDate
+    )
+    const n = (k: string) => counts[k as keyof typeof counts] ?? 0
+    const leave =
+      n('paid-leave') + n('unpaid-leave') + n('paid-leave-half') + n('unpaid-leave-half')
+    const norm = n('normalized') + n('pending-normalization')
+    const items: { label: string; value: number }[] = [
+      { label: 'On time', value: n('on-time') + n('present') },
+      { label: 'G1', value: n('grace-1') },
+      { label: 'G2', value: n('grace-2') },
+      { label: 'Late ₹', value: n('late-penalty') },
+      { label: 'Late', value: n('late') },
+      { label: 'Half', value: n('half-day') },
+      { label: 'Leave', value: leave },
+      { label: 'Absent', value: n('absent') },
+      { label: 'Norm', value: norm },
+    ]
+    return items.filter((i) => i.value > 0)
+  }, [attendance, leaveDays, holidayDays, fromDate, toDate])
+
+  if (segments.length === 0) {
+    return (
+      <p className="text-[11px] text-muted-foreground">No calendar days in selected range.</p>
+    )
+  }
+
+  return (
+    <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] leading-snug text-muted-foreground border-b border-border/60 pb-3 mb-3">
+      {segments.map(({ label, value }) => (
+        <span key={label} className="whitespace-nowrap">
+          <span className="tabular-nums font-semibold text-foreground">{value}</span>
+          <span className="ml-1">{label}</span>
+        </span>
+      ))}
+    </div>
+  )
 }
 
 export default function MyTeamPage() {
@@ -116,14 +250,6 @@ export default function MyTeamPage() {
   const [normReason, setNormReason] = useState('')
   const [normNormalizeAs, setNormNormalizeAs] = useState<'FULL_DAY' | 'HALF_DAY'>('FULL_DAY')
   const [selectedNormDates, setSelectedNormDates] = useState<Set<string>>(new Set())
-  const [selectedNormRequest, setSelectedNormRequest] = useState<{
-    id: string
-    employeeName: string
-    date: string
-    reason: string | null
-  } | null>(null)
-  const [normRequestNormalizeAs, setNormRequestNormalizeAs] = useState<'FULL_DAY' | 'HALF_DAY'>('FULL_DAY')
-  const [normRequestDialogOpen, setNormRequestDialogOpen] = useState(false)
   const [drillDownManager, setDrillDownManager] = useState<TeamMember | null>(null)
 
   const { data: treeData } = useQuery<TeamTreeResponse>({
@@ -153,18 +279,6 @@ export default function MyTeamPage() {
       ),
   })
 
-  const { data: normRequestsData } = useQuery<{ list: Array<{
-    id: string
-    employeeId: string
-    date: string
-    reason: string | null
-    employee: { id: string; employeeCode: string; user: { name: string; email: string } }
-    requestedBy: string | null
-  }> }>({
-    queryKey: ['attendance', 'normalize', 'team-requests'],
-    queryFn: () => apiGet('/api/attendance/normalize/team-requests'),
-  })
-
   const normalizeMutation = useMutation({
     mutationFn: (payload: { employeeId: string; dates: string[]; reason?: string; normalizeAs?: 'FULL_DAY' | 'HALF_DAY' }) =>
       apiPost<{ created?: number; skipped?: number }>('/api/attendance/normalize/manager', payload),
@@ -178,20 +292,6 @@ export default function MyTeamPage() {
       else if (skipped > 0) toast.info('All selected days were already normalized')
     },
     onError: (e: Error) => toast.error(e.message || 'Failed to normalize'),
-  })
-
-  const managerApproveNormMutation = useMutation({
-    mutationFn: (payload: { id: string; status: 'APPROVED' | 'REJECTED'; normalizeAs?: 'FULL_DAY' | 'HALF_DAY' }) =>
-      apiPatch(`/api/attendance/normalize/${payload.id}/manager-approve`, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'team'] })
-      queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'team-requests'] })
-      queryClient.invalidateQueries({ queryKey: ['hierarchy', 'my-team', 'attendance'] })
-      setNormRequestDialogOpen(false)
-      setSelectedNormRequest(null)
-      toast.success('Request updated')
-    },
-    onError: (e: Error) => toast.error(e.message || 'Failed to update'),
   })
 
   const approveMutation = useMutation({
@@ -225,9 +325,15 @@ export default function MyTeamPage() {
   }
 
   const entries = attendanceData?.entries ?? []
+  const holidayDays = attendanceData?.holidayDays ?? []
   const leaves = leavesData?.leaves ?? []
   const from = attendanceData?.fromDate ?? fromDate
   const to = attendanceData?.toDate ?? toDate
+
+  const normTargetEntry = useMemo(
+    () => entries.find((e) => e.employeeId === normEmployeeId),
+    [entries, normEmployeeId]
+  )
 
   /** Dates past normalization deadline (week rule from Apr 2026, else 5th of next month). */
   const normalizationDisabledDateKeys = useMemo(
@@ -237,11 +343,35 @@ export default function MyTeamPage() {
 
   const members = treeData?.members ?? []
 
+  const managerMarkTeamOptions = useMemo(() => {
+    const m = new Map<string, { id: string; name: string; email: string; employeeCode?: string }>()
+    for (const mem of members) {
+      m.set(mem.id, {
+        id: mem.id,
+        name: mem.name,
+        email: mem.email,
+        employeeCode: mem.employeeCode,
+      })
+    }
+    for (const ent of entries) {
+      if (!m.has(ent.employeeId)) {
+        m.set(ent.employeeId, {
+          id: ent.employeeId,
+          name: ent.name,
+          email: ent.email,
+        })
+      }
+    }
+    return Array.from(m.values()).sort((a, b) => a.name.localeCompare(b.name))
+  }, [members, entries])
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">My Team</h1>
-        <p className="text-muted-foreground mt-1">Attendance and leave requests for employees you manage</p>
+        <p className="text-muted-foreground mt-1">
+          Attendance (with approved leave in range), summaries, and leave approvals for your team
+        </p>
       </div>
 
       {members.length > 0 && (
@@ -303,7 +433,7 @@ export default function MyTeamPage() {
         <TabsList>
           <TabsTrigger value="attendance" className="gap-2">
             <Clock className="h-4 w-4" />
-            Attendance
+            Attendance &amp; leave
           </TabsTrigger>
           <TabsTrigger value="leaves" className="gap-2">
             <Calendar className="h-4 w-4" />
@@ -319,7 +449,7 @@ export default function MyTeamPage() {
           <Card>
             <CardHeader>
               <CardTitle>Date range</CardTitle>
-              <CardDescription>Select range for attendance heatmaps</CardDescription>
+              <CardDescription>Heatmaps include approved leave and official holidays in this range</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4 max-w-md">
@@ -345,28 +475,44 @@ export default function MyTeamPage() {
             <Card>
               <CardContent className="py-12 text-center text-muted-foreground">
                 <Users className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                <p>No team members with attendance in this range, or you have no direct reports.</p>
+                <p>
+                  No team data in this range (no punches or approved leave), or you have no direct reports.
+                </p>
               </CardContent>
             </Card>
           ) : (
             <div className="space-y-6">
               {entries.map((entry) => (
                 <Card key={entry.employeeId}>
-                  <CardHeader>
+                  <CardHeader className="pb-2">
                     <CardTitle className="text-lg">{entry.name}</CardTitle>
-                    <CardDescription>
-                      {entry.email} · {entry.role}
+                    <CardDescription className="text-xs">
+                      {entry.email} · {entry.role.replace(/_/g, ' ')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
+                    <AttendancePeriodStats
+                      attendance={entry.attendance}
+                      leaveDays={entry.leaveDays ?? []}
+                      holidayDays={holidayDays}
+                      fromDate={from}
+                      toDate={to}
+                    />
+                    <LeaveTypeBreakdown rows={entry.leaveByType ?? []} />
                     <AttendanceHeatmap
                       attendance={entry.attendance}
                       fromDate={from}
                       toDate={to}
+                      leaveDays={entry.leaveDays ?? []}
+                      holidayDays={holidayDays}
+                      showLegend={false}
                     />
                   </CardContent>
                 </Card>
               ))}
+              <p className="text-[11px] text-muted-foreground px-1">
+                Hover any cell for punch times and status. Counts match the grid (payroll rules).
+              </p>
             </div>
           )}
         </TabsContent>
@@ -403,6 +549,8 @@ export default function MyTeamPage() {
               </div>
             </CardContent>
           </Card>
+
+          <ManagerMarkLeavePanel teamOptions={managerMarkTeamOptions} />
 
           <Card>
             <CardHeader>
@@ -494,77 +642,94 @@ export default function MyTeamPage() {
         </TabsContent>
 
         <TabsContent value="normalization" className="space-y-4">
-          {normRequestsData?.list && normRequestsData.list.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Employee normalization requests</CardTitle>
-                <CardDescription>
-                  {normRequestsData.list.length} request(s) from your team members. Approve or reject with half/full day.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Employee</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Reason</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {normRequestsData.list.map((r) => (
-                      <TableRow key={r.id}>
-                        <TableCell className="font-medium">
-                          {r.employee?.user?.name ?? '—'}
-                          <span className="block text-xs text-muted-foreground">{r.employee?.employeeCode}</span>
-                        </TableCell>
-                        <TableCell>{format(new Date(r.date), 'PPP')}</TableCell>
-                        <TableCell className="max-w-[200px] truncate">{r.reason || '—'}</TableCell>
-                        <TableCell>
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              onClick={() => {
-                                setSelectedNormRequest({
-                                  id: r.id,
-                                  employeeName: r.employee?.user?.name ?? '—',
-                                  date: r.date,
-                                  reason: r.reason,
-                                })
-                                setNormRequestNormalizeAs('FULL_DAY')
-                                setNormRequestDialogOpen(true)
-                              }}
-                            >
-                              <Check className="h-4 w-4 mr-1" />
-                              Approve
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() =>
-                                managerApproveNormMutation.mutate({ id: r.id, status: 'REJECTED' })
-                              }
-                              disabled={managerApproveNormMutation.isPending}
-                            >
-                              <X className="h-4 w-4 mr-1" />
-                              Reject
-                            </Button>
-                          </div>
-                        </TableCell>
+          <Card>
+            <CardHeader>
+              <CardTitle>Team normalization status</CardTitle>
+              <CardDescription>
+                Read-only visibility for your direct and indirect reports. Shows each request, raw punch times for that date (UTC), and HR outcome. HR approves employee and manager-submitted requests—you stay informed but do not approve here.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {normLoading ? (
+                <div className="text-center py-8 text-muted-foreground">Loading…</div>
+              ) : !normData?.list?.length ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  No normalization records in this date range.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Employee</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>In</TableHead>
+                        <TableHead>Out</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>As</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Reason</TableHead>
+                        <TableHead>Requested by</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          )}
+                    </TableHeader>
+                    <TableBody>
+                      {normData.list.map((n) => (
+                        <TableRow key={n.id}>
+                          <TableCell className="font-medium whitespace-nowrap">
+                            {n.employee?.user?.name ?? '—'}
+                            <span className="block text-xs text-muted-foreground font-normal">
+                              {n.employee?.employeeCode}
+                            </span>
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">{format(parseISO(n.date), 'PP')}</TableCell>
+                          <TableCell className="tabular-nums text-sm">{formatPunchUtc(n.attendanceIn)}</TableCell>
+                          <TableCell className="tabular-nums text-sm">{formatPunchUtc(n.attendanceOut)}</TableCell>
+                          <TableCell className="text-sm">{normalizationTypeLabel(n.type)}</TableCell>
+                          <TableCell className="text-sm">
+                            {n.normalizeAs === 'HALF_DAY'
+                              ? 'Half day'
+                              : n.normalizeAs === 'FULL_DAY'
+                                ? 'Full day'
+                                : '—'}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                n.status === 'APPROVED'
+                                  ? 'default'
+                                  : n.status === 'REJECTED'
+                                    ? 'destructive'
+                                    : 'secondary'
+                              }
+                            >
+                              {n.status}
+                            </Badge>
+                            {n.status === 'REJECTED' && n.hrRejectionReason && (
+                              <p className="text-xs text-muted-foreground mt-1 max-w-[200px] line-clamp-3">
+                                {n.hrRejectionReason}
+                              </p>
+                            )}
+                          </TableCell>
+                          <TableCell className="max-w-[180px] text-sm">
+                            <span className="line-clamp-2">{n.reason || '—'}</span>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
+                            {n.requestedBy?.user?.name ?? '—'}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Normalize attendance</CardTitle>
+              <CardTitle>Apply for normalization (on behalf)</CardTitle>
               <CardDescription>
-                Select a team member and date range, then click days on the heatmap to apply for normalization. You can apply for a month until the 5th of the next month. Applications go to HR for approval.
+                Select a team member and date range, then click days on the heatmap to apply for normalization on their behalf. Deadline rules apply (same week from April 2026, or 5th of next month before that). Applications go to HR for approval.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -609,15 +774,13 @@ export default function MyTeamPage() {
               {normEmployeeId && (
                 <>
                   <SelectableAttendanceHeatmap
-                    attendance={
-                      (attendanceData?.entries ?? []).find((e) => e.employeeId === normEmployeeId)
-                        ?.attendance ?? []
-                    }
+                    attendance={normTargetEntry?.attendance ?? []}
                     fromDate={from}
                     toDate={to}
                     selectedDates={selectedNormDates}
                     onSelectionChange={setSelectedNormDates}
                     disabledDateKeys={normalizationDisabledDateKeys}
+                    leaveDays={normTargetEntry?.leaveDays ?? []}
                   />
 
                   <div className="flex flex-wrap items-center gap-3 pt-2 border-t">
@@ -682,115 +845,8 @@ export default function MyTeamPage() {
               )}
             </CardContent>
           </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent normalizations</CardTitle>
-              <CardDescription>Manager normalizations in the selected range</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {normLoading ? (
-                <div className="text-center py-8 text-muted-foreground">Loading...</div>
-              ) : !normData?.list?.length ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  No normalizations in this range.
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Employee</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Type</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {normData.list.map((n) => (
-                      <TableRow key={n.id}>
-                        <TableCell className="font-medium">
-                          {n.employee?.user?.name ?? '—'} ({n.employee?.employeeCode})
-                        </TableCell>
-                        <TableCell>{format(new Date(n.date), 'PPP')}</TableCell>
-                        <TableCell>{n.type}</TableCell>
-                        <TableCell>
-                          <Badge variant={n.status === 'APPROVED' ? 'default' : 'secondary'}>
-                            {n.status}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
-
-      <Dialog open={normRequestDialogOpen} onOpenChange={setNormRequestDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Approve normalization request</DialogTitle>
-            <DialogDescription>
-              {selectedNormRequest &&
-                `${selectedNormRequest.employeeName} · ${format(new Date(selectedNormRequest.date), 'PPP')}`}
-            </DialogDescription>
-          </DialogHeader>
-          {selectedNormRequest && (
-            <div className="space-y-4">
-              {selectedNormRequest.reason && (
-                <div>
-                  <span className="text-muted-foreground text-sm">Reason:</span>
-                  <p className="font-medium">{selectedNormRequest.reason}</p>
-                </div>
-              )}
-              <div>
-                <Label>Normalize as</Label>
-                <div className="flex gap-2 mt-2">
-                  <Button
-                    type="button"
-                    variant={normRequestNormalizeAs === 'FULL_DAY' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setNormRequestNormalizeAs('FULL_DAY')}
-                  >
-                    Full day
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={normRequestNormalizeAs === 'HALF_DAY' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setNormRequestNormalizeAs('HALF_DAY')}
-                  >
-                    Half day
-                  </Button>
-                </div>
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setNormRequestDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() =>
-                    managerApproveNormMutation.mutate({
-                      id: selectedNormRequest.id,
-                      status: 'APPROVED',
-                      normalizeAs: normRequestNormalizeAs,
-                    })
-                  }
-                  disabled={managerApproveNormMutation.isPending}
-                >
-                  <Check className="h-4 w-4 mr-2" />
-                  Approve
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
 
       <Dialog open={approveDialogOpen} onOpenChange={setApproveDialogOpen}>
         <DialogContent>
@@ -918,6 +974,7 @@ function TeamDrillDownSheet({
   }
 
   const entries = attendanceData?.entries ?? []
+  const sheetHolidayDays = attendanceData?.holidayDays ?? []
   const leaves = leavesData?.leaves ?? []
   const from = attendanceData?.fromDate ?? fromDate
   const to = attendanceData?.toDate ?? toDate
@@ -938,7 +995,7 @@ function TeamDrillDownSheet({
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Date range</CardTitle>
-                <CardDescription>Select range for attendance heatmaps</CardDescription>
+                <CardDescription>Heatmaps include approved leave and holidays in range</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
@@ -965,33 +1022,47 @@ function TeamDrillDownSheet({
             <div>
               <h4 className="font-medium mb-3 flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                Attendance
+                Attendance &amp; leave
               </h4>
               {attendanceLoading ? (
                 <div className="text-center py-8 text-muted-foreground text-sm">Loading...</div>
               ) : entries.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground text-sm rounded-lg border border-dashed">
-                  No attendance in this range
+                  No punches or approved leave in this range
                 </div>
               ) : (
                 <div className="space-y-4">
                   {entries.map((entry) => (
                     <Card key={entry.employeeId}>
-                      <CardHeader className="py-3">
+                      <CardHeader className="py-3 pb-2">
                         <CardTitle className="text-base">{entry.name}</CardTitle>
                         <CardDescription className="text-xs">
-                          {entry.email} · {entry.role.replace('_', ' ')}
+                          {entry.email} · {entry.role.replace(/_/g, ' ')}
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="pt-0">
+                        <AttendancePeriodStats
+                          attendance={entry.attendance}
+                          leaveDays={entry.leaveDays ?? []}
+                          holidayDays={sheetHolidayDays}
+                          fromDate={from}
+                          toDate={to}
+                        />
+                        <LeaveTypeBreakdown rows={entry.leaveByType ?? []} />
                         <AttendanceHeatmap
                           attendance={entry.attendance}
                           fromDate={from}
                           toDate={to}
+                          leaveDays={entry.leaveDays ?? []}
+                          holidayDays={sheetHolidayDays}
+                          showLegend={false}
                         />
                       </CardContent>
                     </Card>
                   ))}
+                  <p className="text-[11px] text-muted-foreground px-1">
+                    Hover cells for details. Approve or reject requests in the list below.
+                  </p>
                 </div>
               )}
             </div>
@@ -999,7 +1070,7 @@ function TeamDrillDownSheet({
             <div>
               <h4 className="font-medium mb-3 flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                Leaves
+                Leave requests
               </h4>
               <div className="flex gap-2 mb-3">
                 <Button

@@ -79,6 +79,7 @@ interface LeaveType {
   name: string
   maxDays: number
   isActive: boolean
+  code?: string | null
 }
 
 interface LeaveRequest {
@@ -194,12 +195,11 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['attendance', 'my'] })
       queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'my'] })
-      queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'team-requests'] })
       setOpen(false)
       setDates([''])
       setReason('')
       const created = data?.created ?? 0
-      if (created > 0) toast.success(`Requested normalization for ${created} day(s). Pending manager approval.`)
+      if (created > 0) toast.success(`Requested normalization for ${created} day(s). Pending HR approval.`)
       onSuccess?.()
     },
     onError: (error: Error) => toast.error(error.message || 'Failed to request normalization'),
@@ -224,13 +224,13 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">Request from manager</Button>
+        <Button variant="outline" size="sm">Request normalization</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Request normalization from manager</DialogTitle>
+          <DialogTitle>Request normalization from HR</DialogTitle>
           <DialogDescription>
-            Request attendance normalization for specific days. Your manager will review and approve (as half or full day). From April 2026, requests must be within the same week.
+            Request attendance normalization for specific days with a reason. HR will review and set full or half day. From April 2026, requests must be within the same week.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -304,7 +304,6 @@ function AttendanceTab() {
   const [normalizeDialogOpen, setNormalizeDialogOpen] = useState(false)
   const [normalizeDate, setNormalizeDate] = useState('')
   const [normalizeHours, setNormalizeHours] = useState<1 | 2 | 3>(1)
-  const [normalizeReason, setNormalizeReason] = useState('')
   const queryClient = useQueryClient()
 
   const { data: attendanceData, isLoading } = useQuery<AttendanceMyResponse>({
@@ -323,26 +322,15 @@ function AttendanceTab() {
       ),
   })
 
-  const normalizeReasonTrimmed = normalizeReason.trim()
-  const normalizeReasonOk = normalizeReasonTrimmed.length >= NORMALIZATION_REASON_MIN_CHARS
-
   const normalizeMutation = useMutation({
-    mutationFn: ({
-      date,
-      hours,
-      reason,
-    }: {
-      date: string
-      hours: 1 | 2 | 3
-      reason: string
-    }) => apiPost<unknown>('/api/attendance/normalize', { date, hours, reason }),
+    mutationFn: ({ date, hours }: { date: string; hours: 1 | 2 | 3 }) =>
+      apiPost<unknown>('/api/attendance/normalize', { date, hours }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['attendance', 'my'] })
       queryClient.invalidateQueries({ queryKey: ['attendance', 'stats'] })
       setNormalizeDialogOpen(false)
       setNormalizeDate('')
       setNormalizeHours(1)
-      setNormalizeReason('')
       toast.success('Attendance normalized successfully')
     },
     onError: (error: Error) => {
@@ -408,7 +396,7 @@ function AttendanceTab() {
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <span className="text-muted-foreground text-sm">You can use up to 3 hours per month, on up to 3 days. Choose 1, 2, or 3 hours per day. Only days where you were in by 11 AM or worked at least 7 hours can be normalized; leave and absent days cannot. Or request normalization from your manager for days that need approval.</span>
+        <span className="text-muted-foreground text-sm">You can use up to 3 hours per month, on up to 3 days. Choose 1, 2, or 3 hours per day. Only days where you were in by 11 AM or worked at least 7 hours can be normalized; leave and absent days cannot. Or request normalization from HR for days that need approval (with a reason).</span>
         <div className="flex gap-2 shrink-0">
           <RequestNormalizationButton
             onSuccess={() => {
@@ -423,7 +411,6 @@ function AttendanceTab() {
               if (!open) {
                 setNormalizeDate('')
                 setNormalizeHours(1)
-                setNormalizeReason('')
               }
             }}
           >
@@ -433,7 +420,7 @@ function AttendanceTab() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Normalize a day</DialogTitle>
-              <DialogDescription>Select a date and how many hours (1, 2, or 3) to use from your monthly allowance. You can use up to 3 hours per month on up to 3 days.</DialogDescription>
+              <DialogDescription>Select a date and how many hours (1, 2, or 3) to use from your monthly allowance. You can use up to 3 hours per month on up to 3 days. No reason is required for self-normalization.</DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
@@ -461,19 +448,6 @@ function AttendanceTab() {
                   ))}
                 </div>
               </div>
-              <div>
-                <Label>Reason (required, min {NORMALIZATION_REASON_MIN_CHARS} characters)</Label>
-                <Textarea
-                  value={normalizeReason}
-                  onChange={(e) => setNormalizeReason(e.target.value)}
-                  placeholder="Explain why you are using your normalization allowance for this day…"
-                  rows={4}
-                  className="mt-1"
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  {normalizeReasonTrimmed.length}/{NORMALIZATION_REASON_MIN_CHARS} characters (minimum)
-                </p>
-              </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setNormalizeDialogOpen(false)}>Cancel</Button>
                 <Button
@@ -482,17 +456,12 @@ function AttendanceTab() {
                       toast.error('Select a date')
                       return
                     }
-                    if (!normalizeReasonOk) {
-                      toast.error(`Reason must be at least ${NORMALIZATION_REASON_MIN_CHARS} characters`)
-                      return
-                    }
                     normalizeMutation.mutate({
                       date: normalizeDate,
                       hours: normalizeHours,
-                      reason: normalizeReasonTrimmed,
                     })
                   }}
-                  disabled={!normalizeDate || !normalizeReasonOk || normalizeMutation.isPending}
+                  disabled={!normalizeDate || normalizeMutation.isPending}
                 >
                   {normalizeMutation.isPending ? 'Normalizing...' : 'Normalize'}
                 </Button>
@@ -644,7 +613,8 @@ function LeavesTab() {
             <DialogHeader>
               <DialogTitle>Apply for Leave</DialogTitle>
               <DialogDescription>
-                Submit a new leave request. Balances are computed from policy (1 CL, 0.5 SL, 0.5 EL per month; EL carries forward).
+                Submit a new leave request. CL and EL are for today or future dates only; SL can be used for past dates.
+                Balances follow policy (1 CL, 0.5 SL, 0.5 EL per month; EL carries forward).
               </DialogDescription>
             </DialogHeader>
             {isProbation ? (

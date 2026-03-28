@@ -68,6 +68,7 @@ export const ModelName = {
   LeaveTypeMaster: 'LeaveTypeMaster',
   LeaveRequest: 'LeaveRequest',
   LeaveBalance: 'LeaveBalance',
+  LeaveBalanceEditRequest: 'LeaveBalanceEditRequest',
   Holiday: 'Holiday',
   PayrollRecord: 'PayrollRecord',
   PayrollComponent: 'PayrollComponent',
@@ -576,6 +577,28 @@ export const LeaveBalanceScalarFieldEnum = {
 } as const
 
 export type LeaveBalanceScalarFieldEnum = (typeof LeaveBalanceScalarFieldEnum)[keyof typeof LeaveBalanceScalarFieldEnum]
+
+
+export const LeaveBalanceEditRequestScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  requestedByUserId: 'requestedByUserId',
+  prevCL: 'prevCL',
+  prevSL: 'prevSL',
+  prevEL: 'prevEL',
+  proposedCL: 'proposedCL',
+  proposedSL: 'proposedSL',
+  proposedEL: 'proposedEL',
+  reason: 'reason',
+  status: 'status',
+  reviewedByUserId: 'reviewedByUserId',
+  reviewedAt: 'reviewedAt',
+  reviewRemarks: 'reviewRemarks',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeaveBalanceEditRequestScalarFieldEnum = (typeof LeaveBalanceEditRequestScalarFieldEnum)[keyof typeof LeaveBalanceEditRequestScalarFieldEnum]
 
 
 export const HolidayScalarFieldEnum = {
