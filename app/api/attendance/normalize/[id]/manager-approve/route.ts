@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { notifyNormalizationPendingReview } from '@/lib/hrms/normalization-notify'
+import { isUserInMDManagedCohort } from '@/lib/hierarchy'
 import { z } from 'zod'
 
 const bodySchema = z.object({
@@ -102,29 +104,23 @@ export async function PATCH(
     })
 
     if (status === 'APPROVED') {
-      const hrHeads = await prisma.user.findMany({
-        where: { role: 'HR_HEAD' },
-        select: { id: true },
-      })
       const empName = normalization.employee.user?.name ?? 'An employee'
-      if (hrHeads.length > 0) {
-        await prisma.notification.createMany({
-          data: hrHeads.map((h) => ({
-            userId: h.id,
-            type: 'NORMALIZATION_REQUESTED',
-            title: 'Normalization Request',
-            message: `${empName} has requested attendance normalization (manager approved)`,
-            link: '/hr/attendance-leaves?tab=normalizations',
-            relatedId: normalization.employee.id,
-          })),
-        })
-      }
+      await notifyNormalizationPendingReview({
+        subjectUserId: normalization.employee.userId,
+        message: `${empName} has requested attendance normalization (manager approved)`,
+        relatedEmployeeId: normalization.employee.id,
+      })
     }
+
+    const pendingCopy =
+      status === 'APPROVED' && (await isUserInMDManagedCohort(normalization.employee.userId))
+        ? 'Pending MD approval.'
+        : 'Pending HR approval.'
 
     return successResponse(
       updated,
       status === 'APPROVED'
-        ? 'Normalization request approved. Pending HR approval.'
+        ? `Normalization request approved. ${pendingCopy}`
         : 'Normalization request rejected'
     )
   } catch (error) {

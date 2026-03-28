@@ -6,6 +6,8 @@ import {
   isWithinNormalizationWindow,
   NORMALIZATION_REASON_MIN_CHARS,
 } from '@/lib/hrms/normalization-deadline'
+import { notifyNormalizationPendingReview } from '@/lib/hrms/normalization-notify'
+import { isUserInMDManagedCohort } from '@/lib/hierarchy'
 import { z } from 'zod'
 
 const bodySchema = z.object({
@@ -94,27 +96,20 @@ export async function POST(request: NextRequest) {
       })),
     })
 
-    const hrHeads = await prisma.user.findMany({
-      where: { role: 'HR_HEAD' },
-      select: { id: true },
-    })
     const empName = employee.user?.name ?? 'An employee'
-    if (hrHeads.length > 0) {
-      await prisma.notification.createMany({
-        data: hrHeads.map((h) => ({
-          userId: h.id,
-          type: 'NORMALIZATION_REQUESTED',
-          title: 'Normalization Request',
-          message: `${empName} has requested attendance normalization for ${toCreate.length} day(s)`,
-          link: '/hr/attendance-leaves?tab=normalizations',
-          relatedId: employee.id,
-        })),
-      })
-    }
+    await notifyNormalizationPendingReview({
+      subjectUserId: employee.userId,
+      message: `${empName} has requested attendance normalization for ${toCreate.length} day(s)`,
+      relatedEmployeeId: employee.id,
+    })
+
+    const pendingCopy = (await isUserInMDManagedCohort(employee.userId))
+      ? 'Pending MD approval.'
+      : 'Pending HR approval.'
 
     return successResponse(
       { created: toCreate.length, skipped: dayStarts.length - toCreate.length },
-      `Requested normalization for ${toCreate.length} day(s). Pending HR approval.`
+      `Requested normalization for ${toCreate.length} day(s). ${pendingCopy}`
     )
   } catch (error) {
     if (error instanceof z.ZodError) {

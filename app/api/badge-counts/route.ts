@@ -4,6 +4,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { LedgerStatus, LeaveRequestStatus } from '@/generated/prisma/client'
+import { employeeNotInMDManagedCohortWhere } from '@/lib/hierarchy'
+import { mdPendingNormalizationsWhere } from '@/lib/hrms/normalization-md-pending'
 
 export interface BadgeCounts {
   pendingFinanceApprovals: number
@@ -31,6 +33,8 @@ export interface BadgeCounts {
   hrPendingTickets: number
   hrPendingMentalHealth: number
   hrPendingNormalizations: number
+  /** Pending attendance normalizations for MD-managed cohort (MD Attendance). */
+  pendingMDTeamNormalizations: number
   hrPendingLeaves: number
   hrPendingIncrements: number
   taskApprovalCount: number
@@ -72,6 +76,7 @@ export async function GET(request: NextRequest) {
       hrPendingTickets: 0,
       hrPendingMentalHealth: 0,
       hrPendingNormalizations: 0,
+      pendingMDTeamNormalizations: 0,
       hrPendingLeaves: 0,
       hrPendingIncrements: 0,
       taskApprovalCount: 0,
@@ -163,14 +168,17 @@ export async function GET(request: NextRequest) {
     // HR-level: PENDING manager normalizations (for HR Attendance tab)
     if (hasPermission(user, 'hrms:attendance:write')) {
       promises.push(
-        prisma.attendanceNormalization.count({
-          where: {
-            type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
-            status: 'PENDING',
-          },
-        }).then((c) => {
-          counts.hrPendingNormalizations = c
-        })
+        prisma.attendanceNormalization
+          .count({
+            where: {
+              type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
+              status: 'PENDING',
+              employee: employeeNotInMDManagedCohortWhere(),
+            },
+          })
+          .then((c) => {
+            counts.hrPendingNormalizations = c
+          })
       )
     }
 
@@ -356,6 +364,7 @@ export async function GET(request: NextRequest) {
             where: {
               type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
               status: 'PENDING',
+              employee: employeeNotInMDManagedCohortWhere(),
             },
           }),
         ]).then(([f, i, n]) => {
@@ -388,7 +397,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Pending MD approvals
+    // Pending MD approvals + MD-team normalizations (MD role only; needs employee row)
     if (user.role === 'MD' || user.role === 'ADMIN') {
       promises.push(
         prisma.mDApprovalRequest.count({ where: { status: 'PENDING' } }).then((c) => {
@@ -399,6 +408,23 @@ export async function GET(request: NextRequest) {
         prisma.leaveBalanceEditRequest.count({ where: { status: 'PENDING' } }).then((c) => {
           counts.pendingLeaveBalanceEditRequests = c
         })
+      )
+    }
+    if (user.role === 'MD') {
+      promises.push(
+        prisma.employee
+          .findUnique({
+            where: { userId: user.id },
+            select: { id: true },
+          })
+          .then((emp) => {
+            if (!emp) return
+            return prisma.attendanceNormalization
+              .count({ where: mdPendingNormalizationsWhere(emp.id) })
+              .then((c) => {
+                counts.pendingMDTeamNormalizations = c
+              })
+          })
       )
     }
 

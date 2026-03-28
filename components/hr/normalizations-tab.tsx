@@ -24,10 +24,18 @@ import {
 } from '@/components/ui/select'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { UserCheck, Check, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { format, parseISO, subMonths } from 'date-fns'
+import { format, subMonths } from 'date-fns'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import { AttendanceHeatmap, type AttendanceDay } from '@/components/employee/attendance-heatmap'
 
 interface NormalizationRow {
   id: string
@@ -52,6 +60,12 @@ interface NormalizationRow {
   approvedBy: string | null
 }
 
+function formatUtcDateKey(ymd: string): string {
+  const [y, m, d] = ymd.split('-').map(Number)
+  if (!y || !m || !d) return ymd
+  return format(new Date(Date.UTC(y, m - 1, d)), 'PPP')
+}
+
 function formatPunchUtc(iso: string | null | undefined): string {
   if (!iso) return '—'
   const d = new Date(iso)
@@ -72,7 +86,7 @@ function NormalizationAttendanceContext({ row }: { row: NormalizationRow }) {
         <span className="text-muted-foreground font-normal">({row.employeeCode})</span>
       </p>
       <p className="text-muted-foreground">
-        Date: <span className="text-foreground font-medium">{format(parseISO(row.date), 'PPP')}</span>
+        Date: <span className="text-foreground font-medium">{formatUtcDateKey(row.date)}</span>
       </p>
       <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/60">
         <div>
@@ -111,6 +125,41 @@ export function NormalizationsTab() {
   const [approveOpen, setApproveOpen] = useState(false)
   const [approveRow, setApproveRow] = useState<NormalizationRow | null>(null)
   const [approveNormalizeAs, setApproveNormalizeAs] = useState<'FULL_DAY' | 'HALF_DAY'>('FULL_DAY')
+  const [detailRow, setDetailRow] = useState<NormalizationRow | null>(null)
+
+  const detailMonthRange = useMemo(() => {
+    if (!detailRow) return null
+    const [y, m] = detailRow.date.split('-').map(Number)
+    if (!y || !m) return null
+    const lastDay = new Date(Date.UTC(y, m, 0)).getUTCDate()
+    return {
+      from: `${y}-${String(m).padStart(2, '0')}-01`,
+      to: `${y}-${String(m).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`,
+    }
+  }, [detailRow])
+
+  const detailMonthLabel = useMemo(() => {
+    if (!detailRow) return ''
+    const [y, m] = detailRow.date.split('-').map(Number)
+    if (!y || !m) return ''
+    return format(new Date(Date.UTC(y, m - 1, 15)), 'MMMM yyyy')
+  }, [detailRow])
+
+  const { data: detailHeatmap, isLoading: detailHeatmapLoading } = useQuery({
+    queryKey: [
+      'hr',
+      'employee',
+      detailRow?.employeeId,
+      'attendance-heatmap',
+      detailMonthRange?.from,
+      detailMonthRange?.to,
+    ],
+    queryFn: () =>
+      apiGet<EmployeeHeatmapPayload>(
+        `/api/hr/employees/${detailRow!.employeeId}/attendance-heatmap?fromDate=${detailMonthRange!.from}&toDate=${detailMonthRange!.to}`
+      ),
+    enabled: !!detailRow && !!detailMonthRange,
+  })
 
   const queryParams = new URLSearchParams({ status: statusFilter })
   if (fromDate) queryParams.set('fromDate', fromDate)
@@ -140,6 +189,7 @@ export function NormalizationsTab() {
       }),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['hr', 'normalizations'] })
+      queryClient.invalidateQueries({ queryKey: ['hr', 'employee'] })
       queryClient.invalidateQueries({ queryKey: ['hierarchy', 'my-team', 'attendance'] })
       queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'team'] })
       toast.success(variables.status === 'APPROVED' ? 'Normalization approved' : 'Normalization rejected')
@@ -193,6 +243,153 @@ export function NormalizationsTab() {
 
   return (
     <div className="space-y-6">
+      <Sheet
+        open={!!detailRow}
+        onOpenChange={(open) => {
+          if (!open) setDetailRow(null)
+        }}
+      >
+        <SheetContent
+          side="right"
+          className="w-full sm:max-w-xl md:max-w-3xl lg:max-w-4xl overflow-y-auto"
+        >
+          {detailRow ? (
+            <>
+              <SheetHeader>
+                <SheetTitle>Normalization details</SheetTitle>
+                <SheetDescription>
+                  {detailRow.employeeName} · {detailMonthLabel} (request date highlighted on the calendar)
+                </SheetDescription>
+              </SheetHeader>
+              <div className="space-y-6 px-4 pb-6">
+                <div className="rounded-lg border bg-muted/30 p-4 space-y-3 text-sm">
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <span className="font-medium">{detailRow.employeeName}</span>
+                    <span className="text-muted-foreground">({detailRow.employeeCode})</span>
+                  </div>
+                  <p className="text-muted-foreground">{detailRow.employeeEmail}</p>
+                  <div className="grid gap-2 sm:grid-cols-2 pt-2 border-t border-border/60">
+                    <div>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Request date</span>
+                      <p className="font-medium">{formatUtcDateKey(detailRow.date)}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Type</span>
+                      <p className="font-medium">
+                        {detailRow.type === 'EMPLOYEE_REQUEST' ? 'Employee request' : 'Manager applied'}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Normalize as</span>
+                      <p className="font-medium">
+                        {detailRow.normalizeAs === 'HALF_DAY'
+                          ? 'Half day'
+                          : detailRow.normalizeAs === 'FULL_DAY'
+                            ? 'Full day'
+                            : '—'}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Status</span>
+                      <p className="font-medium capitalize">{detailRow.status.toLowerCase()}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Punch in (UTC)</span>
+                      <p className="font-mono tabular-nums">{formatPunchUtc(detailRow.attendanceIn)}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Punch out (UTC)</span>
+                      <p className="font-mono tabular-nums">{formatPunchUtc(detailRow.attendanceOut)}</p>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Requested by</span>
+                      <p className="font-medium">{detailRow.requestedBy ?? '—'}</p>
+                      {detailRow.requestedByEmail ? (
+                        <p className="text-muted-foreground text-xs">{detailRow.requestedByEmail}</p>
+                      ) : null}
+                    </div>
+                    {detailRow.type === 'EMPLOYEE_REQUEST' &&
+                      detailRow.submittedByEmployeeName &&
+                      detailRow.submittedByEmployeeName !== detailRow.requestedBy && (
+                        <div className="sm:col-span-2">
+                          <span className="text-xs text-muted-foreground uppercase tracking-wide">Employee (submitter)</span>
+                          <p className="font-medium">{detailRow.submittedByEmployeeName}</p>
+                          {detailRow.submittedByEmployeeEmail ? (
+                            <p className="text-muted-foreground text-xs">{detailRow.submittedByEmployeeEmail}</p>
+                          ) : null}
+                        </div>
+                      )}
+                    <div className="sm:col-span-2">
+                      <span className="text-xs text-muted-foreground uppercase tracking-wide">Reason</span>
+                      <p className="mt-1 whitespace-pre-wrap rounded-md border bg-background p-3 text-foreground">
+                        {detailRow.reason?.trim() ? detailRow.reason : '—'}
+                      </p>
+                    </div>
+                    {detailRow.status === 'REJECTED' && (
+                      <div className="sm:col-span-2">
+                        <span className="text-xs text-muted-foreground uppercase tracking-wide">HR rejection</span>
+                        <p className="mt-1 whitespace-pre-wrap rounded-md border border-destructive/30 bg-destructive/5 p-3">
+                          {detailRow.hrRejectionReason?.trim() ? detailRow.hrRejectionReason : '—'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-semibold mb-2">Attendance this month</h3>
+                  {detailHeatmapLoading ? (
+                    <p className="text-sm text-muted-foreground py-8 text-center">Loading calendar…</p>
+                  ) : detailHeatmap ? (
+                    <AttendanceHeatmap
+                      attendance={detailHeatmap.attendance.map((d) => {
+                        const raw = d as AttendanceDay & {
+                          inTime?: string | Date | null
+                          outTime?: string | Date | null
+                        }
+                        const toDt = (v: string | Date | null | undefined) =>
+                          v == null ? null : typeof v === 'string' ? new Date(v) : v
+                        return {
+                          ...raw,
+                          date:
+                            typeof raw.date === 'string'
+                              ? new Date(raw.date)
+                              : raw.date instanceof Date
+                                ? raw.date
+                                : new Date(raw.date as unknown as string),
+                          inTime: toDt(raw.inTime ?? null),
+                          outTime: toDt(raw.outTime ?? null),
+                        }
+                      })}
+                      fromDate={detailMonthRange!.from}
+                      toDate={detailMonthRange!.to}
+                      leaveDays={detailHeatmap.leaveDays}
+                      holidayDays={detailHeatmap.holidayDays}
+                      highlightDateKeys={[detailRow.date]}
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground py-6 text-center">Could not load attendance.</p>
+                  )}
+                </div>
+
+                {detailRow.status === 'PENDING' && (
+                  <div className="flex flex-wrap gap-2 border-t pt-4">
+                    <Button type="button" size="sm" onClick={() => openApproveDialog(detailRow)}>
+                      <Check className="h-4 w-4 mr-1" />
+                      Approve
+                    </Button>
+                    <Button type="button" size="sm" variant="destructive" onClick={() => openRejectDialog(detailRow)}>
+                      <X className="h-4 w-4 mr-1" />
+                      Reject
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : null}
+        </SheetContent>
+      </Sheet>
+
       <Dialog open={approveOpen} onOpenChange={(o) => !o && closeApproveDialog()}>
         <DialogContent className="sm:max-w-md max-h-[min(90vh,640px)] overflow-y-auto">
           <DialogHeader>
@@ -278,7 +475,8 @@ export function NormalizationsTab() {
       <div>
         <h1 className="text-3xl font-bold">Attendance Normalizations</h1>
         <p className="text-muted-foreground mt-1">
-          Employee requests (direct to HR) and manager-submitted applications. Approve with full or half day, or reject.
+          Employee requests (direct to HR) and manager-submitted applications. Click a row for the full reason and a
+          monthly attendance view. Approve with full or half day, or reject.
         </p>
       </div>
 
@@ -346,17 +544,18 @@ export function NormalizationsTab() {
               </TableHeader>
               <TableBody>
                 {list.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => setDetailRow(row)}
+                  >
                     <TableCell className="font-medium">
                       {row.employeeName}
                       <span className="block text-xs text-muted-foreground">{row.employeeCode} · {row.employeeEmail}</span>
                     </TableCell>
-                    <TableCell>{format(parseISO(row.date), 'PPP')}</TableCell>
+                    <TableCell>{formatUtcDateKey(row.date)}</TableCell>
                     <TableCell className="tabular-nums text-sm font-mono">{formatPunchUtc(row.attendanceIn)}</TableCell>
                     <TableCell className="tabular-nums text-sm font-mono">{formatPunchUtc(row.attendanceOut)}</TableCell>
-                    <TableCell>
-                      {row.type === 'EMPLOYEE_REQUEST' ? 'Employee Request' : 'Manager'}
-                    </TableCell>
                     <TableCell>
                       {row.normalizeAs === 'HALF_DAY' ? 'Half Day' : row.normalizeAs === 'FULL_DAY' ? 'Full Day' : '—'}
                     </TableCell>
@@ -376,7 +575,12 @@ export function NormalizationsTab() {
                           </span>
                         )}
                     </TableCell>
-                    <TableCell className="max-w-[200px] truncate">{row.reason || '—'}</TableCell>
+                    <TableCell className="max-w-[min(280px,32vw)]">
+                      <span className="line-clamp-2 text-sm text-muted-foreground" title={row.reason ?? undefined}>
+                        {row.reason?.trim() ? row.reason : '—'}
+                      </span>
+                      <span className="mt-1 block text-[10px] text-muted-foreground/80">Open row for full text</span>
+                    </TableCell>
                     {statusFilter === 'REJECTED' && (
                       <TableCell className="max-w-[220px] text-sm text-muted-foreground">
                         {row.hrRejectionReason || '—'}
@@ -388,7 +592,7 @@ export function NormalizationsTab() {
                       {row.status === 'REJECTED' && <Badge variant="destructive">Rejected</Badge>}
                     </TableCell>
                     {statusFilter === 'PENDING' && (
-                      <TableCell>
+                      <TableCell onClick={(e) => e.stopPropagation()}>
                         <div className="flex gap-2">
                           <Button size="sm" onClick={() => openApproveDialog(row)} disabled={approveMutation.isPending}>
                             <Check className="h-4 w-4 mr-1" />

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
+import { isUserInMDManagedCohort } from '@/lib/hierarchy'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 
@@ -52,6 +53,7 @@ export async function PATCH(
           select: {
             id: true,
             employeeCode: true,
+            userId: true,
             user: { select: { name: true, email: true } },
           },
         },
@@ -80,6 +82,13 @@ export async function PATCH(
 
     if (hrEmployee.id === normalization.employee.id) {
       return errorResponse('You cannot approve your own normalization request', 403)
+    }
+
+    if (await isUserInMDManagedCohort(normalization.employee.userId)) {
+      return errorResponse(
+        'This normalization is for the MD-managed team; approve it from MD Attendance.',
+        403
+      )
     }
 
     const resolvedNormalizeAs =

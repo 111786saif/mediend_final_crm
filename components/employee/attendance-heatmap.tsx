@@ -58,6 +58,8 @@ interface AttendanceHeatmapProps {
   holidayDays?: { date: string; name: string }[]
   /** When false, only the grid is shown (e.g. dense team views). Default true. */
   showLegend?: boolean
+  /** UTC date keys (yyyy-MM-dd) to ring-highlight (e.g. normalization request day). */
+  highlightDateKeys?: string[]
 }
 
 function formatTime(date: Date | string | null) {
@@ -365,6 +367,12 @@ export function AttendanceHeatmap({
     return eachDayOfInterval({ start, end })
   }, [fromDate, toDate])
 
+  const highlightKeysDep = highlightDateKeys.join(',')
+  const highlightDateKeySet = useMemo(
+    () => new Set(highlightKeysDep ? highlightKeysDep.split(',') : []),
+    [highlightKeysDep]
+  )
+
   const heatmapCells = useMemo(() => {
     return allDates.map((date) => {
       const dateKey = format(date, 'yyyy-MM-dd')
@@ -381,16 +389,27 @@ export function AttendanceHeatmap({
         format(date, 'PPP'),
         officialHoliday
       )
+      const highlight = highlightDateKeySet.size > 0 && highlightDateKeySet.has(dateKey)
       return {
         date,
         dateKey,
         ...config,
+        highlight,
         dayAbbr: format(date, 'EEE').slice(0, 3),
         dateNum: format(date, 'd'),
         fullDate: format(date, 'PPP'),
       }
     })
-  }, [allDates, attendanceMap, leaveMap, holidayMap])
+  }, [allDates, attendanceMap, leaveMap, holidayMap, highlightDateKeySet])
+
+  const MAX_ENTRIES_PER_ROW = 7
+  const rows = useMemo(() => {
+    const result: (typeof heatmapCells)[] = []
+    for (let i = 0; i < heatmapCells.length; i += MAX_ENTRIES_PER_ROW) {
+      result.push(heatmapCells.slice(i, i + MAX_ENTRIES_PER_ROW))
+    }
+    return result
+  }, [heatmapCells])
 
   if (heatmapCells.length === 0) {
     return (
@@ -399,15 +418,6 @@ export function AttendanceHeatmap({
       </div>
     )
   }
-
-  const MAX_ENTRIES_PER_ROW = 7
-  const rows = useMemo(() => {
-    const result: typeof heatmapCells[] = []
-    for (let i = 0; i < heatmapCells.length; i += MAX_ENTRIES_PER_ROW) {
-      result.push(heatmapCells.slice(i, i + MAX_ENTRIES_PER_ROW))
-    }
-    return result
-  }, [heatmapCells])
 
   return (
     <div className="space-y-4">
@@ -425,7 +435,10 @@ export function AttendanceHeatmap({
                           cell.status !== 'paid-leave-half' &&
                           cell.status !== 'unpaid-leave-half' &&
                           cell.bgColor,
-                        cell.textColor
+                        cell.textColor,
+                        'highlight' in cell &&
+                          cell.highlight &&
+                          'ring-2 ring-amber-500 ring-offset-2 ring-offset-background shadow-md z-10 scale-[1.02]'
                       )}
                     >
                       {'pendingNormalization' in cell && cell.pendingNormalization ? (
@@ -460,7 +473,17 @@ export function AttendanceHeatmap({
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <div className="whitespace-pre-line text-sm">{cell.tooltipText}</div>
+                    <div className="whitespace-pre-line text-sm">
+                      {cell.tooltipText}
+                      {'highlight' in cell && cell.highlight ? (
+                        <>
+                          {'\n\n'}
+                          <span className="font-medium text-amber-600 dark:text-amber-400">
+                            ★ Normalization request day
+                          </span>
+                        </>
+                      ) : null}
+                    </div>
                   </TooltipContent>
                 </Tooltip>
               ))}
@@ -532,6 +555,12 @@ export function AttendanceHeatmap({
           <div className="w-4 h-4 rounded bg-orange-400" />
           <span>Official Holiday</span>
         </div>
+        {highlightDateKeySet.size > 0 && (
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded ring-2 ring-amber-500 ring-offset-1 ring-offset-background bg-muted" />
+            <span>Request day</span>
+          </div>
+        )}
       </div>
       )}
     </div>

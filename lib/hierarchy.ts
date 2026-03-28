@@ -297,6 +297,28 @@ export async function isUserInMDManagedCohort(userId: string): Promise<boolean> 
 }
 
 /**
+ * Prisma filter for employees in the MD-managed cohort (same rules as {@link isUserInMDManagedCohort}).
+ */
+export function employeeMDManagedCohortWhere(): Prisma.EmployeeWhereInput {
+  return {
+    OR: [
+      { manager: { user: { role: 'MD' } } },
+      {
+        mdTaskTeamMemberships: {
+          some: { team: { owner: { role: 'MD' } } },
+        },
+      },
+      { mdWatchlistMemberships: { some: {} } },
+    ],
+  }
+}
+
+/** Employees not in the MD-managed cohort (for HR-only queues). */
+export function employeeNotInMDManagedCohortWhere(): Prisma.EmployeeWhereInput {
+  return { NOT: employeeMDManagedCohortWhere() }
+}
+
+/**
  * User IDs the creator may add as meet participants (same rules as task assignable-users).
  */
 export async function getMeetInviteableUserIds(user: { id: string; role: string }): Promise<Set<string>> {

@@ -9,6 +9,7 @@ import {
   groupAttendanceByDate,
   type DepartmentTiming,
 } from '@/lib/hrms/attendance-utils'
+import { employeeNotInMDManagedCohortWhere } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
   try {
@@ -29,8 +30,10 @@ export async function GET(request: NextRequest) {
       type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] }
       status?: 'PENDING' | 'APPROVED' | 'REJECTED'
       date?: { gte?: Date; lte?: Date }
+      employee: ReturnType<typeof employeeNotInMDManagedCohortWhere>
     } = {
       type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
+      employee: employeeNotInMDManagedCohortWhere(),
     }
 
     if (status) {

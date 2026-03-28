@@ -27,7 +27,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiPost } from '@/lib/api-client'
+import { apiPost, apiRequest } from '@/lib/api-client'
 import { toast } from 'sonner'
 import { SectionContainer } from '@/components/employee/section-container'
 import { TabNavigation, type TabItem } from '@/components/employee/tab-navigation'
@@ -190,16 +190,22 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
   const queryClient = useQueryClient()
 
   const requestMutation = useMutation({
-    mutationFn: (payload: { dates: string[]; reason: string }) =>
-      apiPost<{ created?: number; skipped?: number }>('/api/attendance/normalize/request', payload),
-    onSuccess: (data) => {
+    mutationFn: async (payload: { dates: string[]; reason: string }) => {
+      const res = await apiRequest<{ created?: number; skipped?: number }>(
+        '/api/attendance/normalize/request',
+        { method: 'POST', body: JSON.stringify(payload) }
+      )
+      if (!res.success) throw new Error(res.error || 'Request failed')
+      return { data: res.data, message: res.message }
+    },
+    onSuccess: ({ data, message }) => {
       queryClient.invalidateQueries({ queryKey: ['attendance', 'my'] })
       queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'my'] })
       setOpen(false)
       setDates([''])
       setReason('')
       const created = data?.created ?? 0
-      if (created > 0) toast.success(`Requested normalization for ${created} day(s). Pending HR approval.`)
+      if (created > 0) toast.success(message || `Requested normalization for ${created} day(s).`)
       onSuccess?.()
     },
     onError: (error: Error) => toast.error(error.message || 'Failed to request normalization'),

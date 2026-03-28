@@ -69,6 +69,7 @@ function getBadgeCount(
     pendingNotices?: number
     pendingFinanceTeamApprovals?: number
     pendingMDApprovals?: number
+    pendingMDTeamNormalizations?: number
     pendingLeaveBalanceEditRequests?: number
   } | undefined,
   isMdOrAdmin: boolean
@@ -89,6 +90,8 @@ function getBadgeCount(
   if (itemTitle === 'My Support & Services') return counts.pendingTickets ?? 0
   if (itemTitle === 'Fin Team Approvals') return counts.pendingFinanceTeamApprovals ?? 0
   if (itemTitle === 'MD Team Approvals') return counts.pendingMDApprovals ?? 0
+  if (itemTitle === 'MD Attendance')
+    return counts.pendingMDTeamNormalizations ?? 0
   if (itemTitle === 'MD Leave balances') return counts.pendingLeaveBalanceEditRequests ?? 0
   return 0
 }
