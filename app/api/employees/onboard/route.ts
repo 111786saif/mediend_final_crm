@@ -1,0 +1,184 @@
+import { NextRequest } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/generated/prisma/client'
+import { getSessionFromRequest } from '@/lib/session'
+import { hasPermission, canCreateRole } from '@/lib/rbac'
+import { hashPassword } from '@/lib/auth'
+import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { z } from 'zod'
+
+const employeeSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(6),
+  role: z.enum([
+    'SALES_HEAD', 'CATEGORY_MANAGER', 'ASSISTANT_CATEGORY_MANAGER',
+    'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD',
+    'HR_HEAD', 'FINANCE_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD',
+    'LOAN_DEMAT_HEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN', 'USER',
+  ]),
+  employeeCode: z.string().min(1),
+  bdNumber: z.number().int().positive().optional().nullable(),
+  departmentId: z.string().optional().nullable(),
+  managerId: z.string().nullable().optional(),
+  joinDate: z.string().optional().nullable(),
+  dateOfBirth: z.string().optional().nullable(),
+})
+
+const onboardSchema = z.object({
+  employees: z.array(employeeSchema).min(1).max(50),
+})
+
+export async function POST(request: NextRequest) {
+  try {
+    const sessionUser = getSessionFromRequest(request)
+    if (!sessionUser) return unauthorizedResponse()
+    if (!hasPermission(sessionUser, 'users:write')) {
+      return errorResponse('Forbidden', 403)
+    }
+
+    const body = await request.json()
+    const { employees: employeesData } = onboardSchema.parse(body)
+
+    const results: Array<{ employeeId: string; userId: string; name: string; bdNumber: number | null }> = []
+    const errors: Array<{ index: number; name: string; error: string }> = []
+
+    for (let i = 0; i < employeesData.length; i++) {
+      const data = employeesData[i]
+      try {
+        if (data.role === 'MD' as any) {
+          errors.push({ index: i, name: data.name, error: 'MD role cannot be created' })
+          continue
+        }
+        if (!canCreateRole(sessionUser, data.role)) {
+          errors.push({ index: i, name: data.name, error: `No permission to create role: ${data.role}` })
+          continue
+        }
+
+        const normalizedEmail = data.email.toLowerCase().trim()
+
+        const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } })
+        if (existingUser) {
+          errors.push({ index: i, name: data.name, error: 'Email already exists' })
+          continue
+        }
+
+        const codeExists = await prisma.employee.findUnique({ where: { employeeCode: data.employeeCode.trim() } })
+        if (codeExists) {
+          errors.push({ index: i, name: data.name, error: 'Employee code already exists' })
+          continue
+        }
+
+        if (data.bdNumber != null) {
+          const bdNumExists = await prisma.employee.findUnique({ where: { bdNumber: data.bdNumber } })
+          if (bdNumExists) {
+            errors.push({ index: i, name: data.name, error: 'CRM Number already assigned to another employee' })
+            continue
+          }
+        }
+
+        if (data.managerId) {
+          const manager = await prisma.employee.findUnique({ where: { id: data.managerId } })
+          if (!manager) {
+            errors.push({ index: i, name: data.name, error: 'Manager not found' })
+            continue
+          }
+        }
+
+        const passwordHash = await hashPassword(data.password)
+
+        let teamId: string | null = null
+        if (data.role === 'BD' || data.role === 'TEAM_LEAD') {
+          const firstTeam = await prisma.team.findFirst({ orderBy: { createdAt: 'asc' } })
+          if (firstTeam) teamId = firstTeam.id
+        }
+
+        const result = await prisma.$transaction(async (tx) => {
+          const newUser = await tx.user.create({
+            data: {
+              email: normalizedEmail,
+              passwordHash,
+              name: data.name,
+              role: data.role,
+              teamId,
+            },
+          })
+
+          const employee = await tx.employee.create({
+            data: {
+              userId: newUser.id,
+              employeeCode: data.employeeCode.trim(),
+              departmentId: data.departmentId || null,
+              managerId: data.managerId ?? null,
+              bdNumber: data.bdNumber ?? null,
+              joinDate: data.joinDate ? new Date(data.joinDate) : null,
+              dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+            },
+          })
+
+          return { userId: newUser.id, employeeId: employee.id }
+        })
+
+        results.push({
+          employeeId: result.employeeId,
+          userId: result.userId,
+          name: data.name,
+          bdNumber: data.bdNumber ?? null,
+        })
+      } catch (err) {
+        const msg = err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002'
+          ? 'Duplicate unique field'
+          : (err instanceof Error ? err.message : 'Unknown error')
+        errors.push({ index: i, name: data.name, error: msg })
+      }
+    }
+
+    if (results.length > 0) {
+      const { clearBdNumberCache } = await import('@/lib/sync/bd-number-map')
+      clearBdNumberCache()
+
+      // Notify finance heads about new employees
+      try {
+        const financeHeads = await prisma.user.findMany({
+          where: { role: 'FINANCE_HEAD' },
+          select: { id: true },
+        })
+
+        if (financeHeads.length > 0) {
+          const names = results.map((r) => r.name)
+          const message = names.length === 1
+            ? `${names[0]} has been onboarded. Please set up their payroll structure.`
+            : `${names.length} employees onboarded (${names.slice(0, 3).join(', ')}${names.length > 3 ? '...' : ''}). Please set up their payroll structures.`
+
+          await prisma.notification.createMany({
+            data: financeHeads.map((fh) => ({
+              userId: fh.id,
+              type: 'EMPLOYEE_ONBOARDED',
+              title: 'New Employee Onboarded',
+              message,
+              link: '/finance/payroll',
+            })),
+          })
+        }
+      } catch (notifErr) {
+        console.error('Failed to send finance notifications:', notifErr)
+      }
+    }
+
+    return successResponse({
+      created: results,
+      errors,
+      summary: {
+        total: employeesData.length,
+        success: results.length,
+        failed: errors.length,
+      },
+    })
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return errorResponse(`Invalid request data: ${error.errors.map((e) => e.message).join(', ')}`, 400)
+    }
+    console.error('Error onboarding employees:', error)
+    return errorResponse('Failed to onboard employees', 500)
+  }
+}

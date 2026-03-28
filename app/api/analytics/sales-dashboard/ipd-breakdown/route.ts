@@ -107,9 +107,9 @@ export async function GET(request: NextRequest) {
         _count: { id: true },
         _sum: { billAmount: true, netProfit: true },
       }),
-      // Month tab: always all-time, not filtered by date picker
+      // Month series uses the same completed + date filter as the rest of the breakdown
       prisma.lead.findMany({
-        where: { pipelineStage: 'COMPLETED', ...teamScope },
+        where: completedWhere,
         select: { conversionDate: true, surgeryDate: true, leadDate: true, createdDate: true, billAmount: true, netProfit: true },
       }),
     ])

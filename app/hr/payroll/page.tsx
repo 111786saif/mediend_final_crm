@@ -1,4 +1,5 @@
-/**
- * HR payroll lives under finance. Show finance payroll at this URL so no redirect.
- */
-export { default } from '@/app/finance/payroll/page'
+import { redirect } from 'next/navigation'
+
+export default function HRPayrollRedirect() {
+  redirect('/finance/payroll')
+}

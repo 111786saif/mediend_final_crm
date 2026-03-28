@@ -30,6 +30,18 @@ type MeetRow = {
   module: 'INTERVIEW' | 'MD_APPOINTMENT' | 'GENERAL'
   candidateName: string | null
   createdBy: { name: string }
+  mdAppointment?: {
+    employee?: { user?: { name: string } | null } | null
+  } | null
+}
+
+/** MD appointment meets are created by the MD; show the employee who requested the slot. */
+function meetRequesterLabel(m: MeetRow): string {
+  if (m.module === 'MD_APPOINTMENT') {
+    const requester = m.mdAppointment?.employee?.user?.name
+    if (requester) return requester
+  }
+  return m.createdBy.name
 }
 
 function moduleLabel(m: MeetRow['module']) {
@@ -201,7 +213,7 @@ export default function MeetsPage() {
                                 <p className="text-xs text-muted-foreground mt-0.5">
                                   {format(new Date(m.scheduledAt), 'EEE, MMM d · h:mm a')}
                                   <span className="mx-1">·</span>
-                                  {m.createdBy.name}
+                                  {meetRequesterLabel(m)}
                                 </p>
                                 {m.location && (
                                   <p className="text-xs text-amber-800 dark:text-amber-200 mt-1">

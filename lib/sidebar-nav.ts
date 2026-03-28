@@ -139,6 +139,11 @@ export const navItems: NavItem[] = [
     roles: ['SALES_HEAD'],
   },
   {
+    title: 'Sales P&L',
+    url: '/sales/pnl',
+    icon: PieChart,
+  },
+  {
     title: 'Insurance',
     url: '/insurance/dashboard',
     icon: Shield,
@@ -173,12 +178,6 @@ export const navItems: NavItem[] = [
     url: '/pl/outstanding',
     icon: CreditCard,
     permission: 'pl:read',
-  },
-  {
-    title: 'Reports',
-    url: '/reports',
-    icon: FileText,
-    permission: 'reports:export',
   },
   {
     title: 'My Core HR',
@@ -379,9 +378,24 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
   return navItems.filter((item) => {
     if (item.title === 'Home' || item.title === 'Tasks') return true
     if (item.title === 'Meets') return user.role !== 'BD'
+    // Sales Head: "Sales Dashboard" already points to /sales/dashboard; generic "Dashboard" would duplicate it
+    if (item.title === 'Dashboard' && user.role === 'SALES_HEAD') {
+      return false
+    }
     // Company P&L (/finance/pnl): Finance Head, MD, Admin only (not TESTER / other roles with broad nav)
     if (item.title === 'Company P&L') {
       return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
+    }
+    if (item.title === 'Sales P&L') {
+      return hasPermission(user, 'sales:pnl:read')
+    }
+    // IT P&L overview: IT Head, Finance Head, MD, Admin only (not Sales Head / TESTER broad nav)
+    if (item.title === 'IT P&L') {
+      return user.role === 'IT_HEAD' || user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
+    }
+    // IT Projects / Resources (write): IT Head, MD, Admin
+    if (item.title === 'IT Projects' || item.title === 'IT Resources') {
+      return user.role === 'IT_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
     }
     if (user.role === 'MD') {
       return (

@@ -359,7 +359,7 @@ function CreateUserForm({
     }
     const bdNum = formData.bdNumber.trim() ? parseInt(formData.bdNumber, 10) : null
     if (formData.bdNumber.trim() && (isNaN(bdNum!) || bdNum! < 1)) {
-      toast.error('BD number must be a positive integer')
+      toast.error('CRM Number must be a positive integer')
       return
     }
     onSubmit({
@@ -523,17 +523,17 @@ function CreateUserForm({
 
       {formData.role === 'BD' && (
         <div>
-          <Label>BD number (optional)</Label>
+          <Label>CRM Number (optional)</Label>
           <Input
             type="number"
             min={1}
             step={1}
             value={formData.bdNumber}
             onChange={(e) => setFormData({ ...formData, bdNumber: e.target.value })}
-            placeholder="Used to sync leads from MySQL (BDM)"
+            placeholder="For lead sync"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            If set, leads with this BDM number will be assigned to this BD when synced.
+            If set, leads with this CRM number will be assigned to this employee when synced.
           </p>
         </div>
       )}
@@ -792,7 +792,7 @@ function EditEmployeeDialog({
     
     const bdNum = formData.bdNumber.trim() ? parseInt(formData.bdNumber, 10) : null
     if (formData.bdNumber.trim() && (isNaN(bdNum!) || bdNum! < 1)) {
-      toast.error('BD number must be a positive integer')
+      toast.error('CRM Number must be a positive integer')
       return
     }
 
@@ -867,7 +867,7 @@ function EditEmployeeDialog({
             </div>
             {user.role === 'BD' && (
               <div>
-                <Label>BD number (optional)</Label>
+                <Label>CRM Number (optional)</Label>
                 <Input
                   type="number"
                   min={1}

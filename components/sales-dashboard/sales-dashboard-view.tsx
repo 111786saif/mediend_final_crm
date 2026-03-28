@@ -497,6 +497,12 @@ function TeamDetailSheet({
 
 // ─── Overview Tab ─────────────────────────────────────────────────────────────
 
+function overviewDateQueryString(dateParams: string): string {
+  if (dateParams) return dateParams
+  const t = new Date()
+  return `startDate=${format(new Date(t.getFullYear(), t.getMonth(), 1), 'yyyy-MM-dd')}&endDate=${format(t, 'yyyy-MM-dd')}`
+}
+
 function OverviewTab({
   dateParams,
   onSelectBd,
@@ -506,28 +512,29 @@ function OverviewTab({
   onSelectBd: (bdId: string) => void
   variant: DashboardVariant
 }) {
-  const today = new Date()
-  const thisMonthStart = format(new Date(today.getFullYear(), today.getMonth(), 1), 'yyyy-MM-dd')
-  const thisMonthEnd = format(today, 'yyyy-MM-dd')
+  const qs = overviewDateQueryString(dateParams)
+  const comparisonQs = qs ? `?${qs}` : ''
+  const breakdownQs = qs ? `?${qs}` : ''
 
   const { data: comparison } = useQuery<IpdComparison>({
-    queryKey: ['sales-dashboard', variant, 'ipd-comparison'],
-    queryFn: () => apiGet<IpdComparison>('/api/analytics/sales-dashboard/ipd-comparison'),
+    queryKey: ['sales-dashboard', variant, 'ipd-comparison', qs],
+    queryFn: () =>
+      apiGet<IpdComparison>(`/api/analytics/sales-dashboard/ipd-comparison${comparisonQs}`),
   })
 
   const { data: bdLeaderboard } = useQuery<LeaderboardEntry[]>({
-    queryKey: ['sales-dashboard', variant, 'leaderboard-bd', thisMonthStart, thisMonthEnd],
-    queryFn: () => apiGet(`/api/analytics/leaderboard?type=bd&startDate=${thisMonthStart}&endDate=${thisMonthEnd}`),
+    queryKey: ['sales-dashboard', variant, 'leaderboard-bd', qs],
+    queryFn: () => apiGet(`/api/analytics/leaderboard?type=bd&${qs}`),
   })
 
   const { data: teamLeaderboard } = useQuery<LeaderboardEntry[]>({
-    queryKey: ['sales-dashboard', variant, 'leaderboard-team', thisMonthStart, thisMonthEnd],
-    queryFn: () => apiGet(`/api/analytics/leaderboard?type=team&startDate=${thisMonthStart}&endDate=${thisMonthEnd}`),
+    queryKey: ['sales-dashboard', variant, 'leaderboard-team', qs],
+    queryFn: () => apiGet(`/api/analytics/leaderboard?type=team&${qs}`),
   })
 
   const { data: ipdBreakdown } = useQuery<IpdBreakdown>({
-    queryKey: ['sales-dashboard', variant, 'ipd-breakdown-month'],
-    queryFn: () => apiGet<IpdBreakdown>('/api/analytics/sales-dashboard/ipd-breakdown'),
+    queryKey: ['sales-dashboard', variant, 'ipd-breakdown-overview', qs],
+    queryFn: () => apiGet<IpdBreakdown>(`/api/analytics/sales-dashboard/ipd-breakdown${breakdownQs}`),
   })
 
   const { data: todayAssignments } = useQuery<TodayAssignments>({
@@ -546,9 +553,9 @@ function OverviewTab({
           <Zap className="h-4 w-4" /> IPD Pulse
         </h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <StatCard label="IPD this month" value={comparison?.ipdThisMonth ?? '–'} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
-          <StatCard label={`By day ${comparison?.dayOfMonth ?? ''} last month`} value={comparison?.ipdByThisDayLastMonth ?? '–'} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
-          <StatCard label={`Best by day ${comparison?.dayOfMonth ?? ''}`} value={comparison?.ipdBestMonthByThisDay ?? '–'} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
+          <StatCard label="IPD (selected range)" value={comparison?.ipdThisMonth ?? '–'} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
+          <StatCard label="Prior period (vs same dates last month)" value={comparison?.ipdByThisDayLastMonth ?? '–'} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
+          <StatCard label={`Best month (by day ${comparison?.dayOfMonth ?? ''} in year)`} value={comparison?.ipdBestMonthByThisDay ?? '–'} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
           <StatCard label="Best month this year" value={comparison?.bestMonthThisYear?.count ?? '–'} sub={comparison?.bestMonthThisYear?.monthLabel ?? undefined} color="bg-amber-500/10 text-amber-900 dark:text-amber-100" />
         </div>
       </div>
@@ -557,7 +564,7 @@ function OverviewTab({
       {monthChartData.length > 0 && (
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold flex items-center gap-2"><BarChart3 className="h-4 w-4" />IPD by Month (All Time)</CardTitle>
+            <CardTitle className="text-sm font-semibold flex items-center gap-2"><BarChart3 className="h-4 w-4" />IPD by Month (filtered range)</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={180}>
@@ -577,7 +584,7 @@ function OverviewTab({
         {/* BD Leaderboard */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500" />BD Leaderboard – This Month</CardTitle>
+            <CardTitle className="text-sm font-semibold flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500" />BD Leaderboard</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y">
@@ -603,7 +610,7 @@ function OverviewTab({
                   </button>
                 )
               })}
-              {!bdLeaderboard?.length && <p className="text-center text-muted-foreground py-6 text-sm">No data this month</p>}
+              {!bdLeaderboard?.length && <p className="text-center text-muted-foreground py-6 text-sm">No data in selected range</p>}
             </div>
           </CardContent>
         </Card>
@@ -611,7 +618,7 @@ function OverviewTab({
         {/* Team Leaderboard */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold flex items-center gap-2"><Users className="h-4 w-4 text-blue-500" />Team Leaderboard – This Month</CardTitle>
+            <CardTitle className="text-sm font-semibold flex items-center gap-2"><Users className="h-4 w-4 text-blue-500" />Team Leaderboard</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y">
@@ -631,7 +638,7 @@ function OverviewTab({
                   </div>
                 )
               })}
-              {!teamLeaderboard?.length && <p className="text-center text-muted-foreground py-6 text-sm">No data this month</p>}
+              {!teamLeaderboard?.length && <p className="text-center text-muted-foreground py-6 text-sm">No data in selected range</p>}
             </div>
           </CardContent>
         </Card>
@@ -1038,7 +1045,10 @@ function CircleTab({ dateParams, variant }: { dateParams: string; variant: Dashb
 
 export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVariant }) {
   const [activeTab, setActiveTab] = useState('overview')
-  const [startDate, setStartDate] = useState<Date | undefined>(() => new Date(new Date().getFullYear(), 0, 1))
+  const [startDate, setStartDate] = useState<Date | undefined>(() => {
+    const t = new Date()
+    return new Date(t.getFullYear(), t.getMonth(), 1)
+  })
   const [endDate, setEndDate] = useState<Date | undefined>(() => new Date())
 
   const [selectedBdId, setSelectedBdId] = useState<string | null>(null)

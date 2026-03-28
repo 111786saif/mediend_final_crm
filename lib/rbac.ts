@@ -14,7 +14,6 @@ export type Permission =
   | 'insurance:write'
   | 'pl:read'
   | 'pl:write'
-  | 'reports:export'
   | 'hrms:read'
   | 'hrms:write'
   | 'hrms:attendance:read'
@@ -48,6 +47,8 @@ export type Permission =
   | 'loan-demat:write'
   | 'pnl:read'
   | 'pnl:write'
+  /** Surgery / sales P&L slice only (no full company P&L) */
+  | 'sales:pnl:read'
   | 'masters:read'
   | 'masters:write'
 
@@ -56,7 +57,6 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'leads:read',
     'leads:write',
     'analytics:read',
-    'reports:export',
     'users:read',
     'insurance:read',
     'pl:read',
@@ -105,7 +105,6 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'targets:read',
     'targets:write',
     'analytics:read',
-    'reports:export',
     'users:read',
     'users:write',
     'departments:create',
@@ -116,7 +115,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:leave:approve',
     'hrms:employees:read',
     'hrms:employees:write',
-    'it:pnl:read',
+    'sales:pnl:read',
   ],
   CATEGORY_MANAGER: [
     'leads:read',
@@ -181,7 +180,6 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
-    'it:pnl:read',
   ],
   HR_HEAD: [
     'users:read',
@@ -232,6 +230,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:leave:approve',
     'pnl:read',
     'pnl:write',
+    'it:pnl:read',
   ],
   DIGITAL_MARKETING_HEAD: [
     'analytics:read',
@@ -252,7 +251,6 @@ const rolePermissions: Record<UserRole, Permission[]> = {
   OUTSTANDING_HEAD: [
     'leads:read',
     'analytics:read',
-    'reports:export',
     'departments:create',
     'users:create_tl',
     'users:create_user',
@@ -274,7 +272,6 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'insurance:write',
     'pl:read',
     'pl:write',
-    'reports:export',
     'hrms:read',
     'hrms:write',
     'hrms:attendance:read',
@@ -330,7 +327,6 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'insurance:write',
     'pl:read',
     'pl:write',
-    'reports:export',
     'hrms:read',
     'hrms:write',
     'hrms:attendance:read',
@@ -357,10 +353,9 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:leave:approve',
     'masters:read',
     'masters:write',
-    'it:pnl:read',
-    'it:pnl:write',
     'loan-demat:read',
     'loan-demat:write',
+    'sales:pnl:read',
   ],
 }
 

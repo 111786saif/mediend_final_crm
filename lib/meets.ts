@@ -16,6 +16,11 @@ export const meetWithRelationsInclude = {
       id: true,
       status: true,
       employeeId: true,
+      employee: {
+        select: {
+          user: { select: { name: true } },
+        },
+      },
     },
   },
 } satisfies Prisma.MeetInclude

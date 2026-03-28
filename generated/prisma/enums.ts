@@ -256,7 +256,8 @@ export const NotificationType = {
   MD_APPROVAL_RESPONDED: 'MD_APPROVAL_RESPONDED',
   MD_APPROVAL_FINANCE_ACK: 'MD_APPROVAL_FINANCE_ACK',
   MEET_SCHEDULED: 'MEET_SCHEDULED',
-  MEET_REMINDER: 'MEET_REMINDER'
+  MEET_REMINDER: 'MEET_REMINDER',
+  EMPLOYEE_ONBOARDED: 'EMPLOYEE_ONBOARDED'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

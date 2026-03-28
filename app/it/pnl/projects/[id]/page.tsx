@@ -4,7 +4,7 @@ import { use, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost, apiDelete } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
-import { hasPermission } from '@/lib/rbac'
+import { canReadItPnl, canWriteItPnl } from '@/lib/pnl/auth-it-pnl'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -51,8 +51,8 @@ type Freelancer = { id: string; name: string }
 export default function ItProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const { user } = useAuth()
-  const can = user && hasPermission(user, 'it:pnl:read')
-  const canWrite = user && hasPermission(user, 'it:pnl:write')
+  const can = user && canReadItPnl(user)
+  const canWrite = user && canWriteItPnl(user)
   const qc = useQueryClient()
 
   const [bookingOpen, setBookingOpen] = useState(false)

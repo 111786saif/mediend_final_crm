@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
         where: { bdNumber: data.bdNumber },
       })
       if (bdNumExists) {
-        return errorResponse('BD number already assigned to another employee', 400)
+        return errorResponse('CRM Number already assigned to another employee', 400)
       }
     }
 

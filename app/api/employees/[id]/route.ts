@@ -165,7 +165,7 @@ export async function PATCH(
         },
       })
       if (bdNumExists) {
-        return errorResponse('BD number already assigned to another employee', 400)
+        return errorResponse('CRM Number already assigned to another employee', 400)
       }
     }
 

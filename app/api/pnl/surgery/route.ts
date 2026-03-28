@@ -61,7 +61,11 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'pnl:read') && !hasPermission(user, 'pl:read')) {
+    if (
+      !hasPermission(user, 'pnl:read') &&
+      !hasPermission(user, 'pl:read') &&
+      !hasPermission(user, 'sales:pnl:read')
+    ) {
       return errorResponse('Forbidden', 403)
     }
 

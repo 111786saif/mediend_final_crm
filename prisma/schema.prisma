@@ -195,6 +195,7 @@ enum NotificationType {
   MD_APPROVAL_FINANCE_ACK
   MEET_SCHEDULED
   MEET_REMINDER
+  EMPLOYEE_ONBOARDED
 }
 
 enum NoticeTargetType {

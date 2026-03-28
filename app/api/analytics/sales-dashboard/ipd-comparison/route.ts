@@ -3,9 +3,9 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { startOfMonth, endOfDay, subMonths, setDate, getDaysInMonth } from 'date-fns'
+import { startOfMonth, startOfDay, endOfDay, subMonths, setDate, getDaysInMonth } from 'date-fns'
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const user = await getSessionWithFreshUser()
     if (!user) return unauthorizedResponse()
@@ -26,13 +26,32 @@ export async function GET(_request: NextRequest) {
     const teamScope: Prisma.LeadWhereInput =
       user.role === 'TEAM_LEAD' && user.teamId ? { bd: { teamId: user.teamId } } : {}
 
-    const today = new Date()
-    const dayOfMonth = today.getDate()
+    const { searchParams } = new URL(request.url)
+    const startParam = searchParams.get('startDate')
+    const endParam = searchParams.get('endDate')
 
-    const thisMonthStart = startOfMonth(today)
-    const thisMonthEnd = endOfDay(today)
-    const lastMonthStart = startOfMonth(subMonths(today, 1))
-    const lastMonthEndThisDay = endOfDay(setDate(subMonths(today, 1), Math.min(dayOfMonth, getDaysInMonth(subMonths(today, 1)))))
+    const today = new Date()
+    let thisMonthStart: Date
+    let thisMonthEnd: Date
+    let lastMonthStart: Date
+    let lastMonthEndThisDay: Date
+    let dayOfMonth: number
+
+    if (startParam && endParam) {
+      thisMonthStart = startOfDay(new Date(startParam))
+      thisMonthEnd = endOfDay(new Date(endParam))
+      lastMonthStart = startOfDay(subMonths(thisMonthStart, 1))
+      lastMonthEndThisDay = endOfDay(subMonths(thisMonthEnd, 1))
+      dayOfMonth = thisMonthEnd.getDate()
+    } else {
+      dayOfMonth = today.getDate()
+      thisMonthStart = startOfMonth(today)
+      thisMonthEnd = endOfDay(today)
+      lastMonthStart = startOfMonth(subMonths(today, 1))
+      lastMonthEndThisDay = endOfDay(
+        setDate(subMonths(today, 1), Math.min(dayOfMonth, getDaysInMonth(subMonths(today, 1))))
+      )
+    }
 
     const currentYear = today.getFullYear()
     const completedWhereBase: Prisma.LeadWhereInput = { pipelineStage: 'COMPLETED', ...teamScope }

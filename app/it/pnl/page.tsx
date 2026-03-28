@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
-import { hasPermission } from '@/lib/rbac'
+import { canReadItPnl } from '@/lib/pnl/auth-it-pnl'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -25,7 +25,7 @@ type PnlSummary = {
 
 export default function ItPnlOverviewPage() {
   const { user } = useAuth()
-  const can = user && hasPermission(user, 'it:pnl:read')
+  const can = user && canReadItPnl(user)
   const now = new Date()
   const [sm, setSm] = useState(now.getMonth() + 1)
   const [sy, setSy] = useState(now.getFullYear())

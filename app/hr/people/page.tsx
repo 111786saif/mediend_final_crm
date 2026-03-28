@@ -6,7 +6,6 @@ import { TabNavigation, type TabItem } from '@/components/employee/tab-navigatio
 import { EmployeesTab } from '@/components/hr/employees-tab'
 import { DepartmentsTab } from '@/components/hr/departments-tab'
 import { OrgChartTab } from '@/components/hr/org-chart-tab'
-import { UsersTab } from '@/components/hr/users-tab'
 import { FnFReminderCard } from '@/components/hr/fnf-reminder-card'
 import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
@@ -15,7 +14,6 @@ const ALL_TABS: (TabItem & { permission?: string; roles?: string[] })[] = [
   { value: 'employees', label: 'Employees', permission: 'hrms:employees:read' },
   { value: 'departments', label: 'Departments', permission: 'hrms:employees:read' },
   { value: 'org-chart', label: 'Org Chart', roles: ['ADMIN', 'HR_HEAD'] },
-  { value: 'users', label: 'Users', permission: 'users:read' },
 ]
 
 export default function HRPeoplePage() {
@@ -69,7 +67,6 @@ export default function HRPeoplePage() {
         {activeTab === 'employees' && <EmployeesTab />}
         {activeTab === 'departments' && <DepartmentsTab />}
         {activeTab === 'org-chart' && <OrgChartTab />}
-        {activeTab === 'users' && <UsersTab />}
       </div>
     </div>
   )

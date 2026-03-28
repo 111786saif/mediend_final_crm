@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost, apiPatch, apiDelete } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
-import { hasPermission } from '@/lib/rbac'
+import { canReadItPnl, canWriteItPnl } from '@/lib/pnl/auth-it-pnl'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -35,8 +35,8 @@ type Freelancer = {
 
 export default function ItResourcesPage() {
   const { user } = useAuth()
-  const can = user && hasPermission(user, 'it:pnl:read')
-  const canWrite = user && hasPermission(user, 'it:pnl:write')
+  const can = user && canReadItPnl(user)
+  const canWrite = user && canWriteItPnl(user)
   const qc = useQueryClient()
   const [open, setOpen] = useState(false)
   const [edit, setEdit] = useState<Freelancer | null>(null)

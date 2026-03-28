@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
       })
       if (bdNumExists) {
         await prisma.user.delete({ where: { id: newUser.id } })
-        return errorResponse('BD number already assigned to another employee', 400)
+        return errorResponse('CRM Number already assigned to another employee', 400)
       }
     }
 
