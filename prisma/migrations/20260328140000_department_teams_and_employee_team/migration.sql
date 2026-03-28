@@ -146,5 +146,29 @@ BEGIN
   END IF;
 END $$;
 
+-- 5b) Drop every FK in public schema that references legacy "Team" (e.g. Target.teamId)
+DO $$
+DECLARE
+  r RECORD;
+BEGIN
+  FOR r IN
+    SELECT conrel.relname AS src_table, c.conname
+    FROM pg_constraint c
+    JOIN pg_class conrel ON conrel.oid = c.conrelid
+    JOIN pg_namespace ns ON ns.oid = conrel.relnamespace
+    JOIN pg_class confrel ON confrel.oid = c.confrelid
+    JOIN pg_namespace nfs ON nfs.oid = confrel.relnamespace
+    WHERE c.contype = 'f'
+      AND ns.nspname = 'public'
+      AND nfs.nspname = 'public'
+      AND confrel.relname = 'Team'
+  LOOP
+    EXECUTE format('ALTER TABLE %I DROP CONSTRAINT %I', r.src_table, r.conname);
+  END LOOP;
+END $$;
+
+-- Target.teamId is not in Prisma schema; remove the column if present.
+ALTER TABLE "Target" DROP COLUMN IF EXISTS "teamId";
+
 -- 6) Drop legacy Team table
 DROP TABLE IF EXISTS "Team";
