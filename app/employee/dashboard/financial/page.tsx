@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import type { BadgeCounts } from '@/app/api/badge-counts/route'
@@ -108,8 +109,16 @@ function getMonthName(month: number) {
   return months[month - 1] || ''
 }
 
-export default function FinancialPage() {
+function FinancialPageContent() {
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('payroll')
+
+  useEffect(() => {
+    const t = searchParams.get('tab')
+    if (t === 'increment' || t === 'payroll') {
+      setActiveTab(t)
+    }
+  }, [searchParams])
 
   const { data: badges } = useQuery<BadgeCounts>({
     queryKey: ['badge-counts'],
@@ -141,6 +150,14 @@ export default function FinancialPage() {
         {activeTab === 'increment' && <IncrementTab />}
       </div>
     </div>
+  )
+}
+
+export default function FinancialPage() {
+  return (
+    <Suspense fallback={<div className="py-12 text-center text-muted-foreground text-sm">Loading…</div>}>
+      <FinancialPageContent />
+    </Suspense>
   )
 }
 

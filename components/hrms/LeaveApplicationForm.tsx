@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { format, subYears } from 'date-fns'
 import { toast } from 'sonner'
-import { isSickLeaveType } from '@/lib/hrms/leave-utils'
+import { isClElPastBackdateGraceActive, isSickLeaveType } from '@/lib/hrms/leave-utils'
 
 interface LeaveType {
   id: string
@@ -87,7 +87,7 @@ export function LeaveApplicationForm({
       return
     }
     const lt = activeLeaveTypes.find((x) => x.id === formData.leaveTypeId)
-    if (lt && !isSickLeaveType(lt)) {
+    if (lt && !isSickLeaveType(lt) && !isClElPastBackdateGraceActive()) {
       const todayStart = new Date()
       todayStart.setHours(0, 0, 0, 0)
       const s = new Date(formData.startDate)
@@ -269,7 +269,7 @@ export function LeaveApplicationForm({
       <p className="text-xs text-muted-foreground">
         {sickAllowsPast
           ? 'Sick leave (SL) can be applied for past, today, or future dates (within policy limits).'
-          : 'Casual Leave (CL) and Earned Leave (EL) can only be selected for today or a future date. For backdated leave, use Sick Leave (SL).'}
+          : 'Choose start and end dates; the system validates them for your leave type and balance.'}
       </p>
 
       {formData.startDate && formData.endDate && (

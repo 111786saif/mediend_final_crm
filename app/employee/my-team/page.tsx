@@ -159,22 +159,33 @@ function LeaveTypeBreakdown({ rows }: { rows: LeaveByTypeRow[] }) {
   const map = new Map(rows.map((r) => [r.code, r.days]))
   const extra = rows.filter((r) => !PRIMARY_LEAVE_CODES.includes(r.code as (typeof PRIMARY_LEAVE_CODES)[number]))
   return (
-    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground border-b border-border/40 pb-2.5 mb-2.5">
-      <span className="text-[10px] uppercase tracking-wide text-muted-foreground/80 shrink-0">
-        Leave (days)
-      </span>
-      {PRIMARY_LEAVE_CODES.map((code) => (
-        <span key={code} className="whitespace-nowrap">
-          <span className="font-medium text-foreground/75">{code}</span>{' '}
-          <span className="tabular-nums">{formatLeaveTypeDays(map.get(code))}</span>
+    <div className="space-y-2 border-b border-border/40 pb-2.5 mb-2.5">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground">
+        <span className="text-[10px] uppercase tracking-wide text-muted-foreground/80 shrink-0">
+          Leave (days)
         </span>
-      ))}
-      {extra.map((r) => (
-        <span key={r.code} className="whitespace-nowrap">
-          <span className="font-medium text-foreground/75">{r.code}</span>{' '}
-          <span className="tabular-nums">{formatLeaveTypeDays(r.days)}</span>
-        </span>
-      ))}
+        {PRIMARY_LEAVE_CODES.map((code) => (
+          <span key={code} className="whitespace-nowrap">
+            <span className="font-medium text-foreground/75">{code}</span>{' '}
+            <span className="tabular-nums">{formatLeaveTypeDays(map.get(code))}</span>
+          </span>
+        ))}
+      </div>
+      {extra.length > 0 ? (
+        <div className="rounded-md border border-border/60 bg-muted/30 px-2 py-1.5 text-[11px]">
+          <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground mb-1">
+            Other leave types (in range)
+          </p>
+          <div className="flex flex-wrap gap-x-3 gap-y-1">
+            {extra.map((r) => (
+              <span key={r.code} className="whitespace-nowrap">
+                <span className="font-medium text-foreground">{r.code}</span>{' '}
+                <span className="tabular-nums text-foreground/90">{formatLeaveTypeDays(r.days)}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

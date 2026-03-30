@@ -4,13 +4,22 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 
-const HEAD_ROLES = ['HR_HEAD', 'FINANCE_HEAD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'ADMIN'] as const
+/** Heads employees may raise new tickets to (dropdown; legacy tickets to other roles still load). */
+const TICKET_TARGET_ROLES = [
+  'HR_HEAD',
+  'FINANCE_HEAD',
+  'SALES_HEAD',
+  'DIGITAL_MARKETING_HEAD',
+  'IT_HEAD',
+  'ADMIN',
+] as const
 
 const createTicketSchema = z.object({
-  targetHeadRole: z.enum(HEAD_ROLES),
+  targetHeadRole: z.enum(TICKET_TARGET_ROLES),
   subject: z.string().min(5, 'Subject must be at least 5 characters'),
   description: z.string().min(20, 'Description must be at least 20 characters'),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).default('MEDIUM'),
+  attachments: z.array(z.string().url()).max(5).optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -30,7 +39,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { targetHeadRole, subject, description, priority } = createTicketSchema.parse(body)
+    const { targetHeadRole, subject, description, priority, attachments } =
+      createTicketSchema.parse(body)
 
     const ticket = await prisma.supportTicket.create({
       data: {
@@ -39,6 +49,7 @@ export async function POST(request: NextRequest) {
         subject,
         description,
         priority,
+        attachments: attachments?.length ? attachments : undefined,
       },
       include: {
         department: {
@@ -71,7 +82,7 @@ export async function POST(request: NextRequest) {
     return successResponse(ticket, 'Ticket raised successfully')
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return errorResponse(error.errors[0].message, 400)
+      return errorResponse(error.issues[0]?.message ?? 'Invalid request data', 400)
     }
     console.error('Error creating ticket:', error)
     return errorResponse('Failed to create ticket', 500)

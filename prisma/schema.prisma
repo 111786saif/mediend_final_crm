@@ -204,6 +204,7 @@ enum NotificationType {
   EMPLOYEE_ONBOARDED
   LEAVE_BALANCE_EDIT_REQUESTED
   LEAVE_BALANCE_EDIT_RESOLVED
+  GRACE2_MONTHLY_LIMIT_EXCEEDED
 }
 
 enum NoticeTargetType {
@@ -1318,6 +1319,8 @@ model SupportTicket {
   status          TicketStatus    @default(OPEN)
   response        String?
   respondedAt     DateTime?
+  /// Array of S3/public URLs for images or PDFs attached when raising the ticket
+  attachments     Json?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 

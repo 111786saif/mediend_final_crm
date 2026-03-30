@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/use-auth'
 import type { BadgeCounts } from '@/app/api/badge-counts/route'
@@ -28,6 +29,8 @@ import {
   ExternalLink,
   Link,
   AlertTriangle,
+  Paperclip,
+  X,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -61,17 +64,32 @@ const SUPPORT_TAB_VALUES = [
   { value: 'job-postings', label: 'Job Postings' },
 ] as const
 
+/** Dropdown for new tickets only (legacy tickets may still show other target roles). */
 const HEAD_ROLE_OPTIONS = [
   { value: 'HR_HEAD', label: 'HR Head' },
   { value: 'FINANCE_HEAD', label: 'Finance Head' },
   { value: 'SALES_HEAD', label: 'Sales Head' },
-  { value: 'INSURANCE_HEAD', label: 'Insurance Head' },
-  { value: 'PL_HEAD', label: 'PL Head' },
-  { value: 'OUTSTANDING_HEAD', label: 'Outstanding Head' },
   { value: 'DIGITAL_MARKETING_HEAD', label: 'Digital Marketing Head' },
   { value: 'IT_HEAD', label: 'IT Head' },
   { value: 'ADMIN', label: 'Admin' },
 ]
+
+function headRoleLabel(role: string | null | undefined): string {
+  if (!role) return '—'
+  const found = HEAD_ROLE_OPTIONS.find((h) => h.value === role)
+  if (found) return found.label
+  return role.replace(/_/g, ' ')
+}
+
+const MAX_TICKET_ATTACHMENTS = 5
+const TICKET_ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024
+
+function ticketAttachmentUrls(t: { attachments?: unknown }): string[] {
+  const a = t.attachments
+  if (!a) return []
+  if (Array.isArray(a) && a.every((x) => typeof x === 'string')) return a
+  return []
+}
 
 interface Feedback {
   id: string
@@ -91,6 +109,7 @@ interface SupportTicket {
   createdAt: string
   department?: { name: string } | null
   targetHeadRole?: string | null
+  attachments?: unknown
   employee?: {
     user: { name: string; email: string }
     department?: { name: string } | null
@@ -191,9 +210,17 @@ const IJP_STATUS = {
 
 const HEAD_ROLES = ['HR_HEAD', 'FINANCE_HEAD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD']
 
-export default function SupportServicesPage() {
+function SupportServicesPageContent() {
   const { user } = useAuth()
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('feedback')
+
+  useEffect(() => {
+    const t = searchParams.get('tab')
+    if (t && SUPPORT_TAB_VALUES.some((x) => x.value === t)) {
+      setActiveTab(t)
+    }
+  }, [searchParams])
 
   const { data: badges } = useQuery<BadgeCounts>({
     queryKey: ['badge-counts'],
@@ -236,6 +263,14 @@ export default function SupportServicesPage() {
         {activeTab === 'job-postings' && <JobPostingsTab />}
       </div>
     </div>
+  )
+}
+
+export default function SupportServicesPage() {
+  return (
+    <Suspense fallback={<div className="py-12 text-center text-muted-foreground text-sm">Loading…</div>}>
+      <SupportServicesPageContent />
+    </Suspense>
   )
 }
 
@@ -380,6 +415,7 @@ function HeadTicketCard({
         </div>
       </div>
       <p className="text-sm bg-muted/50 p-3 rounded mb-3">{ticket.description}</p>
+      <TicketAttachments urls={ticketAttachmentUrls(ticket)} />
       {ticket.status === 'OPEN' || ticket.status === 'IN_PROGRESS' ? (
         <div className="space-y-2">
           <Label>Response</Label>
@@ -426,11 +462,42 @@ function HeadTicketCard({
   )
 }
 
+function TicketAttachments({ urls }: { urls: string[] }) {
+  if (urls.length === 0) return null
+  return (
+    <div className="mb-3 flex flex-wrap gap-2 items-center">
+      <span className="text-xs text-muted-foreground flex items-center gap-1">
+        <Paperclip className="h-3.5 w-3.5" />
+        Attachments
+      </span>
+      {urls.map((url) => (
+        <a
+          key={url}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-xs font-medium text-primary underline-offset-2 hover:underline"
+        >
+          <FileText className="h-3 w-3 shrink-0" />
+          View file
+          <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
+        </a>
+      ))}
+    </div>
+  )
+}
+
 function CreateTicketForm({
   onSubmit,
   isLoading,
 }: {
-  onSubmit: (data: { targetHeadRole: string; subject: string; description: string; priority: string }) => void
+  onSubmit: (data: {
+    targetHeadRole: string
+    subject: string
+    description: string
+    priority: string
+    files: File[]
+  }) => void
   isLoading: boolean
 }) {
   const [formData, setFormData] = useState({
@@ -439,12 +506,38 @@ function CreateTicketForm({
     description: '',
     priority: 'MEDIUM',
   })
+  const [files, setFiles] = useState<File[]>([])
+
+  const addFiles = (list: FileList | null) => {
+    if (!list?.length) return
+    setFiles((prev) => {
+      const next = [...prev]
+      for (let i = 0; i < list.length; i++) {
+        const f = list.item(i)
+        if (!f) continue
+        if (f.size > TICKET_ATTACHMENT_MAX_BYTES) {
+          toast.error(`${f.name} is too large (max 10 MB)`)
+          continue
+        }
+        if (next.length >= MAX_TICKET_ATTACHMENTS) {
+          toast.error(`Maximum ${MAX_TICKET_ATTACHMENTS} attachments`)
+          break
+        }
+        next.push(f)
+      }
+      return next.slice(0, MAX_TICKET_ATTACHMENTS)
+    })
+  }
+
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index))
+  }
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault()
-        onSubmit(formData)
+        onSubmit({ ...formData, files })
       }}
       className="space-y-4"
     >
@@ -501,6 +594,35 @@ function CreateTicketForm({
           minLength={20}
         />
       </div>
+      <div>
+        <Label htmlFor="ticket-files">Attachments (optional)</Label>
+        <p className="text-xs text-muted-foreground mt-1 mb-2">
+          Up to {MAX_TICKET_ATTACHMENTS} files — PDF or images (JPEG, PNG, GIF, WebP), max 10 MB each.
+        </p>
+        <Input
+          id="ticket-files"
+          type="file"
+          accept="application/pdf,image/*"
+          multiple
+          className="cursor-pointer"
+          onChange={(e) => {
+            addFiles(e.target.files)
+            e.target.value = ''
+          }}
+        />
+        {files.length > 0 && (
+          <ul className="mt-2 space-y-1 text-sm">
+            {files.map((f, i) => (
+              <li key={`${f.name}-${i}`} className="flex items-center justify-between gap-2 rounded-md border px-2 py-1">
+                <span className="truncate text-muted-foreground">{f.name}</span>
+                <Button type="button" variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => removeFile(i)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <div className="flex justify-end">
         <Button type="submit" disabled={isLoading}>
           {isLoading ? 'Submitting...' : 'Submit ticket'}
@@ -512,6 +634,7 @@ function CreateTicketForm({
 
 function TicketsTab() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [ticketFormKey, setTicketFormKey] = useState(0)
   const queryClient = useQueryClient()
   const { user } = useAuth()
 
@@ -520,7 +643,6 @@ function TicketsTab() {
     queryFn: () => apiGet<SupportTicket[]>('/api/employee/tickets'),
   })
 
-  const HEAD_ROLES = ['HR_HEAD', 'FINANCE_HEAD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD']
   const isHead = user && HEAD_ROLES.includes(user.role)
 
   const { data: incomingTickets, isLoading: loadingIncoming } = useQuery<SupportTicket[]>({
@@ -530,8 +652,26 @@ function TicketsTab() {
   })
 
   const createMutation = useMutation({
-    mutationFn: (data: { targetHeadRole: string; subject: string; description: string; priority: string }) =>
-      apiPost<SupportTicket>('/api/employee/tickets', data),
+    mutationFn: async (data: {
+      targetHeadRole: string
+      subject: string
+      description: string
+      priority: string
+      files: File[]
+    }) => {
+      const urls: string[] = []
+      for (const file of data.files) {
+        const fd = new FormData()
+        fd.append('file', file)
+        const uploaded = await apiPost<{ url: string }>('/api/employee/tickets/upload', fd)
+        urls.push(uploaded.url)
+      }
+      const { files: _f, ...rest } = data
+      return apiPost<SupportTicket>('/api/employee/tickets', {
+        ...rest,
+        attachments: urls.length ? urls : undefined,
+      })
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-tickets'] })
       setIsDialogOpen(false)
@@ -544,7 +684,13 @@ function TicketsTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <span className="text-muted-foreground">Raise tickets for assistance — response within 48 hours</span>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog
+          open={isDialogOpen}
+          onOpenChange={(open) => {
+            setIsDialogOpen(open)
+            if (open) setTicketFormKey((k) => k + 1)
+          }}
+        >
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
@@ -557,6 +703,7 @@ function TicketsTab() {
               <DialogDescription>Describe your issue and choose which head to raise to</DialogDescription>
             </DialogHeader>
             <CreateTicketForm
+              key={ticketFormKey}
               onSubmit={(data) => createMutation.mutate(data)}
               isLoading={createMutation.isPending}
             />
@@ -600,7 +747,7 @@ function TicketsTab() {
                       <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                         <ShieldCheck className="h-3 w-3" />
                         {t.targetHeadRole
-                          ? HEAD_ROLE_OPTIONS.find((h) => h.value === t.targetHeadRole)?.label ?? t.targetHeadRole
+                          ? headRoleLabel(t.targetHeadRole)
                           : t.department?.name ?? '—'}
                         <span>·</span>
                         {format(new Date(t.createdAt), 'PPP')}
@@ -615,6 +762,7 @@ function TicketsTab() {
                     </div>
                   </div>
                   <p className="text-sm bg-muted/50 p-3 rounded mb-3">{t.description}</p>
+                  <TicketAttachments urls={ticketAttachmentUrls(t)} />
                   {t.response && (
                     <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                       <p className="text-sm font-medium text-green-700">Response:</p>

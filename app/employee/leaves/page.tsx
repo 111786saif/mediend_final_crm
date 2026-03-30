@@ -130,9 +130,7 @@ export default function EmployeeLeavesPage() {
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>Apply for Leave</DialogTitle>
-              <DialogDescription>
-                CL and EL are for today or future only; SL can be used for past dates. Balances follow policy.
-              </DialogDescription>
+              <DialogDescription>Submit a new leave request. Balances follow policy.</DialogDescription>
             </DialogHeader>
             {isProbation ? (
               <p className="text-sm text-muted-foreground py-4">

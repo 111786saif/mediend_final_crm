@@ -46,6 +46,14 @@ function attributedLeaveDaysInRange(
   return leave.days * (overlap / calendarInLeave)
 }
 
+/** When `LeaveTypeMaster.code` is null, map common display names to policy codes. */
+const LEAVE_NAME_TO_CODE: Record<string, string> = {
+  'casual leave': 'CL',
+  'sick leave': 'SL',
+  'earned leave': 'EL',
+  'privilege leave': 'EL',
+}
+
 function leaveTypeCodeForAggregation(leave: {
   isUnpaid: boolean
   leaveType: { code: string | null; name: string }
@@ -53,6 +61,8 @@ function leaveTypeCodeForAggregation(leave: {
   if (leave.isUnpaid) return 'LOP'
   const c = leave.leaveType.code?.trim()
   if (c) return c.toUpperCase()
+  const nameKey = leave.leaveType.name?.trim().toLowerCase()
+  if (nameKey && LEAVE_NAME_TO_CODE[nameKey]) return LEAVE_NAME_TO_CODE[nameKey]
   const n = leave.leaveType.name?.trim()
   return n ? n.slice(0, 8).toUpperCase() : 'OTHER'
 }

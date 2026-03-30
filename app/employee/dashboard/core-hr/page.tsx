@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import type { BadgeCounts } from '@/app/api/badge-counts/route'
 import { format } from 'date-fns'
-import { Calendar, FileText, ExternalLink, CalendarDays } from 'lucide-react'
+import { Calendar, FileText, ExternalLink, CalendarDays, ChevronRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -36,13 +37,92 @@ import { LeaveApplicationForm } from '@/components/hrms/LeaveApplicationForm'
 import { useRouter } from 'next/navigation'
 import { Textarea } from '@/components/ui/textarea'
 import { NORMALIZATION_REASON_MIN_CHARS } from '@/lib/hrms/normalization-deadline'
+import {
+  MIN_FULL_DAY_HOURS,
+  MIN_HALF_DAY_HOURS,
+  DEFAULT_DEPARTMENT_TIMING,
+} from '@/lib/hrms/attendance-constants'
 
 const CORE_HR_TAB_VALUES = [
   { value: 'attendance', label: 'Attendance' },
   { value: 'leaves', label: 'Leaves' },
   { value: 'holidays', label: 'Holidays' },
   { value: 'documents', label: 'Documents' },
+  { value: 'policies', label: 'HR Policies' },
 ] as const
+
+const GRACE2_MONTHLY_MAX = 10
+
+/** Shown on the attendance stats card, HR Policies, and normalize dialog. */
+const SELF_NORMALIZATION_RULE_TEXT =
+  'You can use up to 3 hours per month, on up to 3 days. Choose 1, 2, or 3 hours per day. Only days where you were in by 11 AM or worked at least 7 hours can be normalized; leave and absent days cannot. Or request normalization from HR for days that need approval (with a reason).'
+
+function clockFromHourMinute(h: number, m: number): string {
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+}
+
+function addMinutesToShift(
+  shiftHour: number,
+  shiftMinute: number,
+  addMinutes: number
+): string {
+  const total = shiftHour * 60 + shiftMinute + addMinutes
+  const hh = Math.floor(total / 60) % 24
+  const mm = total % 60
+  return clockFromHourMinute(hh, mm)
+}
+
+interface TimingStats {
+  shiftStartHour: number
+  shiftStartMinute: number
+  grace1Minutes: number
+  grace2Minutes: number
+  penaltyMinutes: number
+}
+
+/** Use API timing when present; avoids treating 0 as missing (e.g. midnight hour). */
+function coalesceTimingFromStats(stats: AttendanceStats | undefined): TimingStats {
+  const d = DEFAULT_DEPARTMENT_TIMING
+  if (!stats) {
+    return {
+      shiftStartHour: d.shiftStartHour,
+      shiftStartMinute: d.shiftStartMinute,
+      grace1Minutes: d.grace1Minutes,
+      grace2Minutes: d.grace2Minutes,
+      penaltyMinutes: d.penaltyMinutes,
+    }
+  }
+  return {
+    shiftStartHour: Number.isFinite(stats.shiftStartHour) ? stats.shiftStartHour : d.shiftStartHour,
+    shiftStartMinute: Number.isFinite(stats.shiftStartMinute) ? stats.shiftStartMinute : d.shiftStartMinute,
+    grace1Minutes: Number.isFinite(stats.grace1Minutes) ? stats.grace1Minutes : d.grace1Minutes,
+    grace2Minutes: Number.isFinite(stats.grace2Minutes) ? stats.grace2Minutes : d.grace2Minutes,
+    penaltyMinutes: Number.isFinite(stats.penaltyMinutes) ? stats.penaltyMinutes : d.penaltyMinutes,
+  }
+}
+
+function buildAttendanceStatSubtitles(t: TimingStats) {
+  const shift = clockFromHourMinute(t.shiftStartHour, t.shiftStartMinute)
+  const g1End = addMinutesToShift(t.shiftStartHour, t.shiftStartMinute, t.grace1Minutes)
+  const g2End = addMinutesToShift(
+    t.shiftStartHour,
+    t.shiftStartMinute,
+    t.grace1Minutes + t.grace2Minutes
+  )
+  const penaltyEnd = addMinutesToShift(
+    t.shiftStartHour,
+    t.shiftStartMinute,
+    t.grace1Minutes + t.grace2Minutes + t.penaltyMinutes
+  )
+  return {
+    fullDays: `On time, before ${shift}`,
+    grace1: `${shift} – ${g1End}`,
+    grace2: `${g1End} – ${g2End}`,
+    latePenalty: `${g2End} – ${penaltyEnd}`,
+    halfDay: `After ${penaltyEnd} (≥${MIN_FULL_DAY_HOURS}h full day; ≥${MIN_HALF_DAY_HOURS}h half)`,
+    absent: `When a half-day would apply but worked under ${MIN_HALF_DAY_HOURS}h`,
+  }
+}
 
 interface AttendanceDay {
   date: Date
@@ -67,11 +147,21 @@ interface AttendanceStats {
   grace2Count: number
   latePenaltyCount: number
   halfDayCount: number
+  absentCount: number
+  fullDayCount: number
+  grace2CountThisUtcMonth?: number
   totalPenalty: number
   normalizationsUsed: number
   normalizationsLimitDays: number
   normalizationsHoursUsed: number
   normalizationsLimitHours: number
+  shiftStartHour: number
+  shiftStartMinute: number
+  grace1Minutes: number
+  grace2Minutes: number
+  penaltyMinutes: number
+  penaltyAmount?: number
+  departmentName?: string | null
 }
 
 interface LeaveType {
@@ -178,6 +268,7 @@ export default function CoreHRPage() {
         {activeTab === 'leaves' && <LeavesTab />}
         {activeTab === 'holidays' && <HolidaysTab />}
         {activeTab === 'documents' && <DocumentsTab router={router} />}
+        {activeTab === 'policies' && <PoliciesTab />}
       </div>
     </div>
   )
@@ -235,8 +326,15 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Request normalization from HR</DialogTitle>
-          <DialogDescription>
-            Request attendance normalization for specific days with a reason. HR will review and set full or half day. From April 2026, requests must be within the same week.
+          <DialogDescription className="space-y-2">
+            <span className="block">
+              Request attendance normalization for specific days with a reason. HR will review and set full or half day.
+              From April 2026, requests must be within the same week.
+            </span>
+            <span className="block text-xs text-muted-foreground">
+              Use this when you need HR approval (e.g. days that do not meet self-normalization rules on your Attendance
+              stats card).
+            </span>
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -299,6 +397,140 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
         </div>
       </DialogContent>
     </Dialog>
+  )
+}
+
+function AttendanceStatsList({ stats }: { stats: AttendanceStats }) {
+  const timing = coalesceTimingFromStats(stats)
+  const sub = buildAttendanceStatSubtitles(timing)
+  const penaltyAmt =
+    typeof stats.penaltyAmount === 'number' && Number.isFinite(stats.penaltyAmount)
+      ? stats.penaltyAmount
+      : DEFAULT_DEPARTMENT_TIMING.penaltyAmount
+  const fullDayCount = stats.fullDayCount ?? 0
+  const absentCount = stats.absentCount ?? 0
+  const grace2OverInSelectedRange = stats.grace2Count > GRACE2_MONTHLY_MAX
+
+  const rowClass =
+    'flex flex-wrap items-center justify-between gap-2 px-4 py-3'
+
+  return (
+    <div className="rounded-lg border border-border bg-card divide-y divide-border">
+      <div className="px-4 py-3 border-b border-border bg-muted/20">
+        <p className="text-xs font-medium text-foreground">Your shift windows (UTC)</p>
+        <p className="text-[11px] text-muted-foreground mt-1">
+          {stats.departmentName ? (
+            <>
+              Department: <span className="text-foreground/90">{stats.departmentName}</span>
+            </>
+          ) : (
+            <>
+              No department on your profile — using default shift ({clockFromHourMinute(DEFAULT_DEPARTMENT_TIMING.shiftStartHour, DEFAULT_DEPARTMENT_TIMING.shiftStartMinute)} UTC). Contact HR if this should match your team.
+            </>
+          )}
+        </p>
+        <p className="text-[11px] text-muted-foreground mt-1">
+          Late penalty in this list is ₹{penaltyAmt} per applicable day (from your department settings).
+        </p>
+      </div>
+      <div className={rowClass}>
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Full days</p>
+          <p className="text-xs text-muted-foreground">{sub.fullDays}</p>
+        </div>
+        <p className="text-2xl font-bold tabular-nums text-green-600 dark:text-green-400">
+          {fullDayCount}
+        </p>
+      </div>
+      <div className={rowClass}>
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Grace 1</p>
+          <p className="text-xs text-muted-foreground">{sub.grace1}</p>
+        </div>
+        <p className="text-2xl font-bold tabular-nums text-blue-600 dark:text-blue-400">
+          {stats.grace1Count}
+        </p>
+      </div>
+      <div className={rowClass}>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm font-medium">Grace 2</p>
+            {grace2OverInSelectedRange ? (
+              <Badge variant="destructive" className="text-xs font-normal">
+                Over limit (max {GRACE2_MONTHLY_MAX}/month in selected range)
+              </Badge>
+            ) : null}
+          </div>
+          <p className="text-xs text-muted-foreground">{sub.grace2}</p>
+          {typeof stats.grace2CountThisUtcMonth === 'number' ? (
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              This calendar month (UTC): {stats.grace2CountThisUtcMonth} Grace 2 day(s)
+              {stats.grace2CountThisUtcMonth > GRACE2_MONTHLY_MAX
+                ? ' — manager & HR notified if not already this month'
+                : null}
+            </p>
+          ) : null}
+        </div>
+        <p className="text-2xl font-bold tabular-nums text-indigo-600 dark:text-indigo-400">
+          {stats.grace2Count}
+        </p>
+      </div>
+      <div className={rowClass}>
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Late penalty</p>
+          <p className="text-xs text-muted-foreground">{sub.latePenalty}</p>
+        </div>
+        <p className="text-2xl font-bold tabular-nums text-amber-600 dark:text-amber-400">
+          {stats.latePenaltyCount}
+        </p>
+      </div>
+      <div className={rowClass}>
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Half-days</p>
+          <p className="text-xs text-muted-foreground">{sub.halfDay}</p>
+        </div>
+        <p className="text-2xl font-bold tabular-nums text-purple-600 dark:text-purple-400">
+          {stats.halfDayCount}
+        </p>
+      </div>
+      <div className={rowClass}>
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Absent</p>
+          <p className="text-xs text-muted-foreground">{sub.absent}</p>
+        </div>
+        <p className="text-2xl font-bold tabular-nums text-red-600 dark:text-red-400">
+          {absentCount}
+        </p>
+      </div>
+      <div className={rowClass}>
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Total penalties</p>
+          <p className="text-xs text-muted-foreground">Late fine (₹) in selected range</p>
+        </div>
+        <p className="text-2xl font-bold tabular-nums text-rose-600 dark:text-rose-400">
+          ₹{stats.totalPenalty}
+        </p>
+      </div>
+      <div className={rowClass}>
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Normalizations</p>
+          <p className="text-xs text-muted-foreground">
+            Self-service this month: {stats.normalizationsUsed}/{stats.normalizationsLimitDays} days ·{' '}
+            {stats.normalizationsHoursUsed}/{stats.normalizationsLimitHours} hrs used
+          </p>
+        </div>
+        <p className="text-2xl font-bold tabular-nums text-teal-600 dark:text-teal-400 shrink-0">
+          {stats.normalizationsHoursUsed}/{stats.normalizationsLimitHours}
+          <span className="text-sm font-medium ml-1">hrs</span>
+        </p>
+      </div>
+      <div className="border-t border-border bg-muted/10 px-4 py-3">
+        <p className="text-xs font-medium text-foreground">Self-normalization rules</p>
+        <p className="text-[11px] text-muted-foreground mt-1.5 leading-relaxed">
+          {SELF_NORMALIZATION_RULE_TEXT}
+        </p>
+      </div>
+    </div>
   )
 }
 
@@ -372,37 +604,11 @@ function AttendanceTab() {
       </div>
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div className="rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950/40 dark:border-blue-800 p-4">
-            <p className="text-xs font-medium text-blue-600 dark:text-blue-400">Grace 1</p>
-            <p className="text-2xl font-bold text-blue-700 dark:text-blue-300 mt-1">{stats.grace1Count}</p>
-          </div>
-          <div className="rounded-xl border border-indigo-200 bg-indigo-50 dark:bg-indigo-950/40 dark:border-indigo-800 p-4">
-            <p className="text-xs font-medium text-indigo-600 dark:text-indigo-400">Grace 2</p>
-            <p className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mt-1">{stats.grace2Count}</p>
-          </div>
-          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/40 dark:border-amber-800 p-4">
-            <p className="text-xs font-medium text-amber-600 dark:text-amber-400">Late Penalty</p>
-            <p className="text-2xl font-bold text-amber-700 dark:text-amber-300 mt-1">{stats.latePenaltyCount}</p>
-          </div>
-          <div className="rounded-xl border border-purple-200 bg-purple-50 dark:bg-purple-950/40 dark:border-purple-800 p-4">
-            <p className="text-xs font-medium text-purple-600 dark:text-purple-400">Half-days</p>
-            <p className="text-2xl font-bold text-purple-700 dark:text-purple-300 mt-1">{stats.halfDayCount}</p>
-          </div>
-          <div className="rounded-xl border border-rose-200 bg-rose-50 dark:bg-rose-950/40 dark:border-rose-800 p-4">
-            <p className="text-xs font-medium text-rose-600 dark:text-rose-400">Total Penalties</p>
-            <p className="text-2xl font-bold text-rose-700 dark:text-rose-300 mt-1">₹{stats.totalPenalty}</p>
-          </div>
-          <div className="rounded-xl border border-teal-200 bg-teal-50 dark:bg-teal-950/40 dark:border-teal-800 p-4">
-            <p className="text-xs font-medium text-teal-600 dark:text-teal-400">Normalizations</p>
-            <p className="text-2xl font-bold text-teal-700 dark:text-teal-300 mt-1">{stats.normalizationsHoursUsed}/{stats.normalizationsLimitHours}<span className="text-sm font-medium ml-1">hrs</span></p>
-            <p className="text-xs text-teal-600 dark:text-teal-400 mt-0.5">{stats.normalizationsUsed}/{stats.normalizationsLimitDays} days used</p>
-          </div>
-        </div>
+        <AttendanceStatsList stats={stats} />
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <span className="text-muted-foreground text-sm">You can use up to 3 hours per month, on up to 3 days. Choose 1, 2, or 3 hours per day. Only days where you were in by 11 AM or worked at least 7 hours can be normalized; leave and absent days cannot. Or request normalization from HR for days that need approval (with a reason).</span>
+
         <div className="flex gap-2 shrink-0">
           <RequestNormalizationButton
             onSuccess={() => {
@@ -421,12 +627,18 @@ function AttendanceTab() {
             }}
           >
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm">Normalize attendance</Button>
+              <Button variant="outline" size="sm">Self Normalize</Button>
             </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Normalize a day</DialogTitle>
-              <DialogDescription>Select a date and how many hours (1, 2, or 3) to use from your monthly allowance. You can use up to 3 hours per month on up to 3 days. No reason is required for self-normalization.</DialogDescription>
+              <DialogDescription className="space-y-2">
+                <span className="block">
+                  Select a date and how many hours (1, 2, or 3) to use from your monthly allowance. No reason is required
+                  for self-normalization.
+                </span>
+                <span className="block text-xs text-muted-foreground">{SELF_NORMALIZATION_RULE_TEXT}</span>
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div>
@@ -619,8 +831,7 @@ function LeavesTab() {
             <DialogHeader>
               <DialogTitle>Apply for Leave</DialogTitle>
               <DialogDescription>
-                Submit a new leave request. CL and EL are for today or future dates only; SL can be used for past dates.
-                Balances follow policy (1 CL, 0.5 SL, 0.5 EL per month; EL carries forward).
+                Submit a new leave request. Balances follow policy (1 CL, 0.5 SL, 0.5 EL per month; EL carries forward).
               </DialogDescription>
             </DialogHeader>
             {isProbation ? (
@@ -860,6 +1071,344 @@ function DocumentsTab({ router }: { router: ReturnType<typeof useRouter> }) {
             <p className="text-sm mt-1">Documents will appear here once HR generates them</p>
           </div>
         )}
+      </SectionContainer>
+    </div>
+  )
+}
+
+function PoliciesTab() {
+  const { data: stats, isLoading } = useQuery<AttendanceStats>({
+    queryKey: ['attendance', 'stats', 'policies-timing'],
+    queryFn: () => apiGet<AttendanceStats>('/api/attendance/stats'),
+    staleTime: 60_000,
+  })
+
+  const timing = coalesceTimingFromStats(stats)
+  const sub = buildAttendanceStatSubtitles(timing)
+  const penaltyAmt =
+    stats && typeof stats.penaltyAmount === 'number' && Number.isFinite(stats.penaltyAmount)
+      ? stats.penaltyAmount
+      : DEFAULT_DEPARTMENT_TIMING.penaltyAmount
+
+  const policyRowClass = 'flex flex-wrap items-start justify-between gap-3 px-4 py-3'
+
+  const policiesIndexRows: { id: string; title: string }[] = [
+    { id: 'policies-attendance', title: 'Attendance' },
+    { id: 'policies-self-normalization', title: 'Self-normalization' },
+    { id: 'policies-hr-normalization', title: 'HR normalization' },
+    { id: 'policies-leave', title: 'Leave' },
+    { id: 'policies-payroll', title: 'Payroll (summary)' },
+    { id: 'policies-increment', title: 'Apply for increments' },
+    { id: 'policies-support', title: 'Support & services' },
+    { id: 'policies-md-connect', title: 'MD Connect' },
+  ]
+
+  return (
+    <div className="space-y-8">
+      <SectionContainer title="HR policies & guidelines">
+        <p className="text-sm text-muted-foreground mb-6">
+          Summary of attendance, normalization, leave, payroll, and where to get help. Shift windows use{' '}
+          <strong className="text-foreground">your department&apos;s settings</strong> (UTC), same as the Attendance
+          tab stats.
+        </p>
+
+        <div className="rounded-lg border border-border overflow-hidden mb-8">
+          <div className="px-4 py-3 bg-muted/30 border-b border-border">
+            <h3 className="text-sm font-semibold text-foreground">On this page</h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              Jump to a section by clicking the links below.
+            </p>
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Topic</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {policiesIndexRows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell className="font-medium">
+                    <a href={`#${row.id}`} className="text-primary underline-offset-2 hover:underline">
+                      {row.title}
+                    </a>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="space-y-8 text-sm">
+          <section id="policies-attendance" className="scroll-mt-24 space-y-3">
+            <h3 className="text-base font-semibold">Attendance (your department times)</h3>
+            {isLoading ? (
+              <p className="text-muted-foreground text-sm py-4">Loading your department timings…</p>
+            ) : (
+              <div className="rounded-lg border border-border bg-card divide-y divide-border mb-4">
+                <div className="px-4 py-3 bg-muted/20">
+                  <p className="text-xs font-medium text-foreground">Shift windows — UTC (punch clock)</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    {stats?.departmentName ? (
+                      <>Department: <span className="text-foreground/90">{stats.departmentName}</span></>
+                    ) : (
+                      <>
+                        No department on your profile — showing default shift (
+                        {clockFromHourMinute(
+                          DEFAULT_DEPARTMENT_TIMING.shiftStartHour,
+                          DEFAULT_DEPARTMENT_TIMING.shiftStartMinute
+                        )}{' '}
+                        UTC). Ask HR to assign your department if this is wrong.
+                      </>
+                    )}
+                  </p>
+                </div>
+                <div className={policyRowClass}>
+                  <span className="text-muted-foreground">Full day (on time)</span>
+                  <span className="font-medium tabular-nums text-right">{sub.fullDays}</span>
+                </div>
+                <div className={policyRowClass}>
+                  <span className="text-muted-foreground">Grace 1</span>
+                  <span className="font-medium tabular-nums text-right">{sub.grace1}</span>
+                </div>
+                <div className={policyRowClass}>
+                  <span className="text-muted-foreground">Grace 2</span>
+                  <span className="font-medium tabular-nums text-right">{sub.grace2}</span>
+                </div>
+                <div className={policyRowClass}>
+                  <span className="text-muted-foreground">Late penalty window</span>
+                  <span className="font-medium tabular-nums text-right">{sub.latePenalty}</span>
+                </div>
+                <div className={policyRowClass}>
+                  <span className="text-muted-foreground">After penalty window (half / absent rules)</span>
+                  <span className="font-medium text-right max-w-[min(100%,20rem)]">{sub.halfDay}</span>
+                </div>
+                <div className="px-4 py-2 text-[11px] text-muted-foreground border-t border-border bg-muted/10">
+                  Late fine when applicable: <strong className="text-foreground">₹{penaltyAmt}</strong> per day (from
+                  your department). Grace 1 and Grace 2: no penalty if you complete {MIN_FULL_DAY_HOURS}+ hours. Max{' '}
+                  <strong className="text-foreground">{GRACE2_MONTHLY_MAX}</strong> Grace 2 days per calendar month
+                  (UTC); your manager and HR are notified if you exceed it.
+                </div>
+              </div>
+            )}
+            <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+              <li>
+                <strong className="text-foreground">Grace 1 / Grace 2:</strong> no penalty; count as full day if you work
+                at least {MIN_FULL_DAY_HOURS} hours.
+              </li>
+              <li>
+                <strong className="text-foreground">Late penalty:</strong> applies only when you work a full day (
+                {MIN_FULL_DAY_HOURS}+ hours) and punch in within the late-penalty window above.
+              </li>
+              <li>
+                After the penalty window ends: half-day by punch-in time; under {MIN_HALF_DAY_HOURS} hours worked →{' '}
+                <strong className="text-foreground">absent</strong> (see the Absent row on your Attendance tab for
+                counts).
+              </li>
+              <li>
+                At least <strong className="text-foreground">two punch logs</strong> (IN and OUT) are needed to compute
+                work hours reliably.
+              </li>
+            </ul>
+          </section>
+
+          <section id="policies-self-normalization" className="scroll-mt-24 space-y-3">
+            <h3 className="text-base font-semibold">Self-normalization</h3>
+            <div className="rounded-lg border border-border bg-card px-4 py-3">
+              <p className="text-xs font-medium text-foreground mb-2">Official rule (same as on your Attendance tab)</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{SELF_NORMALIZATION_RULE_TEXT}</p>
+            </div>
+            <ul className="list-disc pl-5 space-y-2 text-muted-foreground text-sm">
+              <li>
+                <strong className="text-foreground">Allowance:</strong> 3 hours total per calendar month, spread across up
+                to 3 separate days (1, 2, or 3 hours on a given day).
+              </li>
+              <li>
+                <strong className="text-foreground">Eligible days:</strong> punch in by 11:00 AM <em>or</em> work at least
+                7 hours that day (per system rules).
+              </li>
+              <li>
+                <strong className="text-foreground">Not allowed:</strong> leave days and absent days cannot be
+                self-normalized.
+              </li>
+              <li>
+                <strong className="text-foreground">HR path:</strong> for anything that needs approval, use “Request
+                normalization” with a reason — HR decides full or half day.
+              </li>
+            </ul>
+          </section>
+
+          <section id="policies-hr-normalization" className="scroll-mt-24 space-y-3">
+            <h3 className="text-base font-semibold">HR normalization</h3>
+            <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+              <li>
+                Request from HR with a mandatory reason (minimum {NORMALIZATION_REASON_MIN_CHARS} characters).
+              </li>
+              <li>HR reviews and approves as full day or half day.</li>
+              <li>From April 2026, requests must be within the same week (see deadline rules in-app).</li>
+            </ul>
+          </section>
+
+          <section id="policies-leave" className="scroll-mt-24 space-y-3">
+            <h3 className="text-base font-semibold">Leave</h3>
+            <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+              <li>
+                <strong className="text-foreground">CL:</strong> typically 1 per month; valid dates are enforced when you apply.
+              </li>
+              <li>
+                <strong className="text-foreground">SL:</strong> typically 0.5 per month; past dates allowed per policy.
+              </li>
+              <li>
+                <strong className="text-foreground">EL:</strong> typically 0.5 per month; may carry forward per policy.
+              </li>
+              <li>
+                <strong className="text-foreground">Probation:</strong> first 6 months — leave applications may be
+                locked.
+              </li>
+              <li>Unpaid leave may apply automatically when quota is exhausted.</li>
+            </ul>
+          </section>
+
+          <section id="policies-payroll" className="scroll-mt-24 space-y-3">
+            <h3 className="text-base font-semibold">Payroll day calculation (summary)</h3>
+            <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+              <li>
+                Payable days ≈ full days + (half days × 0.5) + paid leave days (per payroll run rules).
+              </li>
+              <li>Late fines are deducted from salary where applicable.</li>
+              <li>Sundays and official company holidays are not working days.</li>
+              <li>Unpaid leave reduces payable days 1:1.</li>
+            </ul>
+          </section>
+
+          <section id="policies-increment" className="scroll-mt-24 space-y-3">
+            <h3 className="text-base font-semibold">Apply for increments</h3>
+            <p className="text-muted-foreground">
+              Increment requests (current salary, requested amount, reason, achievements, supporting documents) are
+              submitted from the Financial area, not from this tab.
+            </p>
+            <p className="text-muted-foreground">
+              Open{' '}
+              <Link
+                href="/employee/dashboard/financial?tab=increment"
+                className="font-medium text-primary underline-offset-2 hover:underline"
+              >
+                Financial → Increment
+              </Link>
+              , fill the form, and track status there.
+            </p>
+            <p className="text-muted-foreground">
+              <strong className="text-foreground">Who sees it in the system:</strong> when you submit,{' '}
+              <strong className="text-foreground">HR Head</strong> users get an in-app notification and HR reviews
+              approve/reject (and remarks) from the HR Increments screen. Your{' '}
+              <strong className="text-foreground">reporting manager is not notified</strong> in this app today — if your
+              department expects manager input first, follow your offline process and still submit here when ready.
+            </p>
+          </section>
+
+          <section id="policies-support" className="scroll-mt-24 space-y-3">
+            <h3 className="text-base font-semibold">Support &amp; services</h3>
+            <p className="text-muted-foreground">
+              Use{' '}
+              <Link
+                href="/employee/dashboard/support-services?tab=feedback"
+                className="font-medium text-primary underline-offset-2 hover:underline"
+              >
+                Support &amp; Services → Feedback
+              </Link>{' '}
+              for general feedback to HR (culture, suggestions, concerns). Submissions are reviewed and can be marked
+              acknowledged.
+            </p>
+            <p className="text-muted-foreground">
+              For a specific request that needs a department head, use{' '}
+              <Link
+                href="/employee/dashboard/support-services?tab=tickets"
+                className="font-medium text-primary underline-offset-2 hover:underline"
+              >
+                Support &amp; Services → Tickets
+              </Link>
+              : choose the right head, subject, priority, description, and optional attachments (PDF or images). Target
+              response SLA is within 48 hours.
+            </p>
+            <div className="rounded-lg border border-border overflow-hidden">
+              <div className="px-4 py-2 bg-muted/30 border-b border-border">
+                <p className="text-xs font-medium text-foreground">Issue type → who to raise the ticket to</p>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[45%]">Topic / issue type</TableHead>
+                    <TableHead>Raise ticket to</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="text-muted-foreground">HR policies, leave, attendance queries</TableCell>
+                    <TableCell className="font-medium">HR Head</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="text-muted-foreground">Salary, payslips, reimbursements, finance process</TableCell>
+                    <TableCell className="font-medium">Finance Head</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="text-muted-foreground">Sales / BD operations</TableCell>
+                    <TableCell className="font-medium">Sales Head</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="text-muted-foreground">Marketing, campaigns, digital</TableCell>
+                    <TableCell className="font-medium">Digital Marketing Head</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="text-muted-foreground">IT access, devices, business systems</TableCell>
+                    <TableCell className="font-medium">IT Head</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="text-muted-foreground">General / cross-team / unclear owner</TableCell>
+                    <TableCell className="font-medium">Admin</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </section>
+
+          <section id="policies-md-connect" className="scroll-mt-24 space-y-3">
+            <h3 className="text-base font-semibold">MD Connect</h3>
+            <p className="text-muted-foreground">
+              <strong className="text-foreground">What it is:</strong> MD Connect (under Support &amp; Services) is for
+              reaching the Managing Director in two ways — without mixing them up with regular HR tickets.
+            </p>
+            <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+              <li>
+                <strong className="text-foreground">Anonymous message:</strong> Send text to the MD; your identity is not
+                stored with the message (see the in-app notice before you submit).
+              </li>
+              <li>
+                <strong className="text-foreground">Appointment request:</strong> Propose a preferred day and explain
+                why you need time with the MD. The MD (or office) confirms date, time, and virtual or offline details.
+              </li>
+            </ul>
+            <p className="text-muted-foreground">
+              <strong className="text-foreground">How to use:</strong> Open{' '}
+              <Link
+                href="/employee/dashboard/support-services?tab=md-connect"
+                className="font-medium text-primary underline-offset-2 hover:underline"
+              >
+                Support &amp; Services → MD Connect
+              </Link>
+              . Use one section at a time; if you already have a pending appointment request, wait for a decision
+              before sending another.
+            </p>
+            <p className="text-sm">
+              <Link
+                href="/employee/dashboard/support-services?tab=md-connect"
+                className="inline-flex items-center gap-1 text-primary font-medium underline-offset-2 hover:underline"
+              >
+                Go to MD Connect
+                <ChevronRight className="h-4 w-4 opacity-70" />
+              </Link>
+            </p>
+          </section>
+        </div>
       </SectionContainer>
     </div>
   )

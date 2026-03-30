@@ -821,6 +821,7 @@ export const SupportTicketScalarFieldEnum = {
   status: 'status',
   response: 'response',
   respondedAt: 'respondedAt',
+  attachments: 'attachments',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

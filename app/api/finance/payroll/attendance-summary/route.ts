@@ -110,6 +110,8 @@ export async function GET(request: NextRequest) {
         fullDays += 1
       } else if (normAs === 'HALF_DAY') {
         halfDays += 1
+      } else if (day.status === 'absent') {
+        // Under min half-day hours: no payable credit from punches
       } else if (day.isHalfDay) {
         halfDays += 1
       } else {

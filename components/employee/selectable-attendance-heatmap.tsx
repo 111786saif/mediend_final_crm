@@ -9,6 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { MIN_HALF_DAY_HOURS } from '@/lib/hrms/attendance-constants'
 import {
   shouldShowHalfDayPink,
   type AttendanceDay,
@@ -78,6 +79,15 @@ function getStatusConfig(
       }
     }
     const entryExit = `Entry: ${formatTime(attendanceRecord.inTime)}\nExit: ${formatTime(attendanceRecord.outTime)}`
+
+    if (attendanceRecord.status === 'absent') {
+      return {
+        status: 'absent',
+        bgColor: 'bg-red-600',
+        textColor: 'text-white',
+        tooltipText: `${dateKey} - Absent (under ${MIN_HALF_DAY_HOURS}h worked)\n${entryExit}`,
+      }
+    }
 
     if (shouldShowHalfDayPink(attendanceRecord)) {
       return {

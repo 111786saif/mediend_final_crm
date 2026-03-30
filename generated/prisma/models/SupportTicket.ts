@@ -65,6 +65,7 @@ export type SupportTicketCountAggregateOutputType = {
   status: number
   response: number
   respondedAt: number
+  attachments: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -112,6 +113,7 @@ export type SupportTicketCountAggregateInputType = {
   status?: true
   response?: true
   respondedAt?: true
+  attachments?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -200,6 +202,7 @@ export type SupportTicketGroupByOutputType = {
   status: $Enums.TicketStatus
   response: string | null
   respondedAt: Date | null
+  attachments: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: SupportTicketCountAggregateOutputType | null
@@ -236,6 +239,7 @@ export type SupportTicketWhereInput = {
   status?: Prisma.EnumTicketStatusFilter<"SupportTicket"> | $Enums.TicketStatus
   response?: Prisma.StringNullableFilter<"SupportTicket"> | string | null
   respondedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
+  attachments?: Prisma.JsonNullableFilter<"SupportTicket">
   createdAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
@@ -253,6 +257,7 @@ export type SupportTicketOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   response?: Prisma.SortOrderInput | Prisma.SortOrder
   respondedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachments?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   employee?: Prisma.EmployeeOrderByWithRelationInput
@@ -273,6 +278,7 @@ export type SupportTicketWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumTicketStatusFilter<"SupportTicket"> | $Enums.TicketStatus
   response?: Prisma.StringNullableFilter<"SupportTicket"> | string | null
   respondedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
+  attachments?: Prisma.JsonNullableFilter<"SupportTicket">
   createdAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   employee?: Prisma.XOR<Prisma.EmployeeScalarRelationFilter, Prisma.EmployeeWhereInput>
@@ -290,6 +296,7 @@ export type SupportTicketOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   response?: Prisma.SortOrderInput | Prisma.SortOrder
   respondedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachments?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SupportTicketCountOrderByAggregateInput
@@ -311,6 +318,7 @@ export type SupportTicketScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumTicketStatusWithAggregatesFilter<"SupportTicket"> | $Enums.TicketStatus
   response?: Prisma.StringNullableWithAggregatesFilter<"SupportTicket"> | string | null
   respondedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SupportTicket"> | Date | string | null
+  attachments?: Prisma.JsonNullableWithAggregatesFilter<"SupportTicket">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SupportTicket"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SupportTicket"> | Date | string
 }
@@ -324,6 +332,7 @@ export type SupportTicketCreateInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   employee: Prisma.EmployeeCreateNestedOneWithoutSupportTicketsInput
@@ -341,6 +350,7 @@ export type SupportTicketUncheckedCreateInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -354,6 +364,7 @@ export type SupportTicketUpdateInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutSupportTicketsNestedInput
@@ -371,6 +382,7 @@ export type SupportTicketUncheckedUpdateInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -386,6 +398,7 @@ export type SupportTicketCreateManyInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -399,6 +412,7 @@ export type SupportTicketUpdateManyMutationInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -414,6 +428,7 @@ export type SupportTicketUncheckedUpdateManyInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -439,6 +454,7 @@ export type SupportTicketCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   response?: Prisma.SortOrder
   respondedAt?: Prisma.SortOrder
+  attachments?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -574,6 +590,7 @@ export type SupportTicketCreateWithoutDepartmentInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   employee: Prisma.EmployeeCreateNestedOneWithoutSupportTicketsInput
@@ -589,6 +606,7 @@ export type SupportTicketUncheckedCreateWithoutDepartmentInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -633,6 +651,7 @@ export type SupportTicketScalarWhereInput = {
   status?: Prisma.EnumTicketStatusFilter<"SupportTicket"> | $Enums.TicketStatus
   response?: Prisma.StringNullableFilter<"SupportTicket"> | string | null
   respondedAt?: Prisma.DateTimeNullableFilter<"SupportTicket"> | Date | string | null
+  attachments?: Prisma.JsonNullableFilter<"SupportTicket">
   createdAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupportTicket"> | Date | string
 }
@@ -646,6 +665,7 @@ export type SupportTicketCreateWithoutEmployeeInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   department?: Prisma.DepartmentCreateNestedOneWithoutSupportTicketsInput
@@ -661,6 +681,7 @@ export type SupportTicketUncheckedCreateWithoutEmployeeInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -701,6 +722,7 @@ export type SupportTicketCreateManyDepartmentInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -714,6 +736,7 @@ export type SupportTicketUpdateWithoutDepartmentInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employee?: Prisma.EmployeeUpdateOneRequiredWithoutSupportTicketsNestedInput
@@ -729,6 +752,7 @@ export type SupportTicketUncheckedUpdateWithoutDepartmentInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -743,6 +767,7 @@ export type SupportTicketUncheckedUpdateManyWithoutDepartmentInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -757,6 +782,7 @@ export type SupportTicketCreateManyEmployeeInput = {
   status?: $Enums.TicketStatus
   response?: string | null
   respondedAt?: Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -770,6 +796,7 @@ export type SupportTicketUpdateWithoutEmployeeInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   department?: Prisma.DepartmentUpdateOneWithoutSupportTicketsNestedInput
@@ -785,6 +812,7 @@ export type SupportTicketUncheckedUpdateWithoutEmployeeInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -799,6 +827,7 @@ export type SupportTicketUncheckedUpdateManyWithoutEmployeeInput = {
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   response?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   respondedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -816,6 +845,7 @@ export type SupportTicketSelect<ExtArgs extends runtime.Types.Extensions.Interna
   status?: boolean
   response?: boolean
   respondedAt?: boolean
+  attachments?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
@@ -833,6 +863,7 @@ export type SupportTicketSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   response?: boolean
   respondedAt?: boolean
+  attachments?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
@@ -850,6 +881,7 @@ export type SupportTicketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   response?: boolean
   respondedAt?: boolean
+  attachments?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
@@ -867,11 +899,12 @@ export type SupportTicketSelectScalar = {
   status?: boolean
   response?: boolean
   respondedAt?: boolean
+  attachments?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SupportTicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "departmentId" | "targetHeadRole" | "subject" | "description" | "priority" | "status" | "response" | "respondedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["supportTicket"]>
+export type SupportTicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "departmentId" | "targetHeadRole" | "subject" | "description" | "priority" | "status" | "response" | "respondedAt" | "attachments" | "createdAt" | "updatedAt", ExtArgs["result"]["supportTicket"]>
 export type SupportTicketInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employee?: boolean | Prisma.EmployeeDefaultArgs<ExtArgs>
   department?: boolean | Prisma.SupportTicket$departmentArgs<ExtArgs>
@@ -902,6 +935,10 @@ export type $SupportTicketPayload<ExtArgs extends runtime.Types.Extensions.Inter
     status: $Enums.TicketStatus
     response: string | null
     respondedAt: Date | null
+    /**
+     * Array of S3/public URLs for images or PDFs attached when raising the ticket
+     */
+    attachments: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["supportTicket"]>
@@ -1339,6 +1376,7 @@ export interface SupportTicketFieldRefs {
   readonly status: Prisma.FieldRef<"SupportTicket", 'TicketStatus'>
   readonly response: Prisma.FieldRef<"SupportTicket", 'String'>
   readonly respondedAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
+  readonly attachments: Prisma.FieldRef<"SupportTicket", 'Json'>
   readonly createdAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"SupportTicket", 'DateTime'>
 }

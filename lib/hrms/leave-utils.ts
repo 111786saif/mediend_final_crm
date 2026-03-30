@@ -20,6 +20,21 @@ export function startOfLocalDay(d: Date): Date {
   return x
 }
 
+/** Inclusive end (local calendar day). After this, CL/EL again require today-or-future only (same as sick leave backdating rules). */
+const CL_EL_PAST_BACKDATE_GRACE_END_LOCAL = { year: 2026, monthIndex: 3, day: 10 }
+
+/** Temporary window: non–sick leave types may include past start/end dates through the grace end day. */
+export function isClElPastBackdateGraceActive(now: Date = new Date()): boolean {
+  const today = startOfLocalDay(now)
+  const end = new Date(
+    CL_EL_PAST_BACKDATE_GRACE_END_LOCAL.year,
+    CL_EL_PAST_BACKDATE_GRACE_END_LOCAL.monthIndex,
+    CL_EL_PAST_BACKDATE_GRACE_END_LOCAL.day
+  )
+  end.setHours(0, 0, 0, 0)
+  return today.getTime() <= end.getTime()
+}
+
 /** Sick leave (code SL, or legacy rows with no code and "sick" in name) may be backdated. CL/EL cannot. */
 export function isSickLeaveType(leaveType: { code?: string | null; name: string }): boolean {
   const c = leaveType.code?.trim().toUpperCase()

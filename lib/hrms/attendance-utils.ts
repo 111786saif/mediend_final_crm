@@ -1,5 +1,10 @@
 import { AttendanceLog, PunchDirection, type Department } from '@/generated/prisma/client'
-import { MIN_FULL_DAY_HOURS } from './attendance-constants'
+import {
+  MIN_FULL_DAY_HOURS,
+  MIN_HALF_DAY_HOURS,
+  DEFAULT_DEPARTMENT_TIMING,
+  type DepartmentTiming,
+} from './attendance-constants'
 
 export type AttendanceStatus =
   | 'on-time'
@@ -7,24 +12,10 @@ export type AttendanceStatus =
   | 'grace-2'
   | 'late-penalty'
   | 'half-day'
+  | 'absent'
 
-export interface DepartmentTiming {
-  shiftStartHour: number
-  shiftStartMinute: number
-  grace1Minutes: number
-  grace2Minutes: number
-  penaltyMinutes: number
-  penaltyAmount: number
-}
-
-export const DEFAULT_DEPARTMENT_TIMING: DepartmentTiming = {
-  shiftStartHour: 10,
-  shiftStartMinute: 0,
-  grace1Minutes: 15,
-  grace2Minutes: 15,
-  penaltyMinutes: 30,
-  penaltyAmount: 200,
-}
+export type { DepartmentTiming }
+export { DEFAULT_DEPARTMENT_TIMING }
 
 /** Map a DB Department row (or null) to attendance classification timing. */
 export function getDepartmentTiming(department: Department | null | undefined): DepartmentTiming {
@@ -39,7 +30,7 @@ export function getDepartmentTiming(department: Department | null | undefined): 
   }
 }
 
-export { MIN_FULL_DAY_HOURS } from './attendance-constants'
+export { MIN_FULL_DAY_HOURS, MIN_HALF_DAY_HOURS } from './attendance-constants'
 
 export interface AttendanceClassification {
   status: AttendanceStatus
@@ -48,12 +39,23 @@ export interface AttendanceClassification {
   isLate: boolean
 }
 
+/** When hours are known and under minimum, treat as absent instead of half-day. */
+function halfDayOrAbsent(
+  workHours: number | null,
+  isLate: boolean
+): Pick<AttendanceClassification, 'status' | 'penalty' | 'isHalfDay' | 'isLate'> {
+  if (workHours !== null && workHours < MIN_HALF_DAY_HOURS) {
+    return { status: 'absent', penalty: 0, isHalfDay: false, isLate: true }
+  }
+  return { status: 'half-day', penalty: 0, isHalfDay: true, isLate }
+}
+
 /**
  * Classify attendance for a single day based on punch-in time, work hours, and department timing.
  * Uses UTC getters for time comparison (no timezone conversion).
  * Rule: Under 9 hours worked is always half-day (including in the late-penalty window), with no late fine.
  * Rule: Late penalty applies only for full-day (9+ hours) punch-in within the late-penalty window.
- * Rule: After the penalty window ends, it is always half-day regardless of hours worked.
+ * Rule: After the penalty window ends, it is half-day if 4.5+ hours worked; under 4.5h (when known) = absent.
  */
 export function classifyAttendance(
   punchTime: Date,
@@ -72,21 +74,21 @@ export function classifyAttendance(
     if (hasEnoughHours) {
       return { status: 'on-time', penalty: 0, isHalfDay: false, isLate: false }
     }
-    return { status: 'half-day', penalty: 0, isHalfDay: true, isLate: false }
+    return halfDayOrAbsent(workHours, false)
   }
 
   if (punchMinutes < grace1EndMinutes) {
     if (hasEnoughHours) {
       return { status: 'grace-1', penalty: 0, isHalfDay: false, isLate: true }
     }
-    return { status: 'half-day', penalty: 0, isHalfDay: true, isLate: true }
+    return halfDayOrAbsent(workHours, true)
   }
 
   if (punchMinutes < grace2EndMinutes) {
     if (hasEnoughHours) {
       return { status: 'grace-2', penalty: 0, isHalfDay: false, isLate: true }
     }
-    return { status: 'half-day', penalty: 0, isHalfDay: true, isLate: true }
+    return halfDayOrAbsent(workHours, true)
   }
 
   if (punchMinutes < penaltyEndMinutes) {
@@ -98,20 +100,10 @@ export function classifyAttendance(
         isLate: true,
       }
     }
-    return {
-      status: 'half-day',
-      penalty: 0,
-      isHalfDay: true,
-      isLate: true,
-    }
+    return halfDayOrAbsent(workHours, true)
   }
 
-  return {
-    status: 'half-day',
-    penalty: 0,
-    isHalfDay: true,
-    isLate: true,
-  }
+  return halfDayOrAbsent(workHours, true)
 }
 
 export interface AttendanceWithHours {

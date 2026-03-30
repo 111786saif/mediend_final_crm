@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { MIN_FULL_DAY_HOURS } from '@/lib/hrms/attendance-constants'
+import { MIN_FULL_DAY_HOURS, MIN_HALF_DAY_HOURS } from '@/lib/hrms/attendance-constants'
 
 export type AttendanceStatusType =
   | 'on-time'
@@ -106,6 +106,7 @@ function getWorkHoursFromRecord(record: AttendanceDay): number | null {
  * Used so the grid stays correct even if `status` / `isHalfDay` are missing on the client.
  */
 export function shouldShowHalfDayPink(record: AttendanceDay): boolean {
+  if (record.status === 'absent') return false
   if (record.status === 'half-day') return true
   if (record.isHalfDay === true) return true
   const wh = getWorkHoursFromRecord(record)
@@ -167,6 +168,15 @@ function getStatusConfig(
       }
     }
     const entryExit = `Entry: ${formatTime(attendanceRecord.inTime)}\nExit: ${getExitTimeDisplay(attendanceRecord.inTime, attendanceRecord.outTime)}`
+
+    if (attendanceRecord.status === 'absent') {
+      return {
+        status: 'absent',
+        bgColor: 'bg-red-600',
+        textColor: 'text-white',
+        tooltipText: `${dateKey} - Absent (under ${MIN_HALF_DAY_HOURS}h worked)\n${entryExit}`,
+      }
+    }
 
     if (shouldShowHalfDayPink(attendanceRecord)) {
       return {
@@ -545,8 +555,12 @@ export function AttendanceHeatmap({
           <span>Unpaid leave</span>
         </div>
         <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded bg-red-600" />
+          <span>Absent (&lt;4.5h worked)</span>
+        </div>
+        <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-gray-200" />
-          <span>Absent</span>
+          <span>Absent (no punch)</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-purple-300" />

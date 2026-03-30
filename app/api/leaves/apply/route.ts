@@ -5,6 +5,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import {
   calculateLeaveDays,
   checkDateConflict,
+  isClElPastBackdateGraceActive,
   isSickLeaveType,
   parseDateOnlyLocal,
   startOfLocalDay,
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
     }
 
     const sick = isSickLeaveType(leaveType)
-    if (!sick) {
+    if (!sick && !isClElPastBackdateGraceActive()) {
       if (startDay < today || endDay < today) {
         return errorResponse(
           'Casual Leave and Earned Leave can only be applied for today or a future date. Use Sick Leave (SL) for past dates.',

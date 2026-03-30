@@ -15,6 +15,14 @@ const SELF_NORMALIZATION_LIMIT_DAYS_PER_MONTH = 3
 const ELIGIBILITY_PUNCH_BY_MINUTES = 11 * 60
 const ELIGIBILITY_MIN_WORK_HOURS = 7
 
+/** Same outcomes as payroll “full day” from punches — self-normalization must not apply. */
+const FULL_DAY_CLASSIFICATION_STATUSES = new Set([
+  'on-time',
+  'grace-1',
+  'grace-2',
+  'late-penalty',
+])
+
 const bodySchema = z.object({
   date: z.string().transform((s) => new Date(s)),
   hours: z.union([z.literal(1), z.literal(2), z.literal(3)]),
@@ -117,6 +125,14 @@ export async function POST(request: NextRequest) {
 
     if (!dayRecord || !dayRecord.inTime) {
       return errorResponse('Cannot normalize: no attendance (absent) for this date', 400)
+    }
+
+    const status = dayRecord.status
+    if (status && FULL_DAY_CLASSIFICATION_STATUSES.has(status)) {
+      return errorResponse(
+        'This day is already a full day; normalization is not required',
+        400
+      )
     }
 
     const punchMinutes =
