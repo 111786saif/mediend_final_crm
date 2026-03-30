@@ -7,9 +7,6 @@ import { useState, useMemo } from 'react'
 import {
   UserCheck,
   Wallet,
-  MessageSquare,
-  Clock,
-  Calendar,
   AlertTriangle,
   UserMinus,
   UserPlus,
@@ -138,12 +135,6 @@ function formatCurrencyFull(n: number) {
   return `₹${Math.round(n).toLocaleString('en-IN')}`
 }
 
-function formatHours(h: number | null) {
-  if (h == null) return '—'
-  if (h < 1) return `${Math.round(h * 60)} min`
-  return `${h.toFixed(1)} hrs`
-}
-
 interface HRDashboardProps {
   title?: string
   /** When omitted, a default is chosen from `audience`. */
@@ -175,8 +166,8 @@ function KpiCard({ title, value, sub, color, icon }: KpiCardProps) {
   )
 }
 
-const DEFAULT_DESCRIPTION_HR = 'Strength, salary, and ticket analytics'
-const DEFAULT_DESCRIPTION_MD = 'Headcount, payroll, and ticket snapshot'
+const DEFAULT_DESCRIPTION_HR = 'Headcount, attendance, payroll, and hiring'
+const DEFAULT_DESCRIPTION_MD = 'Headcount, payroll, and hiring snapshot'
 
 export function HRDashboard({
   title = 'HR Dashboard',
@@ -330,9 +321,9 @@ export function HRDashboard({
           <p className="text-muted-foreground text-sm mt-0.5">{description}</p>
         </div>
         {/* Date filters - stacked on mobile */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2">
           <Select value={period} onValueChange={(v) => setPeriod(v as 'thisMonth' | 'lastMonth' | 'custom')}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px]">
               <SelectValue placeholder="Period" />
             </SelectTrigger>
             <SelectContent>
@@ -345,7 +336,7 @@ export function HRDashboard({
             value={String(month)}
             onValueChange={(v) => { setPeriod('custom'); setSelectedMonth(parseInt(v, 10)) }}
           >
-            <SelectTrigger className="w-[130px]">
+            <SelectTrigger className="w-full sm:w-[130px]">
               <SelectValue placeholder="Month" />
             </SelectTrigger>
             <SelectContent>
@@ -371,8 +362,8 @@ export function HRDashboard({
       </div>
 
       {isLoading ? (
-        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-          {Array.from({ length: 8 }).map((_, i) => (
+        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+          {Array.from({ length: 5 }).map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardHeader className="pb-2"><div className="h-3 w-20 bg-muted rounded" /></CardHeader>
               <CardContent><div className="h-7 w-24 bg-muted rounded" /></CardContent>
@@ -414,34 +405,13 @@ export function HRDashboard({
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
               {MONTHS[month - 1]} {year}
             </p>
-            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 max-w-2xl">
               <KpiCard
                 title="Monthly Salary"
                 value={formatCurrency(mergedAnalytics.kpis.monthlySalaryOutgo)}
                 sub={mergedAnalytics.kpis.hasPayrollData ? 'Actual payroll' : 'CTC estimate'}
                 color="border-l-violet-500"
                 icon={<Wallet className="h-4 w-4 sm:h-5 sm:w-5 text-violet-600 dark:text-violet-400" />}
-              />
-              <KpiCard
-                title="Open Tickets"
-                value={String(mergedAnalytics.kpis.openTicketsCount)}
-                sub="Support + Mental health"
-                color="border-l-amber-500"
-                icon={<MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400" />}
-              />
-              <KpiCard
-                title="Avg Response"
-                value={formatHours(mergedAnalytics.kpis.avgTicketResponseHours)}
-                sub="48hr SLA target"
-                color="border-l-cyan-500"
-                icon={<Clock className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-600 dark:text-cyan-400" />}
-              />
-              <KpiCard
-                title="Pending Leaves"
-                value={String(mergedAnalytics.kpis.pendingLeaveCount)}
-                sub="Awaiting approval"
-                color="border-l-rose-500"
-                icon={<Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-rose-600 dark:text-rose-400" />}
               />
               <KpiCard
                 title="New Joiners"
@@ -682,57 +652,6 @@ export function HRDashboard({
               </CardContent>
             </Card>
 
-            {/* Ticket analytics */}
-            <Card className="overflow-hidden">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-amber-500" />
-                  <CardTitle className="text-base">Ticket Analytics</CardTitle>
-                </div>
-                <CardDescription>{MONTHS[month - 1]} {year} — 48hr SLA</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-xs">Type</TableHead>
-                        <TableHead className="text-xs text-center">Total</TableHead>
-                        <TableHead className="text-xs text-center">Done</TableHead>
-                        <TableHead className="text-xs text-center hidden sm:table-cell">Avg</TableHead>
-                        <TableHead className="text-xs text-right">SLA</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {mergedAnalytics.ticketAnalytics.map((t) => (
-                        <TableRow key={t.type}>
-                          <TableCell className="text-xs font-medium py-3">{t.type}</TableCell>
-                          <TableCell className="text-xs py-3 text-center">{t.totalInMonth}</TableCell>
-                          <TableCell className="text-xs py-3 text-center text-emerald-600 dark:text-emerald-400 font-semibold">{t.resolvedCount}</TableCell>
-                          <TableCell className="text-xs py-3 text-center hidden sm:table-cell text-muted-foreground">{formatHours(t.avgResponseHours)}</TableCell>
-                          <TableCell className="text-xs py-3 text-right">
-                            {t.slaCompliancePercent != null ? (
-                              <Badge
-                                variant={
-                                  t.slaCompliancePercent >= 90
-                                    ? 'default'
-                                    : t.slaCompliancePercent >= 70
-                                      ? 'secondary'
-                                      : 'destructive'
-                                }
-                                className="text-xs"
-                              >
-                                {t.slaCompliancePercent.toFixed(0)}%
-                              </Badge>
-                            ) : '—'}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* ─── New Joiners ─── */}
