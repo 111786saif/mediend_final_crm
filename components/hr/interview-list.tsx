@@ -27,6 +27,7 @@ import {
   Calendar,
   ChevronRight,
   MapPin,
+  Pencil,
   Users,
   Video,
 } from 'lucide-react'
@@ -52,9 +53,10 @@ export type InterviewMeet = {
 interface InterviewListProps {
   from?: string
   to?: string
+  onEdit?: (meet: InterviewMeet) => void
 }
 
-export function InterviewList({ from, to }: InterviewListProps) {
+export function InterviewList({ from, to, onEdit }: InterviewListProps) {
   const [deptFilter, setDeptFilter] = useState<string>('all')
   const [search, setSearch] = useState('')
   const [detail, setDetail] = useState<InterviewMeet | null>(null)
@@ -244,6 +246,20 @@ export function InterviewList({ from, to }: InterviewListProps) {
                 <p className="text-sm text-muted-foreground text-left">
                   {detail.candidateRole}
                 </p>
+                {onEdit && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="mt-2 rounded-xl w-full sm:w-auto gap-1.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
+                    onClick={() => {
+                      onEdit(detail)
+                      setDetail(null)
+                    }}
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                    Edit details
+                  </Button>
+                )}
               </SheetHeader>
               <div className="px-3 py-3 space-y-3 text-sm">
                 <div className="flex flex-wrap gap-2">

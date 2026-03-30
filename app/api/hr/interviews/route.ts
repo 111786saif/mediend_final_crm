@@ -7,23 +7,9 @@ import { z } from 'zod'
 import { MeetType } from '@/generated/prisma/client'
 import { meetWithRelationsInclude } from '@/lib/meets'
 import { canUserCreateMeet } from '@/lib/permissions'
+import { getMeetInviteableUserIds } from '@/lib/hierarchy'
 import { format } from 'date-fns'
-
-const interviewCreateSchema = z.object({
-  candidateName: z.string().min(1).max(200),
-  candidateRole: z.string().min(1).max(200),
-  departmentId: z.string().optional().nullable().or(z.literal('')),
-  interviewRound: z.number().int().min(1).max(99),
-  type: z.enum(['VIRTUAL', 'OFFLINE']),
-  meetLink: z.string().url().optional().nullable().or(z.literal('')),
-  location: z.string().max(500).optional().nullable().or(z.literal('')),
-  scheduledAt: z.string().transform((s) => new Date(s)),
-  endTime: z.string().transform((s) => new Date(s)).optional().nullable(),
-  notes: z.string().max(10000).optional().nullable().or(z.literal('')),
-  participantUserIds: z.array(z.string()),
-  isRecorded: z.boolean().default(false),
-  resumeUrl: z.string().url().optional().nullable().or(z.literal('')),
-})
+import { interviewCreateSchema, interviewTitleFromBody } from '@/lib/hr-interview-request'
 
 export async function GET(request: NextRequest) {
   try {
@@ -91,7 +77,14 @@ export async function POST(request: NextRequest) {
 
     const participantUserIds = [...new Set(data.participantUserIds)].filter((id) => id !== user.id)
 
-    const title = `Interview — ${data.candidateName.trim()} (Round ${data.interviewRound})`
+    const inviteable = await getMeetInviteableUserIds(user)
+    for (const pid of participantUserIds) {
+      if (!inviteable.has(pid)) {
+        return errorResponse('Invalid participant', 400)
+      }
+    }
+
+    const title = interviewTitleFromBody(data)
 
     const meet = await prisma.meet.create({
       data: {

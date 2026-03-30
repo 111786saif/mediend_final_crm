@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useState, useMemo } from 'react'
+import { cn } from '@/lib/utils'
 import {
   UserCheck,
   Wallet,
@@ -13,7 +14,12 @@ import {
 } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   ChartContainer,
@@ -162,16 +168,36 @@ interface KpiCardProps {
   sub: string
   color: string
   icon: React.ReactNode
+  onClick?: () => void
 }
 
-function KpiCard({ title, value, sub, color, icon }: KpiCardProps) {
+function KpiCard({ title, value, sub, color, icon, onClick }: KpiCardProps) {
   return (
-    <Card className={`border-l-4 ${color} bg-card`}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-4 px-4">
+    <Card
+      className={cn(
+        `border-l-4 ${color} bg-card`,
+        onClick &&
+          'cursor-pointer select-none transition-transform active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+      )}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onClick()
+              }
+            }
+          : undefined
+      }
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-3 sm:pt-4 px-2.5 sm:px-4">
         <CardTitle className="text-xs sm:text-sm font-medium leading-tight">{title}</CardTitle>
         <div className="shrink-0 ml-2">{icon}</div>
       </CardHeader>
-      <CardContent className="px-4 pb-4">
+      <CardContent className="px-2.5 sm:px-4 pb-3 sm:pb-4">
         <div className="text-xl sm:text-2xl font-bold truncate">{value}</div>
         <p className="text-xs text-muted-foreground mt-1 leading-tight">{sub}</p>
       </CardContent>
@@ -191,20 +217,9 @@ export function HRDashboard({
     descriptionProp ??
     (audience === 'md' ? DEFAULT_DESCRIPTION_MD : DEFAULT_DESCRIPTION_HR)
   const now = new Date()
-  const [period, setPeriod] = useState<'thisMonth' | 'lastMonth' | 'custom'>('thisMonth')
-  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1)
-  const [selectedYear, setSelectedYear] = useState(now.getFullYear())
-
-  const { month, year } = useMemo(() => {
-    if (period === 'thisMonth') {
-      return { month: now.getMonth() + 1, year: now.getFullYear() }
-    }
-    if (period === 'lastMonth') {
-      const last = new Date(now.getFullYear(), now.getMonth() - 1)
-      return { month: last.getMonth() + 1, year: last.getFullYear() }
-    }
-    return { month: selectedMonth, year: selectedYear }
-  }, [period, selectedMonth, selectedYear, now])
+  const month = now.getMonth() + 1
+  const year = now.getFullYear()
+  const [newJoinersDrawerOpen, setNewJoinersDrawerOpen] = useState(false)
 
   const todayStr = useMemo(() => {
     const y = now.getFullYear()
@@ -334,56 +349,15 @@ export function HRDashboard({
   const isLoading = analyticsLoading
 
   return (
-    <div className="space-y-5 p-3 sm:p-5">
+    <div className="space-y-3 sm:space-y-5 px-2 py-3 sm:px-5 sm:py-5">
       {/* Header */}
-      <div className="flex flex-col gap-3">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{title}</h1>
-          <p className="text-muted-foreground text-sm mt-0.5">{description}</p>
-        </div>
-        {/* Date filters - stacked on mobile */}
-        <div className="flex flex-col sm:flex-row flex-wrap gap-2">
-          <Select value={period} onValueChange={(v) => setPeriod(v as 'thisMonth' | 'lastMonth' | 'custom')}>
-            <SelectTrigger className="w-full sm:w-[140px]">
-              <SelectValue placeholder="Period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="thisMonth">This Month</SelectItem>
-              <SelectItem value="lastMonth">Last Month</SelectItem>
-              <SelectItem value="custom">Custom</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            value={String(month)}
-            onValueChange={(v) => { setPeriod('custom'); setSelectedMonth(parseInt(v, 10)) }}
-          >
-            <SelectTrigger className="w-full sm:w-[130px]">
-              <SelectValue placeholder="Month" />
-            </SelectTrigger>
-            <SelectContent>
-              {MONTHS.map((m, i) => (
-                <SelectItem key={m} value={String(i + 1)}>{m}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
-            value={String(year)}
-            onValueChange={(v) => { setPeriod('custom'); setSelectedYear(parseInt(v, 10)) }}
-          >
-            <SelectTrigger className="w-[90px]">
-              <SelectValue placeholder="Year" />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 5 }, (_, i) => year - i).map((y) => (
-                <SelectItem key={y} value={String(y)}>{y}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{title}</h1>
+        <p className="hidden sm:block text-muted-foreground text-sm mt-0.5">{description}</p>
       </div>
 
       {isLoading ? (
-        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+        <div className="grid gap-2.5 sm:gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
           {Array.from({ length: 5 }).map((_, i) => (
             <Card key={i} className="animate-pulse">
               <CardHeader className="pb-2"><div className="h-3 w-20 bg-muted rounded" /></CardHeader>
@@ -395,8 +369,8 @@ export function HRDashboard({
         <>
           {/* ─── KPI Cards Row 1: Today ─── */}
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">Today</p>
-            <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-0.5">Today</p>
+            <div className="grid gap-2.5 sm:gap-3 grid-cols-2 sm:grid-cols-3">
               <KpiCard
                 title="Strength"
                 value={`${mergedAnalytics.kpis.todayStrength} / ${mergedAnalytics.kpis.totalHeadcount}`}
@@ -423,10 +397,10 @@ export function HRDashboard({
 
           {/* ─── KPI Cards Row 2: Month ─── */}
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-0.5">
               {MONTHS[month - 1]} {year}
             </p>
-            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 max-w-2xl">
+            <div className="grid gap-2.5 sm:gap-3 grid-cols-2 sm:grid-cols-2">
               <KpiCard
                 title="Monthly Salary"
                 value={formatCurrency(mergedAnalytics.kpis.monthlySalaryOutgo)}
@@ -437,9 +411,18 @@ export function HRDashboard({
               <KpiCard
                 title="New Joiners"
                 value={String(mergedAnalytics.kpis.newJoinersCount)}
-                sub="Joined this month"
+                sub={
+                  mergedAnalytics.newJoiners.length > 0
+                    ? 'Joined this month — tap for list'
+                    : 'Joined this month'
+                }
                 color="border-l-teal-500"
                 icon={<UserPlus className="h-4 w-4 sm:h-5 sm:w-5 text-teal-600 dark:text-teal-400" />}
+                onClick={
+                  mergedAnalytics.newJoiners.length > 0
+                    ? () => setNewJoinersDrawerOpen(true)
+                    : undefined
+                }
               />
             </div>
           </div>
@@ -448,7 +431,7 @@ export function HRDashboard({
 
           {audience === 'md' && interviewsVsHiresChartData.length > 0 && (
             <Card className="overflow-hidden">
-              <CardHeader className="space-y-1 pb-2">
+              <CardHeader className="space-y-1 pb-2 px-2 sm:px-6">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-indigo-500" />
                   <CardTitle className="text-base">Interviews vs new hires</CardTitle>
@@ -458,7 +441,27 @@ export function HRDashboard({
                 </CardDescription>
               </CardHeader>
               <CardContent className="px-0 sm:px-4 pb-2">
-                <div className="w-full overflow-x-auto overscroll-x-contain touch-pan-x">
+                <div className="sm:hidden px-2 pb-2">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-xs h-9">Month</TableHead>
+                        <TableHead className="text-xs h-9 text-right">Interviews</TableHead>
+                        <TableHead className="text-xs h-9 text-right">New hires</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {interviewsVsHiresChartData.map((row, i) => (
+                        <TableRow key={`${row.year}-${row.month}-${i}`}>
+                          <TableCell className="text-xs py-2 font-medium">{row.label}</TableCell>
+                          <TableCell className="text-xs py-2 text-right tabular-nums">{row.interviews}</TableCell>
+                          <TableCell className="text-xs py-2 text-right tabular-nums">{row.newHires}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <div className="hidden sm:block w-full overflow-x-auto overscroll-x-contain touch-pan-x">
                   <ChartContainer
                     config={{
                       interviews: {
@@ -514,10 +517,10 @@ export function HRDashboard({
           )}
 
           {/* ─── Today's Latecomers + Absent Today ─── */}
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+          <div className="grid gap-2.5 sm:gap-4 grid-cols-1 md:grid-cols-2">
             {/* Late today */}
             <Card className="overflow-hidden">
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-2 px-2 sm:px-6">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-orange-500" />
                   <CardTitle className="text-base">Late Today</CardTitle>
@@ -563,7 +566,7 @@ export function HRDashboard({
 
             {/* Absent today */}
             <Card className="overflow-hidden">
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-2 px-2 sm:px-6">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-slate-400" />
                   <CardTitle className="text-base">Absent Today</CardTitle>
@@ -605,48 +608,52 @@ export function HRDashboard({
           {/* ─── Monthly Late Arrivals Chart ─── */}
           {mergedAnalytics.monthlyLateArrivals.length > 0 && (
             <Card className="overflow-hidden">
-              <CardHeader>
+              <CardHeader className="px-2 sm:px-6">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-orange-500" />
                   <CardTitle className="text-base">Monthly Late Arrivals</CardTitle>
                 </div>
                 <CardDescription>{MONTHS[month - 1]} {year} — days arrived late per employee</CardDescription>
               </CardHeader>
-              <CardContent className="px-2 sm:px-4">
-                <ChartContainer
-                  config={{ lateCount: { label: 'Late Days', color: '#f97316' } }}
-                  className="w-full"
-                  style={{ height: Math.max(180, mergedAnalytics.monthlyLateArrivals.length * 32) }}
-                >
-                  <BarChart
-                    data={mergedAnalytics.monthlyLateArrivals}
-                    layout="vertical"
-                    margin={{ top: 0, right: 40, left: 0, bottom: 0 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis type="number" allowDecimals={false} tick={{ fontSize: 11 }} />
-                    <YAxis
-                      dataKey="employeeName"
-                      type="category"
-                      width={110}
-                      tick={{ fontSize: 11 }}
-                      tickLine={false}
-                    />
-                    <ChartTooltip
-                      content={<ChartTooltipContent />}
-                    />
-                    <Bar dataKey="lateCount" fill="#f97316" radius={[0, 4, 4, 0]} maxBarSize={20} />
-                  </BarChart>
-                </ChartContainer>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto max-h-[min(55vh,420px)] overflow-y-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-xs">Name</TableHead>
+                        <TableHead className="text-xs hidden sm:table-cell">Dept</TableHead>
+                        <TableHead className="text-xs text-right">Late days</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {mergedAnalytics.monthlyLateArrivals.map((e) => (
+                        <TableRow key={e.employeeId}>
+                          <TableCell className="text-xs font-medium py-2">{e.employeeName}</TableCell>
+                          <TableCell className="text-xs py-2 hidden sm:table-cell text-muted-foreground">
+                            {e.departmentName}
+                          </TableCell>
+                          <TableCell className="text-xs py-2 text-right">
+                            <Badge
+                              variant="outline"
+                              className="text-orange-600 dark:text-orange-400 border-orange-300 dark:border-orange-700 text-xs px-1.5 tabular-nums"
+                            >
+                              {e.lateCount}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           )}
 
           {/* ─── Salary (by department / by team) ─── */}
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+          <div className="grid gap-2.5 sm:gap-4 grid-cols-1 md:grid-cols-2">
             <Card className="overflow-hidden">
               <Tabs defaultValue="department" className="gap-0">
-                <CardHeader className="space-y-3">
+                <CardHeader className="space-y-3 px-2 sm:px-6">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-violet-500" />
@@ -660,7 +667,7 @@ export function HRDashboard({
                     {mergedAnalytics.kpis.hasPayrollData ? 'Net payable' : 'CTC estimate'} — {MONTHS[month - 1]} {year}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="px-2 sm:px-4 pt-0">
+                <CardContent className="px-2 sm:px-6 pt-0">
                   <TabsContent value="department" className="mt-0 outline-none">
                     <ChartContainer
                       config={{ amount: { label: 'Amount', color: '#8b5cf6' } }}
@@ -670,7 +677,7 @@ export function HRDashboard({
                       <BarChart
                         data={mergedAnalytics.departmentSalaryBreakdown}
                         layout="vertical"
-                        margin={{ top: 0, right: 60, left: 0, bottom: 0 }}
+                        margin={{ top: 0, right: 48, left: 0, bottom: 0 }}
                       >
                         <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                         <XAxis
@@ -681,9 +688,12 @@ export function HRDashboard({
                         <YAxis
                           dataKey="departmentName"
                           type="category"
-                          width={110}
-                          tick={{ fontSize: 11 }}
+                          width={80}
+                          tick={{ fontSize: 10 }}
                           tickLine={false}
+                          tickFormatter={(v) =>
+                            String(v).length > 14 ? `${String(v).slice(0, 12)}…` : String(v)
+                          }
                         />
                         <ChartTooltip content={<ChartTooltipContent formatter={(v) => formatCurrencyFull(Number(v))} />} />
                         <Bar dataKey="amount" radius={[0, 4, 4, 0]} maxBarSize={22}>
@@ -700,7 +710,7 @@ export function HRDashboard({
 
             {/* Department headcount - horizontal bar (replaces pie) */}
             <Card className="overflow-hidden">
-              <CardHeader>
+              <CardHeader className="px-2 sm:px-6">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-blue-500" />
                   <CardTitle className="text-base">Department Headcount</CardTitle>
@@ -709,7 +719,7 @@ export function HRDashboard({
                   {mergedAnalytics.kpis.totalHeadcount} employees total — breakdown by department
                 </CardDescription>
               </CardHeader>
-              <CardContent className="px-2 sm:px-4">
+              <CardContent className="px-2 sm:px-6">
                 <ChartContainer
                   config={{ count: { label: 'Employees', color: '#3b82f6' } }}
                   className="w-full"
@@ -718,16 +728,19 @@ export function HRDashboard({
                   <BarChart
                     data={mergedAnalytics.departmentHeadcount}
                     layout="vertical"
-                    margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
+                    margin={{ top: 0, right: 24, left: 0, bottom: 0 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis type="number" allowDecimals={false} tick={{ fontSize: 11 }} />
+                    <XAxis type="number" allowDecimals={false} tick={{ fontSize: 10 }} />
                     <YAxis
                       dataKey="departmentName"
                       type="category"
-                      width={110}
-                      tick={{ fontSize: 11 }}
+                      width={80}
+                      tick={{ fontSize: 10 }}
                       tickLine={false}
+                      tickFormatter={(v) =>
+                        String(v).length > 14 ? `${String(v).slice(0, 12)}…` : String(v)
+                      }
                     />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Bar dataKey="count" radius={[0, 4, 4, 0]} maxBarSize={22}>
@@ -742,49 +755,51 @@ export function HRDashboard({
 
           </div>
 
-          {/* ─── New Joiners ─── */}
-          {mergedAnalytics.newJoiners.length > 0 && (
-            <Card className="overflow-hidden">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-teal-500" />
-                  <CardTitle className="text-base">New Joiners</CardTitle>
-                </div>
-                <CardDescription>Joined in {MONTHS[month - 1]} {year}</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-xs">Name</TableHead>
-                        <TableHead className="text-xs">Code</TableHead>
-                        <TableHead className="text-xs hidden sm:table-cell">Department</TableHead>
-                        <TableHead className="text-xs text-right">Join Date</TableHead>
+          <Drawer open={newJoinersDrawerOpen} onOpenChange={setNewJoinersDrawerOpen}>
+            <DrawerContent className="max-h-[88vh]">
+              <DrawerHeader className="text-left px-4 pb-2">
+                <DrawerTitle>
+                  New joiners — {MONTHS[month - 1]} {year}
+                </DrawerTitle>
+              </DrawerHeader>
+              <div className="overflow-y-auto overscroll-contain px-2 pb-6 max-h-[min(70vh,520px)]">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-xs">Name</TableHead>
+                      <TableHead className="text-xs">Code</TableHead>
+                      <TableHead className="text-xs hidden sm:table-cell">Department</TableHead>
+                      <TableHead className="text-xs text-right">Join date</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {mergedAnalytics.newJoiners.map((e, i) => (
+                      <TableRow key={i}>
+                        <TableCell className="text-xs font-medium py-2">{e.employeeName}</TableCell>
+                        <TableCell className="text-xs font-mono py-2 text-muted-foreground">
+                          {e.employeeCode}
+                        </TableCell>
+                        <TableCell className="text-xs py-2 hidden sm:table-cell text-muted-foreground">
+                          {e.departmentName}
+                        </TableCell>
+                        <TableCell className="text-xs py-2 text-right text-teal-600 dark:text-teal-400 font-medium">
+                          {new Date(e.joinDate).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                          })}
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {mergedAnalytics.newJoiners.map((e, i) => (
-                        <TableRow key={i}>
-                          <TableCell className="text-xs font-medium py-2">{e.employeeName}</TableCell>
-                          <TableCell className="text-xs font-mono py-2 text-muted-foreground">{e.employeeCode}</TableCell>
-                          <TableCell className="text-xs py-2 hidden sm:table-cell text-muted-foreground">{e.departmentName}</TableCell>
-                          <TableCell className="text-xs py-2 text-right text-teal-600 dark:text-teal-400 font-medium">
-                            {new Date(e.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </DrawerContent>
+          </Drawer>
         </>
       ) : (
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center text-muted-foreground">No data available for the selected period</p>
+            <p className="text-center text-muted-foreground">No data available</p>
           </CardContent>
         </Card>
       )}

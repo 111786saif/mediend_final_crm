@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Sheet,
@@ -23,7 +23,8 @@ import {
 } from '@/components/ui/select'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Badge } from '@/components/ui/badge'
-import { apiGet, apiPost } from '@/lib/api-client'
+import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import type { InterviewMeet } from '@/components/hr/interview-list'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Users, Upload, Video, MapPin, CalendarClock, History } from 'lucide-react'
@@ -54,9 +55,15 @@ type DepartmentRow = { id: string; name: string }
 interface InterviewFormSheetProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  /** When set while opening, form loads this interview for editing */
+  meetToEdit?: InterviewMeet | null
 }
 
-export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetProps) {
+export function InterviewFormSheet({
+  open,
+  onOpenChange,
+  meetToEdit = null,
+}: InterviewFormSheetProps) {
   const queryClient = useQueryClient()
   const [mode, setMode] = useState<'schedule' | 'record'>('schedule')
   const [meetType, setMeetType] = useState<'VIRTUAL' | 'OFFLINE'>('OFFLINE')
@@ -74,6 +81,9 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
   const [resumeFile, setResumeFile] = useState<File | null>(null)
   const [resumeUrl, setResumeUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [displayTitle, setDisplayTitle] = useState('')
+
+  const isEdit = Boolean(meetToEdit?.id)
 
   const { data: departments = [] } = useQuery<DepartmentRow[]>({
     queryKey: ['departments'],
@@ -102,55 +112,7 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
   const resolvedRole =
     rolePreset === 'Other (type below)' ? roleCustom.trim() : rolePreset
 
-  const createMutation = useMutation({
-    mutationFn: async () => {
-      if (!candidateName.trim()) throw new Error('Candidate name is required')
-      if (!resolvedRole) throw new Error('Role is required')
-      if (!scheduledAt || !isValid(scheduledAt)) throw new Error('Date & time is required')
-      if (meetType === 'OFFLINE' && !location.trim()) {
-        throw new Error('Location is required for walk-in interviews')
-      }
-
-      let finalResumeUrl = resumeUrl
-      if (resumeFile) {
-        setUploading(true)
-        try {
-          const fd = new FormData()
-          fd.append('file', resumeFile)
-          const res = await apiPost<{ url: string }>('/api/upload/resume', fd)
-          finalResumeUrl = res.url
-          setResumeUrl(res.url)
-        } finally {
-          setUploading(false)
-        }
-      }
-
-      return apiPost('/api/hr/interviews', {
-        candidateName: candidateName.trim(),
-        candidateRole: resolvedRole,
-        departmentId: departmentId || null,
-        interviewRound: round,
-        type: meetType,
-        meetLink: meetType === 'VIRTUAL' ? meetLink.trim() || null : null,
-        location: meetType === 'OFFLINE' ? location.trim() : null,
-        scheduledAt: scheduledAt.toISOString(),
-        notes: notes.trim() || null,
-        participantUserIds: Array.from(participantIds),
-        isRecorded: mode === 'record',
-        resumeUrl: finalResumeUrl || null,
-      })
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['hr-interviews'] })
-      queryClient.invalidateQueries({ queryKey: ['meets'] })
-      toast.success(mode === 'record' ? 'Interview recorded' : 'Interview scheduled')
-      onOpenChange(false)
-      resetForm()
-    },
-    onError: (e: Error) => toast.error(e.message || 'Failed to save'),
-  })
-
-  function resetForm() {
+  const resetForm = useCallback(() => {
     setMode('schedule')
     setMeetType('OFFLINE')
     setCandidateName('')
@@ -166,7 +128,110 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
     setEmpSearch('')
     setResumeFile(null)
     setResumeUrl(null)
+    setDisplayTitle('')
+  }, [])
+
+  useEffect(() => {
+    if (!open) return
+    if (meetToEdit) {
+      setMode(meetToEdit.isRecorded ? 'record' : 'schedule')
+      setMeetType(meetToEdit.type)
+      setCandidateName(meetToEdit.candidateName || '')
+      const role = meetToEdit.candidateRole || ''
+      if (ROLE_PRESETS.includes(role)) {
+        setRolePreset(role)
+        setRoleCustom('')
+      } else {
+        setRolePreset('Other (type below)')
+        setRoleCustom(role)
+      }
+      setDepartmentId(meetToEdit.department?.id || '')
+      setRound(meetToEdit.interviewRound ?? 1)
+      setMeetLink(meetToEdit.meetLink || '')
+      setLocation(meetToEdit.location || '')
+      setScheduledAt(
+        meetToEdit.scheduledAt ? new Date(meetToEdit.scheduledAt) : undefined
+      )
+      setNotes(meetToEdit.notes || '')
+      setParticipantIds(new Set(meetToEdit.participants.map((p) => p.user.id)))
+      setResumeFile(null)
+      setResumeUrl(meetToEdit.resumeUrl)
+      setDisplayTitle(meetToEdit.title || '')
+      setEmpSearch('')
+    } else {
+      resetForm()
+    }
+  }, [open, meetToEdit, resetForm])
+
+  const buildInterviewPayload = async () => {
+    if (!candidateName.trim()) throw new Error('Candidate name is required')
+    if (!resolvedRole) throw new Error('Role is required')
+    if (!scheduledAt || !isValid(scheduledAt)) throw new Error('Date & time is required')
+    if (meetType === 'OFFLINE' && !location.trim()) {
+      throw new Error('Location is required for walk-in interviews')
+    }
+
+    let finalResumeUrl = resumeUrl
+    if (resumeFile) {
+      setUploading(true)
+      try {
+        const fd = new FormData()
+        fd.append('file', resumeFile)
+        const res = await apiPost<{ url: string }>('/api/upload/resume', fd)
+        finalResumeUrl = res.url
+        setResumeUrl(res.url)
+      } finally {
+        setUploading(false)
+      }
+    }
+
+    return {
+      candidateName: candidateName.trim(),
+      candidateRole: resolvedRole,
+      departmentId: departmentId || null,
+      interviewRound: round,
+      type: meetType,
+      meetLink: meetType === 'VIRTUAL' ? meetLink.trim() || null : null,
+      location: meetType === 'OFFLINE' ? location.trim() : null,
+      scheduledAt: scheduledAt.toISOString(),
+      notes: notes.trim() || null,
+      participantUserIds: Array.from(participantIds),
+      isRecorded: mode === 'record',
+      resumeUrl: finalResumeUrl || null,
+      title: displayTitle.trim() || null,
+    }
   }
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const body = await buildInterviewPayload()
+      return apiPost('/api/hr/interviews', body)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hr-interviews'] })
+      queryClient.invalidateQueries({ queryKey: ['meets'] })
+      toast.success(mode === 'record' ? 'Interview recorded' : 'Interview scheduled')
+      onOpenChange(false)
+      resetForm()
+    },
+    onError: (e: Error) => toast.error(e.message || 'Failed to save'),
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      if (!meetToEdit?.id) throw new Error('Missing interview')
+      const body = await buildInterviewPayload()
+      return apiPatch(`/api/hr/interviews/${meetToEdit.id}`, body)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hr-interviews'] })
+      queryClient.invalidateQueries({ queryKey: ['meets'] })
+      toast.success('Interview updated')
+      onOpenChange(false)
+      resetForm()
+    },
+    onError: (e: Error) => toast.error(e.message || 'Failed to update'),
+  })
 
   function toggleParticipant(userId: string) {
     setParticipantIds((prev) => {
@@ -186,41 +251,45 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
         <SheetHeader className="border-b bg-gradient-to-r from-violet-600/10 via-fuchsia-500/10 to-amber-500/10 px-3 py-3 md:p-4">
           <SheetTitle className="text-lg flex items-center gap-2">
             <CalendarClock className="h-5 w-5 text-violet-600" />
-            Schedule or record interview
+            {isEdit ? 'Edit interview' : 'Schedule or record interview'}
           </SheetTitle>
           <SheetDescription className="text-left text-xs md:text-sm">
-            Add walk-in or virtual interviews. Invite teammates as panelists.
+            {isEdit
+              ? 'Update time, panel, resume, title, and other details.'
+              : 'Add walk-in or virtual interviews. Invite teammates as panelists.'}
           </SheetDescription>
         </SheetHeader>
 
         <div className="space-y-4 px-3 py-3 md:px-4 md:py-4">
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setMode('schedule')}
-              className={cn(
-                'flex-1 rounded-xl border-2 py-2.5 text-sm font-semibold transition-all',
-                mode === 'schedule'
-                  ? 'border-violet-500 bg-violet-600 text-white shadow-md'
-                  : 'border-border bg-card text-muted-foreground'
-              )}
-            >
-              Schedule
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode('record')}
-              className={cn(
-                'flex-1 rounded-xl border-2 py-2.5 text-sm font-semibold transition-all flex items-center justify-center gap-1',
-                mode === 'record'
-                  ? 'border-amber-500 bg-amber-500 text-white shadow-md'
-                  : 'border-border bg-card text-muted-foreground'
-              )}
-            >
-              <History className="h-4 w-4" />
-              Record past
-            </button>
-          </div>
+          {!isEdit && (
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setMode('schedule')}
+                className={cn(
+                  'flex-1 rounded-xl border-2 py-2.5 text-sm font-semibold transition-all',
+                  mode === 'schedule'
+                    ? 'border-violet-500 bg-violet-600 text-white shadow-md'
+                    : 'border-border bg-card text-muted-foreground'
+                )}
+              >
+                Schedule
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('record')}
+                className={cn(
+                  'flex-1 rounded-xl border-2 py-2.5 text-sm font-semibold transition-all flex items-center justify-center gap-1',
+                  mode === 'record'
+                    ? 'border-amber-500 bg-amber-500 text-white shadow-md'
+                    : 'border-border bg-card text-muted-foreground'
+                )}
+              >
+                <History className="h-4 w-4" />
+                Record past
+              </button>
+            </div>
+          )}
 
           <div className="flex gap-2">
             <button
@@ -274,6 +343,20 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
               />
             </div>
           )}
+
+          <div className="space-y-1.5">
+            <Label>Interview title</Label>
+            <Input
+              value={displayTitle}
+              onChange={(e) => setDisplayTitle(e.target.value)}
+              placeholder={
+                isEdit
+                  ? 'Shown in calendar and lists'
+                  : 'Optional — defaults to “Interview — Name (Round N)”'
+              }
+              className="rounded-xl"
+            />
+          </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-2">
             <div className="space-y-1.5">
@@ -456,10 +539,20 @@ export function InterviewFormSheet({ open, onOpenChange }: InterviewFormSheetPro
           </Button>
           <Button
             className="flex-1 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-md"
-            disabled={createMutation.isPending || uploading}
-            onClick={() => createMutation.mutate()}
+            disabled={
+              createMutation.isPending ||
+              updateMutation.isPending ||
+              uploading
+            }
+            onClick={() =>
+              isEdit ? updateMutation.mutate() : createMutation.mutate()
+            }
           >
-            {createMutation.isPending || uploading ? 'Saving…' : 'Save'}
+            {createMutation.isPending || updateMutation.isPending || uploading
+              ? 'Saving…'
+              : isEdit
+                ? 'Save changes'
+                : 'Save'}
           </Button>
         </SheetFooter>
       </SheetContent>

@@ -8,9 +8,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Calendar, Check, FileClock, UserCheck, X } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Calendar, Check, FileClock, LayoutGrid, UserCheck, X } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
+import { MDTeamAttendanceTab } from '@/components/md/attendance/md-team-attendance-tab'
 import {
   Drawer,
   DrawerContent,
@@ -328,8 +330,8 @@ export function MDAttendancePage() {
   const [selectedNorm, setSelectedNorm] = useState<MDNormalizationRow | null>(null)
 
   const { data: leavesData, isLoading: leavesLoading } = useQuery<{ leaves: TeamLeave[] }>({
-    queryKey: ['md', 'team', 'leaves', 'pending'],
-    queryFn: () => apiGet<{ leaves: TeamLeave[] }>('/api/hierarchy/my-team/leaves?status=PENDING'),
+    queryKey: ['md', 'team', 'leaves', 'all'],
+    queryFn: () => apiGet<{ leaves: TeamLeave[] }>('/api/hierarchy/my-team/leaves'),
   })
 
   const leaves = leavesData?.leaves ?? []
@@ -386,6 +388,7 @@ export function MDAttendancePage() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['md', 'normalizations'] })
+      queryClient.invalidateQueries({ queryKey: ['hierarchy', 'my-team', 'attendance'] })
       queryClient.invalidateQueries({ queryKey: BADGE_COUNTS_QUERY_KEY })
       toast.success('Normalization updated')
     },
@@ -393,16 +396,22 @@ export function MDAttendancePage() {
   })
 
   const pendingLeaves = leaves.filter((l) => l.status === 'PENDING')
+  const settledLeaves = leaves.filter((l) => l.status !== 'PENDING')
+
+  const normHighlights = normalizations.map((n) => ({
+    employeeId: n.employeeId,
+    date: n.date,
+  }))
 
   return (
     <div className="mx-auto w-full max-w-5xl min-w-0 px-3 py-4 sm:px-6 sm:py-6">
       <header className="mb-4 flex flex-col gap-3 rounded-xl border border-teal-200/80 bg-gradient-to-r from-teal-500/10 via-background to-violet-500/10 p-4 shadow-sm dark:border-teal-900/50 dark:from-teal-500/15 dark:to-violet-500/15 sm:mb-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <h1 className="text-lg font-semibold leading-tight tracking-tight text-teal-950 dark:text-teal-100 sm:text-xl md:text-2xl">
-            Team leave requests
+            Team attendance & leave
           </h1>
           <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-            Approve or reject leave for your direct reports
+            Review attendance heatmaps, leave requests, and normalizations for your team
           </p>
         </div>
         <Badge className="w-fit shrink-0 border-violet-300/80 bg-violet-100 text-violet-900 hover:bg-violet-100 dark:border-violet-700 dark:bg-violet-950/80 dark:text-violet-100">
@@ -410,151 +419,199 @@ export function MDAttendancePage() {
         </Badge>
       </header>
 
-      {leavesLoading ? (
-        <Card className="border-teal-200/60 dark:border-teal-900/40">
-          <CardContent className="flex items-center justify-center p-8 sm:p-12">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-teal-600 border-t-transparent" />
-          </CardContent>
-        </Card>
-      ) : pendingLeaves.length === 0 ? (
-        <Card className="border-teal-200/60 bg-teal-50/40 dark:border-teal-900/40 dark:bg-teal-950/20">
-          <CardContent className="p-8 text-center sm:p-12">
-            <UserCheck className="mx-auto mb-3 h-10 w-10 text-teal-600 dark:text-teal-400 sm:mb-4 sm:h-12 sm:w-12" />
-            <p className="text-lg font-medium text-teal-950 dark:text-teal-100 sm:text-xl">No pending leave requests</p>
-            <p className="mt-1 text-sm text-muted-foreground">All leave requests from your team have been processed</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid min-w-0 gap-3 sm:gap-4">
-          {pendingLeaves.map((leave) => (
-            <Card
-              key={leave.id}
-              className="min-w-0 cursor-pointer border-l-4 border-l-teal-500 transition-all hover:shadow-md dark:border-l-teal-400"
-              onClick={() => setSelectedLeave(leave)}
-            >
-              <CardContent className="min-w-0 p-4 sm:p-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-                    <Avatar className="h-10 w-10 shrink-0 border-2 border-teal-200 dark:border-teal-800 sm:h-12 sm:w-12">
-                      <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-200">
-                        {leave.employeeName
-                          .split(' ')
-                          .map((n) => n[0])
-                          .join('')
-                          .toUpperCase()
-                          .slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0">
-                      <div className="truncate font-semibold">{leave.employeeName}</div>
-                      <div className="truncate text-sm text-muted-foreground">{leave.employeeEmail}</div>
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 flex-row items-center justify-between gap-2 sm:flex-col sm:items-end sm:text-right">
-                    <Badge className="bg-teal-600 text-white hover:bg-teal-600">{leave.leaveType}</Badge>
-                    <div className="text-xs text-muted-foreground">
-                      {leave.days} day{leave.days !== 1 ? 's' : ''}
-                    </div>
-                  </div>
-                </div>
+      <Tabs defaultValue="attendance" className="w-full min-w-0 gap-4">
+        <TabsList className="grid h-auto w-full grid-cols-3 gap-0.5 rounded-xl p-1 sm:max-w-xl">
+          <TabsTrigger value="attendance" className="text-[11px] px-1.5 py-2 sm:text-sm sm:px-3">
+            Attendance
+          </TabsTrigger>
+          <TabsTrigger value="leaves" className="text-[11px] px-1.5 py-2 sm:text-sm sm:px-3">
+            Leaves
+          </TabsTrigger>
+          <TabsTrigger value="normalizations" className="text-[11px] px-1.5 py-2 sm:text-sm sm:px-3">
+            Normalizations
+          </TabsTrigger>
+        </TabsList>
 
-                <div className="mt-3 flex min-w-0 flex-col gap-2 text-sm text-muted-foreground sm:mt-4 sm:flex-row sm:items-center sm:gap-4">
-                  <div className="flex shrink-0 items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 shrink-0 text-teal-600 dark:text-teal-400" />
-                    <span className="whitespace-normal break-words">
-                      {format(new Date(leave.startDate), 'dd MMM')} — {format(new Date(leave.endDate), 'dd MMM yyyy')}
+        <TabsContent value="attendance" className="mt-0 space-y-3 outline-none">
+          <p className="text-xs text-muted-foreground px-0.5">
+            Tap a team member to open their heatmap, CL/SL/EL usage for the month, and summary counts.
+          </p>
+          <MDTeamAttendanceTab highlightNormalizations={normHighlights} />
+        </TabsContent>
+
+        <TabsContent value="leaves" className="mt-0 space-y-6 outline-none">
+          <div>
+            <h2 className="text-sm font-semibold text-teal-950 dark:text-teal-100 mb-2 flex items-center gap-2">
+              <LayoutGrid className="h-4 w-4" />
+              Pending approval
+            </h2>
+            {leavesLoading ? (
+              <Card className="border-teal-200/60 dark:border-teal-900/40">
+                <CardContent className="flex items-center justify-center p-8 sm:p-12">
+                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-teal-600 border-t-transparent" />
+                </CardContent>
+              </Card>
+            ) : pendingLeaves.length === 0 ? (
+              <Card className="border-teal-200/60 bg-teal-50/40 dark:border-teal-900/40 dark:bg-teal-950/20">
+                <CardContent className="p-6 text-center sm:p-8">
+                  <UserCheck className="mx-auto mb-2 h-9 w-9 text-teal-600 dark:text-teal-400" />
+                  <p className="font-medium text-teal-950 dark:text-teal-100">No pending leave requests</p>
+                  <p className="mt-1 text-xs text-muted-foreground">All caught up for your team</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid min-w-0 gap-3 sm:gap-4">
+                {pendingLeaves.map((leave) => (
+                  <Card
+                    key={leave.id}
+                    className="min-w-0 cursor-pointer border-l-4 border-l-teal-500 transition-all hover:shadow-md dark:border-l-teal-400"
+                    onClick={() => setSelectedLeave(leave)}
+                  >
+                    <CardContent className="min-w-0 p-4 sm:p-6">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                          <Avatar className="h-10 w-10 shrink-0 border-2 border-teal-200 dark:border-teal-800 sm:h-12 sm:w-12">
+                            <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-200">
+                              {leave.employeeName
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                                .toUpperCase()
+                                .slice(0, 2)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0">
+                            <div className="truncate font-semibold">{leave.employeeName}</div>
+                            <div className="truncate text-sm text-muted-foreground">{leave.employeeEmail}</div>
+                          </div>
+                        </div>
+                        <div className="flex shrink-0 flex-row items-center justify-between gap-2 sm:flex-col sm:items-end sm:text-right">
+                          <Badge className="bg-teal-600 text-white hover:bg-teal-600">{leave.leaveType}</Badge>
+                          <div className="text-xs text-muted-foreground">
+                            {leave.days} day{leave.days !== 1 ? 's' : ''}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 flex min-w-0 flex-col gap-2 text-sm text-muted-foreground sm:mt-4 sm:flex-row sm:items-center sm:gap-4">
+                        <div className="flex shrink-0 items-center gap-1">
+                          <Calendar className="h-3.5 w-3.5 shrink-0 text-teal-600 dark:text-teal-400" />
+                          <span className="whitespace-normal break-words">
+                            {format(new Date(leave.startDate), 'dd MMM')} —{' '}
+                            {format(new Date(leave.endDate), 'dd MMM yyyy')}
+                          </span>
+                        </div>
+                        {leave.reason && (
+                          <div className="line-clamp-2 min-w-0 text-xs sm:line-clamp-1 sm:flex-1">{leave.reason}</div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <h2 className="text-sm font-semibold text-muted-foreground mb-2">Recent decisions</h2>
+            {leavesLoading ? null : settledLeaves.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4 text-center">No approved or rejected requests yet.</p>
+            ) : (
+              <div className="space-y-2 max-h-[min(50vh,28rem)] overflow-y-auto rounded-xl border bg-muted/20 p-2">
+                {settledLeaves.slice(0, 40).map((leave) => (
+                  <div
+                    key={leave.id}
+                    className="flex flex-wrap items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm"
+                  >
+                    <span className="font-medium truncate min-w-0 flex-1">{leave.employeeName}</span>
+                    <Badge variant={leave.status === 'APPROVED' ? 'default' : 'secondary'} className="shrink-0 text-[10px]">
+                      {leave.status}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground w-full sm:w-auto">
+                      {leave.leaveType} · {leave.days}d · {format(new Date(leave.startDate), 'dd MMM')}
                     </span>
                   </div>
-                  {leave.reason && (
-                    <div className="line-clamp-2 min-w-0 text-xs sm:line-clamp-1 sm:flex-1">{leave.reason}</div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+                ))}
+              </div>
+            )}
+          </div>
+        </TabsContent>
 
-      <header className="mb-4 mt-10 flex flex-col gap-3 rounded-xl border border-violet-200/80 bg-gradient-to-r from-violet-500/10 via-background to-teal-500/10 p-4 shadow-sm dark:border-violet-900/50 dark:from-violet-500/15 dark:to-teal-500/15 sm:mb-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h2 className="text-lg font-semibold leading-tight tracking-tight text-violet-950 dark:text-violet-100 sm:text-xl">
-            Attendance normalizations (MD team)
-          </h2>
-          <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-            Final approval for your direct reports and MD-managed cohort — not shown in HR queue
+        <TabsContent value="normalizations" className="mt-0 space-y-3 outline-none">
+          <p className="text-xs text-muted-foreground px-0.5">
+            Final approval for your direct reports and MD-managed cohort — not shown in HR queue.
           </p>
-        </div>
-      </header>
-
-      {normLoading ? (
-        <Card className="border-violet-200/60 dark:border-violet-900/40">
-          <CardContent className="flex items-center justify-center p-8 sm:p-12">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-violet-600 border-t-transparent" />
-          </CardContent>
-        </Card>
-      ) : normalizations.length === 0 ? (
-        <Card className="border-violet-200/60 bg-violet-50/40 dark:border-violet-900/40 dark:bg-violet-950/20">
-          <CardContent className="p-8 text-center sm:p-12">
-            <FileClock className="mx-auto mb-3 h-10 w-10 text-violet-600 dark:text-violet-400 sm:mb-4 sm:h-12 sm:w-12" />
-            <p className="text-lg font-medium text-violet-950 dark:text-violet-100 sm:text-xl">
-              No pending normalizations
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              MD team requests are routed here instead of HR
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid min-w-0 gap-3 sm:gap-4">
-          {normalizations.map((n) => (
-            <Card
-              key={n.id}
-              className="min-w-0 cursor-pointer border-l-4 border-l-violet-500 transition-all hover:shadow-md dark:border-l-violet-400"
-              onClick={() => setSelectedNorm(n)}
-            >
-              <CardContent className="min-w-0 p-4 sm:p-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-                    <Avatar className="h-10 w-10 shrink-0 border-2 border-violet-200 dark:border-violet-800 sm:h-12 sm:w-12">
-                      <AvatarFallback className="bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-200">
-                        {n.employeeName
-                          .split(' ')
-                          .map((x) => x[0])
-                          .join('')
-                          .toUpperCase()
-                          .slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0">
-                      <div className="truncate font-semibold">{n.employeeName}</div>
-                      <div className="truncate text-sm text-muted-foreground">{n.employeeEmail}</div>
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-col sm:items-end">
-                    <Badge className="bg-violet-600 text-white hover:bg-violet-600">
-                      {n.type === 'EMPLOYEE_REQUEST' ? 'Employee' : 'Manager'}
-                    </Badge>
-                    {n.normalizeAs && (
-                      <span className="text-xs text-muted-foreground">
-                        {n.normalizeAs === 'HALF_DAY' ? 'Half day' : 'Full day'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="mt-3 flex min-w-0 flex-col gap-2 text-sm text-muted-foreground sm:mt-4 sm:flex-row sm:items-center sm:gap-4">
-                  <div className="flex shrink-0 items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 shrink-0 text-violet-600 dark:text-violet-400" />
-                    <span>{format(new Date(n.date + 'T12:00:00'), 'dd MMM yyyy')}</span>
-                  </div>
-                  {n.reason && (
-                    <div className="line-clamp-2 min-w-0 text-xs sm:line-clamp-1 sm:flex-1">{n.reason}</div>
-                  )}
-                </div>
+          {normLoading ? (
+            <Card className="border-violet-200/60 dark:border-violet-900/40">
+              <CardContent className="flex items-center justify-center p-8 sm:p-12">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-violet-600 border-t-transparent" />
               </CardContent>
             </Card>
-          ))}
-        </div>
-      )}
+          ) : normalizations.length === 0 ? (
+            <Card className="border-violet-200/60 bg-violet-50/40 dark:border-violet-900/40 dark:bg-violet-950/20">
+              <CardContent className="p-8 text-center sm:p-12">
+                <FileClock className="mx-auto mb-3 h-10 w-10 text-violet-600 dark:text-violet-400 sm:mb-4 sm:h-12 sm:w-12" />
+                <p className="text-lg font-medium text-violet-950 dark:text-violet-100 sm:text-xl">
+                  No pending normalizations
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  MD team requests are routed here instead of HR
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid min-w-0 gap-3 sm:gap-4">
+              {normalizations.map((n) => (
+                <Card
+                  key={n.id}
+                  className="min-w-0 cursor-pointer border-l-4 border-l-violet-500 transition-all hover:shadow-md dark:border-l-violet-400"
+                  onClick={() => setSelectedNorm(n)}
+                >
+                  <CardContent className="min-w-0 p-4 sm:p-6">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+                        <Avatar className="h-10 w-10 shrink-0 border-2 border-violet-200 dark:border-violet-800 sm:h-12 sm:w-12">
+                          <AvatarFallback className="bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-200">
+                            {n.employeeName
+                              .split(' ')
+                              .map((x) => x[0])
+                              .join('')
+                              .toUpperCase()
+                              .slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0">
+                          <div className="truncate font-semibold">{n.employeeName}</div>
+                          <div className="truncate text-sm text-muted-foreground">{n.employeeEmail}</div>
+                        </div>
+                      </div>
+                      <div className="flex shrink-0 flex-wrap items-center gap-2 sm:flex-col sm:items-end">
+                        <Badge className="bg-violet-600 text-white hover:bg-violet-600">
+                          {n.type === 'EMPLOYEE_REQUEST' ? 'Employee' : 'Manager'}
+                        </Badge>
+                        {n.normalizeAs && (
+                          <span className="text-xs text-muted-foreground">
+                            {n.normalizeAs === 'HALF_DAY' ? 'Half day' : 'Full day'}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-3 flex min-w-0 flex-col gap-2 text-sm text-muted-foreground sm:mt-4 sm:flex-row sm:items-center sm:gap-4">
+                      <div className="flex shrink-0 items-center gap-1">
+                        <Calendar className="h-3.5 w-3.5 shrink-0 text-violet-600 dark:text-violet-400" />
+                        <span>{format(new Date(n.date + 'T12:00:00'), 'dd MMM yyyy')}</span>
+                      </div>
+                      {n.reason && (
+                        <div className="line-clamp-2 min-w-0 text-xs sm:line-clamp-1 sm:flex-1">{n.reason}</div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
 
       <NormalizationDrawer
         row={selectedNorm}

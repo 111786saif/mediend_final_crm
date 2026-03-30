@@ -52,7 +52,7 @@ export async function PATCH(request: NextRequest, ctx: { params: Promise<{ id: s
     return successResponse(row, 'Saved')
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return errorResponse(error.errors[0]?.message || 'Invalid input', 400)
+      return errorResponse(error.issues[0]?.message || 'Invalid input', 400)
     }
     console.error('meet my-attendance PATCH:', error)
     return errorResponse('Failed to save attendance', 500)
