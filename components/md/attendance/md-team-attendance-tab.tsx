@@ -220,7 +220,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
       <Card className="border-dashed border-teal-200/60 dark:border-teal-900/40">
         <CardContent className="p-8 text-center text-sm text-muted-foreground">
           <Users className="mx-auto mb-2 h-10 w-10 opacity-60" />
-          No direct or indirect reports in your hierarchy yet.
+          No direct reports yet.
         </CardContent>
       </Card>
     )

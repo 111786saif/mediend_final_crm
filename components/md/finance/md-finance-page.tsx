@@ -482,7 +482,7 @@ export function MDFinancePage() {
       doc.setFontSize(10)
       doc.text(`Total Revenue: ${formatCurrencyForPDF(analytics.kpis.totalRevenue)}`, 14, y)
       y += 6
-      doc.text(`Total Expenses: ${formatCurrencyForPDF(analytics.kpis.totalExpenses)}`, 14, y)
+      doc.text(`Total Debit: ${formatCurrencyForPDF(analytics.kpis.totalExpenses)}`, 14, y)
       y += 6
       doc.text(`Net cash flow: ${formatCurrencyForPDF(analytics.kpis.netCashFlow)}`, 14, y)
       y += 6
@@ -784,7 +784,7 @@ export function MDFinancePage() {
                   valueAccent
                 />
                 <StatCard
-                  label="Expenses"
+                  label="Debit"
                   value={formatCurrencyCompact(analytics.kpis.totalExpenses)}
                   accent="red"
                   valueAccent

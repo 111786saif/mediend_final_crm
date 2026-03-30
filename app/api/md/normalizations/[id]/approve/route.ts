@@ -3,7 +3,6 @@ import { NotificationType } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { isUserInMDManagedCohort } from '@/lib/hierarchy'
 import { z } from 'zod'
 
 const bodySchema = z
@@ -84,19 +83,17 @@ export async function PATCH(
       return errorResponse('Unsupported normalization type', 400)
     }
 
-    const inCohort = await isUserInMDManagedCohort(normalization.employee.userId)
-
     const isDirectReportFirstStep =
       normalization.type === 'EMPLOYEE_REQUEST' &&
       !normalization.managerApprovedAt &&
       normalization.employee.managerId === mdEmployee.id
 
-    const isCohortFinalStep =
-      inCohort &&
+    const isDirectReportFinalStep =
+      normalization.employee.managerId === mdEmployee.id &&
       (normalization.type === 'MANAGER' ||
         (normalization.type === 'EMPLOYEE_REQUEST' && normalization.managerApprovedAt != null))
 
-    if (!isDirectReportFirstStep && !isCohortFinalStep) {
+    if (!isDirectReportFirstStep && !isDirectReportFinalStep) {
       return errorResponse('You cannot approve this normalization request', 403)
     }
 

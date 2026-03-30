@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
       return errorResponse('Employee record not found', 404)
     }
 
-    const subordinates = await getSubordinates(employee.id, true)
+    const subordinates = await getSubordinates(employee.id, user.role !== 'MD')
 
     return successResponse({
       manager: {

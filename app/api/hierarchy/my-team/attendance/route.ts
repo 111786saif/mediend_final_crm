@@ -227,7 +227,8 @@ export async function GET(request: NextRequest) {
       rootEmployeeId = managerEmployeeIdParam
     }
 
-    const subordinates = await getSubordinates(rootEmployeeId, true)
+    const mdAtOwnRoot = user.role === 'MD' && rootEmployeeId === employee.id
+    const subordinates = await getSubordinates(rootEmployeeId, !mdAtOwnRoot)
     let subordinateIds = subordinates.map((s) => s.id)
     if (managerEmployeeIdParam && managerEmployeeIdParam !== employee.id) {
       subordinateIds = [managerEmployeeIdParam, ...subordinateIds]

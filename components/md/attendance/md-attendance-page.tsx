@@ -411,7 +411,7 @@ export function MDAttendancePage() {
             Team attendance & leave
           </h1>
           <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-            Review attendance heatmaps, leave requests, and normalizations for your team
+            Review attendance heatmaps, leave requests, and normalizations for your direct reports
           </p>
         </div>
         <Badge className="w-fit shrink-0 border-violet-300/80 bg-violet-100 text-violet-900 hover:bg-violet-100 dark:border-violet-700 dark:bg-violet-950/80 dark:text-violet-100">
@@ -539,7 +539,7 @@ export function MDAttendancePage() {
 
         <TabsContent value="normalizations" className="mt-0 space-y-3 outline-none">
           <p className="text-xs text-muted-foreground px-0.5">
-            Final approval for your direct reports and MD-managed cohort — not shown in HR queue.
+            Final approval for your direct reports — not shown in HR queue.
           </p>
           {normLoading ? (
             <Card className="border-violet-200/60 dark:border-violet-900/40">

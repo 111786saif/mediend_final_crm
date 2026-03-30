@@ -33,7 +33,7 @@ export interface BadgeCounts {
   hrPendingTickets: number
   hrPendingMentalHealth: number
   hrPendingNormalizations: number
-  /** Pending attendance normalizations for MD-managed cohort (MD Attendance). */
+  /** Pending attendance normalizations for MD direct reports (MD Attendance). */
   pendingMDTeamNormalizations: number
   hrPendingLeaves: number
   hrPendingIncrements: number
