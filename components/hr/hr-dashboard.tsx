@@ -15,7 +15,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from '@/components/ui/chart'
 import {
   BarChart,
   Bar,
@@ -79,6 +85,13 @@ export interface HRAnalytics {
     employeeCode: string
     departmentName: string
     joinDate: string
+  }>
+  /** Rolling 12 months ending at selected month; interviews from scheduled meets, hires from join dates */
+  recruitmentMonthlyTrend: Array<{
+    year: number
+    month: number
+    interviews: number
+    newHires: number
   }>
   month: number
   year: number
@@ -310,6 +323,14 @@ export function HRDashboard({
     }
   }, [analytics, todayAttendance, monthAttendance, employees])
 
+  const interviewsVsHiresChartData = useMemo(() => {
+    const rows = mergedAnalytics?.recruitmentMonthlyTrend ?? []
+    return rows.map((r) => ({
+      ...r,
+      label: `${MONTHS[r.month - 1].slice(0, 3)} '${String(r.year).slice(-2)}`,
+    }))
+  }, [mergedAnalytics?.recruitmentMonthlyTrend])
+
   const isLoading = analyticsLoading
 
   return (
@@ -424,6 +445,73 @@ export function HRDashboard({
           </div>
 
           <HRDashboardRecruitmentStrip />
+
+          {audience === 'md' && interviewsVsHiresChartData.length > 0 && (
+            <Card className="overflow-hidden">
+              <CardHeader className="space-y-1 pb-2">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-indigo-500" />
+                  <CardTitle className="text-base">Interviews vs new hires</CardTitle>
+                </div>
+                <CardDescription className="text-xs">
+                  Last 12 months ending {MONTHS[month - 1]} {year} — scheduled interviews and employees who joined
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="px-0 sm:px-4 pb-2">
+                <div className="w-full overflow-x-auto overscroll-x-contain touch-pan-x">
+                  <ChartContainer
+                    config={{
+                      interviews: {
+                        label: 'Interviews',
+                        color: 'hsl(239 84% 67%)',
+                      },
+                      newHires: {
+                        label: 'New hires',
+                        color: 'hsl(173 58% 40%)',
+                      },
+                    }}
+                    className="h-[240px] sm:h-[280px] w-full min-w-[520px] sm:min-w-0 aspect-auto mx-auto"
+                  >
+                    <BarChart
+                      data={interviewsVsHiresChartData}
+                      margin={{ top: 8, right: 8, left: 4, bottom: 4 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis
+                        dataKey="label"
+                        tickLine={false}
+                        axisLine={false}
+                        tick={{ fontSize: 10 }}
+                        interval={0}
+                        height={36}
+                      />
+                      <YAxis
+                        allowDecimals={false}
+                        tickLine={false}
+                        axisLine={false}
+                        width={32}
+                        tick={{ fontSize: 10 }}
+                      />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <ChartLegend content={<ChartLegendContent className="flex-wrap gap-x-3 justify-center pt-1" />} />
+                      <Bar
+                        dataKey="interviews"
+                        fill="var(--color-interviews)"
+                        radius={[4, 4, 0, 0]}
+                        maxBarSize={28}
+                      />
+                      <Bar
+                        dataKey="newHires"
+                        fill="var(--color-newHires)"
+                        radius={[4, 4, 0, 0]}
+                        maxBarSize={28}
+                      />
+                    </BarChart>
+                  </ChartContainer>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* ─── Today's Latecomers + Absent Today ─── */}
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2">

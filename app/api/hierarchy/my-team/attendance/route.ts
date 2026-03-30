@@ -43,11 +43,21 @@ function attributedLeaveDaysInRange(
   for (let d = new Date(effStart); d <= effEnd; d.setUTCDate(d.getUTCDate() + 1)) {
     overlap += 1
   }
-  return leave.days * (overlap / calendarInLeave)
+  if (overlap === 0) return 0
+
+  const rawDays = typeof leave.days === 'number' && Number.isFinite(leave.days) ? leave.days : 0
+  // If `days` was never set or is 0, still count overlap so CL/SL/EL match the heatmap (expand uses calendar days).
+  if (rawDays > 0) {
+    return rawDays * (overlap / calendarInLeave)
+  }
+  return overlap
 }
 
 /** When `LeaveTypeMaster.code` is null or non-standard, map names / codes to CL, SL, EL for team UI. */
 const LEAVE_NAME_TO_CODE: Record<string, string> = {
+  cl: 'CL',
+  sl: 'SL',
+  el: 'EL',
   casual: 'CL',
   'casual leave': 'CL',
   sick: 'SL',
@@ -75,23 +85,12 @@ const LEAVE_CODE_ALIASES: Record<string, string> = {
   EARNED_LEAVE: 'EL',
 }
 
-function leaveTypeCodeForAggregation(leave: {
-  isUnpaid: boolean
-  leaveType: { code: string | null; name: string }
-}): string {
-  if (leave.isUnpaid) return 'LOP'
-  const rawCode = leave.leaveType.code?.trim()
-  if (rawCode) {
-    const u = rawCode.toUpperCase()
-    if (u === 'CL' || u === 'SL' || u === 'EL' || u === 'LOP') return u
-    if (LEAVE_CODE_ALIASES[u]) return LEAVE_CODE_ALIASES[u]
-    return u
-  }
-  const name = leave.leaveType.name?.trim() ?? ''
+/** Map display name to CL / SL / EL when possible (used for team leave-type row). */
+function mapLeaveNameToPrimaryCode(name: string): 'CL' | 'SL' | 'EL' | null {
   const nameKey = name.toLowerCase()
-  if (nameKey && LEAVE_NAME_TO_CODE[nameKey]) return LEAVE_NAME_TO_CODE[nameKey]
+  if (nameKey && LEAVE_NAME_TO_CODE[nameKey]) return LEAVE_NAME_TO_CODE[nameKey] as 'CL' | 'SL' | 'EL'
   const firstWord = nameKey.split(/\s+/)[0]
-  if (firstWord && LEAVE_NAME_TO_CODE[firstWord]) return LEAVE_NAME_TO_CODE[firstWord]
+  if (firstWord && LEAVE_NAME_TO_CODE[firstWord]) return LEAVE_NAME_TO_CODE[firstWord] as 'CL' | 'SL' | 'EL'
   const paren = /\(([A-Za-z]{2,4})\)\s*$/.exec(name)
   if (paren) {
     const tok = paren[1].toUpperCase()
@@ -100,6 +99,26 @@ function leaveTypeCodeForAggregation(leave: {
   if (/\bCL\b/i.test(name)) return 'CL'
   if (/\bSL\b/i.test(name)) return 'SL'
   if (/\bEL\b/i.test(name)) return 'EL'
+  return null
+}
+
+function leaveTypeCodeForAggregation(leave: {
+  isUnpaid: boolean
+  leaveType: { code: string | null; name: string }
+}): string {
+  if (leave.isUnpaid) return 'LOP'
+  const rawCode = leave.leaveType.code?.trim()
+  const name = leave.leaveType.name?.trim() ?? ''
+  if (rawCode) {
+    const u = rawCode.toUpperCase()
+    if (u === 'CL' || u === 'SL' || u === 'EL' || u === 'LOP') return u
+    if (LEAVE_CODE_ALIASES[u]) return LEAVE_CODE_ALIASES[u]
+    const fromName = mapLeaveNameToPrimaryCode(name)
+    if (fromName) return fromName
+    return u
+  }
+  const fromNameOnly = mapLeaveNameToPrimaryCode(name)
+  if (fromNameOnly) return fromNameOnly
   return name ? name.slice(0, 8).toUpperCase() : 'OTHER'
 }
 
@@ -129,11 +148,11 @@ function aggregateLeaveDaysByTypeInRange(
 
 function toLeaveByTypeList(m: Map<string, number>): { code: string; days: number }[] {
   const rows = Array.from(m.entries())
-    .map(([code, days]) => ({
-      code,
-      days: Math.round(days * 100) / 100,
-    }))
-    .filter((r) => r.days > 0)
+    .filter(([, days]) => days > 1e-9)
+    .map(([code, days]) => {
+      const rounded = Math.round(days * 100) / 100
+      return { code, days: rounded > 0 ? rounded : 0.01 }
+    })
 
   const rank = (code: string) => {
     const i = LEAVE_TYPE_DISPLAY_ORDER.indexOf(code as (typeof LEAVE_TYPE_DISPLAY_ORDER)[number])

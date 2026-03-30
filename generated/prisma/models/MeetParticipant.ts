@@ -28,18 +28,24 @@ export type MeetParticipantMinAggregateOutputType = {
   id: string | null
   meetId: string | null
   userId: string | null
+  attended: boolean | null
+  remarks: string | null
 }
 
 export type MeetParticipantMaxAggregateOutputType = {
   id: string | null
   meetId: string | null
   userId: string | null
+  attended: boolean | null
+  remarks: string | null
 }
 
 export type MeetParticipantCountAggregateOutputType = {
   id: number
   meetId: number
   userId: number
+  attended: number
+  remarks: number
   _all: number
 }
 
@@ -48,18 +54,24 @@ export type MeetParticipantMinAggregateInputType = {
   id?: true
   meetId?: true
   userId?: true
+  attended?: true
+  remarks?: true
 }
 
 export type MeetParticipantMaxAggregateInputType = {
   id?: true
   meetId?: true
   userId?: true
+  attended?: true
+  remarks?: true
 }
 
 export type MeetParticipantCountAggregateInputType = {
   id?: true
   meetId?: true
   userId?: true
+  attended?: true
+  remarks?: true
   _all?: true
 }
 
@@ -139,6 +151,8 @@ export type MeetParticipantGroupByOutputType = {
   id: string
   meetId: string
   userId: string
+  attended: boolean | null
+  remarks: string | null
   _count: MeetParticipantCountAggregateOutputType | null
   _min: MeetParticipantMinAggregateOutputType | null
   _max: MeetParticipantMaxAggregateOutputType | null
@@ -166,6 +180,8 @@ export type MeetParticipantWhereInput = {
   id?: Prisma.StringFilter<"MeetParticipant"> | string
   meetId?: Prisma.StringFilter<"MeetParticipant"> | string
   userId?: Prisma.StringFilter<"MeetParticipant"> | string
+  attended?: Prisma.BoolNullableFilter<"MeetParticipant"> | boolean | null
+  remarks?: Prisma.StringNullableFilter<"MeetParticipant"> | string | null
   meet?: Prisma.XOR<Prisma.MeetScalarRelationFilter, Prisma.MeetWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -174,6 +190,8 @@ export type MeetParticipantOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   meetId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  attended?: Prisma.SortOrderInput | Prisma.SortOrder
+  remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   meet?: Prisma.MeetOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -186,6 +204,8 @@ export type MeetParticipantWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MeetParticipantWhereInput | Prisma.MeetParticipantWhereInput[]
   meetId?: Prisma.StringFilter<"MeetParticipant"> | string
   userId?: Prisma.StringFilter<"MeetParticipant"> | string
+  attended?: Prisma.BoolNullableFilter<"MeetParticipant"> | boolean | null
+  remarks?: Prisma.StringNullableFilter<"MeetParticipant"> | string | null
   meet?: Prisma.XOR<Prisma.MeetScalarRelationFilter, Prisma.MeetWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "meetId_userId">
@@ -194,6 +214,8 @@ export type MeetParticipantOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   meetId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  attended?: Prisma.SortOrderInput | Prisma.SortOrder
+  remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MeetParticipantCountOrderByAggregateInput
   _max?: Prisma.MeetParticipantMaxOrderByAggregateInput
   _min?: Prisma.MeetParticipantMinOrderByAggregateInput
@@ -206,10 +228,14 @@ export type MeetParticipantScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"MeetParticipant"> | string
   meetId?: Prisma.StringWithAggregatesFilter<"MeetParticipant"> | string
   userId?: Prisma.StringWithAggregatesFilter<"MeetParticipant"> | string
+  attended?: Prisma.BoolNullableWithAggregatesFilter<"MeetParticipant"> | boolean | null
+  remarks?: Prisma.StringNullableWithAggregatesFilter<"MeetParticipant"> | string | null
 }
 
 export type MeetParticipantCreateInput = {
   id?: string
+  attended?: boolean | null
+  remarks?: string | null
   meet: Prisma.MeetCreateNestedOneWithoutParticipantsInput
   user: Prisma.UserCreateNestedOneWithoutMeetParticipationsInput
 }
@@ -218,10 +244,14 @@ export type MeetParticipantUncheckedCreateInput = {
   id?: string
   meetId: string
   userId: string
+  attended?: boolean | null
+  remarks?: string | null
 }
 
 export type MeetParticipantUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meet?: Prisma.MeetUpdateOneRequiredWithoutParticipantsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutMeetParticipationsNestedInput
 }
@@ -230,22 +260,30 @@ export type MeetParticipantUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   meetId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MeetParticipantCreateManyInput = {
   id?: string
   meetId: string
   userId: string
+  attended?: boolean | null
+  remarks?: string | null
 }
 
 export type MeetParticipantUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MeetParticipantUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   meetId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MeetParticipantListRelationFilter = {
@@ -267,18 +305,24 @@ export type MeetParticipantCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   meetId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  attended?: Prisma.SortOrder
+  remarks?: Prisma.SortOrder
 }
 
 export type MeetParticipantMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   meetId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  attended?: Prisma.SortOrder
+  remarks?: Prisma.SortOrder
 }
 
 export type MeetParticipantMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   meetId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  attended?: Prisma.SortOrder
+  remarks?: Prisma.SortOrder
 }
 
 export type MeetParticipantCreateNestedManyWithoutUserInput = {
@@ -365,14 +409,22 @@ export type MeetParticipantUncheckedUpdateManyWithoutMeetNestedInput = {
   deleteMany?: Prisma.MeetParticipantScalarWhereInput | Prisma.MeetParticipantScalarWhereInput[]
 }
 
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
 export type MeetParticipantCreateWithoutUserInput = {
   id?: string
+  attended?: boolean | null
+  remarks?: string | null
   meet: Prisma.MeetCreateNestedOneWithoutParticipantsInput
 }
 
 export type MeetParticipantUncheckedCreateWithoutUserInput = {
   id?: string
   meetId: string
+  attended?: boolean | null
+  remarks?: string | null
 }
 
 export type MeetParticipantCreateOrConnectWithoutUserInput = {
@@ -408,16 +460,22 @@ export type MeetParticipantScalarWhereInput = {
   id?: Prisma.StringFilter<"MeetParticipant"> | string
   meetId?: Prisma.StringFilter<"MeetParticipant"> | string
   userId?: Prisma.StringFilter<"MeetParticipant"> | string
+  attended?: Prisma.BoolNullableFilter<"MeetParticipant"> | boolean | null
+  remarks?: Prisma.StringNullableFilter<"MeetParticipant"> | string | null
 }
 
 export type MeetParticipantCreateWithoutMeetInput = {
   id?: string
+  attended?: boolean | null
+  remarks?: string | null
   user: Prisma.UserCreateNestedOneWithoutMeetParticipationsInput
 }
 
 export type MeetParticipantUncheckedCreateWithoutMeetInput = {
   id?: string
   userId: string
+  attended?: boolean | null
+  remarks?: string | null
 }
 
 export type MeetParticipantCreateOrConnectWithoutMeetInput = {
@@ -449,41 +507,57 @@ export type MeetParticipantUpdateManyWithWhereWithoutMeetInput = {
 export type MeetParticipantCreateManyUserInput = {
   id?: string
   meetId: string
+  attended?: boolean | null
+  remarks?: string | null
 }
 
 export type MeetParticipantUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   meet?: Prisma.MeetUpdateOneRequiredWithoutParticipantsNestedInput
 }
 
 export type MeetParticipantUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   meetId?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MeetParticipantUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   meetId?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MeetParticipantCreateManyMeetInput = {
   id?: string
   userId: string
+  attended?: boolean | null
+  remarks?: string | null
 }
 
 export type MeetParticipantUpdateWithoutMeetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutMeetParticipationsNestedInput
 }
 
 export type MeetParticipantUncheckedUpdateWithoutMeetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MeetParticipantUncheckedUpdateManyWithoutMeetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  attended?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -492,6 +566,8 @@ export type MeetParticipantSelect<ExtArgs extends runtime.Types.Extensions.Inter
   id?: boolean
   meetId?: boolean
   userId?: boolean
+  attended?: boolean
+  remarks?: boolean
   meet?: boolean | Prisma.MeetDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["meetParticipant"]>
@@ -500,6 +576,8 @@ export type MeetParticipantSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   id?: boolean
   meetId?: boolean
   userId?: boolean
+  attended?: boolean
+  remarks?: boolean
   meet?: boolean | Prisma.MeetDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["meetParticipant"]>
@@ -508,6 +586,8 @@ export type MeetParticipantSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   id?: boolean
   meetId?: boolean
   userId?: boolean
+  attended?: boolean
+  remarks?: boolean
   meet?: boolean | Prisma.MeetDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["meetParticipant"]>
@@ -516,9 +596,11 @@ export type MeetParticipantSelectScalar = {
   id?: boolean
   meetId?: boolean
   userId?: boolean
+  attended?: boolean
+  remarks?: boolean
 }
 
-export type MeetParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "meetId" | "userId", ExtArgs["result"]["meetParticipant"]>
+export type MeetParticipantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "meetId" | "userId" | "attended" | "remarks", ExtArgs["result"]["meetParticipant"]>
 export type MeetParticipantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   meet?: boolean | Prisma.MeetDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -542,6 +624,11 @@ export type $MeetParticipantPayload<ExtArgs extends runtime.Types.Extensions.Int
     id: string
     meetId: string
     userId: string
+    /**
+     * null = not set yet; true = joined; false = did not join
+     */
+    attended: boolean | null
+    remarks: string | null
   }, ExtArgs["result"]["meetParticipant"]>
   composites: {}
 }
@@ -970,6 +1057,8 @@ export interface MeetParticipantFieldRefs {
   readonly id: Prisma.FieldRef<"MeetParticipant", 'String'>
   readonly meetId: Prisma.FieldRef<"MeetParticipant", 'String'>
   readonly userId: Prisma.FieldRef<"MeetParticipant", 'String'>
+  readonly attended: Prisma.FieldRef<"MeetParticipant", 'Boolean'>
+  readonly remarks: Prisma.FieldRef<"MeetParticipant", 'String'>
 }
     
 

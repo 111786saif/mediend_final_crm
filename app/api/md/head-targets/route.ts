@@ -47,18 +47,17 @@ async function computeAchievement(
       return count
     }
     case 'HEAD_COUNT': {
+      const joinedInPeriod = { joinDate: { gte: start, lte: end } }
       if (headCountDepartmentIds && headCountDepartmentIds.length > 0) {
         return prisma.employee.count({
           where: {
             departmentId: { in: headCountDepartmentIds },
-            createdAt: { gte: start, lte: end },
+            ...joinedInPeriod,
           },
         })
       }
       return prisma.employee.count({
-        where: {
-          createdAt: { gte: start, lte: end },
-        },
+        where: joinedInPeriod,
       })
     }
     case 'LEADS_GENERATED': {

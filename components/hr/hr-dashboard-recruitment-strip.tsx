@@ -67,10 +67,15 @@ export function HRDashboardRecruitmentStrip() {
     enabled: !!user && user.role === 'HR_HEAD',
   })
 
-  if (!canRecruit) return null
+  const showInterviews = !!canRecruit
+  const showHiringTarget = user?.role === 'HR_HEAD'
+  const showMdDeptTargets = user?.role === 'MD' || user?.role === 'ADMIN'
+
+  if (!showInterviews && !showHiringTarget && !showMdDeptTargets) return null
 
   return (
     <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+      {showInterviews ? (
       <Card className="border-2 border-violet-200/60 dark:border-violet-900/50 bg-gradient-to-br from-violet-50/80 to-fuchsia-50/40 dark:from-violet-950/20 dark:to-fuchsia-950/10 overflow-hidden">
         <CardHeader className="pb-2 px-4 pt-4 space-y-1">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -159,8 +164,9 @@ export function HRDashboardRecruitmentStrip() {
           </Button>
         </CardContent>
       </Card>
+      ) : null}
 
-      {user?.role === 'HR_HEAD' && (
+      {showHiringTarget ? (
         <Card className="border-2 border-amber-200/70 dark:border-amber-900/50 bg-gradient-to-br from-amber-50/90 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10">
           <CardHeader className="pb-2 px-4 pt-4">
             <CardTitle className="text-base flex items-center gap-2">
@@ -194,9 +200,9 @@ export function HRDashboardRecruitmentStrip() {
             )}
           </CardContent>
         </Card>
-      )}
+      ) : null}
 
-      {(user?.role === 'MD' || user?.role === 'ADMIN') && (
+      {showMdDeptTargets ? (
         <Card className="border-2 border-amber-200/70 dark:border-amber-900/50 bg-gradient-to-br from-amber-50/90 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10">
           <CardHeader className="pb-2 px-4 pt-4">
             <CardTitle className="text-base flex items-center gap-2">
@@ -213,7 +219,7 @@ export function HRDashboardRecruitmentStrip() {
             </Button>
           </CardContent>
         </Card>
-      )}
+      ) : null}
     </div>
   )
 }

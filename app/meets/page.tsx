@@ -7,6 +7,8 @@ import { format, isThisWeek, isToday, isTomorrow } from 'date-fns'
 import { apiGet } from '@/lib/api-client'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { CreateMeetDrawer } from '@/components/meets/create-meet-drawer'
+import { MeetCardActions } from '@/components/meets/meet-card-actions'
+import { useAuth } from '@/hooks/use-auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -20,6 +22,12 @@ import {
 import { cn } from '@/lib/utils'
 import { ArrowLeft, FileText, MapPin, Video, CalendarDays, Plus } from 'lucide-react'
 
+type MeetParticipantRow = {
+  userId: string
+  attended: boolean | null
+  remarks: string | null
+}
+
 type MeetRow = {
   id: string
   title: string
@@ -30,7 +38,8 @@ type MeetRow = {
   module: 'INTERVIEW' | 'MD_APPOINTMENT' | 'GENERAL'
   candidateName: string | null
   resumeUrl: string | null
-  createdBy: { name: string }
+  createdBy: { id: string; name: string }
+  participants?: MeetParticipantRow[]
   mdAppointment?: {
     employee?: { user?: { name: string } | null } | null
   } | null
@@ -69,7 +78,13 @@ function moduleBadgeClass(m: MeetRow['module']) {
 
 type CanCreateResponse = { canCreate: boolean }
 
+function myParticipationRow(meet: MeetRow, userId: string | undefined) {
+  if (!userId) return null
+  return meet.participants?.find((p) => p.userId === userId) ?? null
+}
+
 export default function MeetsPage() {
+  const { user } = useAuth()
   const [moduleFilter, setModuleFilter] = useState<string>('all')
   const [createOpen, setCreateOpen] = useState(false)
 
@@ -172,7 +187,13 @@ export default function MeetsPage() {
                       {section.label}
                     </h2>
                     <ul className="space-y-2">
-                      {section.items.map((m) => (
+                      {section.items.map((m) => {
+                        const mine = myParticipationRow(m, user?.id)
+                        const showAttendanceHint =
+                          mine?.attended === true ||
+                          mine?.attended === false ||
+                          (mine?.remarks && mine.remarks.trim().length > 0)
+                        return (
                         <li key={m.id}>
                           <Card
                             className={cn(
@@ -182,8 +203,9 @@ export default function MeetsPage() {
                                 : 'border-border'
                             )}
                           >
-                            <CardContent className="p-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                              <div className="min-w-0 flex-1">
+                            <CardContent className="p-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                              <div className="min-w-0 flex-1 flex gap-1 sm:gap-2">
+                                <div className="min-w-0 flex-1">
                                 <div className="flex flex-wrap items-center gap-1.5 mb-1">
                                   <Badge className={cn('text-[10px]', moduleBadgeClass(m.module))}>
                                     {moduleLabel(m.module)}
@@ -208,21 +230,52 @@ export default function MeetsPage() {
                                     )}
                                   </Badge>
                                 </div>
-                                <p className="font-semibold text-sm leading-tight">
-                                  {m.candidateName ? `${m.title}` : m.title}
-                                </p>
+                                <p className="font-semibold text-sm leading-tight">{m.title}</p>
                                 <p className="text-xs text-muted-foreground mt-0.5">
                                   {format(new Date(m.scheduledAt), 'EEE, MMM d · h:mm a')}
                                   <span className="mx-1">·</span>
                                   {meetRequesterLabel(m)}
                                 </p>
+                                {showAttendanceHint && (
+                                  <p className="text-xs mt-1.5 text-muted-foreground">
+                                    {mine?.attended === true && (
+                                      <span className="text-emerald-700 dark:text-emerald-400 font-medium">
+                                        You marked: joined
+                                      </span>
+                                    )}
+                                    {mine?.attended === false && (
+                                      <span className="text-rose-700 dark:text-rose-400 font-medium">
+                                        You marked: did not join
+                                      </span>
+                                    )}
+                                    {mine?.attended == null &&
+                                      mine?.remarks &&
+                                      mine.remarks.trim().length > 0 && (
+                                        <span className="font-medium">Remarks saved</span>
+                                      )}
+                                  </p>
+                                )}
                                 {m.location && (
                                   <p className="text-xs text-amber-800 dark:text-amber-200 mt-1">
                                     {m.location}
                                   </p>
                                 )}
+                                </div>
+                                {user?.id && (
+                                  <MeetCardActions
+                                    meet={{
+                                      id: m.id,
+                                      title: m.title,
+                                      module: m.module,
+                                      meetLink: m.meetLink,
+                                      resumeUrl: m.resumeUrl,
+                                    }}
+                                    myAttended={mine?.attended ?? null}
+                                    myRemarks={mine?.remarks ?? null}
+                                  />
+                                )}
                               </div>
-                              <div className="flex flex-col gap-1.5 shrink-0 w-full sm:w-auto">
+                              <div className="flex flex-col gap-1.5 shrink-0 w-full sm:w-auto sm:items-end">
                                 {m.meetLink && (
                                   <Button size="sm" className="rounded-xl w-full sm:w-auto" asChild>
                                     <a href={m.meetLink} target="_blank" rel="noreferrer">
@@ -247,7 +300,8 @@ export default function MeetsPage() {
                             </CardContent>
                           </Card>
                         </li>
-                      ))}
+                        )
+                      })}
                     </ul>
                   </section>
                 )

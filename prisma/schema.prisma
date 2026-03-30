@@ -1278,11 +1278,14 @@ model Meet {
 }
 
 model MeetParticipant {
-  id     String @id @default(cuid())
-  meetId String
-  meet   Meet   @relation(fields: [meetId], references: [id], onDelete: Cascade)
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String  @id @default(cuid())
+  meetId    String
+  meet      Meet    @relation(fields: [meetId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// null = not set yet; true = joined; false = did not join
+  attended  Boolean?
+  remarks   String?
 
   @@unique([meetId, userId])
   @@index([userId])

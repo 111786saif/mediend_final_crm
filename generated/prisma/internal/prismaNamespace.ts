@@ -8045,7 +8045,9 @@ export type MeetScalarFieldEnum = (typeof MeetScalarFieldEnum)[keyof typeof Meet
 export const MeetParticipantScalarFieldEnum = {
   id: 'id',
   meetId: 'meetId',
-  userId: 'userId'
+  userId: 'userId',
+  attended: 'attended',
+  remarks: 'remarks'
 } as const
 
 export type MeetParticipantScalarFieldEnum = (typeof MeetParticipantScalarFieldEnum)[keyof typeof MeetParticipantScalarFieldEnum]

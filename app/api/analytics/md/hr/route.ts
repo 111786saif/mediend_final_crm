@@ -45,6 +45,10 @@ export async function GET(request: NextRequest) {
     const monthStart = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0))
     const monthEnd = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999))
 
+    // Rolling 12 months ending at selected month (inclusive), for interviews vs hires trend
+    const trendStart = new Date(Date.UTC(year, month - 1 - 11, 1, 0, 0, 0, 0))
+    const trendEnd = monthEnd
+
     const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0))
     const todayEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999))
 
@@ -325,6 +329,54 @@ export async function GET(request: NextRequest) {
         ? allResponseTimes.reduce((a, b) => a + b, 0) / allResponseTimes.length
         : null
 
+    const recruitmentMonthlyTrend: Array<{
+      year: number
+      month: number
+      interviews: number
+      newHires: number
+    }> = []
+    for (let i = 0; i < 12; i++) {
+      const d = new Date(Date.UTC(year, month - 1 - (11 - i), 1))
+      recruitmentMonthlyTrend.push({
+        year: d.getUTCFullYear(),
+        month: d.getUTCMonth() + 1,
+        interviews: 0,
+        newHires: 0,
+      })
+    }
+    const trendBucketKey = (y: number, m: number) => `${y}-${m}`
+    const trendIndexByKey = new Map(
+      recruitmentMonthlyTrend.map((b, idx) => [trendBucketKey(b.year, b.month), idx])
+    )
+
+    const [interviewRows, hireRows] = await Promise.all([
+      prisma.meet.findMany({
+        where: {
+          module: 'INTERVIEW',
+          scheduledAt: { gte: trendStart, lte: trendEnd },
+        },
+        select: { scheduledAt: true },
+      }),
+      prisma.employee.findMany({
+        where: {
+          joinDate: { gte: trendStart, lte: trendEnd },
+        },
+        select: { joinDate: true },
+      }),
+    ])
+
+    for (const row of interviewRows) {
+      const sa = row.scheduledAt
+      const idx = trendIndexByKey.get(trendBucketKey(sa.getUTCFullYear(), sa.getUTCMonth() + 1))
+      if (idx !== undefined) recruitmentMonthlyTrend[idx].interviews += 1
+    }
+    for (const row of hireRows) {
+      const jd = row.joinDate
+      if (!jd) continue
+      const idx = trendIndexByKey.get(trendBucketKey(jd.getUTCFullYear(), jd.getUTCMonth() + 1))
+      if (idx !== undefined) recruitmentMonthlyTrend[idx].newHires += 1
+    }
+
     const ticketAnalytics = [
       {
         type: 'Support Tickets',
@@ -372,6 +424,7 @@ export async function GET(request: NextRequest) {
       monthlyLateArrivals,
       absentToday,
       newJoiners,
+      recruitmentMonthlyTrend,
       month,
       year,
     })

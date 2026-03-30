@@ -45,16 +45,17 @@ async function computeAchievement(
       })
     }
     case 'HEAD_COUNT': {
+      const joinedInPeriod = { joinDate: { gte: start, lte: end } }
       if (headCountDepartmentIds && headCountDepartmentIds.length > 0) {
         return prisma.employee.count({
           where: {
             departmentId: { in: headCountDepartmentIds },
-            createdAt: { gte: start, lte: end },
+            ...joinedInPeriod,
           },
         })
       }
       return prisma.employee.count({
-        where: { createdAt: { gte: start, lte: end } },
+        where: joinedInPeriod,
       })
     }
     case 'LEADS_GENERATED': {
@@ -231,7 +232,7 @@ export async function GET(request: NextRequest) {
           _count: { id: true },
           where: {
             departmentId: { not: null },
-            createdAt: { gte: months[0].start, lte: months[0].end },
+            joinDate: { gte: months[0].start, lte: months[0].end },
           },
         }),
       ])
