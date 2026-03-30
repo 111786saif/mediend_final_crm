@@ -71,6 +71,8 @@ function getBadgeCount(
     pendingMDApprovals?: number
     pendingMDTeamNormalizations?: number
     pendingLeaveBalanceEditRequests?: number
+    /** Same pending normalization count rolled into Engagement’s aggregate; show on Attendance & Leaves instead. */
+    hrPendingNormalizations?: number
   } | undefined,
   isMdOrAdmin: boolean
 ): number {
@@ -85,8 +87,15 @@ function getBadgeCount(
   if (itemTitle === 'MD Appointments') return counts.pendingAppointments ?? 0
   if (itemTitle === 'Home') return counts.pendingNotices ?? 0
   if (itemTitle === 'Chat') return counts.unreadChatMessages ?? 0
-  if (itemTitle === 'Attendance & Leaves') return counts.pendingLeaveApprovals ?? 0
-  if (itemTitle === 'Engagement') return counts.pendingHRActions ?? 0
+  if (itemTitle === 'Attendance & Leaves') {
+    const norms = counts.hrPendingNormalizations ?? 0
+    return (counts.pendingLeaveApprovals ?? 0) + norms
+  }
+  if (itemTitle === 'Engagement') {
+    const hr = counts.pendingHRActions ?? 0
+    const norms = counts.hrPendingNormalizations ?? 0
+    return Math.max(0, hr - norms)
+  }
   if (itemTitle === 'My Support & Services') return counts.pendingTickets ?? 0
   if (itemTitle === 'Fin Team Approvals') return counts.pendingFinanceTeamApprovals ?? 0
   if (itemTitle === 'MD Team Approvals') return counts.pendingMDApprovals ?? 0

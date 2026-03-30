@@ -22,8 +22,13 @@ import { Calendar } from '@/components/ui/calendar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts'
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from '@/components/ui/drawer'
 import {
   CalendarIcon,
   Download,
@@ -204,7 +209,17 @@ interface ReportResponse<T> {
 type TabId = 'overview' | 'balances' | 'expenses' | 'revenue' | 'profit-loss' | 'parties' | 'daily'
 type PeriodPreset = 'all' | '7d' | '30d' | 'thisMonth' | 'lastMonth' | 'thisYear' | 'custom'
 
-const CHART_NET_FLOW = 'hsl(221 83% 53%)'
+interface LedgerEntryDetailRow {
+  id: string
+  serialNumber: string
+  transactionDate: Date | string
+  transactionType: string
+  partyName: string
+  headName: string
+  paymentModeName: string
+  amount: number
+  description: string
+}
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat('en-IN', {
@@ -293,6 +308,12 @@ export function MDFinancePage() {
   const [filterOpen, setFilterOpen] = useState(false)
   const [startCalOpen, setStartCalOpen] = useState(false)
   const [endCalOpen, setEndCalOpen] = useState(false)
+
+  const [detailDrawerOpen, setDetailDrawerOpen] = useState(false)
+  const [detailDrawerType, setDetailDrawerType] = useState<'day' | 'head' | null>(null)
+  const [detailDrawerTitle, setDetailDrawerTitle] = useState('')
+  const [detailDayDate, setDetailDayDate] = useState<string | null>(null)
+  const [detailHeadId, setDetailHeadId] = useState<string | null>(null)
 
   const { startDate, endDate } = useMemo(
     () => getRangeFromPreset(periodPreset, customStart, customEnd),
@@ -385,6 +406,63 @@ export function MDFinancePage() {
       ),
     enabled: activeTab === 'daily',
   })
+
+  const detailEntriesQueryKey = useMemo(
+    () =>
+      [
+        'md-finance',
+        'entries',
+        detailDrawerType,
+        detailDayDate,
+        detailHeadId,
+        reportQuerySuffix,
+      ] as const,
+    [detailDrawerType, detailDayDate, detailHeadId, reportQuerySuffix]
+  )
+
+  const { data: detailEntriesPayload, isLoading: loadingDetailEntries } = useQuery<{
+    type: string
+    data: LedgerEntryDetailRow[]
+  }>({
+    queryKey: detailEntriesQueryKey,
+    queryFn: async () => {
+      const p = new URLSearchParams()
+      if (detailDrawerType === 'day') {
+        p.set('type', 'day')
+        if (detailDayDate) p.set('date', detailDayDate)
+      } else {
+        p.set('type', 'head')
+        if (detailHeadId) p.set('headId', detailHeadId)
+      }
+      if (startDate) p.set('startDate', startDate.toISOString())
+      if (endDate) p.set('endDate', endDate.toISOString())
+      return apiGet<{ type: string; data: LedgerEntryDetailRow[] }>(
+        `/api/finance/reports/entries?${p.toString()}`
+      )
+    },
+    enabled:
+      detailDrawerOpen &&
+      !!detailDrawerType &&
+      (detailDrawerType === 'day' ? !!detailDayDate : !!detailHeadId),
+  })
+
+  const detailEntries = detailEntriesPayload?.data ?? []
+
+  const openDayEntriesDrawer = (dateKey: string, label: string) => {
+    setDetailDrawerType('day')
+    setDetailDayDate(dateKey)
+    setDetailHeadId(null)
+    setDetailDrawerTitle(label)
+    setDetailDrawerOpen(true)
+  }
+
+  const openHeadEntriesDrawer = (headId: string, headName: string) => {
+    setDetailDrawerType('head')
+    setDetailHeadId(headId)
+    setDetailDayDate(null)
+    setDetailDrawerTitle(headName)
+    setDetailDrawerOpen(true)
+  }
 
   const expenseTotalForBars = expenseReportData?.totals.totalExpenses ?? 0
 
@@ -550,9 +628,9 @@ export function MDFinancePage() {
   ]
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-2 py-2 sm:gap-6 sm:px-6 sm:py-6">
       {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
         <div>
           <h1 className="text-lg font-semibold tracking-tight sm:text-xl md:text-2xl">Finance</h1>
           <p className="text-muted-foreground text-sm">Overview and reports</p>
@@ -662,7 +740,7 @@ export function MDFinancePage() {
       </Sheet>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabId)} className="w-full">
-        <div className="-mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
+        <div className="bg-background sticky top-0 z-10 -mx-2 overflow-x-auto px-2 pb-1 sm:static sm:z-auto sm:mx-0 sm:px-0">
           <TabsList className="inline-flex h-auto w-max min-w-full flex-nowrap justify-start gap-1 bg-muted/50 p-1 sm:flex-wrap sm:justify-start">
             <TabsTrigger value="overview" className="shrink-0 px-3 text-xs sm:text-sm">
               Overview
@@ -689,16 +767,16 @@ export function MDFinancePage() {
         </div>
 
         {/* Overview */}
-        <TabsContent value="overview" className="mt-4 space-y-4">
+        <TabsContent value="overview" className="mt-2 space-y-2 sm:mt-4 sm:space-y-4">
           {loadingAnalytics ? (
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Skeleton key={i} className="h-24 rounded-lg" />
               ))}
             </div>
           ) : analytics ? (
             <>
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
                 <StatCard
                   label="Revenue"
                   value={formatCurrencyCompact(analytics.kpis.totalRevenue)}
@@ -719,7 +797,7 @@ export function MDFinancePage() {
                   className="col-span-2 lg:col-span-1"
                 />
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
                 <StatCard
                   label="Pending approvals"
                   value={analytics.kpis.pendingApprovalsCount}
@@ -727,7 +805,7 @@ export function MDFinancePage() {
                   valueAccent
                   className="border-l-amber-500"
                 />
-                <div className="text-muted-foreground flex items-center gap-2 rounded-lg border bg-card px-3 py-3 text-sm">
+                <div className="text-muted-foreground flex items-center gap-2 rounded-lg border bg-card px-2.5 py-2 text-sm sm:px-3 sm:py-3">
                   <AlertCircle className="text-amber-500 size-5 shrink-0" />
                   <span>Approved ₹{formatCurrencyCompact(analytics.kpis.approvedAmount)} · Rejected ₹{formatCurrencyCompact(analytics.kpis.rejectedAmount)}</span>
                 </div>
@@ -735,36 +813,15 @@ export function MDFinancePage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Net flow trend</CardTitle>
-                  <CardDescription>Daily in selected period</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <ChartContainer
-                    config={{ netFlow: { label: 'Net', color: CHART_NET_FLOW } }}
-                    className="aspect-[16/9] w-full min-h-[180px] max-h-[260px] sm:max-h-[280px]"
-                  >
-                    <AreaChart data={analytics.transactionTrends} margin={{ left: 0, right: 8, top: 8, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                      <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} fontSize={11} />
-                      <YAxis tickLine={false} axisLine={false} width={48} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} fontSize={10} />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Area type="monotone" dataKey="netFlow" stroke="var(--color-netFlow)" fill="var(--color-netFlow)" fillOpacity={0.25} />
-                    </AreaChart>
-                  </ChartContainer>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-2">
                   <CardTitle className="text-base">Top transactions</CardTitle>
                   <CardDescription>Largest amounts in period</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="md:hidden space-y-2">
+                  <div className="md:hidden divide-y divide-border rounded-md border">
                     {analytics.topTransactions.slice(0, 5).map((t) => (
                       <div
                         key={t.id}
-                        className="flex flex-col gap-1 rounded-lg border bg-card p-3 active:scale-[0.99]"
+                        className="flex flex-col gap-1 bg-card px-2 py-2.5 active:scale-[0.99] sm:px-3 sm:py-3"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <span className="font-mono text-xs text-muted-foreground">{t.serialNumber}</span>
@@ -818,9 +875,9 @@ export function MDFinancePage() {
                     <CardTitle className="text-base">Pending approvals</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
-                    <div className="md:hidden space-y-2">
+                    <div className="md:hidden divide-y divide-border rounded-md border">
                       {analytics.pendingApprovals.slice(0, 8).map((t) => (
-                        <div key={t.id} className="rounded-lg border p-3">
+                        <div key={t.id} className="px-2 py-2.5 sm:px-3 sm:py-3">
                           <div className="flex justify-between gap-2">
                             <span className="font-mono text-xs">{t.serialNumber}</span>
                             <span className="font-semibold">{formatCurrency(t.amount)}</span>
@@ -866,12 +923,12 @@ export function MDFinancePage() {
         </TabsContent>
 
         {/* Balances */}
-        <TabsContent value="balances" className="mt-4 space-y-4">
+        <TabsContent value="balances" className="mt-2 space-y-2 sm:mt-4 sm:space-y-4">
           {loadingPaymentMode ? (
             <Skeleton className="h-40 w-full" />
           ) : paymentModeData ? (
             <>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
                 <StatCard
                   label="Total credits"
                   value={formatCurrencyCompact(paymentModeData.totals.totalCredits || 0)}
@@ -891,22 +948,20 @@ export function MDFinancePage() {
                   valueAccent
                 />
               </div>
-              <div className="md:hidden space-y-2">
+              <div className="md:hidden divide-y divide-border rounded-md border">
                 {paymentModeData.data.map((m) => (
-                  <Card key={m.id} className="active:scale-[0.99]">
-                    <CardContent className="space-y-2 p-4">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="font-medium">{m.name}</p>
-                        <Wallet className="text-muted-foreground size-4" />
-                      </div>
-                      <p className="text-lg font-semibold">{formatCurrency(m.currentBalance)}</p>
-                      <div className="text-muted-foreground grid grid-cols-2 gap-2 text-xs">
-                        <span>Credits {formatCurrencyCompact(m.totalCredits)}</span>
-                        <span>Debits {formatCurrencyCompact(m.totalDebits)}</span>
-                        <span className="col-span-2">Net {formatCurrencyCompact(m.netChange)}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div key={m.id} className="space-y-2 px-2 py-3 active:scale-[0.99] sm:px-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-medium">{m.name}</p>
+                      <Wallet className="text-muted-foreground size-4" />
+                    </div>
+                    <p className="text-lg font-semibold">{formatCurrency(m.currentBalance)}</p>
+                    <div className="text-muted-foreground grid grid-cols-2 gap-2 text-xs">
+                      <span>Credits {formatCurrencyCompact(m.totalCredits)}</span>
+                      <span>Debits {formatCurrencyCompact(m.totalDebits)}</span>
+                      <span className="col-span-2">Net {formatCurrencyCompact(m.netChange)}</span>
+                    </div>
+                  </div>
                 ))}
               </div>
               <Card className="hidden md:block">
@@ -945,12 +1000,12 @@ export function MDFinancePage() {
         </TabsContent>
 
         {/* Expenses */}
-        <TabsContent value="expenses" className="mt-4 space-y-4">
+        <TabsContent value="expenses" className="mt-2 space-y-2 sm:mt-4 sm:space-y-4">
           {loadingExpenseReport ? (
             <Skeleton className="h-40 w-full" />
           ) : expenseReportData ? (
             <>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 <StatCard
                   label="Total expenses"
                   value={formatCurrencyCompact(expenseReportData.totals.totalExpenses || 0)}
@@ -963,30 +1018,33 @@ export function MDFinancePage() {
                   accent="neutral"
                 />
               </div>
-              <div className="md:hidden space-y-2">
+              <div className="md:hidden divide-y divide-border rounded-md border">
                 {expenseReportData.data.map((h) => {
                   const pct =
                     expenseTotalForBars > 0
                       ? Math.round((h.totalExpenses / expenseTotalForBars) * 100)
                       : 0
                   return (
-                    <Card key={h.headId}>
-                      <CardContent className="space-y-2 p-4">
-                        <div className="flex items-start justify-between gap-2">
-                          <p className="font-medium leading-tight">{h.headName}</p>
-                          {h.department ? (
-                            <Badge variant="outline" className="shrink-0 text-xs">
-                              {h.department}
-                            </Badge>
-                          ) : null}
-                        </div>
-                        <p className="text-lg font-semibold text-red-600 dark:text-red-400">
-                          {formatCurrency(h.totalExpenses)}
-                        </p>
-                        <Progress value={pct} className="h-2" />
-                        <p className="text-muted-foreground text-xs">{pct}% of period · {h.entriesCount} entries</p>
-                      </CardContent>
-                    </Card>
+                    <button
+                      key={h.headId}
+                      type="button"
+                      className="w-full cursor-pointer space-y-2 px-2 py-3 text-left active:bg-muted/50 sm:px-3"
+                      onClick={() => openHeadEntriesDrawer(h.headId, h.headName)}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-medium leading-tight">{h.headName}</p>
+                        {h.department ? (
+                          <Badge variant="outline" className="shrink-0 text-xs">
+                            {h.department}
+                          </Badge>
+                        ) : null}
+                      </div>
+                      <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+                        {formatCurrency(h.totalExpenses)}
+                      </p>
+                      <Progress value={pct} className="h-2" />
+                      <p className="text-muted-foreground text-xs">{pct}% of period · {h.entriesCount} entries</p>
+                    </button>
                   )
                 })}
               </div>
@@ -1024,12 +1082,12 @@ export function MDFinancePage() {
         </TabsContent>
 
         {/* Revenue */}
-        <TabsContent value="revenue" className="mt-4 space-y-4">
+        <TabsContent value="revenue" className="mt-2 space-y-2 sm:mt-4 sm:space-y-4">
           {loadingRevenue ? (
             <Skeleton className="h-40 w-full" />
           ) : revenueData ? (
             <>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 <StatCard
                   label="Total revenue"
                   value={formatCurrencyCompact(revenueData.totals.totalRevenue || 0)}
@@ -1038,19 +1096,20 @@ export function MDFinancePage() {
                 />
                 <StatCard label="Entries" value={revenueData.totals.entriesCount ?? 0} accent="neutral" />
               </div>
-              <div className="md:hidden space-y-2">
+              <div className="md:hidden divide-y divide-border rounded-md border">
                 {revenueData.data.map((p) => (
-                  <Card key={p.projectId}>
-                    <CardContent className="flex items-center justify-between gap-2 p-4">
-                      <div>
-                        <p className="font-medium">{p.projectName}</p>
-                        <p className="text-muted-foreground text-xs">{p.entriesCount} entries</p>
-                      </div>
-                      <p className="text-lg font-semibold text-green-600 dark:text-green-400">
-                        {formatCurrencyCompact(p.totalRevenue)}
-                      </p>
-                    </CardContent>
-                  </Card>
+                  <div
+                    key={p.projectId}
+                    className="flex items-center justify-between gap-2 px-2 py-3 sm:px-3"
+                  >
+                    <div>
+                      <p className="font-medium">{p.projectName}</p>
+                      <p className="text-muted-foreground text-xs">{p.entriesCount} entries</p>
+                    </div>
+                    <p className="text-lg font-semibold text-green-600 dark:text-green-400">
+                      {formatCurrencyCompact(p.totalRevenue)}
+                    </p>
+                  </div>
                 ))}
               </div>
               <Card className="hidden md:block">
@@ -1085,12 +1144,12 @@ export function MDFinancePage() {
         </TabsContent>
 
         {/* P&L */}
-        <TabsContent value="profit-loss" className="mt-4 space-y-4">
+        <TabsContent value="profit-loss" className="mt-2 space-y-2 sm:mt-4 sm:space-y-4">
           {loadingProfitLoss ? (
             <Skeleton className="h-40 w-full" />
           ) : profitLossData ? (
             <>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
                 <StatCard
                   label="Revenue"
                   value={formatCurrencyCompact(profitLossData.totals.totalRevenue || 0)}
@@ -1115,9 +1174,9 @@ export function MDFinancePage() {
                   <CardTitle className="text-base">Revenue by project</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="md:hidden space-y-2">
+                  <div className="md:hidden divide-y divide-border rounded-md border">
                     {(profitLossData.revenueByProject ?? []).map((r) => (
-                      <div key={r.projectId} className="flex justify-between gap-2 rounded-lg border p-3">
+                      <div key={r.projectId} className="flex justify-between gap-2 px-2 py-3 sm:px-3">
                         <span className="font-medium">{r.projectName}</span>
                         <span className="font-semibold text-green-600 dark:text-green-400">
                           {formatCurrencyCompact(r.totalRevenue)}
@@ -1125,7 +1184,7 @@ export function MDFinancePage() {
                       </div>
                     ))}
                     {(profitLossData.revenueByProject ?? []).length === 0 && (
-                      <p className="text-muted-foreground text-sm">No revenue in period.</p>
+                      <p className="text-muted-foreground px-2 py-3 text-sm sm:px-3">No revenue in period.</p>
                     )}
                   </div>
                   <div className="hidden md:block overflow-x-auto rounded-md border">
@@ -1155,9 +1214,9 @@ export function MDFinancePage() {
                   <CardTitle className="text-base">Expenses by head</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="md:hidden space-y-2">
+                  <div className="md:hidden divide-y divide-border rounded-md border">
                     {(profitLossData.expensesByHead ?? []).map((e) => (
-                      <div key={e.headId} className="rounded-lg border p-3">
+                      <div key={e.headId} className="px-2 py-3 sm:px-3">
                         <div className="flex justify-between gap-2">
                           <span className="font-medium">{e.headName}</span>
                           <span className="font-semibold text-amber-700 dark:text-amber-400">
@@ -1168,7 +1227,7 @@ export function MDFinancePage() {
                       </div>
                     ))}
                     {(profitLossData.expensesByHead ?? []).length === 0 && (
-                      <p className="text-muted-foreground text-sm">No expenses in period.</p>
+                      <p className="text-muted-foreground px-2 py-3 text-sm sm:px-3">No expenses in period.</p>
                     )}
                   </div>
                   <div className="hidden md:block overflow-x-auto rounded-md border">
@@ -1200,12 +1259,12 @@ export function MDFinancePage() {
         </TabsContent>
 
         {/* Parties */}
-        <TabsContent value="parties" className="mt-4 space-y-4">
+        <TabsContent value="parties" className="mt-2 space-y-2 sm:mt-4 sm:space-y-4">
           {loadingPartyWise ? (
             <Skeleton className="h-40 w-full" />
           ) : partyWiseData ? (
             <>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 <StatCard
                   label="Credits"
                   value={formatCurrencyCompact(partyWiseData.totals.totalCredits || 0)}
@@ -1219,30 +1278,28 @@ export function MDFinancePage() {
                   valueAccent
                 />
               </div>
-              <div className="md:hidden space-y-2">
+              <div className="md:hidden divide-y divide-border rounded-md border">
                 {partyWiseData.data.map((p) => (
-                  <Card key={p.partyId}>
-                    <CardContent className="space-y-2 p-4">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="font-medium">{p.partyName}</p>
-                        <Badge variant="outline" className="shrink-0 text-xs">
-                          {p.partyType}
-                        </Badge>
-                      </div>
-                      <p
-                        className={cn(
-                          'text-lg font-semibold',
-                          p.netAmount >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                        )}
-                      >
-                        Net {formatCurrency(p.netAmount)}
-                      </p>
-                      <div className="text-muted-foreground flex justify-between text-xs">
-                        <span>In {formatCurrencyCompact(p.totalCredits)}</span>
-                        <span>Out {formatCurrencyCompact(p.totalDebits)}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div key={p.partyId} className="space-y-2 px-2 py-3 sm:px-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="font-medium">{p.partyName}</p>
+                      <Badge variant="outline" className="shrink-0 text-xs">
+                        {p.partyType}
+                      </Badge>
+                    </div>
+                    <p
+                      className={cn(
+                        'text-lg font-semibold',
+                        p.netAmount >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                      )}
+                    >
+                      Net {formatCurrency(p.netAmount)}
+                    </p>
+                    <div className="text-muted-foreground flex justify-between text-xs">
+                      <span>In {formatCurrencyCompact(p.totalCredits)}</span>
+                      <span>Out {formatCurrencyCompact(p.totalDebits)}</span>
+                    </div>
+                  </div>
                 ))}
               </div>
               <Card className="hidden md:block">
@@ -1281,38 +1338,46 @@ export function MDFinancePage() {
         </TabsContent>
 
         {/* Daily */}
-        <TabsContent value="daily" className="mt-4 space-y-4">
+        <TabsContent value="daily" className="mt-2 space-y-2 sm:mt-4 sm:space-y-4">
           {loadingDayWise ? (
             <Skeleton className="h-40 w-full" />
           ) : dayWiseData ? (
             <>
-              <div className="md:hidden space-y-2">
+              <div className="md:hidden divide-y divide-border rounded-md border">
                 {dayWiseData.data.map((d) => (
-                  <Card key={d.date}>
-                    <CardContent className="space-y-2 p-4">
-                      <p className="font-medium">{format(new Date(d.date), 'EEE, dd MMM yyyy')}</p>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-green-600">+{formatCurrencyCompact(d.totalCredits)}</span>
-                        <span className="text-red-600">−{formatCurrencyCompact(d.totalDebits)}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {d.netChange >= 0 ? (
-                          <TrendingUp className="size-4 text-green-600" />
-                        ) : (
-                          <TrendingDown className="size-4 text-red-600" />
+                  <button
+                    key={d.date}
+                    type="button"
+                    className="w-full cursor-pointer space-y-2 px-2 py-3 text-left active:bg-muted/50 sm:px-3"
+                    onClick={() =>
+                      openDayEntriesDrawer(
+                        d.date,
+                        format(new Date(d.date), 'EEE, dd MMM yyyy')
+                      )
+                    }
+                  >
+                    <p className="font-medium">{format(new Date(d.date), 'EEE, dd MMM yyyy')}</p>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-green-600">+{formatCurrencyCompact(d.totalCredits)}</span>
+                      <span className="text-red-600">−{formatCurrencyCompact(d.totalDebits)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {d.netChange >= 0 ? (
+                        <TrendingUp className="size-4 text-green-600" />
+                      ) : (
+                        <TrendingDown className="size-4 text-red-600" />
+                      )}
+                      <span
+                        className={cn(
+                          'font-semibold',
+                          d.netChange >= 0 ? 'text-green-600' : 'text-red-600'
                         )}
-                        <span
-                          className={cn(
-                            'font-semibold',
-                            d.netChange >= 0 ? 'text-green-600' : 'text-red-600'
-                          )}
-                        >
-                          Net {formatCurrency(Math.abs(d.netChange))}
-                        </span>
-                      </div>
-                      <p className="text-muted-foreground text-xs">{d.entriesCount} entries</p>
-                    </CardContent>
-                  </Card>
+                      >
+                        Net {formatCurrency(Math.abs(d.netChange))}
+                      </span>
+                    </div>
+                    <p className="text-muted-foreground text-xs">{d.entriesCount} entries</p>
+                  </button>
                 ))}
               </div>
               <Card className="hidden md:block">
@@ -1359,6 +1424,58 @@ export function MDFinancePage() {
           )}
         </TabsContent>
       </Tabs>
+
+      <Drawer open={detailDrawerOpen} onOpenChange={setDetailDrawerOpen}>
+        <DrawerContent className="max-h-[90vh] flex flex-col">
+          <DrawerHeader className="text-left">
+            <DrawerTitle className="line-clamp-2">{detailDrawerTitle}</DrawerTitle>
+            <DrawerDescription>
+              {detailDrawerType === 'day'
+                ? 'All ledger lines on this day in the selected period.'
+                : detailDrawerType === 'head'
+                  ? 'Expense (debit) lines for this head in the selected period.'
+                  : ''}
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
+            {loadingDetailEntries ? (
+              <div className="space-y-2">
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-16 w-full" />
+              </div>
+            ) : detailEntries.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No entries found.</p>
+            ) : (
+              <div className="divide-y divide-border">
+                {detailEntries.map((e) => (
+                  <div key={e.id} className="space-y-1 py-3 first:pt-0">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <span className="font-mono text-xs text-muted-foreground">{e.serialNumber}</span>
+                      <Badge
+                        variant={e.transactionType === 'CREDIT' ? 'default' : 'destructive'}
+                        className="shrink-0"
+                      >
+                        {e.transactionType}
+                      </Badge>
+                    </div>
+                    <p className="font-medium leading-tight">{e.partyName || '—'}</p>
+                    <p className="text-lg font-semibold tabular-nums">{formatCurrency(e.amount)}</p>
+                    <p className="text-muted-foreground text-xs">
+                      {format(new Date(e.transactionDate), 'dd MMM yyyy, HH:mm')}
+                      {e.paymentModeName ? ` · ${e.paymentModeName}` : ''}
+                      {e.headName ? ` · ${e.headName}` : ''}
+                    </p>
+                    {e.description ? (
+                      <p className="text-muted-foreground text-xs line-clamp-3">{e.description}</p>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   )
 }
