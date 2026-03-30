@@ -817,7 +817,7 @@ export function MDFinancePage() {
                   <CardDescription>Largest amounts in period</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="md:hidden divide-y divide-border rounded-md border">
+                  <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                     {analytics.topTransactions.slice(0, 5).map((t) => (
                       <div
                         key={t.id}
@@ -875,7 +875,7 @@ export function MDFinancePage() {
                     <CardTitle className="text-base">Pending approvals</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
-                    <div className="md:hidden divide-y divide-border rounded-md border">
+                    <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                       {analytics.pendingApprovals.slice(0, 8).map((t) => (
                         <div key={t.id} className="px-2 py-2.5 sm:px-3 sm:py-3">
                           <div className="flex justify-between gap-2">
@@ -948,7 +948,7 @@ export function MDFinancePage() {
                   valueAccent
                 />
               </div>
-              <div className="md:hidden divide-y divide-border rounded-md border">
+              <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                 {paymentModeData.data.map((m) => (
                   <div key={m.id} className="space-y-2 px-2 py-3 active:scale-[0.99] sm:px-3">
                     <div className="flex items-center justify-between gap-2">
@@ -1018,7 +1018,7 @@ export function MDFinancePage() {
                   accent="neutral"
                 />
               </div>
-              <div className="md:hidden divide-y divide-border rounded-md border">
+              <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                 {expenseReportData.data.map((h) => {
                   const pct =
                     expenseTotalForBars > 0
@@ -1096,7 +1096,7 @@ export function MDFinancePage() {
                 />
                 <StatCard label="Entries" value={revenueData.totals.entriesCount ?? 0} accent="neutral" />
               </div>
-              <div className="md:hidden divide-y divide-border rounded-md border">
+              <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                 {revenueData.data.map((p) => (
                   <div
                     key={p.projectId}
@@ -1174,7 +1174,7 @@ export function MDFinancePage() {
                   <CardTitle className="text-base">Revenue by project</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="md:hidden divide-y divide-border rounded-md border">
+                  <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                     {(profitLossData.revenueByProject ?? []).map((r) => (
                       <div key={r.projectId} className="flex justify-between gap-2 px-2 py-3 sm:px-3">
                         <span className="font-medium">{r.projectName}</span>
@@ -1214,7 +1214,7 @@ export function MDFinancePage() {
                   <CardTitle className="text-base">Expenses by head</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="md:hidden divide-y divide-border rounded-md border">
+                  <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                     {(profitLossData.expensesByHead ?? []).map((e) => (
                       <div key={e.headId} className="px-2 py-3 sm:px-3">
                         <div className="flex justify-between gap-2">
@@ -1278,7 +1278,7 @@ export function MDFinancePage() {
                   valueAccent
                 />
               </div>
-              <div className="md:hidden divide-y divide-border rounded-md border">
+              <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                 {partyWiseData.data.map((p) => (
                   <div key={p.partyId} className="space-y-2 px-2 py-3 sm:px-3">
                     <div className="flex items-start justify-between gap-2">
@@ -1343,7 +1343,7 @@ export function MDFinancePage() {
             <Skeleton className="h-40 w-full" />
           ) : dayWiseData ? (
             <>
-              <div className="md:hidden divide-y divide-border rounded-md border">
+              <div className="md:hidden divide-y divide-border rounded-xl border border-border bg-card text-card-foreground shadow-sm">
                 {dayWiseData.data.map((d) => (
                   <button
                     key={d.date}

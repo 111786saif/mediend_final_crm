@@ -59,6 +59,7 @@ export function OverviewTab() {
         (t) =>
           t.status !== "COMPLETED" &&
           t.status !== "CANCELLED" &&
+          t.status !== "EMPLOYEE_DONE" &&
           t.dueDate &&
           new Date(t.dueDate) < today
       )
@@ -118,19 +119,6 @@ export function OverviewTab() {
       sub: `${count} task${count === 1 ? "" : "s"}`,
     }
   }
-  const assigneeCount = stats.employeeWise.length
-  const warnN = stats.employeesWithWarnings ?? 0
-  const warningsPct =
-    assigneeCount <= 0
-      ? {
-          main: warnN === 0 ? "0%" : "—",
-          sub: `${warnN} employee${warnN === 1 ? "" : "s"}`,
-        }
-      : {
-          main: `${Math.round((warnN / assigneeCount) * 100)}%`,
-          sub: `${warnN} employee${warnN === 1 ? "" : "s"}`,
-        }
-
   const completedPct = pctOfTotal(stats.completed)
   const pendingPct = pctOfTotal(stats.pending)
   const pendingReviewPct = pctOfTotal(stats.pendingReview ?? 0)
@@ -156,7 +144,7 @@ export function OverviewTab() {
 
   return (
     <div className="space-y-6">
-      <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {isMobile ? (
           <>
             <StatCard
@@ -224,13 +212,6 @@ export function OverviewTab() {
               accent="red"
               valueAccent
             />
-            <StatCard
-              label="Employees w/ warnings"
-              value={warningsPct.main}
-              subValue={warningsPct.sub}
-              accent="orange"
-              valueAccent
-            />
           </>
         )}
       </section>
@@ -249,7 +230,11 @@ export function OverviewTab() {
               ) : (
                 statDrawerTasks.map((task) => {
                   const today = startOfDay(new Date())
-                  const isOverdue = !!task.dueDate && new Date(task.dueDate) < today && task.status !== "COMPLETED"
+                  const isOverdue =
+                    !!task.dueDate &&
+                    new Date(task.dueDate) < today &&
+                    task.status !== "COMPLETED" &&
+                    task.status !== "EMPLOYEE_DONE"
                   return (
                     <div key={task.id} className={getTaskCardClass(task, { isOverdue })}>
                       <TaskRow
@@ -413,7 +398,11 @@ export function OverviewTab() {
                       ) : (
                         assigneeTasks.map((task) => {
                           const today = startOfDay(new Date())
-                          const isOverdue = !!task.dueDate && new Date(task.dueDate) < today && task.status !== "COMPLETED"
+                          const isOverdue =
+                            !!task.dueDate &&
+                            new Date(task.dueDate) < today &&
+                            task.status !== "COMPLETED" &&
+                            task.status !== "EMPLOYEE_DONE"
                           return (
                             <div key={task.id} className={getTaskCardClass(task, { isOverdue })}>
                               <TaskRow
@@ -491,7 +480,11 @@ export function OverviewTab() {
                       ) : (
                         projectTasks.map((task) => {
                           const today = startOfDay(new Date())
-                          const isOverdue = !!task.dueDate && new Date(task.dueDate) < today && task.status !== "COMPLETED"
+                          const isOverdue =
+                            !!task.dueDate &&
+                            new Date(task.dueDate) < today &&
+                            task.status !== "COMPLETED" &&
+                            task.status !== "EMPLOYEE_DONE"
                           return (
                             <div key={task.id} className={getTaskCardClass(task, { isOverdue })}>
                               <TaskRow

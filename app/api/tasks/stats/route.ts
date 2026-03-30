@@ -48,7 +48,7 @@ export async function GET(_request: NextRequest) {
     prisma.task.count({
       where: {
         ...baseWhere,
-        status: { in: ["PENDING", "IN_PROGRESS", "EMPLOYEE_DONE"] },
+        status: { in: ["PENDING", "IN_PROGRESS"] },
         dueDate: { lt: startOfToday },
       },
     }),
