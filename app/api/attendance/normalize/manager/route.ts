@@ -7,10 +7,17 @@ import { notifyNormalizationPendingReview } from '@/lib/hrms/normalization-notif
 import { isUserInMDManagedCohort } from '@/lib/hierarchy'
 import { z } from 'zod'
 
+const dayReasonSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format'),
+  reason: z
+    .string()
+    .trim()
+    .min(15, 'Reason must be at least 15 characters for each day'),
+})
+
 const bodySchema = z.object({
   employeeId: z.string(),
-  dates: z.array(z.string().transform((s) => new Date(s))).min(1),
-  reason: z.string().optional(),
+  days: z.array(dayReasonSchema).min(1, 'Select at least one day'),
   normalizeAs: z.enum(['FULL_DAY', 'HALF_DAY']).default('FULL_DAY'),
 })
 
@@ -35,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { employeeId, dates, reason, normalizeAs } = bodySchema.parse(body)
+    const { employeeId, days, normalizeAs } = bodySchema.parse(body)
 
     const employee = await prisma.employee.findUnique({
       where: { id: employeeId },
@@ -50,9 +57,13 @@ export async function POST(request: NextRequest) {
       return errorResponse('You can only normalize attendance for your direct reports', 403)
     }
 
-    const dayStarts = [...new Set(dates.map(toDayStart).map((d) => d.getTime()))].map(
-      (t) => new Date(t)
-    )
+    const reasonByDayMs = new Map<number, string>()
+    for (const { date, reason } of days) {
+      const ds = toDayStart(new Date(date))
+      reasonByDayMs.set(ds.getTime(), reason)
+    }
+
+    const dayStarts = [...reasonByDayMs.keys()].map((ms) => new Date(ms))
 
     const now = new Date()
     const outOfWindow = dayStarts.filter((d) => !isWithinNormalizationWindow(d, now))
@@ -100,7 +111,7 @@ export async function POST(request: NextRequest) {
         managerApprovedById: manager.id,
         managerApprovedAt: new Date(),
         status: 'PENDING',
-        reason: reason ?? null,
+        reason: reasonByDayMs.get(date.getTime()) ?? null,
         normalizeAs,
       })),
     })
@@ -122,7 +133,7 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return errorResponse('Invalid request data', 400)
+      return errorResponse(error.issues[0]?.message ?? 'Invalid request data', 400)
     }
     console.error('Error creating manager normalization:', error)
     return errorResponse('Failed to normalize attendance', 500)

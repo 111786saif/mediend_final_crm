@@ -46,12 +46,33 @@ function attributedLeaveDaysInRange(
   return leave.days * (overlap / calendarInLeave)
 }
 
-/** When `LeaveTypeMaster.code` is null, map common display names to policy codes. */
+/** When `LeaveTypeMaster.code` is null or non-standard, map names / codes to CL, SL, EL for team UI. */
 const LEAVE_NAME_TO_CODE: Record<string, string> = {
+  casual: 'CL',
   'casual leave': 'CL',
+  sick: 'SL',
   'sick leave': 'SL',
+  earned: 'EL',
   'earned leave': 'EL',
   'privilege leave': 'EL',
+  paid: 'EL',
+  'paid leave': 'EL',
+  'annual leave': 'EL',
+  privilege: 'EL',
+}
+
+/** DB `code` values that are not already CL/SL/EL but mean the same for aggregation. */
+const LEAVE_CODE_ALIASES: Record<string, string> = {
+  CASUAL: 'CL',
+  SICK: 'SL',
+  EARNED: 'EL',
+  PAID: 'EL',
+  PRIVILEGE: 'EL',
+  PL: 'EL',
+  PRIVILEGE_LEAVE: 'EL',
+  CASUAL_LEAVE: 'CL',
+  SICK_LEAVE: 'SL',
+  EARNED_LEAVE: 'EL',
 }
 
 function leaveTypeCodeForAggregation(leave: {
@@ -59,12 +80,27 @@ function leaveTypeCodeForAggregation(leave: {
   leaveType: { code: string | null; name: string }
 }): string {
   if (leave.isUnpaid) return 'LOP'
-  const c = leave.leaveType.code?.trim()
-  if (c) return c.toUpperCase()
-  const nameKey = leave.leaveType.name?.trim().toLowerCase()
+  const rawCode = leave.leaveType.code?.trim()
+  if (rawCode) {
+    const u = rawCode.toUpperCase()
+    if (u === 'CL' || u === 'SL' || u === 'EL' || u === 'LOP') return u
+    if (LEAVE_CODE_ALIASES[u]) return LEAVE_CODE_ALIASES[u]
+    return u
+  }
+  const name = leave.leaveType.name?.trim() ?? ''
+  const nameKey = name.toLowerCase()
   if (nameKey && LEAVE_NAME_TO_CODE[nameKey]) return LEAVE_NAME_TO_CODE[nameKey]
-  const n = leave.leaveType.name?.trim()
-  return n ? n.slice(0, 8).toUpperCase() : 'OTHER'
+  const firstWord = nameKey.split(/\s+/)[0]
+  if (firstWord && LEAVE_NAME_TO_CODE[firstWord]) return LEAVE_NAME_TO_CODE[firstWord]
+  const paren = /\(([A-Za-z]{2,4})\)\s*$/.exec(name)
+  if (paren) {
+    const tok = paren[1].toUpperCase()
+    if (tok === 'CL' || tok === 'SL' || tok === 'EL') return tok
+  }
+  if (/\bCL\b/i.test(name)) return 'CL'
+  if (/\bSL\b/i.test(name)) return 'SL'
+  if (/\bEL\b/i.test(name)) return 'EL'
+  return name ? name.slice(0, 8).toUpperCase() : 'OTHER'
 }
 
 function aggregateLeaveDaysByTypeInRange(

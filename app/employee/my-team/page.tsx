@@ -33,7 +33,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { format, parseISO } from 'date-fns'
 import { getDisabledNormalizationDateKeys } from '@/lib/hrms/normalization-deadline'
 import { Calendar, Check, Clock, Users, X, UserCheck, ChevronRight } from 'lucide-react'
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { toast } from 'sonner'
 import { ManagerMarkLeavePanel } from '@/components/hrms/ManagerMarkLeavePanel'
 
@@ -258,9 +258,33 @@ export default function MyTeamPage() {
   const [remarks, setRemarks] = useState('')
   const [approveDialogOpen, setApproveDialogOpen] = useState(false)
   const [normEmployeeId, setNormEmployeeId] = useState('')
-  const [normReason, setNormReason] = useState('')
+  /** YYYY-MM-DD → reason (min 15 chars each when submitting) */
+  const [normReasonsByDate, setNormReasonsByDate] = useState<Record<string, string>>({})
   const [normNormalizeAs, setNormNormalizeAs] = useState<'FULL_DAY' | 'HALF_DAY'>('FULL_DAY')
   const [selectedNormDates, setSelectedNormDates] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    setNormReasonsByDate((prev) => {
+      const next: Record<string, string> = {}
+      for (const k of selectedNormDates) {
+        next[k] = prev[k] ?? ''
+      }
+      return next
+    })
+  }, [selectedNormDates])
+
+  const selectedNormDatesSorted = useMemo(
+    () => Array.from(selectedNormDates).sort(),
+    [selectedNormDates]
+  )
+
+  const normReasonsComplete = useMemo(() => {
+    if (selectedNormDates.size === 0) return false
+    for (const d of selectedNormDates) {
+      if ((normReasonsByDate[d] ?? '').trim().length < 15) return false
+    }
+    return true
+  }, [selectedNormDates, normReasonsByDate])
   const [drillDownManager, setDrillDownManager] = useState<TeamMember | null>(null)
 
   const { data: treeData } = useQuery<TeamTreeResponse>({
@@ -291,12 +315,16 @@ export default function MyTeamPage() {
   })
 
   const normalizeMutation = useMutation({
-    mutationFn: (payload: { employeeId: string; dates: string[]; reason?: string; normalizeAs?: 'FULL_DAY' | 'HALF_DAY' }) =>
-      apiPost<{ created?: number; skipped?: number }>('/api/attendance/normalize/manager', payload),
+    mutationFn: (payload: {
+      employeeId: string
+      days: { date: string; reason: string }[]
+      normalizeAs?: 'FULL_DAY' | 'HALF_DAY'
+    }) => apiPost<{ created?: number; skipped?: number }>('/api/attendance/normalize/manager', payload),
     onSuccess: (data: { created?: number; skipped?: number }) => {
       queryClient.invalidateQueries({ queryKey: ['attendance', 'normalize', 'team'] })
       queryClient.invalidateQueries({ queryKey: ['hierarchy', 'my-team', 'attendance'] })
       setSelectedNormDates(new Set())
+      setNormReasonsByDate({})
       const created = data?.created ?? 0
       const skipped = data?.skipped ?? 0
       if (created > 0) toast.success(`Normalized ${created} day(s)${skipped > 0 ? ` (${skipped} already normalized)` : ''}`)
@@ -740,7 +768,9 @@ export default function MyTeamPage() {
             <CardHeader>
               <CardTitle>Apply for normalization (on behalf)</CardTitle>
               <CardDescription>
-                Select a team member and date range, then click days on the heatmap to apply for normalization on their behalf. Deadline rules apply (same week from April 2026, or 5th of next month before that). Applications go to HR for approval.
+                Select a team member and date range, then click days on the heatmap. Enter a separate reason (at least
+                15 characters) for each selected day. Deadline rules apply (same week from April 2026, or 5th of next
+                month before that). Applications go to HR for approval.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -770,6 +800,7 @@ export default function MyTeamPage() {
                     onChange={(e) => {
                       setNormEmployeeId(e.target.value)
                       setSelectedNormDates(new Set())
+                      setNormReasonsByDate({})
                     }}
                   >
                     <option value="">Select team member...</option>
@@ -794,7 +825,7 @@ export default function MyTeamPage() {
                     leaveDays={normTargetEntry?.leaveDays ?? []}
                   />
 
-                  <div className="flex flex-wrap items-center gap-3 pt-2 border-t">
+                  <div className="space-y-4 pt-2 border-t">
                     <div>
                       <Label className="text-xs text-muted-foreground">Normalize as</Label>
                       <div className="flex gap-2 mt-1">
@@ -816,30 +847,54 @@ export default function MyTeamPage() {
                         </Button>
                       </div>
                     </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Reason (optional)</Label>
-                      <Input
-                        value={normReason}
-                        onChange={(e) => setNormReason(e.target.value)}
-                        placeholder="e.g. Official travel"
-                        className="mt-1 max-w-xs"
-                      />
-                    </div>
+
+                    {selectedNormDatesSorted.length > 0 && (
+                      <div className="space-y-3 max-w-xl">
+                        <Label className="text-xs text-muted-foreground">Reason per selected day (min. 15 characters)</Label>
+                        {selectedNormDatesSorted.map((dateKey) => {
+                          const len = (normReasonsByDate[dateKey] ?? '').trim().length
+                          return (
+                            <div key={dateKey} className="rounded-md border border-border p-3 space-y-1.5">
+                              <Label className="text-sm font-medium">{format(parseISO(dateKey), 'PPP')}</Label>
+                              <Textarea
+                                value={normReasonsByDate[dateKey] ?? ''}
+                                onChange={(e) =>
+                                  setNormReasonsByDate((prev) => ({ ...prev, [dateKey]: e.target.value }))
+                                }
+                                placeholder="Reason for normalizing this day..."
+                                rows={2}
+                                minLength={15}
+                                className="resize-y min-h-[60px]"
+                              />
+                              <p className="text-[11px] text-muted-foreground tabular-nums">
+                                {len}/15 characters minimum
+                              </p>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+
                     <Button
                       onClick={() => {
                         if (selectedNormDates.size === 0) {
                           toast.error('Select at least one day on the heatmap')
                           return
                         }
+                        if (!normReasonsComplete) {
+                          toast.error('Each selected day needs a reason of at least 15 characters')
+                          return
+                        }
                         normalizeMutation.mutate({
                           employeeId: normEmployeeId,
-                          dates: Array.from(selectedNormDates),
-                          reason: normReason || undefined,
+                          days: selectedNormDatesSorted.map((dateKey) => ({
+                            date: dateKey,
+                            reason: (normReasonsByDate[dateKey] ?? '').trim(),
+                          })),
                           normalizeAs: normNormalizeAs,
                         })
                       }}
-                      disabled={selectedNormDates.size === 0 || normalizeMutation.isPending}
-                      className="mt-6"
+                      disabled={selectedNormDates.size === 0 || !normReasonsComplete || normalizeMutation.isPending}
                     >
                       {normalizeMutation.isPending
                         ? 'Applying...'

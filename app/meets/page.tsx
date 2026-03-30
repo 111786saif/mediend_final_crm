@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-import { ArrowLeft, MapPin, Video, CalendarDays, Plus } from 'lucide-react'
+import { ArrowLeft, FileText, MapPin, Video, CalendarDays, Plus } from 'lucide-react'
 
 type MeetRow = {
   id: string
@@ -29,6 +29,7 @@ type MeetRow = {
   scheduledAt: string
   module: 'INTERVIEW' | 'MD_APPOINTMENT' | 'GENERAL'
   candidateName: string | null
+  resumeUrl: string | null
   createdBy: { name: string }
   mdAppointment?: {
     employee?: { user?: { name: string } | null } | null
@@ -226,6 +227,19 @@ export default function MeetsPage() {
                                   <Button size="sm" className="rounded-xl w-full sm:w-auto" asChild>
                                     <a href={m.meetLink} target="_blank" rel="noreferrer">
                                       Join
+                                    </a>
+                                  </Button>
+                                )}
+                                {m.module === 'INTERVIEW' && m.resumeUrl && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="rounded-xl w-full sm:w-auto gap-1.5"
+                                    asChild
+                                  >
+                                    <a href={m.resumeUrl} target="_blank" rel="noreferrer">
+                                      <FileText className="h-3.5 w-3.5 shrink-0" />
+                                      Resume
                                     </a>
                                   </Button>
                                 )}
