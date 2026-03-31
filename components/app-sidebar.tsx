@@ -16,7 +16,9 @@ import { useBadgeCounts } from '@/hooks/use-badge-counts'
 import { useNotifications } from '@/hooks/use-notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useSidebar } from '@/components/ui/sidebar'
-import { getFilteredNavItemsWithUrls } from '@/lib/sidebar-nav'
+import { getCampaignCplNavItem, getFilteredNavItemsWithUrls } from '@/lib/sidebar-nav'
+import { useQuery } from '@tanstack/react-query'
+import { apiGet } from '@/lib/api-client'
 import {
   BarChart3,
   BookOpen,
@@ -120,6 +122,13 @@ export function AppSidebar() {
   )
   const isMdOrAdmin = user?.role === 'MD' || user?.role === 'ADMIN'
 
+  const { data: cplAccessData } = useQuery({
+    queryKey: ['sidebar-cpl-access', user?.id],
+    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=cpl_access'),
+    enabled: !!user,
+    staleTime: 60_000,
+  })
+
   const closeSidebarOnMobile = React.useCallback(() => {
     if (isMobile) {
       navigatingRef.current = true
@@ -217,13 +226,18 @@ export function AppSidebar() {
               }
             )
 
-  const mainItems = navigationItems.filter((item) => {
+  const navigationItemsWithCpl =
+    cplAccessData?.allowed === true && !navigationItems.some((i) => i.title === 'Campaign CPL')
+      ? [...navigationItems, getCampaignCplNavItem()]
+      : navigationItems
+
+  const mainItems = navigationItemsWithCpl.filter((item) => {
     if (item.title.startsWith('My ')) return false
     if (HRM_TITLES.includes(item.title)) return user.role !== 'HR_HEAD'
     return true
   })
-  const hrItems = navigationItems.filter((item) => HRM_TITLES.includes(item.title))
-  const myHrmsItems = navigationItems.filter((item) => item.title.startsWith('My '))
+  const hrItems = navigationItemsWithCpl.filter((item) => HRM_TITLES.includes(item.title))
+  const myHrmsItems = navigationItemsWithCpl.filter((item) => item.title.startsWith('My '))
 
   const showHrSection = user.role === 'HR_HEAD' && hrItems.length > 0
   const showMyHrmsSection = myHrmsItems.length > 0

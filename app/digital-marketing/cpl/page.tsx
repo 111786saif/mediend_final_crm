@@ -181,7 +181,7 @@ export default function CampaignCplPage() {
               <CardTitle>No access</CardTitle>
               <CardDescription>
                 CPL access is controlled from <strong>IT Permissions</strong>. Ask IT to enable{' '}
-                <strong>CPL Access</strong> for your user (MD and Admin have access by default).
+                <strong>CPL Access</strong> for your user (Admin has access by default).
               </CardDescription>
             </CardHeader>
           </Card>

@@ -54,7 +54,7 @@ export async function hasFeaturePermission(
       return employee?.manager?.user?.role === 'MD'
     }
     case FEATURE_KEYS.CPL_ACCESS: {
-      if (user.role === 'MD' || user.role === 'ADMIN') return true
+      if (user.role === 'ADMIN') return true
       return false
     }
     default:

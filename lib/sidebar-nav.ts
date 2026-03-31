@@ -348,18 +348,21 @@ export const navItems: NavItem[] = [
     roles: ['FINANCE_HEAD', 'MD', 'ADMIN'],
   },
   {
-    title: 'Campaign CPL',
-    url: '/digital-marketing/cpl',
-    icon: Target,
-    roles: ['DIGITAL_MARKETING_HEAD', 'MD', 'ADMIN'],
-  },
-  {
     title: 'IT Permissions',
     url: '/it/permissions',
     icon: ShieldCheck,
     permission: 'it:permissions',
   },
 ]
+
+/** Merged in app-sidebar when user has `cpl_access` (IT Permissions). Not in `navItems`. */
+export function getCampaignCplNavItem(): NavItem & { url: string } {
+  return {
+    title: 'Campaign CPL',
+    url: '/digital-marketing/cpl',
+    icon: Target,
+  }
+}
 
 export function getDashboardUrl(role: string): string {
   if (role === 'SALES_HEAD') return '/sales/dashboard'
@@ -394,7 +397,6 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
         item.title === 'MD HR Dashboard' ||
         item.title === 'Recruitment' ||
         item.title === 'Loan & Demat Revenue' ||
-        item.title === 'Campaign CPL' ||
         item.title.startsWith('MD ') ||
         (item.title === 'Master Data' && item.roles?.includes('MD'))
       )
