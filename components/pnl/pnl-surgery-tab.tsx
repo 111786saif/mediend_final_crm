@@ -28,6 +28,8 @@ type PnlSurgery = {
   netProfit: number
   surgeryCount: number
   seatCostPerEmployee: number
+  /** Sum of CPL × attributed leads (Campaign CPL page) for the selected range */
+  totalMarketingCostCpl?: number
   marketingCostPerBd?: Record<string, number>
   marketingCostPerGroup?: Record<string, number>
 }
@@ -73,7 +75,7 @@ export function PnlSurgeryTab({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Surgeries</CardDescription>
@@ -98,6 +100,14 @@ export function PnlSurgeryTab({
         </Card>
         <Card>
           <CardHeader className="pb-2">
+            <CardDescription>Marketing (CPL)</CardDescription>
+          </CardHeader>
+          <CardContent className="text-2xl font-bold text-orange-600">
+            {(pnl.totalMarketingCostCpl ?? 0).toLocaleString('en-IN')}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
             <CardDescription>Net</CardDescription>
           </CardHeader>
           <CardContent className="text-2xl font-bold">{pnl.netProfit.toLocaleString('en-IN')}</CardContent>
@@ -107,7 +117,11 @@ export function PnlSurgeryTab({
       <Card>
         <CardHeader>
           <CardTitle>Team-wise P&amp;L</CardTitle>
-          <CardDescription>Click a row for seat cost &amp; BD breakdown</CardDescription>
+          <CardDescription>
+            Marketing (CPL) is allocated per BD by leads received in the range: each lead with a campaign name
+            uses the CPL for that campaign and calendar month (from Campaign CPL). Team column is the sum of
+            BDs in that manager group.
+          </CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           <SurgeryTeamTable

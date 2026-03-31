@@ -6,6 +6,10 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSeatCostPerEmployee } from '@/lib/pnl/pnl-config'
 import { getManagerGroups } from '@/lib/hierarchy'
+import {
+  allocateCplMarketingByBdAndGroup,
+  loadCampaignCplMap,
+} from '@/lib/pnl/surgery-marketing-cpl'
 
 function mediendExpenseForPl(pl: {
   cabCharges: number
@@ -221,45 +225,56 @@ export async function GET(request: NextRequest) {
       memberCountByGroup.set(group.managerId, group.subordinates.length)
     }
 
-    let totalSurgeryMarketing = 0
     const marketingCostPerBd: Record<string, number> = {}
     const marketingCostPerGroup: Record<string, number> = {}
 
-    let monthsForPnL: { month: number; year: number }[] = []
+    let monthsInRange: { month: number; year: number }[] = []
     if (startDate && endDate) {
-      monthsForPnL = calendarMonthsBetween(new Date(startDate), new Date(endDate))
-    }
-
-    const mktCat = await prisma.pnLCategory.findFirst({
-      where: { type: 'EXPENSE', sourceKey: 'MARKETING', departmentKey: 'SURGERY' },
-    })
-    if (mktCat && monthsForPnL.length > 0) {
-      const entries = await prisma.pnLEntry.findMany({
-        where: { categoryId: mktCat.id, OR: monthsForPnL.map((m) => ({ month: m.month, year: m.year })) },
-      })
-      totalSurgeryMarketing = entries.reduce((s, e) => s + e.amount, 0)
+      monthsInRange = calendarMonthsBetween(new Date(startDate), new Date(endDate))
     }
 
     const leadDateWhere: Prisma.DateTimeFilter = {}
     if (startDate) leadDateWhere.gte = new Date(startDate)
-    if (endDate) { const e = new Date(endDate); e.setHours(23, 59, 59, 999); leadDateWhere.lte = e }
-
-    const leadCounts = Object.keys(leadDateWhere).length > 0
-      ? await prisma.lead.groupBy({ by: ['bdId'], where: { leadDate: leadDateWhere }, _count: { _all: true } })
-      : []
-
-    const totalLeads = leadCounts.reduce((s, x) => s + x._count._all, 0)
-
-    for (const row of leadCounts) {
-      const share = totalLeads > 0 ? row._count._all / totalLeads : 0
-      marketingCostPerBd[row.bdId] = share * totalSurgeryMarketing
+    if (endDate) {
+      const e = new Date(endDate)
+      e.setHours(23, 59, 59, 999)
+      leadDateWhere.lte = e
     }
+
+    const leadCounts =
+      Object.keys(leadDateWhere).length > 0
+        ? await prisma.lead.groupBy({
+            by: ['bdId'],
+            where: { leadDate: leadDateWhere },
+            _count: { _all: true },
+          })
+        : []
 
     const leadCountByGroup = new Map<string, number>()
     for (const row of leadCounts) {
       const gid = bdToManagerId.get(row.bdId) ?? 'unassigned'
       leadCountByGroup.set(gid, (leadCountByGroup.get(gid) ?? 0) + row._count._all)
-      marketingCostPerGroup[gid] = (marketingCostPerGroup[gid] ?? 0) + (marketingCostPerBd[row.bdId] ?? 0)
+    }
+
+    /** Marketing = sum over leads (CPL for campaign + month from Campaign CPL page). */
+    let totalMarketingCostCpl = 0
+    if (monthsInRange.length > 0 && Object.keys(leadDateWhere).length > 0) {
+      const cplMap = await loadCampaignCplMap(prisma, monthsInRange)
+      const leadsForCpl = await prisma.lead.findMany({
+        where: {
+          leadDate: leadDateWhere,
+          campaignName: { not: null },
+        },
+        select: { bdId: true, campaignName: true, leadDate: true },
+      })
+      const { total, perBd, perGroup } = allocateCplMarketingByBdAndGroup(
+        leadsForCpl,
+        cplMap,
+        bdToManagerId
+      )
+      totalMarketingCostCpl = total
+      Object.assign(marketingCostPerBd, perBd)
+      Object.assign(marketingCostPerGroup, perGroup)
     }
 
     function distToDiseaseArr(m: Map<string, Bucket> | undefined) {
@@ -298,6 +313,7 @@ export async function GET(request: NextRequest) {
       totalExpenses,
       netProfit: totalRevenue - totalExpenses,
       avgPerCase: surgeryCount > 0 ? (totalRevenue - totalExpenses) / surgeryCount : 0,
+      totalMarketingCostCpl,
       teamBreakdown: groupBreakdownEnriched,
       seatCostPerEmployee: seatRate,
       bdBreakdown: bdBreakdownEnriched,

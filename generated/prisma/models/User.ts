@@ -287,6 +287,7 @@ export type UserWhereInput = {
   itFreelancersCreated?: Prisma.ITFreelancerListRelationFilter
   itProjectBookingsCreated?: Prisma.ITProjectBookingListRelationFilter
   departmentRevenuesCreated?: Prisma.DepartmentRevenueListRelationFilter
+  campaignCplsCreated?: Prisma.CampaignCPLListRelationFilter
   pnlCategoriesCreated?: Prisma.PnLCategoryListRelationFilter
   pnlEntriesCreated?: Prisma.PnLEntryListRelationFilter
   meetsCreated?: Prisma.MeetListRelationFilter
@@ -369,6 +370,7 @@ export type UserOrderByWithRelationInput = {
   itFreelancersCreated?: Prisma.ITFreelancerOrderByRelationAggregateInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingOrderByRelationAggregateInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueOrderByRelationAggregateInput
+  campaignCplsCreated?: Prisma.CampaignCPLOrderByRelationAggregateInput
   pnlCategoriesCreated?: Prisma.PnLCategoryOrderByRelationAggregateInput
   pnlEntriesCreated?: Prisma.PnLEntryOrderByRelationAggregateInput
   meetsCreated?: Prisma.MeetOrderByRelationAggregateInput
@@ -454,6 +456,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   itFreelancersCreated?: Prisma.ITFreelancerListRelationFilter
   itProjectBookingsCreated?: Prisma.ITProjectBookingListRelationFilter
   departmentRevenuesCreated?: Prisma.DepartmentRevenueListRelationFilter
+  campaignCplsCreated?: Prisma.CampaignCPLListRelationFilter
   pnlCategoriesCreated?: Prisma.PnLCategoryListRelationFilter
   pnlEntriesCreated?: Prisma.PnLEntryListRelationFilter
   meetsCreated?: Prisma.MeetListRelationFilter
@@ -568,6 +571,7 @@ export type UserCreateInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -650,6 +654,7 @@ export type UserUncheckedCreateInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -732,6 +737,7 @@ export type UserUpdateInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -814,6 +820,7 @@ export type UserUncheckedUpdateInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -1486,6 +1493,20 @@ export type UserUpdateOneWithoutFeaturePermissionsGrantedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFeaturePermissionsGrantedInput, Prisma.UserUpdateWithoutFeaturePermissionsGrantedInput>, Prisma.UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput>
 }
 
+export type UserCreateNestedOneWithoutCampaignCplsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignCplsCreatedInput, Prisma.UserUncheckedCreateWithoutCampaignCplsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignCplsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCampaignCplsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignCplsCreatedInput, Prisma.UserUncheckedCreateWithoutCampaignCplsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignCplsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutCampaignCplsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCampaignCplsCreatedInput, Prisma.UserUpdateWithoutCampaignCplsCreatedInput>, Prisma.UserUncheckedUpdateWithoutCampaignCplsCreatedInput>
+}
+
 export type UserCreateNestedOneWithoutQueriesRaisedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutQueriesRaisedInput, Prisma.UserUncheckedCreateWithoutQueriesRaisedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutQueriesRaisedInput
@@ -2007,6 +2028,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -2088,6 +2110,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2174,6 +2197,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -2255,6 +2279,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2341,6 +2366,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -2422,6 +2448,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2519,6 +2546,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -2600,6 +2628,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2692,6 +2721,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -2773,6 +2803,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2865,6 +2896,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -2946,6 +2978,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3027,6 +3060,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -3108,6 +3142,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3205,6 +3240,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -3286,6 +3322,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3367,6 +3404,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -3448,6 +3486,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3545,6 +3584,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -3626,6 +3666,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3707,6 +3748,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -3788,6 +3830,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3885,6 +3928,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -3966,6 +4010,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4047,6 +4092,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -4128,6 +4174,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4225,6 +4272,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -4306,6 +4354,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4387,6 +4436,7 @@ export type UserCreateWithoutPlRecordsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -4468,6 +4518,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4565,6 +4616,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -4646,6 +4698,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4727,6 +4780,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -4808,6 +4862,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4905,6 +4960,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -4986,6 +5042,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5067,6 +5124,7 @@ export type UserCreateWithoutEmployeeInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -5148,6 +5206,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5234,6 +5293,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -5315,6 +5375,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5412,6 +5473,7 @@ export type UserUpdateWithoutEmployeeInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -5493,6 +5555,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5585,6 +5648,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -5666,6 +5730,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5747,6 +5812,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -5828,6 +5894,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5925,6 +5992,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -6006,6 +6074,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6087,6 +6156,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -6168,6 +6238,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6254,6 +6325,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -6335,6 +6407,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6432,6 +6505,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -6513,6 +6587,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6605,6 +6680,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -6686,6 +6762,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6768,6 +6845,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
@@ -6849,6 +6927,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
@@ -6946,6 +7025,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
@@ -7027,6 +7107,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
@@ -7108,6 +7189,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -7189,6 +7271,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7286,6 +7369,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -7367,6 +7451,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -7447,6 +7532,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -7528,6 +7614,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7614,6 +7701,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -7695,6 +7783,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7781,6 +7870,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -7862,6 +7952,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7948,6 +8039,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -8029,6 +8121,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8115,6 +8208,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -8196,6 +8290,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8293,6 +8388,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -8374,6 +8470,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8466,6 +8563,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -8547,6 +8645,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8639,6 +8738,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -8720,6 +8820,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8812,6 +8913,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -8893,6 +8995,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8985,6 +9088,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -9066,6 +9170,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -9147,6 +9252,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -9228,6 +9334,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9325,6 +9432,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -9406,6 +9514,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -9487,6 +9596,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -9568,6 +9678,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9665,6 +9776,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -9746,6 +9858,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -9827,6 +9940,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -9908,6 +10022,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10005,6 +10120,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -10086,6 +10202,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10167,6 +10284,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -10248,6 +10366,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10345,6 +10464,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -10426,6 +10546,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10507,6 +10628,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -10588,6 +10710,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10674,6 +10797,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -10755,6 +10879,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10852,6 +10977,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -10933,6 +11059,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11025,6 +11152,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -11106,6 +11234,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11187,6 +11316,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -11268,6 +11398,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11365,6 +11496,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -11446,6 +11578,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11527,6 +11660,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -11608,6 +11742,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11694,6 +11829,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -11775,6 +11911,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11872,6 +12009,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -11953,6 +12091,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12045,6 +12184,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -12126,6 +12266,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12207,6 +12348,7 @@ export type UserCreateWithoutNotificationsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -12288,6 +12430,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12385,6 +12528,7 @@ export type UserUpdateWithoutNotificationsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -12466,6 +12610,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12547,6 +12692,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -12628,6 +12774,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12725,6 +12872,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -12806,6 +12954,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12887,6 +13036,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -12968,6 +13118,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13065,6 +13216,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -13146,6 +13298,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13227,6 +13380,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -13308,6 +13462,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13394,6 +13549,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -13475,6 +13631,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13561,6 +13718,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -13642,6 +13800,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13739,6 +13898,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -13820,6 +13980,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13912,6 +14073,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -13993,6 +14155,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14085,6 +14248,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -14166,6 +14330,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14247,6 +14412,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -14328,6 +14494,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14414,6 +14581,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -14495,6 +14663,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14592,6 +14761,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -14673,6 +14843,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14765,6 +14936,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -14840,6 +15012,351 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
   mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
   featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCampaignCplsCreatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCampaignCplsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCampaignCplsCreatedInput, Prisma.UserUncheckedCreateWithoutCampaignCplsCreatedInput>
+}
+
+export type UserUpsertWithoutCampaignCplsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCampaignCplsCreatedInput, Prisma.UserUncheckedUpdateWithoutCampaignCplsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCampaignCplsCreatedInput, Prisma.UserUncheckedCreateWithoutCampaignCplsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCampaignCplsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCampaignCplsCreatedInput, Prisma.UserUncheckedUpdateWithoutCampaignCplsCreatedInput>
+}
+
+export type UserUpdateWithoutCampaignCplsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
   fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
   leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14927,6 +15444,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -15008,6 +15526,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -15094,6 +15613,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -15175,6 +15695,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -15272,6 +15793,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -15353,6 +15875,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15445,6 +15968,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -15526,6 +16050,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15607,6 +16132,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -15688,6 +16214,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -15785,6 +16312,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -15866,6 +16394,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15947,6 +16476,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -16028,6 +16558,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16125,6 +16656,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -16206,6 +16738,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -16287,6 +16820,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -16368,6 +16902,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16465,6 +17000,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -16546,6 +17082,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -16627,6 +17164,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -16708,6 +17246,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16805,6 +17344,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -16886,6 +17426,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -16967,6 +17508,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -17048,6 +17590,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17145,6 +17688,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -17226,6 +17770,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17307,6 +17852,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -17388,6 +17934,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17485,6 +18032,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -17566,6 +18114,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17647,6 +18196,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -17728,6 +18278,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17825,6 +18376,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -17906,6 +18458,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17987,6 +18540,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -18068,6 +18622,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18154,6 +18709,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -18235,6 +18791,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18321,6 +18878,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -18402,6 +18960,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18499,6 +19058,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -18580,6 +19140,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18672,6 +19233,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -18753,6 +19315,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18845,6 +19408,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -18926,6 +19490,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -19007,6 +19572,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -19088,6 +19654,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19185,6 +19752,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -19266,6 +19834,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -19347,6 +19916,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -19428,6 +19998,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19525,6 +20096,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -19606,6 +20178,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -19687,6 +20260,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -19768,6 +20342,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19854,6 +20429,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -19935,6 +20511,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20032,6 +20609,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -20113,6 +20691,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20205,6 +20784,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -20286,6 +20866,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20367,6 +20948,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -20448,6 +21030,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20545,6 +21128,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -20626,6 +21210,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20707,6 +21292,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -20788,6 +21374,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20885,6 +21472,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -20966,6 +21554,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21047,6 +21636,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -21128,6 +21718,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -21225,6 +21816,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -21306,6 +21898,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21387,6 +21980,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -21468,6 +22062,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -21554,6 +22149,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -21635,6 +22231,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -21732,6 +22329,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -21813,6 +22411,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21905,6 +22504,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -21986,6 +22586,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22067,6 +22668,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -22148,6 +22750,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22245,6 +22848,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -22326,6 +22930,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22407,6 +23012,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -22488,6 +23094,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22585,6 +23192,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -22666,6 +23274,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22747,6 +23356,7 @@ export type UserCreateWithoutWorkLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -22828,6 +23438,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22925,6 +23536,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -23006,6 +23618,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23087,6 +23700,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -23168,6 +23782,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23265,6 +23880,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -23346,6 +23962,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23427,6 +24044,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -23508,6 +24126,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23605,6 +24224,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -23686,6 +24306,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23767,6 +24388,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -23848,6 +24470,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23945,6 +24568,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -24026,6 +24650,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24107,6 +24732,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -24188,6 +24814,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24285,6 +24912,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -24366,6 +24994,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24447,6 +25076,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
@@ -24528,6 +25158,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24625,6 +25256,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
@@ -24706,6 +25338,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24788,6 +25421,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
@@ -24869,6 +25503,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
@@ -24966,6 +25601,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
@@ -25047,6 +25683,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
@@ -25128,6 +25765,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
@@ -25209,6 +25847,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
@@ -25306,6 +25945,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
@@ -25387,6 +26027,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
   itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
   departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
@@ -25462,6 +26103,7 @@ export type UserCountOutputType = {
   itFreelancersCreated: number
   itProjectBookingsCreated: number
   departmentRevenuesCreated: number
+  campaignCplsCreated: number
   pnlCategoriesCreated: number
   pnlEntriesCreated: number
   meetsCreated: number
@@ -25533,6 +26175,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   itFreelancersCreated?: boolean | UserCountOutputTypeCountItFreelancersCreatedArgs
   itProjectBookingsCreated?: boolean | UserCountOutputTypeCountItProjectBookingsCreatedArgs
   departmentRevenuesCreated?: boolean | UserCountOutputTypeCountDepartmentRevenuesCreatedArgs
+  campaignCplsCreated?: boolean | UserCountOutputTypeCountCampaignCplsCreatedArgs
   pnlCategoriesCreated?: boolean | UserCountOutputTypeCountPnlCategoriesCreatedArgs
   pnlEntriesCreated?: boolean | UserCountOutputTypeCountPnlEntriesCreatedArgs
   meetsCreated?: boolean | UserCountOutputTypeCountMeetsCreatedArgs
@@ -26000,6 +26643,13 @@ export type UserCountOutputTypeCountDepartmentRevenuesCreatedArgs<ExtArgs extend
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountCampaignCplsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CampaignCPLWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountPnlCategoriesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PnLCategoryWhereInput
 }
@@ -26102,6 +26752,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   itFreelancersCreated?: boolean | Prisma.User$itFreelancersCreatedArgs<ExtArgs>
   itProjectBookingsCreated?: boolean | Prisma.User$itProjectBookingsCreatedArgs<ExtArgs>
   departmentRevenuesCreated?: boolean | Prisma.User$departmentRevenuesCreatedArgs<ExtArgs>
+  campaignCplsCreated?: boolean | Prisma.User$campaignCplsCreatedArgs<ExtArgs>
   pnlCategoriesCreated?: boolean | Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>
   pnlEntriesCreated?: boolean | Prisma.User$pnlEntriesCreatedArgs<ExtArgs>
   meetsCreated?: boolean | Prisma.User$meetsCreatedArgs<ExtArgs>
@@ -26215,6 +26866,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   itFreelancersCreated?: boolean | Prisma.User$itFreelancersCreatedArgs<ExtArgs>
   itProjectBookingsCreated?: boolean | Prisma.User$itProjectBookingsCreatedArgs<ExtArgs>
   departmentRevenuesCreated?: boolean | Prisma.User$departmentRevenuesCreatedArgs<ExtArgs>
+  campaignCplsCreated?: boolean | Prisma.User$campaignCplsCreatedArgs<ExtArgs>
   pnlCategoriesCreated?: boolean | Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>
   pnlEntriesCreated?: boolean | Prisma.User$pnlEntriesCreatedArgs<ExtArgs>
   meetsCreated?: boolean | Prisma.User$meetsCreatedArgs<ExtArgs>
@@ -26292,6 +26944,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     itFreelancersCreated: Prisma.$ITFreelancerPayload<ExtArgs>[]
     itProjectBookingsCreated: Prisma.$ITProjectBookingPayload<ExtArgs>[]
     departmentRevenuesCreated: Prisma.$DepartmentRevenuePayload<ExtArgs>[]
+    campaignCplsCreated: Prisma.$CampaignCPLPayload<ExtArgs>[]
     pnlCategoriesCreated: Prisma.$PnLCategoryPayload<ExtArgs>[]
     pnlEntriesCreated: Prisma.$PnLEntryPayload<ExtArgs>[]
     meetsCreated: Prisma.$MeetPayload<ExtArgs>[]
@@ -26767,6 +27420,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   itFreelancersCreated<T extends Prisma.User$itFreelancersCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$itFreelancersCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ITFreelancerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   itProjectBookingsCreated<T extends Prisma.User$itProjectBookingsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$itProjectBookingsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ITProjectBookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   departmentRevenuesCreated<T extends Prisma.User$departmentRevenuesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$departmentRevenuesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DepartmentRevenuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  campaignCplsCreated<T extends Prisma.User$campaignCplsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$campaignCplsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignCPLPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pnlCategoriesCreated<T extends Prisma.User$pnlCategoriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PnLCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pnlEntriesCreated<T extends Prisma.User$pnlEntriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pnlEntriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PnLEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meetsCreated<T extends Prisma.User$meetsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$meetsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -28755,6 +29409,30 @@ export type User$departmentRevenuesCreatedArgs<ExtArgs extends runtime.Types.Ext
   take?: number
   skip?: number
   distinct?: Prisma.DepartmentRevenueScalarFieldEnum | Prisma.DepartmentRevenueScalarFieldEnum[]
+}
+
+/**
+ * User.campaignCplsCreated
+ */
+export type User$campaignCplsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CampaignCPL
+   */
+  select?: Prisma.CampaignCPLSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CampaignCPL
+   */
+  omit?: Prisma.CampaignCPLOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CampaignCPLInclude<ExtArgs> | null
+  where?: Prisma.CampaignCPLWhereInput
+  orderBy?: Prisma.CampaignCPLOrderByWithRelationInput | Prisma.CampaignCPLOrderByWithRelationInput[]
+  cursor?: Prisma.CampaignCPLWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CampaignCPLScalarFieldEnum | Prisma.CampaignCPLScalarFieldEnum[]
 }
 
 /**

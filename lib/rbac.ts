@@ -209,8 +209,6 @@ const rolePermissions: Record<UserRole, Permission[]> = {
   ],
   LOAN_DEMAT_HEAD: [
     'analytics:read',
-    'loan-demat:read',
-    'loan-demat:write',
     'hierarchy:read',
     'hierarchy:team:read',
   ],
@@ -231,6 +229,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'pnl:read',
     'pnl:write',
     'it:pnl:read',
+    'loan-demat:read',
+    'loan-demat:write',
   ],
   DIGITAL_MARKETING_HEAD: [
     'analytics:read',

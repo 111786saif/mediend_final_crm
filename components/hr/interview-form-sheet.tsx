@@ -68,6 +68,7 @@ export function InterviewFormSheet({
   const [mode, setMode] = useState<'schedule' | 'record'>('schedule')
   const [meetType, setMeetType] = useState<'VIRTUAL' | 'OFFLINE'>('OFFLINE')
   const [candidateName, setCandidateName] = useState('')
+  const [candidatePhone, setCandidatePhone] = useState('')
   const [rolePreset, setRolePreset] = useState<string>(ROLE_PRESETS[0])
   const [roleCustom, setRoleCustom] = useState('')
   const [departmentId, setDepartmentId] = useState<string>('')
@@ -116,6 +117,7 @@ export function InterviewFormSheet({
     setMode('schedule')
     setMeetType('OFFLINE')
     setCandidateName('')
+    setCandidatePhone('')
     setRolePreset(ROLE_PRESETS[0])
     setRoleCustom('')
     setDepartmentId('')
@@ -137,6 +139,9 @@ export function InterviewFormSheet({
       setMode(meetToEdit.isRecorded ? 'record' : 'schedule')
       setMeetType(meetToEdit.type)
       setCandidateName(meetToEdit.candidateName || '')
+      setCandidatePhone(
+        meetToEdit.candidatePhone?.replace(/\D/g, '').slice(0, 10) || ''
+      )
       const role = meetToEdit.candidateRole || ''
       if (ROLE_PRESETS.includes(role)) {
         setRolePreset(role)
@@ -165,6 +170,10 @@ export function InterviewFormSheet({
 
   const buildInterviewPayload = async () => {
     if (!candidateName.trim()) throw new Error('Candidate name is required')
+    const phoneDigits = candidatePhone.replace(/\D/g, '')
+    if (phoneDigits.length !== 10) {
+      throw new Error('Candidate phone must be exactly 10 digits')
+    }
     if (!resolvedRole) throw new Error('Role is required')
     if (!scheduledAt || !isValid(scheduledAt)) throw new Error('Date & time is required')
     if (meetType === 'OFFLINE' && !location.trim()) {
@@ -390,6 +399,25 @@ export function InterviewFormSheet({
               placeholder="Full name"
               className="rounded-xl"
             />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>
+              Candidate phone <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              type="tel"
+              inputMode="numeric"
+              autoComplete="tel"
+              maxLength={10}
+              value={candidatePhone}
+              onChange={(e) =>
+                setCandidatePhone(e.target.value.replace(/\D/g, '').slice(0, 10))
+              }
+              placeholder="10-digit mobile number"
+              className="rounded-xl"
+            />
+            <p className="text-[11px] text-muted-foreground">Required — exactly 10 digits</p>
           </div>
 
           <div className="space-y-1.5">

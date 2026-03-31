@@ -40,6 +40,7 @@ interface UserWithPermissions {
     [FEATURE_KEYS.CREATE_NOTICE]: boolean | null
     [FEATURE_KEYS.WORKLOG_ENFORCEMENT]: boolean | null
     [FEATURE_KEYS.CREATE_MEET]: boolean | null
+    [FEATURE_KEYS.CPL_ACCESS]: boolean | null
   }
 }
 
@@ -167,12 +168,13 @@ export default function ITPermissionsPage() {
                   <TableHead>{FEATURE_LABELS[FEATURE_KEYS.CREATE_NOTICE]}</TableHead>
                   <TableHead>{FEATURE_LABELS[FEATURE_KEYS.WORKLOG_ENFORCEMENT]}</TableHead>
                   <TableHead>{FEATURE_LABELS[FEATURE_KEYS.CREATE_MEET]}</TableHead>
+                  <TableHead>{FEATURE_LABELS[FEATURE_KEYS.CPL_ACCESS]}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                       Loading...
                     </TableCell>
                   </TableRow>
@@ -247,6 +249,19 @@ export default function ITPermissionsPage() {
                               u.id,
                               FEATURE_KEYS.CREATE_MEET,
                               u.permissions[FEATURE_KEYS.CREATE_MEET]
+                            )
+                          }
+                          disabled={toggleMutation.isPending}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Switch
+                          checked={u.permissions[FEATURE_KEYS.CPL_ACCESS] ?? false}
+                          onCheckedChange={() =>
+                            handleToggle(
+                              u.id,
+                              FEATURE_KEYS.CPL_ACCESS,
+                              u.permissions[FEATURE_KEYS.CPL_ACCESS]
                             )
                           }
                           disabled={toggleMutation.isPending}

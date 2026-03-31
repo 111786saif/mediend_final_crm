@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { AlertCircle } from 'lucide-react'
 import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
@@ -98,14 +99,27 @@ export default function MDTargetsPage() {
     enabled: isMdOrAdmin,
   })
 
-  const { data: myAchievement } = useQuery({
+  type AchievementMonth = {
+    month: string
+    targetValue: number
+    actual: number
+    percentage: number
+    targetId?: string | null
+  }
+
+  const {
+    data: myAchievement,
+    isLoading: myAchievementLoading,
+    isError: myAchievementError,
+    error: myAchievementErr,
+  } = useQuery({
     queryKey: ['head-target-achievement', user?.id],
     queryFn: () =>
       apiGet<{
         head: { id: string; name: string; role: string; departmentLabel?: string }
         metric: string
-        currentMonth: { month: string; targetValue: number; actual: number; percentage: number }
-        history: Array<{ month: string; targetValue: number; actual: number; percentage: number }>
+        currentMonth: AchievementMonth
+        history: AchievementMonth[]
       }>(`/api/md/head-targets/achievement?headUserId=${user?.id}`),
     enabled: !!user?.id && !!isHead,
   })
@@ -121,7 +135,10 @@ export default function MDTargetsPage() {
   }
 
   const displayItems = isMdOrAdmin ? items : []
-  const showMyTarget = isHead && myAchievement?.currentMonth && myAchievement.currentMonth.targetValue > 0
+  const cm = myAchievement?.currentMonth
+  const hasMyTargetRecord =
+    !!cm && (cm.targetValue > 0 || Boolean(cm.targetId))
+  const showMyTarget = Boolean(isHead && hasMyTargetRecord)
 
   return (
     <AuthenticatedLayout>
@@ -146,7 +163,29 @@ export default function MDTargetsPage() {
           )}
         </header>
 
-        {isHead && showMyTarget && (
+        {isHead && myAchievementLoading && (
+          <Card>
+            <CardContent className="p-6 space-y-3 animate-pulse">
+              <div className="h-4 w-32 rounded bg-muted" />
+              <div className="h-8 w-48 rounded bg-muted" />
+              <div className="h-2 w-full rounded bg-muted" />
+            </CardContent>
+          </Card>
+        )}
+
+        {isHead && myAchievementError && (
+          <Card className="border-destructive/50">
+            <CardContent className="flex flex-col items-center gap-2 py-8 text-center">
+              <AlertCircle className="h-10 w-10 text-destructive" />
+              <p className="font-medium text-destructive">Could not load your target</p>
+              <p className="text-sm text-muted-foreground">
+                {(myAchievementErr as Error)?.message || 'Please refresh or try again later.'}
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {isHead && !myAchievementLoading && !myAchievementError && showMyTarget && myAchievement && (
           <Card
             className="cursor-pointer transition-all hover:shadow-md hover:border-primary/20"
             onClick={() => {
@@ -182,7 +221,7 @@ export default function MDTargetsPage() {
           </Card>
         )}
 
-        {isHead && !showMyTarget && (
+        {isHead && !myAchievementLoading && !myAchievementError && !showMyTarget && (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
               No target set for this month. Contact your MD to set a target.

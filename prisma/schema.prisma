@@ -465,6 +465,7 @@ model User {
   itFreelancersCreated    ITFreelancer[]        @relation("ITFreelancerCreator")
   itProjectBookingsCreated ITProjectBooking[]   @relation("ITProjectBookingCreator")
   departmentRevenuesCreated DepartmentRevenue[] @relation("DepartmentRevenueCreator")
+  campaignCplsCreated     CampaignCPL[]         @relation("CampaignCPLCreator")
   pnlCategoriesCreated    PnLCategory[]         @relation("PnLCategoryCreator")
   pnlEntriesCreated       PnLEntry[]            @relation("PnLEntryCreator")
 
@@ -1255,6 +1256,8 @@ model Meet {
   interviewRound  Int?
   candidateName   String?
   candidateRole   String?
+  /// 10-digit mobile; optional for legacy rows
+  candidatePhone  String?
   departmentId    String?
   department      Department? @relation(fields: [departmentId], references: [id])
   notes           String?
@@ -2078,6 +2081,22 @@ model UserFeaturePermission {
   @@index([featureKey])
 }
 
+/// Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + leadDate
+model CampaignCPL {
+  id           String   @id @default(cuid())
+  campaignName String
+  month        Int
+  year         Int
+  cpl          Float    @default(0)
+  createdById  String
+  createdBy    User     @relation("CampaignCPLCreator", fields: [createdById], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([campaignName, month, year])
+  @@index([year, month])
+}
+
 // ==========================================
 // Insurance Query (Q&A Flow)
 // ==========================================
@@ -2798,6 +2817,20 @@ model ITProjectBooking {
   @@index([month, year])
 }
 
+/// Partners / sources for Loan & Demat revenue (vendor-wise monthly amounts).
+model LoanDematVendor {
+  id        String   @id @default(cuid())
+  name      String
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  revenues DepartmentRevenue[]
+
+  @@index([isActive, sortOrder, name])
+}
+
 model DepartmentRevenue {
   id          String            @id @default(cuid())
   department  RevenueDepartment
@@ -2806,12 +2839,16 @@ model DepartmentRevenue {
   amount      Float             @default(0)
   description String?
   notes       String?           @db.Text
+  /// Set for LOAN_DEMAT rows tied to a vendor; null for legacy or non-vendor lines
+  vendorId    String?
+  vendor      LoanDematVendor?  @relation(fields: [vendorId], references: [id], onDelete: SetNull)
   createdById String
   createdBy   User              @relation("DepartmentRevenueCreator", fields: [createdById], references: [id])
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
   @@index([department, month, year])
+  @@index([department, vendorId, month, year])
 }
 
 model PnLCategory {

@@ -78,6 +78,13 @@ async function computeAchievement(
   }
 }
 
+/** Target row overlapping a calendar month window (local server TZ). Prefer first = most recent by periodStartDate desc. */
+function pickTargetOverlappingMonth<
+  T extends { periodStartDate: Date; periodEndDate: Date },
+>(targets: T[], start: Date, end: Date): T | undefined {
+  return targets.find((t) => t.periodStartDate <= end && t.periodEndDate >= start)
+}
+
 function getMetricForRole(role: string): string {
   switch (role) {
     case 'SALES_HEAD':
@@ -148,29 +155,15 @@ export async function GET(request: NextRequest) {
       orderBy: { periodStartDate: 'desc' },
     })
 
-    const targetByMonth = new Map<
-      string,
-      { targetValue: number; targetId: string; departmentTargets: unknown }
-    >()
-    for (const t of targets) {
-      const key = `${t.periodStartDate.getFullYear()}-${String(t.periodStartDate.getMonth() + 1).padStart(2, '0')}`
-      const parsed = parseDepartmentTargets(t.departmentTargets)
-      const targetValue =
-        metric === 'HEAD_COUNT' && parsed?.length
-          ? parsed.reduce((s, d) => s + d.addCount, 0)
-          : t.targetValue
-      targetByMonth.set(key, {
-        targetValue,
-        targetId: t.id,
-        departmentTargets: t.departmentTargets,
-      })
-    }
-
     const history = await Promise.all(
       months.map(async (m) => {
         const key = `${m.start.getFullYear()}-${String(m.start.getMonth() + 1).padStart(2, '0')}`
-        const targetInfo = targetByMonth.get(key)
-        const deptParsed = parseDepartmentTargets(targetInfo?.departmentTargets)
+        const t = pickTargetOverlappingMonth(targets, m.start, m.end)
+        const deptParsed = parseDepartmentTargets(t?.departmentTargets)
+        const targetValue =
+          metric === 'HEAD_COUNT' && deptParsed?.length
+            ? deptParsed.reduce((s, d) => s + d.addCount, 0)
+            : (t?.targetValue ?? 0)
         const headCountDeptIds =
           metric === 'HEAD_COUNT' && deptParsed?.length
             ? deptParsed.map((d) => d.departmentId)
@@ -181,7 +174,6 @@ export async function GET(request: NextRequest) {
           m.end,
           headCountDeptIds
         )
-        const targetValue = targetInfo?.targetValue ?? 0
         const percentage =
           targetValue > 0 ? Math.round((actual / targetValue) * 100) : 0
 
@@ -191,7 +183,7 @@ export async function GET(request: NextRequest) {
           start: m.start.toISOString(),
           end: m.end.toISOString(),
           targetValue,
-          targetId: targetInfo?.targetId ?? null,
+          targetId: t?.id ?? null,
           actual,
           percentage,
         }
@@ -212,8 +204,11 @@ export async function GET(request: NextRequest) {
         orderBy: { name: 'asc' },
       })
 
-      const currentMonthKey = `${months[0].start.getFullYear()}-${String(months[0].start.getMonth() + 1).padStart(2, '0')}`
-      const currentTargetRow = targetByMonth.get(currentMonthKey)
+      const currentTargetRow = pickTargetOverlappingMonth(
+        targets,
+        months[0].start,
+        months[0].end
+      )
       const targetByDept = new Map(
         parseDepartmentTargets(currentTargetRow?.departmentTargets)?.map((r) => [
           r.departmentId,

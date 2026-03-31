@@ -4,6 +4,10 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { canReadLoanDemat, canWriteLoanDemat } from '@/lib/pnl/auth-pnl'
 
+const vendorInclude = {
+  vendor: { select: { id: true, name: true, isActive: true, sortOrder: true } },
+} as const
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -12,13 +16,20 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const year = searchParams.get('year')
+    const month = searchParams.get('month')
 
-    const where: { department: 'LOAN_DEMAT'; year?: number } = { department: 'LOAN_DEMAT' }
+    const where: {
+      department: 'LOAN_DEMAT'
+      year?: number
+      month?: number
+    } = { department: 'LOAN_DEMAT' }
     if (year) where.year = parseInt(year, 10)
+    if (month) where.month = parseInt(month, 10)
 
     const data = await prisma.departmentRevenue.findMany({
       where,
-      orderBy: [{ year: 'desc' }, { month: 'desc' }],
+      include: vendorInclude,
+      orderBy: [{ year: 'desc' }, { month: 'desc' }, { createdAt: 'desc' }],
     })
 
     return successResponse(data)
@@ -35,23 +46,57 @@ export async function POST(request: NextRequest) {
     if (!canWriteLoanDemat(user)) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
-    const { month, year, amount, description, notes } = body
+    const { month, year, amount, vendorId, description, notes } = body
     const m = Number(month)
     const y = Number(year)
     if (!m || m < 1 || m > 12) return errorResponse('Invalid month', 400)
     if (!y || y < 2000) return errorResponse('Invalid year', 400)
+    if (!vendorId || typeof vendorId !== 'string') {
+      return errorResponse('vendorId is required', 400)
+    }
 
-    const row = await prisma.departmentRevenue.create({
-      data: {
+    const vendor = await prisma.loanDematVendor.findFirst({
+      where: { id: vendorId, isActive: true },
+    })
+    if (!vendor) return errorResponse('Vendor not found or inactive', 400)
+
+    const amt = Number(amount) || 0
+
+    const existing = await prisma.departmentRevenue.findFirst({
+      where: {
         department: 'LOAN_DEMAT',
         month: m,
         year: y,
-        amount: Number(amount) || 0,
-        description: description?.trim() || null,
-        notes: notes || null,
-        createdById: user.id,
+        vendorId,
       },
     })
+
+    let row
+    if (existing) {
+      row = await prisma.departmentRevenue.update({
+        where: { id: existing.id },
+        data: {
+          amount: amt,
+          description: description?.trim() || vendor.name,
+          notes: notes ?? null,
+        },
+        include: vendorInclude,
+      })
+    } else {
+      row = await prisma.departmentRevenue.create({
+        data: {
+          department: 'LOAN_DEMAT',
+          month: m,
+          year: y,
+          amount: amt,
+          vendorId,
+          description: description?.trim() || vendor.name,
+          notes: notes || null,
+          createdById: user.id,
+        },
+        include: vendorInclude,
+      })
+    }
 
     return successResponse(row)
   } catch (error) {
@@ -82,6 +127,7 @@ export async function PATCH(request: NextRequest) {
         ...(description !== undefined ? { description: description?.trim() || null } : {}),
         ...(notes !== undefined ? { notes: notes || null } : {}),
       },
+      include: vendorInclude,
     })
 
     return successResponse(row)

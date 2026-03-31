@@ -28,6 +28,7 @@ import {
   ChevronRight,
   MapPin,
   Pencil,
+  Phone,
   Users,
   Video,
 } from 'lucide-react'
@@ -42,6 +43,7 @@ export type InterviewMeet = {
   interviewRound: number | null
   candidateName: string | null
   candidateRole: string | null
+  candidatePhone: string | null
   notes: string | null
   resumeUrl: string | null
   isRecorded: boolean
@@ -90,6 +92,7 @@ export function InterviewList({ from, to, onEdit }: InterviewListProps) {
       const blob = [
         i.candidateName,
         i.candidateRole,
+        i.candidatePhone,
         i.title,
         i.notes,
       ]
@@ -206,6 +209,12 @@ export function InterviewList({ from, to, onEdit }: InterviewListProps) {
                         {i.candidateRole}
                         {i.department ? ` · ${i.department.name}` : ''}
                       </p>
+                      {i.candidatePhone ? (
+                        <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                          <Phone className="h-3 w-3 shrink-0" />
+                          <span className="tabular-nums">{i.candidatePhone}</span>
+                        </p>
+                      ) : null}
                       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                         <span className="inline-flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5 text-violet-600" />
@@ -246,6 +255,12 @@ export function InterviewList({ from, to, onEdit }: InterviewListProps) {
                 <p className="text-sm text-muted-foreground text-left">
                   {detail.candidateRole}
                 </p>
+                {detail.candidatePhone ? (
+                  <p className="text-sm text-left mt-1 flex items-center gap-1.5 tabular-nums">
+                    <Phone className="h-4 w-4 text-violet-600 shrink-0" />
+                    {detail.candidatePhone}
+                  </p>
+                ) : null}
                 {onEdit && (
                   <Button
                     type="button"

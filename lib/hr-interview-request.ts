@@ -3,6 +3,9 @@ import { z } from 'zod'
 export const interviewCreateSchema = z.object({
   candidateName: z.string().min(1).max(200),
   candidateRole: z.string().min(1).max(200),
+  candidatePhone: z
+    .string()
+    .regex(/^\d{10}$/, 'Phone must be exactly 10 digits'),
   departmentId: z.string().optional().nullable().or(z.literal('')),
   interviewRound: z.number().int().min(1).max(99),
   type: z.enum(['VIRTUAL', 'OFFLINE']),

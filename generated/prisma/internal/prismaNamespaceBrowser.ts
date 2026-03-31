@@ -108,6 +108,7 @@ export const ModelName = {
   NoticeRecipient: 'NoticeRecipient',
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
+  CampaignCPL: 'CampaignCPL',
   InsuranceQuery: 'InsuranceQuery',
   PreAuthPDF: 'PreAuthPDF',
   AdmissionRecord: 'AdmissionRecord',
@@ -139,6 +140,7 @@ export const ModelName = {
   ITFreelancer: 'ITFreelancer',
   ITProjectResource: 'ITProjectResource',
   ITProjectBooking: 'ITProjectBooking',
+  LoanDematVendor: 'LoanDematVendor',
   DepartmentRevenue: 'DepartmentRevenue',
   PnLCategory: 'PnLCategory',
   PnLConfig: 'PnLConfig',
@@ -774,6 +776,7 @@ export const MeetScalarFieldEnum = {
   interviewRound: 'interviewRound',
   candidateName: 'candidateName',
   candidateRole: 'candidateRole',
+  candidatePhone: 'candidatePhone',
   departmentId: 'departmentId',
   notes: 'notes',
   resumeUrl: 'resumeUrl',
@@ -1309,6 +1312,20 @@ export const UserFeaturePermissionScalarFieldEnum = {
 export type UserFeaturePermissionScalarFieldEnum = (typeof UserFeaturePermissionScalarFieldEnum)[keyof typeof UserFeaturePermissionScalarFieldEnum]
 
 
+export const CampaignCPLScalarFieldEnum = {
+  id: 'id',
+  campaignName: 'campaignName',
+  month: 'month',
+  year: 'year',
+  cpl: 'cpl',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CampaignCPLScalarFieldEnum = (typeof CampaignCPLScalarFieldEnum)[keyof typeof CampaignCPLScalarFieldEnum]
+
+
 export const InsuranceQueryScalarFieldEnum = {
   id: 'id',
   preAuthorizationId: 'preAuthorizationId',
@@ -1841,6 +1858,18 @@ export const ITProjectBookingScalarFieldEnum = {
 export type ITProjectBookingScalarFieldEnum = (typeof ITProjectBookingScalarFieldEnum)[keyof typeof ITProjectBookingScalarFieldEnum]
 
 
+export const LoanDematVendorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoanDematVendorScalarFieldEnum = (typeof LoanDematVendorScalarFieldEnum)[keyof typeof LoanDematVendorScalarFieldEnum]
+
+
 export const DepartmentRevenueScalarFieldEnum = {
   id: 'id',
   department: 'department',
@@ -1849,6 +1878,7 @@ export const DepartmentRevenueScalarFieldEnum = {
   amount: 'amount',
   description: 'description',
   notes: 'notes',
+  vendorId: 'vendorId',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -2,7 +2,6 @@ import * as React from 'react'
 import {
   BarChart3,
   BookOpen,
-  Briefcase,
   Building2,
   Calendar,
   CalendarDays,
@@ -343,22 +342,16 @@ export const navItems: NavItem[] = [
     permission: 'it:pnl:read',
   },
   {
-    title: 'IT Projects',
-    url: '/it/pnl/projects',
-    icon: Briefcase,
-    permission: 'it:pnl:write',
-  },
-  {
-    title: 'IT Resources',
-    url: '/it/pnl/resources',
-    icon: Users,
-    permission: 'it:pnl:write',
-  },
-  {
     title: 'Loan & Demat Revenue',
     url: '/loan-demat/revenue',
     icon: IndianRupee,
-    permission: 'loan-demat:read',
+    roles: ['FINANCE_HEAD', 'MD', 'ADMIN'],
+  },
+  {
+    title: 'Campaign CPL',
+    url: '/digital-marketing/cpl',
+    icon: Target,
+    roles: ['DIGITAL_MARKETING_HEAD', 'MD', 'ADMIN'],
   },
   {
     title: 'IT Permissions',
@@ -394,16 +387,14 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
     if (item.title === 'IT P&L') {
       return user.role === 'IT_HEAD' || user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
     }
-    // IT Projects / Resources (write): IT Head, MD, Admin
-    if (item.title === 'IT Projects' || item.title === 'IT Resources') {
-      return user.role === 'IT_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
-    }
     if (user.role === 'MD') {
       return (
         item.title === 'Sales Dashboard' ||
         item.title === 'Finance Dashboard' ||
         item.title === 'MD HR Dashboard' ||
         item.title === 'Recruitment' ||
+        item.title === 'Loan & Demat Revenue' ||
+        item.title === 'Campaign CPL' ||
         item.title.startsWith('MD ') ||
         (item.title === 'Master Data' && item.roles?.includes('MD'))
       )

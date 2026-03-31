@@ -55,7 +55,7 @@ export function SurgeryTeamDrawer({
             )}
             {team.marketingCost != null && (
               <p>
-                <span className="text-muted-foreground">Allocated marketing:</span>{' '}
+                <span className="text-muted-foreground">Marketing (CPL × leads):</span>{' '}
                 <span className="font-medium tabular-nums">{formatInr(team.marketingCost)}</span>
               </p>
             )}

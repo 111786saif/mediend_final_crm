@@ -46,6 +46,7 @@ export type DepartmentRevenueMinAggregateOutputType = {
   amount: number | null
   description: string | null
   notes: string | null
+  vendorId: string | null
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -59,6 +60,7 @@ export type DepartmentRevenueMaxAggregateOutputType = {
   amount: number | null
   description: string | null
   notes: string | null
+  vendorId: string | null
   createdById: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -72,6 +74,7 @@ export type DepartmentRevenueCountAggregateOutputType = {
   amount: number
   description: number
   notes: number
+  vendorId: number
   createdById: number
   createdAt: number
   updatedAt: number
@@ -99,6 +102,7 @@ export type DepartmentRevenueMinAggregateInputType = {
   amount?: true
   description?: true
   notes?: true
+  vendorId?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -112,6 +116,7 @@ export type DepartmentRevenueMaxAggregateInputType = {
   amount?: true
   description?: true
   notes?: true
+  vendorId?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -125,6 +130,7 @@ export type DepartmentRevenueCountAggregateInputType = {
   amount?: true
   description?: true
   notes?: true
+  vendorId?: true
   createdById?: true
   createdAt?: true
   updatedAt?: true
@@ -225,6 +231,7 @@ export type DepartmentRevenueGroupByOutputType = {
   amount: number
   description: string | null
   notes: string | null
+  vendorId: string | null
   createdById: string
   createdAt: Date
   updatedAt: Date
@@ -261,9 +268,11 @@ export type DepartmentRevenueWhereInput = {
   amount?: Prisma.FloatFilter<"DepartmentRevenue"> | number
   description?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
   notes?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
+  vendorId?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
   createdById?: Prisma.StringFilter<"DepartmentRevenue"> | string
   createdAt?: Prisma.DateTimeFilter<"DepartmentRevenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DepartmentRevenue"> | Date | string
+  vendor?: Prisma.XOR<Prisma.LoanDematVendorNullableScalarRelationFilter, Prisma.LoanDematVendorWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -275,9 +284,11 @@ export type DepartmentRevenueOrderByWithRelationInput = {
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  vendorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  vendor?: Prisma.LoanDematVendorOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -292,9 +303,11 @@ export type DepartmentRevenueWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.FloatFilter<"DepartmentRevenue"> | number
   description?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
   notes?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
+  vendorId?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
   createdById?: Prisma.StringFilter<"DepartmentRevenue"> | string
   createdAt?: Prisma.DateTimeFilter<"DepartmentRevenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DepartmentRevenue"> | Date | string
+  vendor?: Prisma.XOR<Prisma.LoanDematVendorNullableScalarRelationFilter, Prisma.LoanDematVendorWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
@@ -306,6 +319,7 @@ export type DepartmentRevenueOrderByWithAggregationInput = {
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  vendorId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -327,6 +341,7 @@ export type DepartmentRevenueScalarWhereWithAggregatesInput = {
   amount?: Prisma.FloatWithAggregatesFilter<"DepartmentRevenue"> | number
   description?: Prisma.StringNullableWithAggregatesFilter<"DepartmentRevenue"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"DepartmentRevenue"> | string | null
+  vendorId?: Prisma.StringNullableWithAggregatesFilter<"DepartmentRevenue"> | string | null
   createdById?: Prisma.StringWithAggregatesFilter<"DepartmentRevenue"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DepartmentRevenue"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"DepartmentRevenue"> | Date | string
@@ -342,6 +357,7 @@ export type DepartmentRevenueCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  vendor?: Prisma.LoanDematVendorCreateNestedOneWithoutRevenuesInput
   createdBy: Prisma.UserCreateNestedOneWithoutDepartmentRevenuesCreatedInput
 }
 
@@ -353,6 +369,7 @@ export type DepartmentRevenueUncheckedCreateInput = {
   amount?: number
   description?: string | null
   notes?: string | null
+  vendorId?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -368,6 +385,7 @@ export type DepartmentRevenueUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  vendor?: Prisma.LoanDematVendorUpdateOneWithoutRevenuesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutDepartmentRevenuesCreatedNestedInput
 }
 
@@ -379,6 +397,7 @@ export type DepartmentRevenueUncheckedUpdateInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -392,6 +411,7 @@ export type DepartmentRevenueCreateManyInput = {
   amount?: number
   description?: string | null
   notes?: string | null
+  vendorId?: string | null
   createdById: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -417,6 +437,7 @@ export type DepartmentRevenueUncheckedUpdateManyInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -440,6 +461,7 @@ export type DepartmentRevenueCountOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  vendorId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -459,6 +481,7 @@ export type DepartmentRevenueMaxOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  vendorId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -472,6 +495,7 @@ export type DepartmentRevenueMinOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   description?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  vendorId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -525,6 +549,48 @@ export type DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.DepartmentRevenueScalarWhereInput | Prisma.DepartmentRevenueScalarWhereInput[]
 }
 
+export type DepartmentRevenueCreateNestedManyWithoutVendorInput = {
+  create?: Prisma.XOR<Prisma.DepartmentRevenueCreateWithoutVendorInput, Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput> | Prisma.DepartmentRevenueCreateWithoutVendorInput[] | Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput[]
+  connectOrCreate?: Prisma.DepartmentRevenueCreateOrConnectWithoutVendorInput | Prisma.DepartmentRevenueCreateOrConnectWithoutVendorInput[]
+  createMany?: Prisma.DepartmentRevenueCreateManyVendorInputEnvelope
+  connect?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+}
+
+export type DepartmentRevenueUncheckedCreateNestedManyWithoutVendorInput = {
+  create?: Prisma.XOR<Prisma.DepartmentRevenueCreateWithoutVendorInput, Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput> | Prisma.DepartmentRevenueCreateWithoutVendorInput[] | Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput[]
+  connectOrCreate?: Prisma.DepartmentRevenueCreateOrConnectWithoutVendorInput | Prisma.DepartmentRevenueCreateOrConnectWithoutVendorInput[]
+  createMany?: Prisma.DepartmentRevenueCreateManyVendorInputEnvelope
+  connect?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+}
+
+export type DepartmentRevenueUpdateManyWithoutVendorNestedInput = {
+  create?: Prisma.XOR<Prisma.DepartmentRevenueCreateWithoutVendorInput, Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput> | Prisma.DepartmentRevenueCreateWithoutVendorInput[] | Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput[]
+  connectOrCreate?: Prisma.DepartmentRevenueCreateOrConnectWithoutVendorInput | Prisma.DepartmentRevenueCreateOrConnectWithoutVendorInput[]
+  upsert?: Prisma.DepartmentRevenueUpsertWithWhereUniqueWithoutVendorInput | Prisma.DepartmentRevenueUpsertWithWhereUniqueWithoutVendorInput[]
+  createMany?: Prisma.DepartmentRevenueCreateManyVendorInputEnvelope
+  set?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+  disconnect?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+  delete?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+  connect?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+  update?: Prisma.DepartmentRevenueUpdateWithWhereUniqueWithoutVendorInput | Prisma.DepartmentRevenueUpdateWithWhereUniqueWithoutVendorInput[]
+  updateMany?: Prisma.DepartmentRevenueUpdateManyWithWhereWithoutVendorInput | Prisma.DepartmentRevenueUpdateManyWithWhereWithoutVendorInput[]
+  deleteMany?: Prisma.DepartmentRevenueScalarWhereInput | Prisma.DepartmentRevenueScalarWhereInput[]
+}
+
+export type DepartmentRevenueUncheckedUpdateManyWithoutVendorNestedInput = {
+  create?: Prisma.XOR<Prisma.DepartmentRevenueCreateWithoutVendorInput, Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput> | Prisma.DepartmentRevenueCreateWithoutVendorInput[] | Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput[]
+  connectOrCreate?: Prisma.DepartmentRevenueCreateOrConnectWithoutVendorInput | Prisma.DepartmentRevenueCreateOrConnectWithoutVendorInput[]
+  upsert?: Prisma.DepartmentRevenueUpsertWithWhereUniqueWithoutVendorInput | Prisma.DepartmentRevenueUpsertWithWhereUniqueWithoutVendorInput[]
+  createMany?: Prisma.DepartmentRevenueCreateManyVendorInputEnvelope
+  set?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+  disconnect?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+  delete?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+  connect?: Prisma.DepartmentRevenueWhereUniqueInput | Prisma.DepartmentRevenueWhereUniqueInput[]
+  update?: Prisma.DepartmentRevenueUpdateWithWhereUniqueWithoutVendorInput | Prisma.DepartmentRevenueUpdateWithWhereUniqueWithoutVendorInput[]
+  updateMany?: Prisma.DepartmentRevenueUpdateManyWithWhereWithoutVendorInput | Prisma.DepartmentRevenueUpdateManyWithWhereWithoutVendorInput[]
+  deleteMany?: Prisma.DepartmentRevenueScalarWhereInput | Prisma.DepartmentRevenueScalarWhereInput[]
+}
+
 export type EnumRevenueDepartmentFieldUpdateOperationsInput = {
   set?: $Enums.RevenueDepartment
 }
@@ -539,6 +605,7 @@ export type DepartmentRevenueCreateWithoutCreatedByInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  vendor?: Prisma.LoanDematVendorCreateNestedOneWithoutRevenuesInput
 }
 
 export type DepartmentRevenueUncheckedCreateWithoutCreatedByInput = {
@@ -549,6 +616,7 @@ export type DepartmentRevenueUncheckedCreateWithoutCreatedByInput = {
   amount?: number
   description?: string | null
   notes?: string | null
+  vendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -590,9 +658,62 @@ export type DepartmentRevenueScalarWhereInput = {
   amount?: Prisma.FloatFilter<"DepartmentRevenue"> | number
   description?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
   notes?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
+  vendorId?: Prisma.StringNullableFilter<"DepartmentRevenue"> | string | null
   createdById?: Prisma.StringFilter<"DepartmentRevenue"> | string
   createdAt?: Prisma.DateTimeFilter<"DepartmentRevenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"DepartmentRevenue"> | Date | string
+}
+
+export type DepartmentRevenueCreateWithoutVendorInput = {
+  id?: string
+  department: $Enums.RevenueDepartment
+  month: number
+  year: number
+  amount?: number
+  description?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdBy: Prisma.UserCreateNestedOneWithoutDepartmentRevenuesCreatedInput
+}
+
+export type DepartmentRevenueUncheckedCreateWithoutVendorInput = {
+  id?: string
+  department: $Enums.RevenueDepartment
+  month: number
+  year: number
+  amount?: number
+  description?: string | null
+  notes?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DepartmentRevenueCreateOrConnectWithoutVendorInput = {
+  where: Prisma.DepartmentRevenueWhereUniqueInput
+  create: Prisma.XOR<Prisma.DepartmentRevenueCreateWithoutVendorInput, Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput>
+}
+
+export type DepartmentRevenueCreateManyVendorInputEnvelope = {
+  data: Prisma.DepartmentRevenueCreateManyVendorInput | Prisma.DepartmentRevenueCreateManyVendorInput[]
+  skipDuplicates?: boolean
+}
+
+export type DepartmentRevenueUpsertWithWhereUniqueWithoutVendorInput = {
+  where: Prisma.DepartmentRevenueWhereUniqueInput
+  update: Prisma.XOR<Prisma.DepartmentRevenueUpdateWithoutVendorInput, Prisma.DepartmentRevenueUncheckedUpdateWithoutVendorInput>
+  create: Prisma.XOR<Prisma.DepartmentRevenueCreateWithoutVendorInput, Prisma.DepartmentRevenueUncheckedCreateWithoutVendorInput>
+}
+
+export type DepartmentRevenueUpdateWithWhereUniqueWithoutVendorInput = {
+  where: Prisma.DepartmentRevenueWhereUniqueInput
+  data: Prisma.XOR<Prisma.DepartmentRevenueUpdateWithoutVendorInput, Prisma.DepartmentRevenueUncheckedUpdateWithoutVendorInput>
+}
+
+export type DepartmentRevenueUpdateManyWithWhereWithoutVendorInput = {
+  where: Prisma.DepartmentRevenueScalarWhereInput
+  data: Prisma.XOR<Prisma.DepartmentRevenueUpdateManyMutationInput, Prisma.DepartmentRevenueUncheckedUpdateManyWithoutVendorInput>
 }
 
 export type DepartmentRevenueCreateManyCreatedByInput = {
@@ -603,6 +724,7 @@ export type DepartmentRevenueCreateManyCreatedByInput = {
   amount?: number
   description?: string | null
   notes?: string | null
+  vendorId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -617,6 +739,7 @@ export type DepartmentRevenueUpdateWithoutCreatedByInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  vendor?: Prisma.LoanDematVendorUpdateOneWithoutRevenuesNestedInput
 }
 
 export type DepartmentRevenueUncheckedUpdateWithoutCreatedByInput = {
@@ -627,6 +750,7 @@ export type DepartmentRevenueUncheckedUpdateWithoutCreatedByInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -639,6 +763,59 @@ export type DepartmentRevenueUncheckedUpdateManyWithoutCreatedByInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vendorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DepartmentRevenueCreateManyVendorInput = {
+  id?: string
+  department: $Enums.RevenueDepartment
+  month: number
+  year: number
+  amount?: number
+  description?: string | null
+  notes?: string | null
+  createdById: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DepartmentRevenueUpdateWithoutVendorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.EnumRevenueDepartmentFieldUpdateOperationsInput | $Enums.RevenueDepartment
+  month?: Prisma.IntFieldUpdateOperationsInput | number
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutDepartmentRevenuesCreatedNestedInput
+}
+
+export type DepartmentRevenueUncheckedUpdateWithoutVendorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.EnumRevenueDepartmentFieldUpdateOperationsInput | $Enums.RevenueDepartment
+  month?: Prisma.IntFieldUpdateOperationsInput | number
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DepartmentRevenueUncheckedUpdateManyWithoutVendorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.EnumRevenueDepartmentFieldUpdateOperationsInput | $Enums.RevenueDepartment
+  month?: Prisma.IntFieldUpdateOperationsInput | number
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -653,9 +830,11 @@ export type DepartmentRevenueSelect<ExtArgs extends runtime.Types.Extensions.Int
   amount?: boolean
   description?: boolean
   notes?: boolean
+  vendorId?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  vendor?: boolean | Prisma.DepartmentRevenue$vendorArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["departmentRevenue"]>
 
@@ -667,9 +846,11 @@ export type DepartmentRevenueSelectCreateManyAndReturn<ExtArgs extends runtime.T
   amount?: boolean
   description?: boolean
   notes?: boolean
+  vendorId?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  vendor?: boolean | Prisma.DepartmentRevenue$vendorArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["departmentRevenue"]>
 
@@ -681,9 +862,11 @@ export type DepartmentRevenueSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   amount?: boolean
   description?: boolean
   notes?: boolean
+  vendorId?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  vendor?: boolean | Prisma.DepartmentRevenue$vendorArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["departmentRevenue"]>
 
@@ -695,25 +878,30 @@ export type DepartmentRevenueSelectScalar = {
   amount?: boolean
   description?: boolean
   notes?: boolean
+  vendorId?: boolean
   createdById?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DepartmentRevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "department" | "month" | "year" | "amount" | "description" | "notes" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["departmentRevenue"]>
+export type DepartmentRevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "department" | "month" | "year" | "amount" | "description" | "notes" | "vendorId" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["departmentRevenue"]>
 export type DepartmentRevenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  vendor?: boolean | Prisma.DepartmentRevenue$vendorArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type DepartmentRevenueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  vendor?: boolean | Prisma.DepartmentRevenue$vendorArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type DepartmentRevenueIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  vendor?: boolean | Prisma.DepartmentRevenue$vendorArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $DepartmentRevenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DepartmentRevenue"
   objects: {
+    vendor: Prisma.$LoanDematVendorPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -724,6 +912,10 @@ export type $DepartmentRevenuePayload<ExtArgs extends runtime.Types.Extensions.I
     amount: number
     description: string | null
     notes: string | null
+    /**
+     * Set for LOAN_DEMAT rows tied to a vendor; null for legacy or non-vendor lines
+     */
+    vendorId: string | null
     createdById: string
     createdAt: Date
     updatedAt: Date
@@ -1121,6 +1313,7 @@ readonly fields: DepartmentRevenueFieldRefs;
  */
 export interface Prisma__DepartmentRevenueClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  vendor<T extends Prisma.DepartmentRevenue$vendorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentRevenue$vendorArgs<ExtArgs>>): Prisma.Prisma__LoanDematVendorClient<runtime.Types.Result.GetResult<Prisma.$LoanDematVendorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1158,6 +1351,7 @@ export interface DepartmentRevenueFieldRefs {
   readonly amount: Prisma.FieldRef<"DepartmentRevenue", 'Float'>
   readonly description: Prisma.FieldRef<"DepartmentRevenue", 'String'>
   readonly notes: Prisma.FieldRef<"DepartmentRevenue", 'String'>
+  readonly vendorId: Prisma.FieldRef<"DepartmentRevenue", 'String'>
   readonly createdById: Prisma.FieldRef<"DepartmentRevenue", 'String'>
   readonly createdAt: Prisma.FieldRef<"DepartmentRevenue", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"DepartmentRevenue", 'DateTime'>
@@ -1559,6 +1753,25 @@ export type DepartmentRevenueDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many DepartmentRevenues to delete.
    */
   limit?: number
+}
+
+/**
+ * DepartmentRevenue.vendor
+ */
+export type DepartmentRevenue$vendorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoanDematVendor
+   */
+  select?: Prisma.LoanDematVendorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoanDematVendor
+   */
+  omit?: Prisma.LoanDematVendorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoanDematVendorInclude<ExtArgs> | null
+  where?: Prisma.LoanDematVendorWhereInput
 }
 
 /**

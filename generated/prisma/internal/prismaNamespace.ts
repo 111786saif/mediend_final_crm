@@ -441,6 +441,7 @@ export const ModelName = {
   NoticeRecipient: 'NoticeRecipient',
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
+  CampaignCPL: 'CampaignCPL',
   InsuranceQuery: 'InsuranceQuery',
   PreAuthPDF: 'PreAuthPDF',
   AdmissionRecord: 'AdmissionRecord',
@@ -472,6 +473,7 @@ export const ModelName = {
   ITFreelancer: 'ITFreelancer',
   ITProjectResource: 'ITProjectResource',
   ITProjectBooking: 'ITProjectBooking',
+  LoanDematVendor: 'LoanDematVendor',
   DepartmentRevenue: 'DepartmentRevenue',
   PnLCategory: 'PnLCategory',
   PnLConfig: 'PnLConfig',
@@ -492,7 +494,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
+    modelProps: "user" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4714,6 +4716,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CampaignCPL: {
+      payload: Prisma.$CampaignCPLPayload<ExtArgs>
+      fields: Prisma.CampaignCPLFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CampaignCPLFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CampaignCPLFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>
+        }
+        findFirst: {
+          args: Prisma.CampaignCPLFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CampaignCPLFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>
+        }
+        findMany: {
+          args: Prisma.CampaignCPLFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>[]
+        }
+        create: {
+          args: Prisma.CampaignCPLCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>
+        }
+        createMany: {
+          args: Prisma.CampaignCPLCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CampaignCPLCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>[]
+        }
+        delete: {
+          args: Prisma.CampaignCPLDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>
+        }
+        update: {
+          args: Prisma.CampaignCPLUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>
+        }
+        deleteMany: {
+          args: Prisma.CampaignCPLDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CampaignCPLUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CampaignCPLUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>[]
+        }
+        upsert: {
+          args: Prisma.CampaignCPLUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignCPLPayload>
+        }
+        aggregate: {
+          args: Prisma.CampaignCPLAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCampaignCPL>
+        }
+        groupBy: {
+          args: Prisma.CampaignCPLGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CampaignCPLGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CampaignCPLCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CampaignCPLCountAggregateOutputType> | number
+        }
+      }
+    }
     InsuranceQuery: {
       payload: Prisma.$InsuranceQueryPayload<ExtArgs>
       fields: Prisma.InsuranceQueryFieldRefs
@@ -7008,6 +7084,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LoanDematVendor: {
+      payload: Prisma.$LoanDematVendorPayload<ExtArgs>
+      fields: Prisma.LoanDematVendorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoanDematVendorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoanDematVendorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>
+        }
+        findFirst: {
+          args: Prisma.LoanDematVendorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoanDematVendorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>
+        }
+        findMany: {
+          args: Prisma.LoanDematVendorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>[]
+        }
+        create: {
+          args: Prisma.LoanDematVendorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>
+        }
+        createMany: {
+          args: Prisma.LoanDematVendorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LoanDematVendorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>[]
+        }
+        delete: {
+          args: Prisma.LoanDematVendorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>
+        }
+        update: {
+          args: Prisma.LoanDematVendorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>
+        }
+        deleteMany: {
+          args: Prisma.LoanDematVendorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoanDematVendorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LoanDematVendorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>[]
+        }
+        upsert: {
+          args: Prisma.LoanDematVendorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanDematVendorPayload>
+        }
+        aggregate: {
+          args: Prisma.LoanDematVendorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoanDematVendor>
+        }
+        groupBy: {
+          args: Prisma.LoanDematVendorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoanDematVendorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoanDematVendorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoanDematVendorCountAggregateOutputType> | number
+        }
+      }
+    }
     DepartmentRevenue: {
       payload: Prisma.$DepartmentRevenuePayload<ExtArgs>
       fields: Prisma.DepartmentRevenueFieldRefs
@@ -8029,6 +8179,7 @@ export const MeetScalarFieldEnum = {
   interviewRound: 'interviewRound',
   candidateName: 'candidateName',
   candidateRole: 'candidateRole',
+  candidatePhone: 'candidatePhone',
   departmentId: 'departmentId',
   notes: 'notes',
   resumeUrl: 'resumeUrl',
@@ -8564,6 +8715,20 @@ export const UserFeaturePermissionScalarFieldEnum = {
 export type UserFeaturePermissionScalarFieldEnum = (typeof UserFeaturePermissionScalarFieldEnum)[keyof typeof UserFeaturePermissionScalarFieldEnum]
 
 
+export const CampaignCPLScalarFieldEnum = {
+  id: 'id',
+  campaignName: 'campaignName',
+  month: 'month',
+  year: 'year',
+  cpl: 'cpl',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CampaignCPLScalarFieldEnum = (typeof CampaignCPLScalarFieldEnum)[keyof typeof CampaignCPLScalarFieldEnum]
+
+
 export const InsuranceQueryScalarFieldEnum = {
   id: 'id',
   preAuthorizationId: 'preAuthorizationId',
@@ -9096,6 +9261,18 @@ export const ITProjectBookingScalarFieldEnum = {
 export type ITProjectBookingScalarFieldEnum = (typeof ITProjectBookingScalarFieldEnum)[keyof typeof ITProjectBookingScalarFieldEnum]
 
 
+export const LoanDematVendorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoanDematVendorScalarFieldEnum = (typeof LoanDematVendorScalarFieldEnum)[keyof typeof LoanDematVendorScalarFieldEnum]
+
+
 export const DepartmentRevenueScalarFieldEnum = {
   id: 'id',
   department: 'department',
@@ -9104,6 +9281,7 @@ export const DepartmentRevenueScalarFieldEnum = {
   amount: 'amount',
   description: 'description',
   notes: 'notes',
+  vendorId: 'vendorId',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -10208,6 +10386,7 @@ export type GlobalOmitConfig = {
   noticeRecipient?: Prisma.NoticeRecipientOmit
   mDApprovalRequest?: Prisma.MDApprovalRequestOmit
   userFeaturePermission?: Prisma.UserFeaturePermissionOmit
+  campaignCPL?: Prisma.CampaignCPLOmit
   insuranceQuery?: Prisma.InsuranceQueryOmit
   preAuthPDF?: Prisma.PreAuthPDFOmit
   admissionRecord?: Prisma.AdmissionRecordOmit
@@ -10239,6 +10418,7 @@ export type GlobalOmitConfig = {
   iTFreelancer?: Prisma.ITFreelancerOmit
   iTProjectResource?: Prisma.ITProjectResourceOmit
   iTProjectBooking?: Prisma.ITProjectBookingOmit
+  loanDematVendor?: Prisma.LoanDematVendorOmit
   departmentRevenue?: Prisma.DepartmentRevenueOmit
   pnLCategory?: Prisma.PnLCategoryOmit
   pnLConfig?: Prisma.PnLConfigOmit

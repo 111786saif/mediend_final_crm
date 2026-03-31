@@ -105,6 +105,7 @@ export async function POST(request: NextRequest) {
         interviewRound: data.interviewRound,
         candidateName: data.candidateName.trim(),
         candidateRole: data.candidateRole.trim(),
+        candidatePhone: data.candidatePhone.trim(),
         departmentId: data.departmentId?.trim() || null,
         notes: data.notes?.trim() || null,
         resumeUrl: data.resumeUrl?.trim() || null,

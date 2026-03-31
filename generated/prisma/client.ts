@@ -327,6 +327,11 @@ export type MDApprovalRequest = Prisma.MDApprovalRequestModel
  */
 export type UserFeaturePermission = Prisma.UserFeaturePermissionModel
 /**
+ * Model CampaignCPL
+ * Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + leadDate
+ */
+export type CampaignCPL = Prisma.CampaignCPLModel
+/**
  * Model InsuranceQuery
  * 
  */
@@ -481,6 +486,11 @@ export type ITProjectResource = Prisma.ITProjectResourceModel
  * 
  */
 export type ITProjectBooking = Prisma.ITProjectBookingModel
+/**
+ * Model LoanDematVendor
+ * Partners / sources for Loan & Demat revenue (vendor-wise monthly amounts).
+ */
+export type LoanDematVendor = Prisma.LoanDematVendorModel
 /**
  * Model DepartmentRevenue
  * 

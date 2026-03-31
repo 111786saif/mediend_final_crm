@@ -48,7 +48,7 @@ export function SurgeryTeamTable({
           {showLeads && (
             <>
               <TableHead className="text-right">Leads</TableHead>
-              <TableHead className="text-right">Mktg cost</TableHead>
+              <TableHead className="text-right">Mktg (CPL)</TableHead>
             </>
           )}
           <TableHead className="text-right">Revenue</TableHead>

@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Target, Briefcase, ChevronRight } from 'lucide-react'
+import { Target, Briefcase, ChevronRight, Phone } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { InterviewMeet } from '@/components/hr/interview-list'
 
@@ -122,11 +122,17 @@ export function HRDashboardRecruitmentStrip() {
     return weekInterviews.filter((i) => new Date(i.scheduledAt) >= now).length
   }, [weekInterviews])
 
-  const { data: hrAchievement } = useQuery<{
+  const {
+    data: hrAchievement,
+    isLoading: hrAchievementLoading,
+    isError: hrAchievementError,
+    error: hrAchievementErr,
+  } = useQuery<{
     currentMonth: {
       actual: number
       targetValue: number
       percentage: number
+      targetId?: string | null
     }
     metric: string
   }>({
@@ -180,7 +186,7 @@ export function HRDashboardRecruitmentStrip() {
   return (
     <div className="grid gap-2.5 sm:gap-4 grid-cols-1 lg:grid-cols-2">
       {showInterviews ? (
-        <Card className="border-2 border-violet-200/60 dark:border-violet-900/50 bg-gradient-to-br from-violet-50/80 to-fuchsia-50/40 dark:from-violet-950/20 dark:to-fuchsia-950/10 overflow-hidden">
+        <Card className="border-2 border-violet-300 dark:border-violet-800 bg-violet-100 dark:bg-violet-950/50 overflow-hidden">
           <CardHeader className="pb-2 px-2 sm:px-6 pt-4 space-y-1">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0">
@@ -223,7 +229,7 @@ export function HRDashboardRecruitmentStrip() {
                     <li
                       key={i.id}
                       className={cn(
-                        'rounded-xl border bg-background/90 dark:bg-background/50 px-3 py-2.5 text-sm shadow-sm',
+                        'rounded-xl border border-violet-200/80 dark:border-violet-800/60 bg-white dark:bg-violet-950/30 px-3 py-2.5 text-sm shadow-sm',
                         past && 'opacity-70 border-muted'
                       )}
                     >
@@ -239,6 +245,12 @@ export function HRDashboardRecruitmentStrip() {
                             if (meta.length === 0) return null
                             return <p className="text-xs text-muted-foreground">{meta.join(' · ')}</p>
                           })()}
+                          {i.candidatePhone ? (
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 tabular-nums">
+                              <Phone className="h-3 w-3 shrink-0" />
+                              {i.candidatePhone}
+                            </p>
+                          ) : null}
                           {i.createdBy?.name ? (
                             <p className="text-xs text-muted-foreground">Coordinator: {i.createdBy.name}</p>
                           ) : null}
@@ -271,31 +283,49 @@ export function HRDashboardRecruitmentStrip() {
       ) : null}
 
       {showHiringTarget ? (
-        <Card className="border-2 border-amber-200/70 dark:border-amber-900/50 bg-gradient-to-br from-amber-50/90 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10">
+        <Card className="border-2 border-amber-300 dark:border-amber-800 bg-amber-100 dark:bg-amber-950/50">
           <CardHeader className="pb-2 px-2 sm:px-6 pt-4">
             <CardTitle className="text-base flex items-center gap-2">
-              <Target className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <Target className="h-5 w-5 text-amber-700 dark:text-amber-400" />
               Hiring target
             </CardTitle>
           </CardHeader>
           <CardContent className="px-2 sm:px-6 pb-4 space-y-3 text-sm">
-            {hrAchievement?.currentMonth && (
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">Headcount (this month)</p>
-                <div className="flex items-baseline gap-2 flex-wrap">
-                  <span className="text-2xl font-bold text-amber-700 dark:text-amber-400">
-                    {hrAchievement.currentMonth.actual}
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    / {hrAchievement.currentMonth.targetValue || '—'} target
-                  </span>
-                  {hrAchievement.currentMonth.targetValue > 0 && (
-                    <Badge variant="outline" className="ml-auto">
+            {hrAchievementLoading && (
+              <div className="space-y-2 animate-pulse py-1">
+                <div className="h-4 w-40 rounded bg-amber-200/80 dark:bg-amber-900/40" />
+                <div className="h-8 w-24 rounded bg-amber-200/80 dark:bg-amber-900/40" />
+                <div className="h-2 rounded bg-amber-200/80 dark:bg-amber-900/40" />
+              </div>
+            )}
+            {hrAchievementError && (
+              <p className="text-xs text-destructive">
+                {(hrAchievementErr as Error)?.message || 'Could not load hiring target.'}
+              </p>
+            )}
+            {!hrAchievementLoading &&
+              !hrAchievementError &&
+              hrAchievement?.currentMonth &&
+              (hrAchievement.currentMonth.targetValue > 0 ||
+                Boolean(hrAchievement.currentMonth.targetId)) && (
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Headcount (this month)</p>
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span className="text-2xl font-bold text-amber-800 dark:text-amber-300">
+                      {hrAchievement.currentMonth.actual}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      / {hrAchievement.currentMonth.targetValue || '—'} target
+                    </span>
+                  {(hrAchievement.currentMonth.targetValue > 0 ||
+                    hrAchievement.currentMonth.percentage > 0) && (
+                    <Badge variant="outline" className="ml-auto border-amber-600/40">
                       {hrAchievement.currentMonth.percentage}%
                     </Badge>
                   )}
                 </div>
-                {hrAchievement.currentMonth.targetValue > 0 && (
+                {(hrAchievement.currentMonth.targetValue > 0 ||
+                  hrAchievement.currentMonth.targetId) && (
                   <Progress
                     value={Math.min(hrAchievement.currentMonth.percentage, 100)}
                     className="mt-3 h-2"
@@ -303,7 +333,18 @@ export function HRDashboardRecruitmentStrip() {
                 )}
               </div>
             )}
-            {!hrAchievement?.currentMonth && (
+            {!hrAchievementLoading &&
+              !hrAchievementError &&
+              hrAchievement?.currentMonth &&
+              !(
+                hrAchievement.currentMonth.targetValue > 0 ||
+                Boolean(hrAchievement.currentMonth.targetId)
+              ) && (
+                <p className="text-xs text-muted-foreground">
+                  No active monthly target set. Ask MD to set headcount targets.
+                </p>
+              )}
+            {!hrAchievementLoading && !hrAchievementError && !hrAchievement?.currentMonth && (
               <p className="text-xs text-muted-foreground">
                 No active monthly target set. Ask MD to set headcount targets.
               </p>
@@ -313,7 +354,7 @@ export function HRDashboardRecruitmentStrip() {
       ) : null}
 
       {showMdDeptTargets ? (
-        <Card className="border-2 border-amber-200/70 dark:border-amber-900/50 bg-gradient-to-br from-amber-50/90 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/10">
+        <Card className="border-2 border-amber-300 dark:border-amber-800 bg-amber-100 dark:bg-amber-950/50">
           <CardHeader className="pb-2 px-2 sm:px-6 pt-4 space-y-1">
             <CardTitle className="text-base flex items-center gap-2">
               <Target className="h-5 w-5 text-amber-600 dark:text-amber-400" />
@@ -350,7 +391,7 @@ export function HRDashboardRecruitmentStrip() {
                     return (
                       <div
                         key={head.id}
-                        className="rounded-xl border border-amber-200/60 dark:border-amber-900/40 bg-background/70 dark:bg-background/40 p-2.5 sm:p-3 space-y-2"
+                        className="rounded-xl border border-amber-300/80 dark:border-amber-800/50 bg-white dark:bg-amber-950/30 p-2.5 sm:p-3 space-y-2"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">

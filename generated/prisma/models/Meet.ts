@@ -47,6 +47,7 @@ export type MeetMinAggregateOutputType = {
   interviewRound: number | null
   candidateName: string | null
   candidateRole: string | null
+  candidatePhone: string | null
   departmentId: string | null
   notes: string | null
   resumeUrl: string | null
@@ -70,6 +71,7 @@ export type MeetMaxAggregateOutputType = {
   interviewRound: number | null
   candidateName: string | null
   candidateRole: string | null
+  candidatePhone: string | null
   departmentId: string | null
   notes: string | null
   resumeUrl: string | null
@@ -93,6 +95,7 @@ export type MeetCountAggregateOutputType = {
   interviewRound: number
   candidateName: number
   candidateRole: number
+  candidatePhone: number
   departmentId: number
   notes: number
   resumeUrl: number
@@ -126,6 +129,7 @@ export type MeetMinAggregateInputType = {
   interviewRound?: true
   candidateName?: true
   candidateRole?: true
+  candidatePhone?: true
   departmentId?: true
   notes?: true
   resumeUrl?: true
@@ -149,6 +153,7 @@ export type MeetMaxAggregateInputType = {
   interviewRound?: true
   candidateName?: true
   candidateRole?: true
+  candidatePhone?: true
   departmentId?: true
   notes?: true
   resumeUrl?: true
@@ -172,6 +177,7 @@ export type MeetCountAggregateInputType = {
   interviewRound?: true
   candidateName?: true
   candidateRole?: true
+  candidatePhone?: true
   departmentId?: true
   notes?: true
   resumeUrl?: true
@@ -282,6 +288,7 @@ export type MeetGroupByOutputType = {
   interviewRound: number | null
   candidateName: string | null
   candidateRole: string | null
+  candidatePhone: string | null
   departmentId: string | null
   notes: string | null
   resumeUrl: string | null
@@ -328,6 +335,7 @@ export type MeetWhereInput = {
   interviewRound?: Prisma.IntNullableFilter<"Meet"> | number | null
   candidateName?: Prisma.StringNullableFilter<"Meet"> | string | null
   candidateRole?: Prisma.StringNullableFilter<"Meet"> | string | null
+  candidatePhone?: Prisma.StringNullableFilter<"Meet"> | string | null
   departmentId?: Prisma.StringNullableFilter<"Meet"> | string | null
   notes?: Prisma.StringNullableFilter<"Meet"> | string | null
   resumeUrl?: Prisma.StringNullableFilter<"Meet"> | string | null
@@ -355,6 +363,7 @@ export type MeetOrderByWithRelationInput = {
   interviewRound?: Prisma.SortOrderInput | Prisma.SortOrder
   candidateName?: Prisma.SortOrderInput | Prisma.SortOrder
   candidateRole?: Prisma.SortOrderInput | Prisma.SortOrder
+  candidatePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   resumeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -386,6 +395,7 @@ export type MeetWhereUniqueInput = Prisma.AtLeast<{
   interviewRound?: Prisma.IntNullableFilter<"Meet"> | number | null
   candidateName?: Prisma.StringNullableFilter<"Meet"> | string | null
   candidateRole?: Prisma.StringNullableFilter<"Meet"> | string | null
+  candidatePhone?: Prisma.StringNullableFilter<"Meet"> | string | null
   departmentId?: Prisma.StringNullableFilter<"Meet"> | string | null
   notes?: Prisma.StringNullableFilter<"Meet"> | string | null
   resumeUrl?: Prisma.StringNullableFilter<"Meet"> | string | null
@@ -412,6 +422,7 @@ export type MeetOrderByWithAggregationInput = {
   interviewRound?: Prisma.SortOrderInput | Prisma.SortOrder
   candidateName?: Prisma.SortOrderInput | Prisma.SortOrder
   candidateRole?: Prisma.SortOrderInput | Prisma.SortOrder
+  candidatePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   resumeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -443,6 +454,7 @@ export type MeetScalarWhereWithAggregatesInput = {
   interviewRound?: Prisma.IntNullableWithAggregatesFilter<"Meet"> | number | null
   candidateName?: Prisma.StringNullableWithAggregatesFilter<"Meet"> | string | null
   candidateRole?: Prisma.StringNullableWithAggregatesFilter<"Meet"> | string | null
+  candidatePhone?: Prisma.StringNullableWithAggregatesFilter<"Meet"> | string | null
   departmentId?: Prisma.StringNullableWithAggregatesFilter<"Meet"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Meet"> | string | null
   resumeUrl?: Prisma.StringNullableWithAggregatesFilter<"Meet"> | string | null
@@ -466,6 +478,7 @@ export type MeetCreateInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   notes?: string | null
   resumeUrl?: string | null
   isRecorded?: boolean
@@ -490,6 +503,7 @@ export type MeetUncheckedCreateInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   departmentId?: string | null
   notes?: string | null
   resumeUrl?: string | null
@@ -514,6 +528,7 @@ export type MeetUpdateInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isRecorded?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -538,6 +553,7 @@ export type MeetUncheckedUpdateInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -562,6 +578,7 @@ export type MeetCreateManyInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   departmentId?: string | null
   notes?: string | null
   resumeUrl?: string | null
@@ -585,6 +602,7 @@ export type MeetUpdateManyMutationInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isRecorded?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -605,6 +623,7 @@ export type MeetUncheckedUpdateManyInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -643,6 +662,7 @@ export type MeetCountOrderByAggregateInput = {
   interviewRound?: Prisma.SortOrder
   candidateName?: Prisma.SortOrder
   candidateRole?: Prisma.SortOrder
+  candidatePhone?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
@@ -670,6 +690,7 @@ export type MeetMaxOrderByAggregateInput = {
   interviewRound?: Prisma.SortOrder
   candidateName?: Prisma.SortOrder
   candidateRole?: Prisma.SortOrder
+  candidatePhone?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
@@ -693,6 +714,7 @@ export type MeetMinOrderByAggregateInput = {
   interviewRound?: Prisma.SortOrder
   candidateName?: Prisma.SortOrder
   candidateRole?: Prisma.SortOrder
+  candidatePhone?: Prisma.SortOrder
   departmentId?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   resumeUrl?: Prisma.SortOrder
@@ -863,6 +885,7 @@ export type MeetCreateWithoutCreatedByInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   notes?: string | null
   resumeUrl?: string | null
   isRecorded?: boolean
@@ -886,6 +909,7 @@ export type MeetUncheckedCreateWithoutCreatedByInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   departmentId?: string | null
   notes?: string | null
   resumeUrl?: string | null
@@ -938,6 +962,7 @@ export type MeetScalarWhereInput = {
   interviewRound?: Prisma.IntNullableFilter<"Meet"> | number | null
   candidateName?: Prisma.StringNullableFilter<"Meet"> | string | null
   candidateRole?: Prisma.StringNullableFilter<"Meet"> | string | null
+  candidatePhone?: Prisma.StringNullableFilter<"Meet"> | string | null
   departmentId?: Prisma.StringNullableFilter<"Meet"> | string | null
   notes?: Prisma.StringNullableFilter<"Meet"> | string | null
   resumeUrl?: Prisma.StringNullableFilter<"Meet"> | string | null
@@ -961,6 +986,7 @@ export type MeetCreateWithoutDepartmentInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   notes?: string | null
   resumeUrl?: string | null
   isRecorded?: boolean
@@ -984,6 +1010,7 @@ export type MeetUncheckedCreateWithoutDepartmentInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   notes?: string | null
   resumeUrl?: string | null
   isRecorded?: boolean
@@ -1033,6 +1060,7 @@ export type MeetCreateWithoutMdAppointmentInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   notes?: string | null
   resumeUrl?: string | null
   isRecorded?: boolean
@@ -1056,6 +1084,7 @@ export type MeetUncheckedCreateWithoutMdAppointmentInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   departmentId?: string | null
   notes?: string | null
   resumeUrl?: string | null
@@ -1095,6 +1124,7 @@ export type MeetUpdateWithoutMdAppointmentInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isRecorded?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1118,6 +1148,7 @@ export type MeetUncheckedUpdateWithoutMdAppointmentInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1141,6 +1172,7 @@ export type MeetCreateWithoutParticipantsInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   notes?: string | null
   resumeUrl?: string | null
   isRecorded?: boolean
@@ -1164,6 +1196,7 @@ export type MeetUncheckedCreateWithoutParticipantsInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   departmentId?: string | null
   notes?: string | null
   resumeUrl?: string | null
@@ -1203,6 +1236,7 @@ export type MeetUpdateWithoutParticipantsInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isRecorded?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1226,6 +1260,7 @@ export type MeetUncheckedUpdateWithoutParticipantsInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1249,6 +1284,7 @@ export type MeetCreateManyCreatedByInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   departmentId?: string | null
   notes?: string | null
   resumeUrl?: string | null
@@ -1271,6 +1307,7 @@ export type MeetUpdateWithoutCreatedByInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isRecorded?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1294,6 +1331,7 @@ export type MeetUncheckedUpdateWithoutCreatedByInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1317,6 +1355,7 @@ export type MeetUncheckedUpdateManyWithoutCreatedByInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1339,6 +1378,7 @@ export type MeetCreateManyDepartmentInput = {
   interviewRound?: number | null
   candidateName?: string | null
   candidateRole?: string | null
+  candidatePhone?: string | null
   notes?: string | null
   resumeUrl?: string | null
   isRecorded?: boolean
@@ -1361,6 +1401,7 @@ export type MeetUpdateWithoutDepartmentInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isRecorded?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1384,6 +1425,7 @@ export type MeetUncheckedUpdateWithoutDepartmentInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isRecorded?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1407,6 +1449,7 @@ export type MeetUncheckedUpdateManyWithoutDepartmentInput = {
   interviewRound?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   candidateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   candidateRole?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidatePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resumeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isRecorded?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1460,6 +1503,7 @@ export type MeetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   interviewRound?: boolean
   candidateName?: boolean
   candidateRole?: boolean
+  candidatePhone?: boolean
   departmentId?: boolean
   notes?: boolean
   resumeUrl?: boolean
@@ -1488,6 +1532,7 @@ export type MeetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   interviewRound?: boolean
   candidateName?: boolean
   candidateRole?: boolean
+  candidatePhone?: boolean
   departmentId?: boolean
   notes?: boolean
   resumeUrl?: boolean
@@ -1514,6 +1559,7 @@ export type MeetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   interviewRound?: boolean
   candidateName?: boolean
   candidateRole?: boolean
+  candidatePhone?: boolean
   departmentId?: boolean
   notes?: boolean
   resumeUrl?: boolean
@@ -1540,6 +1586,7 @@ export type MeetSelectScalar = {
   interviewRound?: boolean
   candidateName?: boolean
   candidateRole?: boolean
+  candidatePhone?: boolean
   departmentId?: boolean
   notes?: boolean
   resumeUrl?: boolean
@@ -1550,7 +1597,7 @@ export type MeetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type MeetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "meetLink" | "location" | "scheduledAt" | "endTime" | "module" | "interviewRound" | "candidateName" | "candidateRole" | "departmentId" | "notes" | "resumeUrl" | "isRecorded" | "createdById" | "mdAppointmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["meet"]>
+export type MeetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "meetLink" | "location" | "scheduledAt" | "endTime" | "module" | "interviewRound" | "candidateName" | "candidateRole" | "candidatePhone" | "departmentId" | "notes" | "resumeUrl" | "isRecorded" | "createdById" | "mdAppointmentId" | "createdAt" | "updatedAt", ExtArgs["result"]["meet"]>
 export type MeetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   department?: boolean | Prisma.Meet$departmentArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1590,6 +1637,10 @@ export type $MeetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     interviewRound: number | null
     candidateName: string | null
     candidateRole: string | null
+    /**
+     * 10-digit mobile; optional for legacy rows
+     */
+    candidatePhone: string | null
     departmentId: string | null
     notes: string | null
     resumeUrl: string | null
@@ -2037,6 +2088,7 @@ export interface MeetFieldRefs {
   readonly interviewRound: Prisma.FieldRef<"Meet", 'Int'>
   readonly candidateName: Prisma.FieldRef<"Meet", 'String'>
   readonly candidateRole: Prisma.FieldRef<"Meet", 'String'>
+  readonly candidatePhone: Prisma.FieldRef<"Meet", 'String'>
   readonly departmentId: Prisma.FieldRef<"Meet", 'String'>
   readonly notes: Prisma.FieldRef<"Meet", 'String'>
   readonly resumeUrl: Prisma.FieldRef<"Meet", 'String'>
