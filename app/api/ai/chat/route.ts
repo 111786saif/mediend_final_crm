@@ -1,7 +1,6 @@
 import { streamText, convertToModelMessages } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { google } from '@ai-sdk/google'
-import { groq } from '@ai-sdk/groq'
 import { NextRequest } from 'next/server'
 import { getSessionFromRequest } from '@/lib/session'
 import { unauthorizedResponse, errorResponse } from '@/lib/api-utils'
@@ -9,20 +8,22 @@ import { buildSystemPrompt } from '@/lib/ai/schema-context'
 import { createQueryLeadsTool, createQueryAnalyticsTool, createQueryFinanceTool, createExecuteQueryTool, createGetSchemaInfoTool } from '@/lib/ai/tools'
 import { getUserById } from '@/lib/auth'
 
-// Provider order: Google (if GOOGLE_GENERATIVE_AI_API_KEY) → OpenAI → Groq
 const OPENAI_CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4o-mini'
 
-function getChatModel() {
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+type AIProvider = 'openai' | 'gemini'
+
+function getChatModel(provider: AIProvider) {
+  if (provider === 'gemini') {
+    if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+      return errorResponse('Gemini is not configured. Set GOOGLE_GENERATIVE_AI_API_KEY in .env', 503)
+    }
     return google('gemini-2.0-flash')
   }
-  if (process.env.OPENAI_API_KEY) {
-    return openai(OPENAI_CHAT_MODEL)
+  // default: openai
+  if (!process.env.OPENAI_API_KEY) {
+    return errorResponse('OpenAI is not configured. Set OPENAI_API_KEY in .env', 503)
   }
-  if (process.env.GROQ_API_KEY) {
-    return groq('llama-3.3-70b-versatile')
-  }
-  return null
+  return openai(OPENAI_CHAT_MODEL)
 }
 
 export async function POST(req: NextRequest) {
@@ -32,13 +33,11 @@ export async function POST(req: NextRequest) {
       return unauthorizedResponse('Please log in to use mediendAI')
     }
 
-    // Get full user data for role context
     const fullUser = await getUserById(user.id)
     if (!fullUser) {
       return unauthorizedResponse()
     }
 
-    // Only allowed roles can use AI chat
     const AI_ALLOWED_ROLES = ['ADMIN', 'MD', 'EXECUTIVE_ASSISTANT', 'FINANCE_HEAD']
     if (!AI_ALLOWED_ROLES.includes(fullUser.role)) {
       return errorResponse('Access denied. AI features are not available for your role.', 403)
@@ -51,10 +50,14 @@ export async function POST(req: NextRequest) {
       return errorResponse('Invalid request: messages array required', 400)
     }
 
-    // Build system prompt with user role context
+    const providerParam = (req.nextUrl.searchParams.get('model') ?? 'openai') as AIProvider
+    const modelOrError = getChatModel(providerParam)
+
+    // If getChatModel returned a Response (error), return it directly
+    if (modelOrError instanceof Response) return modelOrError
+
     const systemPrompt = buildSystemPrompt(fullUser.role)
 
-    // Create tools with user context
     const cookieHeader = req.headers.get('cookie') || ''
     const tools = {
       queryLeads: createQueryLeadsTool(fullUser),
@@ -64,19 +67,10 @@ export async function POST(req: NextRequest) {
       getSchemaInfo: createGetSchemaInfoTool(),
     }
 
-    const model = getChatModel()
-    if (!model) {
-      return errorResponse(
-        'No AI provider configured. Set OPENAI_API_KEY, GROQ_API_KEY, or GOOGLE_GENERATIVE_AI_API_KEY in .env',
-        503
-      )
-    }
-
-    // Client sends UIMessage[] (id, role, parts); streamText expects CoreMessage[] (role, content).
     const modelMessages = await convertToModelMessages(messages, { tools })
 
     const result = streamText({
-      model,
+      model: modelOrError,
       system: systemPrompt,
       messages: modelMessages,
       tools,
