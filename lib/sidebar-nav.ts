@@ -404,6 +404,7 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
         item.title === 'MD HR Dashboard' ||
         item.title === 'Recruitment' ||
         item.title === 'Loan & Demat Revenue' ||
+        item.title === 'DM Dashboard' ||
         item.title.startsWith('MD ') ||
         (item.title === 'Master Data' && item.roles?.includes('MD'))
       )
