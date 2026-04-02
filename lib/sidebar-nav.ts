@@ -31,6 +31,7 @@ import {
   UserCheck,
   UserCircle,
   Users,
+  Megaphone,
   Wallet,
 } from 'lucide-react'
 import { SessionUser } from '@/lib/auth'
@@ -101,6 +102,12 @@ export const navItems: NavItem[] = [
     url: '/master-data',
     icon: Database,
     roles: ['EXECUTIVE_ASSISTANT', 'MD', 'ADMIN', 'TESTER'],
+  },
+  {
+    title: 'DM Dashboard',
+    url: '/digital-marketing/dashboard',
+    icon: Megaphone,
+    roles: ['DIGITAL_MARKETING_HEAD', 'MD', 'ADMIN'],
   },
   {
     title: 'Dept Targets',

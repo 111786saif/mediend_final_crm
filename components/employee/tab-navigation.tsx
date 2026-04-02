@@ -14,6 +14,7 @@ export type TabVariant =
   | 'hr-engagement'
   | 'sales'
   | 'pnl'
+  | 'digital-marketing'
 
 const variantStyles: Record<
   TabVariant,
@@ -83,6 +84,12 @@ const variantStyles: Record<
     active: 'bg-violet-600 text-white border-violet-600',
     inactive:
       'border-border bg-card text-muted-foreground hover:bg-violet-50 hover:text-violet-800 hover:border-violet-200',
+    list: 'border-b border-border gap-0 bg-card',
+  },
+  'digital-marketing': {
+    active: 'bg-violet-600 text-white border-violet-600',
+    inactive:
+      'border-border bg-card text-muted-foreground hover:bg-violet-50 hover:text-violet-700 hover:border-violet-200',
     list: 'border-b border-border gap-0 bg-card',
   },
 }

@@ -129,11 +129,13 @@ export function LeaveApplicationForm({
     ? activeLeaveTypes.find((lt) => lt.id === formData.leaveTypeId)
     : null
   const sickAllowsPast = selectedLeaveType ? isSickLeaveType(selectedLeaveType) : false
-  const startDateMinStr = sickAllowsPast ? earliestSelectableStr : todayStr
+  const graceActive = isClElPastBackdateGraceActive()
+  const startDateMinStr = sickAllowsPast || graceActive ? earliestSelectableStr : todayStr
 
   const clElPastInvalid = useMemo(() => {
     if (!selectedLeaveType || !formData.startDate || !formData.endDate) return false
     if (isSickLeaveType(selectedLeaveType)) return false
+    if (isClElPastBackdateGraceActive()) return false
     const t = new Date()
     t.setHours(0, 0, 0, 0)
     const s = new Date(formData.startDate)

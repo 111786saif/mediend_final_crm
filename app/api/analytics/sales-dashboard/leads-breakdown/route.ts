@@ -30,7 +30,8 @@ export async function GET(request: NextRequest) {
       user.role !== 'ADMIN' &&
       user.role !== 'SALES_HEAD' &&
       user.role !== 'EXECUTIVE_ASSISTANT' &&
-      user.role !== 'TEAM_LEAD'
+      user.role !== 'TEAM_LEAD' &&
+      user.role !== 'DIGITAL_MARKETING_HEAD'
     ) {
       return errorResponse('Forbidden', 403)
     }
