@@ -39,6 +39,7 @@ import {
   MessageSquare,
   Package,
   ShieldCheck,
+  Sparkles,
   Target,
   Ticket,
   TrendingUp,
@@ -53,6 +54,7 @@ import { usePathname } from 'next/navigation'
 import * as React from 'react'
 import logo from '@/public/logo-mediend.png'
 import { UserRole } from '@/generated/prisma/enums'
+import { useAI } from '@/components/ai/ai-provider'
 
 function getBadgeCount(
   itemTitle: string,
@@ -109,6 +111,7 @@ function getBadgeCount(
 
 export function AppSidebar() {
   const { user, logout, isTester, setActiveRole } = useAuth()
+  const ai = useAI()
   const pathname = usePathname()
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
@@ -537,6 +540,14 @@ export function AppSidebar() {
                   <option value="USER">USER</option>
                 </select>
               </div>
+            </SidebarMenuItem>
+          )}
+          {ai && (
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={ai.openAI} tooltip="mediendAI">
+                <Sparkles className="text-purple-400" />
+                <span>mediendAI</span>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           )}
           <SidebarMenuItem>

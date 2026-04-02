@@ -41,6 +41,7 @@ touch /var/log/cron-attendance.log
 touch /var/log/cron-leads.log
 touch /var/log/cron-cleanup.log
 touch /var/log/cron-work-log-reminders.log
+touch /var/log/cron-leave-accrual.log
 chmod 644 /var/log/cron-*.log
 echo "✓ Created log files"
 
@@ -89,6 +90,9 @@ crontab -l 2>/dev/null | grep -v "mediend-crm\|api/cron" | crontab - 2>/dev/null
 
 # Cleanup old logs - daily at 3 AM UTC
 0 3 * * * curl -sf -X POST http://localhost:3000/api/cron/cleanup -H "Authorization: Bearer ${CRON_SECRET}" >> /var/log/cron-cleanup.log 2>&1
+
+# Monthly leave accrual - 1st of every month at 1:30 AM UTC (7:00 AM IST)
+30 1 1 * * curl -sf -X POST http://localhost:3000/api/cron/leave-accrual -H "Authorization: Bearer ${CRON_SECRET}" >> /var/log/cron-leave-accrual.log 2>&1
 EOF
 ) | crontab -
 
@@ -136,6 +140,7 @@ echo "  - Leads sync: every 5 minutes"
 echo "  - Work log reminders (push): every 15 minutes"
 echo "  - Database backup: daily at 2 AM UTC"
 echo "  - Log cleanup: daily at 3 AM UTC"
+echo "  - Leave accrual: 1st of every month at 1:30 AM UTC (7:00 AM IST)"
 echo ""
 echo "Log files:"
 echo "  - /var/log/cron-attendance.log"

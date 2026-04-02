@@ -84,7 +84,7 @@ export function AIChatSheet({ open, onOpenChange }: AIChatSheetProps) {
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-lg flex flex-col p-0">
+      <SheetContent side="right" className="!w-screen !max-w-none flex flex-col p-0">
         <SheetHeader className="px-6 py-4 border-b">
           <SheetTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="h-5 w-5 text-purple-500" />

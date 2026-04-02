@@ -9,18 +9,18 @@ import { buildSystemPrompt } from '@/lib/ai/schema-context'
 import { createQueryLeadsTool, createQueryAnalyticsTool, createQueryFinanceTool, createExecuteQueryTool, createGetSchemaInfoTool } from '@/lib/ai/tools'
 import { getUserById } from '@/lib/auth'
 
-// Provider order: OpenAI (if OPENAI_API_KEY) → Groq → Google
+// Provider order: Google (if GOOGLE_GENERATIVE_AI_API_KEY) → OpenAI → Groq
 const OPENAI_CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4o-mini'
 
 function getChatModel() {
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    return google('gemini-2.0-flash')
+  }
   if (process.env.OPENAI_API_KEY) {
     return openai(OPENAI_CHAT_MODEL)
   }
   if (process.env.GROQ_API_KEY) {
     return groq('llama-3.3-70b-versatile')
-  }
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    return google('gemini-1.5-flash')
   }
   return null
 }

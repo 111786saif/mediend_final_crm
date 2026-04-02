@@ -2,7 +2,6 @@
 
 import { createContext, useCallback, useContext, useState } from 'react'
 import { useAuth } from '@/hooks/use-auth'
-import { AIFloatingButton } from './ai-floating-button'
 import { AIChatSheet } from './ai-chat-sheet'
 
 const AIContext = createContext<{ openAI: () => void } | null>(null)
@@ -25,10 +24,7 @@ export function AIProvider({ children }: { children: React.ReactNode }) {
     <AIContext.Provider value={isAdmin ? { openAI } : null}>
       {children}
       {isAdmin && (
-        <>
-          <AIFloatingButton onClick={openAI} />
-          <AIChatSheet open={isOpen} onOpenChange={setIsOpen} />
-        </>
+        <AIChatSheet open={isOpen} onOpenChange={setIsOpen} />
       )}
     </AIContext.Provider>
   )
