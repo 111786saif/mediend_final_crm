@@ -74,7 +74,6 @@ export async function POST(req: NextRequest) {
       system: systemPrompt,
       messages: modelMessages,
       tools,
-      maxSteps: 5,
       temperature: 0.7,
     })
 

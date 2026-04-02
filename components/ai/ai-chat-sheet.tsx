@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import { useChat } from '@ai-sdk/react'
-import { DefaultChatTransport } from 'ai'
+import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from 'ai'
 import {
   Sheet,
   SheetContent,
@@ -67,6 +67,7 @@ export function AIChatSheet({ open, onOpenChange }: AIChatSheetProps) {
 
   const { messages, sendMessage, status, setMessages } = useChat({
     transport,
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
     onError: (error) => {
       console.error('Chat error:', error)
       toast.error(error.message || 'Failed to get AI response')
