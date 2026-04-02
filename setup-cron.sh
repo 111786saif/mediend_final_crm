@@ -6,8 +6,8 @@ set -e
 # Run this on your VPS server to configure cron jobs
 # ============================================================
 
-APP_DIR="/opt/mediend-crm"
-ENV_FILE="${APP_DIR}/.env.production"
+APP_DIR="/opt/mediend-crm/mediend-crm2"
+ENV_FILE="${APP_DIR}/.env"
 
 echo "===> Setting up cron jobs for Mediend CRM..."
 

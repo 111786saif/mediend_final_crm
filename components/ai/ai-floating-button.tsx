@@ -1,42 +1,20 @@
 'use client'
 
-import { useState } from 'react'
 import { Sparkles } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 interface AIFloatingButtonProps {
   onClick: () => void
 }
 
 export function AIFloatingButton({ onClick }: AIFloatingButtonProps) {
-  const [isHovered, setIsHovered] = useState(false)
-
   return (
     <button
       onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={cn(
-        'fixed bottom-6 right-6 z-50 hidden md:flex items-center justify-center',
-        'h-16 w-16 rounded-full',
-        'bg-gradient-to-br from-purple-600 via-purple-500 to-white',
-        'bg-[length:300%_300%]',
-        'shadow-lg shadow-purple-500/50',
-        'transition-all duration-300',
-        'hover:scale-110 hover:shadow-xl hover:shadow-purple-500/60',
-        'active:scale-95',
-        'animate-[gradient-rotate_4s_ease_infinite]',
-        isHovered && 'ring-4 ring-purple-300/50'
-      )}
+      className="fixed right-4 z-40 h-10 w-10 rounded-full border border-border bg-card shadow-md hover:bg-muted/80 transition-colors flex items-center justify-center md:hidden"
+      style={{ top: 'max(1rem, env(safe-area-inset-top))' }}
       aria-label="Open mediendAI"
     >
-      <Sparkles 
-        className={cn(
-          'h-8 w-8 text-white',
-          'transition-transform duration-300',
-          isHovered && 'scale-110 rotate-12'
-        )}
-      />
+      <Sparkles className="h-4 w-4 text-muted-foreground" />
     </button>
   )
 }

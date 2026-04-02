@@ -38,9 +38,10 @@ export async function POST(req: NextRequest) {
       return unauthorizedResponse()
     }
 
-    // Only ADMIN role can use AI chat
-    if (fullUser.role !== 'ADMIN') {
-      return errorResponse('Access denied. AI features are only available for ADMIN users.', 403)
+    // Only allowed roles can use AI chat
+    const AI_ALLOWED_ROLES = ['ADMIN', 'MD', 'EXECUTIVE_ASSISTANT', 'FINANCE_HEAD']
+    if (!AI_ALLOWED_ROLES.includes(fullUser.role)) {
+      return errorResponse('Access denied. AI features are not available for your role.', 403)
     }
 
     const body = await req.json()

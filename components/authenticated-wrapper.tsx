@@ -27,19 +27,13 @@ import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
 import { MeetReminderPopup } from '@/components/meets/meet-reminder-popup'
 import { BMICalculator } from '@/components/bmi-calculator'
 
-function AIHeaderButton() {
-  const { user } = useAuth()
+
+function AIDesktopButton() {
   const ai = useAI()
-  if (!ai || user?.role !== 'ADMIN') return null
+  if (!ai) return null
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={ai.openAI}
-      className="md:hidden"
-      aria-label="Open mediendAI"
-    >
-      <Sparkles className="h-5 w-5 text-purple-500" />
+    <Button variant="ghost" size="icon" onClick={ai.openAI} aria-label="Open mediendAI">
+      <Sparkles className="h-5 w-5 text-muted-foreground" />
     </Button>
   )
 }
@@ -285,7 +279,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
                 >
                   <Search className="h-5 w-5" />
                 </Button>
-                <AIHeaderButton />
+                <AIDesktopButton />
                 {(user?.role === 'BD' || user?.role === 'TEAM_LEAD') && (
                   <BMICalculator />
                 )}

@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useState } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { AIChatSheet } from './ai-chat-sheet'
+import { AIFloatingButton } from './ai-floating-button'
 
 const AIContext = createContext<{ openAI: () => void } | null>(null)
 
@@ -17,14 +18,16 @@ export function AIProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
   const openAI = useCallback(() => setIsOpen(true), [])
 
-  // Only show AI features for ADMIN role
-  const isAdmin = user?.role === 'ADMIN'
+  const hasAIAccess = ['ADMIN', 'MD', 'EXECUTIVE_ASSISTANT', 'FINANCE_HEAD'].includes(user?.role ?? '')
 
   return (
-    <AIContext.Provider value={isAdmin ? { openAI } : null}>
+    <AIContext.Provider value={hasAIAccess ? { openAI } : null}>
       {children}
-      {isAdmin && (
-        <AIChatSheet open={isOpen} onOpenChange={setIsOpen} />
+      {hasAIAccess && (
+        <>
+          <AIFloatingButton onClick={openAI} />
+          <AIChatSheet open={isOpen} onOpenChange={setIsOpen} />
+        </>
       )}
     </AIContext.Provider>
   )
