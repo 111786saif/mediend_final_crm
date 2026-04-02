@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { Prisma } from '@/generated/prisma/client'
+import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,15 +20,27 @@ export async function GET(request: NextRequest) {
     const where: Prisma.KYPSubmissionWhereInput = {}
 
     // Filter by role
-    if (user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'SALES_HEAD' || user.role === 'TESTER') {
-      // Sales team sees their own submissions OR submissions for their leads
-      delete where.submittedById; // Remove the strict check
+    if (user.role === 'BD') {
       where.OR = [
         { submittedById: user.id },
         { lead: { bdId: user.id } }
-      ];
-      
-      // If status is provided, use it (for follow-up view)
+      ]
+      if (status) {
+        where.status = status as any
+      }
+    } else if (user.role === 'TEAM_LEAD') {
+      // Team Lead can access their own leads + all subordinates' leads
+      const subordinateIds = await getTeamLeadLeadAccessBdUserIds(user.id)
+      where.OR = [
+        { submittedById: user.id },
+        { lead: { bdId: user.id } },
+        ...(subordinateIds.length > 0 ? [{ lead: { bdId: { in: subordinateIds } } }] : []),
+      ]
+      if (status) {
+        where.status = status as any
+      }
+    } else if (user.role === 'SALES_HEAD' || user.role === 'TESTER') {
+      // Sales Head and Tester can see all KYP submissions
       if (status) {
         where.status = status as any
       }
