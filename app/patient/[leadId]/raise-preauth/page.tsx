@@ -113,8 +113,8 @@ export default function RaisePreAuthPage() {
   const { data: kypSubmission, isLoading } = useQuery<KYPSubmission | null>({
     queryKey: ['kyp-submission', leadId],
     queryFn: async () => {
-      const submissions = await apiGet<KYPSubmission[]>('/api/kyp')
-      return submissions.find((s) => s.leadId === leadId) || null
+      const submissions = await apiGet<KYPSubmission[]>(`/api/kyp?leadId=${leadId}`)
+      return submissions[0] || null
     },
     enabled: !!leadId,
   })

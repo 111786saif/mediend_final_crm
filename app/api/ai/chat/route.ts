@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json()
     const messages = body.messages
+    const dateRange = body.dateRange as { from?: string; to?: string } | undefined
 
     if (!messages || !Array.isArray(messages)) {
       return errorResponse('Invalid request: messages array required', 400)
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
     // If getChatModel returned a Response (error), return it directly
     if (modelOrError instanceof Response) return modelOrError
 
-    const systemPrompt = buildSystemPrompt(fullUser.role)
+    const systemPrompt = buildSystemPrompt(fullUser.role, dateRange)
 
     const cookieHeader = req.headers.get('cookie') || ''
     const tools = {

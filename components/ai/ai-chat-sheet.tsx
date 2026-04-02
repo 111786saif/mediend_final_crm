@@ -3,17 +3,22 @@
 import { useState, useCallback, useMemo } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport, lastAssistantMessageIsCompleteWithToolCalls } from 'ai'
+import { startOfMonth, endOfMonth, format } from 'date-fns'
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Sparkles, Send, Loader2 } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import { Button } from '@/components/ui/button'
+import { Sparkles, Send, Loader2, CalendarIcon } from 'lucide-react'
 import { MessageList } from './message-list'
 import { QuickQuestions } from './quick-questions'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import type { DateRange } from 'react-day-picker'
 
 const CHAT_API = '/api/ai/chat'
 
@@ -59,10 +64,23 @@ const PROVIDERS: { id: AIProvider; label: string; sublabel: string }[] = [
 export function AIChatSheet({ open, onOpenChange }: AIChatSheetProps) {
   const [inputValue, setInputValue] = useState('')
   const [selectedModel, setSelectedModel] = useState<AIProvider>('openai')
+  const now = new Date()
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: startOfMonth(now),
+    to: endOfMonth(now),
+  })
 
   const transport = useMemo(
-    () => new DefaultChatTransport({ api: `${CHAT_API}?model=${selectedModel}` }),
-    [selectedModel]
+    () => new DefaultChatTransport({
+      api: `${CHAT_API}?model=${selectedModel}`,
+      body: {
+        dateRange: {
+          from: dateRange.from?.toISOString(),
+          to: dateRange.to?.toISOString(),
+        },
+      },
+    }),
+    [selectedModel, dateRange]
   )
 
   const { messages, sendMessage, status, setMessages } = useChat({
@@ -91,6 +109,8 @@ export function AIChatSheet({ open, onOpenChange }: AIChatSheetProps) {
       if (!nextOpen) {
         setMessages([])
         setInputValue('')
+        const n = new Date()
+        setDateRange({ from: startOfMonth(n), to: endOfMonth(n) })
       }
       onOpenChange(nextOpen)
     },
@@ -137,8 +157,31 @@ export function AIChatSheet({ open, onOpenChange }: AIChatSheetProps) {
               }
             </div>
             mediendAI
+
+            {/* Date range picker */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className="ml-auto h-8 gap-1.5 text-xs font-medium">
+                  <CalendarIcon className="h-3.5 w-3.5" />
+                  {dateRange.from ? format(dateRange.from, 'dd MMM') : '?'}
+                  {' – '}
+                  {dateRange.to ? format(dateRange.to, 'dd MMM yy') : '?'}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={(range) => {
+                    if (range) setDateRange(range)
+                  }}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
+
             <span className={cn(
-              'ml-auto text-[10px] font-medium px-2 py-0.5 rounded-full border',
+              'text-[10px] font-medium px-2 py-0.5 rounded-full border',
               isGemini
                 ? 'text-purple-600 border-purple-200 bg-purple-50 dark:bg-purple-950/30 dark:border-purple-800 dark:text-purple-400'
                 : 'text-gray-600 border-gray-200 bg-gray-50 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-400'

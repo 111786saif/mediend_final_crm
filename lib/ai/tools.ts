@@ -109,41 +109,42 @@ export function createQueryAnalyticsTool(user: SessionUser) {
       if (startDate) dateFilter.gte = new Date(startDate)
       if (endDate) dateFilter.lte = new Date(endDate)
 
-      const where: Prisma.LeadWhereInput = {
-        pipelineStage: 'COMPLETED',
-        conversionDate: dateFilter,
-      }
+      const hasDateFilter = startDate || endDate
 
-      if (circle) where.circle = circle
+      const baseWhere: Prisma.LeadWhereInput = {}
+      if (circle) baseWhere.circle = circle
 
       // Role-based filtering
       if (user.role === 'BD') {
-        where.bdId = user.id
+        baseWhere.bdId = user.id
       } else if (user.role === 'TEAM_LEAD') {
         const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-        where.bdId = { in: [user.id, ...subIds] }
+        baseWhere.bdId = { in: [user.id, ...subIds] }
       }
 
       switch (metric) {
         case 'dashboard': {
+          const completedWhere: Prisma.LeadWhereInput = {
+            ...baseWhere,
+            pipelineStage: 'COMPLETED',
+            ...(hasDateFilter ? { conversionDate: dateFilter } : {}),
+          }
+          const allLeadsWhere: Prisma.LeadWhereInput = {
+            ...baseWhere,
+            ...(hasDateFilter ? { createdDate: dateFilter } : {}),
+          }
+
           const [totalSurgeries, totalProfit, avgTicketSize, totalLeads] = await Promise.all([
-            prisma.lead.count({ where }),
+            prisma.lead.count({ where: completedWhere }),
             prisma.lead.aggregate({
-              where,
+              where: completedWhere,
               _sum: { netProfit: true },
             }),
             prisma.lead.aggregate({
-              where,
+              where: completedWhere,
               _avg: { ticketSize: true },
             }),
-            prisma.lead.count({
-              where: {
-                ...where,
-                pipelineStage: undefined,
-                conversionDate: undefined,
-                createdDate: dateFilter,
-              },
-            }),
+            prisma.lead.count({ where: allLeadsWhere }),
           ])
 
           const conversionRate = totalLeads > 0 ? (totalSurgeries / totalLeads) * 100 : 0
@@ -158,45 +159,74 @@ export function createQueryAnalyticsTool(user: SessionUser) {
         }
 
         case 'leaderboard': {
+          // Leaderboard uses createdDate for all leads, not just completed
+          const leaderboardWhere: Prisma.LeadWhereInput = {
+            ...baseWhere,
+            ...(hasDateFilter ? { createdDate: dateFilter } : {}),
+          }
+
           const bdPerformance = await prisma.lead.groupBy({
             by: ['bdId'],
-            where,
+            where: leaderboardWhere,
             _count: { id: true },
-            _sum: { netProfit: true },
+            _sum: { netProfit: true, billAmount: true },
           })
 
           const bdData = await Promise.all(
             bdPerformance.map(async (bd) => {
-              const user = await prisma.user.findUnique({
+              const bdUser = await prisma.user.findUnique({
                 where: { id: bd.bdId },
                 select: { id: true, name: true, email: true },
               })
+              // Also get completed count for this BD
+              const completedCount = await prisma.lead.count({
+                where: { ...leaderboardWhere, bdId: bd.bdId, pipelineStage: 'COMPLETED' },
+              })
               return {
                 bdId: bd.bdId,
-                bdName: user?.name || 'Unknown',
-                closedLeads: bd._count.id,
+                bdName: bdUser?.name || 'Unknown',
+                totalLeads: bd._count.id,
+                completedLeads: completedCount,
+                revenue: bd._sum.billAmount || 0,
                 netProfit: bd._sum.netProfit || 0,
               }
             })
           )
 
           return {
-            bdPerformance: bdData.sort((a, b) => b.closedLeads - a.closedLeads).slice(0, 10),
+            bdPerformance: bdData.sort((a, b) => b.totalLeads - a.totalLeads).slice(0, 15),
           }
         }
 
         case 'source-campaign': {
+          const sourceWhere: Prisma.LeadWhereInput = {
+            ...baseWhere,
+            ...(hasDateFilter ? { createdDate: dateFilter } : {}),
+          }
+
           const sourceData = await prisma.lead.groupBy({
             by: ['source'],
-            where,
+            where: sourceWhere,
             _count: { id: true },
             _sum: { billAmount: true, netProfit: true },
           })
 
+          // Also get conversion counts per source
+          const sourceConversions = await prisma.lead.groupBy({
+            by: ['source'],
+            where: { ...sourceWhere, pipelineStage: 'COMPLETED' },
+            _count: { id: true },
+          })
+          const convMap = new Map(sourceConversions.map((s) => [s.source, s._count.id]))
+
           return {
             sources: sourceData.map((s) => ({
               source: s.source || 'Unknown',
-              leadCount: s._count.id,
+              totalLeads: s._count.id,
+              convertedLeads: convMap.get(s.source) || 0,
+              conversionRate: s._count.id > 0
+                ? Math.round(((convMap.get(s.source) || 0) / s._count.id) * 10000) / 100
+                : 0,
               revenue: s._sum.billAmount || 0,
               profit: s._sum.netProfit || 0,
             })),
