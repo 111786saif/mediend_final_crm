@@ -195,12 +195,13 @@ export function HospitalSuggestionForm({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="insuranceName">Insurance Name</Label>
-          <Input
+          <MasterCombobox
             id="insuranceName"
+            label="Insurance Name"
+            masterType="insurance"
             value={insuranceName}
-            onChange={(e) => setInsuranceName(e.target.value)}
-            placeholder="Enter insurance name"
+            onChange={setInsuranceName}
+            placeholder="Search insurance company or type name"
           />
         </div>
         <div>

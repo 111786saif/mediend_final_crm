@@ -32,13 +32,14 @@ import { Pencil, Plus, Database, ExternalLink } from 'lucide-react'
 import type { MasterItem, MasterType } from '@/components/ui/master-combobox'
 import Link from 'next/link'
 
-type TabKey = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia'
+type TabKey = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia' | 'insurance'
 
 const TAB_TO_TYPE: Record<TabKey, MasterType> = {
   hospitals: 'hospitals',
   doctors: 'doctors',
   tpas: 'tpas',
   anesthesia: 'anesthesia',
+  insurance: 'insurance',
 }
 
 const API_BASE: Record<MasterType, string> = {
@@ -46,6 +47,7 @@ const API_BASE: Record<MasterType, string> = {
   doctors: '/api/masters/doctors',
   tpas: '/api/masters/tpas',
   anesthesia: '/api/masters/anesthesia',
+  insurance: '/api/masters/insurance',
 }
 
 function useMasterList(tab: TabKey, search: string, enabled: boolean) {
@@ -176,7 +178,7 @@ export default function MasterDataPage() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Master Data</h1>
               <p className="text-muted-foreground text-sm">
-                Hospitals, doctors, TPAs, and anesthesia types for forms and dropdowns.
+                Hospitals, doctors, TPAs, insurance companies, and anesthesia types for forms and dropdowns.
               </p>
             </div>
           </div>
@@ -198,10 +200,11 @@ export default function MasterDataPage() {
         </div>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5">
             <TabsTrigger value="hospitals">Hospitals</TabsTrigger>
             <TabsTrigger value="doctors">Doctors</TabsTrigger>
             <TabsTrigger value="tpas">TPAs</TabsTrigger>
+            <TabsTrigger value="insurance">Insurance</TabsTrigger>
             <TabsTrigger value="anesthesia">Anesthesia</TabsTrigger>
           </TabsList>
 

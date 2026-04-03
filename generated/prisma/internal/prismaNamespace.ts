@@ -469,6 +469,7 @@ export const ModelName = {
   DoctorMaster: 'DoctorMaster',
   TPAMaster: 'TPAMaster',
   AnesthesiaMaster: 'AnesthesiaMaster',
+  InsuranceMaster: 'InsuranceMaster',
   AppSetting: 'AppSetting',
   ITProject: 'ITProject',
   ITFreelancer: 'ITFreelancer',
@@ -495,7 +496,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
+    modelProps: "user" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6789,6 +6790,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    InsuranceMaster: {
+      payload: Prisma.$InsuranceMasterPayload<ExtArgs>
+      fields: Prisma.InsuranceMasterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InsuranceMasterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InsuranceMasterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>
+        }
+        findFirst: {
+          args: Prisma.InsuranceMasterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InsuranceMasterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>
+        }
+        findMany: {
+          args: Prisma.InsuranceMasterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>[]
+        }
+        create: {
+          args: Prisma.InsuranceMasterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>
+        }
+        createMany: {
+          args: Prisma.InsuranceMasterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InsuranceMasterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>[]
+        }
+        delete: {
+          args: Prisma.InsuranceMasterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>
+        }
+        update: {
+          args: Prisma.InsuranceMasterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>
+        }
+        deleteMany: {
+          args: Prisma.InsuranceMasterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InsuranceMasterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InsuranceMasterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>[]
+        }
+        upsert: {
+          args: Prisma.InsuranceMasterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsuranceMasterPayload>
+        }
+        aggregate: {
+          args: Prisma.InsuranceMasterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInsuranceMaster>
+        }
+        groupBy: {
+          args: Prisma.InsuranceMasterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InsuranceMasterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InsuranceMasterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InsuranceMasterCountAggregateOutputType> | number
+        }
+      }
+    }
     AppSetting: {
       payload: Prisma.$AppSettingPayload<ExtArgs>
       fields: Prisma.AppSettingFieldRefs
@@ -9270,6 +9345,17 @@ export const AnesthesiaMasterScalarFieldEnum = {
 export type AnesthesiaMasterScalarFieldEnum = (typeof AnesthesiaMasterScalarFieldEnum)[keyof typeof AnesthesiaMasterScalarFieldEnum]
 
 
+export const InsuranceMasterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InsuranceMasterScalarFieldEnum = (typeof InsuranceMasterScalarFieldEnum)[keyof typeof InsuranceMasterScalarFieldEnum]
+
+
 export const AppSettingScalarFieldEnum = {
   key: 'key',
   value: 'value',
@@ -10504,6 +10590,7 @@ export type GlobalOmitConfig = {
   doctorMaster?: Prisma.DoctorMasterOmit
   tPAMaster?: Prisma.TPAMasterOmit
   anesthesiaMaster?: Prisma.AnesthesiaMasterOmit
+  insuranceMaster?: Prisma.InsuranceMasterOmit
   appSetting?: Prisma.AppSettingOmit
   iTProject?: Prisma.ITProjectOmit
   iTFreelancer?: Prisma.ITFreelancerOmit

@@ -467,6 +467,11 @@ export type TPAMaster = Prisma.TPAMasterModel
  */
 export type AnesthesiaMaster = Prisma.AnesthesiaMasterModel
 /**
+ * Model InsuranceMaster
+ * 
+ */
+export type InsuranceMaster = Prisma.InsuranceMasterModel
+/**
  * Model AppSetting
  * 
  */

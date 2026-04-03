@@ -205,11 +205,11 @@ export function KYPBasicForm({
   const debouncedInsuranceSearch = useDebouncedValue(formData.insuranceName, 250)
   const debouncedDoctorSearch = useDebouncedValue(formData.doctorName, 250)
 
-  const { data: tpaSuggestData } = useQuery({
-    queryKey: ['masters', 'tpas', 'kyp-suggest', debouncedInsuranceSearch],
+  const { data: insuranceSuggestData } = useQuery({
+    queryKey: ['masters', 'insurance', 'kyp-suggest', debouncedInsuranceSearch],
     queryFn: () =>
       apiGet<{ items: { id: string; name: string }[] }>(
-        `/api/masters/tpas?search=${encodeURIComponent(debouncedInsuranceSearch.trim())}`
+        `/api/masters/insurance?search=${encodeURIComponent(debouncedInsuranceSearch.trim())}`
       ),
     staleTime: 30_000,
   })
@@ -223,7 +223,7 @@ export function KYPBasicForm({
     staleTime: 30_000,
   })
 
-  const tpaSuggestions = useMemo(() => (tpaSuggestData?.items ?? []).slice(0, 25), [tpaSuggestData])
+  const insuranceSuggestions = useMemo(() => (insuranceSuggestData?.items ?? []).slice(0, 25), [insuranceSuggestData])
 
   const doctorSuggestions = useMemo(
     () => (doctorSuggestData?.items ?? []).slice(0, 25),
@@ -437,7 +437,7 @@ export function KYPBasicForm({
           >
             <ComboboxInput
               id="insuranceName"
-              placeholder="Search TPA master or type any insurer name"
+              placeholder="Search insurance company or type name"
               className={cn('w-full')}
               value={formData.insuranceName}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -446,14 +446,14 @@ export function KYPBasicForm({
             />
             <ComboboxContent>
               <ComboboxList>
-                {tpaSuggestions.length > 0 ? (
-                  tpaSuggestions.map((item) => (
+                {insuranceSuggestions.length > 0 ? (
+                  insuranceSuggestions.map((item) => (
                     <ComboboxItem key={item.id} value={item.name}>
                       {item.name}
                     </ComboboxItem>
                   ))
                 ) : (
-                  <ComboboxEmpty>No TPA matches. Keep typing to use your own text.</ComboboxEmpty>
+                  <ComboboxEmpty>No insurance matches. Keep typing to use your own text.</ComboboxEmpty>
                 )}
               </ComboboxList>
             </ComboboxContent>

@@ -243,6 +243,22 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/fix-lead-categories-circles.ts"]
 
+  # One-off: seed InsuranceMaster and TPAMaster companies
+  # Usage: docker compose --profile tools run --rm seed-insurance-tpa
+  seed-insurance-tpa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/seed-insurance-tpa.ts"]
+
   # One-off: backfill leadDate from createdDate for existing leads
   # Usage: docker compose --profile tools run --rm backfill-lead-date
   backfill-lead-date:

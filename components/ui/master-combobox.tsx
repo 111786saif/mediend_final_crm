@@ -10,13 +10,14 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 
-export type MasterType = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia'
+export type MasterType = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia' | 'insurance'
 
 const MASTER_PATH: Record<MasterType, string> = {
   hospitals: '/api/masters/hospitals',
   doctors: '/api/masters/doctors',
   tpas: '/api/masters/tpas',
   anesthesia: '/api/masters/anesthesia',
+  insurance: '/api/masters/insurance',
 }
 
 export interface MasterItem {

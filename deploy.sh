@@ -33,7 +33,8 @@ git push origin main
 echo "===> Deploying commit $COMMIT to VPS (zero-downtime)..."
 
 # Use unquoted heredoc so local vars expand, escape remote-only vars with \$
-ssh ${VPS_USER}@${VPS_IP} << ENDSSH
+
+
   set -e
   cd ${APP_DIR}
 
