@@ -1,0 +1,55 @@
+# ============================================================
+# Mediend CRM - Nginx config for zero-downtime blue/green deploy
+# ============================================================
+#
+# TWO files are needed:
+#
+# 1. /etc/nginx/conf.d/mediend-upstream.conf  (managed by deploy.sh)
+#    Contains:  upstream mediend_app { server 127.0.0.1:3000; }
+#    deploy.sh rewrites this to point to whichever slot is live.
+#
+# 2. Your server block (this file) — references the upstream.
+#
+# First-time setup:
+#   echo 'upstream mediend_app { server 127.0.0.1:3000; }' > /etc/nginx/conf.d/mediend-upstream.conf
+#   cp nginx.conf.example /etc/nginx/sites-available/workspace.mediend.com
+#   ln -s /etc/nginx/sites-available/workspace.mediend.com /etc/nginx/sites-enabled/
+#   nginx -t && systemctl reload nginx
+# ============================================================
+
+server {
+    listen 80;
+    server_name workspace.mediend.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name workspace.mediend.com;
+
+    ssl_certificate     /etc/letsencrypt/live/workspace.mediend.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/workspace.mediend.com/privkey.pem;
+
+    # IMPORTANT: Allow 25 MB uploads (20 MB file + multipart overhead)
+    # Default is 1m which causes 413 errors on file uploads!
+    client_max_body_size 25m;
+
+    # Timeouts for large uploads and slow API calls
+    proxy_read_timeout 120s;
+    proxy_send_timeout 120s;
+    proxy_connect_timeout 10s;
+
+    location / {
+        # Points to the upstream managed by deploy.sh
+        proxy_pass http://mediend_app;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}

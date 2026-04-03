@@ -50,6 +50,7 @@ import { Megaphone } from 'lucide-react'
 import { FnFReminderCard } from '@/components/hr/fnf-reminder-card'
 import { BirthdayCelebrationCard } from '@/components/birthday-celebration-card'
 import { BirthdayPopup } from '@/components/birthday-popup'
+import { TeamTargetWidget } from '@/components/targets/team-target-widget'
 
 // ─── Greeting ─────────────────────────────────────────────────────────────────
 
@@ -675,6 +676,9 @@ export default function HomePage() {
         </h2>
         <NoticeActions />
       </div>
+
+      {/* Target progress widget (for TL and Sales Head) */}
+      <TeamTargetWidget />
 
       {/* KPIs */}
       <div>

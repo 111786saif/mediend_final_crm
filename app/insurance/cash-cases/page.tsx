@@ -121,8 +121,7 @@ export default function InsuranceCashCasesPage() {
         l.patientName.toLowerCase().includes(q) ||
         l.leadRef.toLowerCase().includes(q) ||
         l.hospitalName.toLowerCase().includes(q) ||
-        (l.treatment && l.treatment.toLowerCase().includes(q)) ||
-        l.phoneNumber.toLowerCase().includes(q)
+        (l.treatment && l.treatment.toLowerCase().includes(q))
       )
     }
 
@@ -289,7 +288,7 @@ export default function InsuranceCashCasesPage() {
                           <TableCell>
                             <div>
                               <div className="font-semibold text-gray-900 dark:text-gray-100">{lead.patientName}</div>
-                              <div className="text-sm text-gray-600 dark:text-gray-400">{getPhoneDisplay(lead.phoneNumber, canViewPhoneNumber(user))}</div>
+                              {canViewPhoneNumber(user) && <div className="text-sm text-gray-600 dark:text-gray-400">{lead.phoneNumber}</div>}
                             </div>
                           </TableCell>
                           <TableCell className="text-gray-700 dark:text-gray-300">{lead.hospitalName}</TableCell>

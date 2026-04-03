@@ -143,7 +143,7 @@ export const navItems: NavItem[] = [
     title: 'Targets',
     url: '/sales/targets',
     icon: Target,
-    roles: ['SALES_HEAD'],
+    roles: ['SALES_HEAD', 'TEAM_LEAD'],
   },
   {
     title: 'Sales P&L',
@@ -443,6 +443,9 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }
       if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/pipeline' }
       if (role === 'ADMIN') return { ...item, url: '/bd/pipeline' }
+    }
+    if (item.title === 'Targets') {
+      if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/targets' }
     }
     return item
   })

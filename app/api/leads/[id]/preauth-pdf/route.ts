@@ -427,8 +427,8 @@ export async function GET(
 
     const html = buildPreAuthHtml({
       patientName: lead.patientName || '—',
-      admissionDate: formatDate(lead.admissionRecord?.admissionDate) ?? formatDate(lead.ipdAdmissionDate),
-      surgeryDate: formatDate(lead.admissionRecord?.surgeryDate),
+      admissionDate: formatDate(lead.admissionRecord?.admissionDate) ?? formatDate(lead.ipdAdmissionDate) ?? formatDate(preAuth.expectedAdmissionDate),
+      surgeryDate: formatDate(lead.admissionRecord?.surgeryDate) ?? formatDate(preAuth.expectedSurgeryDate),
       preAuth: {
         insurance: insuranceDisplay,
         tpa: preAuth.tpa ?? null,
