@@ -1182,11 +1182,13 @@ model MonthlyPayroll {
 // Employee Documents (Offer Letter, Appraisal, etc.)
 model EmployeeDocument {
   id             String       @id @default(cuid())
-  employeeId     String
-  employee       Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId     String?
+  employee       Employee?    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   documentType   DocumentType
   documentUrl    String?
   title          String?
+  applicantName  String?
+  applicantEmail String?
   metadata       Json?
   generatedAt    DateTime     @default(now())
   createdAt      DateTime     @default(now())

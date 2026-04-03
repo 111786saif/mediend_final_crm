@@ -195,6 +195,17 @@ async function calculateActual(
   start: Date,
   end: Date
 ): Promise<number> {
+  // IPD_DONE: count AdmissionRecords where ipdStatus is IPD_DONE or DISCHARGED
+  if (metric === 'IPD_DONE' || metric === 'SURGERIES_DONE') {
+    return prisma.admissionRecord.count({
+      where: {
+        lead: { bdId },
+        ipdStatus: { in: ['IPD_DONE', 'DISCHARGED'] },
+        ipdStatusUpdatedAt: { gte: start, lte: end },
+      },
+    })
+  }
+
   const baseWhere: Prisma.LeadWhereInput = {
     bdId,
     pipelineStage: 'COMPLETED',
@@ -207,7 +218,6 @@ async function calculateActual(
 
   switch (metric) {
     case 'LEADS_CLOSED':
-    case 'SURGERIES_DONE':
       return prisma.lead.count({ where: baseWhere })
     case 'NET_PROFIT': {
       const agg = await prisma.lead.aggregate({ where: baseWhere, _sum: { netProfit: true } })

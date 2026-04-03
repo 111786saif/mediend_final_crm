@@ -32,10 +32,12 @@ interface Employee {
 
 interface EmployeeDocument {
   id: string
-  employeeId: string
+  employeeId: string | null
   documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'CUSTOM'
   documentUrl?: string | null
   title?: string | null
+  applicantName?: string | null
+  applicantEmail?: string | null
   generatedAt: string
   metadata: Record<string, unknown>
   ackToken?: string | null
@@ -46,7 +48,7 @@ interface EmployeeDocument {
       name: string
       email: string
     }
-  }
+  } | null
 }
 
 const DOCUMENT_TYPES: Record<string, string> = {
@@ -116,6 +118,7 @@ export default function HRDocumentsPage() {
   const documentsByEmployee = useMemo(() => {
     const map = new Map<string, EmployeeDocument[]>()
     for (const doc of documents) {
+      if (!doc.employeeId) continue
       const list = map.get(doc.employeeId) ?? []
       list.push(doc)
       map.set(doc.employeeId, list)
@@ -136,8 +139,10 @@ export default function HRDocumentsPage() {
 
   const generateMutation = useMutation({
     mutationFn: async (data: {
-      employeeId: string
+      employeeId?: string
       documentType: string
+      applicantName?: string
+      applicantEmail?: string
       metadata?: Record<string, unknown>
     }) => {
       const response = await apiPost<{ document: EmployeeDocument; htmlContent: string }>('/api/hr/documents', data)
@@ -381,7 +386,7 @@ export default function HRDocumentsPage() {
                                     </Button>
                                     <EmailDocumentButton
                                       documentId={doc.id}
-                                      defaultEmail={doc.employee.user.email}
+                                      defaultEmail={doc.employee?.user.email || doc.applicantEmail || ''}
                                       documentType={doc.documentType}
                                       onSuccess={invalidateDocuments}
                                     />
@@ -566,14 +571,20 @@ function GenerateDocumentForm({
 }: {
   employees: Employee[]
   preselectedEmployeeId?: string
-  onSubmit: (data: { employeeId: string; documentType: string; metadata?: Record<string, unknown> }) => void
+  onSubmit: (data: { employeeId?: string; documentType: string; applicantName?: string; applicantEmail?: string; metadata?: Record<string, unknown> }) => void
   isLoading: boolean
 }) {
+  const [step, setStep] = useState<1 | 2>(1)
   const [formData, setFormData] = useState({
-    employeeId: preselectedEmployeeId ?? '',
     documentType: '',
+    employeeId: preselectedEmployeeId ?? '',
+    applicantName: '',
+    applicantEmail: '',
     designation: '',
     ctc: '',
+    guardianName: '',
+    guardianRelation: 'S/O',
+    address: '',
     isSales: false,
     salesTarget: '',
     monthlyTarget: '',
@@ -595,13 +606,26 @@ function GenerateDocumentForm({
     }
   }, [preselectedEmployeeId])
 
+  const isOfferLetter = formData.documentType === 'OFFER_LETTER'
+  const selectedEmployee = employees.find((e) => e.id === formData.employeeId)
+  const canProceed = formData.documentType && (
+    isOfferLetter
+      ? formData.applicantName.trim() && formData.applicantEmail.trim()
+      : formData.employeeId
+  )
+
+  const summaryLabel = isOfferLetter
+    ? formData.applicantName
+    : selectedEmployee?.user.name
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
     const metadata: Record<string, unknown> = {}
-
     if (formData.designation) metadata.designation = formData.designation
     if (formData.ctc) metadata.ctc = parseFloat(formData.ctc)
+    if (formData.guardianName) metadata.guardianName = formData.guardianName
+    if (formData.guardianRelation) metadata.guardianRelation = formData.guardianRelation
+    if (formData.address) metadata.address = formData.address
     if (formData.isSales) metadata.isSales = true
     if (formData.salesTarget) metadata.salesTarget = formData.salesTarget
     if (formData.monthlyTarget) metadata.monthlyTarget = formData.monthlyTarget
@@ -610,31 +634,128 @@ function GenerateDocumentForm({
     if (formData.previousSalary) metadata.previousSalary = parseFloat(formData.previousSalary)
     if (formData.newSalary) metadata.newSalary = parseFloat(formData.newSalary)
     if (formData.incrementPercentage) metadata.incrementPercentage = parseFloat(formData.incrementPercentage)
-    if (formData.newSalary) metadata.newSalary = parseFloat(formData.newSalary)
     if (formData.effectiveDate) metadata.effectiveDate = formData.effectiveDate
     if (formData.joinDate) metadata.joinDate = formData.joinDate
     if (formData.lastWorkingDate) metadata.lastWorkingDate = formData.lastWorkingDate
     if (formData.resignationDate) metadata.resignationDate = formData.resignationDate
     if (formData.remarks) metadata.remarks = formData.remarks
-
     onSubmit({
-      employeeId: formData.employeeId,
+      employeeId: isOfferLetter ? undefined : formData.employeeId,
       documentType: formData.documentType,
+      applicantName: isOfferLetter ? formData.applicantName : undefined,
+      applicantEmail: isOfferLetter ? formData.applicantEmail : undefined,
       metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
     })
   }
 
-  const renderMetadataFields = () => {
-    switch (formData.documentType) {
-      case 'OFFER_LETTER':
-        return (
+  // ── Step 1: Pick doc type + employee/applicant ──
+  if (step === 1) {
+    return (
+      <div className="space-y-4">
+        <div>
+          <Label>Document Type</Label>
+          <Select
+            value={formData.documentType}
+            onValueChange={(value) => setFormData({ ...formData, documentType: value, employeeId: '', applicantName: '', applicantEmail: '' })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select document type" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(DOCUMENT_TYPES)
+                .filter(([k]) => k !== 'CUSTOM')
+                .map(([key, label]) => (
+                  <SelectItem key={key} value={key}>
+                    {label}
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {isOfferLetter ? (
           <>
+            <div>
+              <Label>Applicant Name</Label>
+              <Input
+                value={formData.applicantName}
+                onChange={(e) => setFormData({ ...formData, applicantName: e.target.value })}
+                placeholder="Full name of the applicant"
+              />
+            </div>
+            <div>
+              <Label>Applicant Email</Label>
+              <Input
+                type="email"
+                value={formData.applicantEmail}
+                onChange={(e) => setFormData({ ...formData, applicantEmail: e.target.value })}
+                placeholder="email@example.com"
+              />
+            </div>
+          </>
+        ) : formData.documentType ? (
+          <div>
+            <Label>Employee</Label>
+            <Select
+              value={formData.employeeId}
+              onValueChange={(value) => setFormData({ ...formData, employeeId: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select employee" />
+              </SelectTrigger>
+              <SelectContent>
+                {employees.map((emp) => (
+                  <SelectItem key={emp.id} value={emp.id}>
+                    {emp.user.name} ({emp.employeeCode})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ) : null}
+
+        <div className="flex justify-end pt-2">
+          <Button
+            type="button"
+            disabled={!canProceed}
+            onClick={() => setStep(2)}
+          >
+            Next
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Step 2: Document details ──
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Summary bar */}
+      <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2 text-sm">
+        <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
+        <span className="font-medium">{summaryLabel}</span>
+        <span className="text-muted-foreground">·</span>
+        <span className="text-muted-foreground">{DOCUMENT_TYPES[formData.documentType]}</span>
+        <button
+          type="button"
+          onClick={() => setStep(1)}
+          className="ml-auto text-xs text-primary hover:underline"
+        >
+          Change
+        </button>
+      </div>
+
+      {/* Document-specific fields */}
+      {formData.documentType === 'OFFER_LETTER' && (
+        <>
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <Label>Designation</Label>
               <Input
                 value={formData.designation}
                 onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                placeholder="e.g., Business Development Executive"
+                placeholder="e.g., BD Executive"
               />
             </div>
             <div>
@@ -643,39 +764,75 @@ function GenerateDocumentForm({
                 type="number"
                 value={formData.ctc}
                 onChange={(e) => setFormData({ ...formData, ctc: e.target.value })}
-                placeholder="Annual CTC amount"
+                placeholder="e.g., 300000"
               />
             </div>
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="isSales"
-                checked={formData.isSales}
-                onCheckedChange={(checked) => setFormData({ ...formData, isSales: !!checked })}
-              />
-              <Label htmlFor="isSales" className="cursor-pointer font-normal">Sales position (include sales targets &amp; commitment)</Label>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-1">
+              <Label>Relation</Label>
+              <Select
+                value={formData.guardianRelation}
+                onValueChange={(value) => setFormData({ ...formData, guardianRelation: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="S/O">S/O</SelectItem>
+                  <SelectItem value="D/O">D/O</SelectItem>
+                  <SelectItem value="W/O">W/O</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            {formData.isSales && (
-              <>
-                <div>
-                  <Label>Initial Sales Target</Label>
-                  <Input
-                    value={formData.salesTarget}
-                    onChange={(e) => setFormData({ ...formData, salesTarget: e.target.value })}
-                    placeholder="e.g., 10 Surgeries in two months"
-                  />
-                </div>
-                <div>
-                  <Label>Target per Month</Label>
-                  <Input
-                    value={formData.monthlyTarget}
-                    onChange={(e) => setFormData({ ...formData, monthlyTarget: e.target.value })}
-                    placeholder="e.g., 5 Surgeries per month"
-                  />
-                </div>
-              </>
-            )}
+            <div className="col-span-2">
+              <Label>Guardian Name</Label>
+              <Input
+                value={formData.guardianName}
+                onChange={(e) => setFormData({ ...formData, guardianName: e.target.value })}
+                placeholder="Father&apos;s / Mother&apos;s name"
+              />
+            </div>
+          </div>
+          <div>
+            <Label>Address</Label>
+            <Input
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              placeholder="Full residential address"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="isSales"
+              checked={formData.isSales}
+              onCheckedChange={(checked) => setFormData({ ...formData, isSales: !!checked })}
+            />
+            <Label htmlFor="isSales" className="cursor-pointer font-normal">Sales position (include targets)</Label>
+          </div>
+          {formData.isSales && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Sales Target</Label>
+                <Input
+                  value={formData.salesTarget}
+                  onChange={(e) => setFormData({ ...formData, salesTarget: e.target.value })}
+                  placeholder="e.g., 10 Surgeries"
+                />
+              </div>
+              <div>
+                <Label>Monthly Target</Label>
+                <Input
+                  value={formData.monthlyTarget}
+                  onChange={(e) => setFormData({ ...formData, monthlyTarget: e.target.value })}
+                  placeholder="e.g., 5/month"
+                />
+              </div>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Joining Date (optional)</Label>
+              <Label>Joining Date</Label>
               <Input
                 type="date"
                 value={formData.joiningDate}
@@ -683,62 +840,65 @@ function GenerateDocumentForm({
               />
             </div>
             <div>
-              <Label>Acceptance Deadline (optional)</Label>
+              <Label>Acceptance Deadline</Label>
               <Input
                 type="date"
                 value={formData.acceptanceDeadline}
                 onChange={(e) => setFormData({ ...formData, acceptanceDeadline: e.target.value })}
               />
             </div>
-          </>
-        )
-      case 'INCREMENT_LETTER':
-        return (
-          <>
+          </div>
+        </>
+      )}
+
+      {formData.documentType === 'INCREMENT_LETTER' && (
+        <>
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <Label>Designation</Label>
               <Input
                 value={formData.designation}
                 onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                placeholder="e.g., Business Development Manager"
+                placeholder="e.g., BD Manager"
               />
             </div>
             <div>
-              <Label>Join Date (for letter text)</Label>
+              <Label>Join Date</Label>
               <Input
                 type="date"
                 value={formData.joinDate}
                 onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })}
-                placeholder="When employee joined"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Previous Annual CTC</Label>
-                <Input
-                  type="number"
-                  value={formData.previousSalary}
-                  onChange={(e) => setFormData({ ...formData, previousSalary: e.target.value })}
-                  placeholder="Previous annual CTC"
-                />
-              </div>
-              <div>
-                <Label>Increment Percentage</Label>
-                <Input
-                  type="number"
-                  value={formData.incrementPercentage}
-                  onChange={(e) => setFormData({ ...formData, incrementPercentage: e.target.value })}
-                  placeholder="e.g., 12.5"
-                />
-              </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Previous Annual CTC</Label>
+              <Input
+                type="number"
+                value={formData.previousSalary}
+                onChange={(e) => setFormData({ ...formData, previousSalary: e.target.value })}
+                placeholder="Previous CTC"
+              />
             </div>
             <div>
-              <Label>New Annual CTC (auto-calculated if left empty)</Label>
+              <Label>Increment %</Label>
+              <Input
+                type="number"
+                value={formData.incrementPercentage}
+                onChange={(e) => setFormData({ ...formData, incrementPercentage: e.target.value })}
+                placeholder="e.g., 12.5"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>New Annual CTC (auto if empty)</Label>
               <Input
                 type="number"
                 value={formData.newSalary}
                 onChange={(e) => setFormData({ ...formData, newSalary: e.target.value })}
-                placeholder="New annual CTC"
+                placeholder="New CTC"
               />
             </div>
             <div>
@@ -749,25 +909,56 @@ function GenerateDocumentForm({
                 onChange={(e) => setFormData({ ...formData, effectiveDate: e.target.value })}
               />
             </div>
+          </div>
+          <div>
+            <Label>Remarks (optional)</Label>
+            <Input
+              value={formData.remarks}
+              onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
+              placeholder="Any additional remarks"
+            />
+          </div>
+        </>
+      )}
+
+      {formData.documentType === 'EXPERIENCE_LETTER' && (
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label>Designation</Label>
+            <Input
+              value={formData.designation}
+              onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+              placeholder="Employee designation"
+            />
+          </div>
+          <div>
+            <Label>Last Working Date</Label>
+            <Input
+              type="date"
+              value={formData.lastWorkingDate}
+              onChange={(e) => setFormData({ ...formData, lastWorkingDate: e.target.value })}
+            />
+          </div>
+        </div>
+      )}
+
+      {formData.documentType === 'RELIEVING_LETTER' && (
+        <>
+          <div>
+            <Label>Designation</Label>
+            <Input
+              value={formData.designation}
+              onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+              placeholder="Employee designation"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Remarks (optional)</Label>
+              <Label>Resignation Date</Label>
               <Input
-                value={formData.remarks}
-                onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
-                placeholder="Any additional remarks"
-              />
-            </div>
-          </>
-        )
-      case 'EXPERIENCE_LETTER':
-        return (
-          <>
-            <div>
-              <Label>Designation</Label>
-              <Input
-                value={formData.designation}
-                onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                placeholder="Employee's designation"
+                type="date"
+                value={formData.resignationDate}
+                onChange={(e) => setFormData({ ...formData, resignationDate: e.target.value })}
               />
             </div>
             <div>
@@ -778,97 +969,15 @@ function GenerateDocumentForm({
                 onChange={(e) => setFormData({ ...formData, lastWorkingDate: e.target.value })}
               />
             </div>
-          </>
-        )
-      case 'RELIEVING_LETTER':
-        return (
-          <>
-            <div>
-              <Label>Designation</Label>
-              <Input
-                value={formData.designation}
-                onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                placeholder="Employee's designation"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Resignation Date</Label>
-                <Input
-                  type="date"
-                  value={formData.resignationDate}
-                  onChange={(e) => setFormData({ ...formData, resignationDate: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Last Working Date</Label>
-                <Input
-                  type="date"
-                  value={formData.lastWorkingDate}
-                  onChange={(e) => setFormData({ ...formData, lastWorkingDate: e.target.value })}
-                />
-              </div>
-            </div>
-          </>
-        )
-      default:
-        return null
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label>Employee</Label>
-        <Select
-          value={formData.employeeId}
-          onValueChange={(value) => setFormData({ ...formData, employeeId: value })}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select employee" />
-          </SelectTrigger>
-          <SelectContent>
-            {employees.map((emp) => (
-              <SelectItem key={emp.id} value={emp.id}>
-                {emp.user.name} ({emp.employeeCode})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <Label>Document Type</Label>
-        <Select
-          value={formData.documentType}
-          onValueChange={(value) => setFormData({ ...formData, documentType: value })}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select document type" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(DOCUMENT_TYPES)
-              .filter(([k]) => k !== 'CUSTOM')
-              .map(([key, label]) => (
-                <SelectItem key={key} value={key}>
-                  {label}
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {formData.documentType && (
-        <div className="border-t pt-4 space-y-4">
-          <h4 className="font-medium">Document Details</h4>
-          {renderMetadataFields()}
-        </div>
+          </div>
+        </>
       )}
 
-      <div className="flex justify-end gap-2 pt-4">
-        <Button type="submit" disabled={isLoading || !formData.employeeId || !formData.documentType}>
+      <div className="flex justify-between pt-2">
+        <Button type="button" variant="outline" onClick={() => setStep(1)}>
+          Back
+        </Button>
+        <Button type="submit" disabled={isLoading}>
           {isLoading ? 'Generating...' : 'Generate Document'}
         </Button>
       </div>

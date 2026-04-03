@@ -1541,10 +1541,12 @@ export type EmployeeCreateNestedOneWithoutDocumentsInput = {
   connect?: Prisma.EmployeeWhereUniqueInput
 }
 
-export type EmployeeUpdateOneRequiredWithoutDocumentsNestedInput = {
+export type EmployeeUpdateOneWithoutDocumentsNestedInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutDocumentsInput, Prisma.EmployeeUncheckedCreateWithoutDocumentsInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutDocumentsInput
   upsert?: Prisma.EmployeeUpsertWithoutDocumentsInput
+  disconnect?: Prisma.EmployeeWhereInput | boolean
+  delete?: Prisma.EmployeeWhereInput | boolean
   connect?: Prisma.EmployeeWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutDocumentsInput, Prisma.EmployeeUpdateWithoutDocumentsInput>, Prisma.EmployeeUncheckedUpdateWithoutDocumentsInput>
 }

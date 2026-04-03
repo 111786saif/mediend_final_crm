@@ -61,14 +61,20 @@ export async function GET(
       return errorResponse('Forbidden', 403)
     }
 
-    const employeeData = {
-      name: document.employee.user.name,
-      employeeCode: document.employee.employeeCode,
-      email: document.employee.user.email,
-      department: document.employee.department?.name,
-      joinDate: document.employee.joinDate,
-      salary: document.employee.salary,
-    }
+    const employeeData = document.employee
+      ? {
+          name: document.employee.user.name,
+          employeeCode: document.employee.employeeCode,
+          email: document.employee.user.email,
+          department: document.employee.department?.name,
+          joinDate: document.employee.joinDate,
+          salary: document.employee.salary,
+        }
+      : {
+          name: document.applicantName || 'Applicant',
+          employeeCode: 'NEW',
+          email: document.applicantEmail || '',
+        }
 
     if (document.documentType === 'CUSTOM') {
       if (!document.documentUrl) {

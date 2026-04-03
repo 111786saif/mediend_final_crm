@@ -51,14 +51,20 @@ export async function GET(
       return errorResponse('Document not found', 404)
     }
 
-    const employeeData = {
-      name: document.employee.user.name,
-      employeeCode: document.employee.employeeCode,
-      email: document.employee.user.email,
-      department: document.employee.department?.name,
-      joinDate: document.employee.joinDate,
-      salary: document.employee.salary,
-    }
+    const employeeData = document.employee
+      ? {
+          name: document.employee.user.name,
+          employeeCode: document.employee.employeeCode,
+          email: document.employee.user.email,
+          department: document.employee.department?.name,
+          joinDate: document.employee.joinDate,
+          salary: document.employee.salary,
+        }
+      : {
+          name: document.applicantName || 'Applicant',
+          employeeCode: 'NEW',
+          email: document.applicantEmail || '',
+        }
 
     const metadata = document.metadata as Record<string, unknown> | null
 
@@ -99,7 +105,7 @@ export async function GET(
       return new NextResponse(htmlContent, {
         headers: {
           'Content-Type': 'text/html',
-          'Content-Disposition': `attachment; filename="${document.documentType.toLowerCase()}_${document.employee.employeeCode}.html"`,
+          'Content-Disposition': `attachment; filename="${document.documentType.toLowerCase()}_${document.employee?.employeeCode || 'applicant'}.html"`,
         },
       })
     }

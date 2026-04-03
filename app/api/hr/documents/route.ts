@@ -13,8 +13,10 @@ import { z } from 'zod'
 import { DocumentType } from '@/generated/prisma/client'
 
 const generateDocumentSchema = z.object({
-  employeeId: z.string(),
+  employeeId: z.string().optional(),
   documentType: z.enum(['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER']),
+  applicantName: z.string().optional(),
+  applicantEmail: z.string().optional(),
   metadata: z.record(z.any()).optional(),
 })
 
@@ -30,37 +32,50 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { employeeId, documentType, metadata } = generateDocumentSchema.parse(body)
+    const { employeeId, documentType, applicantName, applicantEmail, metadata } = generateDocumentSchema.parse(body)
 
-    // Get employee details
-    const employee = await prisma.employee.findUnique({
-      where: { id: employeeId },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
-        department: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    })
-
-    if (!employee) {
-      return errorResponse('Employee not found', 404)
+    let employeeData: {
+      name: string
+      employeeCode: string
+      email: string
+      department?: string
+      joinDate?: Date | null
+      salary?: number | null
+      designation?: string
     }
 
-    const employeeData = {
-      name: employee.user.name,
-      employeeCode: employee.employeeCode,
-      email: employee.user.email,
-      department: employee.department?.name,
-      joinDate: employee.joinDate,
-      salary: employee.salary,
+    // For offer letters, applicant details can be provided directly (no employee needed)
+    if (documentType === 'OFFER_LETTER' && !employeeId) {
+      if (!applicantName || !applicantEmail) {
+        return errorResponse('Applicant name and email are required for offer letters', 400)
+      }
+      employeeData = {
+        name: applicantName,
+        employeeCode: 'NEW',
+        email: applicantEmail,
+      }
+    } else {
+      if (!employeeId) {
+        return errorResponse('Employee is required for this document type', 400)
+      }
+      const employee = await prisma.employee.findUnique({
+        where: { id: employeeId },
+        include: {
+          user: { select: { name: true, email: true } },
+          department: { select: { name: true } },
+        },
+      })
+      if (!employee) {
+        return errorResponse('Employee not found', 404)
+      }
+      employeeData = {
+        name: employee.user.name,
+        employeeCode: employee.employeeCode,
+        email: employee.user.email,
+        department: employee.department?.name,
+        joinDate: employee.joinDate,
+        salary: employee.salary,
+      }
     }
 
     let htmlContent: string
@@ -85,7 +100,9 @@ export async function POST(request: NextRequest) {
     // Save document record
     const document = await prisma.employeeDocument.create({
       data: {
-        employeeId,
+        employeeId: employeeId || null,
+        applicantName: !employeeId ? applicantName : null,
+        applicantEmail: !employeeId ? applicantEmail : null,
         documentType: documentType as DocumentType,
         metadata: metadata || {},
       },

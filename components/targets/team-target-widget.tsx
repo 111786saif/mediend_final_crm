@@ -29,7 +29,8 @@ interface TargetProgress {
 }
 
 const METRIC_LABELS: Record<string, string> = {
-  SURGERIES_DONE: 'Surgeries',
+  IPD_DONE: 'IPD Done',
+  SURGERIES_DONE: 'IPD Done',
   LEADS_CLOSED: 'Leads Closed',
   NET_PROFIT: 'Net Profit',
   BILL_AMOUNT: 'Bill Amount',
@@ -42,7 +43,8 @@ function getInitials(name: string) {
 function formatVal(value: number, metric: string) {
   if (metric === 'NET_PROFIT' || metric === 'BILL_AMOUNT') {
     if (value >= 100000) return `₹${(value / 100000).toFixed(1)}L`
-    return `₹${(value / 1000).toFixed(0)}K`
+    if (value >= 1000) return `₹${(value / 1000).toFixed(0)}K`
+    return `₹${value}`
   }
   return String(value)
 }

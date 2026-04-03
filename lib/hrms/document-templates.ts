@@ -112,20 +112,26 @@ export function generateOfferLetterHTML(
     monthlyTarget?: string
     joiningDate?: string
     acceptanceDeadline?: string
+    guardianName?: string
+    guardianRelation?: string
+    address?: string
   }
 ): string {
   const today = format(new Date(), 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Associate'
   const ctc = metadata?.ctc || employee.salary || 0
   const monthlySalary = Math.round(ctc / 12)
+  const guardianName = metadata?.guardianName || ''
+  const guardianRelation = metadata?.guardianRelation || 'S/O'
+  const address = metadata?.address || ''
   const isSales = metadata?.isSales ?? false
   const salesTarget = metadata?.salesTarget || 'As per performance plan'
   const monthlyTarget = metadata?.monthlyTarget || 'As per performance plan'
   const joiningDateRaw = metadata?.joiningDate || employee.joinDate
   const joiningDate = joiningDateRaw
     ? (typeof joiningDateRaw === 'string'
-        ? format(new Date(joiningDateRaw), "do MMMM, yyyy 'at' 09:30 AM")
-        : format(joiningDateRaw, "do MMMM, yyyy 'at' 09:30 AM"))
+        ? format(new Date(joiningDateRaw), "do MMMM, yyyy 'at 09:30 AM'")
+        : format(joiningDateRaw, "do MMMM, yyyy 'at 09:30 AM'"))
     : 'To be confirmed'
   const acceptanceDeadlineRaw = metadata?.acceptanceDeadline
   const acceptanceDeadline = acceptanceDeadlineRaw
@@ -161,7 +167,8 @@ export function generateOfferLetterHTML(
 
   <div>
     <p><strong>To,</strong></p>
-    <p>Ms/Mr ${employee.name}</p>
+    <p>Ms/Mr ${employee.name}${guardianName ? `, ${guardianRelation} ${guardianName}` : ''}</p>${address ? `
+    <p>${address}</p>` : ''}
     <p>Email: ${employee.email}</p>
   </div>
 
@@ -227,7 +234,7 @@ export function generateOfferLetterHTML(
 
   <div style="margin-top: 40px; border-top: 1px dashed #999; padding-top: 20px;">
     <p><strong>Acceptance:</strong></p>
-    <p>I, ${employee.name}, hereby accept the offer of employment as mentioned above.</p>
+    <p>I, ${employee.name}${guardianName ? `, ${guardianRelation} ${guardianName}` : ''}${address ? `, residing at ${address}` : ''}, hereby accept the offer of employment as mentioned above.</p>
     <!-- ACK_PLACEHOLDER -->
   </div>
 

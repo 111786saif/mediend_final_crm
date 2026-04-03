@@ -717,6 +717,8 @@ export const EmployeeDocumentScalarFieldEnum = {
   documentType: 'documentType',
   documentUrl: 'documentUrl',
   title: 'title',
+  applicantName: 'applicantName',
+  applicantEmail: 'applicantEmail',
   metadata: 'metadata',
   generatedAt: 'generatedAt',
   createdAt: 'createdAt',

@@ -44,14 +44,20 @@ export async function GET(request: NextRequest) {
       return errorResponse('Invalid or expired token', 404)
     }
 
-    const employeeData = {
-      name: document.employee.user.name,
-      employeeCode: document.employee.employeeCode,
-      email: document.employee.user.email,
-      department: document.employee.department?.name,
-      joinDate: document.employee.joinDate,
-      salary: document.employee.salary,
-    }
+    const employeeData = document.employee
+      ? {
+          name: document.employee.user.name,
+          employeeCode: document.employee.employeeCode,
+          email: document.employee.user.email,
+          department: document.employee.department?.name,
+          joinDate: document.employee.joinDate,
+          salary: document.employee.salary,
+        }
+      : {
+          name: document.applicantName || 'Applicant',
+          employeeCode: 'NEW',
+          email: document.applicantEmail || '',
+        }
     const metadata = document.metadata as Record<string, unknown> | null
 
     let htmlContent: string
@@ -84,7 +90,7 @@ export async function GET(request: NextRequest) {
     return successResponse({
       documentType: document.documentType,
       documentTypeLabel: DOCUMENT_TYPE_LABELS[document.documentType] ?? document.documentType,
-      employeeName: document.employee.user.name,
+      employeeName: document.employee?.user.name || document.applicantName || 'Applicant',
       companyName: COMPANY_NAME,
       generatedAt: document.generatedAt,
       generatedAtFormatted: format(new Date(document.generatedAt), 'do MMMM, yyyy'),

@@ -9,18 +9,11 @@ import { z } from 'zod'
 const targetSchema = z.object({
   targetType: z.enum(['BD', 'TEAM']),
   targetForId: z.string(),
-  periodType: z.enum(['WEEK', 'MONTH']),
+  periodType: z.enum(['WEEK', 'MONTH']).default('MONTH'),
   periodStartDate: z.string(),
   periodEndDate: z.string(),
-  metric: z.enum(['LEADS_CLOSED', 'NET_PROFIT', 'BILL_AMOUNT', 'SURGERIES_DONE']),
+  metric: z.enum(['LEADS_CLOSED', 'NET_PROFIT', 'BILL_AMOUNT', 'SURGERIES_DONE', 'IPD_DONE']).default('IPD_DONE'),
   targetValue: z.number(),
-  bonusRules: z.array(z.object({
-    ruleType: z.enum(['PERCENT_ABOVE_TARGET', 'FIXED_COUNT']),
-    thresholdValue: z.number(),
-    bonusAmount: z.number().optional(),
-    bonusPercentage: z.number().optional(),
-    capAmount: z.number().optional(),
-  })).optional(),
 })
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
@@ -106,12 +99,6 @@ export async function POST(request: NextRequest) {
         metric: data.metric,
         targetValue: data.targetValue,
         createdById: user.id,
-        bonusRules: data.bonusRules ? {
-          create: data.bonusRules,
-        } : undefined,
-      },
-      include: {
-        bonusRules: true,
       },
     })
 
