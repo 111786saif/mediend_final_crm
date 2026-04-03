@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { TabNavigation, type TabItem } from '@/components/employee/tab-navigation'
 import { AttendanceTab } from '@/components/hr/attendance-tab'
-import { LeavesTab } from '@/components/hr/leaves-tab'
 import { NormalizationsTab } from '@/components/hr/normalizations-tab'
 import { LeaveTypesTab } from '@/components/hr/leave-types-tab'
 import { LeaveBalancesTab } from '@/components/hr/leave-balances-tab'
@@ -17,7 +16,6 @@ import type { BadgeCounts } from '@/app/api/badge-counts/route'
 
 const ALL_TABS: (TabItem & { permission?: string })[] = [
   { value: 'attendance', label: 'Attendance', permission: 'hrms:attendance:read' },
-  { value: 'leaves', label: 'Leaves', permission: 'hrms:leaves:read' },
   { value: 'holidays', label: 'Holidays', permission: 'hrms:attendance:read' },
   { value: 'normalizations', label: 'Normalizations', permission: 'hrms:attendance:write' },
   { value: 'leave-types', label: 'Leave Types', permission: 'hrms:leaves:read' },
@@ -39,8 +37,7 @@ export default function HRAttendanceLeavesPage() {
     if (!user) return []
     return ALL_TABS.filter((t) => !t.permission || hasPermission(user, t.permission as any)).map(({ value, label }) => {
       let badge: number | undefined
-      if (value === 'leaves') badge = badges?.hrPendingLeaves
-      else if (value === 'normalizations') badge = badges?.hrPendingNormalizations
+      if (value === 'normalizations') badge = badges?.hrPendingNormalizations
       return { value, label, badge }
     })
   }, [user, badges])
@@ -77,7 +74,6 @@ export default function HRAttendanceLeavesPage() {
       />
       <div className="mt-6">
         {activeTab === 'attendance' && <AttendanceTab />}
-        {activeTab === 'leaves' && <LeavesTab />}
         {activeTab === 'holidays' && <HolidaysManagementTab />}
         {activeTab === 'normalizations' && <NormalizationsTab />}
         {activeTab === 'leave-types' && <LeaveTypesTab />}

@@ -91,6 +91,7 @@ export default function GeneratePayrollPage() {
       return latest ?? null
     },
     enabled: !!employeeId,
+    staleTime: 0,
   })
 
   const { data: existingPayroll } = useQuery<MonthlyPayroll | null>({
@@ -102,6 +103,7 @@ export default function GeneratePayrollPage() {
       return res.data?.[0] ?? null
     },
     enabled: !!employeeId,
+    staleTime: 0,
   })
 
   const buildNavigateNext = () => {
@@ -818,6 +820,13 @@ export default function GeneratePayrollPage() {
         {hasPayroll && (
           <Button onClick={handleSave} disabled={updateMutation.isPending}>
             {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+          </Button>
+        )}
+        {hasPayroll && existingPayroll && (
+          <Button variant="outline" asChild>
+            <Link href={`/employee/payroll/${existingPayroll.id}/slip`} target="_blank">
+              View Payslip
+            </Link>
           </Button>
         )}
         {queue.length > 1 && (

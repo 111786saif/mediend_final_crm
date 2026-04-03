@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { canReadItPnl } from '@/lib/pnl/auth-it-pnl'
 import { monthlyCostForResource } from '@/lib/pnl/it-resource-cost'
+import { getSeatCostPerEmployee } from '@/lib/pnl/pnl-config'
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,6 +17,8 @@ export async function GET(request: NextRequest) {
     const startYear = parseInt(searchParams.get('startYear') || String(new Date().getFullYear()), 10)
     const endMonth = parseInt(searchParams.get('endMonth') || String(startMonth), 10)
     const endYear = parseInt(searchParams.get('endYear') || String(startYear), 10)
+
+    const seatCostPerEmployee = await getSeatCostPerEmployee()
 
     const projects = await prisma.iTProject.findMany({
       include: {
@@ -77,8 +80,9 @@ export async function GET(request: NextRequest) {
             endDate: r.endDate,
             isActive: r.isActive,
             employeeSalary: r.employee?.salary ?? null,
+            seatCostApplied: r.seatCostApplied ?? false,
           }
-          cost += monthlyCostForResource(costInput, ms, ys)
+          cost += monthlyCostForResource(costInput, ms, ys, seatCostPerEmployee)
         }
 
         monthly[key] = { revenue, cost, net: revenue - cost }
@@ -115,9 +119,11 @@ export async function GET(request: NextRequest) {
               endDate: r.endDate,
               isActive: r.isActive,
               employeeSalary: r.employee?.salary ?? null,
+              seatCostApplied: r.seatCostApplied ?? false,
             },
             ms,
-            ys
+            ys,
+            seatCostPerEmployee
           )
         }
       }
@@ -143,9 +149,11 @@ export async function GET(request: NextRequest) {
               endDate: r.endDate,
               isActive: r.isActive,
               employeeSalary: r.employee?.salary ?? null,
+              seatCostApplied: r.seatCostApplied ?? false,
             },
             ms,
-            ys
+            ys,
+            seatCostPerEmployee
           )
         }
       }

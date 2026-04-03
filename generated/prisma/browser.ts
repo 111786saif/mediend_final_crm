@@ -308,6 +308,11 @@ export type UserFeaturePermission = Prisma.UserFeaturePermissionModel
  */
 export type CampaignCPL = Prisma.CampaignCPLModel
 /**
+ * Model DailyCampaignSpend
+ * 
+ */
+export type DailyCampaignSpend = Prisma.DailyCampaignSpendModel
+/**
  * Model InsuranceQuery
  * 
  */

@@ -44,7 +44,21 @@ export async function GET(
       if (!isOwn && !hasPayrollPermission) return errorResponse('Forbidden', 403)
       // Employees can only see APPROVED or PAID; finance/HR can see DRAFT too
       if (isOwn && monthlyPayroll.status === 'DRAFT') return errorResponse('Payroll not yet released', 404)
-      return successResponse({ type: 'monthly', ...monthlyPayroll })
+      const salaryStructure = await prisma.salaryStructure.findFirst({
+        where: { employeeId: monthlyPayroll.employeeId },
+        orderBy: { effectiveFrom: 'desc' },
+        select: {
+          basicSalary: true,
+          hraAllowance: true,
+          medicalAllowance: true,
+          conveyanceAllowance: true,
+          otherAllowance: true,
+          specialAllowance: true,
+          monthlyGross: true,
+          annualCtc: true,
+        },
+      })
+      return successResponse({ type: 'monthly', ...monthlyPayroll, salaryStructure: salaryStructure ?? null })
     }
 
     const payrollRecord = await prisma.payrollRecord.findUnique({

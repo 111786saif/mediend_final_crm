@@ -102,35 +102,53 @@ export async function GET(request: NextRequest) {
     let halfDays = 0
     let lateFines = 0
     const attendedDates = new Set<string>()
+    // Dates where employee clocked a half-day punch (eligible for leave supplement)
+    const halfDayAttendanceDates = new Set<string>()
     for (const day of grouped) {
       const dateKey = day.date.toISOString().split('T')[0]
-      attendedDates.add(dateKey)
       const normAs = normalizedByDate.get(dateKey)
       if (normAs === 'FULL_DAY') {
+        attendedDates.add(dateKey)
         fullDays += 1
       } else if (normAs === 'HALF_DAY') {
+        attendedDates.add(dateKey)
         halfDays += 1
       } else if (day.status === 'absent') {
-        // Under min half-day hours: no payable credit from punches
+        // Under min half-day hours — not added to attendedDates so paid leave can still apply
       } else if (day.isHalfDay) {
+        attendedDates.add(dateKey)
+        halfDayAttendanceDates.add(dateKey)
         halfDays += 1
+        lateFines += day.penalty ?? 0
       } else {
+        attendedDates.add(dateKey)
         fullDays += 1
+        lateFines += day.penalty ?? 0
       }
-      lateFines += day.penalty ?? 0
     }
 
     // Approved normalizations for days with no punch
+    const normalizedOnlyDates = new Set<string>()
+    // Normalization-only half-day dates (also eligible for leave supplement)
+    const halfDayNormOnlyDates = new Set<string>()
     for (const [dateKey, normAs] of normalizedByDate) {
       if (!attendedDates.has(dateKey)) {
-        if (normAs === 'HALF_DAY') halfDays += 1
-        else fullDays += 1
+        normalizedOnlyDates.add(dateKey)
+        if (normAs === 'HALF_DAY') {
+          halfDays += 1
+          halfDayNormOnlyDates.add(dateKey)
+        } else {
+          fullDays += 1
+        }
       }
     }
 
-    // Leave days in this month: paid vs unpaid (only count days not already in attendance)
+    // Leave days in this month: paid vs unpaid
+    // Half-day attendance/normalization dates allow a paid leave to supplement the remaining 0.5
     const unpaidLeaveDays = new Set<string>()
     const paidLeaveDays = new Set<string>()
+    const supplementedDates = new Set<string>()
+    let paidLeaveSupplements = 0
     for (const leave of leaveRequests) {
       const start = new Date(leave.startDate)
       const end = new Date(leave.endDate)
@@ -140,7 +158,18 @@ export async function GET(request: NextRequest) {
         const dateKey = d.toISOString().split('T')[0]
         const [y, m] = dateKey.split('-').map(Number)
         if (m !== monthNum || y !== yearNum) continue
-        if (attendedDates.has(dateKey)) continue // already counted in full/half
+        if (attendedDates.has(dateKey) || normalizedOnlyDates.has(dateKey)) {
+          // Allow paid leave to top up a half-day attendance/normalization to a full day
+          if (
+            !leave.isUnpaid &&
+            !supplementedDates.has(dateKey) &&
+            (halfDayAttendanceDates.has(dateKey) || halfDayNormOnlyDates.has(dateKey))
+          ) {
+            paidLeaveSupplements += 0.5
+            supplementedDates.add(dateKey)
+          }
+          continue
+        }
         if (leave.isUnpaid) {
           unpaidLeaveDays.add(dateKey)
         } else {
@@ -149,12 +178,12 @@ export async function GET(request: NextRequest) {
       }
     }
     const unpaidLeaves = unpaidLeaveDays.size
-    const paidLeaves = paidLeaveDays.size
+    const paidLeaves = paidLeaveDays.size + paidLeaveSupplements
 
-    // Payable = full days + (half days × 0.5) + paid leave days (paid leave = full day pay)
-    const payableDays = Math.max(
-      0,
-      Math.round((fullDays + halfDays * 0.5 + paidLeaves) * 100) / 100
+    // Payable = full days + (half days × 0.5) + paid leave days, capped at total calendar days
+    const payableDays = Math.min(
+      totalDaysInMonth,
+      Math.max(0, Math.round((fullDays + halfDays * 0.5 + paidLeaves) * 100) / 100)
     )
 
     return successResponse({

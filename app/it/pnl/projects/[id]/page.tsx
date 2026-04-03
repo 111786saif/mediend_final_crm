@@ -21,10 +21,12 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import { toast } from 'sonner'
 import { Plus, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+
+const SEAT_COST = 25000
 
 type ProjectDetail = {
   id: string
@@ -36,17 +38,16 @@ type ProjectDetail = {
   resources: {
     id: string
     resourceType: string
+    resourceName: string | null
+    monthlyCost: number
+    seatCostApplied: boolean
     allocationPercent: number
     paymentType: string
-    monthlyCost: number
     oneTimeCost: number
     employee: { user: { name: string } } | null
     freelancer: { name: string } | null
   }[]
 }
-
-type Employee = { id: string; salary: number | null; user: { name: string; email: string } }
-type Freelancer = { id: string; name: string }
 
 export default function ItProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -59,32 +60,17 @@ export default function ItProjectDetailPage({ params }: { params: Promise<{ id: 
   const [bk, setBk] = useState({ month: new Date().getMonth() + 1, year: new Date().getFullYear(), amount: '', notes: '' })
 
   const [resOpen, setResOpen] = useState(false)
-  const [resTab, setResTab] = useState<'sal' | 'free'>('sal')
   const [resForm, setResForm] = useState({
-    employeeId: '',
-    freelancerId: '',
-    allocationPercent: '100',
-    paymentType: 'MONTHLY',
+    resourceType: 'SALARIED' as 'SALARIED' | 'FREELANCE',
+    resourceName: '',
     monthlyCost: '',
-    oneTimeCost: '',
+    seatCostApplied: false,
   })
 
   const { data: project, isLoading } = useQuery({
     queryKey: ['it-project', id],
     queryFn: () => apiGet<ProjectDetail>(`/api/it/projects/${id}`),
     enabled: !!can && !!id,
-  })
-
-  const { data: employees = [] } = useQuery({
-    queryKey: ['employees-it'],
-    queryFn: () => apiGet<Employee[]>('/api/employees?status=ACTIVE'),
-    enabled: !!canWrite && resOpen,
-  })
-
-  const { data: freelancers = [] } = useQuery({
-    queryKey: ['it-freelancers'],
-    queryFn: () => apiGet<Freelancer[]>('/api/it/freelancers'),
-    enabled: !!canWrite && resOpen,
   })
 
   const bookingMut = useMutation({
@@ -117,33 +103,35 @@ export default function ItProjectDetailPage({ params }: { params: Promise<{ id: 
   const addRes = useMutation({
     mutationFn: () =>
       apiPost(`/api/it/projects/${id}/resources`, {
-        resourceType: resTab === 'sal' ? 'SALARIED' : 'FREELANCE',
-        employeeId: resTab === 'sal' ? resForm.employeeId : undefined,
-        freelancerId: resTab === 'free' ? resForm.freelancerId : undefined,
-        allocationPercent: parseFloat(resForm.allocationPercent) || 0,
-        paymentType: resForm.paymentType,
+        resourceType: resForm.resourceType,
+        resourceName: resForm.resourceName,
         monthlyCost: parseFloat(resForm.monthlyCost) || 0,
-        oneTimeCost: parseFloat(resForm.oneTimeCost) || 0,
+        seatCostApplied: resForm.seatCostApplied,
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['it-project', id] })
       toast.success('Resource added')
       setResOpen(false)
+      setResForm({ resourceType: 'SALARIED', resourceName: '', monthlyCost: '', seatCostApplied: false })
     },
     onError: (e: Error) => toast.error(e.message),
   })
 
   const totalBooked = project?.bookings.reduce((s, b) => s + b.amount, 0) ?? 0
 
+  function resDisplayName(r: ProjectDetail['resources'][0]): string {
+    return r.resourceName || r.employee?.user.name || r.freelancer?.name || '—'
+  }
+
   return (
     <ProtectedRoute>
       <div className="space-y-6 p-4 md:p-6 w-full min-w-0">
         <Button variant="ghost" asChild>
-          <Link href="/it/pnl?tab=projects">← Projects</Link>
+          <Link href="/it/pnl?tab=projects">&larr; Projects</Link>
         </Button>
 
         {!can || isLoading || !project ? (
-          <p className="text-muted-foreground">{!can ? 'No access' : 'Loading…'}</p>
+          <p className="text-muted-foreground">{!can ? 'No access' : 'Loading\u2026'}</p>
         ) : (
           <>
             <Card>
@@ -151,7 +139,7 @@ export default function ItProjectDetailPage({ params }: { params: Promise<{ id: 
                 <div className="flex justify-between gap-4 flex-wrap">
                   <div>
                     <CardTitle className="text-2xl">{project.name}</CardTitle>
-                    <p className="text-muted-foreground">{project.clientName || '—'}</p>
+                    <p className="text-muted-foreground">{project.clientName || '\u2014'}</p>
                   </div>
                   <Badge>{project.status}</Badge>
                 </div>
@@ -219,53 +207,54 @@ export default function ItProjectDetailPage({ params }: { params: Promise<{ id: 
                         </DialogTrigger>
                         <DialogContent className="max-w-md">
                           <DialogHeader><DialogTitle>Add resource</DialogTitle></DialogHeader>
-                          <Tabs value={resTab} onValueChange={(v) => setResTab(v as 'sal' | 'free')}>
-                            <TabsList className="grid w-full grid-cols-2">
-                              <TabsTrigger value="sal">Salaried</TabsTrigger>
-                              <TabsTrigger value="free">Freelance</TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="sal" className="space-y-3 mt-4">
+                          <div className="space-y-4 mt-2">
+                            <div className="flex gap-2">
+                              <Button
+                                type="button"
+                                variant={resForm.resourceType === 'SALARIED' ? 'default' : 'outline'}
+                                className="flex-1"
+                                onClick={() => setResForm((f) => ({ ...f, resourceType: 'SALARIED' }))}
+                              >
+                                Salaried
+                              </Button>
+                              <Button
+                                type="button"
+                                variant={resForm.resourceType === 'FREELANCE' ? 'default' : 'outline'}
+                                className="flex-1"
+                                onClick={() => setResForm((f) => ({ ...f, resourceType: 'FREELANCE' }))}
+                              >
+                                Freelance
+                              </Button>
+                            </div>
+                            <div>
+                              <Label>Name</Label>
+                              <Input
+                                placeholder="Resource name"
+                                value={resForm.resourceName}
+                                onChange={(e) => setResForm((f) => ({ ...f, resourceName: e.target.value }))}
+                              />
+                            </div>
+                            <div>
+                              <Label>Monthly Cost (INR)</Label>
+                              <Input
+                                type="number"
+                                placeholder="0"
+                                value={resForm.monthlyCost}
+                                onChange={(e) => setResForm((f) => ({ ...f, monthlyCost: e.target.value }))}
+                              />
+                            </div>
+                            <div className="flex items-center justify-between rounded-md border p-3">
                               <div>
-                                <Label>Employee</Label>
-                                <Select value={resForm.employeeId} onValueChange={(v) => setResForm((f) => ({ ...f, employeeId: v }))}>
-                                  <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                                  <SelectContent>
-                                    {employees.map((e) => (
-                                      <SelectItem key={e.id} value={e.id}>{e.user.name} ({e.salary?.toLocaleString('en-IN') ?? '—'})</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
+                                <p className="text-sm font-medium">Apply seat cost</p>
+                                <p className="text-xs text-muted-foreground">+{SEAT_COST.toLocaleString('en-IN')}/mo</p>
                               </div>
-                              <div><Label>Allocation %</Label><Input value={resForm.allocationPercent} onChange={(e) => setResForm((f) => ({ ...f, allocationPercent: e.target.value }))} /></div>
-                            </TabsContent>
-                            <TabsContent value="free" className="space-y-3 mt-4">
-                              <div>
-                                <Label>Freelancer</Label>
-                                <Select value={resForm.freelancerId} onValueChange={(v) => setResForm((f) => ({ ...f, freelancerId: v }))}>
-                                  <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
-                                  <SelectContent>
-                                    {freelancers.map((f) => (
-                                      <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              <div>
-                                <Label>Payment</Label>
-                                <Select value={resForm.paymentType} onValueChange={(v) => setResForm((f) => ({ ...f, paymentType: v }))}>
-                                  <SelectTrigger><SelectValue /></SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="MONTHLY">Monthly</SelectItem>
-                                    <SelectItem value="ONE_TIME">One-time</SelectItem>
-                                    <SelectItem value="BOTH">Both</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              <div><Label>Monthly cost</Label><Input value={resForm.monthlyCost} onChange={(e) => setResForm((f) => ({ ...f, monthlyCost: e.target.value }))} /></div>
-                              <div><Label>One-time cost</Label><Input value={resForm.oneTimeCost} onChange={(e) => setResForm((f) => ({ ...f, oneTimeCost: e.target.value }))} /></div>
-                            </TabsContent>
-                          </Tabs>
-                          <DialogFooter><Button onClick={() => addRes.mutate()}>Add</Button></DialogFooter>
+                              <Switch
+                                checked={resForm.seatCostApplied}
+                                onCheckedChange={(v) => setResForm((f) => ({ ...f, seatCostApplied: v }))}
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter><Button onClick={() => addRes.mutate()} disabled={!resForm.resourceName.trim()}>Add</Button></DialogFooter>
                         </DialogContent>
                       </Dialog>
                     )}
@@ -276,29 +265,32 @@ export default function ItProjectDetailPage({ params }: { params: Promise<{ id: 
                         <TableRow>
                           <TableHead>Name</TableHead>
                           <TableHead>Type</TableHead>
-                          <TableHead>%</TableHead>
-                          <TableHead>Pay</TableHead>
-                          <TableHead className="text-right">Monthly / Once</TableHead>
+                          <TableHead className="text-right">Monthly Cost</TableHead>
+                          <TableHead className="text-right">Seat Cost</TableHead>
+                          <TableHead className="text-right">Total</TableHead>
                           {canWrite && <TableHead />}
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {project.resources.map((r) => (
-                          <TableRow key={r.id}>
-                            <TableCell>{r.employee?.user.name ?? r.freelancer?.name}</TableCell>
-                            <TableCell><Badge variant="outline">{r.resourceType}</Badge></TableCell>
-                            <TableCell>{r.allocationPercent}</TableCell>
-                            <TableCell>{r.paymentType}</TableCell>
-                            <TableCell className="text-right">{r.monthlyCost} / {r.oneTimeCost}</TableCell>
-                            {canWrite && (
-                              <TableCell>
-                                <Button variant="ghost" size="icon" onClick={() => deleteRes.mutate(r.id)}>
-                                  <Trash2 className="h-4 w-4 text-destructive" />
-                                </Button>
-                              </TableCell>
-                            )}
-                          </TableRow>
-                        ))}
+                        {project.resources.map((r) => {
+                          const seat = r.seatCostApplied ? SEAT_COST : 0
+                          return (
+                            <TableRow key={r.id}>
+                              <TableCell>{resDisplayName(r)}</TableCell>
+                              <TableCell><Badge variant="outline">{r.resourceType}</Badge></TableCell>
+                              <TableCell className="text-right">{r.monthlyCost.toLocaleString('en-IN')}</TableCell>
+                              <TableCell className="text-right">{seat > 0 ? seat.toLocaleString('en-IN') : '\u2014'}</TableCell>
+                              <TableCell className="text-right font-medium">{(r.monthlyCost + seat).toLocaleString('en-IN')}</TableCell>
+                              {canWrite && (
+                                <TableCell>
+                                  <Button variant="ghost" size="icon" onClick={() => deleteRes.mutate(r.id)}>
+                                    <Trash2 className="h-4 w-4 text-destructive" />
+                                  </Button>
+                                </TableCell>
+                              )}
+                            </TableRow>
+                          )
+                        })}
                       </TableBody>
                     </Table>
                   </CardContent>

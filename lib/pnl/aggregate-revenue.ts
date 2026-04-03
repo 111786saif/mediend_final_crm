@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { monthlyCostForResource } from '@/lib/pnl/it-resource-cost'
+import { getSeatCostPerEmployee } from '@/lib/pnl/pnl-config'
 
 export type MonthYear = { month: number; year: number }
 
@@ -87,13 +88,16 @@ export async function itSalaryHintByMonth(months: MonthYear[]): Promise<Map<stri
     map.set(`${m.year}-${m.month}`, 0)
   }
 
-  const projects = await prisma.iTProject.findMany({
-    include: {
-      resources: {
-        include: { employee: { select: { salary: true } } },
+  const [projects, seatCostPerEmployee] = await Promise.all([
+    prisma.iTProject.findMany({
+      include: {
+        resources: {
+          include: { employee: { select: { salary: true } } },
+        },
       },
-    },
-  })
+    }),
+    getSeatCostPerEmployee(),
+  ])
 
   for (const my of months) {
     let total = 0
@@ -111,9 +115,11 @@ export async function itSalaryHintByMonth(months: MonthYear[]): Promise<Map<stri
             endDate: r.endDate,
             isActive: r.isActive,
             employeeSalary: r.employee?.salary ?? null,
+            seatCostApplied: r.seatCostApplied ?? false,
           },
           my.month,
-          my.year
+          my.year,
+          seatCostPerEmployee
         )
       }
     }

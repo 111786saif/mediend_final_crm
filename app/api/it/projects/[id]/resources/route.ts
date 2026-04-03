@@ -46,6 +46,7 @@ export async function POST(
     const body = await request.json()
     const {
       resourceType,
+      resourceName,
       employeeId,
       freelancerId,
       allocationPercent,
@@ -55,26 +56,32 @@ export async function POST(
       startDate,
       endDate,
       isActive,
+      seatCostApplied,
     } = body
 
-    if (resourceType === 'SALARIED') {
-      if (!employeeId) return errorResponse('employeeId is required for salaried resource', 400)
-    } else if (resourceType === 'FREELANCE') {
-      if (!freelancerId) return errorResponse('freelancerId is required for freelance resource', 400)
-    } else {
+    if (resourceType !== 'SALARIED' && resourceType !== 'FREELANCE') {
       return errorResponse('Invalid resourceType', 400)
+    }
+    // Legacy flows may still pass employeeId/freelancerId; new flow uses resourceName
+    if (!resourceName && resourceType === 'SALARIED' && !employeeId) {
+      return errorResponse('resourceName or employeeId is required for salaried resource', 400)
+    }
+    if (!resourceName && resourceType === 'FREELANCE' && !freelancerId) {
+      return errorResponse('resourceName or freelancerId is required for freelance resource', 400)
     }
 
     const resource = await prisma.iTProjectResource.create({
       data: {
         projectId,
         resourceType,
-        employeeId: resourceType === 'SALARIED' ? employeeId : null,
-        freelancerId: resourceType === 'FREELANCE' ? freelancerId : null,
-        allocationPercent: Number(allocationPercent) || 0,
+        resourceName: resourceName || null,
+        employeeId: resourceType === 'SALARIED' ? (employeeId || null) : null,
+        freelancerId: resourceType === 'FREELANCE' ? (freelancerId || null) : null,
+        allocationPercent: Number(allocationPercent) || 100,
         paymentType: paymentType || 'MONTHLY',
         monthlyCost: Number(monthlyCost) || 0,
         oneTimeCost: Number(oneTimeCost) || 0,
+        seatCostApplied: seatCostApplied === true,
         startDate: startDate ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
         isActive: isActive !== false,

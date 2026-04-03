@@ -36,6 +36,16 @@ interface MonthlyPayrollSlip {
   epfEmployer: number
   netPayable: number
   status: string
+  salaryStructure: {
+    basicSalary: number
+    hraAllowance: number
+    medicalAllowance: number
+    conveyanceAllowance: number
+    otherAllowance: number
+    specialAllowance: number
+    monthlyGross: number
+    annualCtc: number
+  } | null
   employee: {
     id: string
     employeeCode: string
@@ -206,13 +216,60 @@ export default function PayslipPage() {
                 <div className="ed-col-title earnings">Earnings</div>
                 {isMonthly && m ? (
                   <>
-                    {m.adjustedBasic > 0 && <div className="ed-row"><span className="ed-label">Basic Salary</span><span className="ed-value">{formatCurrency(m.adjustedBasic)}</span></div>}
-                    {(m.adjustedHra ?? 0) > 0 && <div className="ed-row"><span className="ed-label">HRA</span><span className="ed-value">{formatCurrency(m.adjustedHra ?? 0)}</span></div>}
-                    {m.adjustedMedical > 0 && <div className="ed-row"><span className="ed-label">Medical Allowance</span><span className="ed-value">{formatCurrency(m.adjustedMedical)}</span></div>}
-                    {m.adjustedConveyance > 0 && <div className="ed-row"><span className="ed-label">Conveyance Allowance</span><span className="ed-value">{formatCurrency(m.adjustedConveyance)}</span></div>}
-                    {m.adjustedOther > 0 && <div className="ed-row"><span className="ed-label">Other Allowance</span><span className="ed-value">{formatCurrency(m.adjustedOther)}</span></div>}
-                    {m.adjustedSpecial > 0 && <div className="ed-row"><span className="ed-label">Special Allowance</span><span className="ed-value">{formatCurrency(m.adjustedSpecial)}</span></div>}
-                    <div className="ed-total earnings-total"><span>Total Earnings</span><span className="ed-value">{formatCurrency(m.adjustedGross)}</span></div>
+                    {m.salaryStructure && (
+                      <div className="ed-row ed-row-header">
+                        <span className="ed-label"></span>
+                        <span className="ed-sub-header">Structure</span>
+                        <span className="ed-sub-header">Earned</span>
+                      </div>
+                    )}
+                    {(m.adjustedBasic > 0 || (m.salaryStructure?.basicSalary ?? 0) > 0) && (
+                      <div className="ed-row">
+                        <span className="ed-label">Basic Salary</span>
+                        {m.salaryStructure ? <span className="ed-value-struct">{formatCurrency(m.salaryStructure.basicSalary)}</span> : null}
+                        <span className="ed-value">{formatCurrency(m.adjustedBasic)}</span>
+                      </div>
+                    )}
+                    {((m.adjustedHra ?? 0) > 0 || (m.salaryStructure?.hraAllowance ?? 0) > 0) && (
+                      <div className="ed-row">
+                        <span className="ed-label">HRA</span>
+                        {m.salaryStructure ? <span className="ed-value-struct">{formatCurrency(m.salaryStructure.hraAllowance)}</span> : null}
+                        <span className="ed-value">{formatCurrency(m.adjustedHra ?? 0)}</span>
+                      </div>
+                    )}
+                    {(m.adjustedMedical > 0 || (m.salaryStructure?.medicalAllowance ?? 0) > 0) && (
+                      <div className="ed-row">
+                        <span className="ed-label">Medical Allowance</span>
+                        {m.salaryStructure ? <span className="ed-value-struct">{formatCurrency(m.salaryStructure.medicalAllowance)}</span> : null}
+                        <span className="ed-value">{formatCurrency(m.adjustedMedical)}</span>
+                      </div>
+                    )}
+                    {(m.adjustedConveyance > 0 || (m.salaryStructure?.conveyanceAllowance ?? 0) > 0) && (
+                      <div className="ed-row">
+                        <span className="ed-label">Conveyance Allowance</span>
+                        {m.salaryStructure ? <span className="ed-value-struct">{formatCurrency(m.salaryStructure.conveyanceAllowance)}</span> : null}
+                        <span className="ed-value">{formatCurrency(m.adjustedConveyance)}</span>
+                      </div>
+                    )}
+                    {(m.adjustedOther > 0 || (m.salaryStructure?.otherAllowance ?? 0) > 0) && (
+                      <div className="ed-row">
+                        <span className="ed-label">Other Allowance</span>
+                        {m.salaryStructure ? <span className="ed-value-struct">{formatCurrency(m.salaryStructure.otherAllowance)}</span> : null}
+                        <span className="ed-value">{formatCurrency(m.adjustedOther)}</span>
+                      </div>
+                    )}
+                    {(m.adjustedSpecial > 0 || (m.salaryStructure?.specialAllowance ?? 0) > 0) && (
+                      <div className="ed-row">
+                        <span className="ed-label">Special Allowance</span>
+                        {m.salaryStructure ? <span className="ed-value-struct">{formatCurrency(m.salaryStructure.specialAllowance)}</span> : null}
+                        <span className="ed-value">{formatCurrency(m.adjustedSpecial)}</span>
+                      </div>
+                    )}
+                    <div className="ed-total earnings-total">
+                      <span>Total Earnings</span>
+                      {m.salaryStructure ? <span className="ed-value-struct ed-value">{formatCurrency(m.salaryStructure.monthlyGross)}</span> : null}
+                      <span className="ed-value">{formatCurrency(m.adjustedGross)}</span>
+                    </div>
                   </>
                 ) : (
                   (() => {
@@ -278,8 +335,8 @@ export default function PayslipPage() {
           </div>
 
           <div className="ctc-bar">
-            <div>Annual CTC: <span>—</span></div>
-            <div>Monthly Gross: <span>{formatCurrency(monthlyGross)}</span></div>
+            <div>Annual CTC: <span>{isMonthly && m?.salaryStructure ? formatCurrency(m.salaryStructure.annualCtc) : '—'}</span></div>
+            <div>Monthly Gross: <span>{isMonthly && m?.salaryStructure ? formatCurrency(m.salaryStructure.monthlyGross) : formatCurrency(monthlyGross)}</span></div>
           </div>
 
           <div className="footer">
@@ -387,22 +444,28 @@ export default function PayslipPage() {
         .ed-row {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           font-size: 13px;
           padding: 6px 0;
           border-bottom: 1px solid #f2f2f2;
         }
-        .ed-row .ed-label { color: #555; }
-        .ed-row .ed-value { font-weight: 600; color: #222; }
+        .ed-row-header { padding-bottom: 4px; }
+        .ed-sub-header { font-size: 10px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; min-width: 60px; text-align: right; }
+        .ed-row .ed-label { color: #555; flex: 1; }
+        .ed-row .ed-value { font-weight: 600; color: #222; min-width: 60px; text-align: right; }
+        .ed-row .ed-value-struct { font-weight: 400; color: #999; min-width: 60px; text-align: right; font-size: 12px; }
         .ed-row.na .ed-value { color: #bbb; }
         .ed-total {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           font-size: 14px;
           font-weight: 700;
           padding: 10px 0 0;
           margin-top: 8px;
           border-top: 2px solid #ddd;
         }
+        .ed-total .ed-value-struct { font-weight: 400; color: #999; min-width: 60px; text-align: right; font-size: 12px; }
         .ed-total.earnings-total .ed-value { color: #1a7a4c; }
         .ed-total.deductions-total .ed-value { color: #c0392b; }
         .employer-grid {

@@ -7,6 +7,11 @@ export function cplLookupKey(campaignName: string, month: number, year: number) 
   return `${campaignName}\0${month}\0${year}`
 }
 
+/**
+ * Load per-campaign per-month CPL.
+ * Primary source: DailyCampaignSpend (sum spend / lead count per campaign per month).
+ * Fallback: CampaignCPL records (legacy per-campaign monthly CPL).
+ */
 export async function loadCampaignCplMap(
   prisma: PrismaClient,
   months: MonthYear[]
@@ -14,13 +19,63 @@ export async function loadCampaignCplMap(
   const map = new Map<string, number>()
   if (months.length === 0) return map
 
-  const rows = await prisma.campaignCPL.findMany({
-    where: { OR: months.map((m) => ({ month: m.month, year: m.year })) },
-    select: { campaignName: true, month: true, year: true, cpl: true },
-  })
-  for (const r of rows) {
-    map.set(cplLookupKey(r.campaignName, r.month, r.year), r.cpl)
+  // Build date range from months
+  const firstMonth = months[0]
+  const lastMonth = months[months.length - 1]
+  const rangeStart = new Date(Date.UTC(firstMonth.year, firstMonth.month - 1, 1))
+  const rangeEnd = new Date(Date.UTC(lastMonth.year, lastMonth.month, 0, 23, 59, 59, 999))
+
+  // Fetch daily spend records and leads in parallel
+  const [dailySpends, leads, legacyCpls] = await Promise.all([
+    prisma.dailyCampaignSpend.findMany({
+      where: { date: { gte: rangeStart, lte: rangeEnd } },
+      select: { campaignName: true, date: true, spend: true },
+    }),
+    prisma.lead.findMany({
+      where: { leadDate: { gte: rangeStart, lte: rangeEnd }, campaignName: { not: null } },
+      select: { campaignName: true, leadDate: true },
+    }),
+    prisma.campaignCPL.findMany({
+      where: { OR: months.map((m) => ({ month: m.month, year: m.year })) },
+      select: { campaignName: true, month: true, year: true, cpl: true },
+    }),
+  ])
+
+  // Aggregate daily spend by campaign+month
+  const spendByCampaignMonth = new Map<string, number>()
+  for (const s of dailySpends) {
+    const d = new Date(s.date)
+    const key = cplLookupKey(s.campaignName, d.getUTCMonth() + 1, d.getUTCFullYear())
+    spendByCampaignMonth.set(key, (spendByCampaignMonth.get(key) || 0) + s.spend)
   }
+
+  // Count leads by campaign+month
+  const leadsByCampaignMonth = new Map<string, number>()
+  for (const l of leads) {
+    if (!l.leadDate || !l.campaignName) continue
+    const d = new Date(l.leadDate)
+    const key = cplLookupKey(l.campaignName.trim(), d.getMonth() + 1, d.getFullYear())
+    leadsByCampaignMonth.set(key, (leadsByCampaignMonth.get(key) || 0) + 1)
+  }
+
+  // Derive CPL from daily spend: spend / leads
+  const coveredKeys = new Set<string>()
+  for (const [key, spend] of spendByCampaignMonth) {
+    const leadCount = leadsByCampaignMonth.get(key) || 0
+    if (leadCount > 0 && spend > 0) {
+      map.set(key, Math.round((spend / leadCount) * 100) / 100)
+    }
+    coveredKeys.add(key)
+  }
+
+  // Fallback: legacy CampaignCPL for campaigns not covered by daily spend
+  for (const r of legacyCpls) {
+    const key = cplLookupKey(r.campaignName, r.month, r.year)
+    if (!coveredKeys.has(key)) {
+      map.set(key, r.cpl)
+    }
+  }
+
   return map
 }
 

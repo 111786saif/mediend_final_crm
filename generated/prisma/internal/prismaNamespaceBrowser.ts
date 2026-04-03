@@ -109,6 +109,7 @@ export const ModelName = {
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
   CampaignCPL: 'CampaignCPL',
+  DailyCampaignSpend: 'DailyCampaignSpend',
   InsuranceQuery: 'InsuranceQuery',
   PreAuthPDF: 'PreAuthPDF',
   AdmissionRecord: 'AdmissionRecord',
@@ -1326,6 +1327,19 @@ export const CampaignCPLScalarFieldEnum = {
 export type CampaignCPLScalarFieldEnum = (typeof CampaignCPLScalarFieldEnum)[keyof typeof CampaignCPLScalarFieldEnum]
 
 
+export const DailyCampaignSpendScalarFieldEnum = {
+  id: 'id',
+  campaignName: 'campaignName',
+  date: 'date',
+  spend: 'spend',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DailyCampaignSpendScalarFieldEnum = (typeof DailyCampaignSpendScalarFieldEnum)[keyof typeof DailyCampaignSpendScalarFieldEnum]
+
+
 export const InsuranceQueryScalarFieldEnum = {
   id: 'id',
   preAuthorizationId: 'preAuthorizationId',
@@ -1836,6 +1850,8 @@ export const ITProjectResourceScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   isActive: 'isActive',
+  resourceName: 'resourceName',
+  seatCostApplied: 'seatCostApplied',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

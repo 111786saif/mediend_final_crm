@@ -91,9 +91,9 @@ function getBadgeCount(
   if (itemTitle === 'MD Appointments') return counts.pendingAppointments ?? 0
   if (itemTitle === 'Home') return counts.pendingNotices ?? 0
   if (itemTitle === 'Chat') return counts.unreadChatMessages ?? 0
-  if (itemTitle === 'Attendance & Leaves') {
+  if (itemTitle === 'Attendance & Normalizations') {
     const norms = counts.hrPendingNormalizations ?? 0
-    return (counts.pendingLeaveApprovals ?? 0) + norms
+    return norms
   }
   if (itemTitle === 'Engagement') {
     const hr = counts.pendingHRActions ?? 0
@@ -158,7 +158,7 @@ export function AppSidebar() {
 
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
 
-  const HRM_TITLES = ['Attendance & Leaves', 'People & Org', 'Compensation & Docs', 'Engagement']
+  const HRM_TITLES = ['Attendance & Normalizations', 'People & Org', 'Compensation & Docs', 'Engagement']
 
   const navigationItems =
     user.role === 'MD'
@@ -183,7 +183,7 @@ export function AppSidebar() {
               item.title === 'Finance Dashboard' ||
               item.title === 'MD HR Dashboard' ||
               item.title.startsWith('MD ') ||
-              item.title === 'Attendance & Leaves' ||
+              item.title === 'Attendance & Normalizations' ||
               item.title === 'People & Org' ||
               item.title === 'Compensation & Docs' ||
               item.title === 'Engagement'
@@ -197,7 +197,7 @@ export function AppSidebar() {
                 item.title === 'Sales Dashboard' ||
                 item.title === 'MD HR Dashboard' ||
                 item.title.startsWith('My ') ||
-                item.title === 'Attendance & Leaves' ||
+                item.title === 'Attendance & Normalizations' ||
                 item.title === 'People & Org' ||
                 item.title === 'Compensation & Docs' ||
                 item.title === 'Engagement' ||
@@ -219,7 +219,7 @@ export function AppSidebar() {
                 return (
                   item.title === 'Home' ||
                   item.title.startsWith('My ') ||
-                  item.title === 'Attendance & Leaves' ||
+                  item.title === 'Attendance & Normalizations' ||
                   item.title === 'People & Org' ||
                   item.title === 'Compensation & Docs' ||
                   item.title === 'Engagement' ||
@@ -460,7 +460,7 @@ export function AppSidebar() {
               </div>
             </SidebarGroup>
         )}
-        {itemsWithUrls.some((item) => item.title.startsWith('Fin ')) && (
+        {user.role !== 'HR_HEAD' && itemsWithUrls.some((item) => item.title.startsWith('Fin ')) && (
           <SidebarGroup className="pb-1">
             <button
               onClick={() => toggleSection('finance')}

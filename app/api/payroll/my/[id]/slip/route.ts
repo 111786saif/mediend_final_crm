@@ -218,10 +218,11 @@ export async function GET(
       doc.text('Generated on: ' + new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }), pageW / 2, y + 5, { align: 'center' })
 
       const pdfBuffer = Buffer.from(doc.output('arraybuffer'))
+      const empName = monthlyPayroll.employee.user.name.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').trim()
       return new Response(pdfBuffer, {
         headers: {
           'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="salary-slip-${monthlyPayroll.month}-${monthlyPayroll.year}.pdf"`,
+          'Content-Disposition': `attachment; filename="payslip-${empName}-${monthlyPayroll.month}-${monthlyPayroll.year}.pdf"`,
         },
       })
     }
@@ -281,10 +282,11 @@ export async function GET(
     doc.text('This is a system-generated document.', 105, y, { align: 'center' })
 
     const pdfBuffer = Buffer.from(doc.output('arraybuffer'))
+    const legacyEmpName = employee.user.name.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').trim()
     return new Response(pdfBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="salary-slip-${payrollRecord.month}-${payrollRecord.year}.pdf"`,
+        'Content-Disposition': `attachment; filename="payslip-${legacyEmpName}-${payrollRecord.month}-${payrollRecord.year}.pdf"`,
       },
     })
   } catch (error) {

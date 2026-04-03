@@ -442,6 +442,7 @@ export const ModelName = {
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
   CampaignCPL: 'CampaignCPL',
+  DailyCampaignSpend: 'DailyCampaignSpend',
   InsuranceQuery: 'InsuranceQuery',
   PreAuthPDF: 'PreAuthPDF',
   AdmissionRecord: 'AdmissionRecord',
@@ -494,7 +495,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
+    modelProps: "user" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4790,6 +4791,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DailyCampaignSpend: {
+      payload: Prisma.$DailyCampaignSpendPayload<ExtArgs>
+      fields: Prisma.DailyCampaignSpendFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DailyCampaignSpendFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DailyCampaignSpendFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>
+        }
+        findFirst: {
+          args: Prisma.DailyCampaignSpendFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DailyCampaignSpendFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>
+        }
+        findMany: {
+          args: Prisma.DailyCampaignSpendFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>[]
+        }
+        create: {
+          args: Prisma.DailyCampaignSpendCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>
+        }
+        createMany: {
+          args: Prisma.DailyCampaignSpendCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DailyCampaignSpendCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>[]
+        }
+        delete: {
+          args: Prisma.DailyCampaignSpendDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>
+        }
+        update: {
+          args: Prisma.DailyCampaignSpendUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>
+        }
+        deleteMany: {
+          args: Prisma.DailyCampaignSpendDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DailyCampaignSpendUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DailyCampaignSpendUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>[]
+        }
+        upsert: {
+          args: Prisma.DailyCampaignSpendUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DailyCampaignSpendPayload>
+        }
+        aggregate: {
+          args: Prisma.DailyCampaignSpendAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDailyCampaignSpend>
+        }
+        groupBy: {
+          args: Prisma.DailyCampaignSpendGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyCampaignSpendGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DailyCampaignSpendCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DailyCampaignSpendCountAggregateOutputType> | number
+        }
+      }
+    }
     InsuranceQuery: {
       payload: Prisma.$InsuranceQueryPayload<ExtArgs>
       fields: Prisma.InsuranceQueryFieldRefs
@@ -8729,6 +8804,19 @@ export const CampaignCPLScalarFieldEnum = {
 export type CampaignCPLScalarFieldEnum = (typeof CampaignCPLScalarFieldEnum)[keyof typeof CampaignCPLScalarFieldEnum]
 
 
+export const DailyCampaignSpendScalarFieldEnum = {
+  id: 'id',
+  campaignName: 'campaignName',
+  date: 'date',
+  spend: 'spend',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DailyCampaignSpendScalarFieldEnum = (typeof DailyCampaignSpendScalarFieldEnum)[keyof typeof DailyCampaignSpendScalarFieldEnum]
+
+
 export const InsuranceQueryScalarFieldEnum = {
   id: 'id',
   preAuthorizationId: 'preAuthorizationId',
@@ -9239,6 +9327,8 @@ export const ITProjectResourceScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   isActive: 'isActive',
+  resourceName: 'resourceName',
+  seatCostApplied: 'seatCostApplied',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -10387,6 +10477,7 @@ export type GlobalOmitConfig = {
   mDApprovalRequest?: Prisma.MDApprovalRequestOmit
   userFeaturePermission?: Prisma.UserFeaturePermissionOmit
   campaignCPL?: Prisma.CampaignCPLOmit
+  dailyCampaignSpend?: Prisma.DailyCampaignSpendOmit
   insuranceQuery?: Prisma.InsuranceQueryOmit
   preAuthPDF?: Prisma.PreAuthPDFOmit
   admissionRecord?: Prisma.AdmissionRecordOmit

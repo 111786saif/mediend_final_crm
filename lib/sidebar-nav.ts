@@ -211,7 +211,7 @@ export const navItems: NavItem[] = [
     permission: 'hierarchy:team:read',
   },
   {
-    title: 'Attendance & Leaves',
+    title: 'Attendance & Normalizations',
     url: '/hr/attendance-leaves',
     icon: Clock,
     permission: 'hrms:attendance:read',

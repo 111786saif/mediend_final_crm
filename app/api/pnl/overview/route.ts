@@ -11,6 +11,7 @@ import {
   itSalaryHintByMonth,
   surgeryRevenueByMonth,
 } from '@/lib/pnl/aggregate-revenue'
+import { marketingSpendByMonth } from '@/lib/pnl/daily-spend-aggregator'
 import { getSeatCostPerEmployee } from '@/lib/pnl/pnl-config'
 import {
   buildSeatCostHintsByMonth,
@@ -39,7 +40,10 @@ export async function GET(request: NextRequest) {
     const itRev = await itRevenueByMonth(months)
     const loanRev = await departmentRevenueByMonth('LOAN_DEMAT', months)
     const adsRev = await departmentRevenueByMonth('GOOGLE_ADS', months)
-    const itSalaryHint = await itSalaryHintByMonth(months)
+    const [itSalaryHint, marketingSpendHint] = await Promise.all([
+      itSalaryHintByMonth(months),
+      marketingSpendByMonth(months),
+    ])
 
     const seatCostPerEmployee = await getSeatCostPerEmployee()
     const headcountByDept = await getEmployeeCountByPnlDepartment()
@@ -94,6 +98,9 @@ export async function GET(request: NextRequest) {
 
       if (cat.sourceKey === 'SALARY' && cat.departmentKey === 'IT') {
         return { amount: itSalaryHint.get(k) || 0, auto: true }
+      }
+      if (cat.sourceKey === 'MARKETING' && cat.departmentKey === 'SURGERY') {
+        return { amount: marketingSpendHint.get(k) || 0, auto: true }
       }
       if (cat.sourceKey === 'SEAT_COST' && cat.departmentKey) {
         const dk = cat.departmentKey as PnlDepartmentKey
