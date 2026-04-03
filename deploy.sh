@@ -4,116 +4,106 @@ set -e
 # ============================================================
 # Mediend CRM - Zero-downtime blue/green deploy
 #
-# How it works:
-#   1. Detects which slot (blue/green) is live on the VPS
-#   2. Builds & starts the OTHER slot with new code
-#   3. Waits for /api/health to return 200
-#   4. Swaps nginx upstream to the new slot
-#   5. Stops the old slot
+# Run this directly on the VPS. It will:
+#   1. Pull latest code from GitHub
+#   2. Detect which slot (blue/green) is live
+#   3. Build & start the OTHER slot with new code
+#   4. Wait for /api/health to return 200
+#   5. Swap nginx upstream to the new slot
+#   6. Stop the old slot
 #
 # First-time setup on VPS:
-#   1. Create /etc/nginx/conf.d/mediend-upstream.conf (deploy.sh will manage it)
+#   1. Create /etc/nginx/conf.d/mediend-upstream.conf (this script will manage it)
 #   2. In your main nginx server block, use: proxy_pass http://mediend_app;
 #   3. Add: client_max_body_size 25m;
 #
 # Usage: ./deploy.sh
 # ============================================================
 
-VPS_IP="93.127.195.235"
-VPS_USER="root"
-APP_DIR="/opt/mediend-crm"
+APP_DIR="/opt/mediend-crm/mediend-crm2"
 NGINX_CONF="/etc/nginx/conf.d/mediend-upstream.conf"
+
+cd "$APP_DIR"
+
+echo "--- Pulling latest code..."
+git pull origin main
 
 COMMIT=$(git rev-parse --short HEAD)
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-echo "===> Pushing code to GitHub..."
-git push origin main
+echo "===> Deploying commit $COMMIT (zero-downtime)..."
 
-echo "===> Deploying commit $COMMIT to VPS (zero-downtime)..."
-
-# Use unquoted heredoc so local vars expand, escape remote-only vars with \$
-
-
-  set -e
-  cd ${APP_DIR}
-
-  echo "--- Pulling latest code..."
-  git pull origin main
-
-  # ── Detect current live slot ─────────────────────────────────
-  CURRENT=""
-  for slot in app-blue app-green; do
-    state=\$(docker compose ps --format '{{.State}}' "\$slot" 2>/dev/null || true)
-    if [ "\$state" = "running" ]; then
-      CURRENT="\$slot"
-      break
-    fi
-  done
-
-  if [ "\$CURRENT" = "app-blue" ]; then
-    NEW_SLOT="app-green"
-    NEW_PORT=3100
-    OLD_SLOT="app-blue"
-  elif [ "\$CURRENT" = "app-green" ]; then
-    NEW_SLOT="app-blue"
-    NEW_PORT=3000
-    OLD_SLOT="app-green"
-  else
-    NEW_SLOT="app-blue"
-    NEW_PORT=3000
-    OLD_SLOT=""
+# ── Detect current live slot ─────────────────────────────────
+CURRENT=""
+for slot in app-blue app-green; do
+  state=$(docker compose ps --format '{{.State}}' "$slot" 2>/dev/null || true)
+  if [ "$state" = "running" ]; then
+    CURRENT="$slot"
+    break
   fi
+done
 
-  echo "--- Current live: \${CURRENT:-none}"
-  echo "--- Deploying to: \$NEW_SLOT (port \$NEW_PORT)"
+if [ "$CURRENT" = "app-blue" ]; then
+  NEW_SLOT="app-green"
+  NEW_PORT=3100
+  OLD_SLOT="app-blue"
+elif [ "$CURRENT" = "app-green" ]; then
+  NEW_SLOT="app-blue"
+  NEW_PORT=3000
+  OLD_SLOT="app-green"
+else
+  NEW_SLOT="app-blue"
+  NEW_PORT=3000
+  OLD_SLOT=""
+fi
 
-  # ── Build & start new slot ───────────────────────────────────
-  DEPLOY_COMMIT=${COMMIT} DEPLOY_TIME=${TIMESTAMP} docker compose build "\$NEW_SLOT"
-  DEPLOY_COMMIT=${COMMIT} DEPLOY_TIME=${TIMESTAMP} docker compose up -d "\$NEW_SLOT"
+echo "--- Current live: ${CURRENT:-none}"
+echo "--- Deploying to: $NEW_SLOT (port $NEW_PORT)"
 
-  # ── Wait for health check ───────────────────────────────────
-  echo "--- Waiting for \$NEW_SLOT to become healthy (max 120s)..."
-  elapsed=0
-  while true; do
-    http_code=\$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:\${NEW_PORT}/api/health" 2>/dev/null || echo "000")
-    if [ "\$http_code" = "200" ]; then
-      echo "--- \$NEW_SLOT is healthy!"
-      break
-    fi
-    if [ "\$elapsed" -ge 120 ]; then
-      echo "!!! \$NEW_SLOT failed health check after 120s. Rolling back."
-      docker compose stop "\$NEW_SLOT"
-      exit 1
-    fi
-    sleep 3
-    elapsed=\$((elapsed + 3))
-    echo "    waiting... (\${elapsed}/120s, http=\$http_code)"
-  done
+# ── Build & start new slot ───────────────────────────────────
+DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose build "$NEW_SLOT"
+DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose up -d "$NEW_SLOT"
 
-  # ── Swap nginx upstream ──────────────────────────────────────
-  echo "--- Switching nginx to \$NEW_SLOT (port \$NEW_PORT)..."
-  cat > ${NGINX_CONF} << 'NGINXEOF'
+# ── Wait for health check ───────────────────────────────────
+echo "--- Waiting for $NEW_SLOT to become healthy (max 120s)..."
+elapsed=0
+while true; do
+  http_code=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:${NEW_PORT}/api/health" 2>/dev/null || echo "000")
+  if [ "$http_code" = "200" ]; then
+    echo "--- $NEW_SLOT is healthy!"
+    break
+  fi
+  if [ "$elapsed" -ge 120 ]; then
+    echo "!!! $NEW_SLOT failed health check after 120s. Rolling back."
+    docker compose stop "$NEW_SLOT"
+    exit 1
+  fi
+  sleep 3
+  elapsed=$((elapsed + 3))
+  echo "    waiting... (${elapsed}/120s, http=$http_code)"
+done
+
+# ── Swap nginx upstream ──────────────────────────────────────
+echo "--- Switching nginx to $NEW_SLOT (port $NEW_PORT)..."
+cat > "$NGINX_CONF" <<EOF
 # Auto-generated by deploy.sh — do not edit manually
-NGINXEOF
-  echo "upstream mediend_app { server 127.0.0.1:\${NEW_PORT}; }" >> ${NGINX_CONF}
+upstream mediend_app { server 127.0.0.1:${NEW_PORT}; }
+EOF
 
-  nginx -t && systemctl reload nginx
-  echo "--- Nginx reloaded, all traffic now on \$NEW_SLOT"
+nginx -t && systemctl reload nginx
+echo "--- Nginx reloaded, all traffic now on $NEW_SLOT"
 
-  # ── Stop old slot ────────────────────────────────────────────
-  if [ -n "\$OLD_SLOT" ]; then
-    # Brief sleep to let in-flight requests finish
-    sleep 2
-    echo "--- Stopping old slot: \$OLD_SLOT"
-    docker compose stop "\$OLD_SLOT"
-  fi
+# ── Stop old slot ────────────────────────────────────────────
+if [ -n "$OLD_SLOT" ]; then
+  sleep 2
+  echo "--- Stopping old slot: $OLD_SLOT"
+  docker compose stop "$OLD_SLOT"
+fi
 
-  # ── Cleanup ──────────────────────────────────────────────────
-  docker image prune -f
-  echo "--- Final status:"
-  docker compose ps
-ENDSSH
+# ── Cleanup ──────────────────────────────────────────────────
+docker image prune -f
+echo "--- Final status:"
+docker compose ps
 
 echo ""
 echo "===> Deployed $COMMIT at $TIMESTAMP (zero-downtime)"
