@@ -128,10 +128,12 @@ function buildPreAuthHtml(params: {
     requestedRoomType: string | null
     diseaseDescription: string | null
   }
+  admissionDate: string | null
+  surgeryDate: string | null
   imageDataUrls: Array<{ data: string; mime: string }>
   pdfBase64List: string[]
 }): string {
-  const { patientName, preAuth, imageDataUrls, pdfBase64List } = params
+  const { patientName, preAuth, admissionDate, surgeryDate, imageDataUrls, pdfBase64List } = params
 
   /** hide = omit card; dash = show —; else show escaped text */
   function fieldCell(raw: string | null | undefined): 'hide' | 'dash' | string {
@@ -157,6 +159,8 @@ function buildPreAuthHtml(params: {
       : `<h1 class="patient-name">${patientCell === 'dash' ? escapeHtml('—') : patientCell}</h1>`
 
   const cardDefs: Array<{ label: string; cell: 'hide' | 'dash' | string; fullWidth?: boolean }> = [
+    { label: 'Date of Admission', cell: fieldCell(admissionDate) },
+    { label: 'Date of Surgery', cell: fieldCell(surgeryDate) },
     { label: 'Insurance', cell: fieldCell(preAuth.insurance) },
     { label: 'TPA', cell: fieldCell(preAuth.tpa) },
     { label: 'Sum Insured', cell: fieldCell(preAuth.sumInsured) },
@@ -189,11 +193,10 @@ function buildPreAuthHtml(params: {
   const imagePages = imageDataUrls
     .map(
       (img) =>
-        `<div class="page-break"><img src="data:${img.mime};base64,${img.data}" alt="Document" class="doc-image" /></div>`
+        `<div class="doc-page"><img src="data:${img.mime};base64,${img.data}" alt="Document" class="doc-image" /></div>`
     )
     .join('')
 
-  const hasDocs = imageDataUrls.length > 0 || pdfBase64List.length > 0
   // Raw JSON in script[type=application/json]: pdfs are base64 from our fetch (no </script> in alphabet)
   const pdfJson = JSON.stringify({
     pdfs: pdfBase64List,
@@ -211,25 +214,26 @@ function buildPreAuthHtml(params: {
     .header-strip { background: #2563eb; padding: 18px 24px; margin: 0 0 0 0; }
     .header-title { font-size: 26px; font-weight: 700; color: #fff; margin: 0; }
     .patient-name { font-size: 28px; font-weight: 700; margin: 24px 24px 20px 24px; color: #0f172a; line-height: 1.2; }
-    h2 { font-size: 17px; font-weight: 600; margin: 24px 24px 12px 24px; color: #334155; }
     .content { padding: 0 0 24px 0; }
     .preauth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 24px; margin-bottom: 8px; }
     .card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; background: #f8fafc; }
     .card-full { grid-column: 1 / -1; }
     .card-label { font-size: 12px; color: #64748b; margin-bottom: 6px; font-weight: 500; }
     .card-value { font-size: 15px; font-weight: 600; color: #0f172a; word-break: break-word; white-space: pre-wrap; }
-    .page-break { page-break-before: always; padding-top: 24px; }
-    .doc-image { max-width: 100%; height: auto; display: block; }
-    .pdf-host canvas { max-width: 100%; height: auto; display: block; margin: 0 auto 16px auto; border: 1px solid #e2e8f0; }
+    .doc-page { page-break-before: always; display: flex; align-items: flex-start; justify-content: center; padding: 0; margin: 0; min-height: 100vh; }
+    .doc-image { max-width: 100%; max-height: 100vh; width: auto; height: auto; display: block; object-fit: contain; }
+    .pdf-host { }
+    .pdf-host .doc-page canvas { max-width: 100%; height: auto; display: block; margin: 0 auto; }
     .print-button-container { padding: 16px 24px; text-align: center; }
     .print-button { padding: 12px 24px; font-size: 16px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
     .print-button:hover:not(:disabled) { background: #1d4ed8; }
     .print-button:disabled { opacity: 0.65; cursor: not-allowed; }
     .pdf-status { padding: 8px 24px; text-align: center; font-size: 14px; color: #475569; }
     @media print {
-      body { padding: 0; }
+      body { padding: 0; margin: 0; }
       .header-strip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .page-break { page-break-before: always; }
+      .doc-page { page-break-before: always; page-break-after: auto; page-break-inside: avoid; }
+      .doc-image { max-height: 100vh; }
       .print-button-container, .pdf-status { display: none; }
     }
   </style>
@@ -241,11 +245,9 @@ function buildPreAuthHtml(params: {
   <div class="content">
     ${patientHeadingHtml}
     <div class="preauth-grid">${cardHtml}</div>
-
-    ${hasDocs ? '<h2>Documents &amp; Images</h2>' : ''}
-    ${imagePages}
-    <div id="pdf-pages-root" class="pdf-host"></div>
   </div>
+  ${imagePages}
+  <div id="pdf-pages-root" class="pdf-host"></div>
   <p id="pdf-load-status" class="pdf-status" ${pdfBase64List.length === 0 ? 'style="display:none"' : ''}>Loading PDF documents…</p>
   <div class="print-button-container">
     <button type="button" class="print-button" id="print-btn" ${pdfBase64List.length > 0 ? 'disabled' : ''} onclick="window.print()">Print / Save as PDF</button>
@@ -298,8 +300,7 @@ function buildPreAuthHtml(params: {
             const renderTask = page.render({ canvasContext: ctx, viewport });
             await renderTask.promise;
             const wrap = document.createElement('div');
-            const needBreakBefore = imageDocCount > 0 || pdfCanvasIndex > 0;
-            wrap.className = needBreakBefore ? 'page-break' : '';
+            wrap.className = 'doc-page';
             pdfCanvasIndex += 1;
             wrap.appendChild(canvas);
             root.appendChild(wrap);
@@ -343,6 +344,12 @@ export async function GET(
         kypSubmission: {
           include: {
             preAuthData: { include: { suggestedHospitals: true } },
+          },
+        },
+        admissionRecord: {
+          select: {
+            admissionDate: true,
+            surgeryDate: true,
           },
         },
       },
@@ -413,8 +420,15 @@ export async function GET(
     const insuranceDisplay =
       (preAuth.insurance || lead.insuranceName || kyp.insuranceCard || null) ?? null
 
+    const formatDate = (d: Date | null | undefined) => {
+      if (!d) return null
+      return new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+    }
+
     const html = buildPreAuthHtml({
       patientName: lead.patientName || '—',
+      admissionDate: formatDate(lead.admissionRecord?.admissionDate) ?? formatDate(lead.ipdAdmissionDate),
+      surgeryDate: formatDate(lead.admissionRecord?.surgeryDate),
       preAuth: {
         insurance: insuranceDisplay,
         tpa: preAuth.tpa ?? null,
