@@ -12,6 +12,18 @@ import { toast } from 'sonner'
 import { User, MapPin, Stethoscope, Building2, Wallet, Calendar, Package, ChevronDown, ChevronUp } from 'lucide-react'
 import { MasterCombobox } from '@/components/ui/master-combobox'
 
+const DOCTOR_TYPES = [
+  'Plastic',
+  'General',
+  'Vascular',
+  'Ophthalmology',
+  'Orthopedic',
+  'ENT',
+  'Gynecologist',
+  'Laparoscopy',
+  'Urologist',
+] as const
+
 export interface IPDCashFormProps {
   leadId: string
   // Patient Information
@@ -453,14 +465,17 @@ export function IPDCashForm({
             />
           </div>
           <div>
-            <Label htmlFor="surgeonType">Surgeon Type</Label>
-            <Input
-              id="surgeonType"
-              value={formData.surgeonType}
-              onChange={(e) => set('surgeonType', e.target.value)}
-              placeholder="e.g. Primary, Assistant"
-              className="mt-1"
-            />
+            <Label htmlFor="surgeonType">Doctor Type</Label>
+            <Select value={formData.surgeonType} onValueChange={(v) => set('surgeonType', v)}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select doctor type" />
+              </SelectTrigger>
+              <SelectContent>
+                {DOCTOR_TYPES.map((t) => (
+                  <SelectItem key={t} value={t}>{t}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </Section>

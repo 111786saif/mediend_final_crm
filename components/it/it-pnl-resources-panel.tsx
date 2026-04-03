@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPost, apiPatch } from '@/lib/api-client'
+import { apiGet, apiPost, apiPatch, apiDelete } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { canReadItPnl, canWriteItPnl } from '@/lib/pnl/auth-it-pnl'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -28,7 +28,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
-import { Plus, Pencil, Users } from 'lucide-react'
+import { Plus, Pencil, Trash2, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 type Freelancer = {
@@ -77,6 +77,15 @@ export function ItPnlResourcesPanel() {
       toast.success(edit ? 'Updated' : 'Created')
       setOpen(false)
       setEdit(null)
+    },
+    onError: (e: Error) => toast.error(e.message),
+  })
+
+  const deleteMut = useMutation({
+    mutationFn: (id: string) => apiDelete(`/api/it/freelancers/${id}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['it-freelancers'] })
+      toast.success('Freelancer deleted')
     },
     onError: (e: Error) => toast.error(e.message),
   })
@@ -167,23 +176,33 @@ export function ItPnlResourcesPanel() {
                           </TableCell>
                           {canWrite && (
                             <TableCell>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="rounded-full opacity-70 group-hover:opacity-100"
-                                onClick={() => {
-                                  setEdit(f)
-                                  setForm({
-                                    name: f.name,
-                                    email: f.email || '',
-                                    phone: f.phone || '',
-                                    skill: f.skill || '',
-                                  })
-                                  setOpen(true)
-                                }}
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
+                              <div className="flex gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full opacity-70 group-hover:opacity-100"
+                                  onClick={() => {
+                                    setEdit(f)
+                                    setForm({
+                                      name: f.name,
+                                      email: f.email || '',
+                                      phone: f.phone || '',
+                                      skill: f.skill || '',
+                                    })
+                                    setOpen(true)
+                                  }}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full opacity-70 group-hover:opacity-100 text-destructive hover:text-destructive"
+                                  onClick={() => { if (confirm(`Delete "${f.name}"?`)) deleteMut.mutate(f.id) }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </TableCell>
                           )}
                         </TableRow>

@@ -124,3 +124,21 @@ export async function PATCH(request: NextRequest) {
     return errorResponse('Failed to update booking', 500)
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) return unauthorizedResponse()
+    if (!canWriteItPnl(user)) return errorResponse('Forbidden', 403)
+
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    if (!id) return errorResponse('id is required', 400)
+
+    await prisma.iTProjectBooking.delete({ where: { id } })
+    return successResponse({ ok: true })
+  } catch (error) {
+    console.error('Error deleting booking:', error)
+    return errorResponse('Failed to delete booking', 500)
+  }
+}

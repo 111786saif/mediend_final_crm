@@ -32,9 +32,21 @@ const initiateSchema = z.object({
   // Overrides for Lead details
   quantityGrade: z.string().optional(),
   anesthesia: z.string().optional(),
+  surgeonName: z.string().optional(),
   surgeonType: z.string().optional(),
   alternateContactName: z.string().optional(),
   alternateContactNumber: z.string().optional(),
+  patientName: z.string().optional(),
+  insuranceName: z.string().optional(),
+  insuranceType: z.string().optional(),
+  copay: z.string().optional(),
+  sumInsured: z.string().optional(),
+  roomType: z.string().optional(),
+  capping: z.string().optional(),
+  bdName: z.string().optional(),
+  bdManagerName: z.string().optional(),
+  age: z.union([z.string(), z.number()]).optional(),
+  sex: z.string().optional(),
 })
 
 export async function POST(
@@ -124,9 +136,14 @@ export async function POST(
         // Save overrides
         ...(data.quantityGrade ? { quantityGrade: data.quantityGrade } : {}),
         ...(data.anesthesia ? { anesthesia: data.anesthesia } : {}),
+        ...(data.surgeonName ? { ipdDrName: data.surgeonName } : {}),
         ...(data.surgeonType ? { surgeonType: data.surgeonType } : {}),
         ...(data.alternateContactName ? { attendantName: data.alternateContactName } : {}),
         ...(data.alternateContactNumber ? { alternateNumber: data.alternateContactNumber } : {}),
+        ...(data.patientName ? { patientName: data.patientName } : {}),
+        ...(data.insuranceName ? { insuranceName: data.insuranceName } : {}),
+        ...(data.age ? { age: Number(data.age) } : {}),
+        ...(data.sex ? { sex: data.sex } : {}),
       },
     })
 

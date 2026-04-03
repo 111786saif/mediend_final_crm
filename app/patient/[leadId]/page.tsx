@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -500,6 +500,74 @@ export default function PatientDetailsPage() {
       undefined
     return rent != null ? rent : undefined
   })()
+
+  const copyIPDDetailsToClipboard = () => {
+    if (!lead) return
+    const rec = lead.admissionRecord
+    const pre = lead.kypSubmission?.preAuthData
+    const fmtDate = (d?: string | null) => {
+      if (!d) return '—'
+      try { return format(new Date(d), 'dd MMM yyyy') } catch { return d }
+    }
+    const fmtMoney = (v?: string | number | null) => {
+      if (v == null || v === '') return '—'
+      const n = typeof v === 'number' ? v : Number(String(v).replace(/[₹,\s]/g, ''))
+      return isNaN(n) ? String(v) : `₹${n.toLocaleString('en-IN')}`
+    }
+    const lines = [
+      `*IPD Details — ${lead.patientName}*`,
+      `Ref: ${lead.leadRef}`,
+      '',
+      `*Timeline*`,
+      rec?.admissionDate ? `Admission: ${fmtDate(rec.admissionDate)}${rec.admissionTime ? ` at ${rec.admissionTime}` : ''}` : null,
+      rec?.surgeryDate ? `Surgery: ${fmtDate(rec.newSurgeryDate || rec.surgeryDate)}${rec.surgeryTime ? ` at ${rec.surgeryTime}` : ''}` : null,
+      '',
+      `*Patient Info*`,
+      `Name: ${lead.patientName}`,
+      `Age / Gender: ${lead.age ?? '—'} / ${lead.sex ?? '—'}`,
+      `Phone: ${lead.phoneNumber ?? '—'}`,
+      lead.attendantName ? `Attendant: ${lead.attendantName}${lead.attendantContactNo ? ` (${lead.attendantContactNo})` : ''}` : null,
+      `Circle: ${lead.circle ?? '—'}`,
+      '',
+      `*Treatment*`,
+      `Treatment: ${lead.treatment ?? '—'}`,
+      `Category: ${lead.category ?? '—'}`,
+      lead.quantityGrade ? `Grade: ${lead.quantityGrade}` : null,
+      lead.anesthesia ? `Anaesthesia: ${lead.anesthesia}` : null,
+      '',
+      `*Surgeon*`,
+      `Name: ${lead.ipdDrName || lead.surgeonName || '—'}`,
+      lead.surgeonType ? `Type: ${lead.surgeonType}` : null,
+      '',
+      `*Hospital*`,
+      `Hospital: ${rec?.admittingHospital || lead.hospitalName || '—'}`,
+      rec?.hospitalAddress ? `Address: ${rec.hospitalAddress}` : null,
+      rec?.googleMapLocation ? `Maps: ${rec.googleMapLocation}` : null,
+      '',
+      `*Insurance*`,
+      `Company: ${lead.insuranceName ?? '—'}`,
+      `Type: ${lead.kypSubmission?.insuranceType ?? lead.insuranceType ?? '—'}`,
+      `TPA: ${pre?.tpa || rec?.tpa || '—'}`,
+      `Sum Insured: ${fmtMoney(pre?.sumInsured)}`,
+      `Copay: ${pre?.copay != null ? `${pre.copay}%` : '—'}`,
+      `Capping: ${fmtMoney(pre?.capping)}`,
+      `Room Type: ${pre?.requestedRoomType ?? '—'}`,
+      '',
+      rec?.instrument ? `*Instruments:* ${rec.instrument}` : null,
+      rec?.implantConsumables ? `*Implants/Consumables:* ${rec.implantConsumables}` : null,
+      rec?.notes ? `*Notes:* ${rec.notes}` : null,
+      '',
+      `*BD*`,
+      `BD: ${lead.bd?.name ?? '—'}`,
+      lead.bd?.manager?.name ? `BD Manager: ${lead.bd.manager.name}` : null,
+    ].filter((l): l is string => l !== null).join('\n')
+
+    navigator.clipboard.writeText(lines).then(() => {
+      toast.success('IPD details copied to clipboard')
+    }).catch(() => {
+      toast.error('Failed to copy')
+    })
+  }
 
   // Cash Flow Permissions
   const canStartCash = user && canStartCashMode(user as any, lead)
@@ -1122,14 +1190,24 @@ export default function PatientDetailsPage() {
                   </Button>
                 )}
                 {lead.admissionRecord && ['BD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'ADMIN'].includes(user.role) && (
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 border-2"
-                    onClick={() => window.open(`/patient/${leadId}/print/ipd`, '_blank', 'noopener,noreferrer')}
-                  >
-                    <FileDown className="h-4 w-4" />
-                    Print IPD
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 border-2"
+                      onClick={() => window.open(`/patient/${leadId}/print/ipd`, '_blank', 'noopener,noreferrer')}
+                    >
+                      <FileDown className="h-4 w-4" />
+                      Print IPD
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex items-center gap-2 hover:bg-green-50 dark:hover:bg-green-900/20 border-2 border-green-200 text-green-700 dark:text-green-400"
+                      onClick={copyIPDDetailsToClipboard}
+                    >
+                      <Copy className="h-4 w-4" />
+                      Copy IPD
+                    </Button>
+                  </>
                 )}
                 {canFillDischargeForm && (
                   <Button
@@ -1641,9 +1719,9 @@ export default function PatientDetailsPage() {
                 treatment={lead.treatment ?? undefined}
                 quantityGrade={lead.quantityGrade ?? undefined}
                 anesthesia={lead.anesthesia ?? undefined}
-                surgeonName={lead.ipdDrName || lead.surgeonName || undefined}
+                surgeonName={lead.ipdDrName || lead.surgeonName || lead.kypSubmission?.preAuthData?.suggestedHospitals?.find(h => h.hospitalName?.trim() === lead.kypSubmission?.preAuthData?.requestedHospitalName?.trim())?.suggestedDoctor || undefined}
                 surgeonType={lead.surgeonType ?? undefined}
-                hospitalName={lead.hospitalName}
+                hospitalName={(lead.hospitalName && lead.hospitalName !== 'Not Specified' ? lead.hospitalName : null) || lead.kypSubmission?.preAuthData?.requestedHospitalName || undefined}
                 insuranceName={lead.insuranceName ?? undefined}
                 insuranceType={lead.kypSubmission?.insuranceType ?? lead.insuranceType ?? undefined}
                 tpa={lead.kypSubmission?.preAuthData?.tpa ?? undefined}
@@ -1690,9 +1768,9 @@ export default function PatientDetailsPage() {
                 treatment={lead.treatment ?? undefined}
                 quantityGrade={lead.quantityGrade ?? undefined}
                 anesthesia={lead.anesthesia ?? undefined}
-                surgeonName={lead.ipdDrName || lead.surgeonName || undefined}
+                surgeonName={lead.ipdDrName || lead.surgeonName || lead.kypSubmission?.preAuthData?.suggestedHospitals?.find(h => h.hospitalName?.trim() === lead.kypSubmission?.preAuthData?.requestedHospitalName?.trim())?.suggestedDoctor || undefined}
                 surgeonType={lead.surgeonType ?? undefined}
-                hospitalName={lead.hospitalName}
+                hospitalName={(lead.hospitalName && lead.hospitalName !== 'Not Specified' ? lead.hospitalName : null) || lead.kypSubmission?.preAuthData?.requestedHospitalName || undefined}
                 bdName={lead.bd?.name}
                 bdManagerName={lead.bd?.manager?.name ?? undefined}
                 // Pass existing data if editing (admissionRecord + lead financials for collected amounts)

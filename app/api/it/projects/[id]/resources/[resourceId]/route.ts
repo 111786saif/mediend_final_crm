@@ -21,6 +21,7 @@ export async function PATCH(
 
     const body = await request.json()
     const {
+      resourceName,
       allocationPercent,
       paymentType,
       monthlyCost,
@@ -28,11 +29,13 @@ export async function PATCH(
       startDate,
       endDate,
       isActive,
+      seatCostApplied,
     } = body
 
     const resource = await prisma.iTProjectResource.update({
       where: { id: resourceId },
       data: {
+        ...(resourceName !== undefined ? { resourceName: resourceName || null } : {}),
         ...(allocationPercent !== undefined ? { allocationPercent: Number(allocationPercent) || 0 } : {}),
         ...(paymentType ? { paymentType } : {}),
         ...(monthlyCost !== undefined ? { monthlyCost: Number(monthlyCost) || 0 } : {}),
@@ -40,6 +43,7 @@ export async function PATCH(
         ...(startDate !== undefined ? { startDate: startDate ? new Date(startDate) : null } : {}),
         ...(endDate !== undefined ? { endDate: endDate ? new Date(endDate) : null } : {}),
         ...(isActive !== undefined ? { isActive: Boolean(isActive) } : {}),
+        ...(seatCostApplied !== undefined ? { seatCostApplied: Boolean(seatCostApplied) } : {}),
       },
       include: {
         employee: { include: { user: { select: { id: true, name: true, email: true } } } },

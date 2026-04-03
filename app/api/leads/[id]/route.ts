@@ -164,7 +164,20 @@ export async function GET(
     try {
       insuranceInitiateForm = await (prisma as any).insuranceInitiateForm.findUnique({
         where: { leadId: id },
-        select: { id: true }
+        select: {
+          id: true,
+          totalBillAmount: true,
+          discount: true,
+          otherReductions: true,
+          copay: true,
+          copayBuffer: true,
+          deductible: true,
+          exceedsPolicyLimit: true,
+          policyDeductibleAmount: true,
+          totalAuthorizedAmount: true,
+          amountToBePaidByInsurance: true,
+          roomCategory: true,
+        }
       });
       console.log('[DEBUG] insuranceInitiateForm relation fetched successfully');
     } catch (e) {

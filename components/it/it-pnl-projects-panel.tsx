@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPost } from '@/lib/api-client'
+import { apiGet, apiPost, apiPatch, apiDelete } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { canReadItPnl, canWriteItPnl } from '@/lib/pnl/auth-it-pnl'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,7 +21,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'sonner'
-import { Plus, Briefcase, ArrowRight, Layers } from 'lucide-react'
+import { Plus, Briefcase, ArrowRight, Layers, Pencil, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
@@ -35,21 +35,24 @@ type Project = {
   _count: { resources: number; bookings: number }
 }
 
+const EMPTY_FORM = {
+  name: '',
+  clientName: '',
+  description: '',
+  projectValue: '0',
+  billingType: 'MONTHLY',
+  monthlyBilling: '',
+  status: 'ACTIVE',
+}
+
 export function ItPnlProjectsPanel() {
   const { user } = useAuth()
   const can = user && canReadItPnl(user)
   const canWrite = user && canWriteItPnl(user)
   const qc = useQueryClient()
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState({
-    name: '',
-    clientName: '',
-    description: '',
-    projectValue: '0',
-    billingType: 'MONTHLY',
-    monthlyBilling: '',
-    status: 'ACTIVE',
-  })
+  const [editId, setEditId] = useState<string | null>(null)
+  const [form, setForm] = useState(EMPTY_FORM)
 
   const { data: projects = [], isLoading } = useQuery({
     queryKey: ['it-projects'],
@@ -57,9 +60,9 @@ export function ItPnlProjectsPanel() {
     enabled: !!can,
   })
 
-  const createMut = useMutation({
-    mutationFn: () =>
-      apiPost<Project>('/api/it/projects', {
+  const saveMut = useMutation({
+    mutationFn: async () => {
+      const payload = {
         name: form.name,
         clientName: form.clientName || null,
         description: form.description || null,
@@ -67,24 +70,52 @@ export function ItPnlProjectsPanel() {
         billingType: form.billingType,
         monthlyBilling: form.monthlyBilling ? parseFloat(form.monthlyBilling) : null,
         status: form.status,
-      }),
+      }
+      if (editId) {
+        return apiPatch(`/api/it/projects/${editId}`, payload)
+      }
+      return apiPost<Project>('/api/it/projects', payload)
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['it-projects'] })
       qc.invalidateQueries({ queryKey: ['it-pnl-summary'] })
-      toast.success('Project created')
+      toast.success(editId ? 'Project updated' : 'Project created')
       setOpen(false)
-      setForm({
-        name: '',
-        clientName: '',
-        description: '',
-        projectValue: '0',
-        billingType: 'MONTHLY',
-        monthlyBilling: '',
-        status: 'ACTIVE',
-      })
+      setEditId(null)
+      setForm(EMPTY_FORM)
     },
     onError: (e: Error) => toast.error(e.message),
   })
+
+  const deleteMut = useMutation({
+    mutationFn: (id: string) => apiDelete(`/api/it/projects/${id}`),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['it-projects'] })
+      qc.invalidateQueries({ queryKey: ['it-pnl-summary'] })
+      toast.success('Project deleted')
+    },
+    onError: (e: Error) => toast.error(e.message),
+  })
+
+  function openCreate() {
+    setEditId(null)
+    setForm(EMPTY_FORM)
+    setOpen(true)
+  }
+
+  function openEdit(p: Project) {
+    setEditId(p.id)
+    setForm({
+      name: p.name,
+      clientName: p.clientName || '',
+      description: '',
+      projectValue: String(p.projectValue),
+      billingType: p.billingType,
+      monthlyBilling: '',
+      status: p.status,
+    })
+    setOpen(true)
+  }
 
   if (!can) {
     return (
@@ -118,7 +149,7 @@ export function ItPnlProjectsPanel() {
         </div>
         {canWrite && (
           <Button
-            onClick={() => setOpen(true)}
+            onClick={openCreate}
             className="rounded-xl bg-gradient-to-r from-sky-600 to-cyan-600 text-white shadow-md hover:opacity-95"
           >
             <Plus className="h-4 w-4 mr-1.5" />
@@ -138,7 +169,7 @@ export function ItPnlProjectsPanel() {
                 : 'Projects will appear here once created.'}
             </p>
             {canWrite && (
-              <Button className="mt-4 rounded-xl" onClick={() => setOpen(true)}>
+              <Button className="mt-4 rounded-xl" onClick={openCreate}>
                 <Plus className="h-4 w-4 mr-1" /> Create project
               </Button>
             )}
@@ -173,7 +204,7 @@ export function ItPnlProjectsPanel() {
                   <span>
                     Value:{' '}
                     <strong className="text-foreground tabular-nums">
-                      ₹{p.projectValue.toLocaleString('en-IN')}
+                      {'\u20B9'}{p.projectValue.toLocaleString('en-IN')}
                     </strong>
                   </span>
                   <span>
@@ -184,29 +215,46 @@ export function ItPnlProjectsPanel() {
                   <span>{p._count.resources} resources</span>
                   <span>{p._count.bookings} bookings</span>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full rounded-xl border-sky-200 group-hover:bg-sky-50 dark:group-hover:bg-sky-950/30"
-                  asChild
-                >
-                  <Link href={`/it/pnl/projects/${p.id}`} className="gap-1">
-                    Open project
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 rounded-xl border-sky-200 group-hover:bg-sky-50 dark:group-hover:bg-sky-950/30"
+                    asChild
+                  >
+                    <Link href={`/it/pnl/projects/${p.id}`} className="gap-1">
+                      Open project
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
+                  {canWrite && (
+                    <>
+                      <Button variant="ghost" size="icon" className="rounded-xl shrink-0" onClick={() => openEdit(p)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-xl shrink-0 text-destructive hover:text-destructive"
+                        onClick={() => { if (confirm(`Delete "${p.name}"?`)) deleteMut.mutate(p.id) }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
       )}
 
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet open={open} onOpenChange={(o) => { setOpen(o); if (!o) setEditId(null) }}>
         <SheetContent className="w-full sm:max-w-lg overflow-y-auto border-l-2 border-sky-200/60">
           <SheetHeader className="text-left border-b pb-4 bg-gradient-to-br from-sky-500/10 to-cyan-500/5 -mx-6 px-6 -mt-6 pt-6 mb-2">
-            <SheetTitle>New project</SheetTitle>
+            <SheetTitle>{editId ? 'Edit project' : 'New project'}</SheetTitle>
             <SheetDescription>
-              Define billing model and value. You can add resources and bookings after creation.
+              {editId ? 'Update project details.' : 'Define billing model and value. You can add resources and bookings after creation.'}
             </SheetDescription>
           </SheetHeader>
           <div className="grid gap-4 py-4">
@@ -237,12 +285,12 @@ export function ItPnlProjectsPanel() {
                 className="rounded-xl min-h-[88px] resize-none"
                 value={form.description}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                placeholder="Scope, milestones, notes…"
+                placeholder="Scope, milestones, notes\u2026"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
-                <Label>Project value (₹)</Label>
+                <Label>Project value ({'\u20B9'})</Label>
                 <Input
                   className="rounded-xl h-11 tabular-nums"
                   value={form.projectValue}
@@ -295,10 +343,10 @@ export function ItPnlProjectsPanel() {
             </Button>
             <Button
               className="rounded-xl bg-sky-600 hover:bg-sky-700"
-              onClick={() => createMut.mutate()}
-              disabled={!form.name.trim() || createMut.isPending}
+              onClick={() => saveMut.mutate()}
+              disabled={!form.name.trim() || saveMut.isPending}
             >
-              {createMut.isPending ? 'Creating…' : 'Create project'}
+              {saveMut.isPending ? 'Saving\u2026' : editId ? 'Save changes' : 'Create project'}
             </Button>
           </SheetFooter>
         </SheetContent>

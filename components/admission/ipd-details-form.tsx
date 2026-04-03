@@ -10,6 +10,19 @@ import { apiPost } from '@/lib/api-client'
 import { toast } from 'sonner'
 import { User, MapPin, Stethoscope, Building2, Shield, Calendar, Package, ChevronDown, ChevronUp } from 'lucide-react'
 import { MasterCombobox } from '@/components/ui/master-combobox'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+const DOCTOR_TYPES = [
+  'Plastic',
+  'General',
+  'Vascular',
+  'Ophthalmology',
+  'Orthopedic',
+  'ENT',
+  'Gynecologist',
+  'Laparoscopy',
+  'Urologist',
+] as const
 
 export interface IPDDetailsFormProps {
   leadId: string
@@ -76,15 +89,6 @@ function Section({ title, icon, color, children, collapsible = false, defaultOpe
   )
 }
 
-function ReadOnlyField({ label, value }: { label: string; value?: string | number | null }) {
-  return (
-    <div>
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{label}</p>
-      <p className="text-sm font-semibold mt-0.5">{value || '—'}</p>
-    </div>
-  )
-}
-
 export function IPDDetailsForm({
   leadId,
   patientName = '',
@@ -117,21 +121,42 @@ export function IPDDetailsForm({
   onCancel,
 }: IPDDetailsFormProps) {
   const [formData, setFormData] = useState({
+    // Patient info (prefilled, editable)
+    patientName: patientName,
+    leadRef: leadRef,
+    age: age != null ? String(age) : '',
+    sex: sex,
+    circle: circle,
+    // Alternate contact (editable)
+    alternateContactName: attendantName,
+    alternateContactNumber: alternateNumber,
+    // Treatment (prefilled, editable)
+    treatment: treatment,
+    quantityGrade: quantityGrade,
+    anesthesia: anesthesia,
+    // Surgeon (prefilled, editable)
+    surgeonName: surgeonName,
+    surgeonType: surgeonType,
+    // Hospital (prefilled, editable)
+    hospitalName: hospitalName,
+    hospitalAddress: '',
+    googleMapLocation: '',
+    // Insurance (prefilled, editable)
+    insuranceType: insuranceType,
+    insuranceName: insuranceName,
+    copay: copay != null ? String(copay) : '',
+    sumInsured: sumInsured != null ? String(sumInsured) : '',
+    roomType: roomType,
+    capping: capping != null ? String(capping) : '',
+    tpa: tpaProp,
+    // BD info (prefilled, editable)
+    bdName: bdName,
+    bdManagerName: bdManagerName,
+    // Admission & Surgery timeline
     admissionDate: '',
     admissionTime: '',
     surgeryDate: '',
     surgeryTime: '',
-    hospitalAddress: '',
-    googleMapLocation: '',
-    tpa: tpaProp,
-    // Alternate contact (editable)
-    alternateContactName: attendantName,
-    alternateContactNumber: alternateNumber,
-    // Treatment overrides (editable)
-    quantityGrade: quantityGrade,
-    anesthesia: anesthesia,
-    // Surgeon overrides
-    surgeonType: surgeonType,
     // Implants & Consumables
     implantText: '',
     implantAmount: '',
@@ -154,7 +179,7 @@ export function IPDDetailsForm({
     if (!formData.admissionTime.trim()) e.admissionTime = 'Required'
     if (!formData.surgeryDate) e.surgeryDate = 'Required'
     if (!formData.surgeryTime.trim()) e.surgeryTime = 'Required'
-    const tpaVal = (tpaProp ?? '').toString().trim()
+    const tpaVal = (formData.tpa ?? '').toString().trim()
     if (!tpaVal) e.tpa = 'Required'
     return e
   }
@@ -183,20 +208,32 @@ export function IPDDetailsForm({
       const response = await apiPost<{ id: string }>(`/api/leads/${leadId}/initiate`, {
         admissionDate: formData.admissionDate,
         admissionTime: formData.admissionTime.trim(),
-        admittingHospital: hospitalName,
+        admittingHospital: formData.hospitalName.trim() || undefined,
         hospitalAddress: formData.hospitalAddress.trim() || 'N/A',
         googleMapLocation: formData.googleMapLocation.trim() || undefined,
         surgeryDate: formData.surgeryDate,
         surgeryTime: formData.surgeryTime.trim(),
-        tpa: (tpaProp ?? formData.tpa).toString().trim(),
+        tpa: formData.tpa.toString().trim(),
         instrument,
         implantConsumables,
         notes: formData.notes.trim() || undefined,
         quantityGrade: formData.quantityGrade.trim() || undefined,
         anesthesia: formData.anesthesia.trim() || undefined,
+        surgeonName: formData.surgeonName.trim() || undefined,
         surgeonType: formData.surgeonType.trim() || undefined,
         alternateContactName: formData.alternateContactName.trim() || undefined,
         alternateContactNumber: formData.alternateContactNumber.trim() || undefined,
+        patientName: formData.patientName.trim() || undefined,
+        insuranceName: formData.insuranceName.trim() || undefined,
+        insuranceType: formData.insuranceType.trim() || undefined,
+        copay: formData.copay.trim() || undefined,
+        sumInsured: formData.sumInsured.trim() || undefined,
+        roomType: formData.roomType.trim() || undefined,
+        capping: formData.capping.trim() || undefined,
+        bdName: formData.bdName.trim() || undefined,
+        bdManagerName: formData.bdManagerName.trim() || undefined,
+        age: formData.age.trim() || undefined,
+        sex: formData.sex.trim() || undefined,
       })
       toast.success('IPD details saved successfully')
       onSuccess?.(response?.id)
@@ -205,16 +242,6 @@ export function IPDDetailsForm({
     } finally {
       setSubmitting(false)
     }
-  }
-
-  const fmt = (v?: string | number | null) => (v != null && v !== '' ? String(v) : undefined)
-
-  // Compute room rent based on selected room type
-  const getRoomRentDisplay = () => {
-    if (roomRent != null && roomRent !== '') {
-      return `₹${Number(roomRent).toLocaleString('en-IN')}`
-    }
-    return undefined
   }
 
   return (
@@ -227,42 +254,45 @@ export function IPDDetailsForm({
         color="border-blue-500"
       >
         <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3">
-            <ReadOnlyField label="Patient Name" value={patientName} />
-            <ReadOnlyField label="Patient ID / Ref" value={leadRef} />
-            <ReadOnlyField label="Age" value={fmt(age)} />
-            <ReadOnlyField label="Gender" value={sex} />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <Label htmlFor="patientName">Patient Name</Label>
+              <Input id="patientName" value={formData.patientName} onChange={(e) => set('patientName', e.target.value)} placeholder="Patient name" className="mt-1" />
+            </div>
+            <div>
+              <Label htmlFor="leadRef">Patient ID / Ref</Label>
+              <Input id="leadRef" value={formData.leadRef} onChange={(e) => set('leadRef', e.target.value)} placeholder="Patient ID" className="mt-1" />
+            </div>
+            <div>
+              <Label htmlFor="age">Age</Label>
+              <Input id="age" value={formData.age} onChange={(e) => set('age', e.target.value)} placeholder="Age" className="mt-1" type="number" />
+            </div>
+            <div>
+              <Label htmlFor="sex">Gender</Label>
+              <Input id="sex" value={formData.sex} onChange={(e) => set('sex', e.target.value)} placeholder="Gender" className="mt-1" />
+            </div>
           </div>
 
-          {/* Alternate Contact — editable inputs */}
+          {/* Alternate Contact */}
           <div className="border-t pt-3">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Alternate Contact</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="alternateContactName">Alternate Contact Name</Label>
-                <Input
-                  id="alternateContactName"
-                  value={formData.alternateContactName}
-                  onChange={(e) => set('alternateContactName', e.target.value)}
-                  placeholder="Name of alternate contact person"
-                  className="mt-1"
-                />
+                <Input id="alternateContactName" value={formData.alternateContactName} onChange={(e) => set('alternateContactName', e.target.value)} placeholder="Name of alternate contact person" className="mt-1" />
               </div>
               <div>
                 <Label htmlFor="alternateContactNumber">Alternate Contact Number</Label>
-                <Input
-                  id="alternateContactNumber"
-                  value={formData.alternateContactNumber}
-                  onChange={(e) => set('alternateContactNumber', e.target.value)}
-                  placeholder="Phone number"
-                  className="mt-1"
-                />
+                <Input id="alternateContactNumber" value={formData.alternateContactNumber} onChange={(e) => set('alternateContactNumber', e.target.value)} placeholder="Phone number" className="mt-1" />
               </div>
             </div>
           </div>
 
           <div className="border-t pt-3">
-            <ReadOnlyField label="Circle" value={circle} />
+            <div>
+              <Label htmlFor="circle">Circle</Label>
+              <Input id="circle" value={formData.circle} onChange={(e) => set('circle', e.target.value)} placeholder="Circle" className="mt-1" />
+            </div>
           </div>
         </div>
       </Section>
@@ -274,11 +304,11 @@ export function IPDDetailsForm({
         color="border-purple-500"
       >
         <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-3">
-            <ReadOnlyField label="Treatment Name" value={treatment} />
-          </div>
-          {/* Editable text fields */}
-          <div className="border-t pt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="treatment">Treatment Name</Label>
+              <Input id="treatment" value={formData.treatment} onChange={(e) => set('treatment', e.target.value)} placeholder="Treatment name" className="mt-1" />
+            </div>
             <div>
               <Label htmlFor="quantityGrade">Quantity / Grade</Label>
               <Input
@@ -310,21 +340,24 @@ export function IPDDetailsForm({
         color="border-teal-500"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ReadOnlyField label="Surgeon Name" value={surgeonName} />
           <div>
-            <Label htmlFor="surgeonType">Surgeon Type</Label>
-            <Input
-              id="surgeonType"
-              value={formData.surgeonType}
-              onChange={(e) => set('surgeonType', e.target.value)}
-              placeholder="e.g. Primary, Assistant"
-              className="mt-1"
-            />
+            <Label htmlFor="surgeonName">Surgeon Name</Label>
+            <Input id="surgeonName" value={formData.surgeonName} onChange={(e) => set('surgeonName', e.target.value)} placeholder="Surgeon name" className="mt-1" />
+          </div>
+          <div>
+            <Label htmlFor="surgeonType">Doctor Type</Label>
+            <Select value={formData.surgeonType} onValueChange={(v) => set('surgeonType', v)}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select doctor type" />
+              </SelectTrigger>
+              <SelectContent>
+                {DOCTOR_TYPES.map((t) => (
+                  <SelectItem key={t} value={t}>{t}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
-        {!surgeonName && (
-          <p className="text-xs text-muted-foreground mt-2">Auto-fetched from patient KYP details.</p>
-        )}
       </Section>
 
       {/* Section 4: Hospital / Clinic Details */}
@@ -335,7 +368,18 @@ export function IPDDetailsForm({
       >
         <div className="space-y-4">
           <div>
-            <ReadOnlyField label="Hospital / Clinic Name" value={hospitalName} />
+            <MasterCombobox
+              id="hospitalName"
+              label="Hospital / Clinic Name"
+              masterType="hospitals"
+              value={formData.hospitalName}
+              onChange={(v) => set('hospitalName', v)}
+              placeholder="Search or type hospital name"
+              onItemSelect={(item) => {
+                if (item.address && !formData.hospitalAddress) set('hospitalAddress', item.address)
+                if (item.googleMapLink && !formData.googleMapLocation) set('googleMapLocation', item.googleMapLink)
+              }}
+            />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -370,22 +414,43 @@ export function IPDDetailsForm({
         color="border-green-500"
       >
         <div className="space-y-4">
-          {/* Auto-fetched insurance (type and company) */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-3">
-            <ReadOnlyField label="Insurance Type" value={insuranceType != null && insuranceType !== '' ? String(insuranceType).replace(/_/g, ' ') : undefined} />
-            <ReadOnlyField label="Insurance Company" value={insuranceName} />
-          </div>
-          <div className="border-t pt-3">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Financial Details</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-3">
-              <ReadOnlyField label="Co-pay %" value={copay != null ? `${copay}%` : undefined} />
-              <ReadOnlyField label="Sum Insured" value={sumInsured != null ? `₹${Number(sumInsured).toLocaleString('en-IN')}` : undefined} />
-              <ReadOnlyField label="Room Type" value={roomType} />
-              <ReadOnlyField label="Capping" value={capping != null && capping !== '' ? (typeof capping === 'string' && !Number.isNaN(Number(capping)) ? `₹${Number(capping).toLocaleString('en-IN')}` : String(capping)) : 'No'} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="insuranceType">Insurance Type</Label>
+              <Input id="insuranceType" value={formData.insuranceType} onChange={(e) => set('insuranceType', e.target.value)} placeholder="Insurance type" className="mt-1" />
+            </div>
+            <div>
+              <Label htmlFor="insuranceName">Insurance Company</Label>
+              <Input id="insuranceName" value={formData.insuranceName} onChange={(e) => set('insuranceName', e.target.value)} placeholder="Insurance company name" className="mt-1" />
             </div>
           </div>
           <div className="border-t pt-3">
-            <ReadOnlyField label="TPA Name" value={tpaProp || formData.tpa} />
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Financial Details</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <Label htmlFor="copay">Co-pay %</Label>
+                <Input id="copay" value={formData.copay} onChange={(e) => set('copay', e.target.value)} placeholder="Co-pay %" className="mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="sumInsured">Sum Insured</Label>
+                <Input id="sumInsured" value={formData.sumInsured} onChange={(e) => set('sumInsured', e.target.value)} placeholder="Sum insured (₹)" className="mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="roomType">Room Type</Label>
+                <Input id="roomType" value={formData.roomType} onChange={(e) => set('roomType', e.target.value)} placeholder="Room type" className="mt-1" />
+              </div>
+              <div>
+                <Label htmlFor="capping">Capping</Label>
+                <Input id="capping" value={formData.capping} onChange={(e) => set('capping', e.target.value)} placeholder="Capping amount" className="mt-1" />
+              </div>
+            </div>
+          </div>
+          <div className="border-t pt-3">
+            <div>
+              <Label htmlFor="tpa">TPA Name <span className="text-destructive">*</span></Label>
+              <Input id="tpa" value={formData.tpa} onChange={(e) => set('tpa', e.target.value)} placeholder="TPA name" className={`mt-1 ${errors.tpa ? 'border-destructive' : ''}`} />
+              {errors.tpa && <p className="text-xs text-destructive mt-1">{errors.tpa}</p>}
+            </div>
           </div>
         </div>
       </Section>
@@ -539,9 +604,15 @@ export function IPDDetailsForm({
       {/* BD Info & Notes */}
       <Card className="border-l-4 border-gray-400">
         <CardContent className="pt-4 space-y-4">
-          <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-            <ReadOnlyField label="Name of BD" value={bdName} />
-            <ReadOnlyField label="BD Manager" value={bdManagerName} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="bdName">Name of BD</Label>
+              <Input id="bdName" value={formData.bdName} onChange={(e) => set('bdName', e.target.value)} placeholder="BD name" className="mt-1" />
+            </div>
+            <div>
+              <Label htmlFor="bdManagerName">BD Manager</Label>
+              <Input id="bdManagerName" value={formData.bdManagerName} onChange={(e) => set('bdManagerName', e.target.value)} placeholder="BD manager name" className="mt-1" />
+            </div>
           </div>
           <div className="border-t pt-3">
             <Label htmlFor="notes">Additional Notes</Label>

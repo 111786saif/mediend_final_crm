@@ -1,12 +1,13 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useRouter, useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
-import { PrinterIcon, ArrowLeft, FileText } from 'lucide-react'
+import { PrinterIcon, ArrowLeft } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface Lead {
@@ -63,6 +64,20 @@ interface Lead {
     newSurgeryDate?: string
     ipdDischargeDate?: string
   } | null
+  insuranceInitiateForm?: {
+    id: string
+    totalBillAmount?: number | null
+    discount?: number | null
+    otherReductions?: number | null
+    copay?: number | null
+    copayBuffer?: number | null
+    deductible?: number | null
+    exceedsPolicyLimit?: string | null
+    policyDeductibleAmount?: number | null
+    totalAuthorizedAmount?: number | null
+    amountToBePaidByInsurance?: number | null
+    roomCategory?: string | null
+  } | null
   kypSubmission?: {
     aadharFileUrl?: string | null
     aadharFiles?: unknown
@@ -95,6 +110,12 @@ interface Lead {
       expectedAdmissionDate?: string | null
       expectedSurgeryDate?: string | null
       diseaseDescription?: string | null
+      suggestedHospitals?: Array<{
+        id: string
+        hospitalName: string
+        tentativeBill?: number | null
+        suggestedDoctor?: string | null
+      }> | null
     } | null
   } | null
 }
@@ -137,57 +158,19 @@ function humanizeEnum(v: string | null | undefined): string {
   return v.replace(/_/g, ' ')
 }
 
-function kypMultiDocUrls(files: unknown, legacyUrl: string | null | undefined): string[] {
-  const arr = Array.isArray(files) ? files : []
-  const urls = arr
-    .map((p: { url?: string } | string) => (typeof p === 'string' ? p : p?.url))
-    .filter((u): u is string => Boolean(u && typeof u === 'string'))
-  const dedup = [...new Set(urls)]
-  if (dedup.length > 0) return dedup
-  if (legacyUrl?.trim()) return [legacyUrl.trim()]
-  return []
-}
-
-type DocItem = { title: string; url: string; isImage: boolean }
-
-function isImageDocUrl(url: string): boolean {
-  return /\.(jpg|jpeg|png|gif|webp)$/i.test(url.toLowerCase())
-}
-
-function buildUploadedDocuments(kyp: Lead['kypSubmission']): DocItem[] {
-  const items: DocItem[] = []
-  const add = (title: string, url: string | null | undefined) => {
-    if (!url?.trim()) return
-    const u = url.trim()
-    items.push({ title, url: u, isImage: isImageDocUrl(u) })
-  }
-  if (!kyp) return []
-  if (kyp.insuranceCardFileUrl) add('Insurance Card', kyp.insuranceCardFileUrl)
-  kypMultiDocUrls(kyp.aadharFiles, kyp.aadharFileUrl).forEach((url, i, a) =>
-    add(a.length > 1 ? `Aadhaar ${i + 1}` : 'Aadhaar', url)
-  )
-  kypMultiDocUrls(kyp.panFiles, kyp.panFileUrl).forEach((url, i, a) =>
-    add(a.length > 1 ? `PAN ${i + 1}` : 'PAN', url)
-  )
-  if (kyp.prescriptionFileUrl) add('Prescription', kyp.prescriptionFileUrl)
-  const processFiles = (files: unknown, label: string) => {
-    if (!files) return
-    const list = Array.isArray(files) ? files : []
-    list.forEach((p: unknown, idx: number) => {
-      const url = typeof p === 'string' ? p : (p as { url?: string })?.url
-      if (!url) return
-      add(list.length > 1 ? `${label} ${idx + 1}` : label, url)
-    })
-  }
-  processFiles(kyp.diseasePhotos, 'Disease photo')
-  processFiles(kyp.otherFiles, 'Additional document')
-  processFiles(kyp.preAuthData?.diseaseImages, 'Disease image')
-  processFiles(kyp.preAuthData?.investigationFileUrls, 'Investigation')
-  processFiles(kyp.preAuthData?.prescriptionFiles, 'Pre-auth prescription')
-  return items.filter((item, idx, self) => idx === self.findIndex((t) => t.url === item.url))
-}
 
 /* ─── Design components ─────────────────────────────────────────────────── */
+
+const SECTION_COLORS: Record<string, { bg: string; border: string; text: string; dot: string }> = {
+  Patient: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', dot: 'bg-blue-500' },
+  'Clinical details': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', dot: 'bg-purple-500' },
+  Insurance: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', dot: 'bg-green-500' },
+  'Pre-authorization': { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-700', dot: 'bg-teal-500' },
+  'Hospital details': { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', dot: 'bg-orange-500' },
+  'Instruments, implants & consumables': { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700', dot: 'bg-indigo-500' },
+  Documents: { bg: 'bg-rose-50', border: 'border-rose-200', text: 'text-rose-700', dot: 'bg-rose-500' },
+}
+const DEFAULT_COLOR = { bg: 'bg-slate-50', border: 'border-slate-200', text: 'text-slate-700', dot: 'bg-slate-500' }
 
 function InfoSection({
   title,
@@ -198,15 +181,18 @@ function InfoSection({
   children: React.ReactNode
   className?: string
 }) {
+  const c = SECTION_COLORS[title] ?? DEFAULT_COLOR
   return (
-    <section className={cn('print:break-inside-avoid', className)}>
-      <div className="flex items-center gap-3 mb-4">
-        <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-slate-400 whitespace-nowrap">
+    <section className={cn('print:break-inside-avoid rounded-xl border overflow-hidden', c.border, className)}>
+      <div className={cn('flex items-center gap-2 px-4 py-2.5', c.bg)}>
+        <span className={cn('h-2 w-2 rounded-full shrink-0', c.dot)} />
+        <span className={cn('text-[10px] font-bold tracking-[0.15em] uppercase', c.text)}>
           {title}
         </span>
-        <div className="h-px flex-1 bg-slate-200" />
       </div>
-      {children}
+      <div className="px-4 py-4 bg-white">
+        {children}
+      </div>
     </section>
   )
 }
@@ -223,13 +209,13 @@ function Field({
   const isEmpty = typeof value === 'string' && (value === EM_DASH || !value.trim())
   return (
     <div className={cn('min-w-0', className)}>
-      <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5 leading-none">
+      <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500 mb-1 leading-none">
         {label}
       </p>
       <div
         className={cn(
           'text-[13px] leading-snug break-words',
-          isEmpty ? 'text-slate-300' : 'text-slate-800 font-medium'
+          isEmpty ? 'text-slate-300 italic' : 'text-slate-900 font-semibold'
         )}
       >
         {value ?? EM_DASH}
@@ -293,8 +279,6 @@ export default function IPDPrintPage() {
   const rec = lead.admissionRecord
   const kyp = lead.kypSubmission
   const pre = kyp?.preAuthData
-  const uploadedDocuments = buildUploadedDocuments(kyp)
-
   /* implant/consumables parsing */
   const implantConsumablesStr = rec?.implantConsumables || ''
   const implantLine = implantConsumablesStr.split('\n').find((l) =>
@@ -331,7 +315,22 @@ export default function IPDPrintPage() {
   })()
   const roomRentDisplay = formatMoneyLike(pre?.roomRent ?? lead.roomRent)
   const surgeonDisplay = display(lead.ipdDrName || lead.surgeonName)
-  const billAmountDisplay = formatMoneyLike(lead.billAmount)
+  const initForm = lead.insuranceInitiateForm
+  const tentativeBillFromHospital = (() => {
+    const hospitals = pre?.suggestedHospitals
+    const requested = pre?.requestedHospitalName?.trim()
+    if (!hospitals?.length || !requested) return null
+    const match = hospitals.find(h => h.hospitalName?.trim() === requested)
+    return match?.tentativeBill ?? null
+  })()
+  const billAmountDisplay = (() => {
+    // Prefer: initiate form totalBillAmount > approved amount > tentative bill > lead.billAmount
+    if (initForm?.totalBillAmount && initForm.totalBillAmount > 0) return formatMoneyLike(initForm.totalBillAmount)
+    if (pre?.approvedAmount && Number(pre.approvedAmount) > 0) return formatMoneyLike(pre.approvedAmount)
+    if (tentativeBillFromHospital && tentativeBillFromHospital > 0) return formatMoneyLike(tentativeBillFromHospital)
+    if (lead.billAmount && Number(lead.billAmount) > 0) return formatMoneyLike(lead.billAmount)
+    return EM_DASH
+  })()
 
   /* surgery date: show newSurgeryDate if it exists (rescheduled), else surgeryDate */
   const isRescheduled =
@@ -350,23 +349,31 @@ export default function IPDPrintPage() {
     !!restImplantBlock
 
   const showHospitalDetails =
-    rec && (rec.hospitalAddress || rec.googleMapLocation || rec.tpa || rec.notes)
+    (rec?.admittingHospital || lead.hospitalName) || (rec && (rec.hospitalAddress || rec.googleMapLocation || rec.tpa || rec.notes))
 
   const printedAt = format(new Date(), 'dd MMM yyyy, HH:mm')
+  const pdfTitle = `${lead.patientName} - ${format(new Date(), 'dd MMM yyyy')}`
+
+  // Set document title for PDF filename
+  useEffect(() => {
+    const prev = document.title
+    document.title = pdfTitle
+    return () => { document.title = prev }
+  }, [pdfTitle])
 
   return (
     <div className="min-h-screen bg-slate-50 print:bg-white">
       {/* ── Screen toolbar ── */}
-      <div className="print:hidden sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b bg-white px-4 py-3 shadow-sm">
+      <div className="print:hidden sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 shadow-md">
         <div>
-          <p className="text-sm font-semibold text-slate-800">Patient case summary</p>
-          <p className="text-xs text-slate-400">{lead.patientName} · {lead.leadRef}</p>
+          <p className="text-sm font-bold text-white">Patient Case Summary</p>
+          <p className="text-xs text-blue-200">{lead.patientName} &middot; {lead.leadRef}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => router.back()}>
+          <Button variant="outline" size="sm" className="bg-white/10 border-white/30 text-white hover:bg-white/20" onClick={() => router.back()}>
             <ArrowLeft className="mr-1.5 h-3.5 w-3.5" /> Back
           </Button>
-          <Button size="sm" onClick={() => window.print()}>
+          <Button size="sm" className="bg-white text-blue-700 hover:bg-blue-50 font-semibold" onClick={() => window.print()}>
             <PrinterIcon className="mr-1.5 h-3.5 w-3.5" /> Print / Save PDF
           </Button>
         </div>
@@ -374,21 +381,20 @@ export default function IPDPrintPage() {
 
       <div className="mx-auto max-w-[860px] px-4 py-8 sm:px-6 print:px-0 print:py-0 print:max-w-none">
 
-        {/* ── Print-only top branding ── */}
-        <div className="hidden print:flex items-center justify-between mb-5 pb-3 border-b border-slate-300">
+        {/* ── Print-only top header ── */}
+        <div className="hidden print:flex items-center justify-between mb-5 pb-3 border-b-2 border-blue-200">
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Mediend CRM</p>
-            <p className="text-[10px] text-slate-400 mt-0.5">Printed {printedAt}</p>
+            <p className="text-[10px] text-slate-400">Patient Case Summary &middot; {printedAt}</p>
           </div>
-          <span className="font-mono text-xs font-bold text-slate-500 border border-slate-200 rounded px-2 py-0.5">
+          <span className="font-mono text-xs font-bold text-white bg-blue-600 rounded-md px-3 py-1">
             {lead.leadRef}
           </span>
         </div>
 
         {/* ── Hero identity card ── */}
-        <div className="mb-8 overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm print:rounded-none print:shadow-none print:border-0 print:border-b print:border-slate-300 print:mb-6">
+        <div className="mb-8 overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-md print:rounded-none print:shadow-none print:border-0 print:border-b print:border-slate-300 print:mb-6">
           {/* colour accent bar */}
-          <div className="h-[3px] bg-gradient-to-r from-blue-600 via-blue-400 to-slate-300 print:hidden" />
+          <div className="h-1.5 bg-gradient-to-r from-blue-600 via-purple-500 to-teal-400" />
 
           <div className="p-6 print:p-4">
             <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -437,11 +443,11 @@ export default function IPDPrintPage() {
                   <p className="font-mono text-sm font-bold text-slate-600">{lead.leadRef}</p>
                 </div>
                 {billAmountDisplay !== EM_DASH && (
-                  <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-right">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-400">
-                      Bill amount
+                  <div className="rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 px-5 py-3 text-right shadow-sm">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-100">
+                      Tentative Bill
                     </p>
-                    <p className="text-[22px] font-bold text-blue-900 leading-tight mt-0.5">
+                    <p className="text-[22px] font-bold text-white leading-tight mt-0.5">
                       {billAmountDisplay}
                     </p>
                   </div>
@@ -451,9 +457,9 @@ export default function IPDPrintPage() {
 
             {/* ── Hospital + key dates strip ── */}
             {(rec || lead.hospitalName) && (
-              <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap gap-x-8 gap-y-3">
+              <div className="mt-5 pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {(rec?.admittingHospital || lead.hospitalName) && (
-                  <div>
+                  <div className="rounded-lg bg-slate-50 px-3 py-2 border border-slate-100">
                     <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">
                       Hospital
                     </p>
@@ -463,43 +469,38 @@ export default function IPDPrintPage() {
                   </div>
                 )}
                 {rec?.admissionDate && (
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">
+                  <div className="rounded-lg bg-blue-50 px-3 py-2 border border-blue-100">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-blue-500 mb-0.5">
                       Admission
                     </p>
-                    <p className="text-sm font-medium text-slate-700">
+                    <p className="text-sm font-semibold text-blue-800">
                       {formatDate(rec.admissionDate)}
                       {rec.admissionTime ? ` · ${rec.admissionTime}` : ''}
                     </p>
                   </div>
                 )}
                 {(rec?.surgeryDate || rec?.newSurgeryDate) && (
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">
+                  <div className={cn('rounded-lg px-3 py-2 border', isRescheduled ? 'bg-amber-50 border-amber-100' : 'bg-purple-50 border-purple-100')}>
+                    <p className={cn('text-[9px] font-bold uppercase tracking-wider mb-0.5', isRescheduled ? 'text-amber-500' : 'text-purple-500')}>
                       Surgery
                       {isRescheduled && (
                         <span className="ml-1 normal-case tracking-normal font-semibold text-amber-500">
-                          · rescheduled
+                          (rescheduled)
                         </span>
                       )}
                     </p>
-                    <p
-                      className={cn(
-                        'text-sm font-medium',
-                        isRescheduled ? 'text-amber-700' : 'text-slate-700'
-                      )}
-                    >
+                    <p className={cn('text-sm font-semibold', isRescheduled ? 'text-amber-800' : 'text-purple-800')}>
                       {effectiveSurgeryDate}
                       {rec?.surgeryTime && !isRescheduled ? ` · ${rec.surgeryTime}` : ''}
                     </p>
                   </div>
                 )}
                 {rec?.ipdDischargeDate && (
-                  <div>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">
+                  <div className="rounded-lg bg-green-50 px-3 py-2 border border-green-100">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-green-500 mb-0.5">
                       Discharged
                     </p>
-                    <p className="text-sm font-medium text-slate-700">
+                    <p className="text-sm font-semibold text-green-800">
                       {formatDate(rec.ipdDischargeDate)}
                     </p>
                   </div>
@@ -601,6 +602,11 @@ export default function IPDPrintPage() {
           {showHospitalDetails && (
             <InfoSection title="Hospital details">
               <div className="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-3 gap-x-6 gap-y-4">
+                <Field
+                  label="Hospital / Clinic"
+                  value={display(rec?.admittingHospital || lead.hospitalName)}
+                  className="sm:col-span-2 print:col-span-2"
+                />
                 {rec?.hospitalAddress && (
                   <Field
                     label="Address"
@@ -678,70 +684,12 @@ export default function IPDPrintPage() {
             </InfoSection>
           )}
 
-          {/* Documents */}
-          {uploadedDocuments.length > 0 && (
-            <InfoSection title="Documents">
-              <p className="mb-4 text-[11px] text-slate-400">
-                Uploaded files from KYP and pre-authorization.
-              </p>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                {uploadedDocuments.map((doc, index) => (
-                  <div
-                    key={`${doc.url}-${index}`}
-                    className="flex flex-col overflow-hidden rounded-xl border border-slate-200 print:rounded-none print:break-inside-avoid"
-                  >
-                    <div className="flex h-[180px] w-full shrink-0 items-center justify-center overflow-hidden bg-slate-50">
-                      {doc.isImage ? (
-                        <>
-                          <img
-                            src={doc.url}
-                            alt={doc.title}
-                            className="hidden max-h-full max-w-full object-contain print:block"
-                          />
-                          <iframe
-                            src={doc.url}
-                            title={doc.title}
-                            className="h-full w-full border-0 select-none print:hidden"
-                            style={{ overflow: 'hidden' }}
-                          />
-                        </>
-                      ) : (
-                        <a
-                          href={doc.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex flex-col items-center justify-center gap-2 p-4 text-slate-400 no-underline hover:text-blue-600 transition-colors"
-                        >
-                          <FileText className="h-10 w-10" />
-                          <span className="line-clamp-2 text-center text-xs">{doc.title}</span>
-                          <span className="text-xs font-semibold text-blue-600">Open</span>
-                        </a>
-                      )}
-                    </div>
-                    <div className="shrink-0 border-t border-slate-100 bg-white px-3 py-2">
-                      <p className="truncate text-xs font-semibold text-slate-700" title={doc.title}>
-                        {doc.title}
-                      </p>
-                      <a
-                        href={doc.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[10px] text-blue-600 underline"
-                      >
-                        Open file
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </InfoSection>
-          )}
         </div>
 
         {/* ── Print footer ── */}
-        <div className="hidden print:block mt-10 pt-4 border-t border-slate-200 text-center">
-          <p className="text-[9px] text-slate-400">
-            Mediend CRM · {lead.leadRef} · {lead.patientName} · Generated {printedAt}
+        <div className="hidden print:block mt-10 pt-4 border-t-2 border-blue-100 text-center">
+          <p className="text-[10px] text-slate-500 font-medium">
+            {lead.leadRef} &middot; {lead.patientName} &middot; Generated {printedAt}
           </p>
         </div>
       </div>

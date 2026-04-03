@@ -47,6 +47,7 @@ export interface MasterComboboxProps {
   required?: boolean
   error?: string
   className?: string
+  onItemSelect?: (item: MasterItem) => void
 }
 
 export function MasterCombobox({
@@ -60,6 +61,7 @@ export function MasterCombobox({
   required,
   error,
   className,
+  onItemSelect,
 }: MasterComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState(value)
@@ -130,6 +132,7 @@ export function MasterCombobox({
     onChange(item.name)
     setInputValue(item.name)
     setOpen(false)
+    onItemSelect?.(item)
   }
 
   return (
