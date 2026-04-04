@@ -148,6 +148,25 @@ interface TeamNormalizationResponse {
   subordinates: { id: string; employeeCode: string; name: string; email: string }[]
 }
 
+interface TeamLeaveBalanceEntry {
+  employeeId: string
+  employeeName: string
+  employeeEmail: string
+  isProbation: boolean
+  balances: {
+    leaveTypeId: string
+    leaveTypeName: string
+    allocated: number
+    used: number
+    remaining: number
+    locked: number
+  }[]
+}
+
+interface TeamLeaveBalancesResponse {
+  balances: TeamLeaveBalanceEntry[]
+}
+
 const PRIMARY_LEAVE_CODES = ['CL', 'SL', 'EL'] as const
 
 function formatLeaveTypeDays(n: number | undefined): string {
@@ -313,6 +332,13 @@ export default function MyTeamPage() {
         `/api/attendance/normalize/team?fromDate=${fromDate}&toDate=${toDate}`
       ),
   })
+
+  const { data: leaveBalancesData, isLoading: leaveBalancesLoading } =
+    useQuery<TeamLeaveBalancesResponse>({
+      queryKey: ['hierarchy', 'my-team', 'leave-balances'],
+      queryFn: () =>
+        apiGet<TeamLeaveBalancesResponse>('/api/hierarchy/my-team/leave-balances'),
+    })
 
   const normalizeMutation = useMutation({
     mutationFn: (payload: {
@@ -586,6 +612,66 @@ export default function MyTeamPage() {
                   Rejected
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Team leave balances</CardTitle>
+              <CardDescription>Current allocated / used / remaining for each team member</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {leaveBalancesLoading ? (
+                <div className="text-center py-6 text-muted-foreground">Loading balances…</div>
+              ) : !leaveBalancesData?.balances?.length ? (
+                <div className="text-center py-6 text-muted-foreground">No team members found.</div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Employee</TableHead>
+                        {leaveBalancesData.balances[0]?.balances.map((b) => (
+                          <TableHead key={b.leaveTypeId} className="text-center text-xs">
+                            {b.leaveTypeName}
+                          </TableHead>
+                        ))}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {leaveBalancesData.balances.map((emp) => (
+                        <TableRow key={emp.employeeId}>
+                          <TableCell>
+                            <span className="font-medium">{emp.employeeName}</span>
+                            {emp.isProbation && (
+                              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">
+                                Probation
+                              </Badge>
+                            )}
+                          </TableCell>
+                          {emp.balances.map((b) => (
+                            <TableCell key={b.leaveTypeId} className="text-center tabular-nums text-sm">
+                              <span className="text-muted-foreground">{b.used}</span>
+                              <span className="text-muted-foreground/50 mx-0.5">/</span>
+                              <span className="font-medium">{b.allocated}</span>
+                              {b.remaining > 0 && (
+                                <span className="block text-xs text-green-600 dark:text-green-400">
+                                  {b.remaining} left
+                                </span>
+                              )}
+                              {b.locked > 0 && (
+                                <span className="block text-xs text-amber-600 dark:text-amber-400">
+                                  {b.locked} locked
+                                </span>
+                              )}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </CardContent>
           </Card>
 

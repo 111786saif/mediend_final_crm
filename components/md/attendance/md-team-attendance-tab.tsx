@@ -159,6 +159,25 @@ function StatMini({
 
 type PendingNormLite = { employeeId: string; date: string }
 
+type LeaveBalanceEntry = {
+  employeeId: string
+  employeeName: string
+  employeeEmail: string
+  isProbation: boolean
+  balances: {
+    leaveTypeId: string
+    leaveTypeName: string
+    allocated: number
+    used: number
+    remaining: number
+    locked: number
+  }[]
+}
+
+type LeaveBalancesResponse = {
+  balances: LeaveBalanceEntry[]
+}
+
 type MDTeamAttendanceTabProps = {
   highlightNormalizations?: PendingNormLite[]
 }
@@ -187,6 +206,18 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
       ),
     enabled: (teamData?.subordinates.length ?? 0) > 0,
   })
+
+  const { data: balancesData } = useQuery<LeaveBalancesResponse>({
+    queryKey: ['hierarchy', 'my-team', 'leave-balances'],
+    queryFn: () => apiGet<LeaveBalancesResponse>('/api/hierarchy/my-team/leave-balances'),
+    enabled: (teamData?.subordinates.length ?? 0) > 0,
+  })
+
+  const balancesByEmployee = useMemo(() => {
+    const map = new Map<string, LeaveBalanceEntry>()
+    for (const b of balancesData?.balances ?? []) map.set(b.employeeId, b)
+    return map
+  }, [balancesData])
 
   const holidayDays = attData?.holidayDays ?? []
 
@@ -413,6 +444,37 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                           <Badge key={lt.code} className="text-sm px-3 py-1 bg-teal-600 hover:bg-teal-600">
                             {lt.code}: {lt.days} day{lt.days !== 1 ? 's' : ''}
                           </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {balancesByEmployee.get(drawerMember.employeeId) && (
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                        Leave balance
+                      </p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {balancesByEmployee.get(drawerMember.employeeId)!.balances.map((b) => (
+                          <div
+                            key={b.leaveTypeId}
+                            className="rounded-xl border border-border/80 bg-muted/30 p-2.5 text-center"
+                          >
+                            <p className="text-[10px] text-muted-foreground font-medium mb-1 truncate">
+                              {b.leaveTypeName}
+                            </p>
+                            <p className="text-lg font-bold tabular-nums leading-none">
+                              {b.remaining}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground mt-0.5">
+                              {b.used} used / {b.allocated} total
+                            </p>
+                            {b.locked > 0 && (
+                              <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">
+                                {b.locked} locked
+                              </p>
+                            )}
+                          </div>
                         ))}
                       </div>
                     </div>
