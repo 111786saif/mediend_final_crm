@@ -15,12 +15,13 @@ const SELF_NORMALIZATION_LIMIT_DAYS_PER_MONTH = 3
 const ELIGIBILITY_PUNCH_BY_MINUTES = 11 * 60
 const ELIGIBILITY_MIN_WORK_HOURS = 7
 
-/** Same outcomes as payroll “full day” from punches — self-normalization must not apply. */
+/** Statuses that are already clean full days — self-normalization not required.
+ *  'late-penalty' is intentionally excluded: the employee has a fine and should be
+ *  able to use their self-normalization allowance to waive it. */
 const FULL_DAY_CLASSIFICATION_STATUSES = new Set([
   'on-time',
   'grace-1',
   'grace-2',
-  'late-penalty',
 ])
 
 const bodySchema = z.object({

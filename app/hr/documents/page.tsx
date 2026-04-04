@@ -23,7 +23,7 @@ interface Employee {
     id: string
     name: string
     email: string
-  }
+  } | null
   department?: {
     id: string
     name: string
@@ -131,7 +131,7 @@ export default function HRDocumentsPage() {
     const q = searchQuery.toLowerCase()
     return employees.filter(
       (e) =>
-        e.user.name.toLowerCase().includes(q) ||
+        e.user?.name.toLowerCase().includes(q) ||
         e.employeeCode.toLowerCase().includes(q) ||
         e.department?.name?.toLowerCase().includes(q)
     )
@@ -269,7 +269,7 @@ export default function HRDocumentsPage() {
                         onClick={() => setSheetEmployee(emp)}
                       >
                         <TableCell className="font-medium">
-                          <div>{emp.user.name}</div>
+                          <div>{emp.user?.name ?? '—'}</div>
                           <div className="text-sm text-muted-foreground">{emp.employeeCode}</div>
                         </TableCell>
                         <TableCell className="text-muted-foreground">{emp.department?.name ?? '—'}</TableCell>
@@ -304,7 +304,7 @@ export default function HRDocumentsPage() {
           {sheetEmployee && (
             <>
               <SheetHeader>
-                <SheetTitle>{sheetEmployee.user.name}</SheetTitle>
+                <SheetTitle>{sheetEmployee.user?.name ?? sheetEmployee.employeeCode}</SheetTitle>
                 <SheetDescription>
                   {sheetEmployee.employeeCode}
                   {sheetEmployee.department?.name && ` • ${sheetEmployee.department.name}`}
@@ -608,15 +608,9 @@ function GenerateDocumentForm({
 
   const isOfferLetter = formData.documentType === 'OFFER_LETTER'
   const selectedEmployee = employees.find((e) => e.id === formData.employeeId)
-  const canProceed = formData.documentType && (
-    isOfferLetter
-      ? formData.applicantName.trim() && formData.applicantEmail.trim()
-      : formData.employeeId
-  )
+  const canProceed = formData.documentType && formData.employeeId
 
-  const summaryLabel = isOfferLetter
-    ? formData.applicantName
-    : selectedEmployee?.user.name
+  const summaryLabel = selectedEmployee?.user?.name ?? selectedEmployee?.employeeCode
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -640,10 +634,8 @@ function GenerateDocumentForm({
     if (formData.resignationDate) metadata.resignationDate = formData.resignationDate
     if (formData.remarks) metadata.remarks = formData.remarks
     onSubmit({
-      employeeId: isOfferLetter ? undefined : formData.employeeId,
+      employeeId: formData.employeeId,
       documentType: formData.documentType,
-      applicantName: isOfferLetter ? formData.applicantName : undefined,
-      applicantEmail: isOfferLetter ? formData.applicantEmail : undefined,
       metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
     })
   }
@@ -673,27 +665,7 @@ function GenerateDocumentForm({
           </Select>
         </div>
 
-        {isOfferLetter ? (
-          <>
-            <div>
-              <Label>Applicant Name</Label>
-              <Input
-                value={formData.applicantName}
-                onChange={(e) => setFormData({ ...formData, applicantName: e.target.value })}
-                placeholder="Full name of the applicant"
-              />
-            </div>
-            <div>
-              <Label>Applicant Email</Label>
-              <Input
-                type="email"
-                value={formData.applicantEmail}
-                onChange={(e) => setFormData({ ...formData, applicantEmail: e.target.value })}
-                placeholder="email@example.com"
-              />
-            </div>
-          </>
-        ) : formData.documentType ? (
+        {formData.documentType ? (
           <div>
             <Label>Employee</Label>
             <Select
@@ -706,7 +678,7 @@ function GenerateDocumentForm({
               <SelectContent>
                 {employees.map((emp) => (
                   <SelectItem key={emp.id} value={emp.id}>
-                    {emp.user.name} ({emp.employeeCode})
+                    {emp.user?.name ?? emp.employeeCode}
                   </SelectItem>
                 ))}
               </SelectContent>

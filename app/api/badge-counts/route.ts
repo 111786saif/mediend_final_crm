@@ -165,15 +165,20 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // HR-level: PENDING manager normalizations (for HR Attendance tab)
+    // HR-level: PENDING normalizations ready for HR action (for HR Attendance tab)
+    // MANAGER type: always HR-actionable when PENDING.
+    // EMPLOYEE_REQUEST type: only HR-actionable after manager has approved (managerApprovedAt set).
     if (hasPermission(user, 'hrms:attendance:write')) {
       promises.push(
         prisma.attendanceNormalization
           .count({
             where: {
-              type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
               status: 'PENDING',
               employee: employeeNotInMDManagedCohortWhere(),
+              OR: [
+                { type: 'MANAGER' },
+                { type: 'EMPLOYEE_REQUEST', managerApprovedAt: { not: null } },
+              ],
             },
           })
           .then((c) => {
@@ -362,9 +367,12 @@ export async function GET(request: NextRequest) {
           prisma.incrementRequest.count({ where: { status: 'PENDING' } }),
           prisma.attendanceNormalization.count({
             where: {
-              type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
               status: 'PENDING',
               employee: employeeNotInMDManagedCohortWhere(),
+              OR: [
+                { type: 'MANAGER' },
+                { type: 'EMPLOYEE_REQUEST', managerApprovedAt: { not: null } },
+              ],
             },
           }),
         ]).then(([f, i, n]) => {

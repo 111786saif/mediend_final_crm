@@ -27,12 +27,21 @@ export async function GET(request: NextRequest) {
     const toDate = searchParams.get('toDate')
 
     const where: {
-      type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] }
       status?: 'PENDING' | 'APPROVED' | 'REJECTED'
       date?: { gte?: Date; lte?: Date }
       employee: ReturnType<typeof employeeNotInMDManagedCohortWhere>
+      OR: Array<Record<string, unknown>>
     } = {
-      type: { in: ['MANAGER', 'EMPLOYEE_REQUEST'] },
+      // MANAGER type: always HR-actionable.
+      // EMPLOYEE_REQUEST: only show to HR after manager has approved (managerApprovedAt set).
+      // For non-PENDING statuses, show all (approved/rejected history for both types).
+      OR:
+        status === 'PENDING'
+          ? [
+              { type: 'MANAGER' },
+              { type: 'EMPLOYEE_REQUEST', managerApprovedAt: { not: null } },
+            ]
+          : [{ type: 'MANAGER' }, { type: 'EMPLOYEE_REQUEST' }],
       employee: employeeNotInMDManagedCohortWhere(),
     }
 

@@ -160,6 +160,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'leads:write',
     'leads:assign',
     'targets:read',
+    'targets:write',
     'analytics:read',
     'hierarchy:read',
     'hierarchy:team:read',

@@ -55,7 +55,7 @@ const GRACE2_MONTHLY_MAX = 10
 
 /** Shown on the attendance stats card, HR Policies, and normalize dialog. */
 const SELF_NORMALIZATION_RULE_TEXT =
-  'You can use up to 3 hours per month, on up to 3 days. Choose 1, 2, or 3 hours per day. Only days where you were in by 11 AM or worked at least 7 hours can be normalized; leave and absent days cannot. Or request normalization from HR for days that need approval (with a reason).'
+  'You can use up to 3 hours per month, on up to 3 days. Choose 1, 2, or 3 hours per day. Only days where you were in by 11 AM or worked at least 7 hours can be normalized (including days with a late fine); leave and absent days cannot. Or request normalization from HR for days that need approval (with a reason).'
 
 function clockFromHourMinute(h: number, m: number): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
