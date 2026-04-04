@@ -37,7 +37,7 @@ echo "===> Deploying commit $COMMIT (zero-downtime)..."
 CURRENT=""
 for slot in app-blue app-green; do
   state=$(docker compose ps --format '{{.State}}' "$slot" 2>/dev/null || true)
-  if [ "$state" = "running" ]; then
+  if [[ "$state" == running* ]]; then
     CURRENT="$slot"
     break
   fi
@@ -60,9 +60,16 @@ fi
 echo "--- Current live: ${CURRENT:-none}"
 echo "--- Deploying to: $NEW_SLOT (port $NEW_PORT)"
 
+# ── Free target port if held by an orphan ────────────────────
+port_holder=$(docker ps --format '{{.ID}}\t{{.Ports}}' | grep "127.0.0.1:${NEW_PORT}->" | cut -f1)
+if [ -n "$port_holder" ]; then
+  echo "--- Port ${NEW_PORT} held by container $port_holder — stopping it first..."
+  docker stop "$port_holder"
+fi
+
 # ── Build & start new slot ───────────────────────────────────
 DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose build "$NEW_SLOT"
-DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose up -d "$NEW_SLOT"
+DEPLOY_COMMIT="$COMMIT" DEPLOY_TIME="$TIMESTAMP" docker compose up -d --remove-orphans "$NEW_SLOT"
 
 # ── Wait for health check ───────────────────────────────────
 echo "--- Waiting for $NEW_SLOT to become healthy (max 120s)..."
