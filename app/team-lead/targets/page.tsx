@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,20 +23,20 @@ import {
   Plus,
   Target,
   TrendingUp,
-  Users,
   Trophy,
-  ChevronLeft,
-  ChevronRight,
   Medal,
   Award,
+  ChevronLeft,
+  ChevronRight,
   CheckCircle2,
   AlertTriangle,
+  Users,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { format, addMonths, subMonths } from 'date-fns'
 
-// ─── Types ──────────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface TeamMember {
   id: string
@@ -75,127 +74,115 @@ interface TargetProgress {
   }>
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────────────────
-
-const RANK_COLORS = [
-  'from-amber-400 to-yellow-500',
-  'from-slate-300 to-slate-400',
-  'from-orange-400 to-amber-600',
-]
-const RANK_ICONS = [Trophy, Medal, Award]
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getInitials(name: string) {
   return name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
 }
 
-// ─── Month Picker ───────────────────────────────────────────────────────────────
+const RANK_ICONS = [Trophy, Medal, Award]
+const RANK_COLORS = ['text-amber-500', 'text-slate-400', 'text-orange-400']
+const RANK_BG = [
+  'bg-amber-50 border-amber-200/60 dark:bg-amber-950/20 dark:border-amber-800/30',
+  'bg-slate-50 border-slate-200/60 dark:bg-slate-900/20 dark:border-slate-700/30',
+  'bg-orange-50 border-orange-200/60 dark:bg-orange-950/20 dark:border-orange-800/30',
+]
 
-function MonthPicker({
-  selectedMonth,
-  onChange,
-}: {
-  selectedMonth: Date
-  onChange: (d: Date) => void
-}) {
+const STATUS_CONFIG = {
+  completed: {
+    label: 'Completed',
+    color: 'text-emerald-600 dark:text-emerald-400',
+    ringColor: '#10B981',
+    icon: CheckCircle2,
+  },
+  on_track: {
+    label: 'On Track',
+    color: 'text-blue-600 dark:text-blue-400',
+    ringColor: '#3B82F6',
+    icon: TrendingUp,
+  },
+  at_risk: {
+    label: 'At Risk',
+    color: 'text-red-500 dark:text-red-400',
+    ringColor: '#EF4444',
+    icon: AlertTriangle,
+  },
+}
+
+// ─── Month Picker ─────────────────────────────────────────────────────────────
+
+function MonthPicker({ selectedMonth, onChange }: { selectedMonth: Date; onChange: (d: Date) => void }) {
   return (
-    <div className="flex items-center gap-1.5 bg-card border border-border rounded-xl px-1.5 py-1 shadow-sm">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        onClick={() => onChange(subMonths(selectedMonth, 1))}
-      >
+    <div className="flex items-center gap-1 bg-card border border-border rounded-xl px-1.5 py-1 shadow-sm">
+      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onChange(subMonths(selectedMonth, 1))}>
         <ChevronLeft className="h-4 w-4" />
       </Button>
-      <span className="text-sm font-semibold min-w-[130px] text-center">
-        {format(selectedMonth, 'MMMM yyyy')}
-      </span>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        onClick={() => onChange(addMonths(selectedMonth, 1))}
-      >
+      <span className="text-sm font-semibold min-w-[120px] text-center">{format(selectedMonth, 'MMMM yyyy')}</span>
+      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onChange(addMonths(selectedMonth, 1))}>
         <ChevronRight className="h-4 w-4" />
       </Button>
     </div>
   )
 }
 
-// ─── Team Target Hero ───────────────────────────────────────────────────────────
+// ─── Team Target Hero ─────────────────────────────────────────────────────────
 
 function TeamTargetHero({ target }: { target: TargetProgress }) {
-  const pct = Math.min(target.percentage, 100)
-  const circumference = 2 * Math.PI * 52
+  const pct = Math.min(Math.round(target.percentage), 100)
+  const circumference = 2 * Math.PI * 48
   const offset = circumference - (pct / 100) * circumference
-
-  const statusConfig = {
-    completed: { label: 'Completed', color: 'text-emerald-600 dark:text-emerald-400', icon: CheckCircle2 },
-    on_track: { label: 'On Track', color: 'text-blue-600 dark:text-blue-400', icon: TrendingUp },
-    at_risk: { label: 'At Risk', color: 'text-red-600 dark:text-red-400', icon: AlertTriangle },
-  }
-  const sc = statusConfig[target.status]
+  const sc = STATUS_CONFIG[target.status]
   const StatusIcon = sc.icon
 
   return (
-    <Card className="overflow-hidden rounded-2xl bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 dark:from-violet-950/40 dark:via-card dark:to-fuchsia-950/20 border-violet-200 dark:border-violet-800">
+    <Card className="rounded-2xl overflow-hidden bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 dark:from-violet-950/40 dark:via-card dark:to-fuchsia-950/20 border-violet-200 dark:border-violet-800">
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row items-center gap-6">
-          {/* Circular progress */}
+          {/* Circular ring */}
           <div className="relative shrink-0">
-            <svg width="120" height="120" className="-rotate-90">
-              <circle
-                cx="60" cy="60" r="52" fill="none"
-                stroke="currentColor" strokeWidth="8"
-                className="text-violet-100 dark:text-violet-900/50"
-              />
-              <circle
-                cx="60" cy="60" r="52" fill="none"
-                stroke="url(#tl-gradient)" strokeWidth="8"
+            <svg width="112" height="112" className="-rotate-90">
+              <circle cx="56" cy="56" r="48" fill="none" stroke="currentColor" strokeWidth="8"
+                className="text-violet-100 dark:text-violet-900/50" />
+              <circle cx="56" cy="56" r="48" fill="none"
+                stroke={sc.ringColor} strokeWidth="8"
                 strokeLinecap="round"
                 strokeDasharray={circumference}
                 strokeDashoffset={offset}
                 className="transition-all duration-1000 ease-out"
               />
-              <defs>
-                <linearGradient id="tl-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#8B5CF6" />
-                  <stop offset="100%" stopColor="#D946EF" />
-                </linearGradient>
-              </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold">{target.percentage}%</span>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                progress
-              </span>
+              <span className="text-2xl font-bold tabular-nums">{pct}%</span>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">done</span>
             </div>
           </div>
 
           {/* Details */}
-          <div className="flex-1 text-center sm:text-left">
-            <div className="flex items-center gap-2 justify-center sm:justify-start mb-1">
-              <Target className="h-5 w-5 text-violet-500" />
-              <h2 className="text-lg font-bold">Team IPD Target</h2>
-              <Badge className={cn('text-xs border-0 gap-1', sc.color)}>
-                <StatusIcon className="h-3 w-3" />
-                {sc.label}
-              </Badge>
+          <div className="flex-1 text-center sm:text-left space-y-3">
+            <div>
+              <div className={cn('flex items-center gap-2 justify-center sm:justify-start mb-0.5', sc.color)}>
+                <StatusIcon className="h-4 w-4" />
+                <span className="text-sm font-semibold">{sc.label}</span>
+              </div>
+              <h2 className="text-lg font-bold text-foreground">Team IPD Target</h2>
+              <p className="text-xs text-muted-foreground">Monthly surgery target set by Sales Head</p>
             </div>
-            <p className="text-sm text-muted-foreground mb-3">
-              IPDs Done this month
-            </p>
-            <div className="flex items-center gap-6 justify-center sm:justify-start">
-              <div>
-                <p className="text-4xl font-bold">{target.actual}</p>
-                <p className="text-xs text-muted-foreground">Done</p>
+            <div className="flex items-baseline gap-3 justify-center sm:justify-start">
+              <div className="text-center sm:text-left">
+                <p className="text-4xl font-bold tabular-nums">{target.actual}</p>
+                <p className="text-xs text-muted-foreground">IPDs Done</p>
               </div>
               <div className="h-8 w-px bg-border" />
-              <div>
-                <p className="text-4xl font-bold text-muted-foreground/50">
-                  {target.targetValue}
-                </p>
+              <div className="text-center sm:text-left">
+                <p className="text-4xl font-bold tabular-nums text-muted-foreground/50">{target.targetValue}</p>
                 <p className="text-xs text-muted-foreground">Target</p>
+              </div>
+              <div className="h-8 w-px bg-border" />
+              <div className="text-center sm:text-left">
+                <p className="text-4xl font-bold tabular-nums text-muted-foreground/50">
+                  {Math.max(0, target.targetValue - target.actual)}
+                </p>
+                <p className="text-xs text-muted-foreground">Remaining</p>
               </div>
             </div>
           </div>
@@ -205,7 +192,7 @@ function TeamTargetHero({ target }: { target: TargetProgress }) {
   )
 }
 
-// ─── BD Leaderboard ─────────────────────────────────────────────────────────────
+// ─── BD Leaderboard ───────────────────────────────────────────────────────────
 
 function BDLeaderboard({
   bdTargets,
@@ -215,18 +202,15 @@ function BDLeaderboard({
   teamTarget: TargetProgress | null
 }) {
   const allBDs = useMemo(() => {
-    const map = new Map<
-      string,
-      {
-        id: string
-        name: string
-        profilePicture: string | null
-        actual: number
-        targetValue: number
-        percentage: number
-        hasTarget: boolean
-      }
-    >()
+    const map = new Map<string, {
+      id: string
+      name: string
+      profilePicture: string | null
+      actual: number
+      targetValue: number
+      percentage: number
+      hasTarget: boolean
+    }>()
 
     for (const t of bdTargets) {
       map.set(t.targetForId, {
@@ -264,15 +248,15 @@ function BDLeaderboard({
   const maxActual = Math.max(...allBDs.map((b) => b.actual), 1)
 
   return (
-    <div>
-      <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+    <div className="space-y-2">
+      <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
         <Users className="h-4 w-4" />
-        BD Performance
+        BD Leaderboard
       </h2>
       <div className="space-y-2">
         {allBDs.map((bd, idx) => {
           const ac = getAvatarColor(bd.name)
-          const barWidth = maxActual > 0 ? (bd.actual / maxActual) * 100 : 0
+          const barPct = maxActual > 0 ? Math.round((bd.actual / maxActual) * 100) : 0
           const RankIcon = idx < 3 ? RANK_ICONS[idx] : null
           const isTop3 = idx < 3
 
@@ -280,85 +264,61 @@ function BDLeaderboard({
             <div
               key={bd.id}
               className={cn(
-                'relative flex items-center gap-3 bg-card border rounded-xl p-3 overflow-hidden transition-all hover:shadow-md',
-                isTop3 && 'border-amber-200/50 dark:border-amber-800/30'
+                'relative flex items-center gap-3 border rounded-xl p-3 overflow-hidden transition-all hover:shadow-sm',
+                isTop3 ? RANK_BG[idx] : 'bg-card border-border'
               )}
             >
-              {/* Background bar */}
+              {/* Background progress bar */}
               <div
-                className={cn(
-                  'absolute inset-y-0 left-0 opacity-[0.06] transition-all duration-700',
-                  idx === 0
-                    ? 'bg-amber-500'
-                    : idx === 1
-                      ? 'bg-slate-400'
-                      : idx === 2
-                        ? 'bg-orange-500'
-                        : 'bg-blue-500'
-                )}
-                style={{ width: `${barWidth}%` }}
+                className="absolute inset-y-0 left-0 opacity-[0.05] bg-violet-500 transition-all duration-700"
+                style={{ width: `${barPct}%` }}
               />
 
               {/* Rank */}
-              <div className="relative z-10 flex items-center justify-center w-8 h-8 shrink-0">
+              <div className="relative z-10 flex items-center justify-center w-7 h-7 shrink-0">
                 {RankIcon ? (
-                  <div
-                    className={cn(
-                      'h-7 w-7 rounded-full bg-gradient-to-br flex items-center justify-center',
-                      RANK_COLORS[idx]
-                    )}
-                  >
-                    <RankIcon className="h-3.5 w-3.5 text-white" />
-                  </div>
+                  <RankIcon className={cn('h-5 w-5', RANK_COLORS[idx])} />
                 ) : (
-                  <span className="text-sm font-bold text-muted-foreground">
-                    {idx + 1}
-                  </span>
+                  <span className="text-sm font-bold text-muted-foreground">{idx + 1}</span>
                 )}
               </div>
 
               {/* Avatar */}
-              <Avatar className="relative z-10">
+              <Avatar className="relative z-10 h-9 w-9">
                 {bd.profilePicture && <AvatarImage src={bd.profilePicture} />}
-                <AvatarFallback
-                  className={cn(ac.bg, ac.text, 'font-semibold text-xs')}
-                >
+                <AvatarFallback className={cn(ac.bg, ac.text, 'font-semibold text-xs')}>
                   {getInitials(bd.name)}
                 </AvatarFallback>
               </Avatar>
 
-              {/* Name & stats */}
+              {/* Name & progress */}
               <div className="relative z-10 flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-0.5">
-                  <span className="text-sm font-semibold truncate">
-                    {bd.name}
-                  </span>
-                  <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-semibold truncate">{bd.name}</span>
+                  <div className="flex items-center gap-1.5 shrink-0 ml-2">
                     {bd.hasTarget && (
-                      <span className="text-xs text-muted-foreground">
-                        / {bd.targetValue}
-                      </span>
+                      <span className="text-xs text-muted-foreground">/{bd.targetValue}</span>
                     )}
-                    <span
-                      className={cn(
-                        'text-lg font-bold tabular-nums',
-                        idx === 0 ? 'text-amber-600 dark:text-amber-400' : ''
-                      )}
-                    >
+                    <span className={cn(
+                      'text-lg font-bold tabular-nums',
+                      idx === 0 && 'text-amber-600 dark:text-amber-400'
+                    )}>
                       {bd.actual}
                     </span>
                   </div>
                 </div>
-                {bd.hasTarget && (
+                {bd.hasTarget ? (
                   <div className="flex items-center gap-2">
                     <Progress
                       value={Math.min(bd.percentage, 100)}
                       className="h-1.5 flex-1 rounded-full [&>div]:bg-gradient-to-r [&>div]:from-violet-500 [&>div]:to-fuchsia-500"
                     />
-                    <span className="text-xs font-medium text-muted-foreground w-10 text-right">
-                      {bd.percentage}%
+                    <span className="text-xs text-muted-foreground w-9 text-right tabular-nums">
+                      {Math.round(bd.percentage)}%
                     </span>
                   </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground">No target set</p>
                 )}
               </div>
             </div>
@@ -369,43 +329,33 @@ function BDLeaderboard({
   )
 }
 
-// ─── Assign BD Target Form ──────────────────────────────────────────────────────
+// ─── Assign BD Target Dialog ──────────────────────────────────────────────────
 
-function AssignBDTargetForm({
+function AssignBDTargetDialog({
   members,
   selectedMonth,
   onSubmit,
   isLoading,
+  open,
+  onOpenChange,
 }: {
   members: TeamMember[]
   selectedMonth: Date
   onSubmit: (data: Record<string, unknown>) => void
   isLoading: boolean
+  open: boolean
+  onOpenChange: (v: boolean) => void
 }) {
   const [selectedBdId, setSelectedBdId] = useState('')
   const [targetValue, setTargetValue] = useState('')
 
-  const periodStart = new Date(
-    selectedMonth.getFullYear(),
-    selectedMonth.getMonth(),
-    1
-  )
-  const periodEnd = new Date(
-    selectedMonth.getFullYear(),
-    selectedMonth.getMonth() + 1,
-    0
-  )
+  const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
+  const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedBdId) {
-      toast.error('Please select a BD')
-      return
-    }
-    if (!targetValue || Number(targetValue) <= 0) {
-      toast.error('Enter a valid target number')
-      return
-    }
+    if (!selectedBdId) { toast.error('Please select a BD'); return }
+    if (!targetValue || Number(targetValue) <= 0) { toast.error('Enter a valid target'); return }
     onSubmit({
       targetType: 'BD',
       targetForId: selectedBdId,
@@ -418,96 +368,75 @@ function AssignBDTargetForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div>
-        <Label className="text-sm font-medium mb-2 block">Select BD</Label>
-        <div className="grid gap-2 max-h-[220px] overflow-y-auto pr-1">
-          {members.map((m) => {
-            const ac = getAvatarColor(m.name)
-            const isSelected = selectedBdId === m.id
-            return (
-              <button
-                key={m.id}
-                type="button"
-                onClick={() => setSelectedBdId(m.id)}
-                className={cn(
-                  'flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left',
-                  isSelected
-                    ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20'
-                    : 'border-border hover:border-muted-foreground/30'
-                )}
-              >
-                <Avatar className="h-9 w-9">
-                  {m.profilePicture && <AvatarImage src={m.profilePicture} />}
-                  <AvatarFallback
-                    className={cn(ac.bg, ac.text, 'text-[10px] font-semibold')}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5 text-violet-500" />
+            Assign BD Target · {format(selectedMonth, 'MMMM yyyy')}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4 mt-1">
+          <div>
+            <Label className="text-sm font-medium mb-2 block">Select BD</Label>
+            <div className="grid gap-2 max-h-[220px] overflow-y-auto pr-1">
+              {members.map((m) => {
+                const ac = getAvatarColor(m.name)
+                const isSelected = selectedBdId === m.id
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setSelectedBdId(m.id)}
+                    className={cn(
+                      'flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left',
+                      isSelected
+                        ? 'border-violet-500 bg-violet-50/50 dark:bg-violet-950/20'
+                        : 'border-border hover:border-muted-foreground/30'
+                    )}
                   >
-                    {getInitials(m.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-sm font-medium flex-1 truncate">
-                  {m.name}
-                </span>
-                {isSelected && (
-                  <div className="h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center shrink-0">
-                    <svg
-                      className="h-3 w-3 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  </div>
-                )}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Period */}
-      <div className="bg-muted/50 rounded-xl p-3 flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">Period</span>
-        <span className="text-sm font-medium">
-          {format(selectedMonth, 'MMMM yyyy')}
-        </span>
-      </div>
-
-      {/* Target */}
-      <div>
-        <Label className="text-sm font-medium">IPD Done Target</Label>
-        <Input
-          type="number"
-          className="mt-1.5 text-lg font-semibold h-12"
-          value={targetValue}
-          onChange={(e) => setTargetValue(e.target.value)}
-          placeholder="e.g. 5"
-          min={1}
-          required
-        />
-        <p className="text-xs text-muted-foreground mt-1">
-          Number of IPDs expected from this BD
-        </p>
-      </div>
-
-      <Button
-        type="submit"
-        className="w-full bg-violet-600 hover:bg-violet-700"
-        disabled={isLoading || !selectedBdId}
-      >
-        {isLoading ? 'Assigning...' : 'Assign Target'}
-      </Button>
-    </form>
+                    <Avatar className="h-9 w-9">
+                      {m.profilePicture && <AvatarImage src={m.profilePicture} />}
+                      <AvatarFallback className={cn(ac.bg, ac.text, 'text-[10px] font-semibold')}>
+                        {getInitials(m.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm font-medium flex-1 truncate">{m.name}</span>
+                    {isSelected && (
+                      <div className="h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center shrink-0">
+                        <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div>
+            <Label className="text-sm font-medium">IPD Done Target</Label>
+            <Input
+              type="number"
+              className="mt-1.5 text-lg font-semibold h-12"
+              value={targetValue}
+              onChange={(e) => setTargetValue(e.target.value)}
+              placeholder="e.g. 8"
+              min={1}
+              required
+            />
+            <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected from this BD</p>
+          </div>
+          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading || !selectedBdId}>
+            {isLoading ? 'Assigning...' : 'Assign Target'}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }
 
-// ─── Main Page ──────────────────────────────────────────────────────────────────
+// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function TeamLeadTargetsPage() {
   const { user } = useAuth()
@@ -525,40 +454,27 @@ export default function TeamLeadTargetsPage() {
     queryFn: () => apiGet<TeamInfo[]>('/api/targets/teams'),
   })
 
-  const myTeam = useMemo(
-    () => teams.find((t) => t.userId === user?.id),
-    [teams, user?.id]
-  )
+  const myTeam = useMemo(() => teams.find((t) => t.userId === user?.id), [teams, user?.id])
 
   const { data: targets = [], isLoading } = useQuery<TargetProgress[]>({
     queryKey: ['target-progress', monthStr],
-    queryFn: () =>
-      apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthStr}`),
+    queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthStr}`),
   })
 
-  const teamTarget = useMemo(
-    () => targets.find((t) => t.targetType === 'TEAM'),
-    [targets]
-  )
-  const bdTargets = useMemo(
-    () => targets.filter((t) => t.targetType === 'BD'),
-    [targets]
-  )
+  const teamTarget = useMemo(() => targets.find((t) => t.targetType === 'TEAM'), [targets])
+  const bdTargets = useMemo(() => targets.filter((t) => t.targetType === 'BD'), [targets])
 
   const createTargetMutation = useMutation({
     mutationFn: (data: Record<string, unknown>) => apiPost('/api/targets', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['target-progress'] })
-      queryClient.invalidateQueries({ queryKey: ['targets'] })
       setIsDialogOpen(false)
-      toast.success('Target assigned successfully')
+      toast.success('Target assigned')
     },
-    onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to assign target'
-      )
-    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Failed to assign target'),
   })
+
+  const hasBDs = myTeam && myTeam.members.length > 0
 
   return (
     <AuthenticatedLayout>
@@ -570,38 +486,21 @@ export default function TeamLeadTargetsPage() {
               <Target className="h-6 w-6 text-violet-500" />
               My Team Targets
             </h1>
-            <p className="text-muted-foreground text-sm mt-0.5">
-              Track IPD progress and assign BD targets
+            <p className="text-sm text-muted-foreground mt-0.5">
+              IPD progress · {format(selectedMonth, 'MMMM yyyy')}
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <MonthPicker
-              selectedMonth={selectedMonth}
-              onChange={setSelectedMonth}
-            />
-            {myTeam && myTeam.members.length > 0 && (
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="gap-2 bg-violet-600 hover:bg-violet-700" size="sm">
-                    <Plus className="h-4 w-4" />
-                    Assign Target
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                      <Target className="h-5 w-5 text-violet-500" />
-                      Assign BD Target
-                    </DialogTitle>
-                  </DialogHeader>
-                  <AssignBDTargetForm
-                    members={myTeam.members}
-                    selectedMonth={selectedMonth}
-                    onSubmit={(data) => createTargetMutation.mutate(data)}
-                    isLoading={createTargetMutation.isPending}
-                  />
-                </DialogContent>
-              </Dialog>
+            <MonthPicker selectedMonth={selectedMonth} onChange={setSelectedMonth} />
+            {hasBDs && (
+              <Button
+                className="gap-2 bg-violet-600 hover:bg-violet-700"
+                size="sm"
+                onClick={() => setIsDialogOpen(true)}
+              >
+                <Plus className="h-4 w-4" />
+                Assign Target
+              </Button>
             )}
           </div>
         </div>
@@ -609,7 +508,7 @@ export default function TeamLeadTargetsPage() {
         {isLoading ? (
           <div className="space-y-4">
             <div className="h-40 rounded-2xl bg-muted animate-pulse" />
-            <div className="h-60 rounded-2xl bg-muted animate-pulse" />
+            <div className="h-64 rounded-2xl bg-muted animate-pulse" />
           </div>
         ) : (
           <>
@@ -617,87 +516,51 @@ export default function TeamLeadTargetsPage() {
             {teamTarget ? (
               <TeamTargetHero target={teamTarget} />
             ) : (
-              <Card className="border-dashed border-violet-200 dark:border-violet-800 bg-violet-50/30 dark:bg-violet-950/10 rounded-2xl">
+              <Card className="border-dashed border-violet-200 dark:border-violet-800 rounded-2xl">
                 <CardContent className="py-10 text-center">
                   <Target className="h-10 w-10 text-violet-300 mx-auto mb-3" />
-                  <h3 className="font-semibold mb-1">
-                    No team target for {format(selectedMonth, 'MMMM yyyy')}
-                  </h3>
+                  <h3 className="font-semibold mb-1">No team target yet</h3>
                   <p className="text-sm text-muted-foreground">
-                    Your Sales Head will set your team&apos;s IPD target here.
+                    Your Sales Head will set your team&apos;s IPD target for {format(selectedMonth, 'MMMM yyyy')}.
                   </p>
                 </CardContent>
               </Card>
             )}
 
-            {/* My Team avatars */}
-            {myTeam && myTeam.members.length > 0 && (
-              <div>
-                <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  My Team · {myTeam.members.length} BDs
-                </h2>
-                <div className="flex flex-wrap gap-3 mb-1">
-                  {myTeam.members.map((m) => {
-                    const ac = getAvatarColor(m.name)
-                    return (
-                      <div key={m.id} className="flex flex-col items-center gap-1">
-                        <Avatar>
-                          {m.profilePicture && (
-                            <AvatarImage src={m.profilePicture} />
-                          )}
-                          <AvatarFallback
-                            className={cn(
-                              ac.bg,
-                              ac.text,
-                              'font-semibold text-xs'
-                            )}
-                          >
-                            {getInitials(m.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-[11px] text-muted-foreground max-w-[60px] truncate text-center">
-                          {m.name.split(' ')[0]}
-                        </span>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
             {/* BD Leaderboard */}
-            <BDLeaderboard
-              bdTargets={bdTargets}
-              teamTarget={teamTarget ?? null}
-            />
-
-            {/* Empty state */}
-            {bdTargets.length === 0 &&
-              (!teamTarget || teamTarget.bdBreakdown.length === 0) &&
-              myTeam && (
-                <Card className="border-dashed rounded-2xl">
-                  <CardContent className="py-10 text-center">
-                    <TrendingUp className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                    <h3 className="font-semibold mb-1">No BD targets yet</h3>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Assign IPD targets to your BDs to track individual performance.
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="gap-2"
-                      onClick={() => setIsDialogOpen(true)}
-                    >
+            {(bdTargets.length > 0 || (teamTarget && teamTarget.bdBreakdown.length > 0)) ? (
+              <BDLeaderboard bdTargets={bdTargets} teamTarget={teamTarget ?? null} />
+            ) : myTeam ? (
+              <Card className="border-dashed rounded-2xl">
+                <CardContent className="py-10 text-center">
+                  <TrendingUp className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+                  <h3 className="font-semibold mb-1">No BD activity yet</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Assign targets to your BDs to track individual performance.
+                  </p>
+                  {hasBDs && (
+                    <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsDialogOpen(true)}>
                       <Plus className="h-4 w-4" />
                       Assign First Target
                     </Button>
-                  </CardContent>
-                </Card>
-              )}
+                  )}
+                </CardContent>
+              </Card>
+            ) : null}
           </>
         )}
       </div>
+
+      {hasBDs && (
+        <AssignBDTargetDialog
+          members={myTeam.members}
+          selectedMonth={selectedMonth}
+          onSubmit={(data) => createTargetMutation.mutate(data)}
+          isLoading={createTargetMutation.isPending}
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+        />
+      )}
     </AuthenticatedLayout>
   )
 }

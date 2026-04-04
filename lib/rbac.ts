@@ -89,14 +89,31 @@ const rolePermissions: Record<UserRole, Permission[]> = {
   EXECUTIVE_ASSISTANT: [
     'analytics:read',
     'leads:read',
+    'leads:write',
+    'leads:assign',
+    'targets:read',
+    'targets:write',
+    'users:read',
+    'insurance:read',
+    'insurance:write',
+    'pl:read',
     'hrms:read',
+    'hrms:write',
     'hrms:attendance:read',
+    'hrms:attendance:write',
     'hrms:leaves:read',
+    'hrms:leaves:write',
     'hrms:employees:read',
+    'hrms:employees:write',
+    'hrms:recruitment:read',
+    'hrms:recruitment:write',
     'hierarchy:read',
+    'hierarchy:write',
     'hierarchy:team:read',
+    'hierarchy:leave:approve',
     'masters:read',
     'masters:write',
+    'sales:pnl:read',
   ],
   SALES_HEAD: [
     'leads:read',
@@ -373,8 +390,8 @@ export function canAccessLead(
 ): boolean {
   if (!user) return false
 
-  // MD, Sales Head, Insurance Head, PL Head, Admin, Tester can access all leads
-  if (['MD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'ADMIN', 'TESTER'].includes(user.role)) {
+  // MD, Sales Head, Insurance Head, PL Head, Admin, Tester, Executive Assistant can access all leads
+  if (['MD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT'].includes(user.role)) {
     return true
   }
 

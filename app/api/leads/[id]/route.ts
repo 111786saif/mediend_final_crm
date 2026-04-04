@@ -257,7 +257,7 @@ export async function GET(
 
     // Map status and source codes to text values for display
     // Mask phone number if user is not INSURANCE_HEAD or ADMIN
-    const canViewPhone = user.role === 'INSURANCE_HEAD' || user.role === 'ADMIN'
+    const canViewPhone = user.role === 'ADMIN'
     const mappedLead = {
       ...fullLead,
       status: mapStatusCode(fullLead.status),

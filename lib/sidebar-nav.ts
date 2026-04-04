@@ -107,7 +107,7 @@ export const navItems: NavItem[] = [
     title: 'DM Dashboard',
     url: '/digital-marketing/dashboard',
     icon: Megaphone,
-    roles: ['DIGITAL_MARKETING_HEAD', 'MD', 'ADMIN'],
+    roles: ['DIGITAL_MARKETING_HEAD', 'MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Dept Targets',
@@ -119,7 +119,7 @@ export const navItems: NavItem[] = [
     title: 'HR Dashboard',
     url: '/hr/dashboard',
     icon: Users,
-    roles: ['HR_HEAD'],
+    roles: ['HR_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Recruitment',
@@ -137,13 +137,13 @@ export const navItems: NavItem[] = [
     title: 'Case Tracker',
     url: '/bd/kyp',
     icon: FileText,
-    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD'],
+    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Targets',
     url: '/sales/targets',
     icon: Target,
-    roles: ['SALES_HEAD', 'TEAM_LEAD'],
+    roles: ['SALES_HEAD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Sales P&L',
@@ -166,7 +166,7 @@ export const navItems: NavItem[] = [
     title: 'Chat',
     url: '/chat',
     icon: MessageSquare,
-    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER'],
+    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'P/L Ledger',
@@ -446,6 +446,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
     }
     if (item.title === 'Targets') {
       if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/targets' }
+      if (role === 'EXECUTIVE_ASSISTANT') return { ...item, url: '/executive-assistant/targets' }
     }
     return item
   })

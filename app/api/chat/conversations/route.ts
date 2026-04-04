@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
           const latestMessage = lead.caseChatMessages[0] || null
 
           // Mask phone number if user is not INSURANCE_HEAD or ADMIN
-          const canViewPhone = user.role === 'INSURANCE_HEAD' || user.role === 'ADMIN'
+          const canViewPhone = user.role === 'ADMIN'
           return {
             leadId: lead.id,
             leadRef: lead.leadRef,

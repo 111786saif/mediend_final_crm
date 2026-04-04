@@ -129,10 +129,10 @@ function summaryCounts(
   const grace1 = counts['grace-1'] ?? 0
   const grace2 = counts['grace-2'] ?? 0
   const late = (counts['late'] ?? 0) + (counts['late-penalty'] ?? 0)
-  const absent = counts['absent'] ?? 0
   const onTime = counts['on-time'] ?? 0
   const halfDay = counts['half-day'] ?? 0
-  return { grace1, grace2, late, absent, onTime, halfDay, counts }
+  const leaves = member.leaveDays.reduce((s, l) => s + (l.isHalfDay ? 0.5 : 1), 0)
+  return { grace1, grace2, late, onTime, halfDay, leaves, counts }
 }
 
 function StatMini({
@@ -167,8 +167,12 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(new Date()))
   const [drawerMember, setDrawerMember] = useState<MergedMember | null>(null)
 
+  const today = new Date()
+  const isCurrentMonth =
+    viewMonth.getFullYear() === today.getFullYear() &&
+    viewMonth.getMonth() === today.getMonth()
   const fromDate = format(startOfMonth(viewMonth), 'yyyy-MM-dd')
-  const toDate = format(endOfMonth(viewMonth), 'yyyy-MM-dd')
+  const toDate = format(isCurrentMonth ? today : endOfMonth(viewMonth), 'yyyy-MM-dd')
 
   const { data: teamData, isLoading: teamLoading } = useQuery<MyTeamApiResponse>({
     queryKey: ['hierarchy', 'my-team'],
@@ -302,7 +306,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                       <StatMini label="G1" value={s.grace1} className="border-amber-200/80 bg-amber-50/80 dark:bg-amber-950/30" />
                       <StatMini label="G2" value={s.grace2} className="border-lime-200/80 bg-lime-50/80 dark:bg-lime-950/20" />
                       <StatMini label="Late" value={s.late} className="border-yellow-200/80 bg-yellow-50/80 dark:bg-yellow-950/25" />
-                      <StatMini label="Absent" value={s.absent} className="border-red-200/80 bg-red-50/80 dark:bg-red-950/30" />
+                      <StatMini label="Leaves" value={s.leaves} className="border-teal-200/80 bg-teal-50/80 dark:bg-teal-950/30" />
                     </div>
                   </div>
                 </div>
@@ -383,11 +387,11 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                         </p>
                         <p className="text-xs text-muted-foreground">Half day</p>
                       </div>
-                      <div className="rounded-xl border border-red-200/80 bg-red-50/90 p-3 dark:border-red-900/50 dark:bg-red-950/35">
-                        <p className="text-2xl font-bold tabular-nums text-red-800 dark:text-red-200">
-                          {drawerSummary.absent}
+                      <div className="rounded-xl border border-teal-200/80 bg-teal-50/90 p-3 dark:border-teal-900/50 dark:bg-teal-950/35">
+                        <p className="text-2xl font-bold tabular-nums text-teal-800 dark:text-teal-200">
+                          {drawerSummary.leaves}
                         </p>
-                        <p className="text-xs text-muted-foreground">Absent</p>
+                        <p className="text-xs text-muted-foreground">Leaves</p>
                       </div>
                       <div className="rounded-xl border border-blue-200/80 bg-blue-50/90 p-3 dark:border-blue-900/50 dark:bg-blue-950/35 sm:col-span-2">
                         <p className="text-2xl font-bold tabular-nums text-blue-800 dark:text-blue-200">

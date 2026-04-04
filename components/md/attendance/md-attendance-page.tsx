@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
-import { BADGE_COUNTS_QUERY_KEY } from '@/hooks/use-badge-counts'
+import { BADGE_COUNTS_QUERY_KEY, useBadgeCounts } from '@/hooks/use-badge-counts'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -328,6 +328,7 @@ export function MDAttendancePage() {
   const queryClient = useQueryClient()
   const [selectedLeave, setSelectedLeave] = useState<TeamLeave | null>(null)
   const [selectedNorm, setSelectedNorm] = useState<MDNormalizationRow | null>(null)
+  const { data: badgeCounts } = useBadgeCounts()
 
   const { data: leavesData, isLoading: leavesLoading } = useQuery<{ leaves: TeamLeave[] }>({
     queryKey: ['md', 'team', 'leaves', 'all'],
@@ -425,10 +426,24 @@ export function MDAttendancePage() {
             Attendance
           </TabsTrigger>
           <TabsTrigger value="leaves" className="text-[11px] px-1.5 py-2 sm:text-sm sm:px-3">
-            Leaves
+            <span className="flex items-center gap-1.5">
+              Leaves
+              {(badgeCounts?.pendingLeaveApprovals ?? 0) > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-white leading-none">
+                  {badgeCounts!.pendingLeaveApprovals}
+                </span>
+              )}
+            </span>
           </TabsTrigger>
           <TabsTrigger value="normalizations" className="text-[11px] px-1.5 py-2 sm:text-sm sm:px-3">
-            Normalizations
+            <span className="flex items-center gap-1.5">
+              Normalizations
+              {(badgeCounts?.pendingMDTeamNormalizations ?? 0) > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-bold text-white leading-none">
+                  {badgeCounts!.pendingMDTeamNormalizations}
+                </span>
+              )}
+            </span>
           </TabsTrigger>
         </TabsList>
 

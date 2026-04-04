@@ -98,6 +98,7 @@ export async function GET(request: NextRequest) {
     const financeHistory = searchParams.get('financeHistory') === 'true'
 
     const isMD = user.role === 'MD' || user.role === 'ADMIN'
+    const isEA = user.role === 'EXECUTIVE_ASSISTANT'
     const isFinance = user.role === 'FINANCE_HEAD'
 
     const where: Prisma.MDApprovalRequestWhereInput = {}
@@ -112,7 +113,16 @@ export async function GET(request: NextRequest) {
     } else if (status && status in MDApprovalStatus) {
       where.status = status as (typeof MDApprovalStatus)[keyof typeof MDApprovalStatus]
     }
-    if (!isMD && !(isFinance && (financePending || financeHistory))) {
+
+    if (isEA) {
+      // EA sees approvals from their direct reports only
+      const eaEmployee = await prisma.employee.findUnique({
+        where: { userId: user.id },
+        select: { subordinates: { select: { userId: true } } },
+      })
+      const subordinateUserIds = eaEmployee?.subordinates.map((s) => s.userId) ?? []
+      where.requestedById = { in: [user.id, ...subordinateUserIds] }
+    } else if (!isMD && !(isFinance && (financePending || financeHistory))) {
       where.requestedById = user.id
     }
 
