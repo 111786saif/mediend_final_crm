@@ -424,6 +424,7 @@ model User {
   admissionsInitiated AdmissionRecord[]  @relation("AdmissionInitiator")
   caseStageChanges   CaseStageHistory[]  @relation("CaseStageChanger")
   caseChatMessagesSent CaseChatMessage[] @relation("CaseChatSender")
+  chatReadReceipts     ChatReadReceipt[]  @relation("ChatReadUser")
 
   // Task Management Relations
   tasksAssigned       Task[]               @relation("TaskAssignee")
@@ -605,6 +606,7 @@ model Lead {
   insuranceInitiateForm InsuranceInitiateForm?
   caseStageHistory CaseStageHistory[]
   caseChatMessages CaseChatMessage[]
+  chatReadReceipts ChatReadReceipt[] @relation("ChatReadLead")
   callNotes        CallNote[]
 
   @@index([bdId])
@@ -2288,6 +2290,18 @@ model CaseChatMessage {
   createdAt DateTime        @default(now())
 
   @@index([leadId, createdAt])
+}
+
+model ChatReadReceipt {
+  id         String   @id @default(cuid())
+  leadId     String
+  lead       Lead     @relation("ChatReadLead", fields: [leadId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation("ChatReadUser", fields: [userId], references: [id], onDelete: Cascade)
+  lastReadAt DateTime @default(now())
+
+  @@unique([leadId, userId])
+  @@index([userId])
 }
 
 // ==========================================

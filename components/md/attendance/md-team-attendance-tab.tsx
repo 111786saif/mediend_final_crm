@@ -18,7 +18,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   AttendanceHeatmap,
-  countAttendanceStatusesInPeriod,
   type AttendanceDay as HeatmapAttendanceDay,
 } from '@/components/employee/attendance-heatmap'
 import { ChevronLeft, ChevronRight, Search, Users, X } from 'lucide-react'
@@ -113,43 +112,18 @@ function mergeTeamWithAttendance(
   })
 }
 
-function summaryCounts(
-  member: MergedMember,
-  fromDate: string,
-  toDate: string,
-  holidayDays: { date: string; name: string }[]
-) {
-  const attendance = toHeatmapAttendance(member.attendance)
-  const counts = countAttendanceStatusesInPeriod(
-    attendance,
-    member.leaveDays,
-    holidayDays,
-    fromDate,
-    toDate
-  )
-  const grace1 = counts['grace-1'] ?? 0
-  const grace2 = counts['grace-2'] ?? 0
-  const late = (counts['late'] ?? 0) + (counts['late-penalty'] ?? 0)
-  const onTime = counts['on-time'] ?? 0
-  const halfDay = counts['half-day'] ?? 0
-  const leaves = member.leaveDays.reduce((s, l) => s + (l.isHalfDay ? 0.5 : 1), 0)
-  return { grace1, grace2, late, onTime, halfDay, leaves, counts }
-}
-
 type PendingNormLite = { employeeId: string; date: string }
 
 type LeaveBalanceEntry = {
   employeeId: string
   employeeName: string
   employeeEmail: string
-  isProbation: boolean
   balances: {
     leaveTypeId: string
     leaveTypeName: string
     allocated: number
     used: number
     remaining: number
-    locked: number
   }[]
 }
 
@@ -169,6 +143,24 @@ type SearchEmployee = {
 
 type MDTeamAttendanceTabProps = {
   highlightNormalizations?: PendingNormLite[]
+}
+
+const todayKey = format(new Date(), 'yyyy-MM-dd')
+
+function formatAttTime(dateStr: string | null): string {
+  if (!dateStr) return '-'
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return '-'
+  return new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'UTC',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  }).format(d)
+}
+
+function getTodayRecord(member: MergedMember) {
+  return member.attendance.find((a) => a.date.startsWith(todayKey)) ?? null
 }
 
 function useDebouncedValue<T>(value: T, delay: number): T {
@@ -280,11 +272,6 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
       .filter((n) => n.employeeId === drawerMember.employeeId)
       .map((n) => (n.date.includes('T') ? n.date.split('T')[0]! : n.date))
   }, [drawerMember, highlightNormalizations])
-
-  const drawerSummary = useMemo(() => {
-    if (!drawerMember) return null
-    return summaryCounts(drawerMember, fromDate, toDate, holidayDays)
-  }, [drawerMember, fromDate, toDate, holidayDays])
 
   const loading = teamLoading || attLoading
 
@@ -420,35 +407,48 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
 
       {/* Members list */}
       <ul className="space-y-2">
-        {members.map((m) => (
-          <li key={m.employeeId}>
-            <button
-              type="button"
-              className="w-full text-left rounded-lg border bg-card p-3 transition-colors hover:bg-muted/40 active:bg-muted/60"
-              onClick={() => setDrawerMember(m)}
-            >
-              <div className="flex items-start gap-3">
-                <Avatar className="h-10 w-10 shrink-0">
-                  <AvatarFallback className="text-sm font-semibold">
-                    {m.name
-                      .split(/\s+/)
-                      .map((p) => p[0])
-                      .join('')
-                      .slice(0, 2)
-                      .toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold leading-tight truncate">{m.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{m.email}</p>
-                  {m.departmentName && (
-                    <p className="text-[11px] text-muted-foreground truncate mt-0.5">{m.departmentName}</p>
+        {members.map((m) => {
+          const todayRec = getTodayRecord(m)
+          const isIn = !!todayRec?.inTime && !todayRec?.outTime
+
+          return (
+            <li key={m.employeeId}>
+              <button
+                type="button"
+                className={cn(
+                  'w-full text-left rounded-lg border p-3 transition-colors hover:bg-muted/40 active:bg-muted/60',
+                  isIn ? 'bg-emerald-50/70 border-emerald-200/60 dark:bg-emerald-950/20 dark:border-emerald-800/30' : 'bg-card'
+                )}
+                onClick={() => setDrawerMember(m)}
+              >
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-10 w-10 shrink-0">
+                    <AvatarFallback className="text-sm font-semibold">
+                      {m.name
+                        .split(/\s+/)
+                        .map((p) => p[0])
+                        .join('')
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold leading-tight truncate">{m.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{m.email}</p>
+                  </div>
+                  {todayRec?.inTime && (
+                    <div className="text-right shrink-0">
+                      <p className="text-xs font-medium tabular-nums">{formatAttTime(todayRec.inTime)}</p>
+                      <p className="text-[10px] text-muted-foreground tabular-nums">
+                        {todayRec.outTime ? formatAttTime(todayRec.outTime) : 'In'}
+                      </p>
+                    </div>
                   )}
                 </div>
-              </div>
-            </button>
-          </li>
-        ))}
+              </button>
+            </li>
+          )
+        })}
       </ul>
 
       {/* Detail drawer */}
@@ -459,7 +459,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
             '[&>div:first-child]:hidden'
           )}
         >
-          {drawerMember && drawerSummary && (
+          {drawerMember && (
             <>
               <DrawerHeader className="shrink-0 border-b px-4 py-3 text-left space-y-1">
                 <div className="flex items-center gap-3 pr-8">
@@ -488,57 +488,6 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
 
               <ScrollArea className="flex-1 min-h-0">
                 <div className="px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3 space-y-5">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
-                      Period summary
-                    </p>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      <div className="rounded-lg border p-3">
-                        <p className="text-2xl font-bold tabular-nums text-emerald-700 dark:text-emerald-300">
-                          {drawerSummary.onTime}
-                        </p>
-                        <p className="text-xs text-muted-foreground">On time</p>
-                      </div>
-                      <div className="rounded-lg border p-3">
-                        <p className="text-2xl font-bold tabular-nums text-green-700 dark:text-green-300">
-                          {drawerSummary.grace1}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Grace 1</p>
-                      </div>
-                      <div className="rounded-lg border p-3">
-                        <p className="text-2xl font-bold tabular-nums">
-                          {drawerSummary.grace2}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Grace 2</p>
-                      </div>
-                      <div className="rounded-lg border p-3">
-                        <p className="text-2xl font-bold tabular-nums text-amber-700 dark:text-amber-300">
-                          {drawerSummary.late}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Late / penalty</p>
-                      </div>
-                      <div className="rounded-lg border p-3">
-                        <p className="text-2xl font-bold tabular-nums text-pink-700 dark:text-pink-300">
-                          {drawerSummary.halfDay}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Half day</p>
-                      </div>
-                      <div className="rounded-lg border p-3">
-                        <p className="text-2xl font-bold tabular-nums text-blue-700 dark:text-blue-300">
-                          {drawerSummary.leaves}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Leaves</p>
-                      </div>
-                      <div className="rounded-lg border p-3 sm:col-span-2">
-                        <p className="text-2xl font-bold tabular-nums">
-                          {(drawerSummary.counts['normalized'] ?? 0) +
-                            (drawerSummary.counts['pending-normalization'] ?? 0)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Normalized / pending</p>
-                      </div>
-                    </div>
-                  </div>
-
                   {drawerMember.leaveByType.length > 0 && (
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
@@ -574,11 +523,6 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                             <p className="text-[10px] text-muted-foreground mt-0.5">
                               {b.used} used / {b.allocated} total
                             </p>
-                            {b.locked > 0 && (
-                              <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">
-                                {b.locked} locked
-                              </p>
-                            )}
                           </div>
                         ))}
                       </div>

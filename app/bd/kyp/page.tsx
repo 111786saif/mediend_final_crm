@@ -159,8 +159,8 @@ export default function CaseTrackerPage() {
       )
     }
     rows = [...rows].sort((a, b) => {
-      const ta = a.createdDate ? new Date(a.createdDate as string).getTime() : 0
-      const tb = b.createdDate ? new Date(b.createdDate as string).getTime() : 0
+      const ta = a.updatedDate ? new Date(a.updatedDate as string).getTime() : a.createdDate ? new Date(a.createdDate as string).getTime() : 0
+      const tb = b.updatedDate ? new Date(b.updatedDate as string).getTime() : b.createdDate ? new Date(b.createdDate as string).getTime() : 0
       return tb - ta
     })
     return rows

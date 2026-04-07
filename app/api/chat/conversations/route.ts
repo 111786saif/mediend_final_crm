@@ -81,6 +81,16 @@ export async function GET(request: NextRequest) {
       take: 100,
     })
 
+    // Batch-fetch read receipts for the current user
+    const leadIds = leads.map((l) => l.id)
+    const readReceipts = leadIds.length > 0
+      ? await prisma.chatReadReceipt.findMany({
+          where: { userId: user.id, leadId: { in: leadIds } },
+          select: { leadId: true, lastReadAt: true },
+        })
+      : []
+    const readReceiptMap = new Map(readReceipts.map((r) => [r.leadId, r.lastReadAt]))
+
     // Filter leads based on access control and get unread counts
     const subordinateIds =
       user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
@@ -88,15 +98,14 @@ export async function GET(request: NextRequest) {
       leads
         .filter((lead) => canAccessLead(user, lead.bdId, subordinateIds))
         .map(async (lead) => {
-          // Get unread message count (messages after user's last read or all if never read)
-          // For now, we'll count all messages as potential unread
-          // In production, you'd track read receipts
-          const unreadCount = await prisma.caseChatMessage.count({
-            where: {
-              leadId: lead.id,
-              senderId: { not: user.id }, // Messages not sent by current user
-            },
-          })
+          // Count messages from others that arrived after the user's last read
+          const lastRead = readReceiptMap.get(lead.id)
+          const unreadWhere: Prisma.CaseChatMessageWhereInput = {
+            leadId: lead.id,
+            senderId: { not: user.id },
+            ...(lastRead ? { createdAt: { gt: lastRead } } : {}),
+          }
+          const unreadCount = await prisma.caseChatMessage.count({ where: unreadWhere })
 
           const latestMessage = lead.caseChatMessages[0] || null
 

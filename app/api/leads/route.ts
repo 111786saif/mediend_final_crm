@@ -139,6 +139,7 @@ export async function GET(request: NextRequest) {
       campaignName: true,
       leadDate: true,
       createdDate: true,
+      updatedDate: true,
       hospitalName: true,
       source: true,
       netProfit: true,

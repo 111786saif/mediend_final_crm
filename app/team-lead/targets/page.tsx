@@ -291,35 +291,15 @@ function BDLeaderboard({
                 </AvatarFallback>
               </Avatar>
 
-              {/* Name & progress */}
-              <div className="relative z-10 flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-semibold truncate">{bd.name}</span>
-                  <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                    {bd.hasTarget && (
-                      <span className="text-xs text-muted-foreground">/{bd.targetValue}</span>
-                    )}
-                    <span className={cn(
-                      'text-lg font-bold tabular-nums',
-                      idx === 0 && 'text-amber-600 dark:text-amber-400'
-                    )}>
-                      {bd.actual}
-                    </span>
-                  </div>
-                </div>
-                {bd.hasTarget ? (
-                  <div className="flex items-center gap-2">
-                    <Progress
-                      value={Math.min(bd.percentage, 100)}
-                      className="h-1.5 flex-1 rounded-full [&>div]:bg-gradient-to-r [&>div]:from-violet-500 [&>div]:to-fuchsia-500"
-                    />
-                    <span className="text-xs text-muted-foreground w-9 text-right tabular-nums">
-                      {Math.round(bd.percentage)}%
-                    </span>
-                  </div>
-                ) : (
-                  <p className="text-xs text-muted-foreground">No target set</p>
-                )}
+              {/* Name & score */}
+              <div className="relative z-10 flex-1 min-w-0 flex items-center justify-between">
+                <span className="text-sm font-semibold truncate">{bd.name}</span>
+                <span className={cn(
+                  'text-lg font-bold tabular-nums shrink-0 ml-2',
+                  idx === 0 && 'text-amber-600 dark:text-amber-400'
+                )}>
+                  {bd.actual}<span className="text-muted-foreground font-medium">/{bd.hasTarget ? bd.targetValue : '-'}</span>
+                </span>
               </div>
             </div>
           )

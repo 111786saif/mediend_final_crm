@@ -367,6 +367,11 @@ export type CaseStageHistory = Prisma.CaseStageHistoryModel
  */
 export type CaseChatMessage = Prisma.CaseChatMessageModel
 /**
+ * Model ChatReadReceipt
+ * 
+ */
+export type ChatReadReceipt = Prisma.ChatReadReceiptModel
+/**
  * Model DischargeSheet
  * 
  */

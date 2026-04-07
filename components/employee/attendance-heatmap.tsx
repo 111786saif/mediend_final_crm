@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { eachDayOfInterval, format, getDay } from 'date-fns'
 import { cn } from '@/lib/utils'
 import {
@@ -422,6 +422,31 @@ export function AttendanceHeatmap({
     return result
   }, [heatmapCells])
 
+  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null)
+  const detailCardRef = useRef<HTMLDivElement>(null)
+
+  // Close detail card on outside click
+  useEffect(() => {
+    if (!selectedDateKey) return
+    function handleClick(e: MouseEvent) {
+      if (detailCardRef.current && !detailCardRef.current.contains(e.target as Node)) {
+        setSelectedDateKey(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [selectedDateKey])
+
+  const selectedCell = useMemo(() => {
+    if (!selectedDateKey) return null
+    return heatmapCells.find((c) => c.dateKey === selectedDateKey) ?? null
+  }, [selectedDateKey, heatmapCells])
+
+  const selectedRecord = useMemo(() => {
+    if (!selectedDateKey) return null
+    return attendanceMap.get(selectedDateKey) ?? null
+  }, [selectedDateKey, attendanceMap])
+
   if (heatmapCells.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
@@ -440,6 +465,7 @@ export function AttendanceHeatmap({
                 <Tooltip key={cell.dateKey}>
                   <TooltipTrigger asChild>
                     <div
+                      onClick={() => setSelectedDateKey(selectedDateKey === cell.dateKey ? null : cell.dateKey)}
                       className={cn(
                         'w-12 h-12 rounded-md flex flex-col items-center justify-center text-xs font-medium transition-colors cursor-pointer hover:opacity-80 shrink-0 relative overflow-hidden',
                         !('pendingNormalization' in cell && cell.pendingNormalization) &&
@@ -447,8 +473,10 @@ export function AttendanceHeatmap({
                           cell.status !== 'unpaid-leave-half' &&
                           cell.bgColor,
                         cell.textColor,
+                        selectedDateKey === cell.dateKey && 'ring-2 ring-foreground ring-offset-1 ring-offset-background',
                         'highlight' in cell &&
                           cell.highlight &&
+                          selectedDateKey !== cell.dateKey &&
                           'ring-2 ring-amber-500 ring-offset-2 ring-offset-background shadow-md z-10 scale-[1.02]'
                       )}
                     >
@@ -502,6 +530,46 @@ export function AttendanceHeatmap({
           </div>
         </div>
       ))}
+
+      {/* Detail card on click */}
+      {selectedCell && (
+        <div ref={detailCardRef} className="rounded-lg border bg-card p-3 space-y-1 animate-in fade-in-0 slide-in-from-top-1 duration-150">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold">{selectedCell.fullDate}</p>
+            <button
+              type="button"
+              className="text-muted-foreground hover:text-foreground text-xs"
+              onClick={() => setSelectedDateKey(null)}
+            >
+              ✕
+            </button>
+          </div>
+          <div className={cn('inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium', selectedCell.bgColor, selectedCell.textColor)}>
+            {selectedCell.tooltipText.split('\n')[0]?.split(' - ')[1] ?? selectedCell.status}
+          </div>
+          {selectedRecord && (
+            <div className="grid grid-cols-3 gap-3 pt-1">
+              <div>
+                <p className="text-[10px] text-muted-foreground uppercase">In</p>
+                <p className="text-sm font-semibold tabular-nums">{formatTime(selectedRecord.inTime)}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-muted-foreground uppercase">Out</p>
+                <p className="text-sm font-semibold tabular-nums">{getExitTimeDisplay(selectedRecord.inTime, selectedRecord.outTime)}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-muted-foreground uppercase">Hours</p>
+                <p className="text-sm font-semibold tabular-nums">
+                  {(() => {
+                    const wh = getWorkHoursFromRecord(selectedRecord)
+                    return wh !== null ? `${wh.toFixed(1)}h` : '-'
+                  })()}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {showLegend && (
       <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-2 border-t">

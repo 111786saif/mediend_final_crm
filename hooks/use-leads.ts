@@ -46,6 +46,7 @@ export interface Lead {
   source?: string
   bdId?: string
   createdDate?: string | Date
+  updatedDate?: string | Date
   leadDate?: string | Date | null
   campaignName?: string | null
   bd?: {

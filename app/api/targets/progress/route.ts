@@ -124,14 +124,18 @@ export async function GET(request: NextRequest) {
             entityAvatar = tl.user.profilePicture
             bdIds = [tl.userId, ...tl.subordinates.map(s => s.userId)]
 
-            // Calculate per-BD breakdown
+            // Calculate per-BD breakdown (include team lead + subordinates)
+            const allMembers = [
+              { userId: tl.userId, user: tl.user },
+              ...tl.subordinates.map(s => ({ userId: s.userId, user: s.user })),
+            ]
             const bdActuals = await Promise.all(
-              tl.subordinates.map(async (sub) => {
-                const actual = await calculateActual(sub.userId, target.metric, tStart, tEnd)
+              allMembers.map(async (member) => {
+                const actual = await calculateActual(member.userId, target.metric, tStart, tEnd)
                 return {
-                  id: sub.userId,
-                  name: sub.user.name,
-                  profilePicture: sub.user.profilePicture,
+                  id: member.userId,
+                  name: member.user.name,
+                  profilePicture: member.user.profilePicture,
                   actual,
                   percentage: target.targetValue > 0 ? Math.round((actual / target.targetValue) * 100) : 0,
                 }

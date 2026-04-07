@@ -39,6 +39,14 @@ export function ChatInterface({ leadId }: ChatInterfaceProps) {
 
   const messages = data?.messages ?? []
 
+  // Mark chat as read when opening and when new messages arrive
+  useEffect(() => {
+    if (!leadId || !user) return
+    apiPost(`/api/leads/${leadId}/chat/read`, {}).then(() => {
+      queryClient.invalidateQueries({ queryKey: ['chat-conversations'] })
+    }).catch(() => {})
+  }, [leadId, user, messages.length, queryClient])
+
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages.length])

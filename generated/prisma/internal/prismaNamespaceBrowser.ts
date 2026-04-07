@@ -116,6 +116,7 @@ export const ModelName = {
   InsuranceInitiateForm: 'InsuranceInitiateForm',
   CaseStageHistory: 'CaseStageHistory',
   CaseChatMessage: 'CaseChatMessage',
+  ChatReadReceipt: 'ChatReadReceipt',
   DischargeSheet: 'DischargeSheet',
   OutstandingCase: 'OutstandingCase',
   Task: 'Task',
@@ -1460,6 +1461,16 @@ export const CaseChatMessageScalarFieldEnum = {
 } as const
 
 export type CaseChatMessageScalarFieldEnum = (typeof CaseChatMessageScalarFieldEnum)[keyof typeof CaseChatMessageScalarFieldEnum]
+
+
+export const ChatReadReceiptScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  userId: 'userId',
+  lastReadAt: 'lastReadAt'
+} as const
+
+export type ChatReadReceiptScalarFieldEnum = (typeof ChatReadReceiptScalarFieldEnum)[keyof typeof ChatReadReceiptScalarFieldEnum]
 
 
 export const DischargeSheetScalarFieldEnum = {
