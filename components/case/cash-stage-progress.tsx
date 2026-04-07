@@ -27,7 +27,8 @@ const CASH_STAGE_ORDER: Partial<Record<CaseStage, number>> = {
   [CaseStage.CASH_IPD_SUBMITTED]: 2,
   [CaseStage.CASH_ON_HOLD]: 2, // Same step as submitted, but held
   [CaseStage.CASH_APPROVED]: 3,
-  [CaseStage.CASH_DISCHARGED]: 4,
+  [CaseStage.CASH_IPD_DONE]: 4,
+  [CaseStage.CASH_DISCHARGED]: 5,
 }
 
 function getCashStageIndex(stage: CaseStage): number {
@@ -54,14 +55,21 @@ const CASH_WORKFLOW_STEPS: WorkflowStep[] = [
     label: 'Approved',
     shortLabel: 'Approved',
     owner: 'INSURANCE',
-    isDone: (si) => si >= 4, // Done when discharged (stage 4+)
+    isDone: (si) => si >= 4, // Done when IPD done (stage 4+)
   },
   {
     number: 4,
+    label: 'IPD Done',
+    shortLabel: 'IPD Done',
+    owner: 'BD',
+    isDone: (si) => si >= 5, // Done when discharged (stage 5+)
+  },
+  {
+    number: 5,
     label: 'Discharge',
     shortLabel: 'Discharge',
     owner: 'INSURANCE',
-    isDone: (si) => si >= 4, // Done when discharged (stage 4)
+    isDone: (si) => si >= 5, // Done when discharged (stage 5)
   },
 ]
 

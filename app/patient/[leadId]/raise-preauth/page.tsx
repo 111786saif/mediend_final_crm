@@ -69,6 +69,10 @@ interface KYPSubmission {
     id: string
     leadRef: string
     patientName: string
+    age?: number | null
+    sex?: string | null
+    treatment?: string | null
+    tpa?: string | null
     surgeonName?: string | null
     ipdDrName?: string | null
     insuranceName?: string | null
@@ -317,6 +321,14 @@ export default function RaisePreAuthPage() {
             <CardContent>
               <PreAuthRaiseForm
                 leadId={leadId}
+                leadData={{
+                  patientName: kypSubmission.lead?.patientName,
+                  age: kypSubmission.lead?.age,
+                  sex: kypSubmission.lead?.sex,
+                  treatment: kypSubmission.lead?.treatment,
+                  tpa: kypSubmission.lead?.tpa,
+                  surgeonName: kypSubmission.lead?.surgeonName,
+                }}
                 initialData={
                   preAuth
                     ? {

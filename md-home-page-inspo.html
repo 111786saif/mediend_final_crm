@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MediEND — MD Command Center (AI-Powered)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+--bg:#060911;--bg2:#0D1220;--bg3:#141B2D;--bg4:#1C2640;--bg5:#0F1525;
+--border:rgba(148,163,194,0.07);--border2:rgba(148,163,194,0.12);
+--text:#F0F4FA;--text2:#94A3C2;--text3:#5B6B8A;--text4:#3D4D6A;
+--blue:#38BDF8;--blue-d:rgba(56,189,248,0.12);
+--green:#34D399;--green-d:rgba(52,211,153,0.1);
+--red:#F87171;--red-d:rgba(248,113,113,0.1);
+--orange:#FB923C;--orange-d:rgba(251,146,60,0.1);
+--purple:#A78BFA;--purple-d:rgba(167,139,250,0.1);
+--teal:#2DD4BF;--teal-d:rgba(45,212,191,0.1);
+--yellow:#FBBF24;--yellow-d:rgba(251,191,36,0.1);
+--pink:#F472B6;--pink-d:rgba(244,114,182,0.1);
+--ai-g:linear-gradient(135deg,#38BDF8,#A78BFA,#F472B6);
+--r:8px;--r2:12px;--r3:16px;
+--f:'DM Sans',sans-serif;--f2:'Outfit',sans-serif;
+--t:.2s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:14.5px;scroll-behavior:smooth}
+body{font-family:var(--f);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:4px}
+
+/* SIDEBAR */
+.sb{width:240px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;display:flex;flex-direction:column;transition:transform .3s ease}
+.sb-h{padding:18px 16px;border-bottom:1px solid var(--border)}
+.sb-logo{display:flex;align-items:center;gap:10px}
+.sb-ic{width:34px;height:34px;background:var(--ai-g);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-family:var(--f2);font-weight:800;font-size:14px;color:#fff}
+.sb-brand{font-family:var(--f2);font-weight:700;font-size:15px;background:var(--ai-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sb-sub{font-size:9.5px;color:var(--text4);letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+.sb-nav{flex:1;padding:10px 8px;overflow-y:auto}
+.sb-lbl{font-size:9px;font-weight:700;color:var(--text4);letter-spacing:1.8px;text-transform:uppercase;padding:14px 10px 5px}
+.sb-i{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r);color:var(--text3);cursor:pointer;transition:all var(--t);font-size:12.5px;font-weight:500;position:relative;margin-bottom:1px}
+.sb-i:hover{background:rgba(255,255,255,0.03);color:var(--text2)}
+.sb-i.on{background:var(--blue-d);color:var(--blue)}
+.sb-i.on::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:16px;background:var(--blue);border-radius:0 3px 3px 0}
+.sb-i svg{width:16px;height:16px;flex-shrink:0;opacity:.7}
+.sb-i.on svg{opacity:1}
+.sb-badge{margin-left:auto;font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;color:#fff}
+.sb-i.ai-item{background:linear-gradient(135deg,rgba(56,189,248,0.06),rgba(167,139,250,0.06));border:1px solid rgba(167,139,250,0.1)}
+.sb-i.ai-item .ai-sparkle{color:var(--purple);font-size:14px;margin-left:auto}
+.sb-ft{padding:12px 14px;border-top:1px solid var(--border)}
+.sb-u{display:flex;align-items:center;gap:8px;padding:7px;border-radius:var(--r)}
+.sb-av{width:32px;height:32px;border-radius:50%;background:var(--ai-g);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff}
+.sb-nm{font-size:12px;font-weight:600}.sb-rl{font-size:10px;color:var(--text4)}
+
+/* MAIN */
+.mn{margin-left:240px;min-height:100vh}
+.tb{position:sticky;top:0;z-index:50;background:rgba(6,9,17,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 22px;display:flex;align-items:center;gap:12px}
+.ham{display:none;background:none;border:none;color:var(--text2);cursor:pointer;padding:3px;flex-shrink:0}
+.ham svg{width:20px;height:20px}
+.tb-l{flex:1;min-width:0}
+.tb-g{font-size:10.5px;color:var(--text4)}
+.tb-t{font-family:var(--f2);font-size:18px;font-weight:700;letter-spacing:-.3px}
+.tb-r{display:flex;align-items:center;gap:7px}
+.tb-dt{font-size:10.5px;color:var(--text3);background:var(--bg3);padding:5px 10px;border-radius:var(--r);border:1px solid var(--border);font-family:var(--f2);font-weight:500;flex-shrink:0}
+.tb-btn{width:34px;height:34px;border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);color:var(--text3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--t);position:relative;flex-shrink:0}
+.tb-btn:hover{background:var(--bg4);color:var(--text)}
+.tb-btn svg{width:15px;height:15px}
+.tb-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid var(--bg3)}
+
+/* CONTENT */
+.ct{padding:20px 22px 40px}
+
+/* AI BANNER */
+.ai-banner{background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(167,139,250,0.08),rgba(244,114,182,0.06));border:1px solid rgba(167,139,250,0.12);border-radius:var(--r3);padding:18px 20px;margin-bottom:20px;position:relative;overflow:hidden}
+.ai-banner::before{content:'';position:absolute;top:-50%;right:-20%;width:200px;height:200px;background:radial-gradient(circle,rgba(167,139,250,0.08),transparent 70%);pointer-events:none}
+.ai-banner-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ai-banner-sparkle{font-size:20px}
+.ai-banner-title{font-family:var(--f2);font-size:15px;font-weight:700;background:var(--ai-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ai-banner-time{font-size:10px;color:var(--text4);margin-left:auto;flex-shrink:0}
+.ai-banner-text{font-size:12.5px;color:var(--text2);line-height:1.7}
+.ai-banner-text strong{color:var(--text);font-weight:600}
+.ai-bullets{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.ai-bullet{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2);line-height:1.5}
+.ai-bullet-ic{font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
+.st{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:all var(--t)}
+.st:hover{border-color:var(--border2);transform:translateY(-1px)}
+.st::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.st:nth-child(1)::after{background:var(--blue)}.st:nth-child(2)::after{background:var(--green)}.st:nth-child(3)::after{background:var(--orange)}.st:nth-child(4)::after{background:var(--red)}.st:nth-child(5)::after{background:var(--purple)}.st:nth-child(6)::after{background:var(--teal)}
+.st-ic{font-size:15px;margin-bottom:8px}
+.st-val{font-family:var(--f2);font-size:24px;font-weight:800;letter-spacing:-1px;line-height:1}
+.st-lbl{font-size:10.5px;color:var(--text3);margin-top:3px}
+.st-d{font-size:9.5px;font-weight:600;margin-top:5px;display:inline-flex;padding:2px 6px;border-radius:8px}
+.st-d.up{background:var(--green-d);color:var(--green)}.st-d.dn{background:var(--red-d);color:var(--red)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+.gm{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:20px}
+
+/* PANEL */
+.pn{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden}
+.pn.ai{border-color:rgba(167,139,250,0.12);background:linear-gradient(180deg,rgba(167,139,250,0.04),var(--bg3) 60px)}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px}
+.pt{font-family:var(--f2);font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.pt .ai-tag{font-size:9px;background:var(--ai-g);color:#fff;padding:2px 7px;border-radius:10px;font-weight:700;letter-spacing:.3px}
+.pc{background:var(--blue-d);color:var(--blue);font-size:10px;font-weight:600;padding:2px 7px;border-radius:7px}
+.pa{display:flex;gap:4px}
+.pb{padding:4px 10px;border-radius:var(--r);border:1px solid var(--border);background:transparent;color:var(--text3);font-size:10.5px;font-family:var(--f);cursor:pointer;transition:all var(--t)}
+.pb:hover{background:var(--bg4);color:var(--text2)}
+.pb.on{background:var(--blue-d);color:var(--blue);border-color:rgba(56,189,248,0.2)}
+.pp{padding:16px}
+.ps{max-height:380px;overflow-y:auto}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th{font-size:10px;font-weight:600;color:var(--text4);text-transform:uppercase;letter-spacing:.5px;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--bg3);position:sticky;top:0}
+td{padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,0.01)}
+.av-sm{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;vertical-align:middle;margin-right:7px}
+.badge{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.b-g{background:var(--green-d);color:var(--green)}.b-r{background:var(--red-d);color:var(--red)}.b-o{background:var(--orange-d);color:var(--orange)}.b-b{background:var(--blue-d);color:var(--blue)}.b-p{background:var(--purple-d);color:var(--purple)}.b-t{background:var(--teal-d);color:var(--teal)}.b-y{background:var(--yellow-d);color:var(--yellow)}
+.chart-box{position:relative;width:100%;max-height:220px}
+canvas{max-width:100%}
+.prog{height:5px;background:var(--bg);border-radius:3px;overflow:hidden}.prog-f{height:100%;border-radius:3px}
+
+/* AI INSIGHT CARD */
+.ai-card{background:linear-gradient(135deg,rgba(56,189,248,0.05),rgba(167,139,250,0.05));border:1px solid rgba(167,139,250,0.1);border-radius:var(--r2);padding:14px;margin-bottom:10px}
+.ai-card-head{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:12px;font-weight:600}
+.ai-card-head .spark{font-size:14px}
+.ai-card-text{font-size:11.5px;color:var(--text2);line-height:1.6}
+.ai-card-text strong{color:var(--text)}
+.ai-card-action{margin-top:8px;display:flex;gap:6px}
+.ai-btn{padding:5px 12px;border-radius:6px;border:1px solid rgba(167,139,250,0.2);background:rgba(167,139,250,0.08);color:var(--purple);font-size:10.5px;font-family:var(--f);cursor:pointer;transition:all var(--t);font-weight:600}
+.ai-btn:hover{background:rgba(167,139,250,0.15)}
+
+/* SCORE */
+.score-ring{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--f2);font-size:22px;font-weight:800;margin:0 auto 8px;position:relative}
+.score-ring::before{content:'';position:absolute;inset:0;border-radius:50%;border:4px solid var(--bg);opacity:.3}
+
+/* CITY CARD */
+.city-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:8px;cursor:pointer;transition:all var(--t)}
+.city-card:hover{border-color:var(--border2)}
+.city-nm{font-size:13px;font-weight:600;margin-bottom:4px}
+.city-sub{font-size:11px;color:var(--text3)}
+.city-stats{display:flex;gap:14px;margin-top:8px}
+.city-st{display:flex;flex-direction:column;align-items:center}
+.city-st-v{font-family:var(--f2);font-size:16px;font-weight:700}
+.city-st-l{font-size:9px;color:var(--text4);text-transform:uppercase}
+
+/* SIDEBAR OVERLAY */
+.s-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99}.s-ov.show{display:block}
+
+/* RESPONSIVE */
+@media(max-width:1200px){.stats{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}.gm{grid-template-columns:1fr}}
+@media(max-width:900px){.sb{transform:translateX(-100%)}.sb.open{transform:translateX(0)}.mn{margin-left:0}.ham{display:flex}.stats{grid-template-columns:repeat(2,1fr)}.g2,.g3{grid-template-columns:1fr}.gm{grid-template-columns:1fr}}
+@media(max-width:600px){.ct{padding:14px 12px}.tb{padding:10px 12px}.stats{grid-template-columns:1fr 1fr;gap:8px}.st{padding:12px}.st-val{font-size:20px}.tb-dt{display:none}}
+@media(max-width:380px){.stats{grid-template-columns:1fr}.st-val{font-size:18px}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.an{animation:fadeIn .35s ease forwards;opacity:0}.d1{animation-delay:.03s}.d2{animation-delay:.06s}.d3{animation-delay:.09s}.d4{animation-delay:.12s}.d5{animation-delay:.15s}.d6{animation-delay:.18s}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}.pulsing{animation:pulse 2s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div class="s-ov" id="sOv" onclick="togSB()"></div>
+<aside class="sb" id="sb">
+  <div class="sb-h"><div class="sb-logo"><div class="sb-ic">M</div><div><div class="sb-brand">MediEND</div><div class="sb-sub">MD Command Center</div></div></div></div>
+  <nav class="sb-nav">
+    <div class="sb-lbl">Overview</div>
+    <div class="sb-i on" data-p="home" onclick="go('home',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</div>
+    <div class="sb-i ai-item" data-p="ai-daily" onclick="go('ai-daily',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>AI Daily Brief<span class="ai-sparkle">✨</span></div>
+
+    <div class="sb-lbl">Business</div>
+    <div class="sb-i" data-p="surgery" onclick="go('surgery',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Surgery Pipeline<span class="sb-badge" style="background:var(--blue)">28</span></div>
+    <div class="sb-i" data-p="hospitals" onclick="go('hospitals',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M9 8h1M9 12h1M9 16h1M14 8h1M14 12h1M14 16h1M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16"/></svg>Hospitals & Doctors</div>
+    <div class="sb-i" data-p="finance" onclick="go('finance',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Finance</div>
+    <div class="sb-i" data-p="marketing" onclick="go('marketing',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Marketing</div>
+
+    <div class="sb-lbl">People</div>
+    <div class="sb-i" data-p="team" onclick="go('team',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>Team Performance</div>
+    <div class="sb-i" data-p="approvals" onclick="go('approvals',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Approvals<span class="sb-badge" style="background:var(--orange)">5</span></div>
+
+    <div class="sb-lbl">AI Tools</div>
+    <div class="sb-i ai-item" data-p="ai-predict" onclick="go('ai-predict',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Revenue Predictor<span class="ai-sparkle">✨</span></div>
+    <div class="sb-i ai-item" data-p="ai-expand" onclick="go('ai-expand',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Expansion Advisor<span class="ai-sparkle">✨</span></div>
+  </nav>
+  <div class="sb-ft"><div class="sb-u"><div class="sb-av">YJ</div><div><div class="sb-nm">Yash Jain</div><div class="sb-rl">Managing Director</div></div></div></div>
+</aside>
+
+<div class="mn">
+  <div class="tb">
+    <button class="ham" onclick="togSB()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+    <div class="tb-l"><div class="tb-g" id="tbG"></div><div class="tb-t" id="tbT">Dashboard</div></div>
+    <div class="tb-r">
+      <div class="tb-dt" id="tbDt"></div>
+      <div class="tb-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="tb-dot"></span></div>
+    </div>
+  </div>
+  <div class="ct" id="ct"></div>
+</div>
+
+<script>
+let curPage='home';
+const titles={home:'MD Command Center','ai-daily':'AI Daily Brief',surgery:'Surgery Pipeline',hospitals:'Hospitals & Doctors',finance:'Finance Overview',marketing:'Marketing & Campaigns',team:'Team Performance',approvals:'Pending Approvals','ai-predict':'AI Revenue Predictor','ai-expand':'AI Expansion Advisor'};
+
+function go(p,el){curPage=p;document.querySelectorAll('.sb-i').forEach(i=>i.classList.remove('on'));if(el)el.classList.add('on');render();closeSB()}
+function togSB(){document.getElementById('sb').classList.toggle('open');document.getElementById('sOv').classList.toggle('show')}
+function closeSB(){document.getElementById('sb').classList.remove('open');document.getElementById('sOv').classList.remove('show')}
+
+function render(){
+  document.getElementById('tbT').textContent=titles[curPage]||'Dashboard';
+  const c=document.getElementById('ct');
+  const fn={home:pgHome,'ai-daily':pgAIDaily,surgery:pgSurgery,hospitals:pgHospitals,finance:pgFinance,marketing:pgMarketing,team:pgTeam,approvals:pgApprovals,'ai-predict':pgAIPredict,'ai-expand':pgAIExpand};
+  (fn[curPage]||pgHome)(c);
+}
+
+// ═══ HOME ═══
+function pgHome(c){
+  c.innerHTML=`
+  <div class="ai-banner an d1">
+    <div class="ai-banner-head"><span class="ai-banner-sparkle">✨</span><div class="ai-banner-title">AI Daily Summary — March 17, 2026</div><div class="ai-banner-time">Generated 8:30 AM</div></div>
+    <div class="ai-banner-text">Good morning Yash. Yesterday MediEND processed <strong>12 surgeries</strong> across 4 cities with a <strong>₹18.2L GMV</strong>. Collection rate is at <strong>74%</strong> (↓3% from last week — flagged). <strong>Delhi NCR</strong> is outperforming other cities by 34%. <strong>3 approvals</strong> pending your action. Vikram Singh has <strong>3 overdue tasks</strong>.</div>
+    <div class="ai-bullets">
+      <div class="ai-bullet"><span class="ai-bullet-ic">🔴</span><strong>Alert:</strong> Hospital ABC Care has ₹8.2L outstanding for 45+ days — recommend escalation</div>
+      <div class="ai-bullet"><span class="ai-bullet-ic">🟢</span><strong>Win:</strong> Gynecomastia conversions up 28% this month — Instagram campaign working</div>
+      <div class="ai-bullet"><span class="ai-bullet-ic">🟡</span><strong>Action:</strong> 2 increment requests forwarded by HR, 1 leave extension pending</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="st an d1"><div class="st-ic">💰</div><div class="st-val">₹6.2Cr</div><div class="st-lbl">Revenue (FY26 YTD)</div><div class="st-d up">↑ 48.9% YoY</div></div>
+    <div class="st an d2"><div class="st-ic">🏥</div><div class="st-val">2,812</div><div class="st-lbl">Total Surgeries</div><div class="st-d up">↑ 312 this month</div></div>
+    <div class="st an d3"><div class="st-ic">📊</div><div class="st-val">₹75K</div><div class="st-lbl">Avg GMV / Surgery</div></div>
+    <div class="st an d4"><div class="st-ic">🔥</div><div class="st-val">74%</div><div class="st-lbl">Collection Rate</div><div class="st-d dn">↓ 3% this week</div></div>
+    <div class="st an d5"><div class="st-ic">👥</div><div class="st-val">52</div><div class="st-lbl">Total Team</div><div class="st-d up">+3 this month</div></div>
+    <div class="st an d6"><div class="st-ic">🏙</div><div class="st-val">14</div><div class="st-lbl">Active Cities</div></div>
+  </div>
+
+  <div class="gm">
+    <div>
+      <div class="pn an d2" style="margin-bottom:16px"><div class="ph"><div class="pt">📈 Revenue & Surgery Trend</div><div class="pa"><button class="pb on">6M</button><button class="pb">1Y</button></div></div><div class="pp"><div class="chart-box"><canvas id="revChart"></canvas></div></div></div>
+      <div class="g2" style="margin-bottom:0">
+        <div class="pn an d3"><div class="ph"><div class="pt">🏙 City Performance</div></div><div class="pp"><div class="chart-box"><canvas id="cityChart"></canvas></div></div></div>
+        <div class="pn an d4"><div class="ph"><div class="pt">🔪 Surgery Type Mix</div></div><div class="pp"><div class="chart-box"><canvas id="surgeryChart"></canvas></div></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="pn ai an d3" style="margin-bottom:16px"><div class="ph"><div class="pt">✨ AI Insights <span class="ai-tag">LIVE</span></div></div><div class="pp ps">
+        <div class="ai-card"><div class="ai-card-head"><span class="spark">📉</span>Collection Rate Declining</div><div class="ai-card-text">Collection rate dropped from <strong>77% → 74%</strong> in 2 weeks. Primary cause: <strong>3 hospitals</strong> with delayed TPA settlements. Recommend follow-up on ABC Care (₹8.2L), XYZ Hospital (₹5.1L).</div><div class="ai-card-action"><button class="ai-btn">View Hospitals</button></div></div>
+        <div class="ai-card"><div class="ai-card-head"><span class="spark">🚀</span>Expansion Ready: Jaipur</div><div class="ai-card-text">Based on lead volume (180+ inquiries/month from Jaipur), low competition, and 3 partner hospitals ready — <strong>Jaipur is ready for launch</strong>. Estimated monthly revenue: ₹12-18L.</div><div class="ai-card-action"><button class="ai-btn">View Analysis</button></div></div>
+        <div class="ai-card"><div class="ai-card-head"><span class="spark">⚠️</span>Loss-Making Surgery Type</div><div class="ai-card-text"><strong>Varicose Vein surgeries</strong> are showing negative margin (-8%) due to high hospital costs. Recommend renegotiating with 2 hospitals or pausing this category.</div><div class="ai-card-action"><button class="ai-btn">View P&L Data</button></div></div>
+        <div class="ai-card"><div class="ai-card-head"><span class="spark">👤</span>Top Performer</div><div class="ai-card-text"><strong>Team Delhi NCR</strong> (led by Akhil Sahu) closed 42 surgeries this month — highest ever. Recommend incentive + replicate their playbook in Lucknow.</div></div>
+        <div class="ai-card"><div class="ai-card-head"><span class="spark">📱</span>Marketing Signal</div><div class="ai-card-text">Instagram Reels for <strong>Gynecomastia</strong> driving 3.2x more leads than static posts. Recommend 80% budget shift to Reels for all surgery types.</div></div>
+      </div></div>
+      <div class="pn an d4"><div class="ph"><div class="pt">⏳ Pending Approvals <span class="pc">5</span></div></div><div class="pp ps">
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px"><span style="font-size:14px">💰</span><div style="flex:1"><div style="font-size:12px;font-weight:600">₹2.4L Payment — ABC Care Hospital</div><div style="font-size:10.5px;color:var(--text3)">Finance → Deepak Khanna</div></div><div style="display:flex;gap:4px"><button class="pb on" style="color:var(--green);border-color:rgba(52,211,153,0.2)">✓</button><button class="pb" style="color:var(--red);border-color:rgba(248,113,113,0.2)">✗</button></div></div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px"><span style="font-size:14px">📩</span><div style="flex:1"><div style="font-size:12px;font-weight:600">Leave Extension — Rajesh Kumar (4 days)</div><div style="font-size:10.5px;color:var(--text3)">HRMS → Task Management</div></div><div style="display:flex;gap:4px"><button class="pb on" style="color:var(--green);border-color:rgba(52,211,153,0.2)">✓</button><button class="pb" style="color:var(--red);border-color:rgba(248,113,113,0.2)">✗</button></div></div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px"><span style="font-size:14px">💼</span><div style="flex:1"><div style="font-size:12px;font-weight:600">Increment Request — Sneha Patel (₹8L→₹10.5L)</div><div style="font-size:10.5px;color:var(--text3)">HR → Forwarded</div></div><div style="display:flex;gap:4px"><button class="pb on" style="color:var(--green);border-color:rgba(52,211,153,0.2)">✓</button><button class="pb" style="color:var(--red);border-color:rgba(248,113,113,0.2)">✗</button></div></div>
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px"><span style="font-size:14px">📋</span><div style="flex:1"><div style="font-size:12px;font-weight:600">Task Review — Instagram Reels Campaign</div><div style="font-size:10.5px;color:var(--text3)">Vikram Singh submitted</div></div><div style="display:flex;gap:4px"><button class="pb on" style="color:var(--blue);border-color:rgba(56,189,248,0.2)">Review</button></div></div>
+        <div style="padding:8px 0;display:flex;align-items:center;gap:10px"><span style="font-size:14px">🏥</span><div style="flex:1"><div style="font-size:12px;font-weight:600">New Hospital Onboarding — Max Super Noida</div><div style="font-size:10.5px;color:var(--text3)">Operations → Sneha Patel</div></div><div style="display:flex;gap:4px"><button class="pb on" style="color:var(--green);border-color:rgba(52,211,153,0.2)">✓</button><button class="pb" style="color:var(--red);border-color:rgba(248,113,113,0.2)">✗</button></div></div>
+      </div></div>
+    </div>
+  </div>`;
+  setTimeout(()=>{
+    new Chart(document.getElementById('revChart'),{type:'line',data:{labels:['Oct','Nov','Dec','Jan','Feb','Mar'],datasets:[{label:'Revenue (₹L)',data:[38,42,55,48,52,62],borderColor:'#38BDF8',backgroundColor:'rgba(56,189,248,0.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#38BDF8'},{label:'Surgeries',data:[180,210,280,240,270,312],borderColor:'#A78BFA',backgroundColor:'rgba(167,139,250,0.08)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#A78BFA',yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94A3C2',font:{size:10}}}},scales:{x:{ticks:{color:'#5B6B8A'},grid:{color:'rgba(255,255,255,0.02)'}},y:{ticks:{color:'#5B6B8A',callback:v=>'₹'+v+'L'},grid:{color:'rgba(255,255,255,0.02)'}},y1:{position:'right',ticks:{color:'#5B6B8A'},grid:{display:false}}}}});
+    new Chart(document.getElementById('cityChart'),{type:'bar',data:{labels:['Delhi NCR','Mumbai','Bangalore','Lucknow','Hyderabad'],datasets:[{label:'Surgeries',data:[42,28,22,18,12],backgroundColor:['#38BDF8','#34D399','#FB923C','#A78BFA','#F472B6'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#5B6B8A'},grid:{color:'rgba(255,255,255,0.02)'}},y:{ticks:{color:'#94A3C2',font:{size:11}},grid:{display:false}}}}});
+    new Chart(document.getElementById('surgeryChart'),{type:'doughnut',data:{labels:['Lipoma','Gynecomastia','LASIK','Piles','Hernia','Other'],datasets:[{data:[28,22,18,15,10,7],backgroundColor:['#38BDF8','#34D399','#FB923C','#A78BFA','#F472B6','#FBBF24'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#94A3C2',font:{size:10},padding:6}}}}});
+  },80);
+}
+
+// ═══ AI DAILY ═══
+function pgAIDaily(c){
+  c.innerHTML=`
+  <div class="ai-banner an d1" style="border-color:rgba(56,189,248,0.15)">
+    <div class="ai-banner-head"><span class="ai-banner-sparkle">🤖</span><div class="ai-banner-title">AI Daily Brief — Monday, March 17, 2026</div></div>
+    <div class="ai-banner-text" style="font-size:13px;line-height:1.8">
+      <strong>📊 Yesterday's Numbers:</strong> 12 surgeries, ₹18.2L GMV, ₹7.3L net revenue. Delhi NCR contributed 42% of volume.<br><br>
+      <strong>🔴 Alerts:</strong><br>
+      • Collection rate fell to 74% — 3 hospitals have ₹15.8L outstanding (45+ days)<br>
+      • Varicose Vein surgeries running at -8% margin — recommend pause or renegotiation<br>
+      • Vikram Singh has 3 overdue tasks (Instagram campaign, SEO pages, LinkedIn strategy)<br><br>
+      <strong>🟢 Wins:</strong><br>
+      • Gynecomastia conversions ↑28% MoM — Instagram Reels performing 3.2x better<br>
+      • Team Delhi NCR closed 42 surgeries — highest ever in a single month<br>
+      • New hospital Max Super Noida ready for onboarding — expected ₹8L/month<br><br>
+      <strong>📋 Your Action Items:</strong><br>
+      • Approve ₹2.4L payment to ABC Care Hospital<br>
+      • Review Sneha Patel's increment request (₹8L → ₹10.5L)<br>
+      • Review Vikram's Instagram task submission<br>
+      • Decide on Jaipur expansion (AI recommends YES — see Expansion Advisor)<br><br>
+      <strong>🔮 AI Prediction:</strong><br>
+      At current trajectory, March will close at <strong>₹62L revenue</strong> (↑19% vs Feb). If collection rate improves to 78%, net cash flow improves by ₹4.8L.
+      For ₹50Cr target next year: need <strong>~420 surgeries/month</strong> across 8+ cities with avg GMV ₹98K.
+    </div>
+  </div>
+  <div class="g2">
+    <div class="pn ai an d2"><div class="ph"><div class="pt">🏥 Hospital Health Score <span class="ai-tag">AI</span></div></div><div class="pp ps">
+      ${[{n:'Apollo Ghaziabad',score:92,c:'var(--green)',rev:'₹12.4L',status:'Excellent'},{n:'Max Super Noida',score:78,c:'var(--blue)',rev:'₹8.1L',status:'Good'},{n:'ABC Care Hospital',score:38,c:'var(--red)',rev:'₹6.2L',status:'⚠️ Outstanding ₹8.2L'},{n:'Fortis Gurgaon',score:85,c:'var(--green)',rev:'₹9.8L',status:'Good'},{n:'XYZ Hospital',score:45,c:'var(--orange)',rev:'₹4.1L',status:'⚠️ Outstanding ₹5.1L'}].map(h=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="width:40px;height:40px;border-radius:50%;border:3px solid ${h.c};display:flex;align-items:center;justify-content:center;font-family:var(--f2);font-weight:800;font-size:13px;flex-shrink:0;color:${h.c}">${h.score}</div><div style="flex:1"><div style="font-size:12.5px;font-weight:600">${h.n}</div><div style="font-size:10.5px;color:var(--text3)">${h.status}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:600">${h.rev}</div><div style="font-size:10px;color:var(--text4)">This month</div></div></div>`).join('')}
+    </div></div>
+    <div class="pn ai an d3"><div class="ph"><div class="pt">👥 Team Efficiency Score <span class="ai-tag">AI</span></div></div><div class="pp ps">
+      ${[{n:'Team Delhi NCR',lead:'Akhil Sahu',score:96,surg:42,conv:'32%'},{n:'Team Mumbai',lead:'Saurav Rayal',score:78,surg:28,conv:'24%'},{n:'Team Bangalore',lead:'Prathmesh S.',score:72,surg:22,conv:'21%'},{n:'Team Lucknow',lead:'Regional TL',score:58,surg:18,conv:'16%'}].map(t=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="width:40px;height:40px;border-radius:50%;border:3px solid ${t.score>80?'var(--green)':t.score>65?'var(--blue)':'var(--orange)'};display:flex;align-items:center;justify-content:center;font-family:var(--f2);font-weight:800;font-size:13px;flex-shrink:0">${t.score}</div><div style="flex:1"><div style="font-size:12.5px;font-weight:600">${t.n}</div><div style="font-size:10.5px;color:var(--text3)">Lead: ${t.lead}</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:600">${t.surg} surgeries</div><div style="font-size:10px;color:var(--text4)">Conv: ${t.conv}</div></div></div>`).join('')}
+    </div></div>
+  </div>`;
+}
+
+// ═══ SURGERY PIPELINE ═══
+function pgSurgery(c){
+  const pipeline=[
+    {n:'Rahul M.',type:'Lipoma',hosp:'Apollo Ghaziabad',stage:'Pre-Auth',ins:'Star Health',gmv:'₹45K',bd:'Akhil',days:1},
+    {n:'Priya T.',type:'Gynecomastia',hosp:'Max Noida',stage:'Surgery Scheduled',ins:'ICICI Lombard',gmv:'₹1.2L',bd:'Saurav',days:2},
+    {n:'Amit K.',type:'LASIK',hosp:'Eye Care Delhi',stage:'IPD',ins:'Bajaj Allianz',gmv:'₹85K',bd:'Akhil',days:0},
+    {n:'Sneha R.',type:'Piles',hosp:'Fortis Gurgaon',stage:'Discharged',ins:'HDFC Ergo',gmv:'₹55K',bd:'Prathmesh',days:3},
+    {n:'Vikas P.',type:'Hernia',hosp:'Apollo Ghaziabad',stage:'Claim Filed',ins:'Star Health',gmv:'₹72K',bd:'Akhil',days:5},
+    {n:'Kavita S.',type:'Lipoma',hosp:'ABC Care',stage:'Lead',ins:'New India',gmv:'₹40K',bd:'Saurav',days:0},
+  ];
+  const stages=['Lead','Insurance Check','Pre-Auth','Surgery Scheduled','IPD','Discharged','Claim Filed','Settled'];
+  c.innerHTML=`
+  <div class="stats" style="grid-template-columns:repeat(4,1fr)">
+    <div class="st an d1"><div class="st-ic">📋</div><div class="st-val">28</div><div class="st-lbl">Active Cases</div></div>
+    <div class="st an d2"><div class="st-ic">🏥</div><div class="st-val">8</div><div class="st-lbl">In IPD Today</div></div>
+    <div class="st an d3"><div class="st-ic">💰</div><div class="st-val">₹18.2L</div><div class="st-lbl">Pipeline GMV</div></div>
+    <div class="st an d4"><div class="st-ic">✅</div><div class="st-val">312</div><div class="st-lbl">Completed (Mar)</div></div>
+  </div>
+  <div class="pn an d2"><div class="ph"><div class="pt">Surgery Pipeline</div><div class="pa">${stages.slice(0,5).map(s=>`<button class="pb">${s}</button>`).join('')}</div></div><div class="pp ps" style="padding:0"><table><thead><tr><th>Patient</th><th>Surgery</th><th>Hospital</th><th>Stage</th><th>Insurance</th><th>GMV</th><th>BD</th></tr></thead><tbody>${pipeline.map(p=>{
+    const sc=p.stage==='Lead'?'b-b':p.stage==='IPD'?'b-o':p.stage==='Discharged'?'b-g':p.stage.includes('Claim')?'b-p':'b-t';
+    return`<tr><td style="font-weight:600">${p.n}</td><td>${p.type}</td><td style="font-size:11px">${p.hosp}</td><td><span class="badge ${sc}">${p.stage}</span></td><td style="font-size:11px;color:var(--text3)">${p.ins}</td><td style="font-weight:600">${p.gmv}</td><td style="font-size:11px">${p.bd}</td></tr>`}).join('')}</tbody></table></div></div>
+  <div class="pn ai an d3" style="margin-top:16px"><div class="ph"><div class="pt">✨ AI Pipeline Insights <span class="ai-tag">AI</span></div></div><div class="pp">
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">⏱</span>Bottleneck Alert</div><div class="ai-card-text">Average <strong>Pre-Auth → Surgery</strong> time increased to <strong>4.2 days</strong> (was 2.8 days). 60% of delays from <strong>Star Health TPA</strong>. Consider dedicated follow-up person.</div></div>
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">💡</span>Conversion Opportunity</div><div class="ai-card-text"><strong>38 leads</strong> in pipeline older than 7 days. AI suggests automated WhatsApp follow-up for Lipoma & Gynecomastia leads — historically 22% convert on 2nd contact.</div></div>
+  </div></div>`;
+}
+
+// ═══ HOSPITALS ═══
+function pgHospitals(c){
+  c.innerHTML=`<div class="pn an d1"><div class="ph"><div class="pt">Partner Hospitals <span class="pc">350+</span></div></div><div class="pp ps" style="padding:0"><table><thead><tr><th>Hospital</th><th>City</th><th>Surgeries (Mar)</th><th>Outstanding</th><th>AI Score</th><th>Status</th></tr></thead><tbody>
+    <tr><td style="font-weight:600">Apollo Ghaziabad</td><td>Delhi NCR</td><td>18</td><td style="color:var(--green)">₹0</td><td><span style="color:var(--green);font-weight:700">92</span></td><td><span class="badge b-g">Active</span></td></tr>
+    <tr><td style="font-weight:600">Max Super Noida</td><td>Delhi NCR</td><td>12</td><td>₹1.2L</td><td><span style="color:var(--blue);font-weight:700">78</span></td><td><span class="badge b-g">Active</span></td></tr>
+    <tr><td style="font-weight:600">Fortis Gurgaon</td><td>Delhi NCR</td><td>8</td><td>₹0.8L</td><td><span style="color:var(--green);font-weight:700">85</span></td><td><span class="badge b-g">Active</span></td></tr>
+    <tr><td style="font-weight:600">ABC Care Hospital</td><td>Delhi NCR</td><td>5</td><td style="color:var(--red);font-weight:600">₹8.2L</td><td><span style="color:var(--red);font-weight:700">38</span></td><td><span class="badge b-r">⚠️ Review</span></td></tr>
+    <tr><td style="font-weight:600">XYZ Hospital</td><td>Mumbai</td><td>6</td><td style="color:var(--orange);font-weight:600">₹5.1L</td><td><span style="color:var(--orange);font-weight:700">45</span></td><td><span class="badge b-o">Warning</span></td></tr>
+    <tr><td style="font-weight:600">City Hospital Bangalore</td><td>Bangalore</td><td>10</td><td>₹0.4L</td><td><span style="color:var(--blue);font-weight:700">74</span></td><td><span class="badge b-g">Active</span></td></tr>
+  </tbody></table></div></div>
+  <div class="pn ai an d2" style="margin-top:16px"><div class="ph"><div class="pt">✨ AI Hospital Recommendations <span class="ai-tag">AI</span></div></div><div class="pp">
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">🚨</span>Remove Recommendation</div><div class="ai-card-text"><strong>ABC Care Hospital</strong> — ₹8.2L outstanding (45+ days), declining surgery volume (18→5 in 3 months), patient complaints rising. <strong>AI recommends: Pause new cases, escalate payment.</strong></div></div>
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">➕</span>Add Recommendation</div><div class="ai-card-text">3 hospitals in <strong>Jaipur</strong> have expressed interest: Mahatma Gandhi Hospital, Fortis Jaipur, Manipal Jaipur. Combined capacity: 40+ surgeries/month. <strong>Onboarding cost: ₹50K</strong>.</div></div>
+  </div></div>`;
+}
+
+// ═══ FINANCE ═══
+function pgFinance(c){
+  c.innerHTML=`
+  <div class="stats" style="grid-template-columns:repeat(4,1fr)">
+    <div class="st an d1"><div class="st-ic">💰</div><div class="st-val">₹62L</div><div class="st-lbl">Revenue (Mar)</div><div class="st-d up">↑ 19%</div></div>
+    <div class="st an d2"><div class="st-ic">📤</div><div class="st-val">₹41L</div><div class="st-lbl">Expenses (Mar)</div></div>
+    <div class="st an d3"><div class="st-ic">📊</div><div class="st-val">₹21L</div><div class="st-lbl">Net Profit</div><div class="st-d up">34% margin</div></div>
+    <div class="st an d4"><div class="st-ic">⏳</div><div class="st-val">₹15.8L</div><div class="st-lbl">Outstanding</div><div class="st-d dn">↑ ₹3L</div></div>
+  </div>
+  <div class="g2">
+    <div class="pn an d2"><div class="ph"><div class="pt">P&L by Surgery Type</div></div><div class="pp"><div class="chart-box"><canvas id="plChart"></canvas></div></div></div>
+    <div class="pn an d3"><div class="ph"><div class="pt">Monthly Cash Flow</div></div><div class="pp"><div class="chart-box"><canvas id="cashChart"></canvas></div></div></div>
+  </div>
+  <div class="pn ai an d4"><div class="ph"><div class="pt">✨ AI Finance Insights <span class="ai-tag">AI</span></div></div><div class="pp">
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">📉</span>Loss Alert</div><div class="ai-card-text"><strong>Varicose Vein</strong> surgeries: -8% margin. Hospital cost ₹38K avg vs collection ₹35K. Either renegotiate or stop this category.</div></div>
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">💡</span>Cash Optimization</div><div class="ai-card-text">If outstanding ₹15.8L collected within 15 days, monthly cash position improves by <strong>22%</strong>. AI recommends automated TPA follow-up workflow.</div></div>
+  </div></div>`;
+  setTimeout(()=>{
+    new Chart(document.getElementById('plChart'),{type:'bar',data:{labels:['Lipoma','Gyneco','LASIK','Piles','Hernia','Varicose'],datasets:[{label:'Revenue',data:[12,18,14,8,6,3.5],backgroundColor:'rgba(56,189,248,0.7)',borderRadius:3},{label:'Cost',data:[7,11,9,5,4,3.8],backgroundColor:'rgba(248,113,113,0.7)',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94A3C2',font:{size:10}}}},scales:{x:{ticks:{color:'#5B6B8A'},grid:{color:'rgba(255,255,255,0.02)'}},y:{ticks:{color:'#5B6B8A',callback:v=>'₹'+v+'L'},grid:{color:'rgba(255,255,255,0.02)'}}}}});
+    new Chart(document.getElementById('cashChart'),{type:'line',data:{labels:['Oct','Nov','Dec','Jan','Feb','Mar'],datasets:[{label:'Inflow',data:[32,38,48,42,46,55],borderColor:'#34D399',tension:.4,pointRadius:3},{label:'Outflow',data:[24,28,35,30,34,41],borderColor:'#F87171',tension:.4,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94A3C2',font:{size:10}}}},scales:{x:{ticks:{color:'#5B6B8A'},grid:{color:'rgba(255,255,255,0.02)'}},y:{ticks:{color:'#5B6B8A',callback:v=>'₹'+v+'L'},grid:{color:'rgba(255,255,255,0.02)'}}}}});
+  },80);
+}
+
+// ═══ MARKETING ═══
+function pgMarketing(c){
+  c.innerHTML=`
+  <div class="stats" style="grid-template-columns:repeat(4,1fr)">
+    <div class="st an d1"><div class="st-ic">📱</div><div class="st-val">₹4.2L</div><div class="st-lbl">Spend (Mar)</div></div>
+    <div class="st an d2"><div class="st-ic">👁</div><div class="st-val">2.8L</div><div class="st-lbl">Total Leads</div><div class="st-d up">↑ 34%</div></div>
+    <div class="st an d3"><div class="st-ic">🎯</div><div class="st-val">₹1,500</div><div class="st-lbl">Cost Per Lead</div><div class="st-d dn">↑ ₹200</div></div>
+    <div class="st an d4"><div class="st-ic">💰</div><div class="st-val">14.7x</div><div class="st-lbl">ROAS</div><div class="st-d up">Best ever</div></div>
+  </div>
+  <div class="pn an d2"><div class="ph"><div class="pt">Campaign Performance</div></div><div class="pp ps" style="padding:0"><table><thead><tr><th>Campaign</th><th>Platform</th><th>Spend</th><th>Leads</th><th>CPL</th><th>Conversions</th><th>ROAS</th></tr></thead><tbody>
+    <tr><td style="font-weight:600">Lipoma Reels</td><td><span class="badge b-p">Instagram</span></td><td>₹1.2L</td><td>320</td><td>₹375</td><td>42</td><td style="color:var(--green);font-weight:600">18.2x</td></tr>
+    <tr><td style="font-weight:600">Gynecomastia Search</td><td><span class="badge b-b">Google</span></td><td>₹1.8L</td><td>180</td><td>₹1,000</td><td>28</td><td style="color:var(--green);font-weight:600">12.4x</td></tr>
+    <tr><td style="font-weight:600">LASIK FB Ads</td><td><span class="badge b-b">Facebook</span></td><td>₹60K</td><td>85</td><td>₹706</td><td>12</td><td style="color:var(--blue);font-weight:600">10.2x</td></tr>
+    <tr><td style="font-weight:600">Piles Awareness</td><td><span class="badge b-p">Instagram</span></td><td>₹40K</td><td>60</td><td>₹667</td><td>6</td><td style="color:var(--orange);font-weight:600">6.8x</td></tr>
+  </tbody></table></div></div>
+  <div class="pn ai an d3" style="margin-top:16px"><div class="ph"><div class="pt">✨ AI Marketing Insights <span class="ai-tag">AI</span></div></div><div class="pp">
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">📱</span>Format Insight</div><div class="ai-card-text">Instagram <strong>Reels drive 3.2x more leads</strong> than static posts at 47% lower CPL. Recommend shifting 80% of Instagram budget to Reels format.</div></div>
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">🎯</span>Budget Optimization</div><div class="ai-card-text">Move <strong>₹20K from Piles Awareness → Lipoma Reels</strong>. Expected additional 53 leads at ₹375 CPL. Lipoma has highest conversion rate (13.1%).</div></div>
+  </div></div>`;
+}
+
+// ═══ TEAM ═══
+function pgTeam(c){
+  c.innerHTML=`<div class="pn an d1"><div class="ph"><div class="pt">Team Performance — March 2026</div></div><div class="pp ps" style="padding:0"><table><thead><tr><th>Team / Member</th><th>Role</th><th>Surgeries</th><th>Revenue</th><th>Conv %</th><th>Tasks Done</th><th>AI Score</th></tr></thead><tbody>
+    <tr style="background:rgba(52,211,153,0.03)"><td style="font-weight:700">📍 Team Delhi NCR</td><td style="color:var(--text3)">Lead: Akhil Sahu</td><td style="font-weight:600">42</td><td>₹32L</td><td style="color:var(--green)">32%</td><td>18/20</td><td><span style="color:var(--green);font-weight:800;font-size:14px">96</span></td></tr>
+    <tr><td style="padding-left:28px">↳ Akhil Sahu</td><td style="color:var(--text3)">BD Lead</td><td>18</td><td>₹14L</td><td>35%</td><td>8/8</td><td><span style="color:var(--green);font-weight:700">94</span></td></tr>
+    <tr><td style="padding-left:28px">↳ Coordinator 1</td><td style="color:var(--text3)">Surgery Coord</td><td>14</td><td>₹10L</td><td>30%</td><td>6/7</td><td><span style="color:var(--blue);font-weight:700">82</span></td></tr>
+    <tr style="background:rgba(56,189,248,0.02)"><td style="font-weight:700">📍 Team Mumbai</td><td style="color:var(--text3)">Lead: Saurav Rayal</td><td style="font-weight:600">28</td><td>₹21L</td><td style="color:var(--blue)">24%</td><td>14/18</td><td><span style="color:var(--blue);font-weight:800;font-size:14px">78</span></td></tr>
+    <tr style="background:rgba(251,146,60,0.02)"><td style="font-weight:700">📍 Team Bangalore</td><td style="color:var(--text3)">Lead: Prathmesh S.</td><td style="font-weight:600">22</td><td>₹16L</td><td style="color:var(--orange)">21%</td><td>10/14</td><td><span style="color:var(--orange);font-weight:800;font-size:14px">72</span></td></tr>
+    <tr style="background:rgba(248,113,113,0.02)"><td style="font-weight:700">📍 Team Lucknow</td><td style="color:var(--text3)">Lead: Regional TL</td><td style="font-weight:600">18</td><td>₹12L</td><td style="color:var(--red)">16%</td><td>8/15</td><td><span style="color:var(--red);font-weight:800;font-size:14px">58</span></td></tr>
+  </tbody></table></div></div>
+  <div class="pn ai an d2" style="margin-top:16px"><div class="ph"><div class="pt">✨ AI Team Insights <span class="ai-tag">AI</span></div></div><div class="pp">
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">📉</span>Underperforming</div><div class="ai-card-text"><strong>Team Lucknow</strong> — 16% conversion (vs 32% Delhi). 7 overdue tasks. AI suggests: share Delhi NCR's playbook, assign dedicated coordinator, weekly review cadence.</div></div>
+    <div class="ai-card"><div class="ai-card-head"><span class="spark">🏆</span>Replicate Success</div><div class="ai-card-text">Delhi NCR's <strong>same-day insurance verification</strong> process is the key differentiator. Avg Pre-Auth time: 1.2 days vs 4.2 days in other cities. Document and scale this SOP.</div></div>
+  </div></div>`;
+}
+
+// ═══ APPROVALS ═══
+function pgApprovals(c){
+  c.innerHTML=`<div class="pn an d1"><div class="ph"><div class="pt">Pending Approvals <span class="pc">5</span></div></div><div class="pp">
+    ${[
+      {ic:'💰',title:'₹2.4L Payment Release — ABC Care Hospital',from:'Finance Team',type:'Finance',urgent:true},
+      {ic:'📩',title:'Leave Extension (4 days) — Rajesh Kumar',from:'HRMS Auto',type:'Leave',urgent:false},
+      {ic:'💼',title:'Increment: Sneha Patel ₹8L → ₹10.5L',from:'HR Neha Singh',type:'HR',urgent:false},
+      {ic:'📋',title:'Task Submission: Instagram Reels Campaign — Vikram',from:'Task Management',type:'Task',urgent:false},
+      {ic:'🏥',title:'New Hospital Onboarding — Max Super Noida',from:'Operations',type:'Ops',urgent:true},
+    ].map(a=>`<div style="display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;background:var(--bg)${a.urgent?';border-left:3px solid var(--red)':''}">
+      <span style="font-size:20px">${a.ic}</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${a.title}</div><div style="font-size:11px;color:var(--text3)">From: ${a.from} · <span class="badge b-b">${a.type}</span></div></div>
+      <div style="display:flex;gap:6px"><button class="pb on" style="color:var(--green);border-color:rgba(52,211,153,0.2);padding:6px 14px" onclick="this.textContent='✓ Done';this.style.opacity='.5'">Approve</button><button class="pb" style="color:var(--red);border-color:rgba(248,113,113,0.2);padding:6px 14px">Reject</button></div>
+    </div>`).join('')}
+  </div></div>`;
+}
+
+// ═══ AI PREDICT ═══
+function pgAIPredict(c){
+  c.innerHTML=`
+  <div class="ai-banner an d1">
+    <div class="ai-banner-head"><span class="ai-banner-sparkle">🔮</span><div class="ai-banner-title">AI Revenue Predictor</div></div>
+    <div class="ai-banner-text">Based on your current data: 2,812 surgeries, ₹6.2Cr revenue, 14 cities, 350+ hospitals, 52 team members, 40% take rate on ₹75K avg GMV.</div>
+  </div>
+  <div class="g2">
+    <div class="pn ai an d2"><div class="ph"><div class="pt">🎯 Target: ₹50 Crore (Next Year)</div></div><div class="pp">
+      <div style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:16px">To achieve <strong>₹50 Crore revenue</strong> next year, AI calculates you need:</div>
+      ${[
+        {label:'Monthly Surgeries',val:'~420',now:'312',icon:'🏥'},
+        {label:'Active Cities',val:'8+',now:'5 active',icon:'🏙'},
+        {label:'Partner Hospitals',val:'500+',now:'350+',icon:'🏨'},
+        {label:'Team Size',val:'80-100',now:'52',icon:'👥'},
+        {label:'Avg GMV / Surgery',val:'₹98K',now:'₹75K',icon:'💰'},
+        {label:'Collection Rate',val:'82%+',now:'74%',icon:'📊'},
+        {label:'Marketing Spend',val:'₹12-15L/month',now:'₹4.2L',icon:'📱'},
+        {label:'New City Launches',val:'3-4 cities',now:'Planning Jaipur',icon:'🚀'},
+      ].map(r=>`<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:16px">${r.icon}</span><div style="flex:1"><div style="font-size:12.5px;font-weight:600">${r.label}</div><div style="font-size:10.5px;color:var(--text3)">Current: ${r.now}</div></div><div style="font-family:var(--f2);font-size:16px;font-weight:800;color:var(--blue)">${r.val}</div></div>`).join('')}
+    </div></div>
+    <div class="pn ai an d3"><div class="ph"><div class="pt">📈 Growth Trajectory</div></div><div class="pp"><div class="chart-box" style="max-height:280px"><canvas id="predictChart"></canvas></div>
+      <div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px">KEY INVESTMENTS NEEDED</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">
+          • <strong>₹1.5-2 Cr</strong> — Hiring (30-40 new BD + coordinators)<br>
+          • <strong>₹1.5 Cr/year</strong> — Marketing budget (3x current)<br>
+          • <strong>₹50-80L</strong> — Technology (AI automation, app scaling)<br>
+          • <strong>₹30-50L</strong> — City expansion setup costs<br>
+          • <strong>Total: ₹4-5 Cr investment</strong> for 8x revenue growth
+        </div>
+      </div>
+    </div></div>
+  </div>`;
+  setTimeout(()=>{
+    new Chart(document.getElementById('predictChart'),{type:'line',data:{labels:['FY24','FY25','FY26','FY27 (P)','FY28 (P)'],datasets:[{label:'Revenue (₹Cr)',data:[2.1,4.2,6.2,18,50],borderColor:'#38BDF8',backgroundColor:'rgba(56,189,248,0.1)',fill:true,tension:.4,pointRadius:4,pointBackgroundColor:'#38BDF8'},{label:'Surgeries',data:[800,1600,2800,7200,18000],borderColor:'#A78BFA',tension:.4,pointRadius:4,pointBackgroundColor:'#A78BFA',yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94A3C2',font:{size:10}}}},scales:{x:{ticks:{color:'#5B6B8A'},grid:{color:'rgba(255,255,255,0.02)'}},y:{ticks:{color:'#5B6B8A',callback:v=>'₹'+v+'Cr'},grid:{color:'rgba(255,255,255,0.02)'}},y1:{position:'right',ticks:{color:'#5B6B8A'},grid:{display:false}}}}});
+  },80);
+}
+
+// ═══ AI EXPAND ═══
+function pgAIExpand(c){
+  c.innerHTML=`
+  <div class="ai-banner an d1">
+    <div class="ai-banner-head"><span class="ai-banner-sparkle">🗺️</span><div class="ai-banner-title">AI Expansion Advisor</div></div>
+    <div class="ai-banner-text">AI analyzes lead volume, hospital availability, competition, insurance network density, and your operational capacity to recommend expansion readiness.</div>
+  </div>
+  <div class="g3">
+    ${[
+      {city:'Jaipur',score:92,color:'var(--green)',leads:180,hosp:3,comp:'Low',est:'₹12-18L/mo',status:'🟢 READY — Launch Now',reason:'High lead volume (180/mo), 3 hospitals ready, low competition, strong insurance network'},
+      {city:'Chandigarh',score:71,color:'var(--blue)',leads:95,hosp:2,comp:'Medium',est:'₹6-10L/mo',status:'🟡 Almost Ready',reason:'Good lead flow, 2 hospitals interested. Need 1 more hospital partner before launch'},
+      {city:'Pune',score:64,color:'var(--orange)',leads:120,hosp:1,comp:'High',est:'₹8-14L/mo',status:'🟡 Needs Work',reason:'High lead volume but only 1 hospital partner. Pristyn Care active. Need differentiation strategy'},
+      {city:'Ahmedabad',score:48,color:'var(--orange)',leads:60,hosp:0,comp:'Medium',est:'₹4-8L/mo',status:'🔴 Not Ready',reason:'Low lead volume, no hospital partnerships yet. Recommend market research first'},
+      {city:'Kolkata',score:35,color:'var(--red)',leads:40,hosp:0,comp:'High',est:'₹3-6L/mo',status:'🔴 Not Ready',reason:'Low leads, no hospitals, high competition from local players. Deprioritize for now'},
+      {city:'Indore',score:55,color:'var(--orange)',leads:75,hosp:1,comp:'Low',est:'₹5-9L/mo',status:'🟡 Potential',reason:'Decent leads, 1 hospital, low competition. Worth exploring in Q3 after Jaipur launch'},
+    ].map(ct=>`
+    <div class="pn an"><div class="pp">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:50px;height:50px;border-radius:50%;border:3px solid ${ct.color};display:flex;align-items:center;justify-content:center;font-family:var(--f2);font-weight:800;font-size:18px;flex-shrink:0;color:${ct.color}">${ct.score}</div>
+        <div><div style="font-family:var(--f2);font-size:16px;font-weight:700">${ct.city}</div><div style="font-size:11px;color:var(--text3)">${ct.status}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="background:var(--bg);padding:8px;border-radius:6px;text-align:center"><div style="font-family:var(--f2);font-size:14px;font-weight:700">${ct.leads}</div><div style="font-size:9px;color:var(--text4)">Leads/mo</div></div>
+        <div style="background:var(--bg);padding:8px;border-radius:6px;text-align:center"><div style="font-family:var(--f2);font-size:14px;font-weight:700">${ct.hosp}</div><div style="font-size:9px;color:var(--text4)">Hospitals</div></div>
+        <div style="background:var(--bg);padding:8px;border-radius:6px;text-align:center"><div style="font-size:12px;font-weight:600;color:${ct.comp==='Low'?'var(--green)':ct.comp==='Medium'?'var(--orange)':'var(--red)'}">${ct.comp}</div><div style="font-size:9px;color:var(--text4)">Competition</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:8px">${ct.reason}</div>
+      <div style="font-size:12px;font-weight:600;color:var(--blue)">Est. Revenue: ${ct.est}</div>
+    </div></div>`).join('')}
+  </div>`;
+}
+
+// INIT
+const d=new Date();const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+document.getElementById('tbDt').textContent=`${days[d.getDay()]}, ${mons[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+const h=d.getHours();document.getElementById('tbG').textContent=`${h<12?'Good morning':h<17?'Good afternoon':'Good evening'}, Yash`;
+render();
+</script>
+</body>
+</html>

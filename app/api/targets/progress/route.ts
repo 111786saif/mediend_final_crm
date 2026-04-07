@@ -196,14 +196,26 @@ async function calculateActual(
   end: Date
 ): Promise<number> {
   // IPD_DONE: count AdmissionRecords where ipdStatus is IPD_DONE or DISCHARGED
+  // PLUS count cash flow leads that reached CASH_IPD_DONE or CASH_DISCHARGED
   if (metric === 'IPD_DONE' || metric === 'SURGERIES_DONE') {
-    return prisma.admissionRecord.count({
-      where: {
-        lead: { bdId },
-        ipdStatus: { in: ['IPD_DONE', 'DISCHARGED'] },
-        ipdStatusUpdatedAt: { gte: start, lte: end },
-      },
-    })
+    const [insuranceCount, cashCount] = await Promise.all([
+      prisma.admissionRecord.count({
+        where: {
+          lead: { bdId },
+          ipdStatus: { in: ['IPD_DONE', 'DISCHARGED'] },
+          ipdStatusUpdatedAt: { gte: start, lte: end },
+        },
+      }),
+      prisma.lead.count({
+        where: {
+          bdId,
+          flowType: 'CASH',
+          caseStage: { in: ['CASH_IPD_DONE', 'CASH_DISCHARGED'] },
+          updatedDate: { gte: start, lte: end },
+        },
+      }),
+    ])
+    return insuranceCount + cashCount
   }
 
   const baseWhere: Prisma.LeadWhereInput = {

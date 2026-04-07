@@ -563,7 +563,34 @@ export default function MyTeamPage() {
                       fromDate={from}
                       toDate={to}
                     />
-                    <LeaveTypeBreakdown rows={entry.leaveByType ?? []} />
+                    {(() => {
+                      const bal = leaveBalancesData?.balances?.find(
+                        (b) => b.employeeId === entry.employeeId
+                      )
+                      if (!bal) return <LeaveTypeBreakdown rows={entry.leaveByType ?? []} />
+                      return (
+                        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[11px] text-muted-foreground border-b border-border/40 pb-2.5 mb-2.5">
+                          <span className="text-[10px] uppercase tracking-wide text-muted-foreground/80 shrink-0">
+                            Balance
+                          </span>
+                          {bal.balances.map((b) => (
+                            <span key={b.leaveTypeId} className="whitespace-nowrap">
+                              <span className="font-medium text-foreground/75">{b.leaveTypeName}</span>{' '}
+                              <span className="tabular-nums">
+                                <span className="text-green-600 dark:text-green-400 font-semibold">{b.remaining}</span>
+                                <span className="text-muted-foreground/50">/{b.allocated}</span>
+                              </span>
+                              {b.used > 0 && (
+                                <span className="text-muted-foreground/60 ml-0.5">({b.used} used)</span>
+                              )}
+                            </span>
+                          ))}
+                          {bal.isProbation && (
+                            <Badge variant="secondary" className="text-[10px] px-1.5 py-0">Probation</Badge>
+                          )}
+                        </div>
+                      )
+                    })()}
                     <AttendanceHeatmap
                       attendance={entry.attendance}
                       fromDate={from}

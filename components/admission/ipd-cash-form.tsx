@@ -341,13 +341,16 @@ export function IPDCashForm({
             </div>
             <div>
               <Label htmlFor="sex">Gender</Label>
-              <Input
-                id="sex"
-                value={formData.sex}
-                onChange={(e) => set('sex', e.target.value)}
-                placeholder="e.g. Male, Female"
-                className="mt-1"
-              />
+              <Select value={formData.sex} onValueChange={(v) => set('sex', v)}>
+                <SelectTrigger id="sex" className="mt-1">
+                  <SelectValue placeholder="Select gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Male">Male</SelectItem>
+                  <SelectItem value="Female">Female</SelectItem>
+                  <SelectItem value="Others">Others</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

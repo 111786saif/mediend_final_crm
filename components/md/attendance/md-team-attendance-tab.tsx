@@ -1,11 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { format, startOfMonth, endOfMonth } from 'date-fns'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -20,7 +21,7 @@ import {
   countAttendanceStatusesInPeriod,
   type AttendanceDay as HeatmapAttendanceDay,
 } from '@/components/employee/attendance-heatmap'
-import { ChevronLeft, ChevronRight, Users } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Search, Users, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type TeamSubordinate = {
@@ -135,28 +136,6 @@ function summaryCounts(
   return { grace1, grace2, late, onTime, halfDay, leaves, counts }
 }
 
-function StatMini({
-  label,
-  value,
-  className,
-}: {
-  label: string
-  value: number
-  className?: string
-}) {
-  return (
-    <div
-      className={cn(
-        'rounded-xl border px-2 py-1.5 text-center min-w-[4.5rem] flex-1',
-        className
-      )}
-    >
-      <div className="text-lg font-bold tabular-nums leading-none">{value}</div>
-      <div className="text-[10px] text-muted-foreground leading-tight mt-0.5">{label}</div>
-    </div>
-  )
-}
-
 type PendingNormLite = { employeeId: string; date: string }
 
 type LeaveBalanceEntry = {
@@ -178,13 +157,35 @@ type LeaveBalancesResponse = {
   balances: LeaveBalanceEntry[]
 }
 
+type SearchEmployee = {
+  id: string
+  userId: string
+  employeeCode: string | null
+  name: string
+  email: string
+  role: string
+  departmentName: string | null
+}
+
 type MDTeamAttendanceTabProps = {
   highlightNormalizations?: PendingNormLite[]
+}
+
+function useDebouncedValue<T>(value: T, delay: number): T {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(t)
+  }, [value, delay])
+  return debounced
 }
 
 export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAttendanceTabProps) {
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(new Date()))
   const [drawerMember, setDrawerMember] = useState<MergedMember | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearch = useDebouncedValue(searchQuery, 300)
+  const [selectedSearchEmployee, setSelectedSearchEmployee] = useState<SearchEmployee | null>(null)
 
   const today = new Date()
   const isCurrentMonth =
@@ -193,6 +194,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
   const fromDate = format(startOfMonth(viewMonth), 'yyyy-MM-dd')
   const toDate = format(isCurrentMonth ? today : endOfMonth(viewMonth), 'yyyy-MM-dd')
 
+  // Team data (default view)
   const { data: teamData, isLoading: teamLoading } = useQuery<MyTeamApiResponse>({
     queryKey: ['hierarchy', 'my-team'],
     queryFn: () => apiGet<MyTeamApiResponse>('/api/hierarchy/my-team'),
@@ -213,18 +215,64 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
     enabled: (teamData?.subordinates.length ?? 0) > 0,
   })
 
+  // Search employees
+  const { data: searchResults } = useQuery<SearchEmployee[]>({
+    queryKey: ['md', 'employees', 'search', debouncedSearch],
+    queryFn: () => apiGet<SearchEmployee[]>(`/api/md/employees?q=${encodeURIComponent(debouncedSearch)}`),
+    enabled: debouncedSearch.length >= 2,
+  })
+
+  // Fetch searched employee's attendance
+  const { data: searchedAttData } = useQuery<{
+    entry: TeamAttendanceApiEntry
+    holidayDays: { date: string; name: string }[]
+  }>({
+    queryKey: ['md', 'employee-attendance', selectedSearchEmployee?.id, fromDate, toDate],
+    queryFn: () =>
+      apiGet(`/api/md/employee-attendance?employeeId=${selectedSearchEmployee!.id}&fromDate=${fromDate}&toDate=${toDate}`),
+    enabled: !!selectedSearchEmployee,
+  })
+
+  // Fetch searched employee's leave balance
+  const { data: searchedBalanceData } = useQuery<{
+    balance: LeaveBalanceEntry
+  }>({
+    queryKey: ['md', 'employee-leave-balance', selectedSearchEmployee?.id],
+    queryFn: () =>
+      apiGet(`/api/md/employee-leave-balance?employeeId=${selectedSearchEmployee!.id}`),
+    enabled: !!selectedSearchEmployee,
+  })
+
   const balancesByEmployee = useMemo(() => {
     const map = new Map<string, LeaveBalanceEntry>()
     for (const b of balancesData?.balances ?? []) map.set(b.employeeId, b)
+    if (searchedBalanceData?.balance) {
+      map.set(searchedBalanceData.balance.employeeId, searchedBalanceData.balance)
+    }
     return map
-  }, [balancesData])
+  }, [balancesData, searchedBalanceData])
 
-  const holidayDays = attData?.holidayDays ?? []
+  const holidayDays = selectedSearchEmployee
+    ? (searchedAttData?.holidayDays ?? [])
+    : (attData?.holidayDays ?? [])
 
   const members = useMemo(() => {
+    if (selectedSearchEmployee && searchedAttData) {
+      const entry = searchedAttData.entry
+      return [{
+        employeeId: selectedSearchEmployee.id,
+        name: entry.name,
+        email: entry.email,
+        role: entry.role,
+        departmentName: selectedSearchEmployee.departmentName,
+        attendance: entry.attendance,
+        leaveDays: entry.leaveDays,
+        leaveByType: entry.leaveByType,
+      }]
+    }
     const subs = teamData?.subordinates ?? []
     return mergeTeamWithAttendance(subs, attData?.entries ?? [])
-  }, [teamData, attData])
+  }, [teamData, attData, selectedSearchEmployee, searchedAttData])
 
   const drawerHighlightKeys = useMemo(() => {
     if (!drawerMember) return []
@@ -240,22 +288,21 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
 
   const loading = teamLoading || attLoading
 
-  if (teamLoading) {
-    return (
-      <Card className="border-teal-200/60 dark:border-teal-900/40">
-        <CardContent className="flex items-center justify-center p-10">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-teal-600 border-t-transparent" />
-        </CardContent>
-      </Card>
-    )
+  const handleSelectSearchResult = (emp: SearchEmployee) => {
+    setSelectedSearchEmployee(emp)
+    setSearchQuery('')
   }
 
-  if (!teamData?.subordinates.length) {
+  const handleClearSearch = () => {
+    setSelectedSearchEmployee(null)
+    setSearchQuery('')
+  }
+
+  if (teamLoading) {
     return (
-      <Card className="border-dashed border-teal-200/60 dark:border-teal-900/40">
-        <CardContent className="p-8 text-center text-sm text-muted-foreground">
-          <Users className="mx-auto mb-2 h-10 w-10 opacity-60" />
-          No direct reports yet.
+      <Card>
+        <CardContent className="flex items-center justify-center p-10">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         </CardContent>
       </Card>
     )
@@ -263,25 +310,94 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-teal-200/70 bg-teal-50/40 px-3 py-2 dark:border-teal-900/50 dark:bg-teal-950/25">
+      {/* Search bar */}
+      <div className="relative">
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                if (e.target.value === '') setSelectedSearchEmployee(null)
+              }}
+              placeholder="Search any employee in the org..."
+              className="pl-9"
+            />
+          </div>
+          {selectedSearchEmployee && (
+            <Button variant="outline" size="sm" onClick={handleClearSearch} className="shrink-0 gap-1.5">
+              <X className="h-3.5 w-3.5" />
+              Back to team
+            </Button>
+          )}
+        </div>
+        {/* Search dropdown */}
+        {searchQuery.length >= 2 && !selectedSearchEmployee && searchResults && searchResults.length > 0 && (
+          <div className="absolute z-20 mt-1 w-full rounded-lg border bg-popover shadow-lg max-h-60 overflow-y-auto">
+            {searchResults.map((emp) => (
+              <button
+                key={emp.id}
+                type="button"
+                className="w-full text-left px-4 py-2.5 hover:bg-muted/50 flex items-center gap-3 border-b last:border-0"
+                onClick={() => handleSelectSearchResult(emp)}
+              >
+                <Avatar className="h-8 w-8 shrink-0">
+                  <AvatarFallback className="text-xs font-semibold">
+                    {emp.name
+                      .split(/\s+/)
+                      .map((p) => p[0])
+                      .join('')
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium truncate">{emp.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{emp.email}</p>
+                </div>
+                {emp.departmentName && (
+                  <span className="text-xs text-muted-foreground shrink-0">{emp.departmentName}</span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Selected search employee indicator */}
+      {selectedSearchEmployee && (
+        <div className="flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2">
+          <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+          <span className="text-sm">
+            Viewing: <strong>{selectedSearchEmployee.name}</strong>
+            {selectedSearchEmployee.departmentName && (
+              <span className="text-muted-foreground"> · {selectedSearchEmployee.departmentName}</span>
+            )}
+          </span>
+        </div>
+      )}
+
+      {/* Month navigation */}
+      <div className="flex items-center justify-between gap-2 rounded-lg border px-3 py-2">
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="icon"
-          className="h-9 w-9 shrink-0 rounded-full"
+          className="h-8 w-8 shrink-0"
           aria-label="Previous month"
           onClick={() => setViewMonth((d) => startOfMonth(new Date(d.getFullYear(), d.getMonth() - 1, 1)))}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <p className="min-w-0 flex-1 text-center text-sm font-semibold text-teal-950 dark:text-teal-100">
+        <p className="text-sm font-semibold text-center">
           {format(viewMonth, 'MMMM yyyy')}
         </p>
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="icon"
-          className="h-9 w-9 shrink-0 rounded-full"
+          className="h-8 w-8 shrink-0"
           aria-label="Next month"
           onClick={() => setViewMonth((d) => startOfMonth(new Date(d.getFullYear(), d.getMonth() + 1, 1)))}
         >
@@ -289,64 +405,53 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
         </Button>
       </div>
 
-      {loading && attData === undefined && (
-        <p className="text-center text-sm text-muted-foreground py-4">Loading attendance…</p>
+      {loading && attData === undefined && !selectedSearchEmployee && (
+        <p className="text-center text-sm text-muted-foreground py-4">Loading attendance...</p>
       )}
 
+      {!selectedSearchEmployee && !teamData?.subordinates.length && (
+        <Card className="border-dashed">
+          <CardContent className="p-8 text-center text-sm text-muted-foreground">
+            <Users className="mx-auto mb-2 h-10 w-10 opacity-60" />
+            No direct reports yet.
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Members list */}
       <ul className="space-y-2">
-        {members.map((m) => {
-          const s = summaryCounts(m, fromDate, toDate, holidayDays)
-          return (
-            <li key={m.employeeId}>
-              <button
-                type="button"
-                className="w-full text-left rounded-2xl border-2 border-border bg-card p-3 shadow-sm transition-colors hover:bg-muted/40 active:bg-muted/60 touch-manipulation"
-                onClick={() => setDrawerMember(m)}
-              >
-                <div className="flex items-start gap-3">
-                  <Avatar className="h-11 w-11 shrink-0 border border-teal-200 dark:border-teal-800">
-                    <AvatarFallback className="bg-teal-100 text-teal-900 text-sm dark:bg-teal-950 dark:text-teal-100">
-                      {m.name
-                        .split(/\s+/)
-                        .map((p) => p[0])
-                        .join('')
-                        .slice(0, 2)
-                        .toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-semibold leading-tight truncate">{m.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{m.email}</p>
-                    {m.departmentName && (
-                      <p className="text-[11px] text-muted-foreground truncate mt-0.5">{m.departmentName}</p>
-                    )}
-                    {m.leaveByType.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {m.leaveByType.map((lt) => (
-                          <Badge
-                            key={lt.code}
-                            variant="secondary"
-                            className="text-[10px] font-normal px-1.5 py-0"
-                          >
-                            {lt.code} {lt.days}d
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                    <div className="flex flex-wrap gap-1.5 mt-2">
-                      <StatMini label="G1" value={s.grace1} className="border-amber-200/80 bg-amber-50/80 dark:bg-amber-950/30" />
-                      <StatMini label="G2" value={s.grace2} className="border-lime-200/80 bg-lime-50/80 dark:bg-lime-950/20" />
-                      <StatMini label="Late" value={s.late} className="border-yellow-200/80 bg-yellow-50/80 dark:bg-yellow-950/25" />
-                      <StatMini label="Leaves" value={s.leaves} className="border-teal-200/80 bg-teal-50/80 dark:bg-teal-950/30" />
-                    </div>
-                  </div>
+        {members.map((m) => (
+          <li key={m.employeeId}>
+            <button
+              type="button"
+              className="w-full text-left rounded-lg border bg-card p-3 transition-colors hover:bg-muted/40 active:bg-muted/60"
+              onClick={() => setDrawerMember(m)}
+            >
+              <div className="flex items-start gap-3">
+                <Avatar className="h-10 w-10 shrink-0">
+                  <AvatarFallback className="text-sm font-semibold">
+                    {m.name
+                      .split(/\s+/)
+                      .map((p) => p[0])
+                      .join('')
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold leading-tight truncate">{m.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{m.email}</p>
+                  {m.departmentName && (
+                    <p className="text-[11px] text-muted-foreground truncate mt-0.5">{m.departmentName}</p>
+                  )}
                 </div>
-              </button>
-            </li>
-          )
-        })}
+              </div>
+            </button>
+          </li>
+        ))}
       </ul>
 
+      {/* Detail drawer */}
       <Drawer open={!!drawerMember} onOpenChange={(o) => !o && setDrawerMember(null)} direction="bottom" repositionInputs={false}>
         <DrawerContent
           className={cn(
@@ -358,8 +463,8 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
             <>
               <DrawerHeader className="shrink-0 border-b px-4 py-3 text-left space-y-1">
                 <div className="flex items-center gap-3 pr-8">
-                  <Avatar className="h-12 w-12 border border-teal-200 dark:border-teal-800">
-                    <AvatarFallback className="bg-teal-100 text-teal-900 dark:bg-teal-950 dark:text-teal-100">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback>
                       {drawerMember.name
                         .split(/\s+/)
                         .map((p) => p[0])
@@ -377,7 +482,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {format(viewMonth, 'MMMM yyyy')} · tap a day for details
+                  {format(viewMonth, 'MMMM yyyy')}
                 </p>
               </DrawerHeader>
 
@@ -388,48 +493,48 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                       Period summary
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      <div className="rounded-xl border border-emerald-200/80 bg-emerald-50/90 p-3 dark:border-emerald-900/50 dark:bg-emerald-950/35">
-                        <p className="text-2xl font-bold tabular-nums text-emerald-800 dark:text-emerald-200">
+                      <div className="rounded-lg border p-3">
+                        <p className="text-2xl font-bold tabular-nums text-emerald-700 dark:text-emerald-300">
                           {drawerSummary.onTime}
                         </p>
                         <p className="text-xs text-muted-foreground">On time</p>
                       </div>
-                      <div className="rounded-xl border border-green-200/80 bg-green-50/90 p-3 dark:border-green-900/50 dark:bg-green-950/35">
-                        <p className="text-2xl font-bold tabular-nums text-green-800 dark:text-green-200">
+                      <div className="rounded-lg border p-3">
+                        <p className="text-2xl font-bold tabular-nums text-green-700 dark:text-green-300">
                           {drawerSummary.grace1}
                         </p>
                         <p className="text-xs text-muted-foreground">Grace 1</p>
                       </div>
-                      <div className="rounded-xl border border-lime-200/80 bg-lime-50/80 p-3 dark:border-lime-900/40 dark:bg-lime-950/25">
-                        <p className="text-2xl font-bold tabular-nums text-lime-900 dark:text-lime-100">
+                      <div className="rounded-lg border p-3">
+                        <p className="text-2xl font-bold tabular-nums">
                           {drawerSummary.grace2}
                         </p>
                         <p className="text-xs text-muted-foreground">Grace 2</p>
                       </div>
-                      <div className="rounded-xl border border-yellow-200/80 bg-yellow-50/90 p-3 dark:border-yellow-900/50 dark:bg-yellow-950/30">
-                        <p className="text-2xl font-bold tabular-nums text-yellow-900 dark:text-yellow-100">
+                      <div className="rounded-lg border p-3">
+                        <p className="text-2xl font-bold tabular-nums text-amber-700 dark:text-amber-300">
                           {drawerSummary.late}
                         </p>
                         <p className="text-xs text-muted-foreground">Late / penalty</p>
                       </div>
-                      <div className="rounded-xl border border-pink-200/80 bg-pink-50/90 p-3 dark:border-pink-900/50 dark:bg-pink-950/30">
-                        <p className="text-2xl font-bold tabular-nums text-pink-900 dark:text-pink-100">
+                      <div className="rounded-lg border p-3">
+                        <p className="text-2xl font-bold tabular-nums text-pink-700 dark:text-pink-300">
                           {drawerSummary.halfDay}
                         </p>
                         <p className="text-xs text-muted-foreground">Half day</p>
                       </div>
-                      <div className="rounded-xl border border-teal-200/80 bg-teal-50/90 p-3 dark:border-teal-900/50 dark:bg-teal-950/35">
-                        <p className="text-2xl font-bold tabular-nums text-teal-800 dark:text-teal-200">
+                      <div className="rounded-lg border p-3">
+                        <p className="text-2xl font-bold tabular-nums text-blue-700 dark:text-blue-300">
                           {drawerSummary.leaves}
                         </p>
                         <p className="text-xs text-muted-foreground">Leaves</p>
                       </div>
-                      <div className="rounded-xl border border-blue-200/80 bg-blue-50/90 p-3 dark:border-blue-900/50 dark:bg-blue-950/35 sm:col-span-2">
-                        <p className="text-2xl font-bold tabular-nums text-blue-800 dark:text-blue-200">
+                      <div className="rounded-lg border p-3 sm:col-span-2">
+                        <p className="text-2xl font-bold tabular-nums">
                           {(drawerSummary.counts['normalized'] ?? 0) +
                             (drawerSummary.counts['pending-normalization'] ?? 0)}
                         </p>
-                        <p className="text-xs text-muted-foreground">Normalized / pending norm.</p>
+                        <p className="text-xs text-muted-foreground">Normalized / pending</p>
                       </div>
                     </div>
                   </div>
@@ -441,7 +546,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {drawerMember.leaveByType.map((lt) => (
-                          <Badge key={lt.code} className="text-sm px-3 py-1 bg-teal-600 hover:bg-teal-600">
+                          <Badge key={lt.code} variant="secondary" className="text-sm px-3 py-1">
                             {lt.code}: {lt.days} day{lt.days !== 1 ? 's' : ''}
                           </Badge>
                         ))}
@@ -458,7 +563,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                         {balancesByEmployee.get(drawerMember.employeeId)!.balances.map((b) => (
                           <div
                             key={b.leaveTypeId}
-                            className="rounded-xl border border-border/80 bg-muted/30 p-2.5 text-center"
+                            className="rounded-lg border p-2.5 text-center"
                           >
                             <p className="text-[10px] text-muted-foreground font-medium mb-1 truncate">
                               {b.leaveTypeName}
@@ -484,7 +589,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
                       Calendar
                     </p>
-                    <div className="rounded-xl border bg-card p-2 -mx-1">
+                    <div className="rounded-lg border bg-card p-2 -mx-1">
                       <AttendanceHeatmap
                         attendance={toHeatmapAttendance(drawerMember.attendance)}
                         fromDate={fromDate}
@@ -500,7 +605,7 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
               </ScrollArea>
 
               <div className="shrink-0 border-t bg-background/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm">
-                <Button variant="outline" className="w-full h-11 rounded-xl" onClick={() => setDrawerMember(null)}>
+                <Button variant="outline" className="w-full h-11 rounded-lg" onClick={() => setDrawerMember(null)}>
                   Close
                 </Button>
               </div>

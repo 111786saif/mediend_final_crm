@@ -290,6 +290,7 @@ enum CaseStage {
   CASH_IPD_SUBMITTED
   CASH_APPROVED
   CASH_ON_HOLD
+  CASH_IPD_DONE
   CASH_DISCHARGED
   // Legacy (deprecated - migrate to new stages via scripts/migrate-case-stages-v2.ts)
   KYP_PENDING
@@ -2376,6 +2377,10 @@ model DischargeSheet {
   mediendSharePct     Float? // % (DECIMAL(5,2))
   mediendShareAmount  Float  @default(0) // Gross share
   mediendNetProfit    Float  @default(0) // Final profit
+
+  // Cash extras
+  packageText String? // Package description (cash flow)
+  othersText  String? // Other details (cash flow)
 
   // Meta
   remarks String? @db.Text // Free text

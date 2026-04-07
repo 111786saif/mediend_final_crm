@@ -42,6 +42,14 @@ interface FilePreview {
 
 export interface PreAuthRaiseFormProps {
   leadId: string
+  leadData?: {
+    patientName?: string | null
+    age?: number | null
+    sex?: string | null
+    treatment?: string | null
+    tpa?: string | null
+    surgeonName?: string | null
+  }
   initialData?: {
     requestedHospitalName?: string
     requestedRoomType?: string
@@ -87,6 +95,7 @@ export interface PreAuthRaiseFormProps {
 
 export function PreAuthRaiseForm({
   leadId,
+  leadData,
   initialData,
   kypData,
   preAuthMeta,
@@ -833,20 +842,43 @@ export function PreAuthRaiseForm({
       description: 'Review all information before submitting',
       component: (
         <div className="space-y-5">
-          {/* Hospital summary */}
+          {/* Patient summary */}
+          <div className="rounded-lg border p-4 space-y-3">
+            <p className="text-sm font-semibold">Patient Details</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+              <div>
+                <span className="text-muted-foreground">Patient Name</span>
+                <p className="font-medium">{leadData?.patientName || '—'}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Age</span>
+                <p className="font-medium">{leadData?.age != null ? leadData.age : '—'}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Sex</span>
+                <p className="font-medium">{leadData?.sex || '—'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Hospital & Timeline summary */}
           <div className="rounded-lg border p-4 space-y-3">
             <p className="text-sm font-semibold">Hospital & Timeline</p>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <span className="text-muted-foreground">Hospital</span>
-                <p className="font-medium">
-                  {hospitalNameForSubmit}
-                </p>
+                <p className="font-medium">{hospitalNameForSubmit}</p>
               </div>
               <div>
                 <span className="text-muted-foreground">Room Type</span>
                 <p className="font-medium">{formData.requestedRoomType || '—'}</p>
               </div>
+              {preAuthMeta?.roomRent && (
+                <div>
+                  <span className="text-muted-foreground">Room Rent</span>
+                  <p className="font-medium">₹{preAuthMeta.roomRent}</p>
+                </div>
+              )}
               <div>
                 <span className="text-muted-foreground">Admission Date</span>
                 <p className="font-medium">{formData.expectedAdmissionDate || '—'}</p>
@@ -854,6 +886,21 @@ export function PreAuthRaiseForm({
               <div>
                 <span className="text-muted-foreground">Surgery Date</span>
                 <p className="font-medium">{formData.expectedSurgeryDate || '—'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Treatment & Surgeon */}
+          <div className="rounded-lg border p-4 space-y-3">
+            <p className="text-sm font-semibold">Treatment & Surgeon</p>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <span className="text-muted-foreground">Treatment</span>
+                <p className="font-medium">{leadData?.treatment || kypData?.disease || '—'}</p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Surgeon</span>
+                <p className="font-medium">{leadData?.surgeonName || kypData?.surgeonName || '—'}</p>
               </div>
             </div>
           </div>
@@ -883,7 +930,7 @@ export function PreAuthRaiseForm({
             </div>
           </div>
 
-          {/* Disease + auto-fills */}
+          {/* Medical & Insurance Details */}
           <div className="rounded-lg border p-4 space-y-3">
             <p className="text-sm font-semibold">Medical & Insurance Details</p>
             <div className="grid grid-cols-2 gap-3 text-sm">
@@ -891,6 +938,12 @@ export function PreAuthRaiseForm({
                 <span className="text-muted-foreground">Disease</span>
                 <p className="font-medium">{formData.diseaseDescription.slice(0, 60)}{formData.diseaseDescription.length > 60 ? '…' : ''}</p>
               </div>
+              {preAuthMeta?.tpa && (
+                <div>
+                  <span className="text-muted-foreground">TPA</span>
+                  <p className="font-medium">{preAuthMeta.tpa}</p>
+                </div>
+              )}
               {preAuthMeta?.insurance && (
                 <div>
                   <span className="text-muted-foreground">Insurance Name</span>

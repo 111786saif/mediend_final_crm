@@ -49,8 +49,13 @@ export async function POST(
       return errorResponse('Forbidden', 403)
     }
 
-    if (lead.caseStage !== CaseStage.INITIATED) {
-      return errorResponse(`Cannot mark IPD status. Current stage: ${lead.caseStage}. Patient must be initiated first.`, 400)
+    const isCashFlow = lead.flowType === 'CASH'
+    const allowedStages: CaseStage[] = isCashFlow
+      ? [CaseStage.CASH_APPROVED, CaseStage.CASH_IPD_SUBMITTED]
+      : [CaseStage.INITIATED]
+
+    if (!allowedStages.includes(lead.caseStage)) {
+      return errorResponse(`Cannot mark IPD status. Current stage: ${lead.caseStage}.`, 400)
     }
 
     if (!lead.admissionRecord) {
@@ -100,13 +105,23 @@ export async function POST(
       data: updateData,
     })
 
-    // Only update case stage if status is DISCHARGED
+    // Update case stage based on status and flow type
     const leadUpdateData: Record<string, any> = {}
     let toStage: CaseStage = lead.caseStage
 
-    if (data.status === 'DISCHARGED') {
-      toStage = CaseStage.DISCHARGED
-      leadUpdateData.caseStage = CaseStage.DISCHARGED
+    if (isCashFlow) {
+      if (data.status === 'IPD_DONE' || data.status === 'ADMITTED_DONE') {
+        toStage = CaseStage.CASH_IPD_DONE
+        leadUpdateData.caseStage = CaseStage.CASH_IPD_DONE
+      } else if (data.status === 'DISCHARGED') {
+        toStage = CaseStage.CASH_DISCHARGED
+        leadUpdateData.caseStage = CaseStage.CASH_DISCHARGED
+      }
+    } else {
+      if (data.status === 'DISCHARGED') {
+        toStage = CaseStage.DISCHARGED
+        leadUpdateData.caseStage = CaseStage.DISCHARGED
+      }
     }
 
     if (Object.keys(leadUpdateData).length > 0) {

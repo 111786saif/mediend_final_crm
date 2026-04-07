@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState, useRef, useEffect } from "react"
+import { useMemo, useState } from "react"
 import { startOfDay, isBefore, isSameDay, format } from "date-fns"
 import { useTasks, useWarnings } from "@/hooks/use-tasks"
 import { useAuth } from "@/hooks/use-auth"
@@ -8,7 +8,6 @@ import { TaskRow } from "./task-row"
 import { TaskDetailModal } from "@/components/calendar/task-detail-modal"
 import { MarkCompleteDrawer } from "./mark-complete-drawer"
 import type { Task } from "@/hooks/use-tasks"
-import { getTaskCardClass } from "./task-card-class"
 
 function getTaskDueDate(task: Task): Date | null {
   if (!task.dueDate) return null
@@ -28,34 +27,16 @@ export function TodayTab() {
   }, [allWarnings])
   const [detailTaskId, setDetailTaskId] = useState<string | null>(null)
   const [taskToComplete, setTaskToComplete] = useState<Task | null>(null)
-  const [exitingIds, setExitingIds] = useState<Set<string>>(() => new Set())
-  const prevStatusRef = useRef<Map<string, string>>(new Map())
 
   const canMarkComplete = (task: Task) =>
     !!user && (user.role === "MD" || user.role === "ADMIN" || task.createdById === user.id)
-
-  useEffect(() => {
-    const next = new Map<string, string>()
-    const toAdd: string[] = []
-    for (const t of tasks) {
-      next.set(t.id, t.status)
-      if (t.status === "COMPLETED" && prevStatusRef.current.get(t.id) !== "COMPLETED") {
-        toAdd.push(t.id)
-      }
-    }
-    prevStatusRef.current = next
-    if (toAdd.length > 0) {
-      setExitingIds((prev) => new Set([...prev, ...toAdd]))
-    }
-  }, [tasks])
 
   const sections = useMemo(() => {
     const now = new Date()
     const startToday = startOfDay(now)
 
     const activeTasks = tasks.filter(
-      (t) =>
-        (t.status !== "COMPLETED" && t.status !== "CANCELLED") || exitingIds.has(t.id)
+      (t) => t.status !== "COMPLETED" && t.status !== "CANCELLED"
     )
 
     const byDate = new Map<string, Task[]>()
@@ -94,7 +75,7 @@ export function TodayTab() {
     }
 
     return { overdue, byDate, sortedDates, noDate }
-  }, [tasks, exitingIds])
+  }, [tasks])
 
   if (isLoading) {
     return (
@@ -109,6 +90,22 @@ export function TodayTab() {
     sections.sortedDates.length > 0 ||
     sections.noDate.length > 0
 
+  const renderTask = (task: Task) => (
+    <TaskRow
+      key={task.id}
+      task={task}
+      onClick={() => setDetailTaskId(task.id)}
+      showAssignee
+      showProject
+      warningCount={taskWarningCountMap[task.id] ?? 0}
+      extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+      activityCount={task.unseenActivityCount ?? 0}
+      isAssignee={task.assigneeId === user?.id}
+      canMarkComplete={canMarkComplete(task)}
+      onMarkCompleteRequest={() => setTaskToComplete(task)}
+    />
+  )
+
   return (
     <div className="space-y-6">
       {sections.overdue.length > 0 && (
@@ -117,30 +114,7 @@ export function TodayTab() {
             Overdue ({sections.overdue.length})
           </h2>
           <div className="space-y-2">
-            {sections.overdue.map((task) => (
-              <div key={task.id} className={getTaskCardClass(task, { isOverdue: true })}>
-                <TaskRow
-                  task={task}
-                  onClick={() => setDetailTaskId(task.id)}
-                  showAssignee
-                  showProject
-                  warningCount={taskWarningCountMap[task.id] ?? 0}
-                  extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                  activityCount={task.unseenActivityCount ?? 0}
-                  isAssignee={task.assigneeId === user?.id}
-                  canMarkComplete={canMarkComplete(task)}
-                  onMarkCompleteRequest={() => setTaskToComplete(task)}
-                  exitAnimation={exitingIds.has(task.id)}
-                  onExitAnimationEnd={() =>
-                    setExitingIds((prev) => {
-                      const next = new Set(prev)
-                      next.delete(task.id)
-                      return next
-                    })
-                  }
-                />
-              </div>
-            ))}
+            {sections.overdue.map(renderTask)}
           </div>
         </section>
       )}
@@ -158,30 +132,7 @@ export function TodayTab() {
               {heading} ({dayTasks.length})
             </h2>
             <div className="space-y-2">
-              {dayTasks.map((task) => (
-                <div key={task.id} className={getTaskCardClass(task, { isOverdue: false })}>
-                  <TaskRow
-                    task={task}
-                    onClick={() => setDetailTaskId(task.id)}
-                    showAssignee
-                    showProject
-                    warningCount={taskWarningCountMap[task.id] ?? 0}
-                  extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                  activityCount={task.unseenActivityCount ?? 0}
-                    isAssignee={task.assigneeId === user?.id}
-                    canMarkComplete={canMarkComplete(task)}
-                    onMarkCompleteRequest={() => setTaskToComplete(task)}
-                    exitAnimation={exitingIds.has(task.id)}
-                    onExitAnimationEnd={() =>
-                      setExitingIds((prev) => {
-                        const next = new Set(prev)
-                        next.delete(task.id)
-                        return next
-                      })
-                    }
-                  />
-                </div>
-              ))}
+              {dayTasks.map(renderTask)}
             </div>
           </section>
         )
@@ -193,30 +144,7 @@ export function TodayTab() {
             No date ({sections.noDate.length})
           </h2>
           <div className="space-y-2">
-            {sections.noDate.map((task) => (
-              <div key={task.id} className={getTaskCardClass(task, { isOverdue: false })}>
-                <TaskRow
-                  task={task}
-                  onClick={() => setDetailTaskId(task.id)}
-                  showAssignee
-                  showProject
-                  warningCount={taskWarningCountMap[task.id] ?? 0}
-                  extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                  activityCount={task.unseenActivityCount ?? 0}
-                  isAssignee={task.assigneeId === user?.id}
-                  canMarkComplete={canMarkComplete(task)}
-                  onMarkCompleteRequest={() => setTaskToComplete(task)}
-                  exitAnimation={exitingIds.has(task.id)}
-                  onExitAnimationEnd={() =>
-                    setExitingIds((prev) => {
-                      const next = new Set(prev)
-                      next.delete(task.id)
-                      return next
-                    })
-                  }
-                />
-              </div>
-            ))}
+            {sections.noDate.map(renderTask)}
           </div>
         </section>
       )}

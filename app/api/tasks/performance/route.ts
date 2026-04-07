@@ -8,14 +8,16 @@ export async function GET(request: NextRequest) {
   const user = getSessionFromRequest(request)
   if (!user) return unauthorizedResponse()
 
-  const isMDOrAdmin = user.role === "MD" || user.role === "ADMIN"
+  const isAdmin = user.role === "ADMIN"
   let allowedEmployeeIds: string[] | null = null
-  if (!isMDOrAdmin) {
+  if (!isAdmin) {
     const employee = await getEmployeeByUserId(user.id)
     if (!employee) {
       allowedEmployeeIds = [user.id]
     } else {
-      const subordinates = await getSubordinates(employee.id, true)
+      // MD sees only direct reports (not recursive), others see recursive subordinates
+      const recursive = user.role !== "MD"
+      const subordinates = await getSubordinates(employee.id, recursive)
       allowedEmployeeIds = [user.id, ...subordinates.map((s) => s.userId)]
     }
   }

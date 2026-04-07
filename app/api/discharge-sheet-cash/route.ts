@@ -23,6 +23,10 @@ const dischargeCashSchema = z.object({
   implantsAmount: z.number().optional().default(0),
   instrumentsAmount: z.number().optional().default(0),
   totalFinalBill: z.number(),
+
+  // Cash extras
+  packageText: z.string().optional(),
+  othersText: z.string().optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -95,6 +99,8 @@ export async function POST(request: NextRequest) {
         instrumentsAmount: validatedData.instrumentsAmount,
         instrumentsCost: instrumentsCostNum,
         totalFinalBill: validatedData.totalFinalBill,
+        packageText: validatedData.packageText,
+        othersText: validatedData.othersText,
         
         createdById: user.id,
         status: 'DISCHARGED',

@@ -79,14 +79,15 @@ export function canInitiate(user: User, lead: Lead): boolean {
   return isBDOrTL && isPreAuthComplete
 }
 
-// BD / TL can mark IPD when initiated
+// BD / TL can mark IPD when initiated (insurance) or approved/submitted (cash)
 export function canMarkIPD(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  
+
   const isBDOrTL = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
   const isInitiated = lead.caseStage === CaseStage.INITIATED
-  
-  return isBDOrTL && isInitiated
+  const isCashReady = lead.caseStage === CaseStage.CASH_APPROVED || lead.caseStage === CaseStage.CASH_IPD_SUBMITTED
+
+  return isBDOrTL && (isInitiated || isCashReady)
 }
 
 // Insurance can generate/download PDF after pre-auth is raised

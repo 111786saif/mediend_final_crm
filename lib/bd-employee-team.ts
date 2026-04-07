@@ -14,6 +14,11 @@ export const prismaBdEmployeeTeamSelect = {
   profilePicture: true,
   employee: {
     select: {
+      manager: {
+        select: {
+          user: { select: { id: true, name: true } },
+        },
+      },
       team: {
         select: {
           id: true,
@@ -42,13 +47,14 @@ export type LegacyBdTeam = {
   salesHead: { id: string; name: string } | null
 } | null
 
-/** Strip employee and expose legacy `team` (department head ≈ former salesHead). */
-export function toLegacyBdShape(bd: BdPayload | null): Omit<BdPayload, 'employee'> & { team: LegacyBdTeam } | null {
+/** Strip employee and expose legacy `team` (department head ≈ former salesHead) + manager. */
+export function toLegacyBdShape(bd: BdPayload | null): Omit<BdPayload, 'employee'> & { team: LegacyBdTeam; manager: { id: string; name: string } | null } | null {
   if (!bd) return null
   const { employee, ...rest } = bd
   const t = employee?.team
+  const mgr = employee?.manager?.user ?? null
   if (!t) {
-    return { ...rest, team: null }
+    return { ...rest, team: null, manager: mgr }
   }
   return {
     ...rest,
@@ -57,5 +63,6 @@ export function toLegacyBdShape(bd: BdPayload | null): Omit<BdPayload, 'employee
       name: t.name,
       salesHead: t.department?.head ?? null,
     },
+    manager: mgr ?? t.teamLead?.user ?? null,
   }
 }

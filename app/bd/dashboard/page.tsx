@@ -124,6 +124,7 @@ export default function BDDashboardPage() {
       [CaseStage.CASH_IPD_SUBMITTED]: 'secondary',
       [CaseStage.CASH_APPROVED]: 'default',
       [CaseStage.CASH_ON_HOLD]: 'destructive',
+      [CaseStage.CASH_IPD_DONE]: 'default',
       [CaseStage.CASH_DISCHARGED]: 'outline',
     }
     return (

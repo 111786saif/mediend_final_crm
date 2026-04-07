@@ -49,6 +49,7 @@ const STAGE_LABELS: Record<CaseStage, string> = {
   [CaseStage.CASH_IPD_SUBMITTED]: 'Cash IPD Submitted',
   [CaseStage.CASH_APPROVED]: 'Cash Approved',
   [CaseStage.CASH_ON_HOLD]: 'Cash On Hold',
+  [CaseStage.CASH_IPD_DONE]: 'Cash IPD Done',
   [CaseStage.CASH_DISCHARGED]: 'Cash Discharged',
 }
 
@@ -227,6 +228,14 @@ function getStageColor(stage: CaseStage): { bg: string; border: string; text: st
       dot: 'bg-red-500 dark:bg-red-400',
       connector: 'bg-red-300 dark:bg-red-700',
       icon: <Clock className="w-3 h-3" />,
+    },
+    [CaseStage.CASH_IPD_DONE]: {
+      bg: 'bg-teal-50 dark:bg-teal-950/30',
+      border: 'border-teal-200 dark:border-teal-800',
+      text: 'text-teal-700 dark:text-teal-300',
+      dot: 'bg-teal-500 dark:bg-teal-400',
+      connector: 'bg-teal-300 dark:bg-teal-700',
+      icon: <CheckCircle2 className="w-3 h-3" />,
     },
     [CaseStage.CASH_DISCHARGED]: {
       bg: 'bg-orange-50 dark:bg-orange-950/30',

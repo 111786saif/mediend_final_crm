@@ -163,6 +163,8 @@ export type DischargeSheetMinAggregateOutputType = {
   mediendSharePct: number | null
   mediendShareAmount: number | null
   mediendNetProfit: number | null
+  packageText: string | null
+  othersText: string | null
   remarks: string | null
   createdById: string | null
   plRecordId: string | null
@@ -233,6 +235,8 @@ export type DischargeSheetMaxAggregateOutputType = {
   mediendSharePct: number | null
   mediendShareAmount: number | null
   mediendNetProfit: number | null
+  packageText: string | null
+  othersText: string | null
   remarks: string | null
   createdById: string | null
   plRecordId: string | null
@@ -303,6 +307,8 @@ export type DischargeSheetCountAggregateOutputType = {
   mediendSharePct: number
   mediendShareAmount: number
   mediendNetProfit: number
+  packageText: number
+  othersText: number
   remarks: number
   createdById: number
   plRecordId: number
@@ -449,6 +455,8 @@ export type DischargeSheetMinAggregateInputType = {
   mediendSharePct?: true
   mediendShareAmount?: true
   mediendNetProfit?: true
+  packageText?: true
+  othersText?: true
   remarks?: true
   createdById?: true
   plRecordId?: true
@@ -519,6 +527,8 @@ export type DischargeSheetMaxAggregateInputType = {
   mediendSharePct?: true
   mediendShareAmount?: true
   mediendNetProfit?: true
+  packageText?: true
+  othersText?: true
   remarks?: true
   createdById?: true
   plRecordId?: true
@@ -589,6 +599,8 @@ export type DischargeSheetCountAggregateInputType = {
   mediendSharePct?: true
   mediendShareAmount?: true
   mediendNetProfit?: true
+  packageText?: true
+  othersText?: true
   remarks?: true
   createdById?: true
   plRecordId?: true
@@ -746,6 +758,8 @@ export type DischargeSheetGroupByOutputType = {
   mediendSharePct: number | null
   mediendShareAmount: number
   mediendNetProfit: number
+  packageText: string | null
+  othersText: string | null
   remarks: string | null
   createdById: string
   plRecordId: string | null
@@ -839,6 +853,8 @@ export type DischargeSheetWhereInput = {
   mediendSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
   mediendShareAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
+  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   createdById?: Prisma.StringFilter<"DischargeSheet"> | string
   plRecordId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -913,6 +929,8 @@ export type DischargeSheetOrderByWithRelationInput = {
   mediendSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
+  packageText?: Prisma.SortOrderInput | Prisma.SortOrder
+  othersText?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   plRecordId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -991,6 +1009,8 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   mediendSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
   mediendShareAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
+  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   createdById?: Prisma.StringFilter<"DischargeSheet"> | string
   createdAt?: Prisma.DateTimeFilter<"DischargeSheet"> | Date | string
@@ -1064,6 +1084,8 @@ export type DischargeSheetOrderByWithAggregationInput = {
   mediendSharePct?: Prisma.SortOrderInput | Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
+  packageText?: Prisma.SortOrderInput | Prisma.SortOrder
+  othersText?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrder
   plRecordId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1142,6 +1164,8 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   mediendSharePct?: Prisma.FloatNullableWithAggregatesFilter<"DischargeSheet"> | number | null
   mediendShareAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   mediendNetProfit?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  packageText?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  othersText?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   createdById?: Prisma.StringWithAggregatesFilter<"DischargeSheet"> | string
   plRecordId?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
@@ -1210,6 +1234,8 @@ export type DischargeSheetCreateInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1282,6 +1308,8 @@ export type DischargeSheetUncheckedCreateInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdById: string
   plRecordId?: string | null
@@ -1350,6 +1378,8 @@ export type DischargeSheetUpdateInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1422,6 +1452,8 @@ export type DischargeSheetUncheckedUpdateInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1492,6 +1524,8 @@ export type DischargeSheetCreateManyInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdById: string
   plRecordId?: string | null
@@ -1560,6 +1594,8 @@ export type DischargeSheetUpdateManyMutationInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1628,6 +1664,8 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1713,6 +1751,8 @@ export type DischargeSheetCountOrderByAggregateInput = {
   mediendSharePct?: Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
+  packageText?: Prisma.SortOrder
+  othersText?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   plRecordId?: Prisma.SortOrder
@@ -1820,6 +1860,8 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   mediendSharePct?: Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
+  packageText?: Prisma.SortOrder
+  othersText?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   plRecordId?: Prisma.SortOrder
@@ -1890,6 +1932,8 @@ export type DischargeSheetMinOrderByAggregateInput = {
   mediendSharePct?: Prisma.SortOrder
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
+  packageText?: Prisma.SortOrder
+  othersText?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
   plRecordId?: Prisma.SortOrder
@@ -2133,6 +2177,8 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2204,6 +2250,8 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   plRecordId?: string | null
   createdAt?: Date | string
@@ -2302,6 +2350,8 @@ export type DischargeSheetScalarWhereInput = {
   mediendSharePct?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
   mediendShareAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
+  packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   createdById?: Prisma.StringFilter<"DischargeSheet"> | string
   plRecordId?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -2370,6 +2420,8 @@ export type DischargeSheetCreateWithoutLeadInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2440,6 +2492,8 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdById: string
   plRecordId?: string | null
@@ -2524,6 +2578,8 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2594,6 +2650,8 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2662,6 +2720,8 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2733,6 +2793,8 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdById: string
   createdAt?: Date | string
@@ -2816,6 +2878,8 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2887,6 +2951,8 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2954,6 +3020,8 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3024,6 +3092,8 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   createdById: string
   plRecordId?: string | null
@@ -3108,6 +3178,8 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3178,6 +3250,8 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.StringFieldUpdateOperationsInput | string
   plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3248,6 +3322,8 @@ export type DischargeSheetCreateManyCreatedByInput = {
   mediendSharePct?: number | null
   mediendShareAmount?: number
   mediendNetProfit?: number
+  packageText?: string | null
+  othersText?: string | null
   remarks?: string | null
   plRecordId?: string | null
   createdAt?: Date | string
@@ -3315,6 +3391,8 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3386,6 +3464,8 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3455,6 +3535,8 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   mediendSharePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   plRecordId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3526,6 +3608,8 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   mediendSharePct?: boolean
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
+  packageText?: boolean
+  othersText?: boolean
   remarks?: boolean
   createdById?: boolean
   plRecordId?: boolean
@@ -3600,6 +3684,8 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   mediendSharePct?: boolean
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
+  packageText?: boolean
+  othersText?: boolean
   remarks?: boolean
   createdById?: boolean
   plRecordId?: boolean
@@ -3674,6 +3760,8 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   mediendSharePct?: boolean
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
+  packageText?: boolean
+  othersText?: boolean
   remarks?: boolean
   createdById?: boolean
   plRecordId?: boolean
@@ -3748,6 +3836,8 @@ export type DischargeSheetSelectScalar = {
   mediendSharePct?: boolean
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
+  packageText?: boolean
+  othersText?: boolean
   remarks?: boolean
   createdById?: boolean
   plRecordId?: boolean
@@ -3755,7 +3845,7 @@ export type DischargeSheetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "remarks" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
+export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "packageText" | "othersText" | "remarks" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
 export type DischargeSheetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
@@ -3846,6 +3936,8 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     mediendSharePct: number | null
     mediendShareAmount: number
     mediendNetProfit: number
+    packageText: string | null
+    othersText: string | null
     remarks: string | null
     createdById: string
     plRecordId: string | null
@@ -4340,6 +4432,8 @@ export interface DischargeSheetFieldRefs {
   readonly mediendSharePct: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly mediendShareAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly mediendNetProfit: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly packageText: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly othersText: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly remarks: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly createdById: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly plRecordId: Prisma.FieldRef<"DischargeSheet", 'String'>

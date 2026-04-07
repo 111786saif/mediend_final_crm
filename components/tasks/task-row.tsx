@@ -1,7 +1,8 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PriorityIcon } from "./priority-icon"
 import { format, differenceInDays } from "date-fns"
 import { type Task } from "@/hooks/use-tasks"
@@ -9,17 +10,8 @@ import { useUpdateTask } from "@/hooks/use-tasks"
 import { useAuth } from "@/hooks/use-auth"
 import { cn } from "@/lib/utils"
 import { isSelfAssigned } from "@/lib/task-utils"
-import { Star, AlertTriangle, CalendarClock, Clock, UserCircle } from "lucide-react"
-
-const DING_SOUND = "/ding-sound-effect_1.mp3"
-
-function playDoneSound() {
-  try {
-    const audio = new Audio(DING_SOUND)
-    audio.volume = 0.5
-    audio.play().catch(() => {})
-  } catch {}
-}
+import { getAvatarColor } from "@/lib/avatar-colors"
+import { AlertTriangle, CalendarClock, Clock } from "lucide-react"
 
 const PRIORITY_COLORS: Record<string, string> = {
   GENERAL: "text-muted-foreground",
@@ -29,32 +21,13 @@ const PRIORITY_COLORS: Record<string, string> = {
   URGENT: "text-red-600",
 }
 
-const RATING_COLORS: Record<string, string> = {
-  "1": "text-red-500",
-  "2": "text-orange-500",
-  "3": "text-amber-500",
-  "4": "text-emerald-500",
-  "5": "text-emerald-600",
-}
-
-function RatingStars({ grade }: { grade: string }) {
-  const num = parseInt(grade)
-  if (isNaN(num) || num < 1 || num > 5) return null
-  return (
-    <div className="flex items-center gap-0.5 shrink-0">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <Star
-          key={s}
-          className={cn(
-            "h-3 w-3",
-            s <= num
-              ? cn("fill-current", RATING_COLORS[grade])
-              : "text-muted-foreground/20"
-          )}
-        />
-      ))}
-    </div>
-  )
+function getInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .map((p) => p[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase()
 }
 
 interface TaskRowProps {
@@ -66,15 +39,10 @@ interface TaskRowProps {
   canMarkComplete?: boolean
   onMarkCompleteRequest?: (task: Task) => void
   showCompletionRating?: boolean
-  /** Number of warnings attached to this task. When > 0, shows warning icon with count. */
   warningCount?: number
-  /** Number of date extensions for this task. When > 0, shows extension icon with count. */
   extensionCount?: number
-  /** Unseen activity count (comments, extension requests, approvals). When > 0, shows notification badge. */
   activityCount?: number
-  /** When false, strikethrough is not shown for done tasks (e.g. in Approval tab). */
   showStrikethrough?: boolean
-  /** When true, applies exit pop animation (task is being removed from list). */
   exitAnimation?: boolean
   onExitAnimationEnd?: () => void
   className?: string
@@ -92,9 +60,6 @@ export function TaskRow({
   warningCount = 0,
   extensionCount = 0,
   activityCount = 0,
-  showStrikethrough = true,
-  exitAnimation = false,
-  onExitAnimationEnd,
   className,
 }: TaskRowProps) {
   const { user } = useAuth()
@@ -102,18 +67,6 @@ export function TaskRow({
   const isCompleted = task.status === "COMPLETED"
   const isEmployeeDone = task.status === "EMPLOYEE_DONE"
   const isDone = isCompleted || isEmployeeDone
-  const wasDoneRef = useRef(isDone)
-  const [runStrikethrough, setRunStrikethrough] = useState(false)
-
-  useEffect(() => {
-    if (isDone && !wasDoneRef.current) {
-      playDoneSound()
-      setRunStrikethrough(true)
-      const t = setTimeout(() => setRunStrikethrough(false), 450)
-      return () => clearTimeout(t)
-    }
-    wasDoneRef.current = isDone
-  }, [isDone])
 
   const handleToggleComplete = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -160,6 +113,11 @@ export function TaskRow({
       ? differenceInDays(new Date(task.dueDate), new Date(task.createdAt))
       : null
 
+  // Determine who to show as avatar
+  const avatarUser = task.assignee ?? task.createdBy
+  const avatarName = avatarUser?.name ?? "?"
+  const ac = getAvatarColor(avatarName)
+
   return (
     <div
       role="button"
@@ -171,65 +129,73 @@ export function TaskRow({
           onClick?.()
         }
       }}
-      onAnimationEnd={exitAnimation ? onExitAnimationEnd : undefined}
       className={cn(
-        "cursor-pointer rounded-md px-2 py-2 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-        isCompleted && "opacity-70",
-        exitAnimation && "animate-[task-exit-pop_0.35s_ease-out_forwards]",
+        "flex items-center gap-3 w-full rounded-lg border px-4 py-3 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer",
+        isDone && "bg-emerald-50/60 border-emerald-200/60 dark:bg-emerald-950/20 dark:border-emerald-900/40",
+        isOverdue && !isDone && "border-red-200/60 dark:border-red-900/40",
+        !isDone && !isOverdue && "border-border bg-card",
         className
       )}
     >
-      {/* ── Row 1: checkbox + title + activity badge ── */}
-      <div className="flex items-start gap-2">
-        {showCheckbox && (
-          <Checkbox
-            checked={isCompleted}
-            onCheckedChange={() => {}}
-            onClick={handleToggleComplete}
-            aria-label={isCompleted ? "Mark incomplete" : isEmployeeDone ? "Review task" : "Mark done for review"}
-            className="shrink-0 mt-0.5"
-          />
+      {/* Checkbox */}
+      {showCheckbox && (
+        <Checkbox
+          checked={isCompleted}
+          onCheckedChange={() => {}}
+          onClick={handleToggleComplete}
+          aria-label={isCompleted ? "Mark incomplete" : isEmployeeDone ? "Review task" : "Mark done for review"}
+          className="shrink-0"
+        />
+      )}
+
+      {/* Avatar */}
+      <Avatar className="h-8 w-8 shrink-0">
+        {avatarUser && 'profilePicture' in avatarUser && (avatarUser as any).profilePicture && (
+          <AvatarImage src={(avatarUser as any).profilePicture} />
         )}
-        {showCompletionRating && isCompleted && task.grade && (
-          <RatingStars grade={task.grade} />
-        )}
-        <span className="relative min-w-0 flex-1">
+        <AvatarFallback className={cn(ac.bg, ac.text, "text-xs font-semibold")}>
+          {getInitials(avatarName)}
+        </AvatarFallback>
+      </Avatar>
+
+      {/* Main content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
           <span
             className={cn(
-              "block wrap-break-word text-base md:text-sm font-medium leading-snug",
-              isDone && "text-muted-foreground"
+              "text-sm font-medium leading-snug truncate",
+              isDone && "text-emerald-700 dark:text-emerald-400"
             )}
           >
             {task.title}
           </span>
-          {isDone && showStrikethrough && (
+          {activityCount > 0 && (
             <span
-              aria-hidden
-              className={cn(
-                "absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-current pointer-events-none origin-left opacity-60",
-                runStrikethrough && "animate-[strikethrough_0.4s_ease-out_forwards]"
-              )}
-              style={runStrikethrough ? undefined : { transform: "scaleX(1)" }}
-            />
+              className="shrink-0 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-medium text-primary-foreground"
+              title={`${activityCount} new activit${activityCount !== 1 ? "ies" : "y"}`}
+            >
+              {activityCount > 99 ? "99+" : activityCount}
+            </span>
           )}
-        </span>
-        {activityCount > 0 && (
-          <span
-            className="shrink-0 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-medium text-primary-foreground"
-            title={`${activityCount} new activit${activityCount !== 1 ? "ies" : "y"}`}
-          >
-            {activityCount > 99 ? "99+" : activityCount}
-          </span>
-        )}
-      </div>
+        </div>
 
-      {/* ── Row 2: meta left | badges+due right ── */}
-      <div className={cn(
-        "mt-1.5 flex items-center justify-between gap-2",
-        showCheckbox && "pl-6"
-      )}>
-        {/* Left: given date, days given, project, assignee */}
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 min-w-0">
+        {/* Meta row */}
+        <div className="flex items-center gap-x-2 gap-y-0.5 mt-0.5 flex-wrap">
+          {showAssignee && task.assignee && task.assigneeId !== task.createdById && (
+            <span className="text-xs text-blue-600 dark:text-blue-400 truncate max-w-[120px]">
+              → {task.assignee.name}
+            </span>
+          )}
+          {showAssignee && isSelfAssigned(task) && (
+            <span className="text-xs text-amber-600 dark:text-amber-400">
+              {user?.id === task.createdById ? "Self" : task.createdBy?.name ?? "—"}
+            </span>
+          )}
+          {showProject && task.project && (
+            <span className="text-xs text-purple-600 dark:text-purple-400 truncate max-w-[120px]">
+              {task.project.name}
+            </span>
+          )}
           {givenLabel && (
             <span className="flex items-center gap-0.5 text-xs text-muted-foreground">
               <Clock className="h-3 w-3 shrink-0" />
@@ -241,66 +207,45 @@ export function TaskRow({
               · {daysGiven}d
             </span>
           )}
-          {showProject && task.project && (
-            <span className="text-xs text-purple-600 dark:text-purple-400 truncate max-w-[120px]">
-              {task.project.name}
-            </span>
-          )}
-          {showAssignee && task.assignee && task.assigneeId !== task.createdById && (
-            <span className="text-xs text-blue-600 dark:text-blue-400 truncate max-w-[100px]">
-              → {task.assignee.name}
-            </span>
-          )}
-          {showAssignee && isSelfAssigned(task) && (
-            <span
-              className="flex items-center gap-0.5 text-xs text-amber-600 dark:text-amber-400 truncate max-w-[140px]"
-              title={user?.id === task.createdById ? "You assigned this task to yourself" : undefined}
-            >
-              <UserCircle className="h-3 w-3 shrink-0" />
-              {user?.id === task.createdById
-                ? "Self assigned"
-                : `Assigned by ${task.createdBy?.name ?? "—"}`}
-            </span>
-          )}
         </div>
+      </div>
 
-        {/* Right: badges + priority + due date */}
-        <div className="flex shrink-0 items-center gap-1.5">
-          {extensionCount > 0 && (
-            <span
-              className="flex items-center gap-0.5 text-blue-600 dark:text-blue-400"
-              title={`${extensionCount} extension${extensionCount !== 1 ? "s" : ""}`}
-            >
-              <CalendarClock className="h-3.5 w-3.5" />
-              <span className="text-xs font-medium">{extensionCount}</span>
-            </span>
-          )}
-          {warningCount > 0 && (
-            <span
-              className="flex items-center gap-0.5 text-amber-600 dark:text-amber-400"
-              title={`${warningCount} warning${warningCount !== 1 ? "s" : ""}`}
-            >
-              <AlertTriangle className="h-3.5 w-3.5" />
-              <span className="text-xs font-medium">{warningCount}</span>
-            </span>
-          )}
-          {task.priority && task.priority !== "GENERAL" && (
-            <PriorityIcon
-              priority={task.priority}
-              className={cn("h-3.5 w-3.5", PRIORITY_COLORS[task.priority] ?? "text-muted-foreground")}
-            />
-          )}
-          {dueLabel && (
-            <span
-              className={cn(
-                "text-xs font-medium",
-                isOverdue ? "text-red-600" : "text-muted-foreground"
-              )}
-            >
-              {dueLabel}
-            </span>
-          )}
-        </div>
+      {/* Right side badges */}
+      <div className="flex shrink-0 items-center gap-2">
+        {extensionCount > 0 && (
+          <span
+            className="flex items-center gap-0.5 text-blue-600 dark:text-blue-400"
+            title={`${extensionCount} extension${extensionCount !== 1 ? "s" : ""}`}
+          >
+            <CalendarClock className="h-3.5 w-3.5" />
+            <span className="text-xs font-medium">{extensionCount}</span>
+          </span>
+        )}
+        {warningCount > 0 && (
+          <span
+            className="flex items-center gap-0.5 text-amber-600 dark:text-amber-400"
+            title={`${warningCount} warning${warningCount !== 1 ? "s" : ""}`}
+          >
+            <AlertTriangle className="h-3.5 w-3.5" />
+            <span className="text-xs font-medium">{warningCount}</span>
+          </span>
+        )}
+        {task.priority && task.priority !== "GENERAL" && (
+          <PriorityIcon
+            priority={task.priority}
+            className={cn("h-3.5 w-3.5", PRIORITY_COLORS[task.priority] ?? "text-muted-foreground")}
+          />
+        )}
+        {dueLabel && (
+          <span
+            className={cn(
+              "text-xs font-medium whitespace-nowrap",
+              isOverdue ? "text-red-600" : "text-muted-foreground"
+            )}
+          >
+            {dueLabel}
+          </span>
+        )}
       </div>
     </div>
   )

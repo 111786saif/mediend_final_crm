@@ -1525,6 +1525,8 @@ export const DischargeSheetScalarFieldEnum = {
   mediendSharePct: 'mediendSharePct',
   mediendShareAmount: 'mediendShareAmount',
   mediendNetProfit: 'mediendNetProfit',
+  packageText: 'packageText',
+  othersText: 'othersText',
   remarks: 'remarks',
   createdById: 'createdById',
   plRecordId: 'plRecordId',

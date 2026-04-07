@@ -406,18 +406,10 @@ export function MDAttendancePage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl min-w-0 px-3 py-4 sm:px-6 sm:py-6">
-      <header className="mb-4 flex flex-col gap-3 rounded-xl border border-teal-200/80 bg-gradient-to-r from-teal-500/10 via-background to-violet-500/10 p-4 shadow-sm dark:border-teal-900/50 dark:from-teal-500/15 dark:to-violet-500/15 sm:mb-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h1 className="text-lg font-semibold leading-tight tracking-tight text-teal-950 dark:text-teal-100 sm:text-xl md:text-2xl">
-            Team attendance & leave
-          </h1>
-          <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-            Review attendance heatmaps, leave requests, and normalizations for your direct reports
-          </p>
-        </div>
-        <Badge className="w-fit shrink-0 border-violet-300/80 bg-violet-100 text-violet-900 hover:bg-violet-100 dark:border-violet-700 dark:bg-violet-950/80 dark:text-violet-100">
-          MD Only
-        </Badge>
+      <header className="mb-4 sm:mb-5">
+        <h1 className="text-lg font-semibold leading-tight tracking-tight sm:text-xl md:text-2xl">
+          Team Attendance & Leave
+        </h1>
       </header>
 
       <Tabs defaultValue="attendance" className="w-full min-w-0 gap-4">
@@ -448,9 +440,6 @@ export function MDAttendancePage() {
         </TabsList>
 
         <TabsContent value="attendance" className="mt-0 space-y-3 outline-none">
-          <p className="text-xs text-muted-foreground px-0.5">
-            Tap a team member to open their heatmap, CL/SL/EL usage for the month, and summary counts.
-          </p>
           <MDTeamAttendanceTab highlightNormalizations={normHighlights} />
         </TabsContent>
 
@@ -553,9 +542,6 @@ export function MDAttendancePage() {
         </TabsContent>
 
         <TabsContent value="normalizations" className="mt-0 space-y-3 outline-none">
-          <p className="text-xs text-muted-foreground px-0.5">
-            Final approval for your direct reports — not shown in HR queue.
-          </p>
           {normLoading ? (
             <Card className="border-violet-200/60 dark:border-violet-900/40">
               <CardContent className="flex items-center justify-center p-8 sm:p-12">
