@@ -69,8 +69,8 @@ CRON_BACKUP="/tmp/crontab_backup_$(date +%Y%m%d_%H%M%S)"
 crontab -l > "$CRON_BACKUP" 2>/dev/null || true
 echo "✓ Backed up existing crontab to $CRON_BACKUP"
 
-# Remove old Mediend CRM cron entries if they exist
-crontab -l 2>/dev/null | grep -v "mediend-crm\|api/cron" | crontab - 2>/dev/null || true
+# Remove ALL old Mediend CRM cron entries (comments + commands)
+crontab -l 2>/dev/null | sed '/^# Mediend CRM Cron Jobs/,/^$/{ /^$/!d; }' | sed '/api\/cron/d' | sed '/pg_backup/d' | sed '/^$/N;/^\n$/d' | crontab - 2>/dev/null || true
 
 # Add new cron entries
 (crontab -l 2>/dev/null; cat << EOF
