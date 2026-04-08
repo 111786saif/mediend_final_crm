@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const syncRequest = new Request(syncUrl.toString(), {
       method: "POST",
       headers: {
-        authorization: `Bearer ${process.env.ATTENDANCE_SYNC_SECRET || process.env.CRON_SECRET || ""}`,
+        authorization: `Bearer ${process.env.CRON_SECRET || ""}`,
       },
     });
 

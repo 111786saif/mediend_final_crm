@@ -51,9 +51,6 @@ export async function POST(request: NextRequest) {
     // Optional: Verify API key or secret for security
     const authHeader = request.headers.get('authorization')
     const expectedSecrets = [
-      process.env.SYNC_API_SECRET,
-      process.env.LEADS_API_SECRET,
-      process.env.MYSQL_SYNC_SECRET,
       process.env.CRON_SECRET,
     ].filter(Boolean) as string[]
 

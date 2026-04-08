@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     const token = authHeader.split(' ')[1];
-    if (token !== process.env.LEADS_API_SECRET) {
+    if (token !== process.env.CRON_SECRET) {
       return NextResponse.json(
         { success: false, error: 'Invalid token' },
         { status: 401 }

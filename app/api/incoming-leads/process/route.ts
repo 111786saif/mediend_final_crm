@@ -11,14 +11,14 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
  * 
  * Authentication: 
  * - Session cookie (for browser requests)
- * - Bearer token with LEADS_API_SECRET (for API/curl requests)
+ * - Bearer token with CRON_SECRET (for API/curl requests)
  */
 export async function POST(request: NextRequest) {
   try {
     // Check for API key authentication first (for curl/automation)
     const authHeader = request.headers.get('authorization')
-    const isApiKeyAuth = authHeader?.startsWith('Bearer ') && 
-                         authHeader.substring(7) === process.env.LEADS_API_SECRET
+    const isApiKeyAuth = authHeader?.startsWith('Bearer ') &&
+                         authHeader.substring(7) === process.env.CRON_SECRET
 
     let user = null
     if (!isApiKeyAuth) {
@@ -86,14 +86,14 @@ export async function POST(request: NextRequest) {
  * 
  * Authentication: 
  * - Session cookie (for browser requests)
- * - Bearer token with LEADS_API_SECRET (for API/curl requests)
+ * - Bearer token with CRON_SECRET (for API/curl requests)
  */
 export async function GET(request: NextRequest) {
   try {
     // Check for API key authentication first (for curl/automation)
     const authHeader = request.headers.get('authorization')
-    const isApiKeyAuth = authHeader?.startsWith('Bearer ') && 
-                         authHeader.substring(7) === process.env.LEADS_API_SECRET
+    const isApiKeyAuth = authHeader?.startsWith('Bearer ') &&
+                         authHeader.substring(7) === process.env.CRON_SECRET
 
     let user = null
     if (!isApiKeyAuth) {

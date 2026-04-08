@@ -36,7 +36,7 @@ const MAX_EXECUTION_TIME = 9 * 60 * 1000 // 9 minutes (cron-job.org has 10 min t
  * POST /api/sync/mysql-leads
  * Sync leads from MySQL to PostgreSQL (incremental sync)
  * 
- * Authentication: Bearer token with SYNC_API_SECRET
+ * Authentication: Bearer token with CRON_SECRET
  * 
  * This endpoint is designed to be called by cron-job.org every 10 minutes
  */
@@ -47,12 +47,9 @@ export async function POST(request: NextRequest) {
     // Check for API key authentication
     const authHeader = request.headers.get('authorization')
     const expectedSecrets = [
-      process.env.SYNC_API_SECRET,
-      process.env.LEADS_API_SECRET,
-      process.env.MYSQL_SYNC_SECRET,
       process.env.CRON_SECRET,
     ].filter(Boolean) as string[]
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return unauthorizedResponse('Missing or invalid Authorization header')
     }
@@ -337,9 +334,6 @@ export async function GET(request: NextRequest) {
     // Check for API key authentication
     const authHeader = request.headers.get('authorization')
     const expectedSecrets = [
-      process.env.SYNC_API_SECRET,
-      process.env.LEADS_API_SECRET,
-      process.env.MYSQL_SYNC_SECRET,
       process.env.CRON_SECRET,
     ].filter(Boolean) as string[]
 

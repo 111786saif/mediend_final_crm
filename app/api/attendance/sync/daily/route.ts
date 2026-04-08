@@ -21,20 +21,9 @@ export async function POST(request: NextRequest) {
   try {
     // Optional: Verify API key or secret for security
     const authHeader = request.headers.get('authorization')
-    const expectedSecrets = [
-      process.env.ATTENDANCE_SYNC_SECRET,
-      process.env.CRON_SECRET,
-    ].filter(Boolean) as string[]
-
-    if (expectedSecrets.length > 0) {
-      const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null
-      if (!token || !expectedSecrets.includes(token)) {
-        return errorResponse('Unauthorized', 401)
-      }
-    }
-
-    if (!expectedSecrets.length && process.env.NODE_ENV === 'production') {
-      console.warn('attendance daily sync: no auth secret configured (ATTENDANCE_SYNC_SECRET/CRON_SECRET)')
+    const expectedSecret = process.env.CRON_SECRET
+    if (!expectedSecret || authHeader !== `Bearer ${expectedSecret}`) {
+      return errorResponse('Unauthorized', 401)
     }
 
     // Get current time in IST (UTC+5:30)
