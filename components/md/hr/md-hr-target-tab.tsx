@@ -55,10 +55,9 @@ interface EmployeeForTargets {
   user?: { name: string }
 }
 
-function getMonthBounds() {
-  const d = new Date()
-  const start = new Date(d.getFullYear(), d.getMonth(), 1, 0, 0, 0, 0)
-  const end = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999)
+function getMonthBounds(month: number, year: number) {
+  const start = new Date(year, month - 1, 1, 0, 0, 0, 0)
+  const end = new Date(year, month, 0, 23, 59, 59, 999)
   return { start, end }
 }
 
@@ -111,7 +110,7 @@ export function MdHrTargetTab({ filters }: MdHrTargetTabProps) {
     return m
   }, [departments])
 
-  const monthBounds = useMemo(() => getMonthBounds(), [])
+  const monthBounds = useMemo(() => getMonthBounds(filters.month, filters.year), [filters.month, filters.year])
 
   const employeesForTargets = useMemo((): EmployeeForTargets[] => {
     return (employeesRaw as any[]).map((e: any) => ({
@@ -129,10 +128,12 @@ export function MdHrTargetTab({ filters }: MdHrTargetTabProps) {
     )
   }, [headTargetItems])
 
+  const deptFilter = useMemo(() => filters.departments.length > 0 ? new Set(filters.departments) : null, [filters.departments])
+
   const departmentBreakdown = useMemo(() => {
     if (!hrTarget?.activeTarget?.departmentTargets) return []
     return hrTarget.activeTarget.departmentTargets
-      .filter((dt) => dt.addCount > 0)
+      .filter((dt) => dt.addCount > 0 && (!deptFilter || deptFilter.has(dt.departmentId)))
       .map((dt) => {
         const actual = countJoinsInDept(employeesForTargets, dt.departmentId, monthBounds.start, monthBounds.end)
         const pct = dt.addCount > 0 ? Math.round((actual / dt.addCount) * 100) : 0
@@ -145,7 +146,7 @@ export function MdHrTargetTab({ filters }: MdHrTargetTabProps) {
         }
       })
       .sort((a, b) => a.departmentName.localeCompare(b.departmentName))
-  }, [hrTarget, employeesForTargets, deptNameById, monthBounds])
+  }, [hrTarget, employeesForTargets, deptNameById, monthBounds, deptFilter])
 
   const selectedDept = useMemo(() => {
     if (!detailDeptId) return null
@@ -197,7 +198,7 @@ export function MdHrTargetTab({ filters }: MdHrTargetTabProps) {
             <div>
               <p className="text-sm text-muted-foreground flex items-center gap-2">
                 <Target className="h-4 w-4 text-amber-600" />
-                Headcount Target — {MONTHS[new Date().getMonth()]}
+                Headcount Target — {MONTHS[filters.month - 1]} {filters.year}
               </p>
               <p className="mt-2 text-3xl sm:text-4xl font-bold tracking-tight">
                 {achievement.actual} <span className="text-lg font-normal text-muted-foreground">/ {achievement.targetValue}</span>

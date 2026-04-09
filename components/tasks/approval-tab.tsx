@@ -1,14 +1,82 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef, useCallback } from "react"
 import { format } from "date-fns"
-import { Check, X } from "lucide-react"
+import { Check, X, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/use-auth"
 import { useTaskApprovals, useApproveTaskDueDate, useTasks, useWarnings, type Task } from "@/hooks/use-tasks"
 import { TaskRow } from "./task-row"
 import { getTaskCardClass } from "./task-card-class"
 import { MarkCompleteDrawer } from "./mark-complete-drawer"
+import { TaskDetailModal } from "@/components/calendar/task-detail-modal"
+import { cn } from "@/lib/utils"
+
+function SwipeableReviewRow({
+  children,
+  onReview,
+}: {
+  children: React.ReactNode
+  onReview: () => void
+}) {
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+  const offsetX = useRef(0)
+  const [translateX, setTranslateX] = useState(0)
+  const [animating, setAnimating] = useState(false)
+  const triggered = useRef(false)
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+    offsetX.current = translateX
+    triggered.current = false
+    setAnimating(false)
+  }, [translateX])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const dx = e.touches[0].clientX - touchStartX.current
+    const dy = Math.abs(e.touches[0].clientY - touchStartY.current)
+    if (dy > 40) return
+    const newX = Math.max(0, Math.min(dx + offsetX.current, 120))
+    setTranslateX(newX)
+  }, [])
+
+  const handleTouchEnd = useCallback(() => {
+    setAnimating(true)
+    if (translateX > 80 && !triggered.current) {
+      triggered.current = true
+      setTranslateX(0)
+      setTimeout(() => onReview(), 150)
+    } else {
+      setTranslateX(0)
+    }
+  }, [translateX, onReview])
+
+  const threshold = 80
+  const progress = Math.min(translateX / threshold, 1)
+
+  return (
+    <div className="relative overflow-hidden">
+      <div className="absolute inset-0 flex items-center pl-5 bg-amber-500">
+        <Star className={cn("h-5 w-5 text-white transition-transform", progress >= 1 ? "scale-125" : "scale-100")} />
+        <span className={cn("ml-2 text-sm font-semibold text-white transition-opacity", progress >= 0.5 ? "opacity-100" : "opacity-0")}>Rate</span>
+      </div>
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{ transform: `translateX(${translateX}px)` }}
+        className={cn(
+          "relative bg-white dark:bg-card",
+          animating && "transition-transform duration-200 ease-out"
+        )}
+      >
+        {children}
+      </div>
+    </div>
+  )
+}
 
 export function ApprovalTab() {
   const { user } = useAuth()
@@ -28,6 +96,7 @@ export function ApprovalTab() {
   const approveMutation = useApproveTaskDueDate()
   const [taskToComplete, setTaskToComplete] = useState<Task | null>(null)
   const [exitingTask, setExitingTask] = useState<Task | null>(null)
+  const [detailTaskId, setDetailTaskId] = useState<string | null>(null)
 
   const canReviewTask = (task: Task) =>
     !!user && (user.role === "MD" || user.role === "ADMIN" || task.createdById === user.id)
@@ -138,6 +207,7 @@ export function ApprovalTab() {
       <section>
         <h2 className="text-sm font-semibold text-foreground mb-2">
           Tasks pending review ({visibleReviewTasks.length})
+          <span className="text-xs font-normal text-muted-foreground ml-2">Swipe right to rate</span>
         </h2>
         {loadingReview ? (
           <div className="py-4 text-center text-sm text-muted-foreground">
@@ -155,21 +225,25 @@ export function ApprovalTab() {
           <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
             {visibleReviewTasks.map((task) => (
               <div key={task.id} className={getTaskCardClass(task)}>
-                <TaskRow
-                  task={task}
-                  onClick={() => !exitingTask && canReviewTask(task) && setTaskToComplete(task)}
-                  showAssignee
-                  showProject
-                  warningCount={taskWarningCountMap[task.id] ?? 0}
-                  extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                  activityCount={task.unseenActivityCount ?? 0}
-                  isAssignee={false}
-                  canMarkComplete={false}
-                  showCompletionRating={false}
-                  showStrikethrough={false}
-                  exitAnimation={exitingTask?.id === task.id}
-                  onExitAnimationEnd={() => exitingTask?.id === task.id && setExitingTask(null)}
-                />
+                <SwipeableReviewRow
+                  onReview={() => !exitingTask && canReviewTask(task) && setTaskToComplete(task)}
+                >
+                  <TaskRow
+                    task={task}
+                    onClick={() => setDetailTaskId(task.id)}
+                    showAssignee
+                    showProject
+                    warningCount={taskWarningCountMap[task.id] ?? 0}
+                    extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+                    activityCount={task.unseenActivityCount ?? 0}
+                    isAssignee={false}
+                    canMarkComplete={false}
+                    showCompletionRating={false}
+                    showStrikethrough={false}
+                    exitAnimation={exitingTask?.id === task.id}
+                    onExitAnimationEnd={() => exitingTask?.id === task.id && setExitingTask(null)}
+                  />
+                </SwipeableReviewRow>
               </div>
             ))}
           </div>
@@ -190,6 +264,12 @@ export function ApprovalTab() {
           setTaskToComplete(null)
           if (task) setExitingTask(task)
         }}
+      />
+
+      <TaskDetailModal
+        taskId={detailTaskId}
+        open={!!detailTaskId}
+        onOpenChange={(open) => !open && setDetailTaskId(null)}
       />
     </div>
   )

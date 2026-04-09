@@ -68,21 +68,32 @@ export function MdHrDepartmentsTab({ filters }: MdHrDepartmentsTabProps) {
     queryFn: () => apiGet<EmployeeItem[]>('/api/employees'),
   })
 
-  const deptFilter = filters.departments.length > 0 ? new Set(filters.departments) : null
+  // Build a set of department NAMES from the selected department IDs
+  const deptNameFilter = useMemo(() => {
+    if (filters.departments.length === 0) return null
+    const idSet = new Set(filters.departments)
+    const names = new Set<string>()
+    for (const e of employees) {
+      if (e.department && idSet.has(e.department.id)) {
+        names.add(e.department.name)
+      }
+    }
+    return names
+  }, [filters.departments, employees])
 
   const headcountData = useMemo(() => {
     if (!analytics) return []
     return analytics.departmentHeadcount
-      .filter((d) => !deptFilter || deptFilter.has(d.departmentName))
+      .filter((d) => !deptNameFilter || deptNameFilter.has(d.departmentName))
       .sort((a, b) => b.count - a.count)
-  }, [analytics, deptFilter])
+  }, [analytics, deptNameFilter])
 
   const salaryData = useMemo(() => {
     if (!analytics) return []
     return analytics.departmentSalaryBreakdown
-      .filter((d) => !deptFilter || deptFilter.has(d.departmentName))
+      .filter((d) => !deptNameFilter || deptNameFilter.has(d.departmentName))
       .sort((a, b) => b.amount - a.amount)
-  }, [analytics, deptFilter])
+  }, [analytics, deptNameFilter])
 
   // Combined department list
   const departmentList = useMemo(() => {

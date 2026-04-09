@@ -88,80 +88,69 @@ function RatingStars({ rating }: { rating: number }) {
   )
 }
 
-/** Swipeable wrapper: swipe right reveals "Review" action on mobile */
+/** Swipeable wrapper: swipe right slides the whole row and opens review */
 function SwipeableReviewRow({
   children,
   onReview,
-  isMobile,
 }: {
   children: React.ReactNode
   onReview: () => void
-  isMobile: boolean
 }) {
   const touchStartX = useRef(0)
   const touchStartY = useRef(0)
-  const [swiped, setSwiped] = useState(false)
+  const offsetX = useRef(0)
+  const [translateX, setTranslateX] = useState(0)
+  const [animating, setAnimating] = useState(false)
+  const triggered = useRef(false)
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
     touchStartY.current = e.touches[0].clientY
+    offsetX.current = translateX
+    triggered.current = false
+    setAnimating(false)
+  }, [translateX])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const dx = e.touches[0].clientX - touchStartX.current
+    const dy = Math.abs(e.touches[0].clientY - touchStartY.current)
+    if (dy > 40) return
+    const newX = Math.max(0, Math.min(dx + offsetX.current, 120))
+    setTranslateX(newX)
   }, [])
 
-  const handleTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      const dx = e.changedTouches[0].clientX - touchStartX.current
-      const dy = Math.abs(e.changedTouches[0].clientY - touchStartY.current)
-      // Right swipe > 60px and mostly horizontal
-      if (dx > 60 && dy < 40) {
-        setSwiped(true)
-        setTimeout(() => setSwiped(false), 2000)
-      }
-    },
-    []
-  )
+  const handleTouchEnd = useCallback(() => {
+    setAnimating(true)
+    if (translateX > 80 && !triggered.current) {
+      triggered.current = true
+      setTranslateX(0)
+      setTimeout(() => onReview(), 150)
+    } else {
+      setTranslateX(0)
+    }
+  }, [translateX, onReview])
 
-  if (!isMobile) {
-    return (
-      <div className="flex items-stretch">
-        <div className="flex-1 min-w-0">{children}</div>
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onReview() }}
-          className="shrink-0 flex items-center px-3 border-l border-border bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 text-xs font-semibold hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
-        >
-          <Star className="h-3.5 w-3.5 mr-1" />
-          Review
-        </button>
-      </div>
-    )
-  }
+  const threshold = 80
+  const progress = Math.min(translateX / threshold, 1)
 
   return (
     <div className="relative overflow-hidden">
-      {/* Reveal layer behind */}
-      <div className="absolute inset-0 flex items-center justify-end px-4 bg-amber-500">
-        <span className="text-white text-sm font-semibold flex items-center gap-1">
-          <Star className="h-4 w-4" /> Review
-        </span>
+      {/* Background reveal */}
+      <div className="absolute inset-0 flex items-center pl-5 bg-amber-500">
+        <Star className={cn("h-5 w-5 text-white transition-transform", progress >= 1 ? "scale-125" : "scale-100")} />
+        <span className={cn("ml-2 text-sm font-semibold text-white transition-opacity", progress >= 0.5 ? "opacity-100" : "opacity-0")}>Rate</span>
       </div>
       <div
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        style={{ transform: `translateX(${translateX}px)` }}
         className={cn(
-          "relative bg-white dark:bg-card transition-transform duration-200",
-          swiped && "-translate-x-24"
+          "relative bg-white dark:bg-card",
+          animating && "transition-transform duration-200 ease-out"
         )}
       >
         {children}
-        {swiped && (
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); setSwiped(false); onReview() }}
-            className="absolute right-0 top-0 bottom-0 w-24 flex items-center justify-center bg-amber-500 text-white text-sm font-semibold"
-          >
-            <Star className="h-4 w-4 mr-1" /> Rate
-          </button>
-        )}
       </div>
     </div>
   )
@@ -482,13 +471,12 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                     <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-violet-700 dark:text-violet-300">
                       <Star className="h-4 w-4 shrink-0" />
                       Needs review ({needsReviewTasks.length})
-                      <span className="text-xs font-normal text-muted-foreground ml-1">{isMobile ? "Swipe right to rate" : "Click Review to rate"}</span>
+                      <span className="text-xs font-normal text-muted-foreground ml-1">Swipe right to rate</span>
                     </h2>
                     <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                       {needsReviewTasks.map((task) => (
                         <div key={task.id} className={getTeamDetailTaskCardClass(false)}>
                           <SwipeableReviewRow
-                            isMobile={isMobile}
                             onReview={() => setTaskToComplete(task)}
                           >
                             <TaskRow
