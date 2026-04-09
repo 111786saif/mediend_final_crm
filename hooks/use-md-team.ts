@@ -21,6 +21,7 @@ export interface MDTeamOverviewMember {
   attendanceStatus: AttendanceStatus
   inTime: string | null
   lastWorkLogAt: string | null
+  worklogEnforced: boolean
   source: TeamMemberSource
 }
 

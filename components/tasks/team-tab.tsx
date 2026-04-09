@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import { Search, UserPlus, Star, ArrowUpRight, Clock } from "lucide-react"
+import { Search, UserPlus, Star, ArrowUpRight, Clock, ChevronRight, Trophy, Medal } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -58,6 +58,14 @@ export function TeamTab() {
     return map
   }, [warnings])
 
+  const sortedMembers = useMemo(() => {
+    return [...members].sort((a, b) => {
+      const ra = a.averageRating ?? -1
+      const rb = b.averageRating ?? -1
+      return rb - ra
+    })
+  }, [members])
+
   if (isError) {
     return (
       <div className="py-6 text-center text-sm text-destructive">
@@ -101,11 +109,12 @@ export function TeamTab() {
           {search ? "No team members match your search." : "No team members yet. Add people to get started."}
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-          {members.map((member) => (
-            <TeamMemberCard
+        <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border mt-4">
+          {sortedMembers.map((member, index) => (
+            <TeamMemberRow
               key={member.id}
               member={member}
+              rank={index + 1}
               warningCount={warningsByUserId[member.id] ?? 0}
               onClick={() => router.push(`/md/tasks/team/${member.id}`)}
             />
@@ -118,12 +127,21 @@ export function TeamTab() {
   )
 }
 
-function TeamMemberCard({
+function RankBadge({ rank }: { rank: number }) {
+  if (rank === 1) return <Trophy className="h-5 w-5 text-amber-500" />
+  if (rank === 2) return <Medal className="h-5 w-5 text-slate-400" />
+  if (rank === 3) return <Medal className="h-5 w-5 text-amber-700" />
+  return <span className="text-xs font-semibold text-muted-foreground w-5 text-center">{rank}</span>
+}
+
+function TeamMemberRow({
   member,
+  rank,
   warningCount,
   onClick,
 }: {
   member: MDTeamOverviewMember
+  rank: number
   warningCount: number
   onClick: () => void
 }) {
@@ -134,104 +152,79 @@ function TeamMemberCard({
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        "relative rounded-xl border bg-card shadow-sm w-full text-center transition-colors",
-        "hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring touch-manipulation active:opacity-90",
-        "flex flex-col items-stretch p-4"
-      )}
+      className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
-      {/* Avatar centered at top */}
-      <div className="flex justify-center mb-3">
-        <Avatar className="size-14 shrink-0">
-          <AvatarFallback
+      {/* Rank */}
+      <div className="shrink-0 flex items-center justify-center w-6">
+        <RankBadge rank={rank} />
+      </div>
+
+      {/* Avatar */}
+      <Avatar className="size-10 shrink-0">
+        <AvatarFallback
+          className={cn(
+            "font-semibold text-sm",
+            getAvatarColor(member.name).bg,
+            getAvatarColor(member.name).text
+          )}
+        >
+          {getInitials(member.name)}
+        </AvatarFallback>
+      </Avatar>
+
+      {/* Name + meta */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="text-base font-medium truncate">{member.name}</span>
+          <span
             className={cn(
-              "font-semibold text-base text-white",
-              getAvatarColor(member.name).bg,
-              getAvatarColor(member.name).text
+              "shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium",
+              isLeave && "bg-amber-100 text-amber-800",
+              isIn && "bg-green-100 text-green-800",
+              !isIn && !isLeave && "bg-muted text-muted-foreground"
             )}
           >
-            {getInitials(member.name)}
-          </AvatarFallback>
-        </Avatar>
-      </div>
-
-      {/* Name */}
-      <p className="font-semibold text-base text-foreground truncate px-1">
-        {member.name}
-      </p>
-
-      {/* Designation / role */}
-      <p className="text-sm text-muted-foreground truncate mt-0.5 px-1">
-        {member.designation || member.role || member.department?.name || "—"}
-      </p>
-
-      {/* Optional: attendance badge */}
-      <div className="mt-1.5 flex flex-col items-center gap-1">
-        <span
-          className={cn(
-            "rounded px-2 py-0.5 text-xs font-medium",
-            isLeave && "bg-amber-100 text-amber-800",
-            isIn && "bg-green-100 text-green-800",
-            !isIn && !isLeave && "bg-muted text-muted-foreground"
+            {isLeave ? "Leave" : isIn ? "IN" : "OUT"}
+          </span>
+          {(member.unseenActivityCount ?? 0) > 0 && (
+            <span className="shrink-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
+              {member.unseenActivityCount! > 99 ? "99+" : member.unseenActivityCount}
+            </span>
           )}
-        >
-          {isLeave ? "Leave" : isIn ? "IN" : "OUT"}
-        </span>
-        {hasStaleWorkLog(member.lastWorkLogAt) && (
-          <span className="inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800">
-            <Clock className="h-3 w-3" />
-            No work log 24h+
-          </span>
-        )}
+        </div>
+        <div className="flex items-center gap-2 mt-0.5 text-xs text-muted-foreground">
+          <span className="truncate">{member.designation || member.role || member.department?.name || "—"}</span>
+          {member.worklogEnforced && hasStaleWorkLog(member.lastWorkLogAt) && (
+            <span className="shrink-0 inline-flex items-center gap-0.5 text-amber-600">
+              <Clock className="h-3 w-3" />
+              No log 24h+
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Activity badge */}
-      {(member.unseenActivityCount ?? 0) > 0 && (
-        <span
-          className="absolute right-2 top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10px] font-medium text-primary-foreground"
-          title={`${member.unseenActivityCount} new activit${member.unseenActivityCount !== 1 ? "ies" : "y"}`}
-        >
-          {member.unseenActivityCount! > 99 ? "99+" : member.unseenActivityCount}
-        </span>
-      )}
-
-      {/* Task overview: ACTIVE · DONE · WARN */}
-      <div className="mt-3 pt-3 border-t border-border flex items-center justify-center gap-4 text-sm">
-        <div className="flex flex-col items-center gap-0.5">
-          <span className="font-semibold text-blue-600">{member.taskCount}</span>
-          <span className="text-xs text-muted-foreground uppercase tracking-wide">Active</span>
-        </div>
-        <div className="flex flex-col items-center gap-0.5">
-          <span className="font-semibold text-muted-foreground">
-            {member.completedCount ?? 0}
+      {/* Rating + indicators */}
+      <div className="flex shrink-0 items-center gap-3 text-xs">
+        {member.averageRating != null ? (
+          <span className={cn("inline-flex items-center gap-0.5 font-semibold text-sm", getStarColor(member.averageRating))}>
+            <Star className="h-4 w-4 fill-current" />
+            {member.averageRating.toFixed(1)}
           </span>
-          <span className="text-xs text-muted-foreground uppercase tracking-wide">Done</span>
-        </div>
+        ) : (
+          <span className="text-muted-foreground text-sm">—</span>
+        )}
         {warningCount > 0 && (
-          <div className="flex flex-col items-center gap-0.5">
-            <span className="font-semibold text-red-600">{warningCount}</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-wide">Warn</span>
-          </div>
+          <span className="font-semibold text-red-600">{warningCount}w</span>
+        )}
+        {(member.extensionRequests ?? 0) > 0 && (
+          <span className="inline-flex items-center gap-0.5 text-violet-600">
+            <ArrowUpRight className="h-3 w-3" />
+            {member.extensionRequests}
+          </span>
         )}
       </div>
 
-      {/* Extra: rating & extensions when present */}
-      {(member.averageRating != null || (member.extensionRequests ?? 0) > 0) && (
-        <div className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs">
-          {member.averageRating != null && (
-            <span className={cn("inline-flex items-center gap-0.5 font-medium", getStarColor(member.averageRating))}>
-              <Star className="h-3 w-3 fill-current" />
-              {member.averageRating.toFixed(1)}
-            </span>
-          )}
-          {(member.extensionRequests ?? 0) > 0 && (
-            <span className="inline-flex items-center gap-0.5 text-violet-600">
-              <ArrowUpRight className="h-3 w-3" />
-              {member.extensionRequests} ext.
-            </span>
-          )}
-        </div>
-      )}
+      <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
     </button>
   )
 }

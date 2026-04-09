@@ -20,12 +20,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon, Clock, User, FolderOpen, Trash2, CalendarClock } from "lucide-react"
+import { CalendarIcon, Check, Clock, User, FolderOpen, Trash2, CalendarClock, MoreVertical, ShieldAlert, Star as StarIcon } from "lucide-react"
 import { PriorityIcon } from "@/components/tasks/priority-icon"
 import { format } from "date-fns"
 import {
@@ -36,6 +33,7 @@ import {
   useUpdateTask,
   useDeleteTask,
   useMarkTaskSeen,
+  useAssignableUsers,
   type Task,
   type UpdateTaskInput,
 } from "@/hooks/use-tasks"
@@ -57,7 +55,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+
 } from "@/components/ui/alert-dialog"
 
 interface TaskDetailModalProps {
@@ -149,6 +147,7 @@ function TaskDetailContent({
   const updateTask = useUpdateTask()
   const deleteTask = useDeleteTask()
   const markSeen = useMarkTaskSeen()
+  const { data: assignableUsers = [] } = useAssignableUsers()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
   const [commentText, setCommentText] = useState("")
@@ -162,6 +161,11 @@ function TaskDetailContent({
   const [showCompletionFeedbackModal, setShowCompletionFeedbackModal] = useState(false)
   const [hasShownCompletionModal, setHasShownCompletionModal] = useState(false)
   const [issueWarningOpen, setIssueWarningOpen] = useState(false)
+  const [actionsSheetOpen, setActionsSheetOpen] = useState(false)
+  const [statusSheetOpen, setStatusSheetOpen] = useState(false)
+  const [prioritySheetOpen, setPrioritySheetOpen] = useState(false)
+  const [dateSheetOpen, setDateSheetOpen] = useState(false)
+  const [assigneeSheetOpen, setAssigneeSheetOpen] = useState(false)
 
   const canEditDueDateDirectly =
     !!task &&
@@ -329,133 +333,88 @@ function TaskDetailContent({
 
   const detailsBlock = (
     <>
-      <div className="space-y-3">
-        <div className="flex items-center gap-3 text-base md:text-sm">
-          <CalendarIcon className="h-5 w-5 md:h-4 md:w-4 shrink-0 text-purple-600 dark:text-purple-400" />
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                type="button"
-                className="text-left font-medium text-purple-700 dark:text-purple-300 hover:underline focus:outline-none focus:underline"
-              >
-                {dueDateValue
-                  ? format(dueDateValue, "MMM d, yyyy")
-                  : "Set due date"}
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={(pendingDueDate ?? dueDateValue) ?? undefined}
-                onSelect={(d) => {
-                  const date = d ?? null
-                  if (canEditDueDateDirectly) {
-                    handleDueDateChange(date)
-                  } else {
-                    setPendingDueDate(date)
-                    if (!date) setDueDateChangeReason("")
-                  }
-                }}
-                initialFocus
-              />
-              {(dueDateValue || pendingDueDate) && canEditDueDateDirectly && (
-                <div className="border-t p-2">
-                  <button
-                    type="button"
-                    className="text-xs text-destructive hover:underline"
-                    onClick={() => handleDueDateChange(null)}
-                  >
-                    Clear date
-                  </button>
-                </div>
-              )}
-              {(dueDateValue || pendingDueDate) && !canEditDueDateDirectly && (
-                <div className="border-t p-2">
-                  <button
-                    type="button"
-                    className="text-xs text-muted-foreground hover:underline"
-                    onClick={() => { setPendingDueDate(null); setDueDateChangeReason("") }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-            </PopoverContent>
-          </Popover>
-        </div>
-        {pendingDueDate != null && !canEditDueDateDirectly && (
-          <div className="rounded-md border bg-muted/30 p-2 space-y-2">
-            <p className="text-xs font-medium">Request due date change</p>
-            <p className="text-xs text-muted-foreground">
-              New date: {format(pendingDueDate, "MMM d, yyyy")}. Reason is required.
-            </p>
-            <Textarea
-              placeholder="Reason for change (required)"
-              value={dueDateChangeReason}
-              onChange={(e) => setDueDateChangeReason(e.target.value)}
-              className="min-h-[60px] resize-none text-sm"
-              rows={2}
-            />
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                onClick={handleRequestDueDateChange}
-                disabled={!dueDateChangeReason.trim() || updateTask.isPending}
-              >
-                Request change
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => { setPendingDueDate(null); setDueDateChangeReason("") }}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
+      {/* Row 1: Due date + Assignee */}
+      <div className="flex items-center gap-4 flex-wrap text-sm">
+        <button
+          type="button"
+          onClick={() => setDateSheetOpen(true)}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-purple-700 dark:text-purple-300 hover:opacity-70 transition-opacity"
+        >
+          <CalendarIcon className="h-4 w-4 shrink-0 text-purple-600 dark:text-purple-400" />
+          {dueDateValue ? format(dueDateValue, "MMM d, yyyy") : "Set due date"}
+        </button>
+        {task.assignee && (
+          <>
+            <span className="text-muted-foreground">·</span>
+            <button
+              type="button"
+              onClick={() => setAssigneeSheetOpen(true)}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-700 dark:text-blue-300 hover:opacity-70 transition-opacity"
+            >
+              <User className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" />
+              {task.assignee.name}
+            </button>
+          </>
         )}
       </div>
-      {task.assignee && (
-        <div className="flex items-center gap-3 text-base md:text-sm">
-          <User className="h-5 w-5 md:h-4 md:w-4 shrink-0 text-blue-600 dark:text-blue-400" />
-          <span className="font-medium text-blue-700 dark:text-blue-300">{task.assignee.name}</span>
-        </div>
-      )}
-      <div className="flex items-center gap-3 text-base md:text-sm">
-        <PriorityIcon
-          priority={priorityValue}
+      {/* Row 2: Status + Priority + Project */}
+      <div className="flex items-center gap-4 flex-wrap text-sm">
+        <button
+          type="button"
+          onClick={() => showStatusDropdown && setStatusSheetOpen(true)}
           className={cn(
-            "h-5 w-5 md:h-4 md:w-4 shrink-0",
-            priorityValue === "HIGH" && "text-orange-600 dark:text-orange-400",
-            priorityValue === "URGENT" && "text-red-600 dark:text-red-400",
-            priorityValue === "MEDIUM" && "text-amber-600 dark:text-amber-400",
-            priorityValue === "LOW" && "text-blue-600 dark:text-blue-400",
-            (priorityValue === "GENERAL" || !priorityValue) && "text-muted-foreground"
+            "inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-sm font-medium transition-colors",
+            showStatusDropdown && "cursor-pointer hover:opacity-80",
+            !showStatusDropdown && "cursor-default",
+            statusValue === "IN_PROGRESS" && "border-blue-400 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+            statusValue === "EMPLOYEE_DONE" && "border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+            statusValue === "COMPLETED" && "border-emerald-500 bg-emerald-50 text-emerald-700 dark:text-emerald-300",
+            statusValue === "PENDING" && "border-slate-400 bg-slate-100 text-slate-700 dark:bg-slate-800/50 dark:text-slate-300",
+            statusValue === "CANCELLED" && "border-muted bg-muted/50 text-muted-foreground"
           )}
-        />
-        <select
-          value={priorityValue}
-          onChange={(e) => handlePriorityChange(e.target.value)}
-          className="flex-1 rounded-md border-2 border-border bg-background px-2 py-1.5 text-base md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-ring"
         >
-          {PRIORITY_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
+          {STATUS_OPTIONS.find((o) => o.value === statusValue)?.label ?? statusValue}
+        </button>
+        <span className="text-muted-foreground">·</span>
+        <button
+          type="button"
+          onClick={() => setPrioritySheetOpen(true)}
+          className="inline-flex items-center gap-1.5 text-sm font-medium transition-opacity cursor-pointer hover:opacity-70"
+        >
+          <PriorityIcon
+            priority={priorityValue}
+            className={cn(
+              "h-4 w-4 shrink-0",
+              priorityValue === "HIGH" && "text-orange-600 dark:text-orange-400",
+              priorityValue === "URGENT" && "text-red-600 dark:text-red-400",
+              priorityValue === "MEDIUM" && "text-amber-600 dark:text-amber-400",
+              priorityValue === "LOW" && "text-blue-600 dark:text-blue-400",
+              (priorityValue === "GENERAL" || !priorityValue) && "text-muted-foreground"
+            )}
+          />
+          {PRIORITY_OPTIONS.find((o) => o.value === priorityValue)?.label ?? "Priority"}
+        </button>
+        {task.project && (
+          <>
+            <span className="text-muted-foreground">·</span>
+            <div className="flex items-center gap-1.5">
+              <FolderOpen className="h-4 w-4 shrink-0 text-purple-600 dark:text-purple-400" />
+              <span className="font-medium text-purple-700 dark:text-purple-300">{task.project.name}</span>
+            </div>
+          </>
+        )}
       </div>
-      {task.project && (
-        <div className="flex items-center gap-3 text-base md:text-sm">
-          <FolderOpen className="h-5 w-5 md:h-4 md:w-4 shrink-0 text-purple-600 dark:text-purple-400" />
-          <span className="font-medium text-purple-700 dark:text-purple-300">{task.project.name}</span>
-        </div>
-      )}
-      {task.createdBy && (
-        <div className="flex items-center gap-2 text-base md:text-sm text-muted-foreground">
+      {/* Row 3: Created by + Updated */}
+      <div className="flex items-center gap-3 flex-wrap text-xs text-muted-foreground">
+        {task.createdBy && (
           <span>Created by {task.createdBy.name}</span>
+        )}
+        {task.createdBy && <span>·</span>}
+        <div className="flex items-center gap-1">
+          <Clock className="h-3 w-3" />
+          <span>Updated {format(new Date(task.updatedAt), "MMM d")}</span>
         </div>
-      )}
+      </div>
       {task.status === "COMPLETED" && task.grade && (
         <CompletionFeedback
           grade={task.grade}
@@ -464,10 +423,6 @@ function TaskDetailContent({
           completedAt={task.completedAt}
         />
       )}
-      <div className="flex items-center gap-2 text-sm md:text-xs text-muted-foreground">
-        <Clock className="h-4 w-4 md:h-3 md:w-3" />
-        <span>Updated {format(new Date(task.updatedAt), "MMM d")}</span>
-      </div>
     </>
   )
 
@@ -491,41 +446,23 @@ function TaskDetailContent({
                 </Button>
               </div>
             ) : (
-              <h2
-                className="flex-1 text-xl md:text-lg font-semibold cursor-pointer hover:bg-muted/50 rounded-md px-2 py-1 -mx-1 min-w-0"
-                onClick={() => setEditingTitle(true)}
-              >
-                {task.title}
-              </h2>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2 items-center">
-            {showStatusDropdown ? (
-              <select
-                value={statusValue}
-                onChange={(e) => handleStatusChange(e.target.value)}
-                className={cn(
-                  "text-sm md:text-xs rounded-md border-2 px-3 py-1.5 font-medium",
-                  statusValue === "IN_PROGRESS" && "border-blue-400 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-                  statusValue === "EMPLOYEE_DONE" && "border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-                  statusValue === "COMPLETED" && "border-emerald-500 bg-emerald-50 text-emerald-700 dark:text-emerald-300",
-                  statusValue === "PENDING" && "border-slate-400 bg-slate-100 text-slate-700 dark:bg-slate-800/50 dark:text-slate-300",
-                  statusValue === "CANCELLED" && "border-muted bg-muted/50 text-muted-foreground"
-                )}
-              >
-                <option value="PENDING">Pending</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="EMPLOYEE_DONE">Mark done (pending review)</option>
-              </select>
-            ) : (
-              <Badge variant="outline" className={cn("text-sm md:text-xs font-medium border-2 px-2.5 py-0.5", statusBadgeClass)}>
-                {STATUS_OPTIONS.find((o) => o.value === task.status)?.label ?? task.status}
-              </Badge>
-            )}
-            {task.project && (
-              <Badge variant="outline" className="text-sm md:text-xs border-2 border-purple-400 bg-purple-50 text-purple-700 dark:border-purple-600 dark:bg-purple-900/30 dark:text-purple-300">
-                {task.project.name}
-              </Badge>
+              <>
+                <h2
+                  className="flex-1 text-xl md:text-lg font-semibold cursor-pointer hover:bg-muted/50 rounded-md px-2 py-1 -mx-1 min-w-0"
+                  onClick={() => setEditingTitle(true)}
+                >
+                  {task.title}
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0 h-8 w-8 text-muted-foreground hover:text-foreground"
+                  onClick={() => setActionsSheetOpen(true)}
+                  aria-label="Actions"
+                >
+                  <MoreVertical className="h-5 w-5" />
+                </Button>
+              </>
             )}
           </div>
           {task.description && (
@@ -556,7 +493,7 @@ function TaskDetailContent({
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="text-sm md:text-xs text-muted-foreground">
-                            {c.user.name} · {format(new Date(c.createdAt), "MMM d, HH:mm")}
+                            {c.user.name} · {format(new Date(c.createdAt), "EEE, MMM d · h:mm a")}
                           </p>
                           <p className="text-base md:text-sm mt-1 whitespace-pre-wrap">{c.content}</p>
                         </div>
@@ -570,7 +507,7 @@ function TaskDetailContent({
                               </div>
                               <div className="min-w-0 flex-1">
                                 <p className="text-sm md:text-xs text-muted-foreground">
-                                  {r.user.name} · {format(new Date(r.createdAt), "MMM d, HH:mm")}
+                                  {r.user.name} · {format(new Date(r.createdAt), "EEE, MMM d · h:mm a")}
                                 </p>
                                 <p className="text-base md:text-sm mt-0.5 whitespace-pre-wrap">{r.content}</p>
                               </div>
@@ -625,29 +562,7 @@ function TaskDetailContent({
         </div>
       </div>
 
-      <div className="md:w-72 shrink-0 flex flex-col min-h-0 overflow-y-auto p-4 gap-4 bg-muted/30 border-l border-border">
-
-        {/* Action buttons — always at the top */}
-        {task.status === "EMPLOYEE_DONE" && canReviewTask && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30 p-3">
-            <p className="text-sm font-medium text-amber-800 dark:text-amber-200">Pending your review</p>
-            <Button size="sm" className="mt-2 w-full" onClick={() => setMarkCompleteDrawerOpen(true)}>
-              Review task
-            </Button>
-          </div>
-        )}
-
-        {canReviewTask && task.assigneeId && (
-          <div className="rounded-lg border border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950/20 p-3">
-            <p className="text-xs font-semibold text-orange-700 dark:text-orange-300">Issue warning</p>
-            <p className="text-xs text-orange-600 dark:text-orange-400 mt-0.5">
-              Attach a warning to this task for the assignee.
-            </p>
-            <Button size="sm" variant="outline" className="mt-2 w-full border-orange-300 text-orange-700 hover:bg-orange-100 dark:border-orange-700 dark:text-orange-300" onClick={() => setIssueWarningOpen(true)}>
-              Issue warning
-            </Button>
-          </div>
-        )}
+      <div className="md:w-72 shrink-0 flex flex-col min-h-0 overflow-y-auto p-4 gap-4 bg-white/60 dark:bg-muted/30 border-l border-border">
 
         {/* Activity */}
         <div className="space-y-2">
@@ -668,7 +583,7 @@ function TaskDetailContent({
                       {a.details ? ` · ${formatActivityDetails(a.action, a.details)}` : ""}
                     </span>
                     <span className="text-muted-foreground">
-                      {format(new Date(a.createdAt), "MMM d, HH:mm")}
+                      {format(new Date(a.createdAt), "EEE, MMM d · h:mm a")}
                     </span>
                   </li>
                 )
@@ -707,7 +622,7 @@ function TaskDetailContent({
                     </span>
                     {a.reason && <span className="text-muted-foreground italic">{a.reason}</span>}
                     <span className="text-muted-foreground">
-                      {format(new Date(a.createdAt), "MMM d, HH:mm")}
+                      {format(new Date(a.createdAt), "EEE, MMM d · h:mm a")}
                     </span>
                   </li>
                 )
@@ -753,51 +668,270 @@ function TaskDetailContent({
           </DialogContent>
         </Dialog>
 
-        {/* Delete — pinned to very bottom */}
-        <div className="mt-auto border-t border-border pt-4">
-          <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+      </div>
+
+      {/* Actions Sheet — accessible via 3-dot menu */}
+      <Sheet open={actionsSheetOpen} onOpenChange={setActionsSheetOpen}>
+        <SheetContent side="bottom" className="rounded-t-2xl bg-white dark:bg-card">
+          <SheetHeader className="text-left">
+            <SheetTitle>Actions</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-1 pt-2 pb-4">
+            {task.status === "EMPLOYEE_DONE" && canReviewTask && (
+              <button
+                type="button"
+                onClick={() => {
+                  setActionsSheetOpen(false)
+                  setMarkCompleteDrawerOpen(true)
+                }}
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/80"
               >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete task
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete task?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete &quot;{task?.title}&quot;. This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  onClick={async (e) => {
-                    e.preventDefault()
-                    if (!task) return
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/40">
+                  <StarIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                </div>
+                <span className="font-medium">Review & Complete Task</span>
+              </button>
+            )}
+            {canReviewTask && task.assigneeId && (
+              <button
+                type="button"
+                onClick={() => {
+                  setActionsSheetOpen(false)
+                  setIssueWarningOpen(true)
+                }}
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/80"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/40">
+                  <ShieldAlert className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                </div>
+                <span className="font-medium">Issue Warning</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setActionsSheetOpen(false)
+                setDeleteDialogOpen(true)
+              }}
+              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/80"
+            >
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/40">
+                <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400" />
+              </div>
+              <span className="font-medium text-destructive">Delete Task</span>
+            </button>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Delete confirmation */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete task?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete &quot;{task?.title}&quot;. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={async (e) => {
+                e.preventDefault()
+                if (!task) return
+                try {
+                  await deleteTask.mutateAsync(task.id)
+                  toast.success("Task deleted")
+                  setDeleteDialogOpen(false)
+                  onClose()
+                } catch {
+                  toast.error("Failed to delete task")
+                }
+              }}
+              disabled={deleteTask.isPending}
+            >
+              {deleteTask.isPending ? "Deleting…" : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Status picker sheet */}
+      <Sheet open={statusSheetOpen} onOpenChange={setStatusSheetOpen}>
+        <SheetContent side="bottom" className="rounded-t-2xl bg-white dark:bg-card">
+          <SheetHeader className="text-left">
+            <SheetTitle>Change Status</SheetTitle>
+          </SheetHeader>
+          <div className="py-2 space-y-1">
+            {[
+              { value: "PENDING", label: "Pending", color: "text-slate-700" },
+              { value: "IN_PROGRESS", label: "In Progress", color: "text-blue-700" },
+              { value: "EMPLOYEE_DONE", label: "Done (pending review)", color: "text-amber-700" },
+            ].map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  handleStatusChange(opt.value)
+                  setStatusSheetOpen(false)
+                }}
+                className={cn(
+                  "flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors hover:bg-muted/50",
+                  opt.color,
+                  statusValue === opt.value && "bg-muted/40"
+                )}
+              >
+                {opt.label}
+                {statusValue === opt.value && <Check className="h-4 w-4 shrink-0" />}
+              </button>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Priority picker sheet */}
+      <Sheet open={prioritySheetOpen} onOpenChange={setPrioritySheetOpen}>
+        <SheetContent side="bottom" className="rounded-t-2xl bg-white dark:bg-card">
+          <SheetHeader className="text-left">
+            <SheetTitle>Set Priority</SheetTitle>
+          </SheetHeader>
+          <div className="py-2 space-y-1">
+            {PRIORITY_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  handlePriorityChange(opt.value)
+                  setPrioritySheetOpen(false)
+                }}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors hover:bg-muted/50",
+                  priorityValue === opt.value && "bg-muted/40"
+                )}
+              >
+                <PriorityIcon
+                  priority={opt.value}
+                  className={cn(
+                    "h-4 w-4 shrink-0",
+                    opt.value === "HIGH" && "text-orange-600",
+                    opt.value === "URGENT" && "text-red-600",
+                    opt.value === "MEDIUM" && "text-amber-600",
+                    opt.value === "LOW" && "text-blue-600",
+                    opt.value === "GENERAL" && "text-muted-foreground"
+                  )}
+                />
+                <span className="flex-1">{opt.label}</span>
+                {priorityValue === opt.value && <Check className="h-4 w-4 shrink-0" />}
+              </button>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Date picker sheet */}
+      <Sheet open={dateSheetOpen} onOpenChange={setDateSheetOpen}>
+        <SheetContent side="bottom" className="rounded-t-2xl bg-white dark:bg-card">
+          <SheetHeader className="text-left">
+            <SheetTitle>Due Date</SheetTitle>
+          </SheetHeader>
+          <div className="py-2 flex flex-col items-center">
+            <Calendar
+              mode="single"
+              selected={(pendingDueDate ?? dueDateValue) ?? undefined}
+              onSelect={(d) => {
+                const date = d ?? null
+                if (canEditDueDateDirectly) {
+                  handleDueDateChange(date)
+                  setDateSheetOpen(false)
+                } else {
+                  setPendingDueDate(date)
+                  if (!date) setDueDateChangeReason("")
+                }
+              }}
+              initialFocus
+            />
+            {(dueDateValue || pendingDueDate) && canEditDueDateDirectly && (
+              <button
+                type="button"
+                className="mt-2 text-sm text-destructive hover:underline"
+                onClick={() => { handleDueDateChange(null); setDateSheetOpen(false) }}
+              >
+                Clear date
+              </button>
+            )}
+            {pendingDueDate != null && !canEditDueDateDirectly && (
+              <div className="w-full mt-3 rounded-md border bg-muted/30 p-3 space-y-2">
+                <p className="text-xs font-medium">Request due date change</p>
+                <p className="text-xs text-muted-foreground">
+                  New date: {format(pendingDueDate, "MMM d, yyyy")}. Reason is required.
+                </p>
+                <Textarea
+                  placeholder="Reason for change (required)"
+                  value={dueDateChangeReason}
+                  onChange={(e) => setDueDateChangeReason(e.target.value)}
+                  className="min-h-[60px] resize-none text-sm"
+                  rows={2}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    onClick={() => { handleRequestDueDateChange(); setDateSheetOpen(false) }}
+                    disabled={!dueDateChangeReason.trim() || updateTask.isPending}
+                  >
+                    Request change
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => { setPendingDueDate(null); setDueDateChangeReason(""); setDateSheetOpen(false) }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* Assignee picker sheet */}
+      <Sheet open={assigneeSheetOpen} onOpenChange={setAssigneeSheetOpen}>
+        <SheetContent side="bottom" className="rounded-t-2xl bg-white dark:bg-card max-h-[60vh]">
+          <SheetHeader className="text-left">
+            <SheetTitle>Assign To</SheetTitle>
+          </SheetHeader>
+          <ScrollArea className="py-2 max-h-[40vh]">
+            <div className="space-y-1">
+              {assignableUsers.map((u) => (
+                <button
+                  key={u.id}
+                  type="button"
+                  onClick={async () => {
+                    if (u.id === task.assigneeId) { setAssigneeSheetOpen(false); return }
                     try {
-                      await deleteTask.mutateAsync(task.id)
-                      toast.success("Task deleted")
-                      setDeleteDialogOpen(false)
-                      onClose()
+                      await updateTask.mutateAsync({ id: task.id, data: { assigneeId: u.id } })
+                      setAssigneeSheetOpen(false)
                     } catch {
-                      toast.error("Failed to delete task")
+                      toast.error("Failed to reassign task")
                     }
                   }}
-                  disabled={deleteTask.isPending}
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium transition-colors hover:bg-muted/50",
+                    task.assigneeId === u.id && "bg-muted/40"
+                  )}
                 >
-                  {deleteTask.isPending ? "Deleting…" : "Delete"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </div>
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <span>{u.name}</span>
+                  </div>
+                  {task.assigneeId === u.id && <Check className="h-4 w-4 shrink-0" />}
+                </button>
+              ))}
+            </div>
+          </ScrollArea>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
@@ -819,7 +953,7 @@ export function TaskDetailModal({ open, onOpenChange, taskId }: TaskDetailModalP
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent
           side="right"
-          className="w-full max-w-full sm:max-w-full p-0 flex flex-col"
+          className="w-full max-w-full sm:max-w-full p-0 flex flex-col bg-white dark:bg-card"
         >
           <SheetHeader className="p-4 shrink-0 border-0">
             <SheetTitle className="sr-only">Task details</SheetTitle>

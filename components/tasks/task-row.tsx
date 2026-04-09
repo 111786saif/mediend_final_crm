@@ -130,10 +130,7 @@ export function TaskRow({
         }
       }}
       className={cn(
-        "flex items-center gap-3 w-full rounded-lg border px-4 py-3 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer",
-        isDone && "bg-emerald-50/60 border-emerald-200/60 dark:bg-emerald-950/20 dark:border-emerald-900/40",
-        isOverdue && !isDone && "border-red-200/60 dark:border-red-900/40",
-        !isDone && !isOverdue && "border-border bg-card",
+        "flex items-center gap-3 w-full px-4 py-4 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer",
         className
       )}
     >
@@ -163,7 +160,7 @@ export function TaskRow({
         <div className="flex items-center gap-2">
           <span
             className={cn(
-              "text-sm font-medium leading-snug truncate",
+              "text-base font-medium leading-snug truncate",
               isDone && "text-emerald-700 dark:text-emerald-400"
             )}
           >

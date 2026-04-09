@@ -110,10 +110,10 @@ export function TodayTab() {
     <div className="space-y-6">
       {sections.overdue.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-red-600 mb-2">
+          <h2 className="text-sm font-semibold text-red-600 mb-2 px-1">
             Overdue ({sections.overdue.length})
           </h2>
-          <div className="space-y-2">
+          <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
             {sections.overdue.map(renderTask)}
           </div>
         </section>
@@ -128,10 +128,10 @@ export function TodayTab() {
           : format(date, "d MMM")
         return (
           <section key={dateKey}>
-            <h2 className="text-sm font-semibold text-foreground mb-2">
+            <h2 className="text-sm font-semibold text-foreground mb-2 px-1">
               {heading} ({dayTasks.length})
             </h2>
-            <div className="space-y-2">
+            <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
               {dayTasks.map(renderTask)}
             </div>
           </section>
@@ -140,10 +140,10 @@ export function TodayTab() {
 
       {sections.noDate.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-muted-foreground mb-2">
+          <h2 className="text-sm font-semibold text-muted-foreground mb-2 px-1">
             No date ({sections.noDate.length})
           </h2>
-          <div className="space-y-2">
+          <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
             {sections.noDate.map(renderTask)}
           </div>
         </section>

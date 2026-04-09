@@ -245,7 +245,7 @@ export function FullCalendarTasks({
               <h3 className="mb-2 text-sm font-semibold text-foreground">
                 {heading}
               </h3>
-              <div className="space-y-2">
+              <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                 {tasks.map((task) => {
                   const today = startOfDay(new Date())
                   const taskDate = task.dueDate ? startOfDay(new Date(task.dueDate)) : null

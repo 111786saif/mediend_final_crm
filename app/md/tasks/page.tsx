@@ -9,8 +9,9 @@ import { TaskInput } from "@/components/tasks/task-input"
 import { MobileTaskDrawer } from "@/components/tasks/mobile-task-drawer"
 import { ApprovalTab } from "@/components/tasks/approval-tab"
 import { OverviewTab } from "@/components/tasks/overview-tab"
-import { CalendarTab } from "@/components/tasks/calendar-tab"
+
 import { TeamTab } from "@/components/tasks/team-tab"
+import { MyTasksTab } from "@/components/tasks/my-tasks-tab"
 import { TodayTab } from "@/components/tasks/today-tab"
 import { PerformanceTab } from "@/components/tasks/performance-tab"
 import { Button } from "@/components/ui/button"
@@ -69,13 +70,13 @@ export default function MDTasksPage() {
         badge: badges?.taskOverdueCount,
       },
       ...(isManager !== false ? [{ value: "team", label: "Team" as const }] : []),
+      { value: "mytasks", label: "My Tasks" },
       {
         value: "approval",
         label: "Approval",
         badge: badges?.taskApprovalCount,
       },
       { value: "all", label: "All tasks" },
-      { value: "calendar", label: "Calendar" },
       ...(user?.role === "MD" ? [{ value: "performance", label: "Performance" as const }] : []),
     ],
     [isManager, user?.role, badges]
@@ -141,10 +142,11 @@ export default function MDTasksPage() {
 
       <div className="flex-1 min-h-0 py-0 md:py-4">
         {activeTab === "team" && isManager && <TeamTab />}
+        {activeTab === "mytasks" && <MyTasksTab />}
         {activeTab === "all" && <TodayTab />}
         {activeTab === "approval" && <ApprovalTab />}
         {activeTab === "overview" && <OverviewTab />}
-        {activeTab === "calendar" && <CalendarTab />}
+
         {activeTab === "performance" && <PerformanceTab />}
       </div>
 

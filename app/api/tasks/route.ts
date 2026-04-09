@@ -24,9 +24,9 @@ async function getAllowedAssigneeIds(userId: string): Promise<string[]> {
   })
   if (user?.role === "ADMIN") return [] // Admin sees all
   if (user?.role === "MD") {
-    // MD sees only their team + watchlist, not everyone under them
+    // MD sees only their team + watchlist + self
     const ids = await getMDTeamAndWatchlistUserIds(userId)
-    return ids.length > 0 ? ids : [userId] // include self if empty
+    return [userId, ...ids.filter((id) => id !== userId)]
   }
   const employee = await getEmployeeByUserId(userId)
   if (!employee) return [userId]

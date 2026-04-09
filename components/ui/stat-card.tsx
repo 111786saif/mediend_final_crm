@@ -84,7 +84,7 @@ function StatCard({
 }: StatCardProps) {
   const styles = accentStyles[accent]
   const baseClassName = cn(
-    "rounded-lg border border-border border-l-4 bg-card px-2.5 py-2 shadow-sm sm:px-3 sm:py-3 block",
+    "rounded-lg border border-border border-l-4 bg-white dark:bg-card px-2.5 py-2 shadow-sm sm:px-3 sm:py-3 block",
     styles.border,
     href && "cursor-pointer transition-colors hover:bg-muted/50 active:scale-[0.98]",
     className

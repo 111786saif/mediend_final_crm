@@ -175,6 +175,7 @@ export interface UpdateTaskInput {
   /** Required when setting status to COMPLETED. 1-5 numeric rating. */
   grade?: "1" | "2" | "3" | "4" | "5"
   completionComments?: string | null
+  assigneeId?: string
   projectId?: string | null
   startTime?: string | null
   endTime?: string | null

@@ -16,6 +16,7 @@ const updateTaskSchema = z.object({
   /** Required when setting status to COMPLETED. Only manager (creator or MD/ADMIN) can approve. */
   grade: z.enum(["1", "2", "3", "4", "5"]).optional(),
   completionComments: z.string().optional().nullable(),
+  assigneeId: z.string().optional(),
   projectId: z.string().optional().nullable(),
   startTime: z.string().datetime().optional().nullable(),
   endTime: z.string().datetime().optional().nullable(),
@@ -163,6 +164,7 @@ export async function PATCH(
   if (parsed.data.description !== undefined) updateData.description = parsed.data.description
   if (parsed.data.dueDate !== undefined) updateData.dueDate = parsed.data.dueDate ? new Date(parsed.data.dueDate) : null
   if (parsed.data.priority !== undefined) updateData.priority = parsed.data.priority
+  if (parsed.data.assigneeId !== undefined) updateData.assigneeId = parsed.data.assigneeId
   if (parsed.data.projectId !== undefined) updateData.projectId = parsed.data.projectId
   if (parsed.data.startTime !== undefined) updateData.startTime = parsed.data.startTime ? new Date(parsed.data.startTime) : null
   if (parsed.data.endTime !== undefined) updateData.endTime = parsed.data.endTime ? new Date(parsed.data.endTime) : null

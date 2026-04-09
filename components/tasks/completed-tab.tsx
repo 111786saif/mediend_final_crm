@@ -80,7 +80,7 @@ export function CompletedTab() {
           <p className="text-xs text-muted-foreground mb-3">
             Marked done by assignees. Tap to review and rate.
           </p>
-          <div className="space-y-2">
+          <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
             {needsReviewTasks.map((task) => (
               <div
                 key={task.id}
@@ -115,7 +115,7 @@ export function CompletedTab() {
           <h2 className="text-sm font-semibold text-foreground mb-2">
             Completed ({completedTasks.length})
           </h2>
-          <div className="space-y-2">
+          <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
             {completedTasks.map((task) => (
               <div
                 key={task.id}

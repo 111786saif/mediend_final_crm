@@ -265,7 +265,7 @@ export function MobileTaskDrawer({
       <Drawer open={open} onOpenChange={onOpenChange} direction="bottom" repositionInputs={false}>
         <DrawerContent
           className={cn(
-            "inset-x-0 bottom-0 mt-0 flex h-dvh max-h-dvh flex-col rounded-t-2xl border-t border-border bg-card",
+            "inset-x-0 bottom-0 mt-0 flex h-dvh max-h-dvh flex-col rounded-t-2xl border-t border-border bg-white dark:bg-card",
             "[&>div:first-child]:hidden"
           )}
         >
@@ -359,7 +359,7 @@ export function MobileTaskDrawer({
       <Sheet open={pickerOpen === "assignee"} onOpenChange={(o) => !o && setPickerOpen(null)}>
         <SheetContent
           side="right"
-          className="w-full max-w-full sm:max-w-full flex flex-col p-0 bg-card"
+          className="w-full max-w-full sm:max-w-full flex flex-col p-0 bg-white dark:bg-card"
           onOpenAutoFocus={(event) => event.preventDefault()}
         >
           <SheetHeader className="border-b border-border px-4 py-4">
@@ -517,7 +517,7 @@ export function MobileTaskDrawer({
 
       {/* Priority picker */}
       <Sheet open={pickerOpen === "priority"} onOpenChange={(o) => !o && setPickerOpen(null)}>
-        <SheetContent side="right" className="w-full max-w-full sm:max-w-full flex flex-col p-0 bg-card">
+        <SheetContent side="right" className="w-full max-w-full sm:max-w-full flex flex-col p-0 bg-white dark:bg-card">
           <SheetHeader className="border-b border-border px-4 py-4">
             <SheetTitle className="text-xl font-semibold pr-8">Priority</SheetTitle>
           </SheetHeader>
@@ -546,7 +546,7 @@ export function MobileTaskDrawer({
 
       {/* Project picker */}
       <Sheet open={pickerOpen === "project"} onOpenChange={(o) => !o && setPickerOpen(null)}>
-        <SheetContent side="right" className="w-full max-w-full sm:max-w-full flex flex-col p-0 bg-card">
+        <SheetContent side="right" className="w-full max-w-full sm:max-w-full flex flex-col p-0 bg-white dark:bg-card">
           <SheetHeader className="border-b border-border px-4 py-4">
             <SheetTitle className="text-xl font-semibold pr-8">Project</SheetTitle>
           </SheetHeader>

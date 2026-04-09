@@ -25,6 +25,7 @@ export interface MDTeamOverviewMember {
   attendanceStatus: AttendanceStatus
   inTime: string | null
   lastWorkLogAt: string | null // ISO string of most recent work log createdAt
+  worklogEnforced: boolean
   source: TeamMemberSource
 }
 
@@ -181,12 +182,15 @@ export async function GET(request: NextRequest) {
       completedCountMap.set(r.assigneeId, r._count.id)
     }
 
-    // Average rating per assignee (completed tasks with numeric grades)
+    // Average rating per assignee (completed tasks with numeric grades, current month)
+    const now = new Date()
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
     const completedWithGrades = await prisma.task.findMany({
       where: {
         assigneeId: { in: userIds },
         status: "COMPLETED",
         grade: { not: null },
+        completedAt: { gte: monthStart },
       },
       select: { assigneeId: true, grade: true },
     })
@@ -263,6 +267,17 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Work log enforcement permissions per user
+    const worklogPermissions = await prisma.userFeaturePermission.findMany({
+      where: {
+        userId: { in: userIds },
+        featureKey: "worklog_enforcement",
+        enabled: true,
+      },
+      select: { userId: true },
+    })
+    const worklogEnforcedSet = new Set(worklogPermissions.map((p) => p.userId))
+
     // Today's attendance — matches attendance route / heatmap logic.
     // inTime = earliest punch, outTime = latest punch (only if 2+ punches AND gap > 5 min).
     // Biometric devices often record duplicate/close-together punches for a single check-in,
@@ -336,6 +351,7 @@ export async function GET(request: NextRequest) {
         attendanceStatus: att.status,
         inTime: att.inTime,
         lastWorkLogAt: lastWorkLog ? lastWorkLog.toISOString() : null,
+        worklogEnforced: worklogEnforcedSet.has(userId),
         source,
       })
     }

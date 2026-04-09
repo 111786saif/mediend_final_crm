@@ -37,12 +37,12 @@ import { toast } from "sonner"
 
 type TabId = "active" | "completed" | "overdue"
 
-/** Team member detail: red for overdue, yellow for on-time (no priority-based colour) */
+/** Team member detail: red left border for overdue, amber for on-time */
 function getTeamDetailTaskCardClass(isOverdue: boolean): string {
-  const base = "rounded-lg border border-l-4 bg-card shadow-sm overflow-hidden mb-2"
+  const base = "border-l-4 overflow-hidden"
   return isOverdue
-    ? cn(base, "border-l-red-500 bg-red-50/50")
-    : cn(base, "border-l-amber-400 bg-amber-50/40")
+    ? cn(base, "border-l-red-500")
+    : cn(base, "border-l-amber-400")
 }
 
 function getOverdueDays(task: Task, today: Date): number {
@@ -362,40 +362,39 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
           <div className="space-y-4 pb-6">
             {/* Extension Requests - pink, click navigates to approval tab */}
             {extensionRequests.length > 0 && (
-              <section className="rounded-xl border border-border border-l-4 border-l-pink-500 bg-card p-3">
-                <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 text-pink-800">
+              <section>
+                <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-pink-700 dark:text-pink-400">
                   <ArrowUpRight className="h-4 w-4 shrink-0" />
                   Extension Requests ({extensionRequests.length})
                 </h2>
-                <ul className="space-y-1.5">
+                <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                   {extensionRequests.map((a) => (
-                    <li key={a.id}>
-                      <button
-                        type="button"
-                        onClick={() => router.push("/md/tasks#approval")}
-                        className="w-full text-left rounded-md bg-pink-100/60 hover:bg-pink-200/60 px-2.5 py-1.5 text-sm transition-colors"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="font-medium text-pink-900 truncate">{a.task.title}</span>
-                          <span className={cn(
-                            "shrink-0 rounded px-1.5 py-0.5 text-xs font-medium",
-                            a.status === "PENDING" && "bg-amber-100 text-amber-800",
-                            a.status === "APPROVED" && "bg-emerald-100 text-emerald-800",
-                            a.status === "REJECTED" && "bg-red-100 text-red-800"
-                          )}>
-                            {a.status.charAt(0) + a.status.slice(1).toLowerCase()}
-                          </span>
-                        </div>
-                        <p className="text-xs text-pink-700/90 mt-0.5">
-                          {a.oldDueDate ? format(new Date(a.oldDueDate), "MMM d") : "No date"}
-                          {" → "}
-                          {a.newDueDate ? format(new Date(a.newDueDate), "MMM d") : "No date"}
-                          {a.reason && ` · ${a.reason}`}
-                        </p>
-                      </button>
-                    </li>
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => router.push("/md/tasks#approval")}
+                      className="w-full text-left px-4 py-3 hover:bg-muted/40 transition-colors"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-base font-medium truncate">{a.task.title}</span>
+                        <span className={cn(
+                          "shrink-0 rounded px-1.5 py-0.5 text-xs font-medium",
+                          a.status === "PENDING" && "bg-amber-100 text-amber-800",
+                          a.status === "APPROVED" && "bg-emerald-100 text-emerald-800",
+                          a.status === "REJECTED" && "bg-red-100 text-red-800"
+                        )}>
+                          {a.status.charAt(0) + a.status.slice(1).toLowerCase()}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {a.oldDueDate ? format(new Date(a.oldDueDate), "MMM d") : "No date"}
+                        {" → "}
+                        {a.newDueDate ? format(new Date(a.newDueDate), "MMM d") : "No date"}
+                        {a.reason && ` · ${a.reason}`}
+                      </p>
+                    </button>
                   ))}
-                </ul>
+                </div>
               </section>
             )}
 
@@ -404,15 +403,15 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
               <>
                 {/* Needs review - top (active tab only) */}
                 {activeTab === "active" && needsReviewTasks.length > 0 && (
-                  <section className="rounded-xl border border-border border-l-4 border-l-violet-500 bg-card p-3">
-                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 text-violet-800 dark:text-violet-200">
+                  <section>
+                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-violet-700 dark:text-violet-300">
                       <Star className="h-4 w-4 shrink-0" />
                       Needs review ({needsReviewTasks.length})
+                      <span className="text-xs font-normal text-muted-foreground ml-1">Click to rate</span>
                     </h2>
-                    <p className="text-xs text-violet-600/80 dark:text-violet-400/60 mb-2">Click a task to rate and approve</p>
-                    <ul className="space-y-1.5">
+                    <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                       {needsReviewTasks.map((task) => (
-                        <li key={task.id} className={getTeamDetailTaskCardClass(false)}>
+                        <div key={task.id} className={getTeamDetailTaskCardClass(false)}>
                           <TaskRow
                             task={task}
                             onClick={() => handleTaskRowClick(task)}
@@ -425,25 +424,25 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                             canMarkComplete={canMarkComplete(task)}
                             onMarkCompleteRequest={() => setTaskToComplete(task)}
                           />
-                        </li>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </section>
                 )}
 
                 {/* Overdue - top */}
                 {overdueTasks.length > 0 && (activeTab === "overdue" || activeTab === "active") && (
-                  <section className="rounded-xl border border-border border-l-4 border-l-red-500 bg-card p-3">
-                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 text-red-800 dark:text-red-200">
+                  <section>
+                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-red-600 dark:text-red-400">
                       <Clock className="h-4 w-4 shrink-0" />
                       Overdue ({overdueTasks.length})
                     </h2>
-                    <ul className="space-y-1.5">
+                    <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                       {overdueTasks.map((task) => {
                         const daysOverdue = getOverdueDays(task, today)
                         return (
-                          <li key={task.id} className={getTeamDetailTaskCardClass(true)}>
-                            <p className="text-xs text-red-600 px-2 pt-1.5 pb-0.5 font-medium">
+                          <div key={task.id} className={getTeamDetailTaskCardClass(true)}>
+                            <p className="text-xs text-red-600 px-4 pt-3 pb-0 font-medium">
                               {daysOverdue} day{daysOverdue !== 1 ? "s" : ""} overdue
                             </p>
                             <TaskRow
@@ -458,31 +457,31 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                               canMarkComplete={canMarkComplete(task)}
                               onMarkCompleteRequest={() => setTaskToComplete(task)}
                             />
-                          </li>
+                          </div>
                         )
                       })}
-                    </ul>
+                    </div>
                   </section>
                 )}
 
                 {/* MD Tasks - on-time only (active tab only) */}
                 {activeTab === "active" && (
-                  <section className="rounded-xl border border-border border-l-4 border-l-blue-500 bg-card p-3">
-                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 text-blue-800 dark:text-blue-200">
+                  <section>
+                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-blue-700 dark:text-blue-300">
                       <Crown className="h-4 w-4 shrink-0" />
                       MD Tasks ({mdTasksOnTime.length})
+                      <span className="text-xs font-normal text-muted-foreground ml-1">Assigned by you</span>
                     </h2>
-                    <p className="text-xs text-blue-600/80 dark:text-blue-400/60 mb-2">Tasks assigned by you</p>
                     {isError ? (
-                      <p className="text-xs text-destructive">Failed to load tasks.</p>
+                      <p className="text-xs text-destructive px-1">Failed to load tasks.</p>
                     ) : isLoading ? (
-                      <p className="text-xs text-muted-foreground">Loading…</p>
+                      <p className="text-xs text-muted-foreground px-1">Loading…</p>
                     ) : mdTasksOnTime.length === 0 ? (
-                      <p className="text-xs text-muted-foreground">No on-time MD tasks</p>
+                      <p className="text-xs text-muted-foreground px-1">No on-time MD tasks</p>
                     ) : (
-                      <ul className="space-y-1.5">
+                      <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                         {mdTasksOnTime.map((task) => (
-                          <li key={task.id} className={getTeamDetailTaskCardClass(false)}>
+                          <div key={task.id} className={getTeamDetailTaskCardClass(false)}>
                             <TaskRow
                               task={task}
                               onClick={() => handleTaskRowClick(task)}
@@ -495,31 +494,31 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                               canMarkComplete={canMarkComplete(task)}
                               onMarkCompleteRequest={() => setTaskToComplete(task)}
                             />
-                          </li>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     )}
                   </section>
                 )}
 
                 {/* Team Tasks - on-time only (active tab only) */}
                 {activeTab === "active" && (
-                  <section className="rounded-xl border border-border border-l-4 border-l-emerald-500 bg-card p-3">
-                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 text-emerald-800 dark:text-emerald-200">
+                  <section>
+                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-emerald-700 dark:text-emerald-300">
                       <Users className="h-4 w-4 shrink-0" />
                       Team Tasks ({teamTasksOnTime.length})
+                      <span className="text-xs font-normal text-muted-foreground ml-1">Assigned by others</span>
                     </h2>
-                    <p className="text-xs text-emerald-600/80 dark:text-emerald-400/60 mb-2">Tasks assigned by others</p>
                     {isError ? (
-                      <p className="text-xs text-destructive">Failed to load tasks.</p>
+                      <p className="text-xs text-destructive px-1">Failed to load tasks.</p>
                     ) : isLoading ? (
-                      <p className="text-xs text-muted-foreground">Loading…</p>
+                      <p className="text-xs text-muted-foreground px-1">Loading…</p>
                     ) : teamTasksOnTime.length === 0 ? (
-                      <p className="text-xs text-muted-foreground">No on-time team tasks</p>
+                      <p className="text-xs text-muted-foreground px-1">No on-time team tasks</p>
                     ) : (
-                      <ul className="space-y-1.5">
+                      <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                         {teamTasksOnTime.map((task) => (
-                          <li key={task.id} className={getTeamDetailTaskCardClass(false)}>
+                          <div key={task.id} className={getTeamDetailTaskCardClass(false)}>
                             <TaskRow
                               task={task}
                               onClick={() => handleTaskRowClick(task)}
@@ -532,9 +531,9 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                               canMarkComplete={canMarkComplete(task)}
                               onMarkCompleteRequest={() => setTaskToComplete(task)}
                             />
-                          </li>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     )}
                   </section>
                 )}
@@ -543,21 +542,21 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
 
             {/* Completed tab */}
             {activeTab === "completed" && (
-              <section className="rounded-xl border border-border border-l-4 border-l-emerald-500 bg-card p-3">
-                <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 text-emerald-800 dark:text-emerald-200">
+              <section>
+                <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-emerald-700 dark:text-emerald-300">
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
                   Completed ({completedTasks.length})
                 </h2>
                 {isError ? (
-                  <p className="text-xs text-destructive">Failed to load tasks.</p>
+                  <p className="text-xs text-destructive px-1">Failed to load tasks.</p>
                 ) : isLoading ? (
-                  <p className="text-xs text-muted-foreground">Loading…</p>
+                  <p className="text-xs text-muted-foreground px-1">Loading…</p>
                 ) : completedTasks.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">No completed tasks</p>
+                  <p className="text-xs text-muted-foreground px-1">No completed tasks</p>
                 ) : (
-                  <ul className="space-y-1.5">
+                  <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                     {completedTasks.map((task) => (
-                      <li key={task.id} className={getTeamDetailTaskCardClass(false)}>
+                      <div key={task.id} className={getTeamDetailTaskCardClass(false)}>
                         <TaskRow
                           task={task}
                           onClick={() => handleTaskRowClick(task)}
@@ -571,9 +570,9 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                           canMarkComplete={canMarkComplete(task)}
                           onMarkCompleteRequest={() => setTaskToComplete(task)}
                         />
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 )}
               </section>
             )}

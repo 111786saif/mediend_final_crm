@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { startOfDay } from "date-fns"
+import { startOfDay, isSameDay } from "date-fns"
 import { useTaskStats, useTasks, useWarnings } from "@/hooks/use-tasks"
 import { useAuth } from "@/hooks/use-auth"
 import { StatCard } from "@/components/ui/stat-card"
@@ -9,7 +9,7 @@ import { TaskRow } from "./task-row"
 import { getTaskCardClass } from "./task-card-class"
 import { TaskDetailModal } from "@/components/calendar/task-detail-modal"
 import { MarkCompleteDrawer } from "./mark-complete-drawer"
-import { ChevronDown, ChevronRight, LayoutGrid, Users, Star, Trophy, Medal } from "lucide-react"
+import { ChevronDown, ChevronRight, LayoutGrid, Users, Star, CalendarCheck } from "lucide-react"
 import type { Task } from "@/hooks/use-tasks"
 import { useIsMobile } from "@/hooks/use-mobile"
 import {
@@ -31,29 +31,20 @@ export function OverviewTab() {
     }
     return map
   }, [allWarnings])
-  const activityCountByAssignee = useMemo(() => {
-    const map: Record<string, number> = {}
-    for (const t of tasks) {
-      const count = t.unseenActivityCount ?? 0
-      if (count > 0) {
-        map[t.assigneeId] = (map[t.assigneeId] ?? 0) + count
-      }
-    }
-    return map
-  }, [tasks])
   const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null)
-  const [expandedAssigneeId, setExpandedAssigneeId] = useState<string | null>(null)
   const [detailTaskId, setDetailTaskId] = useState<string | null>(null)
   const [taskToComplete, setTaskToComplete] = useState<Task | null>(null)
   const [statDrawer, setStatDrawer] = useState<"completed" | "pending" | "pendingReview" | "overdue" | null>(null)
   const [overdueExpanded, setOverdueExpanded] = useState(false)
+  const [dueTodayExpanded, setDueTodayExpanded] = useState(true)
   const isMobile = useIsMobile()
 
   const canMarkComplete = (task: Task) =>
     !!user && (user.role === "MD" || user.role === "ADMIN" || task.createdById === user.id)
 
+  const today = useMemo(() => startOfDay(new Date()), [])
+
   const overdueTasks = useMemo(() => {
-    const today = startOfDay(new Date())
     return tasks
       .filter(
         (t) =>
@@ -67,7 +58,17 @@ export function OverviewTab() {
         (a, b) =>
           new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime()
       )
-  }, [tasks])
+  }, [tasks, today])
+
+  const dueTodayTasks = useMemo(() => {
+    return tasks.filter(
+      (t) =>
+        t.status !== "COMPLETED" &&
+        t.status !== "CANCELLED" &&
+        t.dueDate &&
+        isSameDay(new Date(t.dueDate), today)
+    )
+  }, [tasks, today])
 
   const projectList = useMemo(
     () => stats?.projectWise.filter((p) => p.projectId != null) ?? [],
@@ -127,10 +128,6 @@ export function OverviewTab() {
   const projectTasks = expandedProjectId
     ? tasks.filter((t) => (t.projectId ?? null) === expandedProjectId)
     : []
-  const assigneeTasks = expandedAssigneeId
-    ? tasks.filter((t) => t.assigneeId === expandedAssigneeId)
-    : []
-
   const statDrawerTitle =
     statDrawer === "completed"
       ? "Completed"
@@ -228,47 +225,89 @@ export function OverviewTab() {
               ) : statDrawerTasks.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No tasks</p>
               ) : (
-                statDrawerTasks.map((task) => {
-                  const today = startOfDay(new Date())
-                  const isOverdue =
-                    !!task.dueDate &&
-                    new Date(task.dueDate) < today &&
-                    task.status !== "COMPLETED" &&
-                    task.status !== "EMPLOYEE_DONE"
-                  return (
-                    <div key={task.id} className={getTaskCardClass(task, { isOverdue })}>
-                      <TaskRow
-                        task={task}
-                        onClick={() => {
-                          setDetailTaskId(task.id)
-                          setStatDrawer(null)
-                        }}
-                        showAssignee
-                        showProject
-                        warningCount={taskWarningCountMap[task.id] ?? 0}
-                        extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                        activityCount={task.unseenActivityCount ?? 0}
-                        isAssignee={task.assigneeId === user?.id}
-                        canMarkComplete={canMarkComplete(task)}
-                        onMarkCompleteRequest={() => {
-                          setTaskToComplete(task)
-                          setStatDrawer(null)
-                        }}
-                      />
-                    </div>
-                  )
-                })
+                <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
+                  {statDrawerTasks.map((task) => {
+                    const isOverdue =
+                      !!task.dueDate &&
+                      new Date(task.dueDate) < today &&
+                      task.status !== "COMPLETED" &&
+                      task.status !== "EMPLOYEE_DONE"
+                    return (
+                      <div key={task.id} className={getTaskCardClass(task, { isOverdue })}>
+                        <TaskRow
+                          task={task}
+                          onClick={() => {
+                            setDetailTaskId(task.id)
+                            setStatDrawer(null)
+                          }}
+                          showAssignee
+                          showProject
+                          warningCount={taskWarningCountMap[task.id] ?? 0}
+                          extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+                          activityCount={task.unseenActivityCount ?? 0}
+                          isAssignee={task.assigneeId === user?.id}
+                          canMarkComplete={canMarkComplete(task)}
+                          onMarkCompleteRequest={() => {
+                            setTaskToComplete(task)
+                            setStatDrawer(null)
+                          }}
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
               )}
             </div>
           </SheetContent>
         </Sheet>
       )}
 
-      {overdueTasks.length > 0 && (
-        <section className="rounded-xl border border-border border-l-4 border-l-red-500 overflow-hidden">
+      {dueTodayTasks.length > 0 && (
+        <section>
           <button
             type="button"
-            className="flex w-full items-center gap-2 px-3 py-3 text-left text-sm hover:bg-muted/50"
+            className="flex w-full items-center gap-2 px-1 py-2 text-left hover:opacity-80"
+            onClick={() => setDueTodayExpanded((v) => !v)}
+          >
+            {dueTodayExpanded ? (
+              <ChevronDown className="h-4 w-4 shrink-0 text-blue-600" />
+            ) : (
+              <ChevronRight className="h-4 w-4 shrink-0 text-blue-600" />
+            )}
+            <CalendarCheck className="h-4 w-4 shrink-0 text-blue-600" />
+            <h2 className="text-sm font-semibold text-blue-600 flex-1">
+              Due Today ({dueTodayTasks.length})
+            </h2>
+          </button>
+          {dueTodayExpanded && (
+            <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
+              {dueTodayTasks.map((task) => (
+                <div key={task.id} className={getTaskCardClass(task, { isOverdue: false })}>
+                  <TaskRow
+                    task={task}
+                    onClick={() => setDetailTaskId(task.id)}
+                    showAssignee
+                    showProject
+                    warningCount={taskWarningCountMap[task.id] ?? 0}
+                    extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+                    activityCount={task.unseenActivityCount ?? 0}
+                    isAssignee={task.assigneeId === user?.id}
+                    canMarkComplete={canMarkComplete(task)}
+                    onMarkCompleteRequest={() => setTaskToComplete(task)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+
+      {overdueTasks.length > 0 && (
+        <section>
+          <button
+            type="button"
+            className="flex w-full items-center gap-2 px-1 py-2 text-left hover:opacity-80"
             onClick={() => setOverdueExpanded((v) => !v)}
           >
             {overdueExpanded ? (
@@ -281,7 +320,7 @@ export function OverviewTab() {
             </h2>
           </button>
           {overdueExpanded && (
-            <div className="border-t px-2 py-2 space-y-2">
+            <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
               {overdueTasks.map((task) => (
                 <div key={task.id} className={getTaskCardClass(task, { isOverdue: true })}>
                   <TaskRow
@@ -304,140 +343,13 @@ export function OverviewTab() {
       )}
 
       <section>
-        <h2 className="text-sm font-semibold flex items-center gap-2 mb-3">
-          <Trophy className="h-4 w-4" />
-          Leaderboard
-        </h2>
-        <div className="space-y-2">
-          {stats.employeeWise.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No tasks yet.</p>
-          ) : (
-            [...stats.employeeWise]
-              .sort((a, b) => {
-                const aVal = a.avgRating ?? -1
-                const bVal = b.avgRating ?? -1
-                return bVal - aVal
-              })
-              .map((e, idx) => {
-                const rank = idx + 1
-                const isExpanded = expandedAssigneeId === e.assigneeId
-                return (
-                  <div
-                    key={e.assigneeId}
-                    className="rounded-xl border border-border border-l-4 overflow-hidden transition-colors hover:bg-muted/30"
-                    style={{
-                      borderLeftColor:
-                        rank === 1
-                          ? "var(--color-amber-500)"
-                          : rank === 2
-                            ? "var(--color-slate-400)"
-                            : rank === 3
-                              ? "var(--color-amber-700)"
-                              : undefined,
-                    }}
-                  >
-                    <button
-                      type="button"
-                      className="flex w-full items-center gap-3 px-3 py-3 text-left text-sm hover:bg-muted/50"
-                      onClick={() =>
-                        setExpandedAssigneeId(
-                          isExpanded ? null : e.assigneeId
-                        )
-                      }
-                    >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold">
-                        {rank <= 3 ? (
-                          rank === 1 ? (
-                            <Trophy className="h-5 w-5 text-amber-500" />
-                          ) : rank === 2 ? (
-                            <Medal className="h-5 w-5 text-slate-400" />
-                          ) : (
-                            <Medal className="h-5 w-5 text-amber-700" />
-                          )
-                        ) : (
-                          <span className="text-muted-foreground">{rank}</span>
-                        )}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <span className="font-medium block truncate">{e.assigneeName}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {e.completed}/{e.total} tasks
-                          {(activityCountByAssignee[e.assigneeId] ?? 0) > 0 && (
-                            <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium text-primary-foreground">
-                              {activityCountByAssignee[e.assigneeId]! > 99 ? "99+" : activityCountByAssignee[e.assigneeId]}
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                      {e.avgRating != null ? (
-                        <div className="flex shrink-0 items-center gap-1">
-                          <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                          <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
-                            {e.avgRating.toFixed(1)}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-muted-foreground shrink-0">—</span>
-                      )}
-                      {isExpanded ? (
-                        <ChevronDown className="h-4 w-4 shrink-0" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 shrink-0" />
-                      )}
-                    </button>
-                  {isExpanded && (
-                    <div className="border-t px-2 py-2 space-y-2">
-                      {tasksLoading ? (
-                        <p className="text-xs text-muted-foreground py-2">
-                          Loading...
-                        </p>
-                      ) : assigneeTasks.length === 0 ? (
-                        <p className="text-xs text-muted-foreground py-2">
-                          No tasks
-                        </p>
-                      ) : (
-                        assigneeTasks.map((task) => {
-                          const today = startOfDay(new Date())
-                          const isOverdue =
-                            !!task.dueDate &&
-                            new Date(task.dueDate) < today &&
-                            task.status !== "COMPLETED" &&
-                            task.status !== "EMPLOYEE_DONE"
-                          return (
-                            <div key={task.id} className={getTaskCardClass(task, { isOverdue })}>
-                              <TaskRow
-                                task={task}
-                                onClick={() => setDetailTaskId(task.id)}
-                                showAssignee={false}
-                                showProject
-                                warningCount={taskWarningCountMap[task.id] ?? 0}
-                                extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                                activityCount={task.unseenActivityCount ?? 0}
-                                isAssignee={task.assigneeId === user?.id}
-                                canMarkComplete={canMarkComplete(task)}
-                                onMarkCompleteRequest={() => setTaskToComplete(task)}
-                              />
-                            </div>
-                          )
-                        })
-                      )}
-                    </div>
-                  )}
-                </div>
-              )
-            })
-          )}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-sm font-semibold flex items-center gap-2 mb-3">
+        <h2 className="text-sm font-semibold flex items-center gap-2 mb-2 px-1 text-muted-foreground uppercase tracking-wide">
           <LayoutGrid className="h-4 w-4" />
           By project
         </h2>
-        <div className="space-y-2">
+        <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
           {projectList.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No projects yet.</p>
+            <p className="text-sm text-muted-foreground px-4 py-6">No projects yet.</p>
           ) : (
             projectList.map((p) => {
               const total = p.count
@@ -446,13 +358,10 @@ export function OverviewTab() {
               ).length
               const isExpanded = expandedProjectId === p.projectId
               return (
-                <div
-                  key={p.projectId ?? "none"}
-                  className="rounded-md border"
-                >
+                <div key={p.projectId ?? "none"}>
                   <button
                     type="button"
-                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-muted/50"
+                    className="flex w-full items-center gap-2 px-4 py-3 text-left hover:bg-muted/40 transition-colors"
                     onClick={() =>
                       setExpandedProjectId(isExpanded ? null : p.projectId)
                     }
@@ -462,24 +371,23 @@ export function OverviewTab() {
                     ) : (
                       <ChevronRight className="h-4 w-4 shrink-0" />
                     )}
-                    <span className="flex-1 font-medium">{p.projectName}</span>
-                    <span className="text-muted-foreground">
+                    <span className="flex-1 text-base font-medium">{p.projectName}</span>
+                    <span className="text-sm text-muted-foreground">
                       {completed}/{total}
                     </span>
                   </button>
                   {isExpanded && (
-                    <div className="border-t px-2 py-2 space-y-2">
+                    <div className="border-t divide-y divide-border bg-muted/20">
                       {tasksLoading ? (
-                        <p className="text-xs text-muted-foreground py-2">
+                        <p className="text-xs text-muted-foreground px-4 py-4">
                           Loading...
                         </p>
                       ) : projectTasks.length === 0 ? (
-                        <p className="text-xs text-muted-foreground py-2">
+                        <p className="text-xs text-muted-foreground px-4 py-4">
                           No tasks
                         </p>
                       ) : (
                         projectTasks.map((task) => {
-                          const today = startOfDay(new Date())
                           const isOverdue =
                             !!task.dueDate &&
                             new Date(task.dueDate) < today &&

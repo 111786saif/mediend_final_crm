@@ -65,15 +65,15 @@ export function ApprovalTab() {
           <p className="text-sm text-muted-foreground mb-3">
             Approve or reject due date change requests from your team.
           </p>
-          <ul className="space-y-3">
+          <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
             {approvals.map((approval) => (
-              <li
+              <div
                 key={approval.id}
-                className="rounded-lg border border-l-4 border-l-amber-400 bg-card p-4 shadow-sm"
+                className="border-l-4 border-l-amber-400 px-4 py-4"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0 flex-1 space-y-1">
-                    <p className="text-left font-medium text-base md:text-sm">
+                    <p className="text-left font-medium text-base">
                       {approval.task.title}
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -82,7 +82,7 @@ export function ApprovalTab() {
                         <> · Assignee: {approval.task.assignee.name}</>
                       )}
                     </p>
-                    <p className="text-sm md:text-xs">
+                    <p className="text-sm">
                       <span className="text-muted-foreground">
                         {approval.oldDueDate
                           ? format(new Date(approval.oldDueDate), "MMM d, yyyy")
@@ -129,9 +129,9 @@ export function ApprovalTab() {
                     </Button>
                   </div>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </section>
       )}
 
@@ -152,7 +152,7 @@ export function ApprovalTab() {
             )}
           </p>
         ) : (
-          <div className="space-y-2">
+          <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
             {visibleReviewTasks.map((task) => (
               <div key={task.id} className={getTaskCardClass(task)}>
                 <TaskRow
