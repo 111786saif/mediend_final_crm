@@ -2,11 +2,13 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { 
-  generateOfferLetterHTML, 
-  generateIncrementLetterHTML, 
-  generateExperienceLetterHTML, 
-  generateRelievingLetterHTML 
+import {
+  generateOfferLetterHTML,
+  generateIncrementLetterHTML,
+  generateExperienceLetterHTML,
+  generateRelievingLetterHTML,
+  generateInternshipOfferLetterHTML,
+  generateInternshipCompletionLetterHTML,
 } from '@/lib/hrms/document-templates'
 
 export async function GET(
@@ -104,6 +106,12 @@ export async function GET(
         break
       case 'RELIEVING_LETTER':
         htmlContent = generateRelievingLetterHTML(employeeData, metadata || undefined)
+        break
+      case 'INTERNSHIP_OFFER_LETTER':
+        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata || undefined)
+        break
+      case 'INTERNSHIP_COMPLETION_LETTER':
+        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
         break
       default:
         return errorResponse('Invalid document type', 400)

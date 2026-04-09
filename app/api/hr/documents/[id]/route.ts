@@ -3,11 +3,13 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { 
-  generateOfferLetterHTML, 
-  generateIncrementLetterHTML, 
-  generateExperienceLetterHTML, 
-  generateRelievingLetterHTML 
+import {
+  generateOfferLetterHTML,
+  generateIncrementLetterHTML,
+  generateExperienceLetterHTML,
+  generateRelievingLetterHTML,
+  generateInternshipOfferLetterHTML,
+  generateInternshipCompletionLetterHTML,
 } from '@/lib/hrms/document-templates'
 
 export async function GET(
@@ -86,6 +88,16 @@ export async function GET(
         break
       case 'RELIEVING_LETTER':
         htmlContent = generateRelievingLetterHTML(employeeData, metadata || undefined)
+        break
+      case 'INTERNSHIP_OFFER_LETTER':
+        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata || undefined)
+        htmlContent = htmlContent.replace(
+          '<!-- ACK_PLACEHOLDER -->',
+          '<br><br><p>Signature: _________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: _________________</p>'
+        )
+        break
+      case 'INTERNSHIP_COMPLETION_LETTER':
+        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
         break
       case 'CUSTOM':
         // CUSTOM documents are uploaded files; view page will show link/embed

@@ -171,6 +171,7 @@ export function AppSidebar() {
             item.title === 'Finance Dashboard' ||
             item.title === 'MD HR Dashboard' ||
             item.title === 'DM Dashboard' ||
+            item.title === 'Dept Targets' ||
             item.title.startsWith('MD ')
         )
       : user.role === 'ADMIN' || user.role === 'TESTER'

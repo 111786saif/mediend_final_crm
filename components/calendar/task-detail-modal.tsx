@@ -72,16 +72,6 @@ const STATUS_OPTIONS = [
   { value: "CANCELLED", label: "Cancelled" },
 ] as const
 
-const PRESET_COMMENTS = [
-  "Good job",
-  "Excellent work",
-  "Delivered on time",
-  "Slight delay",
-  "Very delayed",
-  "Bad quality of work",
-  "Needs improvement",
-  "Rework required",
-]
 
 const PRIORITY_OPTIONS = [
   { value: "GENERAL", label: "General" },
@@ -522,19 +512,6 @@ function TaskDetailContent({
             </div>
           </ScrollArea>
           <div className="space-y-2 mt-3 shrink-0">
-            <p className="text-xs font-medium text-muted-foreground">Quick comment</p>
-            <div className="flex flex-wrap gap-1.5">
-              {PRESET_COMMENTS.map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setCommentText((prev) => (prev ? `${prev}\n${p}` : p))}
-                  className="rounded-full px-3 py-1.5 text-xs font-medium bg-muted hover:bg-muted/80 text-foreground border border-border transition-colors"
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
             <div className="flex gap-2">
               <Textarea
                 placeholder="Add a comment..."

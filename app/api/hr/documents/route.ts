@@ -3,18 +3,20 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { 
-  generateOfferLetterHTML, 
-  generateIncrementLetterHTML, 
-  generateExperienceLetterHTML, 
-  generateRelievingLetterHTML 
+import {
+  generateOfferLetterHTML,
+  generateIncrementLetterHTML,
+  generateExperienceLetterHTML,
+  generateRelievingLetterHTML,
+  generateInternshipOfferLetterHTML,
+  generateInternshipCompletionLetterHTML,
 } from '@/lib/hrms/document-templates'
 import { z } from 'zod'
 import { DocumentType } from '@/generated/prisma/client'
 
 const generateDocumentSchema = z.object({
   employeeId: z.string().optional(),
-  documentType: z.enum(['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER']),
+  documentType: z.enum(['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'INTERNSHIP_OFFER_LETTER', 'INTERNSHIP_COMPLETION_LETTER']),
   applicantName: z.string().optional(),
   applicantEmail: z.string().optional(),
   metadata: z.record(z.any()).optional(),
@@ -45,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     // For offer letters, applicant details can be provided directly (no employee needed)
-    if (documentType === 'OFFER_LETTER' && !employeeId) {
+    if ((documentType === 'OFFER_LETTER' || documentType === 'INTERNSHIP_OFFER_LETTER') && !employeeId) {
       if (!applicantName || !applicantEmail) {
         return errorResponse('Applicant name and email are required for offer letters', 400)
       }
@@ -92,6 +94,12 @@ export async function POST(request: NextRequest) {
         break
       case 'RELIEVING_LETTER':
         htmlContent = generateRelievingLetterHTML(employeeData, metadata)
+        break
+      case 'INTERNSHIP_OFFER_LETTER':
+        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata)
+        break
+      case 'INTERNSHIP_COMPLETION_LETTER':
+        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata)
         break
       default:
         return errorResponse('Invalid document type', 400)

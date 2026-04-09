@@ -53,6 +53,7 @@ const STATUS_LABELS: Record<string, string> = {
   ON_PIP: 'On PIP',
   ON_NOTICE: 'Notice',
   TERMINATED: 'Inactive',
+  ABSCONDED: 'Absconded',
 }
 
 const ROW_STATUS_CLASS: Record<string, string> = {
@@ -60,6 +61,7 @@ const ROW_STATUS_CLASS: Record<string, string> = {
   ON_PIP: 'bg-orange-50/50 dark:bg-orange-950/20',
   ON_NOTICE: 'bg-amber-50/50 dark:bg-amber-950/20',
   TERMINATED: 'bg-red-50/50 dark:bg-red-950/20',
+  ABSCONDED: 'bg-rose-50/50 dark:bg-rose-950/20',
 }
 
 export default function HREmployeesPage() {
@@ -246,6 +248,7 @@ export default function HREmployeesPage() {
                   <SelectItem value="ON_PIP">On PIP</SelectItem>
                   <SelectItem value="ON_NOTICE">On Notice</SelectItem>
                   <SelectItem value="TERMINATED">Inactive</SelectItem>
+                  <SelectItem value="ABSCONDED">Absconded</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -304,7 +307,8 @@ export default function HREmployeesPage() {
                           employee.status === 'ACTIVE' && 'border-emerald-300 text-emerald-700 bg-emerald-50/80 dark:border-emerald-800 dark:text-emerald-300 dark:bg-emerald-950/30',
                           employee.status === 'ON_PIP' && 'border-orange-300 text-orange-700 bg-orange-50/80 dark:border-orange-800 dark:text-orange-300 dark:bg-orange-950/30',
                           employee.status === 'ON_NOTICE' && 'border-amber-300 text-amber-700 bg-amber-50/80 dark:border-amber-800 dark:text-amber-300 dark:bg-amber-950/30',
-                          employee.status === 'TERMINATED' && 'border-red-300 text-red-700 bg-red-50/80 dark:border-red-800 dark:text-red-300 dark:bg-red-950/30'
+                          employee.status === 'TERMINATED' && 'border-red-300 text-red-700 bg-red-50/80 dark:border-red-800 dark:text-red-300 dark:bg-red-950/30',
+                          employee.status === 'ABSCONDED' && 'border-rose-300 text-rose-700 bg-rose-50/80 dark:border-rose-800 dark:text-rose-300 dark:bg-rose-950/30'
                         )}
                       >
                         {STATUS_LABELS[employee.status] ?? employee.status}

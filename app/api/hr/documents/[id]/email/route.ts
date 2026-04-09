@@ -8,6 +8,8 @@ import {
   generateIncrementLetterHTML,
   generateExperienceLetterHTML,
   generateRelievingLetterHTML,
+  generateInternshipOfferLetterHTML,
+  generateInternshipCompletionLetterHTML,
 } from '@/lib/hrms/document-templates'
 import { sendDocumentEmail } from '@/lib/resend'
 import { z } from 'zod'
@@ -17,6 +19,8 @@ const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   INCREMENT_LETTER: 'Increment Letter',
   EXPERIENCE_LETTER: 'Experience Letter',
   RELIEVING_LETTER: 'Relieving Letter',
+  INTERNSHIP_OFFER_LETTER: 'Internship Offer Letter',
+  INTERNSHIP_COMPLETION_LETTER: 'Internship Completion Certificate',
 }
 
 const emailSchema = z.object({
@@ -115,6 +119,24 @@ export async function POST(
         break
       case 'RELIEVING_LETTER':
         htmlContent = generateRelievingLetterHTML(employeeData, metadata || undefined)
+        break
+      case 'INTERNSHIP_OFFER_LETTER':
+        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata || undefined)
+        ackToken = crypto.randomUUID()
+        const internBaseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.mediend.com'
+        const internAckUrl = `${internBaseUrl}/documents/acknowledge?token=${ackToken}`
+        const internAckSection = `
+    <br><br>
+    <p style="margin: 20px 0; font-size: 14px;">To acknowledge and accept this internship offer online, click the button below:</p>
+    <p style="margin: 16px 0;">
+      <a href="${internAckUrl}" style="display: inline-block; padding: 12px 24px; background: #1a365d; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">I Acknowledge & Accept</a>
+    </p>
+    <p style="margin: 12px 0; font-size: 12px; color: #666;">Or copy this link: ${internAckUrl}</p>
+    `
+        htmlContent = htmlContent.replace('<!-- ACK_PLACEHOLDER -->', internAckSection)
+        break
+      case 'INTERNSHIP_COMPLETION_LETTER':
+        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
         break
       default:
         return errorResponse('Invalid document type', 400)

@@ -493,10 +493,10 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
                         Leave taken ({format(viewMonth, 'MMM yyyy')})
                       </p>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex gap-2">
                         {drawerMember.leaveByType.map((lt) => (
-                          <Badge key={lt.code} variant="secondary" className="text-sm px-3 py-1">
-                            {lt.code}: {lt.days} day{lt.days !== 1 ? 's' : ''}
+                          <Badge key={lt.code} variant="secondary" className="text-xs px-2.5 py-1 whitespace-nowrap">
+                            {lt.code}: {lt.days}d
                           </Badge>
                         ))}
                       </div>
@@ -508,20 +508,20 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
                         Leave balance
                       </p>
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="flex gap-2">
                         {balancesByEmployee.get(drawerMember.employeeId)!.balances.map((b) => (
                           <div
                             key={b.leaveTypeId}
-                            className="rounded-lg border p-2.5 text-center"
+                            className="flex-1 min-w-0 rounded-lg border bg-white dark:bg-card p-2.5 text-center"
                           >
-                            <p className="text-[10px] text-muted-foreground font-medium mb-1 truncate">
+                            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide truncate">
                               {b.leaveTypeName}
                             </p>
-                            <p className="text-lg font-bold tabular-nums leading-none">
+                            <p className="text-lg font-bold tabular-nums leading-none mt-1">
                               {b.remaining}
                             </p>
-                            <p className="text-[10px] text-muted-foreground mt-0.5">
-                              {b.used} used / {b.allocated} total
+                            <p className="text-[10px] text-muted-foreground mt-0.5 tabular-nums whitespace-nowrap">
+                              {b.used}/{b.allocated}
                             </p>
                           </div>
                         ))}

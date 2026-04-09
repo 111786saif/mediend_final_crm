@@ -7,10 +7,11 @@ import { z } from 'zod'
 import { addDays } from 'date-fns'
 
 const statusActionSchema = z.object({
-  action: z.enum(['START_PIP', 'START_NOTICE', 'TERMINATE', 'REACTIVATE']),
+  action: z.enum(['START_PIP', 'START_NOTICE', 'TERMINATE', 'REACTIVATE', 'ABSCOND']),
   days: z.number().int().positive().optional(),
   terminationReason: z.string().max(500).optional(),
   finalWorkingDay: z.string().optional(),
+  note: z.string().max(1000).optional(),
 })
 
 export async function PATCH(
@@ -111,6 +112,22 @@ export async function PATCH(
           },
         })
         return successResponse({ ok: true, message: 'Employee reactivated' })
+      }
+
+      case 'ABSCOND': {
+        await prisma.employee.update({
+          where: { id },
+          data: {
+            status: 'ABSCONDED',
+            pipStartDate: null,
+            pipEndDate: null,
+            noticePeriodStartDate: null,
+            noticePeriodEndDate: null,
+            finalWorkingDay: null,
+            terminationReason: data.note ?? null,
+          },
+        })
+        return successResponse({ ok: true, message: 'Employee marked as absconded' })
       }
     }
   } catch (error) {

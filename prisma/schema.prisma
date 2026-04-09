@@ -105,6 +105,8 @@ enum DocumentType {
   INCREMENT_LETTER
   EXPERIENCE_LETTER
   RELIEVING_LETTER
+  INTERNSHIP_OFFER_LETTER
+  INTERNSHIP_COMPLETION_LETTER
   CUSTOM
 }
 
@@ -320,6 +322,7 @@ enum EmployeeStatus {
   ON_PIP
   ON_NOTICE
   TERMINATED
+  ABSCONDED
 }
 
 // Company-wide P&L (IT projects, department revenue, dynamic finance table)

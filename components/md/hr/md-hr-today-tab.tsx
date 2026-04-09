@@ -22,10 +22,24 @@ import {
   AttendanceHeatmap,
   type AttendanceDay as HeatmapAttendanceDay,
 } from '@/components/employee/attendance-heatmap'
-import { UserMinus, AlertTriangle, UserPlus, ChevronRight } from 'lucide-react'
+import { UserMinus, AlertTriangle, UserPlus, ChevronRight, ChevronLeft, CalendarHeart } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useMDTeamOverview } from '@/hooks/use-md-team'
 import type { HRDashboardFilters } from './md-hr-filter-drawer'
 import type { HRAnalytics } from '@/components/hr/hr-dashboard'
+
+interface LeaveBalanceEntry {
+  employeeId: string
+  employeeName: string
+  employeeEmail: string
+  balances: {
+    leaveTypeId: string
+    leaveTypeName: string
+    allocated: number
+    used: number
+    remaining: number
+  }[]
+}
 
 interface AttendanceRecord {
   employee: { id: string; employeeCode: string; user: { name: string }; department: { name: string; id?: string } | null }
@@ -114,12 +128,13 @@ interface MdHrTodayTabProps {
 
 export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
   const isMobile = useIsMobile()
-  const [activeDrawer, setActiveDrawer] = useState<'absent' | 'late' | 'joiners' | null>(null)
+  const [activeDrawer, setActiveDrawer] = useState<'absent' | 'late' | 'joiners' | 'leave' | null>(null)
   const [heatmapEmployee, setHeatmapEmployee] = useState<{
     id: string
     name: string
     departmentName: string | null
   } | null>(null)
+  const [heatmapMonth, setHeatmapMonth] = useState(() => new Date(filters.year, filters.month - 1, 1))
 
   const now = new Date()
   const todayStr = useMemo(() => {
@@ -155,12 +170,35 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
     queryFn: () => apiGet<EmployeeItem[]>('/api/employees'),
   })
 
+  // Team overview for on-leave data
+  const { data: teamOverview } = useMDTeamOverview()
+
+  // Heatmap month-based dates (independent from filter month)
+  const heatmapFromStr = useMemo(() => {
+    return `${heatmapMonth.getFullYear()}-${String(heatmapMonth.getMonth() + 1).padStart(2, '0')}-01`
+  }, [heatmapMonth])
+
+  const heatmapToStr = useMemo(() => {
+    const lastDay = new Date(heatmapMonth.getFullYear(), heatmapMonth.getMonth() + 1, 0).getDate()
+    return `${heatmapMonth.getFullYear()}-${String(heatmapMonth.getMonth() + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`
+  }, [heatmapMonth])
+
   // Heatmap data for selected employee
   const { data: heatmapAttendance } = useQuery<AttendanceData>({
-    queryKey: ['md-employee-attendance-heatmap', heatmapEmployee?.id, monthStartStr, monthEndStr],
+    queryKey: ['md-employee-attendance-heatmap', heatmapEmployee?.id, heatmapFromStr, heatmapToStr],
     queryFn: () =>
       apiGet<AttendanceData>(
-        `/api/attendance?fromDate=${monthStartStr}&toDate=${monthEndStr}&employeeId=${heatmapEmployee!.id}&page=1&limit=10000`
+        `/api/attendance?fromDate=${heatmapFromStr}&toDate=${heatmapToStr}&employeeId=${heatmapEmployee!.id}&page=1&limit=10000`
+      ),
+    enabled: !!heatmapEmployee,
+  })
+
+  // Leave balance for heatmap employee
+  const { data: heatmapLeaveBalance } = useQuery<{ balance: LeaveBalanceEntry }>({
+    queryKey: ['md-employee-leave-balance', heatmapEmployee?.id],
+    queryFn: () =>
+      apiGet<{ balance: LeaveBalanceEntry }>(
+        `/api/md/employee-leave-balance?employeeId=${heatmapEmployee!.id}`
       ),
     enabled: !!heatmapEmployee,
   })
@@ -248,7 +286,25 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
     }
   }, [analytics, todayAttendance, monthAttendance, employees, filters.departments])
 
+  const onLeaveToday = useMemo(() => {
+    if (!teamOverview?.members) return []
+    const deptFilter = filters.departments.length > 0 ? new Set(filters.departments) : null
+    return teamOverview.members
+      .filter((m) => {
+        if (m.attendanceStatus !== 'leave') return false
+        if (deptFilter && m.department && !deptFilter.has(m.department.id)) return false
+        return true
+      })
+      .map((m) => ({
+        employeeId: m.employeeId,
+        employeeName: m.name,
+        departmentName: m.department?.name ?? 'No Department',
+      }))
+      .sort((a, b) => a.departmentName.localeCompare(b.departmentName))
+  }, [teamOverview, filters.departments])
+
   const handleEmployeeClick = (employeeId: string, employeeName: string, departmentName: string | null) => {
+    setHeatmapMonth(new Date(filters.year, filters.month - 1, 1))
     setHeatmapEmployee({ id: employeeId, name: employeeName, departmentName })
   }
 
@@ -277,7 +333,7 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
   return (
     <div className="space-y-5 sm:space-y-7 pb-8">
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3 sm:gap-4">
         <StatCard
           label="Strength"
           value={`${merged.todayStrength}/${merged.totalHeadcount}`}
@@ -301,6 +357,15 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
           valueAccent
           className="cursor-pointer active:scale-[0.97] transition-transform"
           onClick={() => setActiveDrawer('late')}
+        />
+        <StatCard
+          label="On Leave"
+          value={onLeaveToday.length}
+          subValue="Approved leave"
+          accent="purple"
+          valueAccent
+          className={onLeaveToday.length > 0 ? 'cursor-pointer active:scale-[0.97] transition-transform' : undefined}
+          onClick={onLeaveToday.length > 0 ? () => setActiveDrawer('leave') : undefined}
         />
         <StatCard
           label="New Joiners"
@@ -533,6 +598,48 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
         </DrawerContent>
       </Drawer>
 
+      <Drawer open={activeDrawer === 'leave'} onOpenChange={(open) => !open && setActiveDrawer(null)}>
+        <DrawerContent className="max-h-[85dvh]">
+          <DrawerHeader className="text-left px-4 pb-2">
+            <DrawerTitle className="flex items-center gap-2">
+              <CalendarHeart className="h-5 w-5 text-purple-500" />
+              On Leave Today — {onLeaveToday.length}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="overflow-y-auto overscroll-contain px-2 pb-6 max-h-[70dvh]">
+            {onLeaveToday.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">No one on leave today</p>
+            ) : (
+              <ul className="space-y-1">
+                {onLeaveToday.map((e) => (
+                  <li key={e.employeeId}>
+                    <button
+                      type="button"
+                      className="w-full text-left rounded-lg px-3 py-3 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
+                      onClick={() => {
+                        setActiveDrawer(null)
+                        setTimeout(() => handleEmployeeClick(e.employeeId, e.employeeName, e.departmentName), 300)
+                      }}
+                    >
+                      <Avatar className="h-9 w-9 shrink-0">
+                        <AvatarFallback className="text-xs font-semibold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                          {getInitials(e.employeeName)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium leading-tight truncate">{e.employeeName}</p>
+                        <p className="text-xs text-muted-foreground truncate">{e.departmentName}</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
+
       <Drawer open={activeDrawer === 'joiners'} onOpenChange={(open) => !open && setActiveDrawer(null)}>
         <DrawerContent className="max-h-[85dvh]">
           <DrawerHeader className="text-left px-4 pb-2">
@@ -595,13 +702,63 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
                     )}
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {MONTHS[filters.month - 1]} {filters.year}
-                </p>
+                {/* Month navigation */}
+                <div className="flex items-center justify-between gap-2 rounded-lg border px-2 py-1.5 mt-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 shrink-0"
+                    aria-label="Previous month"
+                    onClick={() => setHeatmapMonth((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <p className="text-sm font-semibold text-center">
+                    {MONTHS[heatmapMonth.getMonth()]} {heatmapMonth.getFullYear()}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7 shrink-0"
+                    aria-label="Next month"
+                    onClick={() => setHeatmapMonth((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </DrawerHeader>
 
               <ScrollArea className="flex-1 min-h-0">
                 <div className="px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3 space-y-5">
+                  {/* Leave balance */}
+                  {heatmapLeaveBalance?.balance?.balances && heatmapLeaveBalance.balance.balances.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                        Leave balance
+                      </p>
+                      <div className="flex gap-2">
+                        {heatmapLeaveBalance.balance.balances.map((b) => (
+                          <div
+                            key={b.leaveTypeId}
+                            className="flex-1 min-w-0 rounded-lg border bg-white dark:bg-card p-2.5 text-center"
+                          >
+                            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide truncate">
+                              {b.leaveTypeName}
+                            </p>
+                            <p className="text-lg font-bold tabular-nums leading-none mt-1">
+                              {b.remaining}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground mt-0.5 tabular-nums whitespace-nowrap">
+                              {b.used}/{b.allocated}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
                       Calendar
@@ -610,8 +767,8 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
                       {heatmapAttendance ? (
                         <AttendanceHeatmap
                           attendance={toHeatmapAttendance(heatmapAttendance.data)}
-                          fromDate={monthStartStr}
-                          toDate={monthEndStr}
+                          fromDate={heatmapFromStr}
+                          toDate={heatmapToStr}
                           showLegend
                         />
                       ) : (

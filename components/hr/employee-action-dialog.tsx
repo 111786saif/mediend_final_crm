@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { apiPatch } from '@/lib/api-client'
 import { toast } from 'sonner'
 
-export type EmployeeActionType = 'START_PIP' | 'START_NOTICE' | 'TERMINATE' | 'REACTIVATE'
+export type EmployeeActionType = 'START_PIP' | 'START_NOTICE' | 'TERMINATE' | 'REACTIVATE' | 'ABSCOND'
 
 export interface EmployeeActionDialogProps {
   open: boolean
@@ -40,11 +40,13 @@ export function EmployeeActionDialog({
   const [days, setDays] = useState<number>(30)
   const [finalWorkingDay, setFinalWorkingDay] = useState('')
   const [terminationReason, setTerminationReason] = useState('')
+  const [note, setNote] = useState('')
   const [loading, setLoading] = useState(false)
 
   const isDaysAction = action === 'START_PIP' || action === 'START_NOTICE'
   const isTerminate = action === 'TERMINATE'
   const isReactivate = action === 'REACTIVATE'
+  const isAbscond = action === 'ABSCOND'
 
   const handleSubmit = async () => {
     if (isDaysAction && (!days || days < 1)) {
@@ -71,6 +73,7 @@ export function EmployeeActionDialog({
         body.finalWorkingDay = new Date(finalWorkingDay).toISOString()
         if (terminationReason.trim()) body.terminationReason = terminationReason.trim()
       }
+      if (isAbscond && note.trim()) body.note = note.trim()
 
       await apiPatch(`/api/employees/${employeeId}/status`, body)
       toast.success(
@@ -80,13 +83,16 @@ export function EmployeeActionDialog({
             ? `Notice period started for ${days} days`
             : action === 'TERMINATE'
               ? 'Employee terminated'
-              : 'Employee reactivated'
+              : action === 'ABSCOND'
+                ? 'Employee marked as absconded'
+                : 'Employee reactivated'
       )
       onSuccess()
       onOpenChange(false)
       setDays(30)
       setFinalWorkingDay('')
       setTerminationReason('')
+      setNote('')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update')
     } finally {
@@ -101,7 +107,9 @@ export function EmployeeActionDialog({
         ? 'Start Notice Period'
         : action === 'TERMINATE'
           ? 'Terminate Employee'
-          : 'Reactivate Employee'
+          : action === 'ABSCOND'
+            ? 'Mark as Absconded'
+            : 'Reactivate Employee'
 
   const description =
     action === 'START_PIP'
@@ -110,7 +118,9 @@ export function EmployeeActionDialog({
         ? `Put ${employeeName} on notice period. Final working day will be set automatically.`
         : action === 'TERMINATE'
           ? `Record ${employeeName}'s termination. This will set status to Inactive.`
-          : `Clear PIP/Notice/Termination status and set ${employeeName} back to Active.`
+          : action === 'ABSCOND'
+            ? `Mark ${employeeName} as absconded. No FNF will be processed.`
+            : `Clear PIP/Notice/Termination status and set ${employeeName} back to Active.`
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -173,6 +183,22 @@ export function EmployeeActionDialog({
                 value={terminationReason}
                 onChange={(e) => setTerminationReason(e.target.value)}
                 placeholder="e.g. Resignation, Performance, etc."
+                rows={3}
+                className="mt-2 resize-none"
+              />
+            </div>
+          </div>
+        )}
+
+        {isAbscond && (
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="abscondNote">Note</Label>
+              <Textarea
+                id="abscondNote"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="e.g. Absent since 3rd April without any communication..."
                 rows={3}
                 className="mt-2 resize-none"
               />

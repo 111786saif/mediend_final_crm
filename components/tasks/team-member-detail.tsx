@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { Plus, AlertTriangle, Star, ArrowUpRight, Crown, Users, FileText, CheckCircle2, Clock, MoreVertical, ClipboardList, ShieldAlert } from "lucide-react"
@@ -84,6 +84,85 @@ function RatingStars({ rating }: { rating: number }) {
         />
       ))}
       <span className={cn("ml-1.5 text-sm font-semibold", color)}>{rating.toFixed(1)}</span>
+    </div>
+  )
+}
+
+/** Swipeable wrapper: swipe right reveals "Review" action on mobile */
+function SwipeableReviewRow({
+  children,
+  onReview,
+  isMobile,
+}: {
+  children: React.ReactNode
+  onReview: () => void
+  isMobile: boolean
+}) {
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+  const [swiped, setSwiped] = useState(false)
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }, [])
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const dx = e.changedTouches[0].clientX - touchStartX.current
+      const dy = Math.abs(e.changedTouches[0].clientY - touchStartY.current)
+      // Right swipe > 60px and mostly horizontal
+      if (dx > 60 && dy < 40) {
+        setSwiped(true)
+        setTimeout(() => setSwiped(false), 2000)
+      }
+    },
+    []
+  )
+
+  if (!isMobile) {
+    return (
+      <div className="flex items-stretch">
+        <div className="flex-1 min-w-0">{children}</div>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onReview() }}
+          className="shrink-0 flex items-center px-3 border-l border-border bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 text-xs font-semibold hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
+        >
+          <Star className="h-3.5 w-3.5 mr-1" />
+          Review
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative overflow-hidden">
+      {/* Reveal layer behind */}
+      <div className="absolute inset-0 flex items-center justify-end px-4 bg-amber-500">
+        <span className="text-white text-sm font-semibold flex items-center gap-1">
+          <Star className="h-4 w-4" /> Review
+        </span>
+      </div>
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className={cn(
+          "relative bg-white dark:bg-card transition-transform duration-200",
+          swiped && "-translate-x-24"
+        )}
+      >
+        {children}
+        {swiped && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setSwiped(false); onReview() }}
+            className="absolute right-0 top-0 bottom-0 w-24 flex items-center justify-center bg-amber-500 text-white text-sm font-semibold"
+          >
+            <Star className="h-4 w-4 mr-1" /> Rate
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -224,11 +303,7 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
   )
 
   const handleTaskRowClick = (task: Task) => {
-    if (task.status === "EMPLOYEE_DONE" && canMarkComplete(task)) {
-      setTaskToComplete(task)
-    } else {
-      setDetailTaskId(task.id)
-    }
+    setDetailTaskId(task.id)
   }
 
   return (
@@ -407,23 +482,28 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                     <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-violet-700 dark:text-violet-300">
                       <Star className="h-4 w-4 shrink-0" />
                       Needs review ({needsReviewTasks.length})
-                      <span className="text-xs font-normal text-muted-foreground ml-1">Click to rate</span>
+                      <span className="text-xs font-normal text-muted-foreground ml-1">{isMobile ? "Swipe right to rate" : "Click Review to rate"}</span>
                     </h2>
                     <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                       {needsReviewTasks.map((task) => (
                         <div key={task.id} className={getTeamDetailTaskCardClass(false)}>
-                          <TaskRow
-                            task={task}
-                            onClick={() => handleTaskRowClick(task)}
-                            showAssignee={false}
-                            showProject
-                            warningCount={taskWarningCountMap[task.id] ?? 0}
-                            extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                            activityCount={task.unseenActivityCount ?? 0}
-                            isAssignee={task.assigneeId === user?.id}
-                            canMarkComplete={canMarkComplete(task)}
-                            onMarkCompleteRequest={() => setTaskToComplete(task)}
-                          />
+                          <SwipeableReviewRow
+                            isMobile={isMobile}
+                            onReview={() => setTaskToComplete(task)}
+                          >
+                            <TaskRow
+                              task={task}
+                              onClick={() => handleTaskRowClick(task)}
+                              showAssignee={false}
+                              showProject
+                              warningCount={taskWarningCountMap[task.id] ?? 0}
+                              extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+                              activityCount={task.unseenActivityCount ?? 0}
+                              isAssignee={task.assigneeId === user?.id}
+                              canMarkComplete={canMarkComplete(task)}
+                              onMarkCompleteRequest={() => setTaskToComplete(task)}
+                            />
+                          </SwipeableReviewRow>
                         </div>
                       ))}
                     </div>

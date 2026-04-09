@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 
 interface EmployeeDocument {
   id: string
-  documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'CUSTOM'
+  documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'INTERNSHIP_OFFER_LETTER' | 'INTERNSHIP_COMPLETION_LETTER' | 'CUSTOM'
   documentUrl?: string | null
   title?: string | null
   generatedAt: string
@@ -23,6 +23,8 @@ const DOCUMENT_TYPES: Record<string, string> = {
   INCREMENT_LETTER: 'Increment Letter',
   EXPERIENCE_LETTER: 'Experience Letter',
   RELIEVING_LETTER: 'Relieving Letter',
+  INTERNSHIP_OFFER_LETTER: 'Internship Offer Letter',
+  INTERNSHIP_COMPLETION_LETTER: 'Internship Completion Certificate',
   CUSTOM: 'Custom',
 }
 

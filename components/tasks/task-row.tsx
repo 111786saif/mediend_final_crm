@@ -160,7 +160,7 @@ export function TaskRow({
         <div className="flex items-center gap-2">
           <span
             className={cn(
-              "text-base font-medium leading-snug truncate",
+              "text-base font-medium leading-snug line-clamp-2",
               isDone && "text-emerald-700 dark:text-emerald-400"
             )}
           >

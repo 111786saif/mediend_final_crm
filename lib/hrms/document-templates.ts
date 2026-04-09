@@ -41,7 +41,16 @@ function renderLetterhead(): string {
   const logoUrl = `${baseUrl}/images/mediend-logo.png`
   return `
   <div class="letterhead">
-    <img src="${logoUrl}" alt="Mediend" style="max-width: 200px; height: auto;" />
+    <img src="${logoUrl}" alt="Mediend" style="max-width: 320px; height: auto;" />
+  </div>`
+}
+
+function renderWatermark(): string {
+  const baseUrl = getBaseUrl()
+  const logoUrl = `${baseUrl}/images/mediend-logo.png`
+  return `
+  <div class="watermark">
+    <img src="${logoUrl}" alt="" />
   </div>`
 }
 
@@ -88,18 +97,22 @@ function numberToWords(num: number): string {
 }
 
 const BASE_STYLES = `
-  body { font-family: 'Times New Roman', serif; margin: 40px; line-height: 1.6; color: #333; }
-  .letterhead { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid transparent; border-image: linear-gradient(to right, #14b8a6, #1e3a5f) 1; }
-  .date { text-align: right; margin-bottom: 20px; }
-  .subject { font-weight: bold; text-align: center; margin: 20px 0; font-size: 16px; text-decoration: underline; }
+  body { font-family: 'Times New Roman', serif; margin: 40px; line-height: 1.6; color: #333; position: relative; }
+  .letterhead { margin-bottom: 24px; padding-bottom: 16px; }
+  .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; }
+  .watermark img { width: 500px; height: auto; opacity: 0.06; }
+  .date { text-align: right; margin-bottom: 20px; position: relative; z-index: 1; }
+  .subject { font-weight: bold; text-align: center; margin: 20px 0; font-size: 16px; text-decoration: underline; position: relative; z-index: 1; }
+  .content { position: relative; z-index: 1; }
   .content p { text-align: justify; margin: 15px 0; }
   .content ul { margin: 15px 0; padding-left: 24px; }
   .content li { margin: 8px 0; }
-  .signature { margin-top: 40px; }
-  .doc-footer { margin-top: 48px; padding-top: 16px; border-top: 2px solid #14b8a6; font-size: 12px; color: #64748b; }
+  .signature { margin-top: 40px; position: relative; z-index: 1; }
+  .doc-footer { margin-top: 48px; padding-top: 16px; border-top: 2px solid #14b8a6; font-size: 12px; color: #64748b; position: relative; z-index: 1; }
   .footer-company { font-weight: bold; color: #334155; margin: 4px 0; }
   .footer-address { margin: 4px 0; }
   .footer-contact { margin: 4px 0; }
+  @media print { .watermark { position: fixed; } }
 `
 
 export function generateOfferLetterHTML(
@@ -158,6 +171,7 @@ export function generateOfferLetterHTML(
   <style>${BASE_STYLES}</style>
 </head>
 <body>
+  ${renderWatermark()}
   ${renderLetterhead()}
 
   <div class="date">
@@ -278,6 +292,7 @@ export function generateIncrementLetterHTML(
   <style>${BASE_STYLES}</style>
 </head>
 <body>
+  ${renderWatermark()}
   ${renderLetterhead()}
 
   <div class="date">
@@ -342,6 +357,7 @@ export function generateExperienceLetterHTML(
   <style>${BASE_STYLES}</style>
 </head>
 <body>
+  ${renderWatermark()}
   ${renderLetterhead()}
 
   <div class="date">
@@ -396,6 +412,7 @@ export function generateRelievingLetterHTML(
   <style>${BASE_STYLES}</style>
 </head>
 <body>
+  ${renderWatermark()}
   ${renderLetterhead()}
 
   <div class="date">
@@ -423,6 +440,176 @@ export function generateRelievingLetterHTML(
 
   <div style="margin-top: 40px;">
     <p>For ${COMPANY_DATA.name}</p>
+    ${renderSignature()}
+  </div>
+
+  ${renderFooter()}
+</body>
+</html>`
+}
+
+export function generateInternshipOfferLetterHTML(
+  employee: EmployeeData,
+  metadata?: {
+    designation?: string
+    stipend?: number
+    duration?: string
+    startDate?: string
+    department?: string
+    location?: string
+    internshipType?: string
+    acceptanceDeadline?: string
+    guardianName?: string
+    guardianRelation?: string
+    address?: string
+  }
+): string {
+  const today = format(new Date(), 'do MMMM, yyyy')
+  const designation = metadata?.designation || 'Intern'
+  const stipend = metadata?.stipend || 0
+  const duration = metadata?.duration || '3 Months'
+  const department = metadata?.department || employee.department || 'Operations'
+  const location = metadata?.location || 'FF, H-166, Sector-63, Noida 201301'
+  const internshipType = metadata?.internshipType || 'Full-time'
+  const guardianName = metadata?.guardianName || ''
+  const guardianRelation = metadata?.guardianRelation || 'S/O'
+  const address = metadata?.address || ''
+  const startDateRaw = metadata?.startDate
+  const startDate = startDateRaw
+    ? format(new Date(startDateRaw), 'do MMMM, yyyy')
+    : 'To be confirmed'
+  const acceptanceDeadlineRaw = metadata?.acceptanceDeadline
+  const acceptanceDeadline = acceptanceDeadlineRaw
+    ? format(new Date(acceptanceDeadlineRaw), 'do MMMM, yyyy')
+    : format(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 'do MMMM, yyyy')
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>${BASE_STYLES}
+    .details-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .details-table td { padding: 8px 12px; border: 1px solid #ddd; }
+    .details-table td:first-child { font-weight: bold; width: 40%; background: #f8fafc; }
+  </style>
+</head>
+<body>
+  ${renderWatermark()}
+  ${renderLetterhead()}
+
+  <div class="date">
+    <p>Date: ${today}</p>
+    <p>Ref: KUNDKUND/HR/INTERN-OFFER/${employee.employeeCode}/${format(new Date(), 'yyyy')}</p>
+  </div>
+
+  <div>
+    <p><strong>To,</strong></p>
+    <p>Ms/Mr ${employee.name}${guardianName ? `, ${guardianRelation} ${guardianName}` : ''}</p>${address ? `
+    <p>${address}</p>` : ''}
+    <p>Email: ${employee.email}</p>
+  </div>
+
+  <div class="subject">INTERNSHIP OFFER LETTER</div>
+
+  <div class="content">
+    <p>Dear ${employee.name},</p>
+
+    <p>We are pleased to extend to you an offer for an internship position at <strong>${COMPANY_DATA.name}</strong> as a <strong>${designation}</strong>. This internship is scheduled to begin on <strong>${startDate}</strong>.</p>
+
+    <h4 style="margin-top: 24px; margin-bottom: 8px;">Details of the Internship</h4>
+
+    <table class="details-table">
+      <tr><td>Position</td><td>${designation}</td></tr>
+      <tr><td>Duration of Internship</td><td>${duration}</td></tr>
+      <tr><td>Department</td><td>${department}</td></tr>
+      <tr><td>Location</td><td>${location}</td></tr>
+      <tr><td>Compensation</td><td>${stipend > 0 ? `INR ${stipend.toLocaleString('en-IN')} per month` : 'Unpaid'}</td></tr>
+      <tr><td>Type of Internship</td><td>${internshipType}</td></tr>
+    </table>
+
+    <p>During the internship, you will be expected to adhere to the company's rules, regulations, and policies. You shall maintain strict confidentiality regarding all proprietary information of the company.</p>
+
+    <p>Please confirm your acceptance by signing and returning this letter by <strong>${acceptanceDeadline}</strong>. We look forward to having you on our team!</p>
+  </div>
+
+  <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <p>Sincerely</p>
+      ${renderSignature()}
+    </div>
+    <div style="text-align: right;">
+      <p><strong>Intern Acceptance</strong></p>
+      <p>Signature: _________________</p>
+      <p>Date: _________________</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 40px; border-top: 1px dashed #999; padding-top: 20px;">
+    <p><strong>Acceptance:</strong></p>
+    <p>I, ${employee.name}${guardianName ? `, ${guardianRelation} ${guardianName}` : ''}${address ? `, residing at ${address}` : ''}, hereby accept the offer of internship as mentioned above.</p>
+    <!-- ACK_PLACEHOLDER -->
+  </div>
+
+  ${renderFooter()}
+</body>
+</html>`
+}
+
+export function generateInternshipCompletionLetterHTML(
+  employee: EmployeeData,
+  metadata?: {
+    designation?: string
+    department?: string
+    startDate?: string
+    endDate?: string
+  }
+): string {
+  const today = format(new Date(), 'do MMMM, yyyy')
+  const designation = metadata?.designation || 'Intern'
+  const department = metadata?.department || employee.department || 'Operations'
+  const startDateRaw = metadata?.startDate
+  const startDate = startDateRaw
+    ? format(new Date(startDateRaw), 'do MMMM, yyyy')
+    : (employee.joinDate ? format(employee.joinDate, 'do MMMM, yyyy') : 'N/A')
+  const endDateRaw = metadata?.endDate
+  const endDate = endDateRaw
+    ? format(new Date(endDateRaw), 'do MMMM, yyyy')
+    : today
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>${BASE_STYLES}</style>
+</head>
+<body>
+  ${renderWatermark()}
+  ${renderLetterhead()}
+
+  <div class="date">
+    <p>Date: ${today}</p>
+    <p>Ref: KUNDKUND/HR/INTERN-COMP/${employee.employeeCode}/${format(new Date(), 'yyyy')}</p>
+  </div>
+
+  <div class="subject">INTERNSHIP COMPLETION CERTIFICATE</div>
+
+  <div class="content">
+    <p><strong>TO WHOMSOEVER IT MAY CONCERN</strong></p>
+
+    <p>We are glad to inform that Ms./Mr. <strong>${employee.name}</strong> has successfully completed the internship at <strong>${COMPANY_DATA.name}</strong> from <strong>${startDate}</strong> to <strong>${endDate}</strong>.</p>
+
+    <p>During the internship, ${employee.name.split(' ')[0]} was exposed to the various activities in the <strong>${department}</strong> Department.</p>
+
+    <p>We found ${employee.name.split(' ')[0]} extremely inquisitive and hard working. ${employee.name.split(' ')[0]} was very much interested to learn the functions of our core division and was willing to put the best efforts and get into the depth of the subject to understand it better.</p>
+
+    <p>The association with us was very fruitful and we wish ${employee.name.split(' ')[0]} all the best in future endeavors.</p>
+  </div>
+
+  <div style="margin-top: 40px;">
+    <p>For ${COMPANY_DATA.name}</p>
+    <p>Thanks &amp; Regards</p>
     ${renderSignature()}
   </div>
 

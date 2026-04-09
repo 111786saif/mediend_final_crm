@@ -6,6 +6,8 @@ import {
   generateIncrementLetterHTML,
   generateExperienceLetterHTML,
   generateRelievingLetterHTML,
+  generateInternshipOfferLetterHTML,
+  generateInternshipCompletionLetterHTML,
 } from '@/lib/hrms/document-templates'
 import { z } from 'zod'
 import { format } from 'date-fns'
@@ -15,6 +17,8 @@ const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   INCREMENT_LETTER: 'Increment Letter',
   EXPERIENCE_LETTER: 'Experience Letter',
   RELIEVING_LETTER: 'Relieving Letter',
+  INTERNSHIP_OFFER_LETTER: 'Internship Offer Letter',
+  INTERNSHIP_COMPLETION_LETTER: 'Internship Completion Certificate',
 }
 
 const COMPANY_NAME = 'Kundkund Healthcare Private Limited'
@@ -77,6 +81,16 @@ export async function GET(request: NextRequest) {
         break
       case 'RELIEVING_LETTER':
         htmlContent = generateRelievingLetterHTML(employeeData, metadata || undefined)
+        break
+      case 'INTERNSHIP_OFFER_LETTER':
+        htmlContent = generateInternshipOfferLetterHTML(employeeData, metadata || undefined)
+        htmlContent = htmlContent.replace(
+          '<!-- ACK_PLACEHOLDER -->',
+          '<br><br><p>Signature: _________________ &nbsp;&nbsp;&nbsp;&nbsp; Date: _________________</p>'
+        )
+        break
+      case 'INTERNSHIP_COMPLETION_LETTER':
+        htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
         break
       case 'CUSTOM':
         htmlContent = document.documentUrl

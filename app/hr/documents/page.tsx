@@ -33,7 +33,7 @@ interface Employee {
 interface EmployeeDocument {
   id: string
   employeeId: string | null
-  documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'CUSTOM'
+  documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'INTERNSHIP_OFFER_LETTER' | 'INTERNSHIP_COMPLETION_LETTER' | 'CUSTOM'
   documentUrl?: string | null
   title?: string | null
   applicantName?: string | null
@@ -56,6 +56,8 @@ const DOCUMENT_TYPES: Record<string, string> = {
   INCREMENT_LETTER: 'Increment Letter',
   EXPERIENCE_LETTER: 'Experience Letter',
   RELIEVING_LETTER: 'Relieving Letter',
+  INTERNSHIP_OFFER_LETTER: 'Internship Offer',
+  INTERNSHIP_COMPLETION_LETTER: 'Internship Completion',
   CUSTOM: 'Custom',
 }
 
@@ -64,7 +66,7 @@ function getDocumentLabel(doc: EmployeeDocument): string {
   return DOCUMENT_TYPES[doc.documentType] ?? doc.documentType
 }
 
-const DOC_TYPES_FOR_TABLE = ['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'CUSTOM'] as const
+const DOC_TYPES_FOR_TABLE = ['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'INTERNSHIP_OFFER_LETTER', 'INTERNSHIP_COMPLETION_LETTER', 'CUSTOM'] as const
 
 function DocStatusCell({ docs }: { docs: EmployeeDocument[] }) {
   if (docs.length === 0) return <span className="text-muted-foreground/50">—</span>
@@ -598,6 +600,13 @@ function GenerateDocumentForm({
     lastWorkingDate: '',
     resignationDate: '',
     remarks: '',
+    stipend: '',
+    duration: '',
+    internshipType: 'Full-time',
+    location: '',
+    startDate: '',
+    endDate: '',
+    department: '',
   })
 
   useEffect(() => {
@@ -606,7 +615,7 @@ function GenerateDocumentForm({
     }
   }, [preselectedEmployeeId])
 
-  const isOfferLetter = formData.documentType === 'OFFER_LETTER'
+  const isOfferLetter = formData.documentType === 'OFFER_LETTER' || formData.documentType === 'INTERNSHIP_OFFER_LETTER'
   const selectedEmployee = employees.find((e) => e.id === formData.employeeId)
   const canProceed = formData.documentType && formData.employeeId
 
@@ -633,6 +642,13 @@ function GenerateDocumentForm({
     if (formData.lastWorkingDate) metadata.lastWorkingDate = formData.lastWorkingDate
     if (formData.resignationDate) metadata.resignationDate = formData.resignationDate
     if (formData.remarks) metadata.remarks = formData.remarks
+    if (formData.department) metadata.department = formData.department
+    if (formData.stipend) metadata.stipend = parseFloat(formData.stipend)
+    if (formData.duration) metadata.duration = formData.duration
+    if (formData.internshipType) metadata.internshipType = formData.internshipType
+    if (formData.location) metadata.location = formData.location
+    if (formData.startDate) metadata.startDate = formData.startDate
+    if (formData.endDate) metadata.endDate = formData.endDate
     onSubmit({
       employeeId: formData.employeeId,
       documentType: formData.documentType,
@@ -939,6 +955,166 @@ function GenerateDocumentForm({
                 type="date"
                 value={formData.lastWorkingDate}
                 onChange={(e) => setFormData({ ...formData, lastWorkingDate: e.target.value })}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {formData.documentType === 'INTERNSHIP_OFFER_LETTER' && (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Internship Title</Label>
+              <Input
+                value={formData.designation}
+                onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                placeholder="e.g., Marketing Intern"
+              />
+            </div>
+            <div>
+              <Label>Monthly Stipend</Label>
+              <Input
+                type="number"
+                value={formData.stipend}
+                onChange={(e) => setFormData({ ...formData, stipend: e.target.value })}
+                placeholder="e.g., 10000 (0 for unpaid)"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Duration</Label>
+              <Input
+                value={formData.duration}
+                onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                placeholder="e.g., 3 Months"
+              />
+            </div>
+            <div>
+              <Label>Internship Type</Label>
+              <Select
+                value={formData.internshipType}
+                onValueChange={(value) => setFormData({ ...formData, internshipType: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Full-time">Full-time</SelectItem>
+                  <SelectItem value="Part-time">Part-time</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Location</Label>
+              <Input
+                value={formData.location}
+                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                placeholder="e.g., Noida Office"
+              />
+            </div>
+            <div>
+              <Label>Department</Label>
+              <Input
+                value={formData.department || ''}
+                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                placeholder="e.g., Marketing"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-1">
+              <Label>Relation</Label>
+              <Select
+                value={formData.guardianRelation}
+                onValueChange={(value) => setFormData({ ...formData, guardianRelation: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="S/O">S/O</SelectItem>
+                  <SelectItem value="D/O">D/O</SelectItem>
+                  <SelectItem value="W/O">W/O</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="col-span-2">
+              <Label>Guardian Name</Label>
+              <Input
+                value={formData.guardianName}
+                onChange={(e) => setFormData({ ...formData, guardianName: e.target.value })}
+                placeholder="Father's / Mother's name"
+              />
+            </div>
+          </div>
+          <div>
+            <Label>Address</Label>
+            <Input
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              placeholder="Full residential address"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Start Date</Label>
+              <Input
+                type="date"
+                value={formData.startDate}
+                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>Acceptance Deadline</Label>
+              <Input
+                type="date"
+                value={formData.acceptanceDeadline}
+                onChange={(e) => setFormData({ ...formData, acceptanceDeadline: e.target.value })}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {formData.documentType === 'INTERNSHIP_COMPLETION_LETTER' && (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Internship Title</Label>
+              <Input
+                value={formData.designation}
+                onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                placeholder="e.g., Marketing Intern"
+              />
+            </div>
+            <div>
+              <Label>Department</Label>
+              <Input
+                value={formData.department || ''}
+                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                placeholder="e.g., Marketing"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label>Start Date</Label>
+              <Input
+                type="date"
+                value={formData.startDate}
+                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label>End Date</Label>
+              <Input
+                type="date"
+                value={formData.endDate}
+                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
               />
             </div>
           </div>

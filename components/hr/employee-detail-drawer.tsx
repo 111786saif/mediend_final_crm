@@ -64,6 +64,7 @@ const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
   ON_PIP: { label: 'On PIP', className: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300' },
   ON_NOTICE: { label: 'Notice', className: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' },
   TERMINATED: { label: 'Inactive', className: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300' },
+  ABSCONDED: { label: 'Absconded', className: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300' },
 }
 
 interface EmployeeData {
@@ -386,7 +387,7 @@ export function EmployeeDetailDrawer({
                               Notice
                             </Button>
                           )}
-                          {employee.status !== 'TERMINATED' && (
+                          {employee.status !== 'TERMINATED' && employee.status !== 'ABSCONDED' && (
                             <Button
                               variant="outline"
                               size="sm"
@@ -397,7 +398,18 @@ export function EmployeeDetailDrawer({
                               Terminate
                             </Button>
                           )}
-                          {(employee.status === 'ON_PIP' || employee.status === 'ON_NOTICE' || employee.status === 'TERMINATED') && (
+                          {employee.status !== 'ABSCONDED' && employee.status !== 'TERMINATED' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-1.5 border-rose-300 text-rose-700 hover:bg-rose-50 dark:border-rose-800 dark:text-rose-300 dark:hover:bg-rose-900/30"
+                              onClick={() => setActionDialog({ action: 'ABSCOND' })}
+                            >
+                              <AlertTriangle className="h-3.5 w-3.5" />
+                              Abscond
+                            </Button>
+                          )}
+                          {(employee.status === 'ON_PIP' || employee.status === 'ON_NOTICE' || employee.status === 'TERMINATED' || employee.status === 'ABSCONDED') && (
                             <Button
                               variant="outline"
                               size="sm"

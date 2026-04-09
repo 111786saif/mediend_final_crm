@@ -141,8 +141,8 @@ export async function GET(request: NextRequest) {
     if (departmentId) {
       where.departmentId = departmentId
     }
-    if (status && ['ACTIVE', 'ON_PIP', 'ON_NOTICE', 'TERMINATED'].includes(status)) {
-      where.status = status as 'ACTIVE' | 'ON_PIP' | 'ON_NOTICE' | 'TERMINATED'
+    if (status && ['ACTIVE', 'ON_PIP', 'ON_NOTICE', 'TERMINATED', 'ABSCONDED'].includes(status)) {
+      where.status = status as 'ACTIVE' | 'ON_PIP' | 'ON_NOTICE' | 'TERMINATED' | 'ABSCONDED'
     }
     if (search) {
       where.OR = [
