@@ -73,7 +73,7 @@ export function MarkCompleteDrawer({
   const updateTask = useUpdateTask()
 
   const isAssignee = !!user && !!task && task.assigneeId === user.id
-  const selfAssignedAssigneeCannotRate = !!task && isSelfAssigned(task) && isAssignee
+  const selfAssignedAssigneeCannotRate = !!task && isSelfAssigned(task) && isAssignee && user?.role !== "MD"
 
   const handlePresetSelect = (value: string) => {
     const preset = PRESET_COMMENTS.find((p) => p === value)
@@ -171,39 +171,30 @@ export function MarkCompleteDrawer({
               </>
             ) : (
             <>
-            <div>
-              <p className="text-sm font-medium mb-3">Rating (required)</p>
-              <div className="flex items-center gap-1" role="group" aria-label="Select rating">
-                {RATINGS.map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setRating(r)}
-                    onMouseEnter={() => setHoverRating(r)}
-                    onMouseLeave={() => setHoverRating(null)}
-                    className="p-1 transition-transform hover:scale-110 focus:outline-none"
-                    aria-pressed={rating === r}
-                    aria-label={`${r} star`}
-                  >
-                    <Star
-                      className={cn(
-                        "h-8 w-8 transition-colors",
-                        activeRating && r <= activeRating
-                          ? cn("fill-current", RATING_COLORS[activeRating])
-                          : "text-muted-foreground/30"
-                      )}
-                    />
-                  </button>
-                ))}
-                {activeRating && (
-                  <span className={cn("ml-2 text-sm font-medium", RATING_COLORS[activeRating])}>
-                    {activeRating}/5 — {RATING_LABELS[activeRating]}
-                  </span>
-                )}
-              </div>
+            <div className="flex justify-center w-full" role="group" aria-label="Select rating">
+              {RATINGS.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setRating(r)}
+                  onMouseEnter={() => setHoverRating(r)}
+                  onMouseLeave={() => setHoverRating(null)}
+                  className="p-1.5 transition-transform hover:scale-110 focus:outline-none"
+                  aria-pressed={rating === r}
+                  aria-label={`${r} star`}
+                >
+                  <Star
+                    className={cn(
+                      "h-10 w-10 transition-colors",
+                      activeRating && r <= activeRating
+                        ? cn("fill-current", RATING_COLORS[activeRating])
+                        : "text-muted-foreground/30"
+                    )}
+                  />
+                </button>
+              ))}
             </div>
             <div>
-              <p className="text-sm font-medium mb-2">Quick comment</p>
               <Select onValueChange={handlePresetSelect}>
                 <SelectTrigger>
                   <SelectValue placeholder="Add preset comment..." />
@@ -217,16 +208,13 @@ export function MarkCompleteDrawer({
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <p className="text-sm font-medium mb-2">Comments</p>
-              <Textarea
-                placeholder="Add feedback (optional)"
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
-                className="min-h-[100px] resize-none"
-                rows={4}
-              />
-            </div>
+            <Textarea
+              placeholder="Add feedback (optional)"
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+              className="min-h-[100px] resize-none"
+              rows={4}
+            />
             <div className="flex gap-2 pt-2">
               <Button
                 onClick={handleApprove}

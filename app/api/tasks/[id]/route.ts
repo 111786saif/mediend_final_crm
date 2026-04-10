@@ -92,7 +92,8 @@ export async function PATCH(
   }
   const isSelfAssigned = task.assigneeId === task.createdById
   const isAssigneeRatingSelf = isSelfAssigned && isAssignee
-  if (parsed.data.status === "COMPLETED") {
+  const isMdCompletingOwnTask = user.role === "MD" && isAssignee
+  if (parsed.data.status === "COMPLETED" && !isMdCompletingOwnTask) {
     const grade = parsed.data.grade
     if (!grade || !["1", "2", "3", "4", "5"].includes(grade)) {
       return errorResponse("Rating (1-5) is required when approving a task", 400)

@@ -1,29 +1,32 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { startOfDay, isSameDay } from "date-fns"
-import { useTaskStats, useTasks, useWarnings } from "@/hooks/use-tasks"
+import { startOfDay, format } from "date-fns"
+import { useTaskStats, useTasks, useWarnings, useTaskApprovals, useApproveTaskDueDate } from "@/hooks/use-tasks"
 import { useAuth } from "@/hooks/use-auth"
 import { StatCard } from "@/components/ui/stat-card"
 import { TaskRow } from "./task-row"
 import { getTaskCardClass } from "./task-card-class"
 import { TaskDetailModal } from "@/components/calendar/task-detail-modal"
 import { MarkCompleteDrawer } from "./mark-complete-drawer"
-import { ChevronDown, ChevronRight, LayoutGrid, Users, Star, CalendarCheck } from "lucide-react"
+import { SwipeableReviewRow } from "./approval-tab"
+import { ChevronDown, ChevronRight, LayoutGrid, ClipboardCheck, Check, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import type { Task } from "@/hooks/use-tasks"
-import { useIsMobile } from "@/hooks/use-mobile"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
 
 export function OverviewTab() {
   const { user } = useAuth()
   const { data: stats, isLoading: statsLoading, isError: statsError, error: statsErrorDetail } = useTaskStats()
   const { data: tasks = [], isLoading: tasksLoading } = useTasks()
   const { data: allWarnings = [] } = useWarnings()
+  const { data: approvals = [] } = useTaskApprovals()
+  const approveMutation = useApproveTaskDueDate()
+  const { data: pendingReviewTasks = [] } = useTasks(
+    { status: "EMPLOYEE_DONE" },
+    { enabled: true }
+  )
+
   const taskWarningCountMap = useMemo(() => {
     const map: Record<string, number> = {}
     for (const w of allWarnings) {
@@ -34,10 +37,8 @@ export function OverviewTab() {
   const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null)
   const [detailTaskId, setDetailTaskId] = useState<string | null>(null)
   const [taskToComplete, setTaskToComplete] = useState<Task | null>(null)
-  const [statDrawer, setStatDrawer] = useState<"completed" | "pending" | "pendingReview" | "overdue" | null>(null)
-  const [overdueExpanded, setOverdueExpanded] = useState(false)
-  const [dueTodayExpanded, setDueTodayExpanded] = useState(true)
-  const isMobile = useIsMobile()
+  const [expandedCard, setExpandedCard] = useState<"completed" | "pending" | "pendingReview" | "overdue" | null>(null)
+  const [exitingTask, setExitingTask] = useState<Task | null>(null)
 
   const canMarkComplete = (task: Task) =>
     !!user && (user.role === "MD" || user.role === "ADMIN" || task.createdById === user.id)
@@ -60,24 +61,14 @@ export function OverviewTab() {
       )
   }, [tasks, today])
 
-  const dueTodayTasks = useMemo(() => {
-    return tasks.filter(
-      (t) =>
-        t.status !== "COMPLETED" &&
-        t.status !== "CANCELLED" &&
-        t.dueDate &&
-        isSameDay(new Date(t.dueDate), today)
-    )
-  }, [tasks, today])
-
   const projectList = useMemo(
     () => stats?.projectWise.filter((p) => p.projectId != null) ?? [],
     [stats]
   )
 
-  const statDrawerTasks = useMemo(() => {
-    if (!statDrawer) return []
-    switch (statDrawer) {
+  const expandedCardTasks = useMemo(() => {
+    if (!expandedCard) return []
+    switch (expandedCard) {
       case "completed":
         return tasks.filter((t) => t.status === "COMPLETED")
       case "pending":
@@ -89,7 +80,23 @@ export function OverviewTab() {
       default:
         return []
     }
-  }, [statDrawer, tasks, overdueTasks])
+  }, [expandedCard, tasks, overdueTasks])
+
+  const expandedCardTitle = expandedCard === "completed"
+    ? "Completed"
+    : expandedCard === "pending"
+      ? "Pending"
+      : expandedCard === "pendingReview"
+        ? "Pending Review"
+        : expandedCard === "overdue"
+          ? "Overdue"
+          : ""
+
+  const visibleReviewTasks = useMemo(() => {
+    if (!exitingTask) return pendingReviewTasks
+    if (pendingReviewTasks.some((t) => t.id === exitingTask.id)) return pendingReviewTasks
+    return [exitingTask, ...pendingReviewTasks]
+  }, [pendingReviewTasks, exitingTask])
 
   if (statsError) {
     return (
@@ -128,218 +135,210 @@ export function OverviewTab() {
   const projectTasks = expandedProjectId
     ? tasks.filter((t) => (t.projectId ?? null) === expandedProjectId)
     : []
-  const statDrawerTitle =
-    statDrawer === "completed"
-      ? "Completed"
-      : statDrawer === "pending"
-        ? "Pending"
-        : statDrawer === "pendingReview"
-          ? "Needs review"
-          : statDrawer === "overdue"
-            ? "Overdue"
-            : ""
+
+  const handleCardClick = (card: "completed" | "pending" | "pendingReview" | "overdue") => {
+    setExpandedCard((prev) => (prev === card ? null : card))
+  }
+
+  const renderTaskList = (taskList: Task[]) => (
+    <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
+      {taskList.length === 0 ? (
+        <p className="text-sm text-muted-foreground px-4 py-6">No tasks</p>
+      ) : (
+        taskList.map((task) => {
+          const isOverdue =
+            !!task.dueDate &&
+            new Date(task.dueDate) < today &&
+            task.status !== "COMPLETED" &&
+            task.status !== "EMPLOYEE_DONE"
+          return (
+            <div key={task.id} className={getTaskCardClass(task, { isOverdue })}>
+              <TaskRow
+                task={task}
+                onClick={() => setDetailTaskId(task.id)}
+                showAssignee
+                showProject
+                warningCount={taskWarningCountMap[task.id] ?? 0}
+                extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+                activityCount={task.unseenActivityCount ?? 0}
+                isAssignee={task.assigneeId === user?.id}
+                canMarkComplete={canMarkComplete(task)}
+                onMarkCompleteRequest={() => setTaskToComplete(task)}
+              />
+            </div>
+          )
+        })
+      )}
+    </div>
+  )
 
   return (
     <div className="space-y-6">
+      {/* Stat Cards — clickable to expand inline */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {isMobile ? (
-          <>
-            <StatCard
-              label="Completed"
-              value={completedPct.main}
-              subValue={completedPct.sub}
-              accent="green"
-              valueAccent
-              className="cursor-pointer active:opacity-80"
-              onClick={() => setStatDrawer("completed")}
-            />
-            <StatCard
-              label="Pending"
-              value={pendingPct.main}
-              subValue={pendingPct.sub}
-              accent="amber"
-              className="cursor-pointer active:opacity-80"
-              onClick={() => setStatDrawer("pending")}
-            />
-            <StatCard
-              label="Pending review"
-              value={pendingReviewPct.main}
-              subValue={pendingReviewPct.sub}
-              accent="purple"
-              valueAccent
-              className="cursor-pointer active:opacity-80"
-              onClick={() => setStatDrawer("pendingReview")}
-            />
-            <StatCard
-              label="Overdue"
-              value={overduePct.main}
-              subValue={overduePct.sub}
-              accent="red"
-              valueAccent
-              className="cursor-pointer active:opacity-80"
-              onClick={() => setStatDrawer("overdue")}
-            />
-          </>
-        ) : (
-          <>
-            <StatCard
-              label="Completed"
-              value={completedPct.main}
-              subValue={completedPct.sub}
-              accent="green"
-              valueAccent
-            />
-            <StatCard
-              label="Pending"
-              value={pendingPct.main}
-              subValue={pendingPct.sub}
-              accent="amber"
-            />
-            <StatCard
-              label="Pending review"
-              value={pendingReviewPct.main}
-              subValue={pendingReviewPct.sub}
-              accent="purple"
-              valueAccent
-            />
-            <StatCard
-              label="Overdue"
-              value={overduePct.main}
-              subValue={overduePct.sub}
-              accent="red"
-              valueAccent
-            />
-          </>
-        )}
+        <StatCard
+          label="Completed"
+          value={completedPct.main}
+          subValue={completedPct.sub}
+          accent="green"
+          valueAccent
+          className={cn("cursor-pointer active:opacity-80 transition-all", expandedCard === "completed" && "ring-2 ring-emerald-500")}
+          onClick={() => handleCardClick("completed")}
+        />
+        <StatCard
+          label="Pending"
+          value={pendingPct.main}
+          subValue={pendingPct.sub}
+          accent="amber"
+          className={cn("cursor-pointer active:opacity-80 transition-all", expandedCard === "pending" && "ring-2 ring-amber-500")}
+          onClick={() => handleCardClick("pending")}
+        />
+        <StatCard
+          label="Pending review"
+          value={pendingReviewPct.main}
+          subValue={pendingReviewPct.sub}
+          accent="purple"
+          valueAccent
+          className={cn("cursor-pointer active:opacity-80 transition-all", expandedCard === "pendingReview" && "ring-2 ring-purple-500")}
+          onClick={() => handleCardClick("pendingReview")}
+        />
+        <StatCard
+          label="Overdue"
+          value={overduePct.main}
+          subValue={overduePct.sub}
+          accent="red"
+          valueAccent
+          className={cn("cursor-pointer active:opacity-80 transition-all", expandedCard === "overdue" && "ring-2 ring-red-500")}
+          onClick={() => handleCardClick("overdue")}
+        />
       </section>
 
-      {isMobile && (
-        <Sheet open={!!statDrawer} onOpenChange={(open) => !open && setStatDrawer(null)}>
-          <SheetContent side="bottom" className="rounded-t-2xl flex flex-col max-h-[85dvh]">
-            <SheetHeader className="text-left">
-              <SheetTitle>{statDrawerTitle}</SheetTitle>
-            </SheetHeader>
-            <div className="flex-1 min-h-0 overflow-auto py-4 space-y-2">
-              {tasksLoading ? (
-                <p className="text-sm text-muted-foreground">Loading...</p>
-              ) : statDrawerTasks.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No tasks</p>
-              ) : (
-                <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
-                  {statDrawerTasks.map((task) => {
-                    const isOverdue =
-                      !!task.dueDate &&
-                      new Date(task.dueDate) < today &&
-                      task.status !== "COMPLETED" &&
-                      task.status !== "EMPLOYEE_DONE"
-                    return (
-                      <div key={task.id} className={getTaskCardClass(task, { isOverdue })}>
-                        <TaskRow
-                          task={task}
-                          onClick={() => {
-                            setDetailTaskId(task.id)
-                            setStatDrawer(null)
-                          }}
-                          showAssignee
-                          showProject
-                          warningCount={taskWarningCountMap[task.id] ?? 0}
-                          extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                          activityCount={task.unseenActivityCount ?? 0}
-                          isAssignee={task.assigneeId === user?.id}
-                          canMarkComplete={canMarkComplete(task)}
-                          onMarkCompleteRequest={() => {
-                            setTaskToComplete(task)
-                            setStatDrawer(null)
-                          }}
-                        />
+      {/* Inline expanded card task list (not for pendingReview — that uses the approvals section below) */}
+      {expandedCard && expandedCard !== "pendingReview" && (
+        <section>
+          <h2 className="text-sm font-semibold mb-2 px-1">{expandedCardTitle}</h2>
+          {tasksLoading ? (
+            <p className="text-sm text-muted-foreground px-4 py-4">Loading...</p>
+          ) : (
+            renderTaskList(expandedCardTasks)
+          )}
+        </section>
+      )}
+
+      {/* Pending Approvals — shown inline when "Pending review" card is expanded */}
+      {expandedCard === "pendingReview" && (
+        <>
+          {/* Due date change requests */}
+          {approvals.length > 0 && (
+            <section>
+              <h2 className="text-sm font-semibold text-amber-600 mb-2 px-1 flex items-center gap-2">
+                <ClipboardCheck className="h-4 w-4 shrink-0" />
+                Due Date Requests ({approvals.length})
+              </h2>
+              <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
+                {approvals.map((approval) => (
+                  <div
+                    key={approval.id}
+                    className="border-l-4 border-l-amber-400 px-4 py-4"
+                  >
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="min-w-0 flex-1 space-y-1">
+                        <p className="text-left font-medium text-base">
+                          {approval.task.title}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Requested by {approval.requestedBy.name}
+                          {approval.task.assignee && (
+                            <> · Assignee: {approval.task.assignee.name}</>
+                          )}
+                        </p>
+                        <p className="text-sm">
+                          <span className="text-muted-foreground">
+                            {approval.oldDueDate
+                              ? format(new Date(approval.oldDueDate), "MMM d, yyyy")
+                              : "No date"}
+                          </span>
+                          {" → "}
+                          <span className="font-medium text-primary">
+                            {approval.newDueDate
+                              ? format(new Date(approval.newDueDate), "MMM d, yyyy")
+                              : "No date"}
+                          </span>
+                        </p>
+                        {approval.reason && (
+                          <div className="rounded bg-muted/50 px-2 py-1.5 mt-1">
+                            <p className="text-xs font-medium text-muted-foreground">Reason</p>
+                            <p className="text-sm mt-0.5 whitespace-pre-wrap">{approval.reason}</p>
+                          </div>
+                        )}
                       </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
-      )}
-
-      {dueTodayTasks.length > 0 && (
-        <section>
-          <button
-            type="button"
-            className="flex w-full items-center gap-2 px-1 py-2 text-left hover:opacity-80"
-            onClick={() => setDueTodayExpanded((v) => !v)}
-          >
-            {dueTodayExpanded ? (
-              <ChevronDown className="h-4 w-4 shrink-0 text-blue-600" />
-            ) : (
-              <ChevronRight className="h-4 w-4 shrink-0 text-blue-600" />
-            )}
-            <CalendarCheck className="h-4 w-4 shrink-0 text-blue-600" />
-            <h2 className="text-sm font-semibold text-blue-600 flex-1">
-              Due Today ({dueTodayTasks.length})
-            </h2>
-          </button>
-          {dueTodayExpanded && (
-            <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
-              {dueTodayTasks.map((task) => (
-                <div key={task.id} className={getTaskCardClass(task, { isOverdue: false })}>
-                  <TaskRow
-                    task={task}
-                    onClick={() => setDetailTaskId(task.id)}
-                    showAssignee
-                    showProject
-                    warningCount={taskWarningCountMap[task.id] ?? 0}
-                    extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                    activityCount={task.unseenActivityCount ?? 0}
-                    isAssignee={task.assigneeId === user?.id}
-                    canMarkComplete={canMarkComplete(task)}
-                    onMarkCompleteRequest={() => setTaskToComplete(task)}
-                  />
-                </div>
-              ))}
-            </div>
+                      <div className="flex shrink-0 gap-2">
+                        <Button
+                          size="sm"
+                          variant="default"
+                          onClick={() =>
+                            approveMutation.mutateAsync({ id: approval.id, status: "APPROVED" })
+                          }
+                          disabled={approveMutation.isPending}
+                          className="gap-1"
+                        >
+                          <Check className="h-4 w-4" />
+                          Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            approveMutation.mutateAsync({ id: approval.id, status: "REJECTED" })
+                          }
+                          disabled={approveMutation.isPending}
+                          className="gap-1 text-destructive hover:text-destructive"
+                        >
+                          <X className="h-4 w-4" />
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
           )}
-        </section>
-      )}
 
-
-      {overdueTasks.length > 0 && (
-        <section>
-          <button
-            type="button"
-            className="flex w-full items-center gap-2 px-1 py-2 text-left hover:opacity-80"
-            onClick={() => setOverdueExpanded((v) => !v)}
-          >
-            {overdueExpanded ? (
-              <ChevronDown className="h-4 w-4 shrink-0 text-red-600" />
-            ) : (
-              <ChevronRight className="h-4 w-4 shrink-0 text-red-600" />
-            )}
-            <h2 className="text-sm font-semibold text-red-600 flex-1">
-              Overdue ({overdueTasks.length})
-            </h2>
-          </button>
-          {overdueExpanded && (
-            <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
-              {overdueTasks.map((task) => (
-                <div key={task.id} className={getTaskCardClass(task, { isOverdue: true })}>
-                  <TaskRow
-                    task={task}
-                    onClick={() => setDetailTaskId(task.id)}
-                    showAssignee
-                    showProject
-                    warningCount={taskWarningCountMap[task.id] ?? 0}
-                    extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
-                    activityCount={task.unseenActivityCount ?? 0}
-                    isAssignee={task.assigneeId === user?.id}
-                    canMarkComplete={canMarkComplete(task)}
-                    onMarkCompleteRequest={() => setTaskToComplete(task)}
-                  />
-                </div>
-              ))}
-            </div>
+          {/* Swipeable review tasks */}
+          {visibleReviewTasks.length > 0 && (
+            <section>
+              <p className="text-xs text-muted-foreground mb-2 px-1">
+                Swipe right to rate
+              </p>
+              <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
+                {visibleReviewTasks.map((task) => (
+                  <div key={task.id} className={getTaskCardClass(task)}>
+                    <SwipeableReviewRow
+                      onReview={() => !exitingTask && canMarkComplete(task) && setTaskToComplete(task)}
+                    >
+                      <TaskRow
+                        task={task}
+                        onClick={() => setDetailTaskId(task.id)}
+                        showAssignee
+                        showProject
+                        warningCount={taskWarningCountMap[task.id] ?? 0}
+                        extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+                        activityCount={task.unseenActivityCount ?? 0}
+                        isAssignee={false}
+                        canMarkComplete={false}
+                        showCompletionRating={false}
+                        showStrikethrough={false}
+                        exitAnimation={exitingTask?.id === task.id}
+                        onExitAnimationEnd={() => exitingTask?.id === task.id && setExitingTask(null)}
+                      />
+                    </SwipeableReviewRow>
+                  </div>
+                ))}
+              </div>
+            </section>
           )}
-        </section>
+        </>
       )}
 
       <section>
@@ -431,7 +430,10 @@ export function OverviewTab() {
         task={taskToComplete}
         open={!!taskToComplete}
         onOpenChange={(open) => !open && setTaskToComplete(null)}
-        onSuccess={() => setTaskToComplete(null)}
+        onSuccess={(task) => {
+          setTaskToComplete(null)
+          if (task) setExitingTask(task)
+        }}
       />
     </div>
   )

@@ -7,12 +7,10 @@ import { useAuth } from "@/hooks/use-auth"
 import { TabNavigation, type TabItem } from "@/components/employee/tab-navigation"
 import { TaskInput } from "@/components/tasks/task-input"
 import { MobileTaskDrawer } from "@/components/tasks/mobile-task-drawer"
-import { ApprovalTab } from "@/components/tasks/approval-tab"
 import { OverviewTab } from "@/components/tasks/overview-tab"
 
 import { TeamTab } from "@/components/tasks/team-tab"
 import { MyTasksTab } from "@/components/tasks/my-tasks-tab"
-import { TodayTab } from "@/components/tasks/today-tab"
 import { PerformanceTab } from "@/components/tasks/performance-tab"
 import { Button } from "@/components/ui/button"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -67,16 +65,10 @@ export default function MDTasksPage() {
       {
         value: "overview",
         label: "Overview",
-        badge: badges?.taskOverdueCount,
+        badge: (badges?.taskOverdueCount || 0) + (badges?.taskApprovalCount || 0) || undefined,
       },
       ...(isManager !== false ? [{ value: "team", label: "Team" as const }] : []),
       { value: "mytasks", label: "My Tasks" },
-      {
-        value: "approval",
-        label: "Approval",
-        badge: badges?.taskApprovalCount,
-      },
-      { value: "all", label: "All tasks" },
       ...(user?.role === "MD" ? [{ value: "performance", label: "Performance" as const }] : []),
     ],
     [isManager, user?.role, badges]
@@ -89,8 +81,13 @@ export default function MDTasksPage() {
     const hash = window.location.hash.slice(1)
     const defaultTab = "overview"
     const effectiveHash = hash || defaultTab
+    if (effectiveHash === "all" || effectiveHash === "approval") {
+      setActiveTab("overview")
+      if (typeof window !== "undefined") window.location.hash = "overview"
+      return
+    }
     if (effectiveHash === "team" && isManager === false) {
-      setActiveTab("all")
+      setActiveTab("overview")
       return
     }
     if (effectiveHash === "performance" && user?.role !== "MD") {
@@ -143,10 +140,7 @@ export default function MDTasksPage() {
       <div className="flex-1 min-h-0 py-0 md:py-4">
         {activeTab === "team" && isManager && <TeamTab />}
         {activeTab === "mytasks" && <MyTasksTab />}
-        {activeTab === "all" && <TodayTab />}
-        {activeTab === "approval" && <ApprovalTab />}
         {activeTab === "overview" && <OverviewTab />}
-
         {activeTab === "performance" && <PerformanceTab />}
       </div>
 

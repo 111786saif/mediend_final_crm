@@ -79,15 +79,24 @@ export function TaskRow({
       } catch {}
       return
     }
-    if (isEmployeeDone && canMarkComplete && onMarkCompleteRequest) {
-      onMarkCompleteRequest(task)
+    if (isEmployeeDone && canMarkComplete) {
+      if (user?.role === "MD" && isAssignee) {
+        try {
+          await updateMutation.mutateAsync({
+            id: task.id,
+            data: { status: "COMPLETED" },
+          })
+        } catch {}
+      } else if (onMarkCompleteRequest) {
+        onMarkCompleteRequest(task)
+      }
       return
     }
     if ((task.status === "PENDING" || task.status === "IN_PROGRESS") && isAssignee) {
       try {
         await updateMutation.mutateAsync({
           id: task.id,
-          data: { status: "EMPLOYEE_DONE" },
+          data: { status: user?.role === "MD" ? "COMPLETED" : "EMPLOYEE_DONE" },
         })
       } catch {}
     }

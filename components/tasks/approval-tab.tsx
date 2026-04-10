@@ -12,7 +12,7 @@ import { MarkCompleteDrawer } from "./mark-complete-drawer"
 import { TaskDetailModal } from "@/components/calendar/task-detail-modal"
 import { cn } from "@/lib/utils"
 
-function SwipeableReviewRow({
+export function SwipeableReviewRow({
   children,
   onReview,
 }: {

@@ -207,7 +207,8 @@ function TaskDetailContent({
 
   const handleStatusChange = async (newStatus: string) => {
     if (!task) return
-    if (newStatus === "COMPLETED" && canReviewTask) {
+    const isMdSelf = user?.role === "MD" && task.assigneeId === user?.id
+    if (newStatus === "COMPLETED" && canReviewTask && !isMdSelf) {
       setMarkCompleteDrawerOpen(true)
       return
     }
@@ -476,7 +477,7 @@ function TaskDetailContent({
                 (() => {
                   const topLevel = comments.filter((c) => !c.parentId)
                   return topLevel.map((c) => (
-                    <div key={c.id} className="space-y-2 rounded-lg border border-border bg-muted/20 p-3">
+                    <div key={c.id} className="space-y-2 rounded-lg bg-muted/30 p-3">
                       <div className="flex gap-3">
                         <div className={cn("shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium", getAvatarColor(c.user.name).bg, getAvatarColor(c.user.name).text)}>
                           {c.user.name.charAt(0)}
@@ -511,30 +512,28 @@ function TaskDetailContent({
               )}
             </div>
           </ScrollArea>
-          <div className="space-y-2 mt-3 shrink-0">
-            <div className="flex gap-2">
-              <Textarea
-                placeholder="Add a comment..."
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault()
-                    handleAddComment()
-                  }
-                }}
-                className="min-h-[64px] md:min-h-[60px] resize-none flex-1 text-base md:text-sm"
-                rows={2}
-              />
-              <Button
-                size="sm"
-                className="h-10 md:h-9 text-sm"
-                onClick={handleAddComment}
-                disabled={!commentText.trim() || createComment.isPending}
-              >
-                Send
-              </Button>
-            </div>
+          <div className="mt-3 shrink-0 relative">
+            <Textarea
+              placeholder="Add a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault()
+                  handleAddComment()
+                }
+              }}
+              className="min-h-[56px] md:min-h-[48px] resize-none pr-16 text-base md:text-sm bg-muted/20 border-border"
+              rows={2}
+            />
+            <Button
+              size="sm"
+              className="absolute right-2 bottom-2 h-8 text-xs"
+              onClick={handleAddComment}
+              disabled={!commentText.trim() || createComment.isPending}
+            >
+              Send
+            </Button>
           </div>
         </div>
       </div>
@@ -741,11 +740,18 @@ function TaskDetailContent({
             <SheetTitle>Change Status</SheetTitle>
           </SheetHeader>
           <div className="py-2 space-y-1">
-            {[
-              { value: "PENDING", label: "Pending", color: "text-slate-700" },
-              { value: "IN_PROGRESS", label: "In Progress", color: "text-blue-700" },
-              { value: "EMPLOYEE_DONE", label: "Done (pending review)", color: "text-amber-700" },
-            ].map((opt) => (
+            {(user?.role === "MD" && isAssignee
+              ? [
+                  { value: "PENDING", label: "Pending", color: "text-slate-700" },
+                  { value: "IN_PROGRESS", label: "In Progress", color: "text-blue-700" },
+                  { value: "COMPLETED", label: "Completed", color: "text-emerald-700" },
+                ]
+              : [
+                  { value: "PENDING", label: "Pending", color: "text-slate-700" },
+                  { value: "IN_PROGRESS", label: "In Progress", color: "text-blue-700" },
+                  { value: "EMPLOYEE_DONE", label: "Done (pending review)", color: "text-amber-700" },
+                ]
+            ).map((opt) => (
               <button
                 key={opt.value}
                 type="button"
@@ -945,7 +951,7 @@ export function TaskDetailModal({ open, onOpenChange, taskId }: TaskDetailModalP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[90vw] min-h-[80vh] max-h-[90vh] flex flex-col p-0 gap-0">
+      <DialogContent className="w-[90vw] min-h-[80vh] max-h-[90vh] flex flex-col p-0 gap-0 bg-white dark:bg-card">
         <DialogHeader className="p-4 shrink-0 border-b-0">
           <DialogTitle className="sr-only">Task details</DialogTitle>
         </DialogHeader>
