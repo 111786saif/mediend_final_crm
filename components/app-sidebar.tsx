@@ -164,7 +164,6 @@ export function AppSidebar() {
     user.role === 'MD'
       ? itemsWithUrls.filter(
           (item) =>
-            item.title === 'Home' ||
             item.title === 'Tasks' ||
             item.title === 'Meets' ||
             item.title === 'Sales Dashboard' ||

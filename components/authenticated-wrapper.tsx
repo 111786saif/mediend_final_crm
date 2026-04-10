@@ -216,12 +216,13 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
     const left = leftCandidates.filter((c) => c.show).slice(0, 2)
     const right = rightCandidates.filter((c) => c.show).slice(0, 1)
 
+    const isMdOrAdmin = u.role === 'MD' || u.role === 'ADMIN'
     const homeItem: BottomNavItem = {
-      href: '/home',
+      href: isMdOrAdmin ? '/md/home' : '/home',
       label: 'Home',
       icon: Home,
       badge: badgeCounts?.pendingNotices ?? 0,
-      matchPrefixes: ['/home'],
+      matchPrefixes: isMdOrAdmin ? ['/md/home'] : ['/home'],
     }
 
     const profileOrMdApprovalsItem: BottomNavItem =

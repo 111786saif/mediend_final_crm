@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     if (!isLoading) {
       if (user) {
-        router.push('/home')
+        router.push(getFirstNavUrl(user))
       } else {
         router.push('/login')
       }

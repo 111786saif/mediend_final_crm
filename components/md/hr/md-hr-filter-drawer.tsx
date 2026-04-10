@@ -6,7 +6,6 @@ import { apiGet } from '@/lib/api-client'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Drawer,
   DrawerContent,
@@ -102,8 +101,8 @@ export function MdHrFilterDrawer({ open, onOpenChange, filters, onApply }: MdHrF
   }
 
   const content = (
-    <div className="flex flex-col h-full">
-      <ScrollArea className="flex-1 px-4 py-4">
+    <div className="flex flex-col min-h-0 flex-1 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 pb-2">
         <div className="space-y-6">
           {/* Month & Year */}
           <div>
@@ -158,10 +157,10 @@ export function MdHrFilterDrawer({ open, onOpenChange, filters, onApply }: MdHrF
             </div>
           </div>
         </div>
-      </ScrollArea>
+      </div>
 
       {/* Footer */}
-      <div className="border-t px-4 py-3 flex gap-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div className="shrink-0 border-t px-4 py-3 flex gap-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <Button variant="outline" className="flex-1 gap-1.5" onClick={handleReset}>
           <RotateCcw className="h-4 w-4" />
           Reset
@@ -176,7 +175,7 @@ export function MdHrFilterDrawer({ open, onOpenChange, filters, onApply }: MdHrF
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={handleOpenChange}>
-        <DrawerContent className="max-h-[85dvh]">
+        <DrawerContent className="max-h-[85dvh] flex flex-col overflow-hidden">
           <DrawerHeader className="text-left px-4 pb-0">
             <DrawerTitle>Filters</DrawerTitle>
           </DrawerHeader>
