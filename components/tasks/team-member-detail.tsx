@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { Plus, AlertTriangle, Star, ArrowUpRight, Crown, Users, FileText, CheckCircle2, Clock, MoreVertical, ClipboardList, ShieldAlert } from "lucide-react"
+import { Plus, AlertTriangle, Star, ArrowUpRight, FileText, CheckCircle2, Clock, MoreVertical, ClipboardList, ShieldAlert, UserMinus } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -29,7 +29,18 @@ import type { MDTeamOverviewMember } from "@/hooks/use-md-team"
 import type { Task } from "@/hooks/use-tasks"
 import { cn } from "@/lib/utils"
 import { getAvatarColor } from "@/lib/avatar-colors"
-import { apiGet, apiPatch } from "@/lib/api-client"
+import { apiGet, apiPatch, apiDelete } from "@/lib/api-client"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { formatRating } from "@/lib/format-rating"
 import { FEATURE_KEYS } from "@/lib/feature-keys"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -72,6 +83,7 @@ function getStarColor(rating: number): string {
 
 function RatingStars({ rating }: { rating: number }) {
   const color = getStarColor(rating)
+  const filled = Math.round(rating)
   return (
     <div className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((s) => (
@@ -79,11 +91,11 @@ function RatingStars({ rating }: { rating: number }) {
           key={s}
           className={cn(
             "h-4 w-4",
-            s <= Math.round(rating) ? cn("fill-current", color) : "text-muted-foreground/20"
+            s <= filled ? cn("fill-current", color) : "text-muted-foreground/20"
           )}
         />
       ))}
-      <span className={cn("ml-1.5 text-sm font-semibold", color)}>{rating.toFixed(1)}</span>
+      <span className={cn("ml-1.5 text-sm font-semibold", color)}>{formatRating(rating)}</span>
     </div>
   )
 }
@@ -171,6 +183,7 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
   const [workLogDrawerOpen, setWorkLogDrawerOpen] = useState(false)
   const [warningsDrawerOpen, setWarningsDrawerOpen] = useState(false)
   const [actionsSheetOpen, setActionsSheetOpen] = useState(false)
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<TabId>("active")
 
   const canMarkComplete = (task: Task) =>
@@ -205,6 +218,24 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
   })
   const workLogEnforcementEnabled =
     memberPermissions?.[0]?.permissions[FEATURE_KEYS.WORKLOG_ENFORCEMENT] ?? false
+
+  const removeMemberMutation = useMutation({
+    mutationFn: () =>
+      apiDelete<{ removedMembers: number; removedWatchlist: number }>(
+        `/api/md/team-overview/${member.employeeId}`
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["md-team-overview"] })
+      queryClient.invalidateQueries({ queryKey: ["md-watchlist"] })
+      toast.success(`${member.name} removed from your team`)
+      setRemoveDialogOpen(false)
+      setActionsSheetOpen(false)
+      router.back()
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Failed to remove team member")
+    },
+  })
 
   const workLogEnforcementMutation = useMutation({
     mutationFn: ({ enabled }: { enabled: boolean }) =>
@@ -244,14 +275,19 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
     [activeTasks, today]
   )
 
+  const selfTasks = useMemo(
+    () => activeTasks.filter((t) => t.createdById === member.id),
+    [activeTasks, member.id]
+  )
+
   const mdTasks = useMemo(
-    () => activeTasks.filter((t) => user && t.createdById === user.id),
-    [activeTasks, user]
+    () => activeTasks.filter((t) => user && t.createdById === user.id && t.createdById !== member.id),
+    [activeTasks, user, member.id]
   )
 
   const teamTasks = useMemo(
-    () => activeTasks.filter((t) => user && t.createdById !== user.id),
-    [activeTasks, user]
+    () => activeTasks.filter((t) => user && t.createdById !== user.id && t.createdById !== member.id),
+    [activeTasks, user, member.id]
   )
 
   const completedTasks = useMemo(
@@ -259,19 +295,23 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
     [tasks]
   )
 
-  const avgRating = useMemo(() => {
-    const graded = completedTasks.filter((t) => t.grade)
-    if (graded.length === 0) return null
-    const sum = graded.reduce((acc, t) => {
-      const n = parseInt(t.grade!)
-      return acc + (isNaN(n) ? 0 : n)
-    }, 0)
-    return Math.round((sum / graded.length) * 10) / 10
-  }, [completedTasks])
+  // Use the canonical current-month rating from /api/md/team-overview so the
+  // header rating matches the outer Team tab exactly. Monthly reset is handled
+  // server-side (filtered by completedAt >= start-of-month).
+  const avgRating = member.averageRating
 
   const isIn = member.attendanceStatus === "in"
   const isLeave = member.attendanceStatus === "leave"
 
+  const selfTasksOnTime = useMemo(
+    () =>
+      selfTasks.filter(
+        (t) =>
+          t.status !== "EMPLOYEE_DONE" &&
+          (!t.dueDate || new Date(t.dueDate) >= today)
+      ),
+    [selfTasks, today]
+  )
   const mdTasksOnTime = useMemo(
     () =>
       mdTasks.filter(
@@ -536,7 +576,6 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                 {activeTab === "active" && (
                   <section>
                     <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-blue-700 dark:text-blue-300">
-                      <Crown className="h-4 w-4 shrink-0" />
                       MD Tasks ({mdTasksOnTime.length})
                       <span className="text-xs font-normal text-muted-foreground ml-1">Assigned by you</span>
                     </h2>
@@ -573,7 +612,6 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                 {activeTab === "active" && (
                   <section>
                     <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-emerald-700 dark:text-emerald-300">
-                      <Users className="h-4 w-4 shrink-0" />
                       Team Tasks ({teamTasksOnTime.length})
                       <span className="text-xs font-normal text-muted-foreground ml-1">Assigned by others</span>
                     </h2>
@@ -586,6 +624,42 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                     ) : (
                       <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
                         {teamTasksOnTime.map((task) => (
+                          <div key={task.id} className={getTeamDetailTaskCardClass(false)}>
+                            <TaskRow
+                              task={task}
+                              onClick={() => handleTaskRowClick(task)}
+                              showAssignee={false}
+                              showProject
+                              warningCount={taskWarningCountMap[task.id] ?? 0}
+                              extensionCount={task.pendingApprovalCount ?? task._count?.approvals ?? 0}
+                              activityCount={task.unseenActivityCount ?? 0}
+                              isAssignee={task.assigneeId === user?.id}
+                              canMarkComplete={canMarkComplete(task)}
+                              onMarkCompleteRequest={() => setTaskToComplete(task)}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+                )}
+
+                {/* Self Assigned Tasks - on-time only (active tab only) */}
+                {activeTab === "active" && (
+                  <section>
+                    <h2 className="text-sm font-semibold mb-2 flex items-center gap-2 px-1 text-violet-700 dark:text-violet-300">
+                      Self Assigned ({selfTasksOnTime.length})
+                      <span className="text-xs font-normal text-muted-foreground ml-1">Created by themselves</span>
+                    </h2>
+                    {isError ? (
+                      <p className="text-xs text-destructive px-1">Failed to load tasks.</p>
+                    ) : isLoading ? (
+                      <p className="text-xs text-muted-foreground px-1">Loading…</p>
+                    ) : selfTasksOnTime.length === 0 ? (
+                      <p className="text-xs text-muted-foreground px-1">No self-assigned tasks</p>
+                    ) : (
+                      <div className="bg-white dark:bg-card rounded-lg border border-border divide-y divide-border">
+                        {selfTasksOnTime.map((task) => (
                           <div key={task.id} className={getTeamDetailTaskCardClass(false)}>
                             <TaskRow
                               task={task}
@@ -783,9 +857,47 @@ export function TeamMemberDetailContent({ member }: TeamMemberDetailContentProps
                 </button>
               </>
             )}
+            {isMD && member.source !== "subordinate" && (
+              <button
+                type="button"
+                onClick={() => {
+                  setActionsSheetOpen(false)
+                  setRemoveDialogOpen(true)
+                }}
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted/80"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-rose-100 dark:bg-rose-900/40">
+                  <UserMinus className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+                </div>
+                <span className="font-medium text-rose-700 dark:text-rose-300">Remove from team</span>
+              </button>
+            )}
           </div>
         </SheetContent>
       </Sheet>
+      <AlertDialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove {member.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              They will be removed from your task team and watchlist. Tasks already assigned to them stay intact. You can add them back later.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={removeMemberMutation.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault()
+                removeMemberMutation.mutate()
+              }}
+              disabled={removeMemberMutation.isPending}
+              className="bg-rose-600 hover:bg-rose-700 focus:ring-rose-600"
+            >
+              {removeMemberMutation.isPending ? "Removing…" : "Remove"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

@@ -7,7 +7,8 @@
       "Bash(npx next:*)",
       "Read(//c/Users/DHRUV/AppData/Local/Temp/claude/C--Users-DHRUV-OneDrive-Desktop-mediend-crm-v2/05ad95a3-1452-4d89-bc32-493a9b636dec/tasks/**)",
       "Bash(mkdir:*)",
-      "Bash(xargs grep:*)"
+      "Bash(xargs grep:*)",
+      "Bash(pnpm typecheck:*)"
     ]
   }
 }

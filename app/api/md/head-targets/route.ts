@@ -7,11 +7,12 @@ import { parseDepartmentTargets } from './dept-target-utils'
 
 const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD'] as const
 
-function getMonthBounds(monthOffset = 0) {
-  const d = new Date()
-  d.setMonth(d.getMonth() + monthOffset)
-  const start = new Date(d.getFullYear(), d.getMonth(), 1, 0, 0, 0, 0)
-  const end = new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999)
+function getMonthBounds(month?: number, year?: number) {
+  const now = new Date()
+  const m = (month ?? now.getMonth() + 1) - 1
+  const y = year ?? now.getFullYear()
+  const start = new Date(y, m, 1, 0, 0, 0, 0)
+  const end = new Date(y, m + 1, 0, 23, 59, 59, 999)
   return { start, end }
 }
 
@@ -121,7 +122,12 @@ export async function GET(request: NextRequest) {
       return errorResponse('Forbidden', 403)
     }
 
-    const { start, end } = getMonthBounds(0)
+    const url = new URL(request.url)
+    const monthParam = url.searchParams.get('month')
+    const yearParam = url.searchParams.get('year')
+    const month = monthParam ? parseInt(monthParam, 10) : undefined
+    const year = yearParam ? parseInt(yearParam, 10) : undefined
+    const { start, end } = getMonthBounds(month, year)
 
     const heads = await prisma.user.findMany({
       where: {

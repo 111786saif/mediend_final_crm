@@ -26,9 +26,10 @@ interface EmployeeOption {
 interface AddPersonDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onAdded?: () => void
 }
 
-export function AddPersonDialog({ open, onOpenChange }: AddPersonDialogProps) {
+export function AddPersonDialog({ open, onOpenChange, onAdded }: AddPersonDialogProps) {
   const [search, setSearch] = useState("")
   const queryClient = useQueryClient()
   const { data: teamData } = useMDTeamOverview()
@@ -49,6 +50,7 @@ export function AddPersonDialog({ open, onOpenChange }: AddPersonDialogProps) {
       apiPost<{ message: string }>("/api/md/watchlist", { employeeIds }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["md-team-overview"] })
+      onAdded?.()
       toast.success("Added to team")
       onOpenChange(false)
     },

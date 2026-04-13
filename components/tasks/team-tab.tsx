@@ -11,6 +11,7 @@ import { useWarnings } from "@/hooks/use-tasks"
 import { getAvatarColor } from "@/lib/avatar-colors"
 import { AddPersonDialog } from "./add-person-dialog"
 import { cn } from "@/lib/utils"
+import { formatRating } from "@/lib/format-rating"
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/)
@@ -208,7 +209,7 @@ function TeamMemberRow({
         {member.averageRating != null ? (
           <span className={cn("inline-flex items-center gap-0.5 font-semibold text-sm", getStarColor(member.averageRating))}>
             <Star className="h-4 w-4 fill-current" />
-            {member.averageRating.toFixed(1)}
+            {formatRating(member.averageRating)}
           </span>
         ) : (
           <span className="text-muted-foreground text-sm">—</span>

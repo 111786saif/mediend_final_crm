@@ -4,6 +4,11 @@ import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 import { maskPhoneNumber } from '@/lib/phone-utils'
+import {
+  LEAD_HYDRATE_INCLUDE,
+  buildDischargeSheetDefaults,
+  buildPlRecordPayload,
+} from '@/lib/pl/hydrate-pl-record'
 
 const createDischargeSheetSchema = z.object({
   leadId: z.string(),
@@ -178,20 +183,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const data = createDischargeSheetSchema.parse(body)
 
-    // Check if lead exists
+    // Check if lead exists — use the full hydrate include so we can pre-fill
+    // every people/case/date field on the DischargeSheet + PLRecord.
     const lead = await prisma.lead.findUnique({
       where: { id: data.leadId },
-      include: {
-        bd: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        admissionRecord: {
-          select: { admissionDate: true },
-        },
-      },
+      include: LEAD_HYDRATE_INCLUDE,
     })
 
     if (!lead) {
@@ -207,36 +203,34 @@ export async function POST(request: NextRequest) {
       return errorResponse('Discharge sheet already exists for this lead', 400)
     }
 
-    // Prepare data for creation
-    const admissionDate =
-      lead.admissionRecord?.admissionDate ?? null
+    // Prepare data for creation — hydrate defaults from Lead/AdmissionRecord
+    // first, then overlay whatever the client sent so client values always win.
+    const defaults = buildDischargeSheetDefaults(lead)
     const instrumentsCostNum =
       data.instrumentsAmount != null ? Number(data.instrumentsAmount) : 0
 
     const dischargeData: any = {
       leadId: data.leadId,
       createdById: user.id,
-      month: data.month ? new Date(data.month) : null,
+      month: data.month ? new Date(data.month) : defaults.month,
       dischargeDate: data.dischargeDate ? new Date(data.dischargeDate) : null,
-      admissionDate,
-      surgeryDate: data.surgeryDate
-        ? new Date(data.surgeryDate)
-        : lead.surgeryDate ?? null,
-      status: data.status,
-      paymentType: data.paymentType,
+      admissionDate: defaults.admissionDate,
+      surgeryDate: data.surgeryDate ? new Date(data.surgeryDate) : defaults.surgeryDate,
+      status: data.status ?? 'DISCHARGED',
+      paymentType: data.paymentType ?? 'INSURANCE',
       approvedOrCash: data.approvedOrCash,
       paymentCollectedAt: data.paymentCollectedAt,
       managerRole: data.managerRole,
-      managerName: data.managerName,
-      bdmName: data.bdmName || lead.bd?.name,
-      patientName: data.patientName || lead.patientName,
-      patientPhone: data.patientPhone || lead.phoneNumber,
-      doctorName: data.doctorName || lead.surgeonName,
-      hospitalName: data.hospitalName || lead.hospitalName,
-      category: data.category || lead.category,
-      treatment: data.treatment || lead.treatment,
-      circle: data.circle || lead.circle,
-      leadSource: data.leadSource || lead.source,
+      managerName: data.managerName ?? defaults.managerName,
+      bdmName: data.bdmName ?? defaults.bdmName,
+      patientName: data.patientName ?? defaults.patientName,
+      patientPhone: data.patientPhone ?? defaults.patientPhone,
+      doctorName: data.doctorName ?? defaults.doctorName,
+      hospitalName: data.hospitalName ?? defaults.hospitalName,
+      category: data.category ?? defaults.category,
+      treatment: data.treatment ?? defaults.treatment,
+      circle: data.circle ?? defaults.circle,
+      leadSource: data.leadSource ?? defaults.leadSource,
       tentativeAmount: data.tentativeAmount,
       copayPct: data.copayPct,
       dischargeSummaryUrl: data.dischargeSummaryUrl,
@@ -311,50 +305,11 @@ export async function POST(request: NextRequest) {
     })
     if (!existingPL) {
       const plRecord = await prisma.pLRecord.create({
-        data: {
-          leadId: dischargeSheet.leadId,
-          month: dischargeSheet.month,
-          admissionDate: dischargeSheet.admissionDate,
-          surgeryDate: dischargeSheet.surgeryDate,
-          status: dischargeSheet.status,
-          paymentType: dischargeSheet.paymentType,
-          approvedOrCash: dischargeSheet.approvedOrCash,
-          paymentCollectedAt: dischargeSheet.paymentCollectedAt,
-          managerRole: dischargeSheet.managerRole,
-          managerName: dischargeSheet.managerName,
-          bdmName: dischargeSheet.bdmName,
-          patientName: dischargeSheet.patientName,
-          patientPhone: dischargeSheet.patientPhone,
-          doctorName: dischargeSheet.doctorName,
-          hospitalName: dischargeSheet.hospitalName,
-          category: dischargeSheet.category,
-          treatment: dischargeSheet.treatment,
-          circle: dischargeSheet.circle,
-          leadSource: dischargeSheet.leadSource,
-          totalAmount: dischargeSheet.totalAmount,
-          billAmount: dischargeSheet.billAmount,
-          cashPaidByPatient: dischargeSheet.cashPaidByPatient,
-          cashOrDedPaid: dischargeSheet.cashOrDedPaid,
-          referralAmount: dischargeSheet.referralAmount,
-          cabCharges: dischargeSheet.cabCharges,
-          implantCost: dischargeSheet.implantCost,
-          instrumentsCost: dischargeSheet.instrumentsCost,
-          implantPaidBy: dischargeSheet.implantPaidBy,
-          instrumentsPaidBy: dischargeSheet.instrumentsPaidBy,
-          dcCharges: dischargeSheet.dcCharges,
-          doctorCharges: dischargeSheet.doctorCharges,
-          hospitalSharePct: dischargeSheet.hospitalSharePct,
-          hospitalShareAmount: dischargeSheet.hospitalShareAmount,
-          mediendSharePct: dischargeSheet.mediendSharePct,
-          mediendShareAmount: dischargeSheet.mediendShareAmount,
-          mediendNetProfit: dischargeSheet.mediendNetProfit,
-          finalProfit: dischargeSheet.mediendNetProfit,
-          hospitalPayoutStatus: 'PENDING',
-          doctorPayoutStatus: 'PENDING',
-          mediendInvoiceStatus: 'PENDING',
-          remarks: dischargeSheet.remarks,
-          handledById: user.id,
-        },
+        data: buildPlRecordPayload({
+          lead,
+          dischargeSheet,
+          userId: user.id,
+        }),
       })
       await prisma.dischargeSheet.update({
         where: { id: dischargeSheet.id },

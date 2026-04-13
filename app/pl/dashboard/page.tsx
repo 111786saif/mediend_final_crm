@@ -32,11 +32,14 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/hooks/use-auth'
-import { canViewPhoneNumber } from '@/lib/case-permissions'
-import { getPhoneDisplay } from '@/lib/phone-utils'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { cn } from '@/lib/utils'
+import {
+  resolvePlRow,
+  formatPlDate,
+  formatPlMonth,
+  formatPlRupee,
+} from '@/lib/pl/resolve-pl-row'
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
@@ -82,7 +85,6 @@ const DEFAULT_COLS: Record<string, boolean> = {
   manager: true,
   bdm: true,
   patient: true,
-  phone: true,
   category: true,
   treatment: true,
   circle: false,
@@ -120,14 +122,19 @@ function loadColVisibility(): Record<string, boolean> {
     const raw = localStorage.getItem(LS_COLUMNS)
     if (!raw) return { ...DEFAULT_COLS }
     const parsed = JSON.parse(raw) as Record<string, boolean>
-    return { ...DEFAULT_COLS, ...parsed }
+    // Only keep keys that are still part of DEFAULT_COLS — drops stale entries
+    // like `phone` from older saved state.
+    const merged: Record<string, boolean> = { ...DEFAULT_COLS }
+    for (const key of Object.keys(DEFAULT_COLS)) {
+      if (key in parsed) merged[key] = Boolean(parsed[key])
+    }
+    return merged
   } catch {
     return { ...DEFAULT_COLS }
   }
 }
 
 export default function PLLedgerPage() {
-  const { user } = useAuth()
   const router = useRouter()
   const [preset, setPreset] = useState<Preset>('mtd')
   const [customStart, setCustomStart] = useState('')
@@ -303,7 +310,6 @@ export default function PLLedgerPage() {
                     ['manager', 'Manager'],
                     ['bdm', 'BDM'],
                     ['patient', 'Patient'],
-                    ['phone', 'Phone'],
                     ['category', 'Category'],
                     ['treatment', 'Treatment'],
                     ['circle', 'Circle'],
@@ -518,7 +524,6 @@ export default function PLLedgerPage() {
                       {visibleCols.manager && <TableHead>Manager</TableHead>}
                       {visibleCols.bdm && <TableHead>BDM</TableHead>}
                       {visibleCols.patient && <TableHead>Patient</TableHead>}
-                      {visibleCols.phone && <TableHead>Phone</TableHead>}
                       {visibleCols.category && <TableHead>Category</TableHead>}
                       {visibleCols.treatment && <TableHead>Treatment</TableHead>}
                       {visibleCols.circle && <TableHead>Circle</TableHead>}
@@ -553,18 +558,7 @@ export default function PLLedgerPage() {
                   <TableBody>
                     {records?.map((record) => {
                       const pl = record.plRecord as Record<string, unknown> | undefined
-                      const admissionRecord = record.admissionRecord as { admissionDate?: string } | undefined
-                      const month = pl?.month
-                        ? new Date(pl.month as string).toLocaleDateString('en-IN', { month: 'short', year: '2-digit' })
-                        : '—'
-                      const surgeryDate = pl?.surgeryDate || record.surgeryDate
-                      const surgeryStr = surgeryDate ? new Date(surgeryDate as string).toLocaleDateString('en-IN') : '—'
-                      const admissionPl = pl?.admissionDate as string | undefined
-                      const admissionStr = admissionPl
-                        ? new Date(admissionPl).toLocaleDateString('en-IN')
-                        : admissionRecord?.admissionDate
-                          ? new Date(admissionRecord.admissionDate).toLocaleDateString('en-IN')
-                          : '—'
+                      const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
                       const paidBy = (v: unknown) => (v === 'HOSPITAL' ? 'Hospital' : v === 'MEDIEND' ? 'Mediend' : '—')
 
                       return (
@@ -583,78 +577,53 @@ export default function PLLedgerPage() {
                               )}
                             </div>
                           </TableCell>
-                          {visibleCols.month && <TableCell className="whitespace-nowrap">{month}</TableCell>}
+                          {visibleCols.month && (
+                            <TableCell className="whitespace-nowrap">{formatPlMonth(resolved.month)}</TableCell>
+                          )}
                           {visibleCols.manager && (
-                            <TableCell className="whitespace-nowrap">{(pl?.managerName as string) || '—'}</TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.manager ?? '—'}</TableCell>
                           )}
                           {visibleCols.bdm && (
-                            <TableCell className="whitespace-nowrap">
-                              {((pl?.bdmName as string) || record.bd?.name || '—') as string}
-                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.bdm ?? '—'}</TableCell>
                           )}
                           {visibleCols.patient && (
-                            <TableCell className="whitespace-nowrap">{record.patientName || '—'}</TableCell>
-                          )}
-                          {visibleCols.phone && (
-                            <TableCell className="whitespace-nowrap">
-                              {getPhoneDisplay(
-                                record.phoneNumber,
-                                canViewPhoneNumber(user ? { role: user.role } : null)
-                              )}
-                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.patient ?? '—'}</TableCell>
                           )}
                           {visibleCols.category && (
-                            <TableCell className="whitespace-nowrap">{String(record.category || '') || '—'}</TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.category ?? '—'}</TableCell>
                           )}
                           {visibleCols.treatment && (
-                            <TableCell className="whitespace-nowrap">{String(record.treatment || '') || '—'}</TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.treatment ?? '—'}</TableCell>
                           )}
                           {visibleCols.circle && (
                             <TableCell className="whitespace-nowrap">{String(record.circle || '') || '—'}</TableCell>
                           )}
                           {visibleCols.doctor && (
-                            <TableCell className="whitespace-nowrap">
-                              {String((pl?.doctorName as string) || (record as { surgeonName?: string }).surgeonName || '') ||
-                                '—'}
-                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.doctor ?? '—'}</TableCell>
                           )}
                           {visibleCols.hospital && (
-                            <TableCell className="whitespace-nowrap">
-                              {record.hospitalName || (pl?.hospitalName as string) || '—'}
-                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.hospital ?? '—'}</TableCell>
                           )}
                           {visibleCols.admissionDate && (
-                            <TableCell className="whitespace-nowrap">{admissionStr}</TableCell>
+                            <TableCell className="whitespace-nowrap">{formatPlDate(resolved.admission)}</TableCell>
                           )}
                           {visibleCols.surgeryDate && (
-                            <TableCell className="whitespace-nowrap">{surgeryStr}</TableCell>
+                            <TableCell className="whitespace-nowrap">{formatPlDate(resolved.surgery)}</TableCell>
                           )}
                           {visibleCols.paymentType && (
-                            <TableCell className="whitespace-nowrap">{(pl?.paymentType as string) || '—'}</TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.paymentType ?? '—'}</TableCell>
                           )}
                           {visibleCols.status && (
-                            <TableCell className="whitespace-nowrap">{(pl?.status as string) || '—'}</TableCell>
+                            <TableCell className="whitespace-nowrap">{resolved.status ?? '—'}</TableCell>
                           )}
                           {visibleCols.totalBill && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(
-                                pl?.billAmount != null ? Number(pl.billAmount) : record.billAmount != null ? Number(record.billAmount) : null
-                              )}
-                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.totalBill)}</TableCell>
                           )}
                           {visibleCols.approvedAmount && (
-                            <TableCell className="whitespace-nowrap">
-                              {pl?.totalAmount != null && Number(pl.totalAmount) !== 0
-                                ? rupee(Number(pl.totalAmount))
-                                : pl?.approvedOrCash != null && String(pl.approvedOrCash).trim() !== ''
-                                  ? String(pl.approvedOrCash)
-                                  : '—'}
-                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.approvedAmount)}</TableCell>
                           )}
                           {visibleCols.deductionPatient && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.cashOrDedPaid != null ? Number(pl.cashOrDedPaid) : null)}
-                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionPatient)}</TableCell>
                           )}
                           {visibleCols.implant && (
                             <TableCell className="whitespace-nowrap">

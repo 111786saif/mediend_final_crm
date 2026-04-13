@@ -182,26 +182,24 @@ export async function GET(request: NextRequest) {
       completedCountMap.set(r.assigneeId, r._count.id)
     }
 
-    // Average rating per assignee (completed tasks with numeric grades, current month)
+    // Average rating per assignee — read from TaskRating so this matches the
+    // Performance tab exactly. Reset monthly via the `month` field (YYYYMM).
     const now = new Date()
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-    const completedWithGrades = await prisma.task.findMany({
+    const currentMonth = now.getFullYear() * 100 + (now.getMonth() + 1)
+    const monthRatings = await prisma.taskRating.findMany({
       where: {
-        assigneeId: { in: userIds },
-        status: "COMPLETED",
-        grade: { not: null },
-        completedAt: { gte: monthStart },
+        employeeId: { in: userIds },
+        month: currentMonth,
       },
-      select: { assigneeId: true, grade: true },
+      select: { employeeId: true, grade: true },
     })
     const ratingMap = new Map<string, { sum: number; count: number }>()
-    for (const t of completedWithGrades) {
-      const num = parseInt(t.grade!)
-      if (isNaN(num) || num < 1 || num > 5) continue
-      const existing = ratingMap.get(t.assigneeId) ?? { sum: 0, count: 0 }
-      existing.sum += num
+    for (const r of monthRatings) {
+      if (r.grade < 1 || r.grade > 5) continue
+      const existing = ratingMap.get(r.employeeId) ?? { sum: 0, count: 0 }
+      existing.sum += r.grade
       existing.count += 1
-      ratingMap.set(t.assigneeId, existing)
+      ratingMap.set(r.employeeId, existing)
     }
     const avgRatingMap = new Map<string, number>()
     for (const [uid, { sum, count }] of ratingMap) {

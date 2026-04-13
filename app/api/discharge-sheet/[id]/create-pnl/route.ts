@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { LEAD_HYDRATE_INCLUDE, buildPlRecordPayload } from '@/lib/pl/hydrate-pl-record'
 
 export async function POST(
   request: NextRequest,
@@ -20,17 +21,11 @@ export async function POST(
 
     const { id } = await params
 
-    // Find discharge sheet
+    // Find discharge sheet (+ lead with full hydrate include)
     const dischargeSheet = await prisma.dischargeSheet.findUnique({
       where: { id },
       include: {
-        lead: {
-          select: {
-            id: true,
-            leadRef: true,
-            patientName: true,
-          },
-        },
+        lead: { include: LEAD_HYDRATE_INCLUDE },
       },
     })
 
@@ -47,52 +42,13 @@ export async function POST(
       return errorResponse('PNL record already exists for this lead', 400)
     }
 
-    // Create PNL record from discharge sheet data
+    // Create PNL record from discharge sheet + lead data
     const plRecord = await prisma.pLRecord.create({
-      data: {
-        leadId: dischargeSheet.leadId,
-        month: dischargeSheet.month,
-        admissionDate: dischargeSheet.admissionDate,
-        surgeryDate: dischargeSheet.surgeryDate,
-        status: dischargeSheet.status,
-        paymentType: dischargeSheet.paymentType,
-        approvedOrCash: dischargeSheet.approvedOrCash,
-        paymentCollectedAt: dischargeSheet.paymentCollectedAt,
-        managerRole: dischargeSheet.managerRole,
-        managerName: dischargeSheet.managerName,
-        bdmName: dischargeSheet.bdmName,
-        patientName: dischargeSheet.patientName,
-        patientPhone: dischargeSheet.patientPhone,
-        doctorName: dischargeSheet.doctorName,
-        hospitalName: dischargeSheet.hospitalName,
-        category: dischargeSheet.category,
-        treatment: dischargeSheet.treatment,
-        circle: dischargeSheet.circle,
-        leadSource: dischargeSheet.leadSource,
-        totalAmount: dischargeSheet.totalAmount,
-        billAmount: dischargeSheet.billAmount,
-        cashPaidByPatient: dischargeSheet.cashPaidByPatient,
-        cashOrDedPaid: dischargeSheet.cashOrDedPaid,
-        referralAmount: dischargeSheet.referralAmount,
-        cabCharges: dischargeSheet.cabCharges,
-        implantCost: dischargeSheet.implantCost,
-        instrumentsCost: dischargeSheet.instrumentsCost,
-        implantPaidBy: dischargeSheet.implantPaidBy,
-        instrumentsPaidBy: dischargeSheet.instrumentsPaidBy,
-        dcCharges: dischargeSheet.dcCharges,
-        doctorCharges: dischargeSheet.doctorCharges,
-        hospitalSharePct: dischargeSheet.hospitalSharePct,
-        hospitalShareAmount: dischargeSheet.hospitalShareAmount,
-        mediendSharePct: dischargeSheet.mediendSharePct,
-        mediendShareAmount: dischargeSheet.mediendShareAmount,
-        mediendNetProfit: dischargeSheet.mediendNetProfit,
-        finalProfit: dischargeSheet.mediendNetProfit, // Alias
-        remarks: dischargeSheet.remarks,
-        handledById: user.id,
-        hospitalPayoutStatus: 'PENDING',
-        doctorPayoutStatus: 'PENDING',
-        mediendInvoiceStatus: 'PENDING',
-      },
+      data: buildPlRecordPayload({
+        lead: dischargeSheet.lead,
+        dischargeSheet,
+        userId: user.id,
+      }),
       include: {
         lead: {
           select: {

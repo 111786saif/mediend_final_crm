@@ -14,6 +14,7 @@ import { Star, Trophy, Medal, ChevronRight } from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { formatRating } from "@/lib/format-rating"
 
 function monthToLabel(month: number): string {
   const y = Math.floor(month / 100)
@@ -128,7 +129,7 @@ export function PerformanceTab() {
                         <div className="flex shrink-0 items-center gap-1">
                           <Star className="h-5 w-5 fill-amber-500 text-amber-500" />
                           <span className="text-lg font-bold text-amber-600 dark:text-amber-400">
-                            {emp.avgRating.toFixed(1)}
+                            {formatRating(emp.avgRating)}
                           </span>
                         </div>
                       ) : (

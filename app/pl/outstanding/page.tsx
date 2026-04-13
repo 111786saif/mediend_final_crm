@@ -14,6 +14,12 @@ import { Building2, CheckCircle, CreditCard, FileText } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { cn } from '@/lib/utils'
+import {
+  resolvePlRow,
+  formatPlDate,
+  formatPlMonth,
+  formatPlRupee,
+} from '@/lib/pl/resolve-pl-row'
 
 type Preset = 'today' | 'week' | 'mtd' | 'lastMonth' | 'custom'
 
@@ -270,19 +276,28 @@ export default function PLOutstandingPage() {
                   <TableHeader>
                     <TableRow className="border-b border-violet-200/40 bg-violet-50/50 hover:bg-violet-50/50 dark:border-violet-800/30 dark:bg-violet-950/25">
                       <TableHead>Lead Ref</TableHead>
-                      <TableHead>Patient</TableHead>
-                      <TableHead>Hospital</TableHead>
-                      <TableHead>Treatment</TableHead>
+                      <TableHead>Month</TableHead>
+                      <TableHead>Manager</TableHead>
                       <TableHead>BDM</TableHead>
-                      <TableHead>Surgery Date</TableHead>
-                      <TableHead>Bill Amount</TableHead>
+                      <TableHead>Patient</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Treatment</TableHead>
+                      <TableHead>Doctor</TableHead>
+                      <TableHead>Hospital</TableHead>
+                      <TableHead>Admission</TableHead>
+                      <TableHead>Surgery</TableHead>
+                      <TableHead>Payment</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Total Bill</TableHead>
+                      <TableHead>Approved</TableHead>
+                      <TableHead>Deduction</TableHead>
                       <TableHead>Net Profit</TableHead>
                       <TableHead>Hospital Payout</TableHead>
                       <TableHead>Hospital Pending</TableHead>
                       <TableHead>Doctor Payout</TableHead>
                       <TableHead>Doctor Pending</TableHead>
                       <TableHead>Invoice Status</TableHead>
-                      <TableHead>Payment</TableHead>
+                      <TableHead>Payment Received</TableHead>
                       <TableHead>Remarks</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -290,8 +305,7 @@ export default function PLOutstandingPage() {
                     {records?.map((record) => {
                       const pl = record.plRecord as Record<string, unknown> | undefined
                       const oc = record.outstandingCase as { paymentReceived?: boolean; remark2?: string | null } | undefined
-                      const surgeryDate = pl?.surgeryDate || record.surgeryDate
-                      const surgeryStr = surgeryDate ? new Date(surgeryDate as string).toLocaleDateString('en-IN') : '—'
+                      const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
                       const hospitalPending = (pl?.hospitalAmountPending as number) || 0
                       const doctorPending = (pl?.doctorAmountPending as number) || 0
                       return (
@@ -310,18 +324,21 @@ export default function PLOutstandingPage() {
                               {record.leadRef ? <CopyLeadRefButton leadRef={String(record.leadRef)} className="h-7 w-7" /> : null}
                             </div>
                           </TableCell>
-                          <TableCell className="whitespace-nowrap">{record.patientName ?? '—'}</TableCell>
-                          <TableCell className="whitespace-nowrap">{record.hospitalName ?? '—'}</TableCell>
-                          <TableCell className="whitespace-nowrap">{record.treatment ?? '—'}</TableCell>
-                          <TableCell className="whitespace-nowrap">{(pl?.bdmName as string) || record.bd?.name || '—'}</TableCell>
-                          <TableCell className="whitespace-nowrap">{surgeryStr}</TableCell>
-                          <TableCell className="whitespace-nowrap">
-                            {pl?.billAmount != null && Number(pl.billAmount) !== 0
-                              ? `₹${Number(pl.billAmount).toLocaleString('en-IN')}`
-                              : record.billAmount != null
-                                ? `₹${Number(record.billAmount).toLocaleString('en-IN')}`
-                                : '—'}
-                          </TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlMonth(resolved.month)}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.manager ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.bdm ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.patient ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.category ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.treatment ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.doctor ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.hospital ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlDate(resolved.admission)}</TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlDate(resolved.surgery)}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.paymentType ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{resolved.status ?? '—'}</TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.totalBill)}</TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.approvedAmount)}</TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionPatient)}</TableCell>
                           <TableCell className="whitespace-nowrap font-medium">
                             ₹
                             {(
@@ -394,7 +411,7 @@ export default function PLOutstandingPage() {
                     })}
                     {(!records || records.length === 0) && (
                       <TableRow>
-                        <TableCell colSpan={15} className="text-center text-muted-foreground py-8">
+                        <TableCell colSpan={24} className="text-center text-muted-foreground py-8">
                           No outstanding records found
                         </TableCell>
                       </TableRow>

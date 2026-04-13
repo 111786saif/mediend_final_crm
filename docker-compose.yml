@@ -275,6 +275,25 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/backfill-lead-date.ts"]
 
+  # One-off: backfill PLRecord + DischargeSheet people/case/date/billing fields
+  # from Lead + AdmissionRecord for historical rows. Only fills empty fields;
+  # never overwrites manual PL edits.
+  # Dry run: docker compose --profile tools run --rm backfill-pl-records -- --dry-run
+  # Live:    docker compose --profile tools run --rm backfill-pl-records
+  backfill-pl-records:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/backfill-pl-records.ts"]
+
   # One-off: backfill conversionDate for IPD Done leads that have no surgery/admission date
   # Usage: docker compose --profile tools run --rm backfill-conversion-dates
   backfill-conversion-dates:

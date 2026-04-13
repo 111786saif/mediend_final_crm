@@ -90,8 +90,8 @@ export function MdHrTargetTab({ filters }: MdHrTargetTabProps) {
   const [detailDeptId, setDetailDeptId] = useState<string | null>(null)
 
   const { data: headTargetItems = [], isLoading: targetsLoading } = useQuery<HeadTargetItem[]>({
-    queryKey: ['md-head-targets', 'hr-tab'],
-    queryFn: () => apiGet<HeadTargetItem[]>('/api/md/head-targets'),
+    queryKey: ['md-head-targets', 'hr-tab', filters.month, filters.year],
+    queryFn: () => apiGet<HeadTargetItem[]>(`/api/md/head-targets?month=${filters.month}&year=${filters.year}`),
   })
 
   const { data: employeesRaw = [] } = useQuery<EmployeeForTargets[]>({
@@ -121,10 +121,14 @@ export function MdHrTargetTab({ filters }: MdHrTargetTabProps) {
     }))
   }, [employeesRaw])
 
-  // Find the HR HEAD target with HEAD_COUNT metric
+  // Find the HR HEAD target with HEAD_COUNT metric.
+  // Prefer an entry that actually has an activeTarget so stale HR_HEAD users
+  // without a target don't shadow the real one.
   const hrTarget = useMemo(() => {
-    return headTargetItems.find(
-      (item) => item.head.role === 'HR_HEAD' && item.achievement.metric === 'HEAD_COUNT'
+    const hrItems = headTargetItems.filter((item) => item.head.role === 'HR_HEAD')
+    return (
+      hrItems.find((item) => item.activeTarget && item.achievement.metric === 'HEAD_COUNT') ??
+      hrItems.find((item) => item.achievement.metric === 'HEAD_COUNT')
     )
   }, [headTargetItems])
 

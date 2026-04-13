@@ -1,8 +1,8 @@
 'use client'
 
 import { useMemo, useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { apiGet } from '@/lib/api-client'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { apiGet, apiDelete } from '@/lib/api-client'
 import { format, startOfMonth, endOfMonth } from 'date-fns'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -15,29 +15,32 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   AttendanceHeatmap,
   type AttendanceDay as HeatmapAttendanceDay,
 } from '@/components/employee/attendance-heatmap'
-import { ChevronLeft, ChevronRight, Search, Users, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Search, Users, X, UserPlus, UserMinus } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-type TeamSubordinate = {
-  id: string
-  userId: string
-  employeeCode: string | null
-  name: string
-  email: string
-  role: string
-  departmentName: string | null
-}
+import { AddPersonDialog } from '@/components/tasks/add-person-dialog'
+import { toast } from 'sonner'
 
 type TeamAttendanceApiEntry = {
   employeeId: string
   name: string
   email: string
   role: string
+  departmentName?: string | null
   attendance: Array<{
     date: string
     inTime: string | null
@@ -61,9 +64,18 @@ type TeamAttendanceApiResponse = {
   toDate: string | null
 }
 
-type MyTeamApiResponse = {
-  subordinates: TeamSubordinate[]
-  count: number
+type TeamOverviewMemberLite = {
+  id: string
+  employeeId: string
+  name: string
+  email: string
+  role: string
+  department: { id: string; name: string } | null
+  source: 'team' | 'watchlist' | 'subordinate'
+}
+
+type TeamOverviewApiResponse = {
+  members: TeamOverviewMemberLite[]
 }
 
 function toHeatmapAttendance(rows: TeamAttendanceApiEntry['attendance']): HeatmapAttendanceDay[] {
@@ -93,18 +105,18 @@ type MergedMember = {
 }
 
 function mergeTeamWithAttendance(
-  subordinates: TeamSubordinate[],
+  members: TeamOverviewMemberLite[],
   entries: TeamAttendanceApiEntry[]
 ): MergedMember[] {
   const byId = new Map(entries.map((e) => [e.employeeId, e]))
-  return subordinates.map((s) => {
-    const e = byId.get(s.id)
+  return members.map((m) => {
+    const e = byId.get(m.employeeId)
     return {
-      employeeId: s.id,
-      name: e?.name ?? s.name,
-      email: e?.email ?? s.email,
-      role: e?.role ?? s.role,
-      departmentName: s.departmentName,
+      employeeId: m.employeeId,
+      name: e?.name ?? m.name,
+      email: e?.email ?? m.email,
+      role: e?.role ?? m.role,
+      departmentName: m.department?.name ?? null,
       attendance: e?.attendance ?? [],
       leaveDays: e?.leaveDays ?? [],
       leaveByType: e?.leaveByType ?? [],
@@ -176,6 +188,9 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
   const [viewMonth, setViewMonth] = useState(() => startOfMonth(new Date()))
   const [drawerMember, setDrawerMember] = useState<MergedMember | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [addPersonOpen, setAddPersonOpen] = useState(false)
+  const [removeTarget, setRemoveTarget] = useState<MergedMember | null>(null)
+  const queryClient = useQueryClient()
   const debouncedSearch = useDebouncedValue(searchQuery, 300)
   const [selectedSearchEmployee, setSelectedSearchEmployee] = useState<SearchEmployee | null>(null)
 
@@ -186,25 +201,41 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
   const fromDate = format(startOfMonth(viewMonth), 'yyyy-MM-dd')
   const toDate = format(isCurrentMonth ? today : endOfMonth(viewMonth), 'yyyy-MM-dd')
 
-  // Team data (default view)
-  const { data: teamData, isLoading: teamLoading } = useQuery<MyTeamApiResponse>({
-    queryKey: ['hierarchy', 'my-team'],
-    queryFn: () => apiGet<MyTeamApiResponse>('/api/hierarchy/my-team'),
+  // MD team members (task team + watchlist + any direct subordinates)
+  const { data: teamOverview, isLoading: teamLoading } = useQuery<TeamOverviewApiResponse>({
+    queryKey: ['md-team-overview', ''],
+    queryFn: () => apiGet<TeamOverviewApiResponse>('/api/md/team-overview'),
   })
 
   const { data: attData, isLoading: attLoading } = useQuery<TeamAttendanceApiResponse>({
-    queryKey: ['hierarchy', 'my-team', 'attendance', fromDate, toDate],
+    queryKey: ['md-team-attendance', fromDate, toDate],
     queryFn: () =>
       apiGet<TeamAttendanceApiResponse>(
-        `/api/hierarchy/my-team/attendance?fromDate=${fromDate}&toDate=${toDate}`
+        `/api/md/team-attendance?fromDate=${fromDate}&toDate=${toDate}`
       ),
-    enabled: (teamData?.subordinates.length ?? 0) > 0,
+    enabled: (teamOverview?.members.length ?? 0) > 0,
   })
 
   const { data: balancesData } = useQuery<LeaveBalancesResponse>({
     queryKey: ['hierarchy', 'my-team', 'leave-balances'],
     queryFn: () => apiGet<LeaveBalancesResponse>('/api/hierarchy/my-team/leave-balances'),
-    enabled: (teamData?.subordinates.length ?? 0) > 0,
+    enabled: (teamOverview?.members.length ?? 0) > 0,
+  })
+
+  const removeMutation = useMutation({
+    mutationFn: (employeeId: string) =>
+      apiDelete<{ removedMembers: number; removedWatchlist: number }>(
+        `/api/md/team-overview/${employeeId}`
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['md-team-overview'] })
+      queryClient.invalidateQueries({ queryKey: ['md-team-attendance'] })
+      toast.success('Removed from team')
+      setRemoveTarget(null)
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || 'Failed to remove')
+    },
   })
 
   // Search employees
@@ -262,9 +293,9 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
         leaveByType: entry.leaveByType,
       }]
     }
-    const subs = teamData?.subordinates ?? []
-    return mergeTeamWithAttendance(subs, attData?.entries ?? [])
-  }, [teamData, attData, selectedSearchEmployee, searchedAttData])
+    const list = teamOverview?.members ?? []
+    return mergeTeamWithAttendance(list, attData?.entries ?? [])
+  }, [teamOverview, attData, selectedSearchEmployee, searchedAttData])
 
   const drawerHighlightKeys = useMemo(() => {
     if (!drawerMember) return []
@@ -396,54 +427,102 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
         <p className="text-center text-sm text-muted-foreground py-4">Loading attendance...</p>
       )}
 
-      {!selectedSearchEmployee && !teamData?.subordinates.length && (
+      {!selectedSearchEmployee && !teamOverview?.members.length && (
         <Card className="border-dashed">
           <CardContent className="p-8 text-center text-sm text-muted-foreground">
             <Users className="mx-auto mb-2 h-10 w-10 opacity-60" />
-            No direct reports yet.
+            <p>No one on your team yet.</p>
+            <Button variant="outline" size="sm" className="mt-3 gap-1.5" onClick={() => setAddPersonOpen(true)}>
+              <UserPlus className="h-3.5 w-3.5" />
+              Add person
+            </Button>
           </CardContent>
         </Card>
+      )}
+
+      {!selectedSearchEmployee && (teamOverview?.members.length ?? 0) > 0 && (
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-muted-foreground">
+            {teamOverview!.members.length} {teamOverview!.members.length === 1 ? 'member' : 'members'}
+          </p>
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => setAddPersonOpen(true)}>
+            <UserPlus className="h-3.5 w-3.5" />
+            Add person
+          </Button>
+        </div>
       )}
 
       {/* Members list */}
       <ul className="space-y-2">
         {members.map((m) => {
           const todayRec = getTodayRecord(m)
-          const isIn = !!todayRec?.inTime && !todayRec?.outTime
+          const hasIn = !!todayRec?.inTime
+          const hasOut = !!todayRec?.outTime
+          const isIn = hasIn && !hasOut
+          const dotClass = isIn
+            ? 'bg-emerald-500'
+            : hasOut
+            ? 'bg-amber-500'
+            : 'bg-slate-300 dark:bg-slate-600'
+          const statusLabel = isIn ? 'In' : hasOut ? 'Out' : 'Not in'
 
           return (
             <li key={m.employeeId}>
               <button
                 type="button"
-                className={cn(
-                  'w-full text-left rounded-lg border p-3 transition-colors hover:bg-muted/40 active:bg-muted/60',
-                  isIn ? 'bg-emerald-50/70 border-emerald-200/60 dark:bg-emerald-950/20 dark:border-emerald-800/30' : 'bg-card'
-                )}
+                className="w-full text-left rounded-xl border border-border bg-card p-3 shadow-sm transition-all hover:border-border/80 hover:shadow-md active:scale-[0.995]"
                 onClick={() => setDrawerMember(m)}
               >
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10 shrink-0">
-                    <AvatarFallback className="text-sm font-semibold">
-                      {m.name
-                        .split(/\s+/)
-                        .map((p) => p[0])
-                        .join('')
-                        .slice(0, 2)
-                        .toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="relative shrink-0">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="text-sm font-semibold">
+                        {m.name
+                          .split(/\s+/)
+                          .map((p) => p[0])
+                          .join('')
+                          .slice(0, 2)
+                          .toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span
+                      className={cn(
+                        'absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-2 ring-card',
+                        dotClass
+                      )}
+                      aria-hidden
+                    />
+                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold leading-tight truncate">{m.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{m.email}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {m.departmentName || m.email}
+                    </p>
                   </div>
-                  {todayRec?.inTime && (
-                    <div className="text-right shrink-0">
-                      <p className="text-xs font-medium tabular-nums">{formatAttTime(todayRec.inTime)}</p>
-                      <p className="text-[10px] text-muted-foreground tabular-nums">
-                        {todayRec.outTime ? formatAttTime(todayRec.outTime) : 'In'}
+                  <div className="text-right shrink-0">
+                    {hasIn ? (
+                      <>
+                        <div className="flex items-center justify-end gap-1 text-sm font-semibold tabular-nums text-emerald-600 dark:text-emerald-400">
+                          <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">In</span>
+                          {formatAttTime(todayRec!.inTime!)}
+                        </div>
+                        {hasOut ? (
+                          <div className="flex items-center justify-end gap-1 text-xs font-medium tabular-nums text-amber-600 dark:text-amber-400">
+                            <span className="text-[9px] font-bold uppercase tracking-wider opacity-70">Out</span>
+                            {formatAttTime(todayRec!.outTime!)}
+                          </div>
+                        ) : (
+                          <p className="text-[10px] font-medium uppercase tracking-wider text-emerald-600/70 dark:text-emerald-400/70">
+                            Working
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                        {statusLabel}
                       </p>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </button>
             </li>
@@ -548,8 +627,21 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                 </div>
               </ScrollArea>
 
-              <div className="shrink-0 border-t bg-background/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm">
-                <Button variant="outline" className="w-full h-11 rounded-lg" onClick={() => setDrawerMember(null)}>
+              <div className="shrink-0 border-t bg-background/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm flex gap-2">
+                {!selectedSearchEmployee && (
+                  <Button
+                    variant="outline"
+                    className="h-11 rounded-lg text-rose-600 hover:text-rose-700"
+                    onClick={() => {
+                      setRemoveTarget(drawerMember)
+                      setDrawerMember(null)
+                    }}
+                  >
+                    <UserMinus className="h-4 w-4 mr-1.5" />
+                    Remove
+                  </Button>
+                )}
+                <Button variant="outline" className="flex-1 h-11 rounded-lg" onClick={() => setDrawerMember(null)}>
                   Close
                 </Button>
               </div>
@@ -557,6 +649,38 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
           )}
         </DrawerContent>
       </Drawer>
+
+      <AddPersonDialog
+        open={addPersonOpen}
+        onOpenChange={setAddPersonOpen}
+        onAdded={() => {
+          queryClient.invalidateQueries({ queryKey: ['md-team-attendance'] })
+        }}
+      />
+
+      <AlertDialog open={!!removeTarget} onOpenChange={(o) => !o && setRemoveTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove {removeTarget?.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              They will be removed from your attendance list and task team. You can add them back any time.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={removeMutation.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault()
+                if (removeTarget) removeMutation.mutate(removeTarget.employeeId)
+              }}
+              disabled={removeMutation.isPending}
+              className="bg-rose-600 hover:bg-rose-700 focus:ring-rose-600"
+            >
+              {removeMutation.isPending ? 'Removing…' : 'Remove'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
