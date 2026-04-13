@@ -73,6 +73,21 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
   const department = team?.department as AnyRecord | undefined
   const departmentHead = department?.head as AnyRecord | undefined
 
+  // Pre-auth is the canonical source for hospital + doctor: the hospital
+  // selected during pre-authorization is THE hospital for the case, and the
+  // doctor is the one attached to that suggestion row.
+  const kyp = record.kypSubmission as AnyRecord | undefined
+  const preAuth = kyp?.preAuthData as AnyRecord | undefined
+  const preAuthHospital = preAuth?.requestedHospitalName as string | undefined
+  const suggestedHospitals =
+    (preAuth?.suggestedHospitals as Array<AnyRecord> | undefined) ?? []
+  const matchedSuggestion = preAuthHospital
+    ? suggestedHospitals.find(
+        (s) => (s.hospitalName as string | undefined) === preAuthHospital
+      )
+    : undefined
+  const preAuthDoctor = matchedSuggestion?.suggestedDoctor as string | undefined
+
   const surgery = pickDate(
     pl?.surgeryDate,
     ds?.surgeryDate,
@@ -102,10 +117,16 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
     doctor: pickString(
       pl?.doctorName,
       ds?.doctorName,
-      record.surgeonName,
-      record.ipdDrName
+      preAuthDoctor,
+      record.ipdDrName,
+      record.surgeonName
     ),
-    hospital: pickString(record.hospitalName, pl?.hospitalName, ds?.hospitalName),
+    hospital: pickString(
+      pl?.hospitalName,
+      ds?.hospitalName,
+      preAuthHospital,
+      record.hospitalName
+    ),
     admission: admissionDate,
     surgery,
     paymentType: pickString(pl?.paymentType, ds?.paymentType),

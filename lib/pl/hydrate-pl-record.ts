@@ -21,6 +21,21 @@ export const LEAD_HYDRATE_INCLUDE = {
     },
   },
   admissionRecord: true,
+  kypSubmission: {
+    select: {
+      preAuthData: {
+        select: {
+          requestedHospitalName: true,
+          suggestedHospitals: {
+            select: {
+              hospitalName: true,
+              suggestedDoctor: true,
+            },
+          },
+        },
+      },
+    },
+  },
 } as const
 
 export type LeadWithHydrate = Prisma.LeadGetPayload<{
@@ -63,6 +78,23 @@ function resolveManagerName(lead: LeadWithHydrate | null | undefined): string | 
   )
 }
 
+function resolvePreAuth(lead: LeadWithHydrate | null | undefined): {
+  hospital: string | null
+  doctor: string | null
+} {
+  const kyp = (lead as AnyRecord | undefined)?.kypSubmission as AnyRecord | undefined
+  const preAuth = kyp?.preAuthData as AnyRecord | undefined
+  if (!preAuth) return { hospital: null, doctor: null }
+  const hospital = (preAuth.requestedHospitalName as string | undefined) ?? null
+  const suggestions =
+    (preAuth.suggestedHospitals as Array<AnyRecord> | undefined) ?? []
+  const matched = hospital
+    ? suggestions.find((s) => (s.hospitalName as string | undefined) === hospital)
+    : undefined
+  const doctor = (matched?.suggestedDoctor as string | undefined) ?? null
+  return { hospital, doctor }
+}
+
 function firstOfMonth(d: Date | null | undefined): Date | null {
   if (!d) return null
   return new Date(d.getFullYear(), d.getMonth(), 1)
@@ -80,6 +112,7 @@ function firstOfMonth(d: Date | null | undefined): Date | null {
 export function buildDischargeSheetDefaults(lead: LeadWithHydrate) {
   const admission = lead.admissionRecord
   const leadSource = lead.source ?? (lead.leadSource != null ? String(lead.leadSource) : null)
+  const preAuth = resolvePreAuth(lead)
   return {
     month: firstOfMonth(new Date()),
     admissionDate: admission?.admissionDate ?? lead.arrivalDate ?? null,
@@ -88,8 +121,8 @@ export function buildDischargeSheetDefaults(lead: LeadWithHydrate) {
     bdmName: lead.bd?.name ?? null,
     patientName: lead.patientName ?? null,
     patientPhone: lead.phoneNumber ?? null,
-    doctorName: lead.surgeonName ?? lead.ipdDrName ?? null,
-    hospitalName: lead.hospitalName ?? null,
+    doctorName: preAuth.doctor ?? lead.ipdDrName ?? lead.surgeonName ?? null,
+    hospitalName: preAuth.hospital ?? lead.hospitalName ?? null,
     category: lead.category ?? null,
     treatment: lead.treatment ?? null,
     circle: lead.circle ?? null,
@@ -131,6 +164,8 @@ export function buildPlRecordPayload(
 
   const leadSourceFromLead =
     lead.source ?? (lead.leadSource != null ? String(lead.leadSource) : null)
+
+  const preAuth = resolvePreAuth(lead)
 
   const payload: Prisma.PLRecordUncheckedCreateInput = {
     leadId: lead.id,
@@ -195,12 +230,14 @@ export function buildPlRecordPayload(
     doctorName: pickFirst(
       ov.doctorName as string | undefined,
       ds.doctorName as string | undefined,
-      lead.surgeonName,
-      lead.ipdDrName
+      preAuth.doctor,
+      lead.ipdDrName,
+      lead.surgeonName
     ),
     hospitalName: pickFirst(
       ov.hospitalName as string | undefined,
       ds.hospitalName as string | undefined,
+      preAuth.hospital,
       lead.hospitalName
     ),
 

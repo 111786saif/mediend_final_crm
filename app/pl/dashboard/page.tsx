@@ -97,16 +97,17 @@ const DEFAULT_COLS: Record<string, boolean> = {
   totalBill: true,
   approvedAmount: true,
   deductionPatient: true,
+  amountPaid: true,
+  hospitalSharePct: true,
+  hospitalShareAmt: true,
+  doctorCharges: true,
   implant: true,
   implantPaidBy: true,
   instruments: true,
   instrumentsPaidBy: true,
-  cab: true,
   dc: true,
-  doctorCharges: true,
+  cab: true,
   referral: true,
-  hospitalSharePct: true,
-  hospitalShareAmt: true,
   mediendSharePct: true,
   mediendShareAmt: true,
   netProfit: true,
@@ -216,6 +217,18 @@ export default function PLLedgerPage() {
         r.plRecord?.hospitalPayoutStatus === 'PENDING' || r.plRecord?.doctorPayoutStatus === 'PENDING'
     ).length || 0
 
+  // Table only shows leads that have reached the discharge stage or beyond.
+  // Info cards above still reflect the full PL/COMPLETED dataset.
+  const tableRecords = useMemo(() => {
+    const afterDischarge = new Set([
+      'DISCHARGED',
+      'PL_PENDING',
+      'OUTSTANDING',
+      'CASH_DISCHARGED',
+    ])
+    return records?.filter((r) => afterDischarge.has((r as Lead).caseStage as unknown as string))
+  }, [records])
+
   const visibleCount = useMemo(() => 1 + Object.values(visibleCols).filter(Boolean).length, [visibleCols])
 
   const rupee = (n: number | null | undefined) =>
@@ -322,18 +335,19 @@ export default function PLLedgerPage() {
                     ['totalBill', 'Total bill'],
                     ['approvedAmount', 'Approved amount'],
                     ['deductionPatient', 'Deduction (patient)'],
-                    ['implant', 'Implant cost'],
-                    ['implantPaidBy', 'Implant paid by'],
-                    ['instruments', 'Instrument cost'],
-                    ['instrumentsPaidBy', 'Instruments paid by'],
-                    ['cab', 'Cab'],
-                    ['dc', 'D&C'],
-                    ['doctorCharges', 'Doctor charges'],
-                    ['referral', 'Referral'],
-                    ['hospitalSharePct', 'Hospital share %'],
+                    ['amountPaid', 'Amount paid'],
+                    ['hospitalSharePct', 'Hospital %'],
                     ['hospitalShareAmt', 'Hospital share'],
-                    ['mediendSharePct', 'Mediend share %'],
-                    ['mediendShareAmt', 'Mediend share'],
+                    ['doctorCharges', 'Doctor fee'],
+                    ['implant', 'Implant'],
+                    ['implantPaidBy', 'Implant by'],
+                    ['instruments', 'Instrument'],
+                    ['instrumentsPaidBy', 'Instrument by'],
+                    ['dc', 'D&C'],
+                    ['cab', 'Cab'],
+                    ['referral', 'Referral'],
+                    ['mediendSharePct', 'Med %'],
+                    ['mediendShareAmt', 'Med share'],
                     ['netProfit', 'Net profit'],
                     ['remarks', 'Remarks'],
                     ['hospPayout', 'Hospital payout'],
@@ -536,18 +550,19 @@ export default function PLLedgerPage() {
                       {visibleCols.totalBill && <TableHead>Total bill</TableHead>}
                       {visibleCols.approvedAmount && <TableHead>Approved amount</TableHead>}
                       {visibleCols.deductionPatient && <TableHead>Deduction (patient)</TableHead>}
-                      {visibleCols.implant && <TableHead>Implant</TableHead>}
-                      {visibleCols.implantPaidBy && <TableHead>Implant by</TableHead>}
-                      {visibleCols.instruments && <TableHead>Instruments</TableHead>}
-                      {visibleCols.instrumentsPaidBy && <TableHead>Instr. by</TableHead>}
-                      {visibleCols.cab && <TableHead>Cab</TableHead>}
-                      {visibleCols.dc && <TableHead>D&amp;C</TableHead>}
-                      {visibleCols.doctorCharges && <TableHead>Dr charges</TableHead>}
-                      {visibleCols.referral && <TableHead>Referral</TableHead>}
+                      {visibleCols.amountPaid && <TableHead>Amount paid</TableHead>}
                       {visibleCols.hospitalSharePct && <TableHead>Hosp %</TableHead>}
                       {visibleCols.hospitalShareAmt && <TableHead>Hosp share</TableHead>}
+                      {visibleCols.doctorCharges && <TableHead>Doctor fee</TableHead>}
+                      {visibleCols.implant && <TableHead>Implant</TableHead>}
+                      {visibleCols.implantPaidBy && <TableHead>Implant by</TableHead>}
+                      {visibleCols.instruments && <TableHead>Instrument</TableHead>}
+                      {visibleCols.instrumentsPaidBy && <TableHead>Instr. by</TableHead>}
+                      {visibleCols.dc && <TableHead>D&amp;C</TableHead>}
+                      {visibleCols.cab && <TableHead>Cab</TableHead>}
+                      {visibleCols.referral && <TableHead>Referral</TableHead>}
                       {visibleCols.mediendSharePct && <TableHead>Med %</TableHead>}
-                      {visibleCols.mediendShareAmt && <TableHead>Mediend share</TableHead>}
+                      {visibleCols.mediendShareAmt && <TableHead>Med share</TableHead>}
                       {visibleCols.netProfit && <TableHead>Net profit</TableHead>}
                       {visibleCols.remarks && <TableHead>Remarks</TableHead>}
                       {visibleCols.hospPayout && <TableHead>Hosp payout</TableHead>}
@@ -556,7 +571,7 @@ export default function PLLedgerPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {records?.map((record) => {
+                    {tableRecords?.map((record) => {
                       const pl = record.plRecord as Record<string, unknown> | undefined
                       const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
                       const paidBy = (v: unknown) => (v === 'HOSPITAL' ? 'Hospital' : v === 'MEDIEND' ? 'Mediend' : '—')
@@ -625,6 +640,28 @@ export default function PLLedgerPage() {
                           {visibleCols.deductionPatient && (
                             <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionPatient)}</TableCell>
                           )}
+                          {visibleCols.amountPaid && (
+                            <TableCell className="whitespace-nowrap">
+                              {formatPlRupee(
+                                (resolved.approvedAmount ?? 0) + (resolved.deductionPatient ?? 0) || null
+                              )}
+                            </TableCell>
+                          )}
+                          {visibleCols.hospitalSharePct && (
+                            <TableCell className="whitespace-nowrap">
+                              {pl?.hospitalSharePct != null ? `${pl.hospitalSharePct}%` : '—'}
+                            </TableCell>
+                          )}
+                          {visibleCols.hospitalShareAmt && (
+                            <TableCell className="whitespace-nowrap">
+                              {rupee(pl?.hospitalShareAmount != null ? Number(pl.hospitalShareAmount) : null)}
+                            </TableCell>
+                          )}
+                          {visibleCols.doctorCharges && (
+                            <TableCell className="whitespace-nowrap">
+                              {rupee(pl?.doctorCharges != null ? Number(pl.doctorCharges) : null)}
+                            </TableCell>
+                          )}
                           {visibleCols.implant && (
                             <TableCell className="whitespace-nowrap">
                               {rupee(pl?.implantCost != null ? Number(pl.implantCost) : null)}
@@ -641,34 +678,19 @@ export default function PLLedgerPage() {
                           {visibleCols.instrumentsPaidBy && (
                             <TableCell className="whitespace-nowrap">{paidBy(pl?.instrumentsPaidBy)}</TableCell>
                           )}
-                          {visibleCols.cab && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.cabCharges != null ? Number(pl.cabCharges) : null)}
-                            </TableCell>
-                          )}
                           {visibleCols.dc && (
                             <TableCell className="whitespace-nowrap">
                               {rupee(pl?.dcCharges != null ? Number(pl.dcCharges) : null)}
                             </TableCell>
                           )}
-                          {visibleCols.doctorCharges && (
+                          {visibleCols.cab && (
                             <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.doctorCharges != null ? Number(pl.doctorCharges) : null)}
+                              {rupee(pl?.cabCharges != null ? Number(pl.cabCharges) : null)}
                             </TableCell>
                           )}
                           {visibleCols.referral && (
                             <TableCell className="whitespace-nowrap">
                               {rupee(pl?.referralAmount != null ? Number(pl.referralAmount) : null)}
-                            </TableCell>
-                          )}
-                          {visibleCols.hospitalSharePct && (
-                            <TableCell className="whitespace-nowrap">
-                              {pl?.hospitalSharePct != null ? `${pl.hospitalSharePct}%` : '—'}
-                            </TableCell>
-                          )}
-                          {visibleCols.hospitalShareAmt && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.hospitalShareAmount != null ? Number(pl.hospitalShareAmount) : null)}
                             </TableCell>
                           )}
                           {visibleCols.mediendSharePct && (
@@ -748,7 +770,7 @@ export default function PLLedgerPage() {
                         </TableRow>
                       )
                     })}
-                    {(!records || records.length === 0) && (
+                    {(!tableRecords || tableRecords.length === 0) && (
                       <TableRow>
                         <TableCell colSpan={visibleCount} className="text-center text-muted-foreground py-8">
                           No P/L records found

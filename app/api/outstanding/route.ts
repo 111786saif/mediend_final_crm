@@ -114,6 +114,21 @@ export async function GET(request: NextRequest) {
             mediendNetProfit: true,
           },
         },
+        kypSubmission: {
+          select: {
+            preAuthData: {
+              select: {
+                requestedHospitalName: true,
+                suggestedHospitals: {
+                  select: {
+                    hospitalName: true,
+                    suggestedDoctor: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         outstandingCase: {
           select: {
             paymentReceived: true,

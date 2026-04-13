@@ -326,6 +326,35 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/migrate-lead-pipeline-stages.ts"]
 
+  # One-off: fix leave balances to March 2026 Excel values (no April accrual)
+  # Usage: docker compose --profile tools run --rm fix-leave-balances
+  # Runs fix-leave-balances-april2026.sql inside a transaction and prints
+  # a verification table of every target employee's CL/SL/EL balances.
+  fix-leave-balances:
+    image: postgres:16-alpine
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        echo "=== Applying fix-leave-balances-april2026.sql ==="
+        psql "$$DATABASE_URL" -v ON_ERROR_STOP=1 -f /sql/fix-leave-balances-april2026.sql
+        echo ""
+        echo "=== Post-run verification: target employees ==="
+        psql "$$DATABASE_URL" -c "SELECT e.\"employeeCode\", u.\"name\", lt.\"code\" AS leave_type, lb.\"allocated\", lb.\"used\", lb.\"remaining\" FROM \"LeaveBalance\" lb JOIN \"Employee\" e ON e.\"id\" = lb.\"employeeId\" JOIN \"User\" u ON u.\"id\" = e.\"userId\" JOIN \"LeaveTypeMaster\" lt ON lt.\"id\" = lb.\"leaveTypeId\" WHERE lt.\"code\" IN ('CL','SL','EL') ORDER BY e.\"employeeCode\", lt.\"code\";"
+        echo ""
+        echo "=== Row counts by leave type ==="
+        psql "$$DATABASE_URL" -c "SELECT lt.\"code\", COUNT(*) AS rows, SUM(lb.\"allocated\") AS total_allocated FROM \"LeaveBalance\" lb JOIN \"LeaveTypeMaster\" lt ON lt.\"id\" = lb.\"leaveTypeId\" WHERE lt.\"code\" IN ('CL','SL','EL') GROUP BY lt.\"code\" ORDER BY lt.\"code\";"
+    volumes:
+      - ./fix-leave-balances-april2026.sql:/sql/fix-leave-balances-april2026.sql:ro
+
   # One-off: rebuild sales Team records from DepartmentTeam in SURGERY SALES
   # Usage: docker compose --profile tools run --rm rebuild-sales-teams
   rebuild-sales-teams:
