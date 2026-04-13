@@ -30,7 +30,10 @@ function formatInr(n: number) {
 }
 
 function toDateStr(d: Date) {
-  return d.toISOString().split('T')[0]
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
 }
 
 function formatDateDisplay(dateStr: string) {
@@ -236,7 +239,7 @@ export default function DailySpendPage() {
                   </label>
                 </Button>
               </div>
-              <Button variant="outline" size="icon" onClick={() => setSelectedDate((d) => addDays(d, 1))} disabled={isToday}>
+              <Button variant="outline" size="icon" onClick={() => setSelectedDate((d) => addDays(d, 1))}>
                 <ChevronRight className="h-4 w-4" />
               </Button>
               {!isToday && (
