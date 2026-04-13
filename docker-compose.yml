@@ -344,14 +344,16 @@ services:
       - -c
       - |
         set -e
+        # Strip Prisma-only ?schema=... param that libpq (psql) rejects
+        PG_URL=$$(echo "$$DATABASE_URL" | sed -E 's/[?&]schema=[^&]*//; s/\?&/?/; s/\?$$//')
         echo "=== Applying fix-leave-balances-april2026.sql ==="
-        psql "$$DATABASE_URL" -v ON_ERROR_STOP=1 -f /sql/fix-leave-balances-april2026.sql
+        psql "$$PG_URL" -v ON_ERROR_STOP=1 -f /sql/fix-leave-balances-april2026.sql
         echo ""
         echo "=== Post-run verification: target employees ==="
-        psql "$$DATABASE_URL" -c "SELECT e.\"employeeCode\", u.\"name\", lt.\"code\" AS leave_type, lb.\"allocated\", lb.\"used\", lb.\"remaining\" FROM \"LeaveBalance\" lb JOIN \"Employee\" e ON e.\"id\" = lb.\"employeeId\" JOIN \"User\" u ON u.\"id\" = e.\"userId\" JOIN \"LeaveTypeMaster\" lt ON lt.\"id\" = lb.\"leaveTypeId\" WHERE lt.\"code\" IN ('CL','SL','EL') ORDER BY e.\"employeeCode\", lt.\"code\";"
+        psql "$$PG_URL" -c "SELECT e.\"employeeCode\", u.\"name\", lt.\"code\" AS leave_type, lb.\"allocated\", lb.\"used\", lb.\"remaining\" FROM \"LeaveBalance\" lb JOIN \"Employee\" e ON e.\"id\" = lb.\"employeeId\" JOIN \"User\" u ON u.\"id\" = e.\"userId\" JOIN \"LeaveTypeMaster\" lt ON lt.\"id\" = lb.\"leaveTypeId\" WHERE lt.\"code\" IN ('CL','SL','EL') ORDER BY e.\"employeeCode\", lt.\"code\";"
         echo ""
         echo "=== Row counts by leave type ==="
-        psql "$$DATABASE_URL" -c "SELECT lt.\"code\", COUNT(*) AS rows, SUM(lb.\"allocated\") AS total_allocated FROM \"LeaveBalance\" lb JOIN \"LeaveTypeMaster\" lt ON lt.\"id\" = lb.\"leaveTypeId\" WHERE lt.\"code\" IN ('CL','SL','EL') GROUP BY lt.\"code\" ORDER BY lt.\"code\";"
+        psql "$$PG_URL" -c "SELECT lt.\"code\", COUNT(*) AS rows, SUM(lb.\"allocated\") AS total_allocated FROM \"LeaveBalance\" lb JOIN \"LeaveTypeMaster\" lt ON lt.\"id\" = lb.\"leaveTypeId\" WHERE lt.\"code\" IN ('CL','SL','EL') GROUP BY lt.\"code\" ORDER BY lt.\"code\";"
     volumes:
       - ./fix-leave-balances-april2026.sql:/sql/fix-leave-balances-april2026.sql:ro
 
