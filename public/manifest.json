@@ -4,10 +4,10 @@
   "description": "Mediend CRM - Patient Lead Management System",
   "start_url": "/login",
   "display": "standalone",
-  "background_color": "#062D4C",
-  "theme_color": "#062D4C",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0072E5",
   "icons": [
-    { "src": "/logo-mediend.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/logo-mediend.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
   ]
 }
