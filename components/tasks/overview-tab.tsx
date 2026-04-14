@@ -87,7 +87,7 @@ export function OverviewTab() {
     : expandedCard === "pending"
       ? "Pending"
       : expandedCard === "pendingReview"
-        ? "Pending Review"
+        ? "Approvals"
         : expandedCard === "overdue"
           ? "Overdue"
           : ""
@@ -194,7 +194,7 @@ export function OverviewTab() {
           onClick={() => handleCardClick("pending")}
         />
         <StatCard
-          label="Pending review"
+          label="Approvals"
           value={pendingReviewPct.main}
           subValue={pendingReviewPct.sub}
           accent="purple"

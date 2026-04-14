@@ -206,7 +206,7 @@ export function ApprovalTab() {
 
       <section>
         <h2 className="text-sm font-semibold text-foreground mb-2">
-          Tasks pending review ({visibleReviewTasks.length})
+          Tasks approvals ({visibleReviewTasks.length})
           <span className="text-xs font-normal text-muted-foreground ml-2">Swipe right to rate</span>
         </h2>
         {loadingReview ? (
@@ -216,7 +216,7 @@ export function ApprovalTab() {
         ) : visibleReviewTasks.length === 0 ? (
           <p className="text-sm text-muted-foreground py-2">
             {user?.role === "MD" || user?.role === "ADMIN" ? (
-              "No tasks pending review."
+              "No tasks approvals."
             ) : (
               "Your manager will rate and approve tasks when you mark them as done."
             )}
