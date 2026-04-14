@@ -213,6 +213,11 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
     const e: FieldErrors = {}
     if (!title.trim()) e.title = 'Title is required'
     if (!scheduledAt || !isValid(scheduledAt)) e.scheduledAt = 'Choose a date and time'
+    else {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      if (scheduledAt < today) e.scheduledAt = 'Cannot schedule a meet in the past'
+    }
     if (meetType === 'VIRTUAL' && meetLink.trim() && !/^https?:\/\//i.test(meetLink.trim())) {
       e.meetLink = 'Link must start with http:// or https://'
     }
@@ -376,6 +381,7 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
                 <div className="mt-1">
                   <DateTimePicker
                     nested
+                    disablePast
                     value={scheduledAt}
                     onChange={(d) => {
                       setScheduledAt(d)

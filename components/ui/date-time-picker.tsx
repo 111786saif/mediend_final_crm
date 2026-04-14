@@ -38,6 +38,8 @@ export interface DateTimePickerProps {
   nested?: boolean
   id?: string
   'aria-labelledby'?: string
+  /** Disable selecting dates before today. */
+  disablePast?: boolean
 }
 
 export function DateTimePicker({
@@ -48,7 +50,9 @@ export function DateTimePicker({
   nested,
   id,
   'aria-labelledby': ariaLabelledBy,
+  disablePast,
 }: DateTimePickerProps) {
+  const today = React.useMemo(() => startOfDay(new Date()), [])
   const [open, setOpen] = React.useState(false)
   const [hour, setHour] = React.useState(10)
   const [minute, setMinute] = React.useState(0)
@@ -105,6 +109,11 @@ export function DateTimePicker({
             selected={calendarDay}
             onSelect={onDaySelect}
             defaultMonth={calendarDay ?? new Date()}
+            disabled={disablePast ? { before: today } : undefined}
+            classNames={{
+              today:
+                'bg-blue-600 text-white rounded-md font-semibold data-[selected=true]:rounded-none',
+            }}
             className="p-2 sm:p-3"
           />
           <div

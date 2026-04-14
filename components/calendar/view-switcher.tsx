@@ -34,7 +34,7 @@ export function ViewSwitcher({
       ? format(focusedDate, 'MMMM yyyy')
       : view === 'week'
         ? `Week of ${format(focusedDate, 'MMM d')}`
-        : format(focusedDate, 'EEE, MMM d')
+        : format(focusedDate, 'EEE, d')
 
   return (
     <div className="flex flex-col gap-2">

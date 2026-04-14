@@ -28,7 +28,15 @@ const createMeetSchema = z.object({
   location: z.string().max(500, 'Venue is too long').optional().nullable(),
   scheduledAt: z
     .string({ required_error: 'Date and time is required' })
-    .transform((s) => new Date(s)),
+    .transform((s) => new Date(s))
+    .refine(
+      (d) => {
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        return d >= today
+      },
+      { message: 'Cannot schedule a meet in the past' }
+    ),
   endTime: z.string().transform((s) => new Date(s)).optional().nullable(),
   module: z.enum(['INTERVIEW', 'MD_APPOINTMENT', 'GENERAL']).default('GENERAL'),
   participantUserIds: z.array(z.string()).default([]),

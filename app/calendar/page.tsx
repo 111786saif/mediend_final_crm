@@ -105,35 +105,6 @@ export default function CalendarPage() {
   return (
     <AuthenticatedLayout>
       <div className="space-y-3 w-full min-w-0 relative pb-24">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="shrink-0 rounded-full"
-            asChild
-          >
-            <Link href="/home" aria-label="Back">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-          </Button>
-          <div className="min-w-0 flex-1">
-            <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-              <CalendarDays className="h-6 w-6 text-indigo-600" />
-              Calendar
-            </h1>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="shrink-0 rounded-full"
-            onClick={() => setStatusListOpen(true)}
-            aria-label="Manage my statuses"
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-        </div>
-
         <CalendarStatStrip
           upcomingMeets={counts.upcomingMeets}
           upcomingInterviews={counts.upcomingInterviews}
