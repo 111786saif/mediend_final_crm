@@ -14,7 +14,6 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   X,
   MapPin,
@@ -239,9 +238,9 @@ export function MeetDetailsDrawer({
             <DrawerTitle>{meet.title}</DrawerTitle>
           </DrawerHeader>
 
-          <ScrollArea className="flex-1 min-h-0">
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
             {/* Hero gradient */}
-            <div className={cn('relative bg-gradient-to-br px-5 pb-10 pt-5 text-white', theme.gradient)}>
+            <div className={cn('relative bg-gradient-to-br px-5 pb-6 pt-5 text-white', theme.gradient)}>
               <div className="flex items-start justify-between gap-3">
                 <div className="flex flex-wrap items-center gap-1.5">
                   <Badge className={cn('border text-[10px] font-semibold uppercase tracking-wide', theme.pill)}>
@@ -275,7 +274,7 @@ export function MeetDetailsDrawer({
               </p>
             </div>
 
-            <div className="-mt-6 space-y-4 px-4 pb-28">
+            <div className="relative z-10 mt-4 space-y-4 px-4 pb-28">
               {/* Time + duration card */}
               <div className={cn('rounded-2xl border border-border bg-card p-4 shadow-lg ring-1', theme.ring)}>
                 <div className="flex items-start gap-3">
@@ -450,7 +449,7 @@ export function MeetDetailsDrawer({
                 </div>
               )}
             </div>
-          </ScrollArea>
+          </div>
 
           {/* Sticky footer */}
           <DrawerFooter className="border-t border-border bg-card p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">

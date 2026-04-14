@@ -13,7 +13,6 @@ import {
 import { Star, Trophy, Medal, ChevronRight } from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { formatRating } from "@/lib/format-rating"
 
 function monthToLabel(month: number): string {
@@ -159,7 +158,7 @@ export function PerformanceTab() {
                   {monthToLabel(selectedMonth)} · {detailEmployee.totalRatings} ratings
                 </p>
               </SheetHeader>
-              <ScrollArea className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 min-h-0 overflow-y-auto overflow-x-hidden">
                 <div className="space-y-6 py-4">
                   {/* Rating distribution */}
                   <div>
@@ -226,7 +225,7 @@ export function PerformanceTab() {
                     </div>
                   </div>
                 </div>
-              </ScrollArea>
+              </div>
             </>
           )}
         </SheetContent>
