@@ -294,6 +294,7 @@ export type UserWhereInput = {
   pnlEntriesCreated?: Prisma.PnLEntryListRelationFilter
   meetsCreated?: Prisma.MeetListRelationFilter
   meetParticipations?: Prisma.MeetParticipantListRelationFilter
+  statuses?: Prisma.UserStatusListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -379,6 +380,7 @@ export type UserOrderByWithRelationInput = {
   pnlEntriesCreated?: Prisma.PnLEntryOrderByRelationAggregateInput
   meetsCreated?: Prisma.MeetOrderByRelationAggregateInput
   meetParticipations?: Prisma.MeetParticipantOrderByRelationAggregateInput
+  statuses?: Prisma.UserStatusOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -467,6 +469,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   pnlEntriesCreated?: Prisma.PnLEntryListRelationFilter
   meetsCreated?: Prisma.MeetListRelationFilter
   meetParticipations?: Prisma.MeetParticipantListRelationFilter
+  statuses?: Prisma.UserStatusListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -584,6 +587,7 @@ export type UserCreateInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -669,6 +673,7 @@ export type UserUncheckedCreateInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -754,6 +759,7 @@ export type UserUpdateInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -839,6 +845,7 @@ export type UserUncheckedUpdateInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -943,6 +950,20 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutStatusesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStatusesInput, Prisma.UserUncheckedCreateWithoutStatusesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStatusesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStatusesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStatusesInput, Prisma.UserUncheckedCreateWithoutStatusesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStatusesInput
+  upsert?: Prisma.UserUpsertWithoutStatusesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStatusesInput, Prisma.UserUpdateWithoutStatusesInput>, Prisma.UserUncheckedUpdateWithoutStatusesInput>
 }
 
 export type UserCreateNestedOneWithoutAssignedLeadsInput = {
@@ -1995,6 +2016,362 @@ export type UserUpdateOneWithoutPnlEntriesCreatedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPnlEntriesCreatedInput, Prisma.UserUpdateWithoutPnlEntriesCreatedInput>, Prisma.UserUncheckedUpdateWithoutPnlEntriesCreatedInput>
 }
 
+export type UserCreateWithoutStatusesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutStatusesInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutStatusesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStatusesInput, Prisma.UserUncheckedCreateWithoutStatusesInput>
+}
+
+export type UserUpsertWithoutStatusesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStatusesInput, Prisma.UserUncheckedUpdateWithoutStatusesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStatusesInput, Prisma.UserUncheckedCreateWithoutStatusesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStatusesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStatusesInput, Prisma.UserUncheckedUpdateWithoutStatusesInput>
+}
+
+export type UserUpdateWithoutStatusesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStatusesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutAssignedLeadsInput = {
   id?: string
   email: string
@@ -2077,6 +2454,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedLeadsInput = {
@@ -2161,6 +2539,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedLeadsInput = {
@@ -2250,6 +2629,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedLeadsInput = {
@@ -2334,6 +2714,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedLeadsInput = {
@@ -2423,6 +2804,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
@@ -2507,6 +2889,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUpdatedLeadsInput = {
@@ -2607,6 +2990,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
@@ -2691,6 +3075,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutCreatedLeadsInput = {
@@ -2786,6 +3171,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
@@ -2870,6 +3256,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutUpdatedLeadsInput = {
@@ -2965,6 +3352,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
@@ -3049,6 +3437,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLeadCallNotesInput = {
@@ -3133,6 +3522,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeadCallNotesInput = {
@@ -3217,6 +3607,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeadCallNotesInput = {
@@ -3317,6 +3708,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
@@ -3401,6 +3793,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLeadStageEventsInput = {
@@ -3485,6 +3878,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeadStageEventsInput = {
@@ -3569,6 +3963,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeadStageEventsInput = {
@@ -3669,6 +4064,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
@@ -3753,6 +4149,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedTargetsInput = {
@@ -3837,6 +4234,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedTargetsInput = {
@@ -3921,6 +4319,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedTargetsInput = {
@@ -4021,6 +4420,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
@@ -4105,6 +4505,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInsuranceCasesInput = {
@@ -4189,6 +4590,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInsuranceCasesInput = {
@@ -4273,6 +4675,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInsuranceCasesInput = {
@@ -4373,6 +4776,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
@@ -4457,6 +4861,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlRecordsInput = {
@@ -4541,6 +4946,7 @@ export type UserCreateWithoutPlRecordsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlRecordsInput = {
@@ -4625,6 +5031,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlRecordsInput = {
@@ -4725,6 +5132,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlRecordsInput = {
@@ -4809,6 +5217,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDepartmentHeadOfInput = {
@@ -4893,6 +5302,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
@@ -4977,6 +5387,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDepartmentHeadOfInput = {
@@ -5077,6 +5488,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
@@ -5161,6 +5573,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmployeeInput = {
@@ -5245,6 +5658,7 @@ export type UserCreateWithoutEmployeeInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmployeeInput = {
@@ -5329,6 +5743,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmployeeInput = {
@@ -5418,6 +5833,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
@@ -5502,6 +5918,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFnfCompletedForEmployeesInput = {
@@ -5602,6 +6019,7 @@ export type UserUpdateWithoutEmployeeInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmployeeInput = {
@@ -5686,6 +6104,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFnfCompletedForEmployeesInput = {
@@ -5781,6 +6200,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
@@ -5865,6 +6285,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApprovedLeavesInput = {
@@ -5949,6 +6370,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedLeavesInput = {
@@ -6033,6 +6455,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedLeavesInput = {
@@ -6133,6 +6556,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
@@ -6217,6 +6641,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
@@ -6301,6 +6726,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
@@ -6385,6 +6811,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaveBalanceEditRequestsRequestedInput = {
@@ -6474,6 +6901,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
@@ -6558,6 +6986,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaveBalanceEditRequestsReviewedInput = {
@@ -6658,6 +7087,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
@@ -6742,6 +7172,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutLeaveBalanceEditRequestsReviewedInput = {
@@ -6837,6 +7268,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
@@ -6921,6 +7353,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMeetsCreatedInput = {
@@ -7005,6 +7438,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMeetsCreatedInput = {
@@ -7089,6 +7523,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMeetsCreatedInput = {
@@ -7189,6 +7624,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
@@ -7273,6 +7709,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMeetParticipationsInput = {
@@ -7357,6 +7794,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMeetParticipationsInput = {
@@ -7441,6 +7879,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMeetParticipationsInput = {
@@ -7541,6 +7980,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
@@ -7625,6 +8065,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDeletedLedgerEntriesInput = {
@@ -7709,6 +8150,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
@@ -7793,6 +8235,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDeletedLedgerEntriesInput = {
@@ -7882,6 +8325,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
@@ -7966,6 +8410,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEditRequestedLedgerEntriesInput = {
@@ -8055,6 +8500,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
@@ -8139,6 +8585,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEditApprovedLedgerEntriesInput = {
@@ -8228,6 +8675,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
@@ -8312,6 +8760,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedLedgerEntriesInput = {
@@ -8401,6 +8850,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
@@ -8485,6 +8935,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedLedgerEntriesInput = {
@@ -8585,6 +9036,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
@@ -8669,6 +9121,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutEditRequestedLedgerEntriesInput = {
@@ -8764,6 +9217,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
@@ -8848,6 +9302,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutEditApprovedLedgerEntriesInput = {
@@ -8943,6 +9398,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
@@ -9027,6 +9483,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutCreatedLedgerEntriesInput = {
@@ -9122,6 +9579,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
@@ -9206,6 +9664,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedLedgerEntriesInput = {
@@ -9301,6 +9760,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
@@ -9385,6 +9845,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLedgerAuditLogsInput = {
@@ -9469,6 +9930,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
@@ -9553,6 +10015,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLedgerAuditLogsInput = {
@@ -9653,6 +10116,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
@@ -9737,6 +10201,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedSalesEntriesInput = {
@@ -9821,6 +10286,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
@@ -9905,6 +10371,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedSalesEntriesInput = {
@@ -10005,6 +10472,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
@@ -10089,6 +10557,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStockMovementsCreatedInput = {
@@ -10173,6 +10642,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
@@ -10257,6 +10727,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStockMovementsCreatedInput = {
@@ -10357,6 +10828,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
@@ -10441,6 +10913,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPurchasesCreatedInput = {
@@ -10525,6 +10998,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
@@ -10609,6 +11083,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPurchasesCreatedInput = {
@@ -10709,6 +11184,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
@@ -10793,6 +11269,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutIssuesReceivedInput = {
@@ -10877,6 +11354,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutIssuesReceivedInput = {
@@ -10961,6 +11439,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutIssuesReceivedInput = {
@@ -11050,6 +11529,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutIssuesCreatedInput = {
@@ -11134,6 +11614,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutIssuesCreatedInput = {
@@ -11234,6 +11715,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
@@ -11318,6 +11800,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutIssuesCreatedInput = {
@@ -11413,6 +11896,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
@@ -11497,6 +11981,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutKypSubmissionsInput = {
@@ -11581,6 +12066,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutKypSubmissionsInput = {
@@ -11665,6 +12151,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutKypSubmissionsInput = {
@@ -11765,6 +12252,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
@@ -11849,6 +12337,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPreAuthsRaisedInput = {
@@ -11933,6 +12422,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
@@ -12017,6 +12507,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPreAuthsRaisedInput = {
@@ -12106,6 +12597,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPreAuthHandledInput = {
@@ -12190,6 +12682,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPreAuthHandledInput = {
@@ -12290,6 +12783,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
@@ -12374,6 +12868,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutPreAuthHandledInput = {
@@ -12469,6 +12964,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
@@ -12553,6 +13049,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -12637,6 +13134,7 @@ export type UserCreateWithoutNotificationsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -12721,6 +13219,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -12821,6 +13320,7 @@ export type UserUpdateWithoutNotificationsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -12905,6 +13405,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNoticesCreatedInput = {
@@ -12989,6 +13490,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNoticesCreatedInput = {
@@ -13073,6 +13575,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNoticesCreatedInput = {
@@ -13173,6 +13676,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
@@ -13257,6 +13761,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNoticeRecipientsInput = {
@@ -13341,6 +13846,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
@@ -13425,6 +13931,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNoticeRecipientsInput = {
@@ -13525,6 +14032,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
@@ -13609,6 +14117,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMdApprovalRequestsInput = {
@@ -13693,6 +14202,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
@@ -13777,6 +14287,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMdApprovalRequestsInput = {
@@ -13866,6 +14377,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
@@ -13950,6 +14462,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMdApprovalsRespondedInput = {
@@ -14039,6 +14552,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
@@ -14123,6 +14637,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMdApprovalsFinanceAckedInput = {
@@ -14223,6 +14738,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
@@ -14307,6 +14823,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutMdApprovalsRespondedInput = {
@@ -14402,6 +14919,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
@@ -14486,6 +15004,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutMdApprovalsFinanceAckedInput = {
@@ -14581,6 +15100,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
@@ -14665,6 +15185,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFeaturePermissionsInput = {
@@ -14749,6 +15270,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
@@ -14833,6 +15355,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFeaturePermissionsInput = {
@@ -14922,6 +15445,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
@@ -15006,6 +15530,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFeaturePermissionsGrantedInput = {
@@ -15106,6 +15631,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
@@ -15190,6 +15716,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFeaturePermissionsGrantedInput = {
@@ -15285,6 +15812,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
@@ -15369,6 +15897,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCampaignCplsCreatedInput = {
@@ -15453,6 +15982,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
@@ -15537,6 +16067,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCampaignCplsCreatedInput = {
@@ -15637,6 +16168,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
@@ -15721,6 +16253,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDailyCampaignSpendsInput = {
@@ -15805,6 +16338,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
@@ -15889,6 +16423,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDailyCampaignSpendsInput = {
@@ -15989,6 +16524,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
@@ -16073,6 +16609,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutQueriesRaisedInput = {
@@ -16157,6 +16694,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQueriesRaisedInput = {
@@ -16241,6 +16779,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQueriesRaisedInput = {
@@ -16330,6 +16869,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
@@ -16414,6 +16954,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutQueriesAnsweredInput = {
@@ -16514,6 +17055,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
@@ -16598,6 +17140,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutQueriesAnsweredInput = {
@@ -16693,6 +17236,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
@@ -16777,6 +17321,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPdfsCreatedInput = {
@@ -16861,6 +17406,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPdfsCreatedInput = {
@@ -16945,6 +17491,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPdfsCreatedInput = {
@@ -17045,6 +17592,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
@@ -17129,6 +17677,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAdmissionsInitiatedInput = {
@@ -17213,6 +17762,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
@@ -17297,6 +17847,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAdmissionsInitiatedInput = {
@@ -17397,6 +17948,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
@@ -17481,6 +18033,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
@@ -17565,6 +18118,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
@@ -17649,6 +18203,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutInsuranceInitiateFormsCreatedInput = {
@@ -17749,6 +18304,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
@@ -17833,6 +18389,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCaseStageChangesInput = {
@@ -17917,6 +18474,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCaseStageChangesInput = {
@@ -18001,6 +18559,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCaseStageChangesInput = {
@@ -18101,6 +18660,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
@@ -18185,6 +18745,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCaseChatMessagesSentInput = {
@@ -18269,6 +18830,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
@@ -18353,6 +18915,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCaseChatMessagesSentInput = {
@@ -18453,6 +19016,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
@@ -18537,6 +19101,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutChatReadReceiptsInput = {
@@ -18621,6 +19186,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
@@ -18705,6 +19271,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutChatReadReceiptsInput = {
@@ -18805,6 +19372,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
@@ -18889,6 +19457,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDischargeSheetsCreatedInput = {
@@ -18973,6 +19542,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
@@ -19057,6 +19627,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDischargeSheetsCreatedInput = {
@@ -19157,6 +19728,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
@@ -19241,6 +19813,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOutstandingCasesHandledInput = {
@@ -19325,6 +19898,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
@@ -19409,6 +19983,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOutstandingCasesHandledInput = {
@@ -19509,6 +20084,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
@@ -19593,6 +20169,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTasksAssignedInput = {
@@ -19677,6 +20254,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTasksAssignedInput = {
@@ -19761,6 +20339,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTasksAssignedInput = {
@@ -19850,6 +20429,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTasksCreatedInput = {
@@ -19934,6 +20514,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTasksCreatedInput = {
@@ -20023,6 +20604,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTasksCompletedInput = {
@@ -20107,6 +20689,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTasksCompletedInput = {
@@ -20207,6 +20790,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksAssignedInput = {
@@ -20291,6 +20875,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutTasksCreatedInput = {
@@ -20386,6 +20971,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksCreatedInput = {
@@ -20470,6 +21056,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutTasksCompletedInput = {
@@ -20565,6 +21152,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTasksCompletedInput = {
@@ -20649,6 +21237,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskApprovalsRequestedInput = {
@@ -20733,6 +21322,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
@@ -20817,6 +21407,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskApprovalsRequestedInput = {
@@ -20917,6 +21508,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
@@ -21001,6 +21593,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUserTaskSeenInput = {
@@ -21085,6 +21678,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserTaskSeenInput = {
@@ -21169,6 +21763,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserTaskSeenInput = {
@@ -21269,6 +21864,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
@@ -21353,6 +21949,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskRatingsGivenInput = {
@@ -21437,6 +22034,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
@@ -21521,6 +22119,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskRatingsGivenInput = {
@@ -21610,6 +22209,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
@@ -21694,6 +22294,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskRatingsReceivedInput = {
@@ -21794,6 +22395,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
@@ -21878,6 +22480,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutTaskRatingsReceivedInput = {
@@ -21973,6 +22576,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
@@ -22057,6 +22661,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskProjectsCreatedInput = {
@@ -22141,6 +22746,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
@@ -22225,6 +22831,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskProjectsCreatedInput = {
@@ -22325,6 +22932,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
@@ -22409,6 +23017,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskCommentsInput = {
@@ -22493,6 +23102,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskCommentsInput = {
@@ -22577,6 +23187,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskCommentsInput = {
@@ -22677,6 +23288,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskCommentsInput = {
@@ -22761,6 +23373,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTaskActivityLogsInput = {
@@ -22845,6 +23458,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
@@ -22929,6 +23543,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTaskActivityLogsInput = {
@@ -23029,6 +23644,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
@@ -23113,6 +23729,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWarningsReceivedInput = {
@@ -23197,6 +23814,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWarningsReceivedInput = {
@@ -23281,6 +23899,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWarningsReceivedInput = {
@@ -23370,6 +23989,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWarningsIssuedInput = {
@@ -23454,6 +24074,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWarningsIssuedInput = {
@@ -23554,6 +24175,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
@@ -23638,6 +24260,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutWarningsIssuedInput = {
@@ -23733,6 +24356,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
@@ -23817,6 +24441,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMdTaskTeamsOwnedInput = {
@@ -23901,6 +24526,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
@@ -23985,6 +24611,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMdTaskTeamsOwnedInput = {
@@ -24085,6 +24712,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
@@ -24169,6 +24797,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMdWatchlistOwnedInput = {
@@ -24253,6 +24882,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
@@ -24337,6 +24967,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMdWatchlistOwnedInput = {
@@ -24437,6 +25068,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
@@ -24521,6 +25153,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWorkLogsInput = {
@@ -24605,6 +25238,7 @@ export type UserCreateWithoutWorkLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWorkLogsInput = {
@@ -24689,6 +25323,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorkLogsInput = {
@@ -24789,6 +25424,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWorkLogsInput = {
@@ -24873,6 +25509,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushSubscriptionsInput = {
@@ -24957,6 +25594,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -25041,6 +25679,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -25141,6 +25780,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -25225,6 +25865,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutItProjectsCreatedInput = {
@@ -25309,6 +25950,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
@@ -25393,6 +26035,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutItProjectsCreatedInput = {
@@ -25493,6 +26136,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
@@ -25577,6 +26221,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutItFreelancersCreatedInput = {
@@ -25661,6 +26306,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
@@ -25745,6 +26391,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutItFreelancersCreatedInput = {
@@ -25845,6 +26492,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
@@ -25929,6 +26577,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutItProjectBookingsCreatedInput = {
@@ -26013,6 +26662,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
@@ -26097,6 +26747,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutItProjectBookingsCreatedInput = {
@@ -26197,6 +26848,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
@@ -26281,6 +26933,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
@@ -26365,6 +27018,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
@@ -26449,6 +27103,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDepartmentRevenuesCreatedInput = {
@@ -26549,6 +27204,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
@@ -26633,6 +27289,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPnlCategoriesCreatedInput = {
@@ -26717,6 +27374,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
@@ -26801,6 +27459,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPnlCategoriesCreatedInput = {
@@ -26901,6 +27560,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
@@ -26985,6 +27645,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPnlEntriesCreatedInput = {
@@ -27069,6 +27730,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
@@ -27153,6 +27815,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPnlEntriesCreatedInput = {
@@ -27253,6 +27916,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
@@ -27337,6 +28001,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -27416,6 +28081,7 @@ export type UserCountOutputType = {
   pnlEntriesCreated: number
   meetsCreated: number
   meetParticipations: number
+  statuses: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -27490,6 +28156,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   pnlEntriesCreated?: boolean | UserCountOutputTypeCountPnlEntriesCreatedArgs
   meetsCreated?: boolean | UserCountOutputTypeCountMeetsCreatedArgs
   meetParticipations?: boolean | UserCountOutputTypeCountMeetParticipationsArgs
+  statuses?: boolean | UserCountOutputTypeCountStatusesArgs
 }
 
 /**
@@ -27999,6 +28666,13 @@ export type UserCountOutputTypeCountMeetParticipationsArgs<ExtArgs extends runti
   where?: Prisma.MeetParticipantWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStatusesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserStatusWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -28083,6 +28757,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   pnlEntriesCreated?: boolean | Prisma.User$pnlEntriesCreatedArgs<ExtArgs>
   meetsCreated?: boolean | Prisma.User$meetsCreatedArgs<ExtArgs>
   meetParticipations?: boolean | Prisma.User$meetParticipationsArgs<ExtArgs>
+  statuses?: boolean | Prisma.User$statusesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -28199,6 +28874,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   pnlEntriesCreated?: boolean | Prisma.User$pnlEntriesCreatedArgs<ExtArgs>
   meetsCreated?: boolean | Prisma.User$meetsCreatedArgs<ExtArgs>
   meetParticipations?: boolean | Prisma.User$meetParticipationsArgs<ExtArgs>
+  statuses?: boolean | Prisma.User$statusesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -28279,6 +28955,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     pnlEntriesCreated: Prisma.$PnLEntryPayload<ExtArgs>[]
     meetsCreated: Prisma.$MeetPayload<ExtArgs>[]
     meetParticipations: Prisma.$MeetParticipantPayload<ExtArgs>[]
+    statuses: Prisma.$UserStatusPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -28757,6 +29434,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   pnlEntriesCreated<T extends Prisma.User$pnlEntriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pnlEntriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PnLEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meetsCreated<T extends Prisma.User$meetsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$meetsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meetParticipations<T extends Prisma.User$meetParticipationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$meetParticipationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeetParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  statuses<T extends Prisma.User$statusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$statusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -30909,6 +31587,30 @@ export type User$meetParticipationsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.MeetParticipantScalarFieldEnum | Prisma.MeetParticipantScalarFieldEnum[]
+}
+
+/**
+ * User.statuses
+ */
+export type User$statusesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserStatus
+   */
+  select?: Prisma.UserStatusSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserStatus
+   */
+  omit?: Prisma.UserStatusOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserStatusInclude<ExtArgs> | null
+  where?: Prisma.UserStatusWhereInput
+  orderBy?: Prisma.UserStatusOrderByWithRelationInput | Prisma.UserStatusOrderByWithRelationInput[]
+  cursor?: Prisma.UserStatusWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserStatusScalarFieldEnum | Prisma.UserStatusScalarFieldEnum[]
 }
 
 /**

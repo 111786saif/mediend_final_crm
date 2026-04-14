@@ -479,8 +479,32 @@ model User {
   meetsCreated            Meet[]                @relation("MeetsCreated")
   meetParticipations      MeetParticipant[]
 
+  // Calendar availability statuses
+  statuses                UserStatus[]
+
   @@index([email])
   @@index([role])
+}
+
+enum UserStatusKind {
+  AVAILABLE
+  ONLINE_ONLY
+  UNAVAILABLE
+  CUSTOM
+}
+
+model UserStatus {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      UserStatusKind
+  label     String?
+  startsAt  DateTime
+  endsAt    DateTime
+  createdAt DateTime       @default(now())
+
+  @@index([userId, startsAt, endsAt])
+  @@index([startsAt])
 }
 
 model Lead {

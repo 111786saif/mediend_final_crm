@@ -34,3 +34,41 @@ export function userMeetAccessWhere(userId: string): Prisma.MeetWhereInput {
     OR: [{ createdById: userId }, { participants: { some: { userId } } }],
   }
 }
+
+/** Meets where the given target user is creator OR participant.
+ *  Used by the team calendar so any viewer can see existence of a user's meets,
+ *  with sensitive fields redacted in the route layer unless the viewer is also
+ *  a participant. */
+export function visibleMeetsForUserWhere(targetUserId: string): Prisma.MeetWhereInput {
+  return {
+    OR: [
+      { createdById: targetUserId },
+      { participants: { some: { userId: targetUserId } } },
+    ],
+  }
+}
+
+/** Redact sensitive fields from a meet unless the viewer is the target user
+ *  or is among the meet's participants (which implies they already had access). */
+export function redactMeetForViewer<
+  T extends {
+    description: string | null
+    meetLink: string | null
+    notes: string | null
+    candidatePhone: string | null
+    createdById: string
+    participants?: { userId: string }[]
+  }
+>(meet: T, viewerId: string): T {
+  const viewerIsInsider =
+    meet.createdById === viewerId ||
+    (meet.participants ?? []).some((p) => p.userId === viewerId)
+  if (viewerIsInsider) return meet
+  return {
+    ...meet,
+    description: null,
+    meetLink: null,
+    notes: null,
+    candidatePhone: null,
+  }
+}

@@ -12,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar"
 // Select no longer used — Priority & Project use Popover
 import { CalendarIcon, User, FolderPlus, SendHorizonal, Search, Check, X } from "lucide-react"
 import { PriorityIcon } from "./priority-icon"
-import { format } from "date-fns"
+import { format, startOfDay } from "date-fns"
 import { useAuth } from "@/hooks/use-auth"
 import {
   useCreateTask,
@@ -120,6 +120,10 @@ export function TaskInput({
     if (!trimmed) return
     if (assigneeRequired && !effectiveAssigneeId) {
       toast.error("Please select a person to assign the task to.")
+      return
+    }
+    if (dueDate && startOfDay(dueDate).getTime() < startOfDay(new Date()).getTime()) {
+      toast.error("Due date can't be in the past")
       return
     }
 
@@ -287,6 +291,7 @@ export function TaskInput({
               mode="single"
               selected={dueDate}
               onSelect={setDueDate}
+              disabled={{ before: startOfDay(new Date()) }}
               initialFocus
             />
           </PopoverContent>

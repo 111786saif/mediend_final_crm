@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model UserStatus
+ * 
+ */
+export type UserStatus = Prisma.UserStatusModel
+/**
  * Model Lead
  * 
  */

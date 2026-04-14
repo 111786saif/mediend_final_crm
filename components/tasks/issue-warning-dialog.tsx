@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useCreateWarning, type WarningType } from "@/hooks/use-tasks"
+import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 
 const WARNING_TYPES: { value: WarningType; label: string }[] = [
@@ -54,12 +55,23 @@ export function IssueWarningDialog({
   const [type, setType] = useState<WarningType | "">("")
   const [note, setNote] = useState("")
   const [selectedTaskId, setSelectedTaskId] = useState<string>("")
+  const [isGeneral, setIsGeneral] = useState(false)
   const createWarning = useCreateWarning()
 
-  const taskId = initialTaskId ?? (selectedTaskId || null)
-  const selectedTask = initialTaskId
-    ? { id: initialTaskId, title: taskTitle ?? "" }
+  const isFromTaskContext = !!initialTaskId
+  const effectiveTaskId = isFromTaskContext
+    ? initialTaskId
+    : isGeneral
+      ? null
+      : selectedTaskId || null
+  const selectedTask = isFromTaskContext
+    ? { id: initialTaskId!, title: taskTitle ?? "" }
     : taskOptions?.find((t) => t.id === selectedTaskId)
+
+  const canSubmit =
+    !!type &&
+    !!note.trim() &&
+    (isFromTaskContext || isGeneral || !!selectedTaskId)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -67,21 +79,22 @@ export function IssueWarningDialog({
       toast.error("Please select a type and enter a note")
       return
     }
-    const finalTaskId = initialTaskId ?? selectedTaskId
-    if (!finalTaskId) {
-      toast.error("Please select a task")
+    if (!isFromTaskContext && !isGeneral && !selectedTaskId) {
+      toast.error("Pick a task or switch on General warning")
       return
     }
     try {
       await createWarning.mutateAsync({
         employeeId,
-        taskId: finalTaskId,
+        taskId: effectiveTaskId,
         type: type as WarningType,
         note: note.trim(),
       })
-      toast.success("Warning issued")
+      toast.success(isGeneral && !isFromTaskContext ? "General warning issued" : "Warning issued")
       setType("")
       setNote("")
+      setIsGeneral(false)
+      setSelectedTaskId("")
       onOpenChange(false)
       onSuccess?.()
     } catch {
@@ -94,6 +107,7 @@ export function IssueWarningDialog({
       setType("")
       setNote("")
       setSelectedTaskId("")
+      setIsGeneral(false)
     }
     onOpenChange(next)
   }
@@ -116,13 +130,33 @@ export function IssueWarningDialog({
           </p>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {taskOptions && !initialTaskId && (
+          {!isFromTaskContext && (
+            <div className="flex items-center justify-between rounded-lg border border-violet-200 dark:border-violet-900 bg-violet-50/60 dark:bg-violet-950/30 px-3 py-2.5">
+              <div className="min-w-0 pr-2">
+                <p className="text-sm font-medium text-violet-900 dark:text-violet-100">General warning</p>
+                <p className="text-[11px] text-violet-700/80 dark:text-violet-300/80">
+                  Not tied to a specific task
+                </p>
+              </div>
+              <Switch
+                checked={isGeneral}
+                onCheckedChange={(v) => {
+                  setIsGeneral(v)
+                  if (v) setSelectedTaskId("")
+                }}
+                aria-label="General warning"
+              />
+            </div>
+          )}
+          {taskOptions && !isFromTaskContext && !isGeneral && (
             <div>
-              <label className="text-sm font-medium mb-1.5 block">Task (required)</label>
+              <label className="text-sm font-medium mb-1.5 block">Task</label>
               {taskOptions.length === 0 ? (
-                <p className="text-sm text-muted-foreground py-2">No tasks to assign warning to</p>
+                <p className="text-sm text-muted-foreground py-2">
+                  No tasks to link — switch on General warning above.
+                </p>
               ) : (
-                <Select value={selectedTaskId} onValueChange={setSelectedTaskId} required>
+                <Select value={selectedTaskId} onValueChange={setSelectedTaskId}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select task..." />
                   </SelectTrigger>
@@ -167,7 +201,7 @@ export function IssueWarningDialog({
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!type || !note.trim() || !taskId || createWarning.isPending}>
+            <Button type="submit" disabled={!canSubmit || createWarning.isPending}>
               Issue warning
             </Button>
           </div>

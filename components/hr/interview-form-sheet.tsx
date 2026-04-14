@@ -27,9 +27,53 @@ import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import type { InterviewMeet } from '@/components/hr/interview-list'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import { Users, Upload, Video, MapPin, CalendarClock, History } from 'lucide-react'
+import { Users, Upload, Video, MapPin, CalendarClock, History, Clock } from 'lucide-react'
 import { isValid } from 'date-fns'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
+
+type InterviewFieldError = Partial<
+  Record<
+    | 'candidateName'
+    | 'candidatePhone'
+    | 'candidateRole'
+    | 'scheduledAt'
+    | 'location'
+    | 'meetLink'
+    | 'interviewRound'
+    | 'duration',
+    string
+  >
+>
+
+const INTERVIEW_DURATION_PRESETS: { label: string; minutes: number }[] = [
+  { label: '15m', minutes: 15 },
+  { label: '30m', minutes: 30 },
+  { label: '45m', minutes: 45 },
+  { label: '1h', minutes: 60 },
+  { label: '1.5h', minutes: 90 },
+  { label: '2h', minutes: 120 },
+]
+
+function isKnownInterviewField(f: string): f is keyof InterviewFieldError {
+  return [
+    'candidateName',
+    'candidatePhone',
+    'candidateRole',
+    'scheduledAt',
+    'location',
+    'meetLink',
+    'interviewRound',
+    'duration',
+  ].includes(f)
+}
+
+function FieldErrorMsg({ message }: { message: string }) {
+  return (
+    <p className="mt-1 text-[11px] font-medium text-rose-600 dark:text-rose-400" role="alert">
+      {message}
+    </p>
+  )
+}
 
 const ROLE_PRESETS = [
   'Software Engineer',
@@ -83,6 +127,10 @@ export function InterviewFormSheet({
   const [resumeUrl, setResumeUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [displayTitle, setDisplayTitle] = useState('')
+  const [durationMins, setDurationMins] = useState<number | null>(null)
+  const [customDuration, setCustomDuration] = useState('')
+  const [showCustomDuration, setShowCustomDuration] = useState(false)
+  const [errors, setErrors] = useState<InterviewFieldError>({})
 
   const isEdit = Boolean(meetToEdit?.id)
 
@@ -131,6 +179,19 @@ export function InterviewFormSheet({
     setResumeFile(null)
     setResumeUrl(null)
     setDisplayTitle('')
+    setDurationMins(null)
+    setCustomDuration('')
+    setShowCustomDuration(false)
+    setErrors({})
+  }, [])
+
+  const clearFieldError = useCallback((field: keyof InterviewFieldError) => {
+    setErrors((prev) => {
+      if (!(field in prev)) return prev
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
   }, [])
 
   useEffect(() => {
@@ -157,6 +218,26 @@ export function InterviewFormSheet({
       setScheduledAt(
         meetToEdit.scheduledAt ? new Date(meetToEdit.scheduledAt) : undefined
       )
+      if (meetToEdit.endTime && meetToEdit.scheduledAt) {
+        const mins = Math.round(
+          (new Date(meetToEdit.endTime).getTime() -
+            new Date(meetToEdit.scheduledAt).getTime()) /
+            60_000
+        )
+        const preset = INTERVIEW_DURATION_PRESETS.find((p) => p.minutes === mins)
+        if (preset) {
+          setDurationMins(preset.minutes)
+          setShowCustomDuration(false)
+        } else if (mins > 0) {
+          setShowCustomDuration(true)
+          setCustomDuration(String(mins))
+        }
+      } else {
+        setDurationMins(null)
+        setShowCustomDuration(false)
+        setCustomDuration('')
+      }
+      setErrors({})
       setNotes(meetToEdit.notes || '')
       setParticipantIds(new Set(meetToEdit.participants.map((p) => p.user.id)))
       setResumeFile(null)
@@ -168,18 +249,53 @@ export function InterviewFormSheet({
     }
   }, [open, meetToEdit, resetForm])
 
-  const buildInterviewPayload = async () => {
-    if (!candidateName.trim()) throw new Error('Candidate name is required')
+  const effectiveDuration: number | null = useMemo(() => {
+    if (showCustomDuration) {
+      const n = parseInt(customDuration, 10)
+      if (!Number.isFinite(n) || n < 5 || n > 480) return null
+      return n
+    }
+    return durationMins
+  }, [showCustomDuration, customDuration, durationMins])
+
+  const validateInterview = (): InterviewFieldError => {
+    const e: InterviewFieldError = {}
+    if (!candidateName.trim()) e.candidateName = 'Candidate name is required'
     const phoneDigits = candidatePhone.replace(/\D/g, '')
     if (phoneDigits.length !== 10) {
-      throw new Error('Candidate phone must be exactly 10 digits')
+      e.candidatePhone = 'Phone must be exactly 10 digits'
     }
-    if (!resolvedRole) throw new Error('Role is required')
-    if (!scheduledAt || !isValid(scheduledAt)) throw new Error('Date & time is required')
+    if (!resolvedRole) e.candidateRole = 'Role is required'
+    if (!scheduledAt || !isValid(scheduledAt)) e.scheduledAt = 'Date & time is required'
     if (meetType === 'OFFLINE' && !location.trim()) {
-      throw new Error('Location is required for walk-in interviews')
+      e.location = 'Location is required for walk-in interviews'
     }
+    if (meetType === 'VIRTUAL' && meetLink.trim() && !/^https?:\/\//i.test(meetLink.trim())) {
+      e.meetLink = 'Link must start with http:// or https://'
+    }
+    if (!Number.isFinite(round) || round < 1 || round > 99) {
+      e.interviewRound = 'Round must be between 1 and 99'
+    }
+    if (showCustomDuration) {
+      const n = parseInt(customDuration, 10)
+      if (!customDuration.trim()) {
+        e.duration = 'Enter duration in minutes'
+      } else if (!Number.isFinite(n) || n < 5 || n > 480) {
+        e.duration = 'Duration must be between 5 and 480 minutes'
+      }
+    }
+    return e
+  }
 
+  const scrollErrorIntoView = (first: keyof InterviewFieldError) => {
+    const id = `interview-field-${first}`
+    if (typeof document !== 'undefined') {
+      const el = document.getElementById(id)
+      el?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    }
+  }
+
+  const buildInterviewPayload = async () => {
     let finalResumeUrl = resumeUrl
     if (resumeFile) {
       setUploading(true)
@@ -194,6 +310,12 @@ export function InterviewFormSheet({
       }
     }
 
+    const start = scheduledAt as Date
+    const endIso =
+      effectiveDuration != null
+        ? new Date(start.getTime() + effectiveDuration * 60_000).toISOString()
+        : null
+
     return {
       candidateName: candidateName.trim(),
       candidateRole: resolvedRole,
@@ -202,12 +324,23 @@ export function InterviewFormSheet({
       type: meetType,
       meetLink: meetType === 'VIRTUAL' ? meetLink.trim() || null : null,
       location: meetType === 'OFFLINE' ? location.trim() : null,
-      scheduledAt: scheduledAt.toISOString(),
+      scheduledAt: start.toISOString(),
+      endTime: endIso,
       notes: notes.trim() || null,
       participantUserIds: Array.from(participantIds),
       isRecorded: mode === 'record',
       resumeUrl: finalResumeUrl || null,
       title: displayTitle.trim() || null,
+    }
+  }
+
+  const handleServerError = (e: Error & { field?: string }) => {
+    if (e.field && isKnownInterviewField(e.field)) {
+      setErrors((prev) => ({ ...prev, [e.field as keyof InterviewFieldError]: e.message }))
+      scrollErrorIntoView(e.field as keyof InterviewFieldError)
+      toast.error(e.message)
+    } else {
+      toast.error(e.message || 'Failed to save')
     }
   }
 
@@ -223,7 +356,7 @@ export function InterviewFormSheet({
       onOpenChange(false)
       resetForm()
     },
-    onError: (e: Error) => toast.error(e.message || 'Failed to save'),
+    onError: (e: Error) => handleServerError(e as Error & { field?: string }),
   })
 
   const updateMutation = useMutation({
@@ -239,8 +372,21 @@ export function InterviewFormSheet({
       onOpenChange(false)
       resetForm()
     },
-    onError: (e: Error) => toast.error(e.message || 'Failed to update'),
+    onError: (e: Error) => handleServerError(e as Error & { field?: string }),
   })
+
+  const submit = () => {
+    const v = validateInterview()
+    if (Object.keys(v).length > 0) {
+      setErrors(v)
+      const first = Object.keys(v)[0] as keyof InterviewFieldError
+      scrollErrorIntoView(first)
+      return
+    }
+    setErrors({})
+    if (isEdit) updateMutation.mutate()
+    else createMutation.mutate()
+  }
 
   function toggleParticipant(userId: string) {
     setParticipantIds((prev) => {
@@ -330,26 +476,44 @@ export function InterviewFormSheet({
           </div>
 
           {meetType === 'VIRTUAL' && (
-            <div className="space-y-1.5">
+            <div className="space-y-1.5" id="interview-field-meetLink">
               <Label>Google Meet / video link</Label>
               <Input
                 value={meetLink}
-                onChange={(e) => setMeetLink(e.target.value)}
+                onChange={(e) => {
+                  setMeetLink(e.target.value)
+                  if (errors.meetLink) clearFieldError('meetLink')
+                }}
                 placeholder="https://meet.google.com/..."
-                className="rounded-xl"
+                aria-invalid={!!errors.meetLink}
+                className={cn(
+                  'rounded-xl',
+                  errors.meetLink && 'border-rose-400 focus-visible:ring-rose-300'
+                )}
               />
+              {errors.meetLink && <FieldErrorMsg message={errors.meetLink} />}
             </div>
           )}
 
           {meetType === 'OFFLINE' && (
-            <div className="space-y-1.5">
-              <Label>Location</Label>
+            <div className="space-y-1.5" id="interview-field-location">
+              <Label>
+                Location <span className="text-destructive">*</span>
+              </Label>
               <Input
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) => {
+                  setLocation(e.target.value)
+                  if (errors.location) clearFieldError('location')
+                }}
                 placeholder="Office / floor / room"
-                className="rounded-xl"
+                aria-invalid={!!errors.location}
+                className={cn(
+                  'rounded-xl',
+                  errors.location && 'border-rose-400 focus-visible:ring-rose-300'
+                )}
               />
+              {errors.location && <FieldErrorMsg message={errors.location} />}
             </div>
           )}
 
@@ -368,40 +532,132 @@ export function InterviewFormSheet({
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-2">
-            <div className="space-y-1.5">
+            <div className="space-y-1.5" id="interview-field-interviewRound">
               <Label>Round</Label>
               <Input
                 type="number"
                 min={1}
                 max={99}
                 value={round}
-                onChange={(e) => setRound(parseInt(e.target.value, 10) || 1)}
-                className="rounded-xl"
+                onChange={(e) => {
+                  setRound(parseInt(e.target.value, 10) || 1)
+                  if (errors.interviewRound) clearFieldError('interviewRound')
+                }}
+                aria-invalid={!!errors.interviewRound}
+                className={cn(
+                  'rounded-xl',
+                  errors.interviewRound && 'border-rose-400 focus-visible:ring-rose-300'
+                )}
               />
+              {errors.interviewRound && <FieldErrorMsg message={errors.interviewRound} />}
             </div>
-            <div className="space-y-1.5 sm:col-span-2">
-              <Label id="interview-when-label">When</Label>
+            <div className="space-y-1.5 sm:col-span-2" id="interview-field-scheduledAt">
+              <Label id="interview-when-label">
+                When <span className="text-destructive">*</span>
+              </Label>
               <DateTimePicker
                 nested
                 value={scheduledAt}
-                onChange={setScheduledAt}
+                onChange={(d) => {
+                  setScheduledAt(d)
+                  if (errors.scheduledAt) clearFieldError('scheduledAt')
+                }}
                 aria-labelledby="interview-when-label"
-                className="rounded-xl min-h-11 h-auto py-2.5"
+                className={cn(
+                  'rounded-xl min-h-11 h-auto py-2.5',
+                  errors.scheduledAt && 'border-rose-400 ring-1 ring-rose-300'
+                )}
               />
+              {errors.scheduledAt && <FieldErrorMsg message={errors.scheduledAt} />}
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <Label>Candidate name</Label>
-            <Input
-              value={candidateName}
-              onChange={(e) => setCandidateName(e.target.value)}
-              placeholder="Full name"
-              className="rounded-xl"
-            />
+          <div className="space-y-1.5" id="interview-field-duration">
+            <Label className="flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5" />
+              Duration (optional)
+            </Label>
+            <div className="flex flex-wrap gap-2">
+              {INTERVIEW_DURATION_PRESETS.map((p) => {
+                const active = !showCustomDuration && durationMins === p.minutes
+                return (
+                  <button
+                    key={p.minutes}
+                    type="button"
+                    onClick={() => {
+                      setDurationMins(p.minutes)
+                      setShowCustomDuration(false)
+                      if (errors.duration) clearFieldError('duration')
+                    }}
+                    className={cn(
+                      'rounded-full border px-3.5 py-1.5 text-sm font-medium touch-manipulation transition-colors',
+                      active
+                        ? 'border-violet-500 bg-violet-600 text-white'
+                        : 'border-border bg-muted/40 text-foreground active:bg-muted'
+                    )}
+                  >
+                    {p.label}
+                  </button>
+                )
+              })}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCustomDuration(true)
+                  setDurationMins(null)
+                }}
+                className={cn(
+                  'rounded-full border px-3.5 py-1.5 text-sm font-medium touch-manipulation transition-colors',
+                  showCustomDuration
+                    ? 'border-violet-500 bg-violet-600 text-white'
+                    : 'border-border bg-muted/40 text-foreground active:bg-muted'
+                )}
+              >
+                Custom
+              </button>
+            </div>
+            {showCustomDuration && (
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  min={5}
+                  max={480}
+                  value={customDuration}
+                  onChange={(e) => {
+                    setCustomDuration(e.target.value)
+                    if (errors.duration) clearFieldError('duration')
+                  }}
+                  placeholder="Minutes (5–480)"
+                  className="rounded-xl h-10 max-w-[180px]"
+                  aria-invalid={!!errors.duration}
+                />
+                <span className="text-xs text-muted-foreground">minutes</span>
+              </div>
+            )}
+            {errors.duration && <FieldErrorMsg message={errors.duration} />}
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1.5" id="interview-field-candidateName">
+            <Label>
+              Candidate name <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              value={candidateName}
+              onChange={(e) => {
+                setCandidateName(e.target.value)
+                if (errors.candidateName) clearFieldError('candidateName')
+              }}
+              placeholder="Full name"
+              aria-invalid={!!errors.candidateName}
+              className={cn(
+                'rounded-xl',
+                errors.candidateName && 'border-rose-400 focus-visible:ring-rose-300'
+              )}
+            />
+            {errors.candidateName && <FieldErrorMsg message={errors.candidateName} />}
+          </div>
+
+          <div className="space-y-1.5" id="interview-field-candidatePhone">
             <Label>
               Candidate phone <span className="text-destructive">*</span>
             </Label>
@@ -411,19 +667,42 @@ export function InterviewFormSheet({
               autoComplete="tel"
               maxLength={10}
               value={candidatePhone}
-              onChange={(e) =>
+              onChange={(e) => {
                 setCandidatePhone(e.target.value.replace(/\D/g, '').slice(0, 10))
-              }
+                if (errors.candidatePhone) clearFieldError('candidatePhone')
+              }}
               placeholder="10-digit mobile number"
-              className="rounded-xl"
+              aria-invalid={!!errors.candidatePhone}
+              className={cn(
+                'rounded-xl',
+                errors.candidatePhone && 'border-rose-400 focus-visible:ring-rose-300'
+              )}
             />
-            <p className="text-[11px] text-muted-foreground">Required — exactly 10 digits</p>
+            {errors.candidatePhone ? (
+              <FieldErrorMsg message={errors.candidatePhone} />
+            ) : (
+              <p className="text-[11px] text-muted-foreground">Required — exactly 10 digits</p>
+            )}
           </div>
 
-          <div className="space-y-1.5">
-            <Label>Role</Label>
-            <Select value={rolePreset} onValueChange={setRolePreset}>
-              <SelectTrigger className="rounded-xl">
+          <div className="space-y-1.5" id="interview-field-candidateRole">
+            <Label>
+              Role <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={rolePreset}
+              onValueChange={(v) => {
+                setRolePreset(v)
+                if (errors.candidateRole) clearFieldError('candidateRole')
+              }}
+            >
+              <SelectTrigger
+                aria-invalid={!!errors.candidateRole}
+                className={cn(
+                  'rounded-xl',
+                  errors.candidateRole && 'border-rose-400 focus:ring-rose-300'
+                )}
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -437,11 +716,19 @@ export function InterviewFormSheet({
             {rolePreset === 'Other (type below)' && (
               <Input
                 value={roleCustom}
-                onChange={(e) => setRoleCustom(e.target.value)}
+                onChange={(e) => {
+                  setRoleCustom(e.target.value)
+                  if (errors.candidateRole) clearFieldError('candidateRole')
+                }}
                 placeholder="Type role / designation"
-                className="rounded-xl mt-2"
+                aria-invalid={!!errors.candidateRole}
+                className={cn(
+                  'rounded-xl mt-2',
+                  errors.candidateRole && 'border-rose-400 focus-visible:ring-rose-300'
+                )}
               />
             )}
+            {errors.candidateRole && <FieldErrorMsg message={errors.candidateRole} />}
           </div>
 
           <div className="space-y-1.5">
@@ -572,9 +859,7 @@ export function InterviewFormSheet({
               updateMutation.isPending ||
               uploading
             }
-            onClick={() =>
-              isEdit ? updateMutation.mutate() : createMutation.mutate()
-            }
+            onClick={submit}
           >
             {createMutation.isPending || updateMutation.isPending || uploading
               ? 'Saving…'

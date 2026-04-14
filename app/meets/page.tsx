@@ -3,11 +3,14 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
-import { format, isThisWeek, isToday, isTomorrow } from 'date-fns'
+import { format, isThisWeek, isToday, isTomorrow, differenceInMinutes } from 'date-fns'
 import { apiGet } from '@/lib/api-client'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { CreateMeetDrawer } from '@/components/meets/create-meet-drawer'
-import { MeetCardActions } from '@/components/meets/meet-card-actions'
+import {
+  MeetDetailsDrawer,
+  type MeetDetailsMeet,
+} from '@/components/meets/meet-details-drawer'
 import { useAuth } from '@/hooks/use-auth'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -20,10 +23,19 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-import { ArrowLeft, FileText, MapPin, Video, CalendarDays, Plus } from 'lucide-react'
+import {
+  ArrowLeft,
+  MapPin,
+  Video,
+  CalendarDays,
+  Plus,
+  ChevronRight,
+  Clock,
+} from 'lucide-react'
 
 type MeetParticipantRow = {
   userId: string
+  user?: { id: string; name: string; email: string } | null
   attended: boolean | null
   remarks: string | null
 }
@@ -31,21 +43,25 @@ type MeetParticipantRow = {
 type MeetRow = {
   id: string
   title: string
+  description: string | null
   type: 'VIRTUAL' | 'OFFLINE'
   meetLink: string | null
   location: string | null
   scheduledAt: string
+  endTime: string | null
   module: 'INTERVIEW' | 'MD_APPOINTMENT' | 'GENERAL'
   candidateName: string | null
+  candidatePhone: string | null
+  candidateRole: string | null
   resumeUrl: string | null
-  createdBy: { id: string; name: string }
+  notes: string | null
+  createdBy: { id: string; name: string; email: string }
   participants?: MeetParticipantRow[]
   mdAppointment?: {
     employee?: { user?: { name: string } | null } | null
   } | null
 }
 
-/** MD appointment meets are created by the MD; show the employee who requested the slot. */
 function meetRequesterLabel(m: MeetRow): string {
   if (m.module === 'MD_APPOINTMENT') {
     const requester = m.mdAppointment?.employee?.user?.name
@@ -72,8 +88,16 @@ function moduleBadgeClass(m: MeetRow['module']) {
     case 'MD_APPOINTMENT':
       return 'bg-amber-600 text-white border-0'
     default:
-      return 'bg-slate-600 text-white border-0'
+      return 'bg-indigo-600 text-white border-0'
   }
+}
+
+function formatDurationShort(mins: number): string {
+  if (mins < 60) return `${mins}m`
+  const h = Math.floor(mins / 60)
+  const m = mins % 60
+  if (m === 0) return `${h}h`
+  return `${h}h ${m}m`
 }
 
 type CanCreateResponse = { canCreate: boolean }
@@ -87,6 +111,8 @@ export default function MeetsPage() {
   const { user } = useAuth()
   const [moduleFilter, setModuleFilter] = useState<string>('all')
   const [createOpen, setCreateOpen] = useState(false)
+  const [detailsOpen, setDetailsOpen] = useState(false)
+  const [selectedMeet, setSelectedMeet] = useState<MeetRow | null>(null)
 
   const { data: createEligibility } = useQuery<CanCreateResponse>({
     queryKey: ['meets', 'can-create'],
@@ -131,6 +157,11 @@ export default function MeetsPage() {
 
   const canCreateMeet = createEligibility?.canCreate === true
 
+  const openDetails = (m: MeetRow) => {
+    setSelectedMeet(m)
+    setDetailsOpen(true)
+  }
+
   return (
     <AuthenticatedLayout>
       <div className="space-y-4 w-full min-w-0 relative">
@@ -163,7 +194,7 @@ export default function MeetsPage() {
         {isLoading ? (
           <div className="space-y-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 rounded-xl bg-muted animate-pulse" />
+              <div key={i} className="h-20 rounded-2xl bg-muted animate-pulse" />
             ))}
           </div>
         ) : meets.length === 0 ? (
@@ -189,117 +220,135 @@ export default function MeetsPage() {
                     <ul className="space-y-2">
                       {section.items.map((m) => {
                         const mine = myParticipationRow(m, user?.id)
-                        const showAttendanceHint =
-                          mine?.attended === true ||
-                          mine?.attended === false ||
-                          (mine?.remarks && mine.remarks.trim().length > 0)
+                        const start = new Date(m.scheduledAt)
+                        const end = m.endTime ? new Date(m.endTime) : null
+                        const durMins = end
+                          ? Math.max(0, differenceInMinutes(end, start))
+                          : null
+                        const attendance: 'joined' | 'missed' | null =
+                          mine?.attended === true
+                            ? 'joined'
+                            : mine?.attended === false
+                              ? 'missed'
+                              : null
                         return (
-                        <li key={m.id}>
-                          <Card
-                            className={cn(
-                              'overflow-hidden border-2 rounded-2xl',
-                              isToday(new Date(m.scheduledAt))
-                                ? 'border-indigo-200 dark:border-indigo-900'
-                                : 'border-border'
-                            )}
-                          >
-                            <CardContent className="p-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                              <div className="min-w-0 flex-1 flex gap-1 sm:gap-2">
-                                <div className="min-w-0 flex-1">
-                                <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                                  <Badge className={cn('text-[10px]', moduleBadgeClass(m.module))}>
-                                    {moduleLabel(m.module)}
-                                  </Badge>
-                                  <Badge
-                                    variant="outline"
-                                    className={cn(
-                                      'text-[10px]',
-                                      m.type === 'VIRTUAL'
-                                        ? 'border-indigo-400 text-indigo-700'
-                                        : 'border-amber-400 text-amber-800'
-                                    )}
-                                  >
-                                    {m.type === 'VIRTUAL' ? (
-                                      <span className="flex items-center gap-0.5">
-                                        <Video className="h-3 w-3" /> Virtual
-                                      </span>
-                                    ) : (
-                                      <span className="flex items-center gap-0.5">
-                                        <MapPin className="h-3 w-3" /> Offline
-                                      </span>
-                                    )}
-                                  </Badge>
-                                </div>
-                                <p className="font-semibold text-sm leading-tight">{m.title}</p>
-                                <p className="text-xs text-muted-foreground mt-0.5">
-                                  {format(new Date(m.scheduledAt), 'EEE, MMM d · h:mm a')}
-                                  <span className="mx-1">·</span>
-                                  {meetRequesterLabel(m)}
-                                </p>
-                                {showAttendanceHint && (
-                                  <p className="text-xs mt-1.5 text-muted-foreground">
-                                    {mine?.attended === true && (
-                                      <span className="text-emerald-700 dark:text-emerald-400 font-medium">
-                                        You marked: joined
-                                      </span>
-                                    )}
-                                    {mine?.attended === false && (
-                                      <span className="text-rose-700 dark:text-rose-400 font-medium">
-                                        You marked: did not join
-                                      </span>
-                                    )}
-                                    {mine?.attended == null &&
-                                      mine?.remarks &&
-                                      mine.remarks.trim().length > 0 && (
-                                        <span className="font-medium">Remarks saved</span>
+                          <li key={m.id}>
+                            <div
+                              role="button"
+                              tabIndex={0}
+                              onClick={() => openDetails(m)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault()
+                                  openDetails(m)
+                                }
+                              }}
+                              className={cn(
+                                'relative w-full text-left block cursor-pointer touch-manipulation rounded-2xl border-2 bg-card overflow-hidden transition-colors active:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500',
+                                isToday(start)
+                                  ? 'border-indigo-200 dark:border-indigo-900'
+                                  : 'border-border'
+                              )}
+                            >
+                              {attendance && (
+                                <span
+                                  className={cn(
+                                    'absolute top-3 right-3 h-2 w-2 rounded-full',
+                                    attendance === 'joined'
+                                      ? 'bg-emerald-500'
+                                      : 'bg-rose-500'
+                                  )}
+                                  aria-label={
+                                    attendance === 'joined' ? 'You joined' : 'You did not join'
+                                  }
+                                />
+                              )}
+                              <div className="p-3 pr-6">
+                                <div className="flex items-start gap-2">
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                                      <Badge
+                                        className={cn(
+                                          'text-[10px] font-semibold uppercase tracking-wide',
+                                          moduleBadgeClass(m.module)
+                                        )}
+                                      >
+                                        {moduleLabel(m.module)}
+                                      </Badge>
+                                      <Badge
+                                        variant="outline"
+                                        className={cn(
+                                          'text-[10px]',
+                                          m.type === 'VIRTUAL'
+                                            ? 'border-indigo-400 text-indigo-700 dark:text-indigo-300'
+                                            : 'border-amber-400 text-amber-800 dark:text-amber-200'
+                                        )}
+                                      >
+                                        {m.type === 'VIRTUAL' ? (
+                                          <span className="flex items-center gap-0.5">
+                                            <Video className="h-3 w-3" /> Virtual
+                                          </span>
+                                        ) : (
+                                          <span className="flex items-center gap-0.5">
+                                            <MapPin className="h-3 w-3" /> Offline
+                                          </span>
+                                        )}
+                                      </Badge>
+                                    </div>
+                                    <p className="font-semibold text-sm leading-snug line-clamp-2">
+                                      {m.title}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1 flex-wrap">
+                                      <span>{format(start, 'EEE, MMM d · h:mm a')}</span>
+                                      {durMins != null && (
+                                        <>
+                                          <span aria-hidden>·</span>
+                                          <span className="inline-flex items-center gap-0.5">
+                                            <Clock className="h-3 w-3" />
+                                            {formatDurationShort(durMins)}
+                                          </span>
+                                        </>
                                       )}
-                                  </p>
-                                )}
-                                {m.location && (
-                                  <p className="text-xs text-amber-800 dark:text-amber-200 mt-1">
-                                    {m.location}
-                                  </p>
-                                )}
-                                </div>
-                                {user?.id && (
-                                  <MeetCardActions
-                                    meet={{
-                                      id: m.id,
-                                      title: m.title,
-                                      module: m.module,
-                                      meetLink: m.meetLink,
-                                      resumeUrl: m.resumeUrl,
-                                    }}
-                                    myAttended={mine?.attended ?? null}
-                                    myRemarks={mine?.remarks ?? null}
-                                  />
-                                )}
-                              </div>
-                              <div className="flex flex-col gap-1.5 shrink-0 w-full sm:w-auto sm:items-end">
-                                {m.meetLink && (
-                                  <Button size="sm" className="rounded-xl w-full sm:w-auto" asChild>
-                                    <a href={m.meetLink} target="_blank" rel="noreferrer">
-                                      Join
-                                    </a>
-                                  </Button>
-                                )}
-                                {m.module === 'INTERVIEW' && m.resumeUrl && (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="rounded-xl w-full sm:w-auto gap-1.5"
-                                    asChild
+                                    </p>
+                                    {(m.location || m.type === 'VIRTUAL') && (
+                                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                                        {m.type === 'OFFLINE' && m.location ? m.location : null}
+                                        {m.type === 'VIRTUAL' && !m.meetLink && 'No link yet'}
+                                      </p>
+                                    )}
+                                    <p className="text-[11px] text-muted-foreground mt-1">
+                                      {meetRequesterLabel(m)}
+                                    </p>
+                                  </div>
+                                  <div
+                                    className="flex flex-col items-end gap-1.5 shrink-0"
+                                    onClick={(e) => e.stopPropagation()}
                                   >
-                                    <a href={m.resumeUrl} target="_blank" rel="noreferrer">
-                                      <FileText className="h-3.5 w-3.5 shrink-0" />
-                                      Resume
-                                    </a>
-                                  </Button>
-                                )}
+                                    {m.type === 'VIRTUAL' && m.meetLink && (
+                                      <Button
+                                        size="sm"
+                                        className="h-8 rounded-xl bg-indigo-600 hover:bg-indigo-700"
+                                        asChild
+                                      >
+                                        <a
+                                          href={m.meetLink}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
+                                          Join
+                                        </a>
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
-                            </CardContent>
-                          </Card>
-                        </li>
+                              <ChevronRight
+                                className="absolute right-1.5 bottom-3 h-4 w-4 text-muted-foreground/60 pointer-events-none"
+                                aria-hidden
+                              />
+                            </div>
+                          </li>
                         )
                       })}
                     </ul>
@@ -323,6 +372,13 @@ export default function MeetsPage() {
             <CreateMeetDrawer open={createOpen} onOpenChange={setCreateOpen} />
           </>
         )}
+
+        <MeetDetailsDrawer
+          open={detailsOpen}
+          onOpenChange={setDetailsOpen}
+          meet={selectedMeet as MeetDetailsMeet | null}
+          currentUserId={user?.id}
+        />
       </div>
     </AuthenticatedLayout>
   )

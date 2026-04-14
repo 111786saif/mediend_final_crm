@@ -40,6 +40,7 @@ export type InterviewMeet = {
   meetLink: string | null
   location: string | null
   scheduledAt: string
+  endTime: string | null
   interviewRound: number | null
   candidateName: string | null
   candidateRole: string | null

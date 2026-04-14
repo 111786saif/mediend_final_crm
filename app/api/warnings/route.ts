@@ -1,16 +1,18 @@
 import { NextRequest } from "next/server"
 import { getSessionFromRequest } from "@/lib/session"
-import { errorResponse, successResponse, unauthorizedResponse } from "@/lib/api-utils"
+import { errorResponse, successResponse, unauthorizedResponse, zodErrorResponse } from "@/lib/api-utils"
 import { prisma } from "@/lib/prisma"
 import { getMDTeamAndWatchlistUserIds } from "@/lib/hierarchy"
 import { z } from "zod"
 import type { Prisma } from "@/generated/prisma/client"
 
 const createWarningSchema = z.object({
-  employeeId: z.string().min(1),
-  taskId: z.string().min(1),
-  type: z.enum(["REPEATED_DEADLINE_MISS", "LOW_QUALITY_WORK", "UNRESPONSIVE", "TASK_ABANDONMENT", "OTHER"]),
-  note: z.string().min(1),
+  employeeId: z.string().min(1, "Employee is required"),
+  taskId: z.string().min(1).optional().nullable(),
+  type: z.enum(["REPEATED_DEADLINE_MISS", "LOW_QUALITY_WORK", "UNRESPONSIVE", "TASK_ABANDONMENT", "OTHER"], {
+    errorMap: () => ({ message: "Pick a warning type" }),
+  }),
+  note: z.string().min(1, "Add a short note explaining the warning"),
 })
 
 export async function GET(request: NextRequest) {
@@ -53,13 +55,13 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   const parsed = createWarningSchema.safeParse(body)
   if (!parsed.success) {
-    return errorResponse(parsed.error.message)
+    return zodErrorResponse(parsed.error)
   }
 
   const warning = await prisma.warning.create({
     data: {
       employeeId: parsed.data.employeeId,
-      taskId: parsed.data.taskId,
+      taskId: parsed.data.taskId ?? null,
       type: parsed.data.type,
       note: parsed.data.note.trim(),
       issuedById: user.id,

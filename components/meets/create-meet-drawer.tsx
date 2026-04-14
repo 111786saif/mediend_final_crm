@@ -14,7 +14,17 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { ChevronRight, MapPin, Search, User, Video, X, Check } from 'lucide-react'
+import {
+  ChevronRight,
+  MapPin,
+  Search,
+  User,
+  Video,
+  X,
+  Check,
+  Clock,
+  UserPlus,
+} from 'lucide-react'
 import { isValid } from 'date-fns'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
 import { useAuth } from '@/hooks/use-auth'
@@ -37,9 +47,35 @@ type MeetCreatePayload = {
   meetLink?: string | null
   location?: string | null
   scheduledAt: string
+  endTime?: string | null
   module: 'GENERAL'
   participantUserIds: string[]
+  candidateName?: string | null
+  candidatePhone?: string | null
 }
+
+type FieldErrors = Partial<
+  Record<
+    | 'title'
+    | 'scheduledAt'
+    | 'meetLink'
+    | 'location'
+    | 'description'
+    | 'candidateName'
+    | 'candidatePhone'
+    | 'duration',
+    string
+  >
+>
+
+const DURATION_PRESETS: { label: string; minutes: number }[] = [
+  { label: '15m', minutes: 15 },
+  { label: '30m', minutes: 30 },
+  { label: '45m', minutes: 45 },
+  { label: '1h', minutes: 60 },
+  { label: '1.5h', minutes: 90 },
+  { label: '2h', minutes: 120 },
+]
 
 export interface CreateMeetDrawerProps {
   open: boolean
@@ -55,12 +91,19 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [scheduledAt, setScheduledAt] = useState<Date | undefined>(undefined)
+  const [durationMins, setDurationMins] = useState<number | null>(null)
+  const [customDuration, setCustomDuration] = useState('')
+  const [showCustomDuration, setShowCustomDuration] = useState(false)
   const [meetType, setMeetType] = useState<'VIRTUAL' | 'OFFLINE'>('OFFLINE')
   const [location, setLocation] = useState('')
   const [meetLink, setMeetLink] = useState('')
   const [participantIds, setParticipantIds] = useState<Set<string>>(() => new Set())
+  const [guestName, setGuestName] = useState('')
+  const [guestPhone, setGuestPhone] = useState('')
+  const [showGuest, setShowGuest] = useState(false)
   const [pickerOpen, setPickerOpen] = useState<'people' | null>(null)
   const [peopleSearch, setPeopleSearch] = useState('')
+  const [errors, setErrors] = useState<FieldErrors>({})
 
   const { data: inviteable = [] } = useAssignableUsers()
 
@@ -68,12 +111,19 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
     setTitle('')
     setDescription('')
     setScheduledAt(undefined)
+    setDurationMins(null)
+    setCustomDuration('')
+    setShowCustomDuration(false)
     setMeetType('OFFLINE')
     setLocation('')
     setMeetLink('')
     setParticipantIds(new Set())
+    setGuestName('')
+    setGuestPhone('')
+    setShowGuest(false)
     setPickerOpen(null)
     setPeopleSearch('')
+    setErrors({})
   }, [])
 
   useEffect(() => {
@@ -82,6 +132,15 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
       setTimeout(() => titleRef.current?.focus(), 300)
     }
   }, [open, reset])
+
+  const clearError = (field: keyof FieldErrors) => {
+    setErrors((prev) => {
+      if (!(field in prev)) return prev
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+  }
 
   const createMutation = useMutation({
     mutationFn: (body: MeetCreatePayload) => apiPost<unknown>('/api/meets', body),
@@ -92,8 +151,13 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
       reset()
       onSuccess?.()
     },
-    onError: (err: Error) => {
-      toast.error(err.message || 'Failed to create meet')
+    onError: (err: Error & { field?: string }) => {
+      if (err.field && isKnownField(err.field)) {
+        setErrors((prev) => ({ ...prev, [err.field as keyof FieldErrors]: err.message }))
+        toast.error(err.message)
+      } else {
+        toast.error(err.message || 'Failed to create meet')
+      }
     },
   })
 
@@ -127,39 +191,85 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
     })
   }
 
-  const linkOk =
-    meetType !== 'VIRTUAL' ||
-    !meetLink.trim() ||
-    /^https?:\/\//i.test(meetLink.trim())
-  const hasWhen = Boolean(scheduledAt && isValid(scheduledAt))
-  const canSubmit =
-    !!title.trim() && hasWhen && !createMutation.isPending && linkOk
+  const effectiveDuration: number | null = useMemo(() => {
+    if (showCustomDuration) {
+      const n = parseInt(customDuration, 10)
+      if (!Number.isFinite(n) || n < 5 || n > 480) return null
+      return n
+    }
+    return durationMins
+  }, [showCustomDuration, customDuration, durationMins])
+
+  const durationLabel = useMemo(() => {
+    const m = effectiveDuration
+    if (!m) return null
+    if (m < 60) return `${m} min`
+    const h = Math.floor(m / 60)
+    const mm = m % 60
+    return mm === 0 ? `${h} h` : `${h} h ${mm} min`
+  }, [effectiveDuration])
+
+  const validate = (): FieldErrors => {
+    const e: FieldErrors = {}
+    if (!title.trim()) e.title = 'Title is required'
+    if (!scheduledAt || !isValid(scheduledAt)) e.scheduledAt = 'Choose a date and time'
+    if (meetType === 'VIRTUAL' && meetLink.trim() && !/^https?:\/\//i.test(meetLink.trim())) {
+      e.meetLink = 'Link must start with http:// or https://'
+    }
+    if (meetType === 'OFFLINE' && !location.trim()) {
+      e.location = 'Venue is required for offline meets'
+    }
+    if (description.length > 5000) {
+      e.description = 'Agenda is too long (max 5000 characters)'
+    }
+    if (showCustomDuration) {
+      const n = parseInt(customDuration, 10)
+      if (!customDuration.trim()) {
+        e.duration = 'Enter a duration in minutes'
+      } else if (!Number.isFinite(n) || n < 5 || n > 480) {
+        e.duration = 'Duration must be between 5 and 480 minutes'
+      }
+    }
+    if (guestPhone.trim() && !/^\d{10}$/.test(guestPhone.trim())) {
+      e.candidatePhone = 'Phone must be exactly 10 digits'
+    }
+    if (guestPhone.trim() && !guestName.trim()) {
+      e.candidateName = 'Guest name is required when a phone is provided'
+    }
+    return e
+  }
 
   const handleSubmit = () => {
-    const trimmedTitle = title.trim()
-    if (!trimmedTitle) return
-    if (!scheduledAt || !isValid(scheduledAt)) {
-      toast.error('Choose date and time')
+    const v = validate()
+    if (Object.keys(v).length > 0) {
+      setErrors(v)
       return
     }
-    const iso = scheduledAt.toISOString()
+    setErrors({})
+
+    const iso = (scheduledAt as Date).toISOString()
     const linkTrim = meetLink.trim()
-    if (meetType === 'VIRTUAL' && linkTrim && !/^https?:\/\//i.test(linkTrim)) {
-      toast.error('Meet link must start with http:// or https://')
-      return
-    }
+    const endIso =
+      effectiveDuration != null && scheduledAt
+        ? new Date(scheduledAt.getTime() + effectiveDuration * 60_000).toISOString()
+        : null
 
     createMutation.mutate({
-      title: trimmedTitle,
+      title: title.trim(),
       description: description.trim() || null,
       type: meetType,
       meetLink: meetType === 'VIRTUAL' ? linkTrim || null : null,
       location: meetType === 'OFFLINE' ? location.trim() || null : null,
       scheduledAt: iso,
+      endTime: endIso,
       module: 'GENERAL',
       participantUserIds: [...participantIds],
+      candidateName: guestName.trim() || null,
+      candidatePhone: guestPhone.trim() || null,
     })
   }
+
+  const canSubmit = !createMutation.isPending
 
   const RowButton = ({
     icon: Icon,
@@ -224,21 +334,41 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
                 <Input
                   ref={titleRef}
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => {
+                    setTitle(e.target.value)
+                    if (errors.title) clearError('title')
+                  }}
                   placeholder="Title"
-                  className="text-xl font-semibold border-0 px-0 shadow-none focus-visible:ring-0 placeholder:text-muted-foreground min-h-[48px]"
+                  aria-invalid={!!errors.title}
+                  className={cn(
+                    'text-xl font-semibold border-0 px-0 shadow-none focus-visible:ring-0 placeholder:text-muted-foreground min-h-[48px]',
+                    errors.title && 'text-rose-700'
+                  )}
                   aria-label="Meet title"
                 />
+                {errors.title && <FieldError message={errors.title} />}
               </div>
+
               <div className="border-b border-border px-4 py-3">
-                <Label className="text-xs text-muted-foreground">Description (optional)</Label>
+                <Label className="text-xs text-muted-foreground">Agenda (optional)</Label>
                 <Input
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Agenda or notes"
+                  onChange={(e) => {
+                    setDescription(e.target.value)
+                    if (errors.description) clearError('description')
+                  }}
+                  placeholder="What's this meet about?"
+                  aria-invalid={!!errors.description}
                   className="mt-1 border-0 px-0 shadow-none focus-visible:ring-0"
                 />
+                {errors.description && <FieldError message={errors.description} />}
+                {description.length > 4500 && !errors.description && (
+                  <p className="mt-1 text-[11px] text-muted-foreground text-right">
+                    {description.length}/5000
+                  </p>
+                )}
               </div>
+
               <div className="border-b border-border px-4 py-3">
                 <Label id="meet-when-label" className="text-xs text-muted-foreground">
                   When *
@@ -247,12 +377,85 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
                   <DateTimePicker
                     nested
                     value={scheduledAt}
-                    onChange={setScheduledAt}
+                    onChange={(d) => {
+                      setScheduledAt(d)
+                      if (errors.scheduledAt) clearError('scheduledAt')
+                    }}
                     aria-labelledby="meet-when-label"
-                    className="rounded-xl min-h-11 h-auto py-2.5"
+                    className={cn(
+                      'rounded-xl min-h-11 h-auto py-2.5',
+                      errors.scheduledAt && 'border-rose-400 ring-1 ring-rose-300'
+                    )}
                   />
                 </div>
+                {errors.scheduledAt && <FieldError message={errors.scheduledAt} />}
               </div>
+
+              <div className="border-b border-border px-4 py-3">
+                <Label className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5" />
+                  Duration {durationLabel && <span className="text-indigo-600 font-medium">· {durationLabel}</span>}
+                </Label>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {DURATION_PRESETS.map((p) => {
+                    const active = !showCustomDuration && durationMins === p.minutes
+                    return (
+                      <button
+                        key={p.minutes}
+                        type="button"
+                        onClick={() => {
+                          setDurationMins(p.minutes)
+                          setShowCustomDuration(false)
+                          if (errors.duration) clearError('duration')
+                        }}
+                        className={cn(
+                          'rounded-full border px-3.5 py-1.5 text-sm font-medium touch-manipulation transition-colors',
+                          active
+                            ? 'border-indigo-500 bg-indigo-600 text-white'
+                            : 'border-border bg-muted/40 text-foreground active:bg-muted'
+                        )}
+                      >
+                        {p.label}
+                      </button>
+                    )
+                  })}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCustomDuration(true)
+                      setDurationMins(null)
+                    }}
+                    className={cn(
+                      'rounded-full border px-3.5 py-1.5 text-sm font-medium touch-manipulation transition-colors',
+                      showCustomDuration
+                        ? 'border-indigo-500 bg-indigo-600 text-white'
+                        : 'border-border bg-muted/40 text-foreground active:bg-muted'
+                    )}
+                  >
+                    Custom
+                  </button>
+                </div>
+                {showCustomDuration && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <Input
+                      type="number"
+                      min={5}
+                      max={480}
+                      value={customDuration}
+                      onChange={(e) => {
+                        setCustomDuration(e.target.value)
+                        if (errors.duration) clearError('duration')
+                      }}
+                      placeholder="Minutes (5–480)"
+                      className="rounded-xl h-10 max-w-[180px]"
+                      aria-invalid={!!errors.duration}
+                    />
+                    <span className="text-xs text-muted-foreground">minutes</span>
+                  </div>
+                )}
+                {errors.duration && <FieldError message={errors.duration} />}
+              </div>
+
               <RowButton
                 icon={User}
                 label="Add people"
@@ -263,6 +466,7 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
                 }
                 onClick={() => setPickerOpen('people')}
               />
+
               <div className="border-b border-border px-4 py-3">
                 <p className="text-sm text-muted-foreground mb-2">Format</p>
                 <div className="flex gap-2">
@@ -270,7 +474,10 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
                     type="button"
                     variant={meetType === 'OFFLINE' ? 'default' : 'outline'}
                     className="flex-1 rounded-xl"
-                    onClick={() => setMeetType('OFFLINE')}
+                    onClick={() => {
+                      setMeetType('OFFLINE')
+                      clearError('meetLink')
+                    }}
                   >
                     <MapPin className="h-4 w-4 mr-1.5" />
                     Offline
@@ -279,35 +486,124 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
                     type="button"
                     variant={meetType === 'VIRTUAL' ? 'default' : 'outline'}
                     className="flex-1 rounded-xl"
-                    onClick={() => setMeetType('VIRTUAL')}
+                    onClick={() => {
+                      setMeetType('VIRTUAL')
+                      clearError('location')
+                    }}
                   >
                     <Video className="h-4 w-4 mr-1.5" />
                     Virtual
                   </Button>
                 </div>
               </div>
+
               {meetType === 'OFFLINE' && (
                 <div className="border-b border-border px-4 py-3">
-                  <Label className="text-xs text-muted-foreground">Location (optional)</Label>
+                  <Label className="text-xs text-muted-foreground">Venue *</Label>
                   <Input
                     value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    onChange={(e) => {
+                      setLocation(e.target.value)
+                      if (errors.location) clearError('location')
+                    }}
                     placeholder="Room or address"
-                    className="mt-1 rounded-xl"
+                    aria-invalid={!!errors.location}
+                    className={cn(
+                      'mt-1 rounded-xl',
+                      errors.location && 'border-rose-400 focus-visible:ring-rose-300'
+                    )}
                   />
+                  {errors.location && <FieldError message={errors.location} />}
                 </div>
               )}
+
               {meetType === 'VIRTUAL' && (
                 <div className="border-b border-border px-4 py-3">
                   <Label className="text-xs text-muted-foreground">Meet link (optional)</Label>
                   <Input
                     value={meetLink}
-                    onChange={(e) => setMeetLink(e.target.value)}
+                    onChange={(e) => {
+                      setMeetLink(e.target.value)
+                      if (errors.meetLink) clearError('meetLink')
+                    }}
                     placeholder="https://…"
-                    className="mt-1 rounded-xl"
+                    aria-invalid={!!errors.meetLink}
+                    className={cn(
+                      'mt-1 rounded-xl',
+                      errors.meetLink && 'border-rose-400 focus-visible:ring-rose-300'
+                    )}
                   />
+                  {errors.meetLink && <FieldError message={errors.meetLink} />}
                 </div>
               )}
+
+              {/* External guest */}
+              <div className="border-b border-border px-4 py-3">
+                {!showGuest ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowGuest(true)}
+                    className="flex w-full items-center gap-2 text-left text-sm text-muted-foreground active:text-foreground touch-manipulation"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    Add guest / external contact (optional)
+                  </button>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs text-muted-foreground">Guest / external contact</Label>
+                      <button
+                        type="button"
+                        className="text-xs text-muted-foreground active:text-foreground"
+                        onClick={() => {
+                          setShowGuest(false)
+                          setGuestName('')
+                          setGuestPhone('')
+                          clearError('candidateName')
+                          clearError('candidatePhone')
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <div>
+                      <Input
+                        value={guestName}
+                        onChange={(e) => {
+                          setGuestName(e.target.value)
+                          if (errors.candidateName) clearError('candidateName')
+                        }}
+                        placeholder="Guest name"
+                        aria-invalid={!!errors.candidateName}
+                        className={cn(
+                          'rounded-xl',
+                          errors.candidateName && 'border-rose-400 focus-visible:ring-rose-300'
+                        )}
+                      />
+                      {errors.candidateName && <FieldError message={errors.candidateName} />}
+                    </div>
+                    <div>
+                      <Input
+                        type="tel"
+                        inputMode="numeric"
+                        maxLength={10}
+                        value={guestPhone}
+                        onChange={(e) => {
+                          setGuestPhone(e.target.value.replace(/\D/g, '').slice(0, 10))
+                          if (errors.candidatePhone) clearError('candidatePhone')
+                        }}
+                        placeholder="10-digit phone"
+                        aria-invalid={!!errors.candidatePhone}
+                        className={cn(
+                          'rounded-xl',
+                          errors.candidatePhone && 'border-rose-400 focus-visible:ring-rose-300'
+                        )}
+                      />
+                      {errors.candidatePhone && <FieldError message={errors.candidatePhone} />}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </ScrollArea>
 
@@ -318,7 +614,7 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
               onClick={handleSubmit}
               disabled={!canSubmit}
             >
-              Create meet
+              {createMutation.isPending ? 'Creating…' : 'Create meet'}
             </Button>
           </DrawerFooter>
         </DrawerContent>
@@ -395,4 +691,25 @@ export function CreateMeetDrawer({ open, onOpenChange, onSuccess }: CreateMeetDr
       </Sheet>
     </>
   )
+}
+
+function FieldError({ message }: { message: string }) {
+  return (
+    <p className="mt-1 text-[11px] font-medium text-rose-600 dark:text-rose-400" role="alert">
+      {message}
+    </p>
+  )
+}
+
+function isKnownField(f: string): f is keyof FieldErrors {
+  return [
+    'title',
+    'scheduledAt',
+    'meetLink',
+    'location',
+    'description',
+    'candidateName',
+    'candidatePhone',
+    'duration',
+  ].includes(f)
 }

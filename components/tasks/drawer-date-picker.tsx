@@ -13,6 +13,7 @@ export interface DrawerDatePickerProps {
   onSelect: (date: Date | undefined) => void
   onClear?: () => void
   className?: string
+  disablePast?: boolean
 }
 
 export function DrawerDatePicker({
@@ -20,6 +21,7 @@ export function DrawerDatePicker({
   onSelect,
   onClear,
   className,
+  disablePast = false,
 }: DrawerDatePickerProps) {
   const today = startOfDay(new Date())
   const [chunkCount, setChunkCount] = useState(1)
@@ -90,6 +92,7 @@ export function DrawerDatePicker({
             onSelect={onSelect}
             defaultMonth={addMonths(today, i * MONTHS_PER_CHUNK)}
             numberOfMonths={MONTHS_PER_CHUNK}
+            disabled={disablePast ? { before: today } : undefined}
             hideNavigation
             className={cn(
               "w-full max-w-full p-0 [--cell-size:2.75rem]",

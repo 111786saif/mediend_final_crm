@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server"
 import { getSessionFromRequest } from "@/lib/session"
-import { errorResponse, successResponse, unauthorizedResponse } from "@/lib/api-utils"
+import { errorResponse, successResponse, unauthorizedResponse, fieldErrorResponse } from "@/lib/api-utils"
 import { prisma } from "@/lib/prisma"
 import { getEmployeeByUserId, getSubordinates, isUserInMDManagedCohort, getMDTeamAndWatchlistUserIds } from "@/lib/hierarchy"
 import { z } from "zod"
@@ -134,6 +134,17 @@ export async function POST(request: NextRequest) {
   const parsed = createTaskSchema.safeParse(body)
   if (!parsed.success) {
     return errorResponse(parsed.error.message)
+  }
+
+  if (parsed.data.dueDate) {
+    const due = new Date(parsed.data.dueDate)
+    const startOfToday = new Date()
+    startOfToday.setHours(0, 0, 0, 0)
+    const startOfDue = new Date(due)
+    startOfDue.setHours(0, 0, 0, 0)
+    if (startOfDue.getTime() < startOfToday.getTime()) {
+      return fieldErrorResponse("Due date can't be in the past", "dueDate", 400)
+    }
   }
 
   const assigneeId = parsed.data.assigneeId ?? user.id

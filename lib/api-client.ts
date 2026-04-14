@@ -26,11 +26,15 @@ export async function apiRequest<T>(
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Request failed' }))
-    throw new Error(error.error || `HTTP ${response.status}`)
+    const err = new Error(error.error || `HTTP ${response.status}`) as Error & { field?: string }
+    if (error.field) err.field = error.field
+    throw err
   }
 
   return response.json()
 }
+
+export type FieldError = Error & { field?: string }
 
 export async function apiGet<T>(endpoint: string): Promise<T> {
   const response = await apiRequest<T>(endpoint, { method: 'GET' })

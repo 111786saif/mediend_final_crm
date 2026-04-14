@@ -159,6 +159,31 @@ type MDTeamAttendanceTabProps = {
 
 const todayKey = format(new Date(), 'yyyy-MM-dd')
 
+function avgWorkMTD(records: { workHours?: number | null }[]): { avgMins: number; days: number } {
+  const valid = records.filter((r) => (r.workHours ?? 0) > 0)
+  if (valid.length === 0) return { avgMins: 0, days: 0 }
+  const totalMins = valid.reduce((s, r) => s + (r.workHours ?? 0) * 60, 0)
+  return { avgMins: Math.round(totalMins / valid.length), days: valid.length }
+}
+
+function fmtMins(m: number): string {
+  if (m <= 0) return '0h'
+  const h = Math.floor(m / 60)
+  const mm = m % 60
+  if (h === 0) return `${mm}m`
+  if (mm === 0) return `${h}h`
+  return `${h}h ${mm}m`
+}
+
+function pickBalance(
+  balances: { leaveTypeName: string; allocated: number; used: number; remaining: number }[] | undefined,
+  match: RegExp
+): { allocated: number; used: number; remaining: number } | null {
+  if (!balances) return null
+  const found = balances.find((b) => match.test(b.leaveTypeName))
+  return found ?? null
+}
+
 function formatAttTime(dateStr: string | null): string {
   if (!dateStr) return '-'
   const d = new Date(dateStr)
@@ -582,31 +607,122 @@ export function MDTeamAttendanceTab({ highlightNormalizations = [] }: MDTeamAtte
                     </div>
                   )}
 
-                  {balancesByEmployee.get(drawerMember.employeeId) && (
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
-                        Leave balance
-                      </p>
-                      <div className="flex gap-2">
-                        {balancesByEmployee.get(drawerMember.employeeId)!.balances.map((b) => (
-                          <div
-                            key={b.leaveTypeId}
-                            className="flex-1 min-w-0 rounded-lg border bg-white dark:bg-card p-2.5 text-center"
-                          >
-                            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide truncate">
-                              {b.leaveTypeName}
+                  {(() => {
+                    const balances = balancesByEmployee.get(drawerMember.employeeId)?.balances
+                    const avg = avgWorkMTD(drawerMember.attendance)
+                    const cl = pickBalance(balances, /casual|^cl/i)
+                    const el = pickBalance(balances, /earned|^el|privilege/i)
+                    const sl = pickBalance(balances, /sick|^sl/i)
+                    const totalAllocated = (cl?.allocated ?? 0) + (el?.allocated ?? 0) + (sl?.allocated ?? 0)
+                    const totalUsed = (cl?.used ?? 0) + (el?.used ?? 0) + (sl?.used ?? 0)
+
+                    const StatCard = ({
+                      label,
+                      value,
+                      sub,
+                      tone,
+                    }: {
+                      label: string
+                      value: React.ReactNode
+                      sub?: React.ReactNode
+                      tone: 'emerald' | 'amber' | 'sky' | 'violet' | 'rose'
+                    }) => {
+                      const toneMap = {
+                        emerald: 'border-emerald-200 dark:border-emerald-900 bg-emerald-50/60 dark:bg-emerald-950/30',
+                        amber: 'border-amber-200 dark:border-amber-900 bg-amber-50/60 dark:bg-amber-950/30',
+                        sky: 'border-sky-200 dark:border-sky-900 bg-sky-50/60 dark:bg-sky-950/30',
+                        violet: 'border-violet-200 dark:border-violet-900 bg-violet-50/60 dark:bg-violet-950/30',
+                        rose: 'border-rose-200 dark:border-rose-900 bg-rose-50/60 dark:bg-rose-950/30',
+                      }
+                      const labelTone = {
+                        emerald: 'text-emerald-700 dark:text-emerald-300',
+                        amber: 'text-amber-700 dark:text-amber-300',
+                        sky: 'text-sky-700 dark:text-sky-300',
+                        violet: 'text-violet-700 dark:text-violet-300',
+                        rose: 'text-rose-700 dark:text-rose-300',
+                      }
+                      return (
+                        <div className={cn('min-w-0 rounded-lg border py-2 px-1.5 text-center', toneMap[tone])}>
+                          <p className={cn('text-[9px] font-bold uppercase tracking-wide truncate', labelTone[tone])}>
+                            {label}
+                          </p>
+                          <p className="text-sm font-bold tabular-nums leading-tight mt-1 truncate">{value}</p>
+                          {sub && (
+                            <p className="text-[9px] text-muted-foreground tabular-nums leading-tight mt-0.5 truncate">
+                              {sub}
                             </p>
-                            <p className="text-lg font-bold tabular-nums leading-none mt-1">
-                              {b.remaining}
-                            </p>
-                            <p className="text-[10px] text-muted-foreground mt-0.5 tabular-nums whitespace-nowrap">
-                              {b.used}/{b.allocated}
-                            </p>
-                          </div>
-                        ))}
+                          )}
+                        </div>
+                      )
+                    }
+
+                    const UtilCard = ({
+                      label,
+                      data,
+                      tone,
+                      barClass,
+                    }: {
+                      label: string
+                      data: { allocated: number; used: number } | null
+                      tone: 'sky' | 'violet' | 'rose'
+                      barClass: string
+                    }) => {
+                      if (!data || data.allocated === 0) {
+                        return <StatCard label={label} value="—" sub="not set" tone={tone} />
+                      }
+                      const pct = Math.min(100, Math.round((data.used / data.allocated) * 100))
+                      return (
+                        <StatCard
+                          label={label}
+                          value={
+                            <span>
+                              <span>{data.used}</span>
+                              <span className="text-muted-foreground font-normal">/{data.allocated}</span>
+                            </span>
+                          }
+                          sub={
+                            <span className="block">
+                              <span className="block h-1 w-full rounded-full bg-muted overflow-hidden mt-0.5">
+                                <span className={cn('block h-full', barClass)} style={{ width: `${pct}%` }} />
+                              </span>
+                              <span className="block mt-0.5">{pct}% used</span>
+                            </span>
+                          }
+                          tone={tone}
+                        />
+                      )
+                    }
+
+                    return (
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+                          This month
+                        </p>
+                        <div className="grid grid-cols-5 gap-1.5">
+                          <StatCard
+                            label="Avg work"
+                            value={avg.days > 0 ? fmtMins(avg.avgMins) : '—'}
+                            sub={avg.days > 0 ? `over ${avg.days}d` : 'no days'}
+                            tone="emerald"
+                          />
+                          <StatCard
+                            label="Total"
+                            value={
+                              <span>
+                                <span>{totalUsed}</span>
+                                <span className="text-muted-foreground font-normal">/{totalAllocated}</span>
+                              </span>
+                            }
+                            sub="cl + el + sl"
+                            tone="amber"
+                          />
+                          <UtilCard label="CL" data={cl} tone="sky" barClass="bg-sky-500" />
+                          <UtilCard label="EL" data={el} tone="violet" barClass="bg-violet-500" />
+                          <UtilCard label="SL" data={sl} tone="rose" barClass="bg-rose-500" />
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )
+                  })()}
 
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">

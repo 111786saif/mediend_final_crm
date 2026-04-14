@@ -166,6 +166,7 @@ export function AppSidebar() {
           (item) =>
             item.title === 'Tasks' ||
             item.title === 'Meets' ||
+            item.title === 'Calendar' ||
             item.title === 'Sales Dashboard' ||
             item.title === 'Finance Dashboard' ||
             item.title === 'MD HR Dashboard' ||
@@ -179,6 +180,7 @@ export function AppSidebar() {
               item.title === 'Home' ||
               item.title === 'Tasks' ||
               item.title === 'Meets' ||
+              item.title === 'Calendar' ||
               item.title === 'Sales Dashboard' ||
               item.title === 'Finance Dashboard' ||
               item.title === 'MD HR Dashboard' ||
@@ -194,6 +196,7 @@ export function AppSidebar() {
                 item.title === 'Home' ||
                 item.title === 'Tasks' ||
                 item.title === 'Meets' ||
+                item.title === 'Calendar' ||
                 item.title === 'Sales Dashboard' ||
                 item.title === 'MD HR Dashboard' ||
                 item.title.startsWith('My ') ||
@@ -211,6 +214,7 @@ export function AppSidebar() {
                 item.title === 'Home' ||
                 item.title === 'Tasks' ||
                 item.title === 'Meets' ||
+                item.title === 'Calendar' ||
                 item.title.startsWith('My ')
             )
           : itemsWithUrls.filter(

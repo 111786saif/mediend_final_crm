@@ -6,6 +6,7 @@ export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: string
+  field?: string
   message?: string
 }
 
@@ -24,6 +25,30 @@ export function errorResponse(error: string, status: number = 400): NextResponse
       error,
     },
     { status }
+  )
+}
+
+export function fieldErrorResponse(
+  error: string,
+  field: string | undefined,
+  status: number = 400
+): NextResponse<ApiResponse> {
+  return NextResponse.json(
+    {
+      success: false,
+      error,
+      ...(field ? { field } : {}),
+    },
+    { status }
+  )
+}
+
+export function zodErrorResponse(err: import('zod').ZodError): NextResponse<ApiResponse> {
+  const first = err.errors[0]
+  return fieldErrorResponse(
+    first?.message || 'Invalid input',
+    first?.path?.[0] ? String(first.path[0]) : undefined,
+    400
   )
 }
 

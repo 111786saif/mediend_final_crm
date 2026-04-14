@@ -2,7 +2,13 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
-import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import {
+  errorResponse,
+  fieldErrorResponse,
+  successResponse,
+  unauthorizedResponse,
+  zodErrorResponse,
+} from '@/lib/api-utils'
 import { MeetType } from '@/generated/prisma/client'
 import { meetWithRelationsInclude } from '@/lib/meets'
 import { canUserCreateMeet } from '@/lib/permissions'
@@ -42,7 +48,11 @@ export async function PATCH(
     const data = interviewCreateSchema.parse(body)
 
     if (data.type === 'OFFLINE' && !data.location?.trim()) {
-      return errorResponse('Location is required for walk-in / offline interviews', 400)
+      return fieldErrorResponse(
+        'Location is required for walk-in / offline interviews',
+        'location',
+        400
+      )
     }
 
     const participantUserIds = [...new Set(data.participantUserIds)].filter((pid) => pid !== user.id)
@@ -120,7 +130,7 @@ export async function PATCH(
     return successResponse(meet, 'Interview updated')
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return errorResponse(error.errors[0]?.message || 'Invalid input', 400)
+      return zodErrorResponse(error)
     }
     console.error('Error updating interview:', error)
     return errorResponse('Failed to update interview', 500)

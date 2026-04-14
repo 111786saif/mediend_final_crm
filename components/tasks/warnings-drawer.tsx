@@ -51,10 +51,14 @@ export function WarningsDrawer({
                       {format(new Date(w.createdAt), "MMM d, yyyy")}
                     </span>
                   </div>
-                  {w.task && (
+                  {w.task ? (
                     <p className="text-xs font-medium text-amber-700/90 dark:text-amber-300/90 mb-1">
                       Task: {w.task.title}
                     </p>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-200 text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 mb-1">
+                      General
+                    </span>
                   )}
                   {w.note && (
                     <p className="text-sm text-amber-800/90 dark:text-amber-200/90">

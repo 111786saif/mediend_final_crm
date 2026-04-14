@@ -63,6 +63,11 @@ export const navItems: NavItem[] = [
     icon: ClipboardList,
   },
   {
+    title: 'Calendar',
+    url: '/calendar',
+    icon: CalendarDays,
+  },
+  {
     title: 'Meets',
     url: '/meets',
     icon: Calendar,

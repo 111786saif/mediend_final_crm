@@ -189,6 +189,10 @@ export function MobileTaskDrawer({
       toast.error("Please select a person to assign the task to.")
       return
     }
+    if (dueDate && startOfDay(dueDate).getTime() < startOfDay(new Date()).getTime()) {
+      toast.error("Due date can't be in the past")
+      return
+    }
 
     const payload: CreateTaskInput = {
       title: trimmed,
@@ -500,6 +504,7 @@ export function MobileTaskDrawer({
           <ScrollArea className="flex-1 min-h-0">
             <div className="px-2 py-3 pb-6">
               <DrawerDatePicker
+                disablePast
                 selected={dueDate}
                 onSelect={(d) => {
                   setDueDate(d ?? undefined)

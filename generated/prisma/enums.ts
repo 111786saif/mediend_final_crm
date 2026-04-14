@@ -485,6 +485,16 @@ export const PnLCategoryType = {
 export type PnLCategoryType = (typeof PnLCategoryType)[keyof typeof PnLCategoryType]
 
 
+export const UserStatusKind = {
+  AVAILABLE: 'AVAILABLE',
+  ONLINE_ONLY: 'ONLINE_ONLY',
+  UNAVAILABLE: 'UNAVAILABLE',
+  CUSTOM: 'CUSTOM'
+} as const
+
+export type UserStatusKind = (typeof UserStatusKind)[keyof typeof UserStatusKind]
+
+
 export const NormalizationType = {
   SELF: 'SELF',
   MANAGER: 'MANAGER',

@@ -2,16 +2,74 @@
 
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import { Search, UserPlus, Star, ArrowUpRight, Clock, ChevronRight, Trophy, Medal } from "lucide-react"
+import {
+  Search,
+  UserPlus,
+  Star,
+  ArrowUpRight,
+  Clock,
+  ChevronRight,
+  Trophy,
+  Medal,
+  SlidersHorizontal,
+  AlertTriangle,
+  ListTodo,
+  Check,
+} from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer"
 import { useMDTeamOverview, type MDTeamOverviewMember } from "@/hooks/use-md-team"
 import { useWarnings } from "@/hooks/use-tasks"
 import { getAvatarColor } from "@/lib/avatar-colors"
 import { AddPersonDialog } from "./add-person-dialog"
 import { cn } from "@/lib/utils"
 import { formatRating } from "@/lib/format-rating"
+
+type SortKey = "rating" | "pending" | "warnings" | "approvals"
+
+const SORT_OPTIONS: {
+  key: SortKey
+  label: string
+  subtitle: string
+  icon: React.ElementType
+  accent: string
+}[] = [
+  {
+    key: "rating",
+    label: "Rating",
+    subtitle: "Highest rating first",
+    icon: Star,
+    accent: "text-amber-500",
+  },
+  {
+    key: "pending",
+    label: "Pending tasks",
+    subtitle: "Most pending first",
+    icon: ListTodo,
+    accent: "text-indigo-600",
+  },
+  {
+    key: "warnings",
+    label: "Warnings",
+    subtitle: "Most warnings first",
+    icon: AlertTriangle,
+    accent: "text-rose-600",
+  },
+  {
+    key: "approvals",
+    label: "Approvals pending",
+    subtitle: "Most extension requests first",
+    icon: ArrowUpRight,
+    accent: "text-violet-600",
+  },
+]
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/)
@@ -46,6 +104,8 @@ export function TeamTab() {
   const router = useRouter()
   const [search, setSearch] = useState("")
   const [addPersonOpen, setAddPersonOpen] = useState(false)
+  const [sortKey, setSortKey] = useState<SortKey>("rating")
+  const [sortOpen, setSortOpen] = useState(false)
 
   const { data, isLoading, isError, error } = useMDTeamOverview(search || undefined)
   const { data: warnings = [] } = useWarnings()
@@ -60,12 +120,33 @@ export function TeamTab() {
   }, [warnings])
 
   const sortedMembers = useMemo(() => {
-    return [...members].sort((a, b) => {
-      const ra = a.averageRating ?? -1
-      const rb = b.averageRating ?? -1
-      return rb - ra
-    })
-  }, [members])
+    const arr = [...members]
+    switch (sortKey) {
+      case "pending":
+        arr.sort(
+          (a, b) =>
+            (b.taskCount - b.completedCount) - (a.taskCount - a.completedCount)
+        )
+        break
+      case "warnings":
+        arr.sort(
+          (a, b) =>
+            (warningsByUserId[b.id] ?? 0) - (warningsByUserId[a.id] ?? 0)
+        )
+        break
+      case "approvals":
+        arr.sort(
+          (a, b) => (b.extensionRequests ?? 0) - (a.extensionRequests ?? 0)
+        )
+        break
+      case "rating":
+      default:
+        arr.sort((a, b) => (b.averageRating ?? -1) - (a.averageRating ?? -1))
+    }
+    return arr
+  }, [members, sortKey, warningsByUserId])
+
+  const activeSort = SORT_OPTIONS.find((o) => o.key === sortKey) ?? SORT_OPTIONS[0]
 
   if (isError) {
     return (
@@ -89,16 +170,34 @@ export function TeamTab() {
             aria-label="Search team members"
           />
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="shrink-0"
-          onClick={() => setAddPersonOpen(true)}
-        >
-          <UserPlus className="h-4 w-4 mr-2" />
-          Add person
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className={cn(
+              "shrink-0 relative",
+              sortKey !== "rating" && "border-indigo-400 text-indigo-600"
+            )}
+            aria-label={`Sort: ${activeSort.label}`}
+            onClick={() => setSortOpen(true)}
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            {sortKey !== "rating" && (
+              <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-indigo-500" />
+            )}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="shrink-0"
+            onClick={() => setAddPersonOpen(true)}
+          >
+            <UserPlus className="h-4 w-4 mr-2" />
+            Add person
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
@@ -124,6 +223,53 @@ export function TeamTab() {
       )}
 
       <AddPersonDialog open={addPersonOpen} onOpenChange={setAddPersonOpen} />
+
+      <Drawer open={sortOpen} onOpenChange={setSortOpen} direction="bottom">
+        <DrawerContent className="rounded-t-2xl pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <DrawerHeader className="border-b">
+            <DrawerTitle className="flex items-center gap-2 text-base">
+              <SlidersHorizontal className="h-4 w-4 text-indigo-600" />
+              Sort team
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="p-2">
+            {SORT_OPTIONS.map((opt) => {
+              const Icon = opt.icon
+              const active = sortKey === opt.key
+              return (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => {
+                    setSortKey(opt.key)
+                    setSortOpen(false)
+                  }}
+                  className={cn(
+                    "flex min-h-[56px] w-full items-center gap-3 rounded-xl px-3 py-3 text-left touch-manipulation active:bg-muted/50 transition-colors",
+                    active && "bg-indigo-50 dark:bg-indigo-950/40 ring-1 ring-indigo-300 dark:ring-indigo-700"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+                      active ? "bg-indigo-100 dark:bg-indigo-900/60" : "bg-muted"
+                    )}
+                  >
+                    <Icon className={cn("h-5 w-5", opt.accent)} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className={cn("text-sm font-semibold", active && "text-indigo-700 dark:text-indigo-300")}>
+                      {opt.label}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{opt.subtitle}</p>
+                  </div>
+                  {active && <Check className="h-5 w-5 shrink-0 text-indigo-600" />}
+                </button>
+              )
+            })}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   )
 }
