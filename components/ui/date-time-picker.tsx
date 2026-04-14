@@ -110,9 +110,9 @@ export function DateTimePicker({
             onSelect={onDaySelect}
             defaultMonth={calendarDay ?? new Date()}
             disabled={disablePast ? { before: today } : undefined}
-            classNames={{
+            modifiersClassNames={{
               today:
-                'bg-blue-600 text-white rounded-md font-semibold data-[selected=true]:rounded-none',
+                '[&>button]:bg-blue-600 [&>button]:text-white [&>button]:font-semibold [&>button]:hover:bg-blue-700 [&>button]:hover:text-white',
             }}
             className="p-2 sm:p-3"
           />

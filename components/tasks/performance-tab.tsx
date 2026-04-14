@@ -149,7 +149,7 @@ export function PerformanceTab() {
       <Sheet open={!!detailEmployee} onOpenChange={(open) => !open && setDetailEmployee(null)}>
         <SheetContent
           side="bottom"
-          className="rounded-t-2xl flex flex-col max-h-[90dvh]"
+          className="rounded-t-2xl flex flex-col max-h-[90dvh] p-4 sm:p-6 overflow-hidden"
         >
           {detailEmployee && (
             <>
@@ -159,12 +159,12 @@ export function PerformanceTab() {
                   {monthToLabel(selectedMonth)} · {detailEmployee.totalRatings} ratings
                 </p>
               </SheetHeader>
-              <ScrollArea className="flex-1 -mx-6 px-6">
+              <ScrollArea className="flex-1 min-w-0">
                 <div className="space-y-6 py-4">
                   {/* Rating distribution */}
                   <div>
                     <h3 className="text-sm font-semibold mb-3">Rating distribution</h3>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-5 gap-1.5 w-full">
                       {([1, 2, 3, 4, 5] as const).map((g) => {
                         const count = detailEmployee.ratingDistribution[g]
                         const max = Math.max(
@@ -172,7 +172,7 @@ export function PerformanceTab() {
                         )
                         const pct = max > 0 ? (count / max) * 100 : 0
                         return (
-                          <div key={g} className="flex-1 flex flex-col items-center gap-1">
+                          <div key={g} className="min-w-0 flex flex-col items-center gap-1">
                             <div className="w-full h-20 bg-muted rounded-md overflow-hidden flex flex-col justify-end">
                               <div
                                 className="bg-amber-500 rounded-t transition-all"

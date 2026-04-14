@@ -267,6 +267,11 @@ export function InterviewFormSheet({
     }
     if (!resolvedRole) e.candidateRole = 'Role is required'
     if (!scheduledAt || !isValid(scheduledAt)) e.scheduledAt = 'Date & time is required'
+    else if (!meetToEdit) {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      if (scheduledAt < today) e.scheduledAt = 'Cannot schedule an interview in the past'
+    }
     if (meetType === 'OFFLINE' && !location.trim()) {
       e.location = 'Location is required for walk-in interviews'
     }
@@ -557,6 +562,7 @@ export function InterviewFormSheet({
               </Label>
               <DateTimePicker
                 nested
+                disablePast={!meetToEdit}
                 value={scheduledAt}
                 onChange={(d) => {
                   setScheduledAt(d)
