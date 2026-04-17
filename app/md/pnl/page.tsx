@@ -14,7 +14,7 @@ export default function MDPnLPage() {
         {!isMd ? (
           <p className="text-muted-foreground">MD or Admin only</p>
         ) : (
-          <PnlDashboard canWritePnl={false} canWriteLoanDemat={false} queryKeyPrefix="md-pnl-overview" />
+          <PnlDashboard canWritePnl={false} canWriteLoanDemat={false} queryKeyPrefix="md-pnl-overview" showTargetedComparison />
         )}
       </div>
     </ProtectedRoute>

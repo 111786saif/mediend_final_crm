@@ -532,6 +532,11 @@ export type PnLConfig = Prisma.PnLConfigModel
  */
 export type PnLEntry = Prisma.PnLEntryModel
 /**
+ * Model TargetPnLEntry
+ * 
+ */
+export type TargetPnLEntry = Prisma.TargetPnLEntryModel
+/**
  * Model RequestLog
  * 
  */

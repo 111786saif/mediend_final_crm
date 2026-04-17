@@ -482,6 +482,7 @@ export const ModelName = {
   PnLCategory: 'PnLCategory',
   PnLConfig: 'PnLConfig',
   PnLEntry: 'PnLEntry',
+  TargetPnLEntry: 'TargetPnLEntry',
   RequestLog: 'RequestLog'
 } as const
 
@@ -498,7 +499,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -7754,6 +7755,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TargetPnLEntry: {
+      payload: Prisma.$TargetPnLEntryPayload<ExtArgs>
+      fields: Prisma.TargetPnLEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TargetPnLEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TargetPnLEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.TargetPnLEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TargetPnLEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>
+        }
+        findMany: {
+          args: Prisma.TargetPnLEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>[]
+        }
+        create: {
+          args: Prisma.TargetPnLEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>
+        }
+        createMany: {
+          args: Prisma.TargetPnLEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TargetPnLEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.TargetPnLEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>
+        }
+        update: {
+          args: Prisma.TargetPnLEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.TargetPnLEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TargetPnLEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TargetPnLEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.TargetPnLEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TargetPnLEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.TargetPnLEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTargetPnLEntry>
+        }
+        groupBy: {
+          args: Prisma.TargetPnLEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TargetPnLEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TargetPnLEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TargetPnLEntryCountAggregateOutputType> | number
+        }
+      }
+    }
     RequestLog: {
       payload: Prisma.$RequestLogPayload<ExtArgs>
       fields: Prisma.RequestLogFieldRefs
@@ -9688,6 +9763,22 @@ export const PnLEntryScalarFieldEnum = {
 export type PnLEntryScalarFieldEnum = (typeof PnLEntryScalarFieldEnum)[keyof typeof PnLEntryScalarFieldEnum]
 
 
+export const TargetPnLEntryScalarFieldEnum = {
+  id: 'id',
+  departmentKey: 'departmentKey',
+  sourceKey: 'sourceKey',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TargetPnLEntryScalarFieldEnum = (typeof TargetPnLEntryScalarFieldEnum)[keyof typeof TargetPnLEntryScalarFieldEnum]
+
+
 export const RequestLogScalarFieldEnum = {
   id: 'id',
   method: 'method',
@@ -10796,6 +10887,7 @@ export type GlobalOmitConfig = {
   pnLCategory?: Prisma.PnLCategoryOmit
   pnLConfig?: Prisma.PnLConfigOmit
   pnLEntry?: Prisma.PnLEntryOmit
+  targetPnLEntry?: Prisma.TargetPnLEntryOmit
   requestLog?: Prisma.RequestLogOmit
 }
 

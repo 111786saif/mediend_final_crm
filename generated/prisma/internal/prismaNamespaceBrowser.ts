@@ -149,6 +149,7 @@ export const ModelName = {
   PnLCategory: 'PnLCategory',
   PnLConfig: 'PnLConfig',
   PnLEntry: 'PnLEntry',
+  TargetPnLEntry: 'TargetPnLEntry',
   RequestLog: 'RequestLog'
 } as const
 
@@ -1987,6 +1988,22 @@ export const PnLEntryScalarFieldEnum = {
 } as const
 
 export type PnLEntryScalarFieldEnum = (typeof PnLEntryScalarFieldEnum)[keyof typeof PnLEntryScalarFieldEnum]
+
+
+export const TargetPnLEntryScalarFieldEnum = {
+  id: 'id',
+  departmentKey: 'departmentKey',
+  sourceKey: 'sourceKey',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  notes: 'notes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TargetPnLEntryScalarFieldEnum = (typeof TargetPnLEntryScalarFieldEnum)[keyof typeof TargetPnLEntryScalarFieldEnum]
 
 
 export const RequestLogScalarFieldEnum = {

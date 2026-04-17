@@ -15,18 +15,21 @@ import { PnlDepartmentDrawer } from '@/components/pnl/pnl-department-drawer'
 import { PnlSurgeryTab } from '@/components/pnl/pnl-surgery-tab'
 import { PnlItTab } from '@/components/pnl/pnl-it-tab'
 import { PnlDeptTab } from '@/components/pnl/pnl-dept-tab'
+import { TargetedVsActualTab } from '@/components/pnl/targeted-vs-actual-tab'
 import type { PnlOverviewData } from '@/components/pnl/types'
 
 export function PnlDashboard({
   canWritePnl,
   canWriteLoanDemat,
   queryKeyPrefix = 'pnl-overview',
+  showTargetedComparison,
 }: {
   /** pnl:write — Google Ads tab & department expense drawers */
   canWritePnl: boolean
   /** loan-demat:write — Loan & Demat tab entries */
   canWriteLoanDemat?: boolean
   queryKeyPrefix?: string
+  showTargetedComparison?: boolean
 }) {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => defaultPnlDateRange())
   const [tab, setTab] = useState('overall')
@@ -74,6 +77,7 @@ export function PnlDashboard({
           { value: 'it', label: 'IT' },
           { value: 'loan', label: 'Loan & Demat' },
           { value: 'ads', label: 'Google Ads' },
+          ...(showTargetedComparison ? [{ value: 'targeted', label: 'Targeted vs Actual' }] : []),
         ]}
       />
 
@@ -107,14 +111,21 @@ export function PnlDashboard({
             endYear={endYear}
             canEdit={!!canWriteLoanDemat}
           />
-        ) : (
+        ) : tab === 'ads' ? (
           <PnlDeptTab
             mode="GOOGLE_ADS"
             startYear={startYear}
             endYear={endYear}
             canEdit={canWritePnl}
           />
-        )}
+        ) : tab === 'targeted' ? (
+          <TargetedVsActualTab
+            startMonth={startMonth}
+            startYear={startYear}
+            endMonth={endMonth}
+            endYear={endYear}
+          />
+        ) : null}
       </div>
 
       <PnlDepartmentDrawer

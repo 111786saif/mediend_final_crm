@@ -474,6 +474,7 @@ model User {
   dailyCampaignSpends     DailyCampaignSpend[]  @relation("DailyCampaignSpendCreator")
   pnlCategoriesCreated    PnLCategory[]         @relation("PnLCategoryCreator")
   pnlEntriesCreated       PnLEntry[]            @relation("PnLEntryCreator")
+  targetPnlEntriesCreated TargetPnLEntry[]      @relation("TargetPnLEntryCreator")
 
   // Meets (calendar / interviews / MD appointments)
   meetsCreated            Meet[]                @relation("MeetsCreated")
@@ -2979,6 +2980,24 @@ model PnLEntry {
 
   @@unique([categoryId, month, year])
   @@index([month, year])
+}
+
+model TargetPnLEntry {
+  id            String   @id @default(cuid())
+  departmentKey String
+  sourceKey     String
+  month         Int
+  year          Int
+  amount        Float    @default(0)
+  notes         String?  @db.Text
+  createdById   String?
+  createdBy     User?    @relation("TargetPnLEntryCreator", fields: [createdById], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([departmentKey, sourceKey, month, year])
+  @@index([month, year])
+  @@index([departmentKey])
 }
 
 // Observability: API request logs

@@ -56,3 +56,73 @@ export type PnlOverviewData = {
     net: number
   }[]
 }
+
+/* ── Targeted PnL types ────────────────────────────── */
+
+export type TargetPnlExpenseCategory = {
+  sourceKey: string
+  name: string
+  amounts: Record<string, number>
+  hints: Record<string, number>
+}
+
+export type TargetPnlDepartmentData = {
+  key: string
+  name: string
+  revenueByMonth: Record<string, number>
+  revenueHints: Record<string, number>
+  expenseCategories: TargetPnlExpenseCategory[]
+  totalRevenue: number
+  totalExpenses: number
+  netPnL: number
+}
+
+export type TargetPnlOverviewData = {
+  months: { month: number; year: number }[]
+  monthKeys: string[]
+  departments: TargetPnlDepartmentData[]
+  totals: { totalRevenue: number; totalExpenses: number; netPnL: number }
+  savedKeys: string[]
+}
+
+export type TargetVsActualRow = {
+  sourceKey: string
+  name: string
+  targeted: Record<string, number>
+  actual: Record<string, number>
+  variance: Record<string, number>
+  variancePct: Record<string, number>
+  totalTargeted: number
+  totalActual: number
+  totalVariance: number
+  totalVariancePct: number
+}
+
+export type TargetVsActualDepartment = {
+  key: string
+  name: string
+  revenue: TargetVsActualRow
+  expenses: TargetVsActualRow[]
+  net: {
+    targeted: Record<string, number>
+    actual: Record<string, number>
+    variance: Record<string, number>
+    totalTargeted: number
+    totalActual: number
+    totalVariance: number
+  }
+}
+
+export type TargetVsActualData = {
+  months: { month: number; year: number }[]
+  monthKeys: string[]
+  departments: TargetVsActualDepartment[]
+  totals: {
+    targetedRevenue: number
+    actualRevenue: number
+    targetedExpenses: number
+    actualExpenses: number
+    targetedNet: number
+    actualNet: number
+  }
+}

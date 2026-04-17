@@ -33,6 +33,7 @@ export function PnlDepartmentTable({
   canWrite,
   onCellSave,
   onAddExpenseCategory,
+  allEditable,
 }: {
   monthKeys: string[]
   departmentKey: string
@@ -44,6 +45,7 @@ export function PnlDepartmentTable({
   canWrite: boolean
   onCellSave: (categoryId: string, monthKey: string, month: number, year: number, amount: number) => Promise<void>
   onAddExpenseCategory: (name: string, deptKey: string) => Promise<void>
+  allEditable?: boolean
 }) {
   const [editing, setEditing] = useState<{ catId: string; key: string; value: string } | null>(null)
   const [expOpen, setExpOpen] = useState(false)
@@ -87,7 +89,7 @@ export function PnlDepartmentTable({
             <TableCell className="font-medium">
               <div className="flex items-center gap-2">
                 {revenueLabel}
-                {revenueAutoFilled[monthKeys[0]] !== false && (
+                {!allEditable && revenueAutoFilled[monthKeys[0]] !== false && (
                   <Badge variant="secondary" className="text-[10px]">
                     <Lock className="h-3 w-3 mr-1" /> auto
                   </Badge>
@@ -114,11 +116,11 @@ export function PnlDepartmentTable({
                       type="button"
                       className={cn(
                         'w-full text-right tabular-nums',
-                        canWrite && !auto && 'hover:underline cursor-pointer'
+                        canWrite && (allEditable || !auto) && 'hover:underline cursor-pointer'
                       )}
-                      disabled={!canWrite || auto}
+                      disabled={!canWrite || (!allEditable && auto)}
                       onClick={() => {
-                        if (!canWrite || auto) return
+                        if (!canWrite || (!allEditable && auto)) return
                         setEditing({ catId: revenueCategoryId, key: k, value: String(Math.round(v)) })
                       }}
                     >
@@ -195,7 +197,7 @@ export function PnlDepartmentTable({
               </TableCell>
             </TableRow>
           ))}
-          {canWrite && (
+          {canWrite && !allEditable && (
             <TableRow>
               <TableCell colSpan={monthKeys.length + 2}>
                 <Dialog open={expOpen} onOpenChange={setExpOpen}>

@@ -348,6 +348,12 @@ export const navItems: NavItem[] = [
     permission: 'pnl:read',
   },
   {
+    title: 'Targeted P&L',
+    url: '/finance/pnl/targeted',
+    icon: Target,
+    permission: 'pnl:write',
+  },
+  {
     title: 'MD P&L',
     url: '/md/pnl',
     icon: TrendingUp,
@@ -391,7 +397,7 @@ export function getDashboardUrl(role: string): string {
 function filterNavItems(user: SessionUser | null): NavItem[] {
   if (!user) return []
   return navItems.filter((item) => {
-    if (item.title === 'Home' || item.title === 'Tasks') return true
+    if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Calendar') return true
     if (item.title === 'Meets') return user.role !== 'BD'
     // Sales Head: "Sales Dashboard" already points to /sales/dashboard; generic "Dashboard" would duplicate it
     if (item.title === 'Dashboard' && user.role === 'SALES_HEAD') {
@@ -399,6 +405,10 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
     }
     // Company P&L (/finance/pnl): Finance Head, MD, Admin only (not TESTER / other roles with broad nav)
     if (item.title === 'Company P&L') {
+      return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
+    }
+    // Targeted P&L: same access as Company P&L
+    if (item.title === 'Targeted P&L') {
       return user.role === 'FINANCE_HEAD' || user.role === 'MD' || user.role === 'ADMIN'
     }
     if (item.title === 'Sales P&L') {
@@ -416,6 +426,7 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
         item.title === 'Recruitment' ||
         item.title === 'Loan & Demat Revenue' ||
         item.title === 'DM Dashboard' ||
+        item.title === 'Targeted P&L' ||
         item.title.startsWith('MD ') ||
         (item.title === 'Master Data' && item.roles?.includes('MD'))
       )
