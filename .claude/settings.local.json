@@ -10,7 +10,9 @@
       "Bash(xargs grep:*)",
       "Bash(pnpm typecheck:*)",
       "Bash(npx prisma *)",
-      "Bash(grep *)"
+      "Bash(grep *)",
+      "Bash(python3 -c ' *)",
+      "Bash(node *)"
     ]
   }
 }

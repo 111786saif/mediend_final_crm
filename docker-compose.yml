@@ -310,6 +310,23 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/backfill-conversion-dates.ts"]
 
+  # One-off: import historical IPD PNL data from CSV
+  # Usage: docker compose --profile tools run --rm import-ipd-pnl
+  # Dry run: docker compose --profile tools run --rm import-ipd-pnl -- --dry-run
+  import-ipd-pnl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/import-ipd-pnl-csv.ts"]
+
   # One-off: migrate lead pipeline stages and conversion dates from status
   # Usage: docker compose --profile tools run --rm migrate-lead-pipeline
   migrate-lead-pipeline:

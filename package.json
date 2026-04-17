@@ -115,6 +115,7 @@
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.21",
     "baseline-browser-mapping": "^2.10.0",
+    "csv-parse": "^6.2.1",
     "eslint": "^9.39.1",
     "eslint-config-next": "16.0.6",
     "postcss-import": "^16.1.0",
