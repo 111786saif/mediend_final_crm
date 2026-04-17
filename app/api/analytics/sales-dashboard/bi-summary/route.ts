@@ -53,6 +53,7 @@ interface BiSummary {
 }
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { ipdDoneWhere, ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -75,54 +76,88 @@ export async function GET(request: NextRequest) {
       teamScope = { bdId: { in: [user.id, ...subIds] } }
     }
 
-    const [totalStats, statusBreakdown, sourceStats, bdStats, monthlyStats] = await Promise.all([
+    const { searchParams } = new URL(request.url)
+    const startDate = searchParams.get('startDate')
+    const endDate = searchParams.get('endDate')
+
+    const dateFilter: Prisma.DateTimeFilter = {}
+    if (startDate) {
+      const start = new Date(startDate)
+      start.setHours(0, 0, 0, 0)
+      dateFilter.gte = start
+    }
+    if (endDate) {
+      const end = new Date(endDate)
+      end.setHours(23, 59, 59, 999)
+      dateFilter.lte = end
+    }
+
+    const leadDateWhere: Prisma.LeadWhereInput =
+      Object.keys(dateFilter).length > 0
+        ? {
+            OR: [
+              { leadDate: dateFilter },
+              { AND: [{ leadDate: null }, { createdDate: dateFilter }] },
+            ],
+          }
+        : {}
+
+    const allLeadsWhere: Prisma.LeadWhereInput = { ...teamScope, ...leadDateWhere }
+
+    const [totalStats, statusBreakdown, ipdDoneCount, sourceStats, bdStats, monthlyStats] = await Promise.all([
       // Total stats
       prisma.lead.aggregate({
-        where: teamScope,
+        where: allLeadsWhere,
         _count: { id: true },
         _sum: { ipdTotalPayment: true }
       }),
-      
+
       // Status breakdown for funnel
       prisma.lead.groupBy({
         by: ['status', 'pipelineStage'],
-        where: teamScope,
+        where: allLeadsWhere,
         _count: { id: true }
       }),
-      
+
+      // IPD done count using canonical filter
+      prisma.lead.count({
+        where: {
+          ...teamScope,
+          ...ipdDoneWhere(dateFilter),
+        },
+      }),
+
       // Source ROI
       prisma.lead.groupBy({
         by: ['source'],
-        where: { ...teamScope, source: { not: null } },
+        where: { ...allLeadsWhere, source: { not: null } },
         _count: { id: true },
       }),
-      
+
       // BD performance for tiers
       prisma.lead.groupBy({
         by: ['bdId'],
-        where: teamScope,
+        where: allLeadsWhere,
         _count: { id: true },
         _sum: { ipdTotalPayment: true }
       }),
-      
+
       // Monthly trends (last 12 months)
       prisma.lead.groupBy({
         by: ['month'],
-        where: teamScope,
+        where: allLeadsWhere,
         _count: { id: true },
         orderBy: { month: 'desc' }
       })
     ])
 
     // Calculate funnel numbers
-    const ipdDone = statusBreakdown
-      .filter(s => s.status === 'IPD Done' || s.pipelineStage === 'COMPLETED')
-      .reduce((sum, s) => sum + s._count.id, 0)
-    
+    const ipdDone = ipdDoneCount
+
     const junkInvalid = statusBreakdown
       .filter(s => ['Junk', 'Duplicate lead', 'Invalid Number'].includes(s.status || ''))
       .reduce((sum, s) => sum + s._count.id, 0)
-    
+
     const deadLeads = statusBreakdown
       .filter(s => ['Closed', 'Not Interested', 'DNP Exhausted'].includes(s.status || ''))
       .reduce((sum, s) => sum + s._count.id, 0)
@@ -159,20 +194,7 @@ export async function GET(request: NextRequest) {
       junkRate: 0
     }))
 
-    const anomalies = [
-      {
-        type: 'data_quality',
-        description: 'BD 503 shows unrealistically high conversion rate',
-        severity: 'critical' as const,
-        affectedCount: 1
-      },
-      {
-        type: 'zero_output',
-        description: 'Multiple BDs with high lead volume but zero IPD',
-        severity: 'warning' as const,
-        affectedCount: 3
-      }
-    ]
+    const anomalies: BiSummary['anomalies'] = []
 
     const summary: BiSummary = {
       totalLeads: totalStats._count.id,

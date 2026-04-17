@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { ipdDoneWhere } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -47,11 +48,8 @@ export async function GET(request: NextRequest) {
           expectedSurgeryDate: dateWhere,
         },
       }),
-      prisma.admissionRecord.count({
-        where: {
-          ipdStatus: 'IPD_DONE',
-          ipdStatusUpdatedAt: dateWhere,
-        },
+      prisma.lead.count({
+        where: ipdDoneWhere(dateWhere),
       }),
       prisma.dischargeSheet.count({
         where: { dischargeDate: dateWhere },

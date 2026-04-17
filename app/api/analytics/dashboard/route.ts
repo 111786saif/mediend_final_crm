@@ -6,6 +6,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -39,14 +40,7 @@ export async function GET(request: NextRequest) {
 
     const completedWhere: Prisma.LeadWhereInput = {
       pipelineStage: 'COMPLETED',
-      ...(Object.keys(dateFilter).length > 0
-        ? {
-            OR: [
-              { conversionDate: dateFilter },
-              { AND: [{ conversionDate: { equals: null } }, { leadDate: dateFilter }] },
-            ],
-          }
-        : {}),
+      ...ipdDoneDateFilter(dateFilter),
     }
 
     const where: Prisma.LeadWhereInput = { ...completedWhere }

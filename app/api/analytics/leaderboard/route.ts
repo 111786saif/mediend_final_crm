@@ -5,6 +5,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess, getManagerGroups } from '@/lib/hierarchy'
+import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
 
 const CLOSED_STATUS_CODES = [
   '13', // IPD Done
@@ -42,17 +43,7 @@ export async function GET(request: NextRequest) {
           }
         : {}
 
-    const conversionDateFilter: Prisma.LeadWhereInput =
-      Object.keys(dateFilter).length > 0
-        ? {
-            OR: [
-              { conversionDate: dateFilter },
-              { AND: [{ conversionDate: { equals: null } }, { surgeryDate: dateFilter }] },
-              { AND: [{ conversionDate: { equals: null } }, { surgeryDate: { equals: null } }, { leadDate: dateFilter }] },
-              { AND: [{ conversionDate: { equals: null } }, { surgeryDate: { equals: null } }, { leadDate: { equals: null } }, { createdDate: dateFilter }] },
-            ],
-          }
-        : {}
+    const conversionDateFilter: Prisma.LeadWhereInput = ipdDoneDateFilter(dateFilter)
 
     // Role-based scope (hierarchy-only)
     let scopeFilter: Prisma.LeadWhereInput = {}

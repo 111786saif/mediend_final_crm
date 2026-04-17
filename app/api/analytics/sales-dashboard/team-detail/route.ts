@@ -4,6 +4,7 @@ import { UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -83,11 +84,7 @@ export async function GET(request: NextRequest) {
         where: {
           bdId: { in: allUserIds },
           pipelineStage: 'COMPLETED',
-          OR: [
-            { conversionDate: { gte: start, lte: end } },
-            { AND: [{ conversionDate: null }, { surgeryDate: { gte: start, lte: end } }] },
-            { AND: [{ conversionDate: null }, { surgeryDate: null }, { leadDate: { gte: start, lte: end } }] },
-          ],
+          ...ipdDoneDateFilter({ gte: start, lte: end }),
         },
         _count: { id: true },
         _sum: { netProfit: true, billAmount: true },

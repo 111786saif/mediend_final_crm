@@ -5,6 +5,7 @@ import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { ipdDoneDateFilter, resolveIpdDate } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -47,19 +48,7 @@ export async function GET(request: NextRequest) {
     const completedWhere: Prisma.LeadWhereInput = {
       pipelineStage: 'COMPLETED',
       ...teamScope,
-      ...(Object.keys(dateFilter).length > 0
-        ? {
-            OR: [
-              { conversionDate: dateFilter },
-              {
-                AND: [
-                  { conversionDate: { equals: null } },
-                  { leadDate: dateFilter },
-                ],
-              },
-            ],
-          }
-        : {}),
+      ...ipdDoneDateFilter(dateFilter),
     }
 
     const [
@@ -155,7 +144,7 @@ export async function GET(request: NextRequest) {
 
     const monthMap = new Map<string, { count: number; revenue: number; profit: number }>()
     completedForMonth.forEach((lead) => {
-      const d = lead.conversionDate ?? lead.surgeryDate ?? lead.leadDate ?? lead.createdDate
+      const d = resolveIpdDate(lead)
       const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
       const cur = monthMap.get(monthKey) ?? { count: 0, revenue: 0, profit: 0 }
       cur.count += 1

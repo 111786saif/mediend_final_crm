@@ -6,6 +6,7 @@ import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-
 import { startOfMonth, startOfDay, endOfDay, subMonths, setDate, getDaysInMonth } from 'date-fns'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { ipdDoneDateFilter, resolveIpdDate } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -63,45 +64,21 @@ export async function GET(request: NextRequest) {
       prisma.lead.count({
         where: {
           ...completedWhereBase,
-          OR: [
-            { conversionDate: { gte: thisMonthStart, lte: thisMonthEnd } },
-            {
-              AND: [
-                { conversionDate: { equals: null } },
-                { leadDate: { gte: thisMonthStart, lte: thisMonthEnd } },
-              ],
-            },
-          ],
+          ...ipdDoneDateFilter({ gte: thisMonthStart, lte: thisMonthEnd }),
         },
       }),
       prisma.lead.count({
         where: {
           ...completedWhereBase,
-          OR: [
-            { conversionDate: { gte: lastMonthStart, lte: lastMonthEndThisDay } },
-            {
-              AND: [
-                { conversionDate: { equals: null } },
-                { leadDate: { gte: lastMonthStart, lte: lastMonthEndThisDay } },
-              ],
-            },
-          ],
+          ...ipdDoneDateFilter({ gte: lastMonthStart, lte: lastMonthEndThisDay }),
         },
       }),
       prisma.lead.findMany({
         where: {
           ...completedWhereBase,
-          OR: [
-            { conversionDate: { gte: new Date(currentYear, 0, 1), lte: today } },
-            {
-              AND: [
-                { conversionDate: { equals: null } },
-                { leadDate: { gte: new Date(currentYear, 0, 1), lte: today } },
-              ],
-            },
-          ],
+          ...ipdDoneDateFilter({ gte: new Date(currentYear, 0, 1), lte: today }),
         },
-        select: { conversionDate: true, leadDate: true, createdDate: true },
+        select: { conversionDate: true, surgeryDate: true, leadDate: true, createdDate: true },
       }),
     ])
 
@@ -116,7 +93,7 @@ export async function GET(request: NextRequest) {
       monthCountsUpToThisDay.set(String(m), 0)
     }
     allCompletedThisYear.forEach((lead) => {
-      const d = lead.conversionDate ?? lead.leadDate ?? lead.createdDate
+      const d = resolveIpdDate(lead)
       if (d.getFullYear() !== currentYear) return
       const m = d.getMonth() + 1
       const key = String(m)

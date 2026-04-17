@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { authenticateUser } from '@/lib/auth'
+import { authenticateUser, InactiveUserError } from '@/lib/auth'
 import { createSession } from '@/lib/session'
 import { errorResponse, successResponse } from '@/lib/api-utils'
 import { z } from 'zod'
@@ -32,6 +32,9 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error) {
+    if (error instanceof InactiveUserError) {
+      return errorResponse(error.message, 403)
+    }
     if (error instanceof z.ZodError) {
       return errorResponse('Invalid request data', 400)
     }
