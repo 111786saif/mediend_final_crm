@@ -157,9 +157,17 @@ export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
   // Targets
   const deptNameById = useMemo(() => {
     const m = new Map<string, string>()
-    for (const d of departments) m.set(d.id, d.name)
+    for (const d of departments) {
+      if (d.id && d.name) m.set(d.id, d.name)
+    }
+    // Also build from employees as fallback (employees have department.name)
+    for (const e of employeesRaw as any[]) {
+      if (e.department?.id && e.department?.name && !m.has(e.department.id)) {
+        m.set(e.department.id, e.department.name)
+      }
+    }
     return m
-  }, [departments])
+  }, [departments, employeesRaw])
 
   const monthBounds = useMemo(() => getMonthBounds(filters.month, filters.year), [filters.month, filters.year])
 
@@ -276,25 +284,23 @@ export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
 
             {/* Department Breakdown */}
             {departmentBreakdown.length > 0 && (
-              <div className="mt-5 pt-5 border-t space-y-2.5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">By Department</p>
+              <div className="mt-5 pt-5 border-t space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">By Department</p>
                 {departmentBreakdown.map((dept) => (
                   <button
                     key={dept.departmentId}
                     type="button"
-                    className="w-full text-left rounded-xl border bg-card p-3.5 shadow-sm hover:bg-muted/50 active:scale-[0.99] transition-all"
+                    className="w-full text-left rounded-lg px-3 py-2.5 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
                     onClick={() => setDetailDeptId(dept.departmentId)}
                   >
-                    <div className="flex items-center justify-between gap-3 mb-2">
-                      <p className="text-sm font-semibold truncate">{dept.departmentName}</p>
-                      <span className="text-sm font-medium tabular-nums shrink-0">{dept.actual}/{dept.target}</span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">{dept.departmentName}</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Progress value={Math.min(dept.percentage, 100)} className="h-2 flex-1" />
-                      <Badge variant={dept.percentage >= 100 ? 'default' : 'outline'} className={cn('text-xs tabular-nums shrink-0', dept.percentage >= 100 && 'bg-emerald-600')}>
-                        {dept.percentage}%
-                      </Badge>
-                    </div>
+                    <span className="text-sm tabular-nums text-muted-foreground shrink-0">{dept.actual}/{dept.target}</span>
+                    <Badge variant={dept.percentage >= 100 ? 'default' : 'outline'} className={cn('text-xs tabular-nums shrink-0', dept.percentage >= 100 && 'bg-emerald-600')}>
+                      {dept.percentage}%
+                    </Badge>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
                   </button>
                 ))}
               </div>

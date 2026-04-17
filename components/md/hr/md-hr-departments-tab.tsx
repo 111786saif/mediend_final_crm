@@ -46,6 +46,7 @@ interface EmployeeItem {
   id: string
   employeeCode: string
   departmentId: string | null
+  salary: number | null
   user: { name: string }
   department: { name: string; id: string } | null
 }
@@ -305,14 +306,16 @@ export function MdHrDepartmentsTab({ filters }: MdHrDepartmentsTabProps) {
                         <TableHeader>
                           <TableRow>
                             <TableHead className="text-sm">Name</TableHead>
-                            <TableHead className="text-sm">Code</TableHead>
+                            <TableHead className="text-sm text-right">Salary</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {selectedDeptEmployees.map((e) => (
                             <TableRow key={e.id}>
                               <TableCell className="text-sm font-medium py-3">{e.user.name}</TableCell>
-                              <TableCell className="text-sm py-3 font-mono text-muted-foreground">{e.employeeCode}</TableCell>
+                              <TableCell className="text-sm py-3 text-right tabular-nums font-medium">
+                                {e.salary ? `₹${e.salary.toLocaleString('en-IN')}` : '—'}
+                              </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>

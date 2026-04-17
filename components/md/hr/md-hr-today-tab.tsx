@@ -514,42 +514,54 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
         )}
       </Card>
 
-      {/* Monthly Late Arrivals */}
+      {/* Monthly Late Arrivals - Collapsible */}
       {merged.monthlyLateArrivals.length > 0 && (
-        <Card>
-          <CardHeader className="px-4 sm:px-6 pb-3">
-            <div className="flex items-center gap-2.5">
-              <div className="h-2.5 w-2.5 rounded-full bg-orange-500" />
-              <CardTitle className="text-lg">Monthly Late Arrivals</CardTitle>
+        <Card className="overflow-hidden">
+          <button
+            type="button"
+            className="w-full text-left px-4 sm:px-6 py-4 flex items-center gap-3 hover:bg-muted/30 transition-colors"
+            onClick={() => toggleSection('monthlyLate')}
+          >
+            <div className="h-9 w-9 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center shrink-0">
+              <AlertTriangle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
             </div>
-            <CardDescription>{MONTHS[filters.month - 1]} {filters.year} — total late days per employee</CardDescription>
-          </CardHeader>
-          <CardContent className="px-2 sm:px-4 pb-4">
-            <ul className="space-y-1 max-h-[min(55vh,420px)] overflow-y-auto overscroll-contain">
-              {merged.monthlyLateArrivals.map((e) => (
-                <li key={e.employeeId}>
-                  <button
-                    type="button"
-                    className="w-full text-left rounded-lg px-3 py-3 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
-                    onClick={() => handleEmployeeClick(e.employeeId, e.employeeName, e.departmentName)}
-                  >
-                    <Avatar className="h-9 w-9 shrink-0">
-                      <AvatarFallback className="text-xs font-semibold">
-                        {getInitials(e.employeeName)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium leading-tight truncate">{e.employeeName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{e.departmentName}</p>
-                    </div>
-                    <Badge variant="outline" className="text-orange-600 dark:text-orange-400 border-orange-300 dark:border-orange-700 text-xs px-2 py-0.5 tabular-nums shrink-0">
-                      {e.lateCount} days
-                    </Badge>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold">Monthly Late Arrivals</p>
+              <p className="text-xs text-muted-foreground">{MONTHS[filters.month - 1]} {filters.year}</p>
+            </div>
+            <Badge className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-0 text-sm font-bold tabular-nums px-2.5">
+              {merged.monthlyLateArrivals.length}
+            </Badge>
+            <ChevronDown className={cn('h-4 w-4 text-muted-foreground transition-transform duration-200', expandedSections.monthlyLate && 'rotate-180')} />
+          </button>
+          {expandedSections.monthlyLate && (
+            <CardContent className="px-2 sm:px-4 pb-4 pt-0 border-t">
+              <ul className="space-y-0.5 max-h-[min(55vh,420px)] overflow-y-auto overscroll-contain">
+                {merged.monthlyLateArrivals.map((e) => (
+                  <li key={e.employeeId}>
+                    <button
+                      type="button"
+                      className="w-full text-left rounded-lg px-3 py-2.5 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
+                      onClick={() => handleEmployeeClick(e.employeeId, e.employeeName, e.departmentName)}
+                    >
+                      <Avatar className="h-8 w-8 shrink-0">
+                        <AvatarFallback className="text-[10px] font-semibold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                          {getInitials(e.employeeName)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium leading-tight truncate">{e.employeeName}</p>
+                        <p className="text-xs text-muted-foreground truncate">{e.departmentName}</p>
+                      </div>
+                      <Badge variant="outline" className="text-orange-600 dark:text-orange-400 border-orange-300 dark:border-orange-700 text-xs px-2 py-0.5 tabular-nums shrink-0">
+                        {e.lateCount} days
+                      </Badge>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          )}
         </Card>
       )}
 
