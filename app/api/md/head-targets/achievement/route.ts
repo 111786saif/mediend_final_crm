@@ -4,7 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { parseDepartmentTargets } from '../dept-target-utils'
 
-const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD'] as const
+const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'EXECUTIVE_ASSISTANT'] as const
 
 function getMonthBounds(monthOffset: number) {
   const d = new Date()
@@ -85,7 +85,7 @@ function pickTargetOverlappingMonth<
   return targets.find((t) => t.periodStartDate <= end && t.periodEndDate >= start)
 }
 
-function getMetricForRole(role: string): string {
+function getMetricForRole(role: string): string | undefined {
   switch (role) {
     case 'SALES_HEAD':
       return 'IPD_DONE'
@@ -95,6 +95,8 @@ function getMetricForRole(role: string): string {
       return 'LEADS_GENERATED'
     case 'IT_HEAD':
       return 'REVENUE'
+    case 'EXECUTIVE_ASSISTANT':
+      return undefined // resolved from the target record
     default:
       return 'IPD_DONE'
   }
@@ -134,7 +136,7 @@ export async function GET(request: NextRequest) {
       return errorResponse('User is not a department head', 400)
     }
 
-    const metric = getMetricForRole(headUser.role)
+    const roleMetric = getMetricForRole(headUser.role)
 
     const months = [
       getMonthBounds(0),
@@ -155,21 +157,25 @@ export async function GET(request: NextRequest) {
       orderBy: { periodStartDate: 'desc' },
     })
 
+    // Resolve metric: use role default, or from the most recent target (for roles like EA with multiple possible metrics)
+    const metric = roleMetric ?? targets[0]?.metric ?? 'IPD_DONE'
+
     const history = await Promise.all(
       months.map(async (m) => {
         const key = `${m.start.getFullYear()}-${String(m.start.getMonth() + 1).padStart(2, '0')}`
         const t = pickTargetOverlappingMonth(targets, m.start, m.end)
+        const effectiveMetric = t?.metric ?? metric
         const deptParsed = parseDepartmentTargets(t?.departmentTargets)
         const targetValue =
-          metric === 'HEAD_COUNT' && deptParsed?.length
+          effectiveMetric === 'HEAD_COUNT' && deptParsed?.length
             ? deptParsed.reduce((s, d) => s + d.addCount, 0)
             : (t?.targetValue ?? 0)
         const headCountDeptIds =
-          metric === 'HEAD_COUNT' && deptParsed?.length
+          effectiveMetric === 'HEAD_COUNT' && deptParsed?.length
             ? deptParsed.map((d) => d.departmentId)
             : null
         const actual = await computeAchievement(
-          metric,
+          effectiveMetric,
           m.start,
           m.end,
           headCountDeptIds

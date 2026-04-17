@@ -9,8 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { MdHrFilterDrawer, type HRDashboardFilters } from '@/components/md/hr/md-hr-filter-drawer'
 import { MdHrTodayTab } from '@/components/md/hr/md-hr-today-tab'
-import { MdHrInterviewsTab } from '@/components/md/hr/md-hr-interviews-tab'
-import { MdHrTargetTab } from '@/components/md/hr/md-hr-target-tab'
+import { MdHrRecruitmentTab } from '@/components/md/hr/md-hr-recruitment-tab'
 import { MdHrDepartmentsTab } from '@/components/md/hr/md-hr-departments-tab'
 
 const MONTH_NAMES = [
@@ -32,8 +31,7 @@ export default function MDHRDashboardPage() {
   const tabs: TabItem[] = useMemo(
     () => [
       { value: 'today', label: 'Today' },
-      { value: 'interviews', label: 'Interviews' },
-      { value: 'target', label: 'Target' },
+      { value: 'recruitment', label: 'Recruitment' },
       { value: 'departments', label: 'Departments' },
     ],
     []
@@ -107,8 +105,7 @@ export default function MDHRDashboardPage() {
         {/* Tab Content */}
         <div className="flex-1 min-h-0 py-1 md:py-4">
           {activeTab === 'today' && <MdHrTodayTab filters={filters} />}
-          {activeTab === 'interviews' && <MdHrInterviewsTab filters={filters} />}
-          {activeTab === 'target' && <MdHrTargetTab filters={filters} />}
+          {activeTab === 'recruitment' && <MdHrRecruitmentTab filters={filters} />}
           {activeTab === 'departments' && <MdHrDepartmentsTab filters={filters} />}
         </div>
 

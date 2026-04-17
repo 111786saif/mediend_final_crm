@@ -22,7 +22,7 @@ import {
   AttendanceHeatmap,
   type AttendanceDay as HeatmapAttendanceDay,
 } from '@/components/employee/attendance-heatmap'
-import { UserMinus, AlertTriangle, UserPlus, ChevronRight, ChevronLeft, CalendarHeart } from 'lucide-react'
+import { UserMinus, AlertTriangle, UserPlus, ChevronRight, ChevronLeft, ChevronDown, CalendarHeart } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useMDTeamOverview } from '@/hooks/use-md-team'
 import type { HRDashboardFilters } from './md-hr-filter-drawer'
@@ -129,6 +129,8 @@ interface MdHrTodayTabProps {
 export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
   const isMobile = useIsMobile()
   const [activeDrawer, setActiveDrawer] = useState<'absent' | 'late' | 'joiners' | 'leave' | null>(null)
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({})
+  const toggleSection = (key: string) => setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }))
   const [heatmapEmployee, setHeatmapEmployee] = useState<{
     id: string
     name: string
@@ -341,24 +343,6 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
           accent="emerald"
         />
         <StatCard
-          label="Absent Today"
-          value={merged.absentCount}
-          subValue="Not punched in"
-          accent="red"
-          valueAccent
-          className="cursor-pointer active:scale-[0.97] transition-transform"
-          onClick={() => setActiveDrawer('absent')}
-        />
-        <StatCard
-          label="Late Today"
-          value={merged.lateCount}
-          subValue={`of ${merged.todayStrength} present`}
-          accent="orange"
-          valueAccent
-          className="cursor-pointer active:scale-[0.97] transition-transform"
-          onClick={() => setActiveDrawer('late')}
-        />
-        <StatCard
           label="On Leave"
           value={onLeaveToday.length}
           subValue="Approved leave"
@@ -377,40 +361,39 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
         />
       </div>
 
-      {/* Monthly Salary */}
-      <StatCard
-        label="Monthly Salary"
-        value={formatCurrency(merged.monthlySalary)}
-        subValue={merged.hasPayrollData ? 'Actual payroll' : 'CTC estimate'}
-        accent="purple"
-      />
-
-      {/* Absent Today List */}
-      <Card>
-        <CardHeader className="pb-3 px-4 sm:px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="h-2.5 w-2.5 rounded-full bg-red-500" />
-            <CardTitle className="text-lg">Absent Today</CardTitle>
-            <Badge variant="secondary" className="ml-auto text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30">
-              {merged.absentCount}
-            </Badge>
+      {/* Absent Today - Collapsible */}
+      <Card className="overflow-hidden">
+        <button
+          type="button"
+          className="w-full text-left px-4 sm:px-6 py-4 flex items-center gap-3 hover:bg-muted/30 transition-colors"
+          onClick={() => merged.absentCount > 0 && toggleSection('absent')}
+        >
+          <div className="h-9 w-9 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center shrink-0">
+            <UserMinus className="h-4 w-4 text-red-600 dark:text-red-400" />
           </div>
-          <CardDescription>No punch-in recorded today</CardDescription>
-        </CardHeader>
-        <CardContent className="px-2 sm:px-4 pb-4">
-          {merged.absentToday.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">Everyone is present</p>
-          ) : (
-            <ul className="space-y-1 max-h-[360px] overflow-y-auto overscroll-contain">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold">Absent Today</p>
+            <p className="text-xs text-muted-foreground">No punch-in recorded</p>
+          </div>
+          <Badge className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-0 text-sm font-bold tabular-nums px-2.5">
+            {merged.absentCount}
+          </Badge>
+          {merged.absentCount > 0 && (
+            <ChevronDown className={cn('h-4 w-4 text-muted-foreground transition-transform duration-200', expandedSections.absent && 'rotate-180')} />
+          )}
+        </button>
+        {expandedSections.absent && merged.absentToday.length > 0 && (
+          <CardContent className="px-2 sm:px-4 pb-4 pt-0 border-t">
+            <ul className="space-y-0.5 max-h-[360px] overflow-y-auto overscroll-contain">
               {merged.absentToday.map((e) => (
                 <li key={e.employeeId}>
                   <button
                     type="button"
-                    className="w-full text-left rounded-lg px-3 py-3 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
+                    className="w-full text-left rounded-lg px-3 py-2.5 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
                     onClick={() => handleEmployeeClick(e.employeeId, e.employeeName, e.departmentName)}
                   >
-                    <Avatar className="h-9 w-9 shrink-0">
-                      <AvatarFallback className="text-xs font-semibold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                    <Avatar className="h-8 w-8 shrink-0">
+                      <AvatarFallback className="text-[10px] font-semibold bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">
                         {getInitials(e.employeeName)}
                       </AvatarFallback>
                     </Avatar>
@@ -423,36 +406,43 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
                 </li>
               ))}
             </ul>
-          )}
-        </CardContent>
+          </CardContent>
+        )}
       </Card>
 
-      {/* Late Today List */}
-      <Card>
-        <CardHeader className="pb-3 px-4 sm:px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="h-2.5 w-2.5 rounded-full bg-orange-500" />
-            <CardTitle className="text-lg">Late Today</CardTitle>
-            <Badge variant="secondary" className="ml-auto text-orange-700 dark:text-orange-300 bg-orange-100 dark:bg-orange-900/30">
-              {merged.lateCount}
-            </Badge>
+      {/* Late Today - Collapsible */}
+      <Card className="overflow-hidden">
+        <button
+          type="button"
+          className="w-full text-left px-4 sm:px-6 py-4 flex items-center gap-3 hover:bg-muted/30 transition-colors"
+          onClick={() => merged.lateCount > 0 && toggleSection('late')}
+        >
+          <div className="h-9 w-9 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center shrink-0">
+            <AlertTriangle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           </div>
-          <CardDescription>Arrived after shift start + grace period</CardDescription>
-        </CardHeader>
-        <CardContent className="px-2 sm:px-4 pb-4">
-          {merged.latecomersToday.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">No late arrivals today</p>
-          ) : (
-            <ul className="space-y-1 max-h-[360px] overflow-y-auto overscroll-contain">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold">Late Today</p>
+            <p className="text-xs text-muted-foreground">After shift start + grace</p>
+          </div>
+          <Badge className="bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-0 text-sm font-bold tabular-nums px-2.5">
+            {merged.lateCount}
+          </Badge>
+          {merged.lateCount > 0 && (
+            <ChevronDown className={cn('h-4 w-4 text-muted-foreground transition-transform duration-200', expandedSections.late && 'rotate-180')} />
+          )}
+        </button>
+        {expandedSections.late && merged.latecomersToday.length > 0 && (
+          <CardContent className="px-2 sm:px-4 pb-4 pt-0 border-t">
+            <ul className="space-y-0.5 max-h-[360px] overflow-y-auto overscroll-contain">
               {merged.latecomersToday.map((e) => (
                 <li key={e.employeeId}>
                   <button
                     type="button"
-                    className="w-full text-left rounded-lg px-3 py-3 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
+                    className="w-full text-left rounded-lg px-3 py-2.5 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
                     onClick={() => handleEmployeeClick(e.employeeId, e.employeeName, e.departmentName)}
                   >
-                    <Avatar className="h-9 w-9 shrink-0">
-                      <AvatarFallback className="text-xs font-semibold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                    <Avatar className="h-8 w-8 shrink-0">
+                      <AvatarFallback className="text-[10px] font-semibold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                         {getInitials(e.employeeName)}
                       </AvatarFallback>
                     </Avatar>
@@ -466,15 +456,15 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
                         <p className="text-[10px] text-muted-foreground">{e.minutesLate}m late</p>
                       </div>
                       <Badge variant="outline" className="text-orange-600 dark:text-orange-400 border-orange-300 dark:border-orange-700 text-[10px] px-1.5 tabular-nums">
-                        {e.monthlyLateCount}x this month
+                        {e.monthlyLateCount}x
                       </Badge>
                     </div>
                   </button>
                 </li>
               ))}
             </ul>
-          )}
-        </CardContent>
+          </CardContent>
+        )}
       </Card>
 
       {/* Monthly Late Arrivals */}
@@ -515,6 +505,14 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* Monthly Salary */}
+      <StatCard
+        label="Monthly Salary"
+        value={formatCurrency(merged.monthlySalary)}
+        subValue={merged.hasPayrollData ? 'Actual payroll' : 'CTC estimate'}
+        accent="purple"
+      />
 
       {/* Stat Card Drawers (for mobile quick view) */}
       <Drawer open={activeDrawer === 'absent'} onOpenChange={(open) => !open && setActiveDrawer(null)}>

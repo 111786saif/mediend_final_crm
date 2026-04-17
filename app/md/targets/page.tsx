@@ -21,6 +21,7 @@ const ROLE_COLORS: Record<string, string> = {
   HR_HEAD: 'bg-violet-100 text-violet-700 border-violet-200',
   DIGITAL_MARKETING_HEAD: 'bg-sky-100 text-sky-700 border-sky-200',
   IT_HEAD: 'bg-amber-100 text-amber-700 border-amber-200',
+  EXECUTIVE_ASSISTANT: 'bg-rose-100 text-rose-700 border-rose-200',
 }
 
 const AVATAR_COLORS: Record<string, string> = {
@@ -28,6 +29,7 @@ const AVATAR_COLORS: Record<string, string> = {
   HR_HEAD: 'bg-violet-500/20 text-violet-700',
   DIGITAL_MARKETING_HEAD: 'bg-sky-500/20 text-sky-700',
   IT_HEAD: 'bg-amber-500/20 text-amber-700',
+  EXECUTIVE_ASSISTANT: 'bg-rose-500/20 text-rose-700',
 }
 
 const METRIC_LABELS: Record<string, string> = {
@@ -81,7 +83,7 @@ interface HeadTargetItem {
   }
 }
 
-const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD'] as const
+const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'EXECUTIVE_ASSISTANT'] as const
 
 export default function MDTargetsPage() {
   const { user } = useAuth()

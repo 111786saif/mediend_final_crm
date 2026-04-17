@@ -21,18 +21,25 @@ import { ChevronLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
-const ROLE_METRICS: Record<string, string> = {
+const ROLE_METRICS: Record<string, string | null> = {
   SALES_HEAD: 'IPD_DONE',
   HR_HEAD: 'HEAD_COUNT',
   DIGITAL_MARKETING_HEAD: 'LEADS_GENERATED',
   IT_HEAD: 'REVENUE',
+  EXECUTIVE_ASSISTANT: null, // EA chooses between REVENUE and IPD_DONE
 }
+
+const EA_METRIC_OPTIONS = [
+  { value: 'REVENUE', label: 'Revenue (₹)' },
+  { value: 'IPD_DONE', label: 'IPD Done' },
+]
 
 const AVATAR_COLORS: Record<string, string> = {
   SALES_HEAD: 'bg-emerald-500/20 text-emerald-700',
   HR_HEAD: 'bg-violet-500/20 text-violet-700',
   DIGITAL_MARKETING_HEAD: 'bg-sky-500/20 text-sky-700',
   IT_HEAD: 'bg-amber-500/20 text-amber-700',
+  EXECUTIVE_ASSISTANT: 'bg-rose-500/20 text-rose-700',
 }
 
 const METRIC_LABELS: Record<string, string> = {
@@ -89,6 +96,7 @@ export function AddTargetDrawer({
     departmentLabel: string
   } | null>(null)
   const [targetValue, setTargetValue] = useState('')
+  const [eaMetric, setEaMetric] = useState<string>('REVENUE')
   /** HR headcount: departmentId → input string */
   const [deptTargets, setDeptTargets] = useState<Record<string, string>>({})
 
@@ -169,6 +177,7 @@ export function AddTargetDrawer({
     setStep(1)
     setSelectedHead(null)
     setTargetValue('')
+    setEaMetric('REVENUE')
     setDeptTargets({})
   }
 
@@ -193,7 +202,9 @@ export function AddTargetDrawer({
     return Number.isNaN(n) ? NaN : Math.max(0, n)
   }
 
-  const metric = selectedHead ? ROLE_METRICS[selectedHead.role] ?? 'IPD_DONE' : 'IPD_DONE'
+  const metric = selectedHead
+    ? (ROLE_METRICS[selectedHead.role] ?? (selectedHead.role === 'EXECUTIVE_ASSISTANT' ? eaMetric : 'IPD_DONE'))
+    : 'IPD_DONE'
   const history = achievementData?.history ?? []
   const currentMonth = achievementData?.currentMonth
   const departmentBreakdown = achievementData?.departmentBreakdown ?? []
@@ -326,7 +337,28 @@ export function AddTargetDrawer({
             </div>
           )}
 
-          {/* Sales: IPD stats + input */}
+          {/* EA: metric choice */}
+          {selectedHead?.role === 'EXECUTIVE_ASSISTANT' && (
+            <div className="space-y-2">
+              <Label>Goal Type</Label>
+              <div className="flex gap-2">
+                {EA_METRIC_OPTIONS.map((opt) => (
+                  <Button
+                    key={opt.value}
+                    type="button"
+                    size="sm"
+                    variant={eaMetric === opt.value ? 'default' : 'outline'}
+                    className={eaMetric === opt.value ? 'bg-rose-600 hover:bg-rose-700' : ''}
+                    onClick={() => { setEaMetric(opt.value); setTargetValue('') }}
+                  >
+                    {opt.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Sales / EA IPD: IPD stats + input */}
           {metric === 'IPD_DONE' && (
             <>
               {recentMonths.length > 0 && (

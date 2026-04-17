@@ -5,7 +5,7 @@ import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-
 import { z } from 'zod'
 import { parseDepartmentTargets } from './dept-target-utils'
 
-const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD'] as const
+const HEAD_ROLES = ['SALES_HEAD', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'EXECUTIVE_ASSISTANT'] as const
 
 function getMonthBounds(month?: number, year?: number) {
   const now = new Date()
@@ -84,7 +84,8 @@ async function computeAchievement(
   }
 }
 
-function getMetricForRole(role: string): string {
+/** Returns the default metric for a role, or undefined if the role supports multiple metrics (e.g. EA). */
+function getMetricForRole(role: string): string | undefined {
   switch (role) {
     case 'SALES_HEAD':
       return 'IPD_DONE'
@@ -94,6 +95,8 @@ function getMetricForRole(role: string): string {
       return 'LEADS_GENERATED'
     case 'IT_HEAD':
       return 'REVENUE'
+    case 'EXECUTIVE_ASSISTANT':
+      return undefined // EA can have REVENUE or IPD_DONE — resolved from the target record
     default:
       return 'IPD_DONE'
   }
@@ -109,6 +112,8 @@ function getDepartmentLabel(role: string): string {
       return 'Digital Marketing'
     case 'IT_HEAD':
       return 'IT'
+    case 'EXECUTIVE_ASSISTANT':
+      return 'Executive Office'
     default:
       return role.replace(/_/g, ' ')
   }
@@ -166,7 +171,7 @@ export async function GET(request: NextRequest) {
     const result = await Promise.all(
       heads.map(async (head) => {
         const target = targetByHead.get(head.id)
-        const metric = target?.metric ?? getMetricForRole(head.role)
+        const metric = target?.metric ?? getMetricForRole(head.role) ?? 'IPD_DONE'
         const deptTargets = parseDepartmentTargets(target?.departmentTargets)
         const targetValue =
           metric === 'HEAD_COUNT' && deptTargets?.length
