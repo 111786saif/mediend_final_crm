@@ -186,6 +186,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
         href: '/meets',
         label: 'Meets',
         icon: Calendar,
+        badge: badgeCounts?.upcomingMeetsToday ?? 0,
         matchPrefixes: ['/meets'],
         show: u.role === 'MD',
       },

@@ -1189,6 +1189,8 @@ export const KYPSubmissionScalarFieldEnum = {
   status: 'status',
   submittedById: 'submittedById',
   submittedAt: 'submittedAt',
+  documentEditCounts: 'documentEditCounts',
+  documentEditHistory: 'documentEditHistory',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

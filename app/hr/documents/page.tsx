@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useState, useMemo, useEffect } from 'react'
-import { FileText, Plus, ExternalLink, Mail, Upload, Search, ChevronRight, Check, Clock } from 'lucide-react'
+import { FileText, Plus, ExternalLink, Mail, Upload, Search, ChevronRight, Check, Clock, Eye, ArrowLeft } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
 interface Employee {
@@ -576,7 +576,9 @@ function GenerateDocumentForm({
   onSubmit: (data: { employeeId?: string; documentType: string; applicantName?: string; applicantEmail?: string; metadata?: Record<string, unknown> }) => void
   isLoading: boolean
 }) {
-  const [step, setStep] = useState<1 | 2>(1)
+  const [step, setStep] = useState<1 | 2 | 'preview'>(1)
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null)
+  const [previewing, setPreviewing] = useState(false)
   const [formData, setFormData] = useState({
     documentType: '',
     employeeId: preselectedEmployeeId ?? '',
@@ -586,6 +588,7 @@ function GenerateDocumentForm({
     ctc: '',
     guardianName: '',
     guardianRelation: 'S/O',
+    salutation: 'Mr.',
     address: '',
     isSales: false,
     salesTarget: '',
@@ -621,13 +624,13 @@ function GenerateDocumentForm({
 
   const summaryLabel = selectedEmployee?.user?.name ?? selectedEmployee?.employeeCode
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const buildPayload = () => {
     const metadata: Record<string, unknown> = {}
     if (formData.designation) metadata.designation = formData.designation
     if (formData.ctc) metadata.ctc = parseFloat(formData.ctc)
     if (formData.guardianName) metadata.guardianName = formData.guardianName
     if (formData.guardianRelation) metadata.guardianRelation = formData.guardianRelation
+    if (formData.salutation) metadata.salutation = formData.salutation
     if (formData.address) metadata.address = formData.address
     if (formData.isSales) metadata.isSales = true
     if (formData.salesTarget) metadata.salesTarget = formData.salesTarget
@@ -649,11 +652,36 @@ function GenerateDocumentForm({
     if (formData.location) metadata.location = formData.location
     if (formData.startDate) metadata.startDate = formData.startDate
     if (formData.endDate) metadata.endDate = formData.endDate
-    onSubmit({
+    return {
       employeeId: formData.employeeId,
       documentType: formData.documentType,
       metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
-    })
+    }
+  }
+
+  const handlePreview = async () => {
+    setPreviewing(true)
+    try {
+      const res = await fetch('/api/hr/documents/preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildPayload()),
+        credentials: 'include',
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Preview failed')
+      setPreviewHtml(data.data?.htmlContent || data.htmlContent)
+      setStep('preview')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to preview')
+    } finally {
+      setPreviewing(false)
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSubmit(buildPayload())
   }
 
   // ── Step 1: Pick doc type + employee/applicant ──
@@ -716,6 +744,32 @@ function GenerateDocumentForm({
     )
   }
 
+  // ── Preview step ──
+  if (step === 'preview' && previewHtml) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2 text-sm">
+          <Eye className="h-4 w-4 text-muted-foreground shrink-0" />
+          <span className="font-medium">Document Preview</span>
+          <span className="text-muted-foreground">·</span>
+          <span className="text-muted-foreground">{DOCUMENT_TYPES[formData.documentType]}</span>
+        </div>
+        <div className="border rounded-lg overflow-hidden max-h-[400px] overflow-y-auto bg-white">
+          <div className="p-4" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+        </div>
+        <div className="flex justify-between pt-2">
+          <Button type="button" variant="outline" onClick={() => setStep(2)}>
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Edit
+          </Button>
+          <Button onClick={() => onSubmit(buildPayload())} disabled={isLoading}>
+            {isLoading ? 'Generating...' : 'Generate & Save'}
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   // ── Step 2: Document details ──
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -732,6 +786,23 @@ function GenerateDocumentForm({
         >
           Change
         </button>
+      </div>
+
+      {/* Salutation */}
+      <div className="w-32">
+        <Label>Title</Label>
+        <Select
+          value={formData.salutation}
+          onValueChange={(value) => setFormData({ ...formData, salutation: value })}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Mr.">Mr.</SelectItem>
+            <SelectItem value="Ms.">Ms.</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Document-specific fields */}
@@ -1125,9 +1196,15 @@ function GenerateDocumentForm({
         <Button type="button" variant="outline" onClick={() => setStep(1)}>
           Back
         </Button>
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Generating...' : 'Generate Document'}
-        </Button>
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" onClick={handlePreview} disabled={previewing}>
+            <Eye className="h-4 w-4 mr-1" />
+            {previewing ? 'Loading...' : 'Preview'}
+          </Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Generating...' : 'Generate Document'}
+          </Button>
+        </div>
       </div>
     </form>
   )

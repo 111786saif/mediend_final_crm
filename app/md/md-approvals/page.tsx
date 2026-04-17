@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost, apiPatch } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { useQuery as usePermissionQuery } from '@tanstack/react-query'
-import { Check, X, ChevronLeft, ChevronRight, Plus, CheckCircle, Clock, Paperclip, LayoutGrid, LayoutList } from 'lucide-react'
+import { Check, X, ChevronLeft, ChevronRight, Plus, CheckCircle, Clock, Paperclip, LayoutGrid, LayoutList, Filter, Search } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
 import { useSwipeable } from 'react-swipeable'
@@ -23,6 +23,8 @@ import { AttachmentCarousel } from '@/components/finance/attachment-carousel'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface Attachment {
   name: string
@@ -260,6 +262,12 @@ export default function MDApprovalsPage() {
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false)
   const [selectedRequest, setSelectedRequest] = useState<MDApprovalRequest | null>(null)
   const [responseNote, setResponseNote] = useState('')
+  const [historySearch, setHistorySearch] = useState('')
+  const [historyStatusFilter, setHistoryStatusFilter] = useState<'all' | 'APPROVED' | 'REJECTED'>('all')
+  const [historyDateFrom, setHistoryDateFrom] = useState('')
+  const [historyDateTo, setHistoryDateTo] = useState('')
+  const [historyPeopleFilter, setHistoryPeopleFilter] = useState<string[]>([])
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
 
   const isMD = user?.role === 'MD' || user?.role === 'ADMIN'
 
@@ -275,6 +283,41 @@ export default function MDApprovalsPage() {
 
   const pending = requests.filter((r) => r.status === 'PENDING')
   const history = requests.filter((r) => r.status !== 'PENDING')
+
+  const uniqueRequesters = useMemo(() => {
+    const map = new Map<string, string>()
+    for (const r of history) map.set(r.requestedBy.id, r.requestedBy.name)
+    return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]))
+  }, [history])
+
+  const filteredHistory = useMemo(() => {
+    let result = history
+    if (historySearch.trim()) {
+      const q = historySearch.toLowerCase()
+      result = result.filter(r => r.title.toLowerCase().includes(q) || r.description?.toLowerCase().includes(q) || r.requestedBy.name.toLowerCase().includes(q))
+    }
+    if (historyStatusFilter !== 'all') {
+      result = result.filter(r => r.status === historyStatusFilter)
+    }
+    if (historyDateFrom) {
+      result = result.filter(r => r.createdAt >= historyDateFrom)
+    }
+    if (historyDateTo) {
+      const to = historyDateTo + 'T23:59:59'
+      result = result.filter(r => r.createdAt <= to)
+    }
+    if (historyPeopleFilter.length > 0) {
+      result = result.filter(r => historyPeopleFilter.includes(r.requestedBy.id))
+    }
+    return result
+  }, [history, historySearch, historyStatusFilter, historyDateFrom, historyDateTo, historyPeopleFilter])
+
+  const activeFilterCount = [
+    historyStatusFilter !== 'all',
+    historyDateFrom !== '',
+    historyDateTo !== '',
+    historyPeopleFilter.length > 0,
+  ].filter(Boolean).length
 
   // Mobile: cards only. Desktop: grid default, user can toggle to table.
   useEffect(() => {
@@ -643,11 +686,109 @@ export default function MDApprovalsPage() {
         </TabsContent>
 
         <TabsContent value="history" className="mt-6">
-          {history.length === 0 ? (
+          <div className="flex items-center gap-2 mb-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search history..."
+                value={historySearch}
+                onChange={(e) => setHistorySearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Sheet open={filterDrawerOpen} onOpenChange={setFilterDrawerOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-1.5 shrink-0">
+                  <Filter className="h-4 w-4" />
+                  Filters
+                  {activeFilterCount > 0 && (
+                    <Badge className="h-5 min-w-5 px-1.5 bg-indigo-600 text-white">{activeFilterCount}</Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-80 sm:w-96 overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>Filter History</SheetTitle>
+                </SheetHeader>
+                <div className="space-y-6 mt-6">
+                  {/* Status */}
+                  <div>
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Status</Label>
+                    <div className="flex gap-2 mt-2">
+                      {(['all', 'APPROVED', 'REJECTED'] as const).map((s) => (
+                        <Button
+                          key={s}
+                          size="sm"
+                          variant={historyStatusFilter === s ? 'default' : 'outline'}
+                          onClick={() => setHistoryStatusFilter(s)}
+                          className={historyStatusFilter === s && s === 'APPROVED' ? 'bg-indigo-600 hover:bg-indigo-700' : historyStatusFilter === s && s === 'REJECTED' ? 'bg-red-600 hover:bg-red-700' : ''}
+                        >
+                          {s === 'all' ? 'All' : s === 'APPROVED' ? 'Approved' : 'Rejected'}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Date Range */}
+                  <div>
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Date Range</Label>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <div>
+                        <Label className="text-xs">From</Label>
+                        <Input type="date" value={historyDateFrom} onChange={(e) => setHistoryDateFrom(e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label className="text-xs">To</Label>
+                        <Input type="date" value={historyDateTo} onChange={(e) => setHistoryDateTo(e.target.value)} className="mt-1" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* People */}
+                  {uniqueRequesters.length > 0 && (
+                    <div>
+                      <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Requested By</Label>
+                      <div className="space-y-2 mt-2 max-h-48 overflow-y-auto">
+                        {uniqueRequesters.map(([id, name]) => (
+                          <label key={id} className="flex items-center gap-2 cursor-pointer text-sm">
+                            <Checkbox
+                              checked={historyPeopleFilter.includes(id)}
+                              onCheckedChange={(checked) => {
+                                setHistoryPeopleFilter((prev) =>
+                                  checked ? [...prev, id] : prev.filter((p) => p !== id)
+                                )
+                              }}
+                            />
+                            {name}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Clear */}
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      setHistoryStatusFilter('all')
+                      setHistoryDateFrom('')
+                      setHistoryDateTo('')
+                      setHistoryPeopleFilter([])
+                    }}
+                  >
+                    Clear all filters
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {filteredHistory.length === 0 ? (
             <div className="text-center py-16 text-muted-foreground">
               <Clock className="h-14 w-14 mx-auto mb-4 opacity-40" />
-              <p className="font-medium">No history yet</p>
-              <p className="text-sm mt-1">{isMD ? 'Approved and rejected requests will appear here' : 'Your approved or rejected requests will appear here'}</p>
+              <p className="font-medium">{history.length === 0 ? 'No history yet' : 'No results match your filters'}</p>
+              <p className="text-sm mt-1">{history.length === 0 ? (isMD ? 'Approved and rejected requests will appear here' : 'Your approved or rejected requests will appear here') : 'Try adjusting your search or filters'}</p>
             </div>
           ) : viewMode === 'table' ? (
             <div className="rounded-md border">
@@ -663,7 +804,7 @@ export default function MDApprovalsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {history.map((req) => (
+                  {filteredHistory.map((req) => (
                     <TableRow key={req.id}>
                       <TableCell>
                         <div>
@@ -710,7 +851,7 @@ export default function MDApprovalsPage() {
           ) : (
             <div className={isMobile ? 'space-y-4' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'}>
               <AnimatePresence mode="popLayout">
-                {history.map((req, i) => (
+                {filteredHistory.map((req, i) => (
                   <motion.div
                     key={req.id}
                     initial={{ opacity: 0, y: 8 }}

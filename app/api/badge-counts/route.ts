@@ -39,6 +39,7 @@ export interface BadgeCounts {
   hrPendingIncrements: number
   taskApprovalCount: number
   taskOverdueCount: number
+  upcomingMeetsToday: number
 }
 
 export async function GET(request: NextRequest) {
@@ -81,6 +82,7 @@ export async function GET(request: NextRequest) {
       hrPendingIncrements: 0,
       taskApprovalCount: 0,
       taskOverdueCount: 0,
+      upcomingMeetsToday: 0,
     }
 
     const promises: Promise<unknown>[] = []
@@ -435,6 +437,25 @@ export async function GET(request: NextRequest) {
           })
       )
     }
+
+    // Upcoming meets today (for mobile nav badge)
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    const todayEnd = new Date()
+    todayEnd.setHours(23, 59, 59, 999)
+    promises.push(
+      prisma.meet.count({
+        where: {
+          scheduledAt: { gte: new Date(), lte: todayEnd },
+          OR: [
+            { createdById: user.id },
+            { participants: { some: { userId: user.id } } },
+          ],
+        },
+      }).then((c) => {
+        counts.upcomingMeetsToday = c
+      })
+    )
 
     await Promise.all(promises)
 

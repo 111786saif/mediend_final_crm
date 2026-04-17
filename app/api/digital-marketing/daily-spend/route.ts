@@ -34,15 +34,19 @@ export async function GET(request: NextRequest) {
         }),
         prisma.lead.findMany({
           where: { leadDate: { gte: start, lte: end } },
-          select: { campaignName: true },
+          select: { campaignName: true, source: true },
         }),
       ])
 
-      // Count leads per campaign
+      // Count leads per campaign and track source
       const leadsByName = new Map<string, number>()
+      const sourceByName = new Map<string, string>()
       for (const l of leads) {
         const name = l.campaignName || 'Unknown'
         leadsByName.set(name, (leadsByName.get(name) || 0) + 1)
+        if (l.source && !sourceByName.has(name)) {
+          sourceByName.set(name, l.source)
+        }
       }
 
       // Merge: all campaigns that have leads OR spend
@@ -58,7 +62,7 @@ export async function GET(request: NextRequest) {
           const rec = spendByName.get(name)
           const spend = rec?.spend ?? 0
           const cpl = leadCount > 0 ? Math.round((spend / leadCount) * 100) / 100 : null
-          return { campaignName: name, spend, leadCount, cpl, id: rec?.id ?? null }
+          return { campaignName: name, source: sourceByName.get(name) ?? null, spend, leadCount, cpl, id: rec?.id ?? null }
         })
         .sort((a, b) => b.leadCount - a.leadCount)
 

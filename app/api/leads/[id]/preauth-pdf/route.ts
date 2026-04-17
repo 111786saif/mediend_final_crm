@@ -127,6 +127,7 @@ function buildPreAuthHtml(params: {
     requestedHospitalName: string | null
     requestedRoomType: string | null
     diseaseDescription: string | null
+    doctorName: string | null
   }
   admissionDate: string | null
   surgeryDate: string | null
@@ -159,6 +160,8 @@ function buildPreAuthHtml(params: {
       : `<h1 class="patient-name">${patientCell === 'dash' ? escapeHtml('—') : patientCell}</h1>`
 
   const cardDefs: Array<{ label: string; cell: 'hide' | 'dash' | string; fullWidth?: boolean }> = [
+    { label: 'Hospital', cell: fieldCell(preAuth.requestedHospitalName) },
+    { label: 'Doctor', cell: fieldCell(preAuth.doctorName) },
     { label: 'Date of Admission', cell: fieldCell(admissionDate) },
     { label: 'Date of Surgery', cell: fieldCell(surgeryDate) },
     { label: 'Insurance', cell: fieldCell(preAuth.insurance) },
@@ -168,8 +171,7 @@ function buildPreAuthHtml(params: {
     { label: 'Capping', cell: fieldCell(preAuth.capping) },
     { label: 'Copay', cell: fieldCell(preAuth.copay) },
     { label: 'ICU', cell: fieldCell(preAuth.icu) },
-    { label: 'Requested Hospital', cell: fieldCell(preAuth.requestedHospitalName) },
-    { label: 'Requested Room Type', cell: fieldCell(preAuth.requestedRoomType) },
+    { label: 'Room Type', cell: fieldCell(preAuth.requestedRoomType) },
     {
       label: 'Disease Description',
       cell:
@@ -397,6 +399,13 @@ export async function GET(
     }
 
     const suggestedHospitals = preAuth.suggestedHospitals ?? []
+    // Find the doctor from the matching suggested hospital
+    const matchedHospital = preAuth.requestedHospitalName
+      ? suggestedHospitals.find(
+          (h) => h.hospitalName?.trim() === preAuth.requestedHospitalName?.trim()
+        )
+      : null
+    const doctorName = matchedHospital?.suggestedDoctor ?? lead.ipdDrName ?? null
     const selectedRoomRent = getSelectedHospitalRoomRent(
       suggestedHospitals,
       preAuth.requestedHospitalName,
@@ -440,6 +449,7 @@ export async function GET(
         requestedHospitalName: preAuth.requestedHospitalName ?? null,
         requestedRoomType: preAuth.requestedRoomType ?? null,
         diseaseDescription: preAuth.diseaseDescription ?? null,
+        doctorName,
       },
       imageDataUrls,
       pdfBase64List,

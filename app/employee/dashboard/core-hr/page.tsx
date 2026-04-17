@@ -305,10 +305,16 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
   const reasonTrimmed = reason.trim()
   const reasonOk = reasonTrimmed.length >= NORMALIZATION_REASON_MIN_CHARS
 
+  const todayStr = format(new Date(), 'yyyy-MM-dd')
+
   const handleSubmit = () => {
     const validDates = dates.filter((d) => d.trim())
     if (validDates.length === 0) {
       toast.error('Add at least one date')
+      return
+    }
+    if (validDates.some((d) => d > todayStr)) {
+      toast.error('Cannot request normalization for a future date')
       return
     }
     if (!reasonOk) {
@@ -345,6 +351,7 @@ function RequestNormalizationButton({ onSuccess }: { onSuccess?: () => void }) {
                 <Input
                   type="date"
                   value={d}
+                  max={todayStr}
                   onChange={(e) => {
                     const next = [...dates]
                     next[i] = e.target.value
@@ -646,6 +653,7 @@ function AttendanceTab() {
                 <Input
                   type="date"
                   value={normalizeDate}
+                  max={format(new Date(), 'yyyy-MM-dd')}
                   onChange={(e) => setNormalizeDate(e.target.value)}
                   className="mt-1"
                 />
@@ -672,6 +680,10 @@ function AttendanceTab() {
                   onClick={() => {
                     if (!normalizeDate) {
                       toast.error('Select a date')
+                      return
+                    }
+                    if (normalizeDate > format(new Date(), 'yyyy-MM-dd')) {
+                      toast.error('Cannot normalize a future date')
                       return
                     }
                     normalizeMutation.mutate({

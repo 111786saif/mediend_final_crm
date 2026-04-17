@@ -17,11 +17,25 @@ export async function POST(
 
     const { id: leadId } = await params
 
-    await prisma.chatReadReceipt.upsert({
-      where: { leadId_userId: { leadId, userId: user.id } },
-      update: { lastReadAt: new Date() },
-      create: { leadId, userId: user.id, lastReadAt: new Date() },
-    })
+    await Promise.all([
+      prisma.chatReadReceipt.upsert({
+        where: { leadId_userId: { leadId, userId: user.id } },
+        update: { lastReadAt: new Date() },
+        create: { leadId, userId: user.id, lastReadAt: new Date() },
+      }),
+      prisma.notification.updateMany({
+        where: {
+          userId: user.id,
+          type: 'CASE_CHAT_MESSAGE',
+          relatedId: leadId,
+          isRead: false,
+        },
+        data: {
+          isRead: true,
+          readAt: new Date(),
+        },
+      }),
+    ])
 
     return successResponse({ ok: true })
   } catch (error) {

@@ -20,6 +20,8 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { toast } from 'sonner'
 import { ChevronLeft, ChevronRight, Megaphone, CalendarDays } from 'lucide-react'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 function formatInr(n: number) {
   return new Intl.NumberFormat('en-IN', {
@@ -64,6 +66,7 @@ function last7Days(dateStr: string) {
 
 type CampaignEntry = {
   campaignName: string
+  source: string | null
   spend: number
   leadCount: number
   cpl: number | null
@@ -92,6 +95,7 @@ export default function DailySpendPage() {
   const qc = useQueryClient()
   const today = toDateStr(new Date())
   const [selectedDate, setSelectedDate] = useState(today)
+  const [calendarOpen, setCalendarOpen] = useState(false)
   const [draftSpend, setDraftSpend] = useState<Record<string, string>>({})
 
   const { data: accessData, isLoading: accessLoading } = useQuery({
@@ -225,20 +229,28 @@ export default function DailySpendPage() {
               <Button variant="outline" size="icon" onClick={() => setSelectedDate((d) => addDays(d, -1))}>
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <div className="relative">
-                <Button variant="outline" className="min-w-[220px] gap-2 text-base font-semibold" asChild>
-                  <label>
+              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="min-w-[220px] gap-2 text-base font-semibold">
                     <CalendarDays className="h-4 w-4" />
                     {formatDateDisplay(selectedDate)}
-                    <input
-                      type="date"
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                      value={selectedDate}
-                      onChange={(e) => e.target.value && setSelectedDate(e.target.value)}
-                    />
-                  </label>
-                </Button>
-              </div>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="center">
+                  <Calendar
+                    mode="single"
+                    selected={new Date(selectedDate + 'T00:00:00')}
+                    defaultMonth={new Date(selectedDate + 'T00:00:00')}
+                    onSelect={(date) => {
+                      if (date) {
+                        setSelectedDate(toDateStr(date))
+                        setDraftSpend({})
+                      }
+                      setCalendarOpen(false)
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
               <Button variant="outline" size="icon" onClick={() => setSelectedDate((d) => addDays(d, 1))}>
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -313,7 +325,7 @@ export default function DailySpendPage() {
                           return (
                             <TableRow key={c.campaignName}>
                               <TableCell className="font-medium max-w-[280px] break-words">
-                                {c.campaignName}
+                                {c.campaignName}{c.source ? ` - ${c.source}` : ''}
                               </TableCell>
                               <TableCell className="text-right tabular-nums">{c.leadCount}</TableCell>
                               <TableCell className="text-right">

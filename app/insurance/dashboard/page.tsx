@@ -156,6 +156,7 @@ export default function InsuranceDashboardPage() {
   const [activeTab, setActiveTab] = useState<TabKey>('kyp-review')
   const [searchQuery, setSearchQuery] = useState('')
   const [ipdMarkFilter, setIpdMarkFilter] = useState<IpdMarkFilterValue>('')
+  const [preAuthFilter, setPreAuthFilter] = useState<'all' | 'pending' | 'rejected'>('all')
 
   const { data: leads, isLoading, error } = useQuery<LeadWithStage[]>({
     queryKey: ['leads', 'insurance'],
@@ -173,10 +174,13 @@ export default function InsuranceDashboardPage() {
 
   // ── Stats ─────────────────────────────────────────────────────────────────
   const stats = useMemo(() => {
-    if (!leads) return { kypReview: 0, preAuthRaised: 0, preAuthComplete: 0, admitted: 0, dischargePending: 0, ipdDone: 0, allPatients: 0, ipdScheduled: 0 }
+    if (!leads) return { kypReview: 0, preAuthRaised: 0, preAuthPending: 0, preAuthRejected: 0, preAuthComplete: 0, admitted: 0, dischargePending: 0, ipdDone: 0, allPatients: 0, ipdScheduled: 0 }
+    const preAuthRaisedLeads = leads.filter(l => l.caseStage === CaseStage.PREAUTH_RAISED)
     return {
       kypReview: leads.filter(l => KYP_STAGES.includes(l.caseStage) || (l.kypSubmission && l.caseStage === CaseStage.NEW_LEAD)).length,
-      preAuthRaised: leads.filter(l => l.caseStage === CaseStage.PREAUTH_RAISED).length,
+      preAuthRaised: preAuthRaisedLeads.length,
+      preAuthPending: preAuthRaisedLeads.filter(l => !l.kypSubmission?.preAuthData?.approvalStatus || l.kypSubmission.preAuthData.approvalStatus === PreAuthStatus.PENDING).length,
+      preAuthRejected: preAuthRaisedLeads.filter(l => l.kypSubmission?.preAuthData?.approvalStatus === PreAuthStatus.REJECTED).length,
       preAuthComplete: leads.filter(l => l.caseStage === CaseStage.PREAUTH_COMPLETE).length,
       admitted: leads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
       dischargePending: leads.filter(l => l.caseStage === CaseStage.DISCHARGED && !l.dischargeSheet).length,
@@ -237,8 +241,12 @@ export default function InsuranceDashboardPage() {
       switch (activeTab) {
         case 'kyp-review':
           return KYP_STAGES.includes(lead.caseStage) || (lead.kypSubmission && lead.caseStage === CaseStage.NEW_LEAD)
-        case 'preauth-raised':
-          return lead.caseStage === CaseStage.PREAUTH_RAISED
+        case 'preauth-raised': {
+          if (lead.caseStage !== CaseStage.PREAUTH_RAISED) return false
+          if (preAuthFilter === 'pending') return !lead.kypSubmission?.preAuthData?.approvalStatus || lead.kypSubmission.preAuthData.approvalStatus === PreAuthStatus.PENDING
+          if (preAuthFilter === 'rejected') return lead.kypSubmission?.preAuthData?.approvalStatus === PreAuthStatus.REJECTED
+          return true
+        }
         case 'preauth-complete':
           return lead.caseStage === CaseStage.PREAUTH_COMPLETE
         case 'admitted':
@@ -279,7 +287,7 @@ export default function InsuranceDashboardPage() {
       const dateB = new Date(b.updatedDate || b.createdDate).getTime()
       return dateB - dateA
     })
-  }, [leads, activeTab, searchQuery, ipdMarkFilter])
+  }, [leads, activeTab, searchQuery, ipdMarkFilter, preAuthFilter])
 
   // ── Pending Hospital Suggestions ───────────────────────────────────────────
   const pendingSuggestions = useMemo(() => {
@@ -495,6 +503,40 @@ export default function InsuranceDashboardPage() {
                   </CardDescription>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
+                  {activeTab === 'preauth-raised' && (
+                    <div className="flex items-center gap-1 mr-2">
+                      {([
+                        { key: 'all' as const, label: 'All', count: stats.preAuthRaised },
+                        { key: 'pending' as const, label: 'Pending', count: stats.preAuthPending },
+                        { key: 'rejected' as const, label: 'Rejected', count: stats.preAuthRejected },
+                      ] as const).map((pill) => (
+                        <button
+                          key={pill.key}
+                          onClick={() => setPreAuthFilter(pill.key)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                            preAuthFilter === pill.key
+                              ? pill.key === 'rejected'
+                                ? 'bg-red-600 text-white shadow-md'
+                                : 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-md'
+                              : pill.key === 'rejected'
+                                ? 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-950/50 border border-red-200 dark:border-red-800'
+                                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+                          }`}
+                        >
+                          {pill.label}
+                          <span className={`inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[10px] font-bold px-1 ${
+                            preAuthFilter === pill.key
+                              ? 'bg-white/20 text-inherit'
+                              : pill.key === 'rejected'
+                                ? 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200'
+                                : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                          }`}>
+                            {pill.count}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <Select
                     value={ipdMarkFilter === '' ? 'all' : ipdMarkFilter}
                     onValueChange={(v) => setIpdMarkFilter((v === 'all' ? '' : v) as IpdMarkFilterValue)}
@@ -567,8 +609,11 @@ export default function InsuranceDashboardPage() {
                         const isSuggestionPending = tier === 3
                         const isDischargeUrgent = tier === 1
                         const isInitialFormUrgent = tier === 2
+                        const isRejected = lead.kypSubmission?.preAuthData?.approvalStatus === PreAuthStatus.REJECTED
 
-                        const rowBg = isSuggestionPending
+                        const rowBg = isRejected
+                          ? 'bg-red-50/60 dark:bg-red-950/20'
+                          : isSuggestionPending
                           ? 'bg-amber-50/60 dark:bg-amber-950/20'
                           : isDischargeUrgent
                           ? 'bg-amber-50/60 dark:bg-amber-950/20'
@@ -578,7 +623,9 @@ export default function InsuranceDashboardPage() {
                           ? 'bg-white dark:bg-gray-950'
                           : 'bg-gray-50/50 dark:bg-gray-900/50'
 
-                        const borderLeft = isSuggestionPending
+                        const borderLeft = isRejected
+                          ? 'border-l-4 border-l-red-500'
+                          : isSuggestionPending
                           ? 'border-l-4 border-l-amber-500'
                           : isDischargeUrgent
                           ? 'border-l-4 border-l-orange-500'
@@ -601,6 +648,11 @@ export default function InsuranceDashboardPage() {
                               <div>
                                 <div className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-1">
                                   {lead.patientName}
+                                  {isRejected && (
+                                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-[10px] font-bold">
+                                      <AlertCircle className="w-2.5 h-2.5" /> Rejected
+                                    </span>
+                                  )}
                                   {isSuggestionPending && (
                                     <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 text-[10px] font-bold">
                                       <AlertTriangle className="w-2.5 h-2.5" /> Hospital Suggestion Pending

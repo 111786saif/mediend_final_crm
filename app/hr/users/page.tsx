@@ -815,6 +815,17 @@ function EditEmployeeDialog({
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+          {user.employee && (formData.employeeCode !== (user.employee.employeeCode || '') || formData.bdNumber !== (user.employee.bdNumber != null ? String(user.employee.bdNumber) : '')) && (
+            <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+              <p className="text-sm text-amber-800 dark:text-amber-300 font-medium">
+                {formData.employeeCode !== (user.employee.employeeCode || '') && formData.bdNumber !== (user.employee.bdNumber != null ? String(user.employee.bdNumber) : '')
+                  ? 'Changing Employee Code and CRM Number will delete existing attendance records and leads, then re-sync from source systems.'
+                  : formData.employeeCode !== (user.employee.employeeCode || '')
+                    ? 'Changing Employee Code will delete existing attendance records and re-sync from the biometric system.'
+                    : 'Changing CRM Number will delete existing leads and re-sync from MySQL.'}
+              </p>
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Employee Code *</Label>

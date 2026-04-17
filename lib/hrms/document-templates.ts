@@ -128,6 +128,7 @@ export function generateOfferLetterHTML(
     guardianName?: string
     guardianRelation?: string
     address?: string
+    salutation?: string
   }
 ): string {
   const today = format(new Date(), 'do MMMM, yyyy')
@@ -137,6 +138,7 @@ export function generateOfferLetterHTML(
   const guardianName = metadata?.guardianName || ''
   const guardianRelation = metadata?.guardianRelation || 'S/O'
   const address = metadata?.address || ''
+  const salutation = metadata?.salutation || 'Mr.'
   const isSales = metadata?.isSales ?? false
   const salesTarget = metadata?.salesTarget || 'As per performance plan'
   const monthlyTarget = metadata?.monthlyTarget || 'As per performance plan'
@@ -181,7 +183,7 @@ export function generateOfferLetterHTML(
 
   <div>
     <p><strong>To,</strong></p>
-    <p>Ms/Mr ${employee.name}${guardianName ? `, ${guardianRelation} ${guardianName}` : ''}</p>${address ? `
+    <p>${salutation} ${employee.name}${guardianName ? `, ${guardianRelation} ${guardianName}` : ''}</p>${address ? `
     <p>${address}</p>` : ''}
     <p>Email: ${employee.email}</p>
   </div>
@@ -267,10 +269,12 @@ export function generateIncrementLetterHTML(
     effectiveDate?: string
     joinDate?: string
     remarks?: string
+    salutation?: string
   }
 ): string {
   const today = format(new Date(), 'do MMMM, yyyy')
   const designation = metadata?.designation || employee.designation || 'Associate'
+  const salutation = metadata?.salutation || 'Mr.'
   const previousSalary = metadata?.previousSalary || employee.salary || 0
   const incrementPercentage = metadata?.incrementPercentage || 10
   const newSalary = metadata?.newSalary || Math.round(previousSalary * (1 + incrementPercentage / 100))
@@ -302,7 +306,7 @@ export function generateIncrementLetterHTML(
 
   <div>
     <p><strong>To,</strong></p>
-    <p>Mr/Ms ${employee.name}</p>
+    <p>${salutation} ${employee.name}</p>
     <p>Employee ID: ${employee.employeeCode}</p>
     <p>Department: ${employee.department || 'N/A'}</p>
   </div>
@@ -342,10 +346,12 @@ export function generateExperienceLetterHTML(
   metadata?: {
     designation?: string
     lastWorkingDate?: string
+    salutation?: string
   }
 ): string {
   const today = format(new Date(), 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Associate'
+  const salutation = metadata?.salutation || 'Mr.'
   const lastWorkingDate = metadata?.lastWorkingDate || today
   const joinDateFormatted = employee.joinDate ? format(employee.joinDate, 'do MMMM, yyyy') : 'N/A'
 
@@ -370,7 +376,7 @@ export function generateExperienceLetterHTML(
   <div class="content">
     <p><strong>TO WHOMSOEVER IT MAY CONCERN</strong></p>
 
-    <p>This is to certify that Mr/Ms <strong>${employee.name}</strong> was employed with Kundkund Healthcare Pvt. Ltd. from <strong>${joinDateFormatted}</strong> to <strong>${lastWorkingDate}</strong> in the capacity of <strong>${designation}</strong>.</p>
+    <p>This is to certify that ${salutation} <strong>${employee.name}</strong> was employed with Kundkund Healthcare Pvt. Ltd. from <strong>${joinDateFormatted}</strong> to <strong>${lastWorkingDate}</strong> in the capacity of <strong>${designation}</strong>.</p>
 
     <p>During the tenure with our organization, ${employee.name.split(' ')[0]} demonstrated a high level of professionalism, commitment, and responsibility in carrying out assigned duties. ${employee.name.split(' ')[0]} consistently displayed strong work ethics, effective communication skills, and the ability to work both independently and as part of a team.</p>
 
@@ -397,6 +403,7 @@ export function generateRelievingLetterHTML(
     designation?: string
     lastWorkingDate?: string
     resignationDate?: string
+    salutation?: string
   }
 ): string {
   const today = format(new Date(), 'do MMMM, yyyy')
@@ -462,6 +469,7 @@ export function generateInternshipOfferLetterHTML(
     guardianName?: string
     guardianRelation?: string
     address?: string
+    salutation?: string
   }
 ): string {
   const today = format(new Date(), 'do MMMM, yyyy')
@@ -474,6 +482,7 @@ export function generateInternshipOfferLetterHTML(
   const guardianName = metadata?.guardianName || ''
   const guardianRelation = metadata?.guardianRelation || 'S/O'
   const address = metadata?.address || ''
+  const salutation = metadata?.salutation || 'Mr.'
   const startDateRaw = metadata?.startDate
   const startDate = startDateRaw
     ? format(new Date(startDateRaw), 'do MMMM, yyyy')
@@ -505,7 +514,7 @@ export function generateInternshipOfferLetterHTML(
 
   <div>
     <p><strong>To,</strong></p>
-    <p>Ms/Mr ${employee.name}${guardianName ? `, ${guardianRelation} ${guardianName}` : ''}</p>${address ? `
+    <p>${salutation} ${employee.name}${guardianName ? `, ${guardianRelation} ${guardianName}` : ''}</p>${address ? `
     <p>${address}</p>` : ''}
     <p>Email: ${employee.email}</p>
   </div>
@@ -563,10 +572,12 @@ export function generateInternshipCompletionLetterHTML(
     department?: string
     startDate?: string
     endDate?: string
+    salutation?: string
   }
 ): string {
   const today = format(new Date(), 'do MMMM, yyyy')
   const designation = metadata?.designation || 'Intern'
+  const salutation = metadata?.salutation || 'Mr.'
   const department = metadata?.department || employee.department || 'Operations'
   const startDateRaw = metadata?.startDate
   const startDate = startDateRaw
@@ -598,7 +609,7 @@ export function generateInternshipCompletionLetterHTML(
   <div class="content">
     <p><strong>TO WHOMSOEVER IT MAY CONCERN</strong></p>
 
-    <p>We are glad to inform that Ms./Mr. <strong>${employee.name}</strong> has successfully completed the internship at <strong>${COMPANY_DATA.name}</strong> from <strong>${startDate}</strong> to <strong>${endDate}</strong>.</p>
+    <p>We are glad to inform that ${salutation} <strong>${employee.name}</strong> has successfully completed the internship at <strong>${COMPANY_DATA.name}</strong> from <strong>${startDate}</strong> to <strong>${endDate}</strong>.</p>
 
     <p>During the internship, ${employee.name.split(' ')[0]} was exposed to the various activities in the <strong>${department}</strong> Department.</p>
 

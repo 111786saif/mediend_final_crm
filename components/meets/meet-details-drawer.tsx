@@ -379,6 +379,7 @@ export function MeetDetailsDrawer({
                       name={p.user?.name ?? p.userId}
                       subtitle={p.user?.email ?? undefined}
                       attended={p.attended}
+                      remarks={meet.createdBy.id === currentUserId ? p.remarks : undefined}
                     />
                   ))}
                   {hasGuest && (
@@ -392,8 +393,8 @@ export function MeetDetailsDrawer({
                 </ul>
               </div>
 
-              {/* My remarks — only if I'm a participant */}
-              {iAmParticipant && myRow && (
+              {/* My remarks — for participants and organizers */}
+              {iAmParticipant && (
                 <div className="rounded-2xl border border-border bg-card p-4">
                   <div className="flex items-center justify-between">
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -406,10 +407,10 @@ export function MeetDetailsDrawer({
                       onClick={() => setRemarksOpen(true)}
                     >
                       <Pencil className="h-3.5 w-3.5 mr-1" />
-                      {myRow.remarks ? 'Edit' : 'Add'}
+                      {myRow?.remarks ? 'Edit' : 'Add'}
                     </Button>
                   </div>
-                  {myRow.remarks ? (
+                  {myRow?.remarks ? (
                     <p className="mt-2 text-sm leading-relaxed whitespace-pre-wrap break-words">
                       {myRow.remarks}
                     </p>
@@ -419,11 +420,11 @@ export function MeetDetailsDrawer({
                   <div className="mt-3 flex gap-2">
                     <Button
                       type="button"
-                      variant={myRow.attended === true ? 'default' : 'outline'}
+                      variant={myRow?.attended === true ? 'default' : 'outline'}
                       size="sm"
                       className={cn(
                         'flex-1 rounded-xl h-10',
-                        myRow.attended === true && 'bg-emerald-600 hover:bg-emerald-700'
+                        myRow?.attended === true && 'bg-emerald-600 hover:bg-emerald-700'
                       )}
                       disabled={quickMarkAttendance.isPending}
                       onClick={() => quickMarkAttendance.mutate(true)}
@@ -433,11 +434,11 @@ export function MeetDetailsDrawer({
                     </Button>
                     <Button
                       type="button"
-                      variant={myRow.attended === false ? 'default' : 'outline'}
+                      variant={myRow?.attended === false ? 'default' : 'outline'}
                       size="sm"
                       className={cn(
                         'flex-1 rounded-xl h-10',
-                        myRow.attended === false && 'bg-rose-600 hover:bg-rose-700'
+                        myRow?.attended === false && 'bg-rose-600 hover:bg-rose-700'
                       )}
                       disabled={quickMarkAttendance.isPending}
                       onClick={() => quickMarkAttendance.mutate(false)}
@@ -578,40 +579,47 @@ function PersonRow({
   subtitle,
   attended,
   isOrganizer,
+  remarks,
 }: {
   name: string
   subtitle?: string
   attended?: boolean | null
   isOrganizer?: boolean
+  remarks?: string | null
 }) {
   const col = getAvatarColor(name)
   return (
-    <li className="flex items-center gap-3">
-      <Avatar className="h-10 w-10 shrink-0">
-        <AvatarFallback className={cn(col.bg, col.text, 'text-sm font-medium')}>
-          {getInitials(name)}
-        </AvatarFallback>
-      </Avatar>
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium leading-tight truncate">{name}</p>
-        {subtitle && <p className="text-xs text-muted-foreground truncate">{subtitle}</p>}
+    <li className="flex flex-col gap-1">
+      <div className="flex items-center gap-3">
+        <Avatar className="h-10 w-10 shrink-0">
+          <AvatarFallback className={cn(col.bg, col.text, 'text-sm font-medium')}>
+            {getInitials(name)}
+          </AvatarFallback>
+        </Avatar>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium leading-tight truncate">{name}</p>
+          {subtitle && <p className="text-xs text-muted-foreground truncate">{subtitle}</p>}
+        </div>
+        {isOrganizer ? (
+          <Badge variant="secondary" className="text-[10px] rounded-full">
+            Organizer
+          </Badge>
+        ) : attended === true ? (
+          <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-0 text-[10px] rounded-full">
+            Joined
+          </Badge>
+        ) : attended === false ? (
+          <Badge className="bg-rose-100 text-rose-800 hover:bg-rose-100 border-0 text-[10px] rounded-full">
+            Not joined
+          </Badge>
+        ) : (
+          <Badge variant="outline" className="text-[10px] rounded-full text-muted-foreground">
+            Not marked
+          </Badge>
+        )}
       </div>
-      {isOrganizer ? (
-        <Badge variant="secondary" className="text-[10px] rounded-full">
-          Organizer
-        </Badge>
-      ) : attended === true ? (
-        <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100 border-0 text-[10px] rounded-full">
-          Joined
-        </Badge>
-      ) : attended === false ? (
-        <Badge className="bg-rose-100 text-rose-800 hover:bg-rose-100 border-0 text-[10px] rounded-full">
-          Not joined
-        </Badge>
-      ) : (
-        <Badge variant="outline" className="text-[10px] rounded-full text-muted-foreground">
-          Not marked
-        </Badge>
+      {remarks && (
+        <p className="text-xs text-muted-foreground ml-[52px] italic">{remarks}</p>
       )}
     </li>
   )

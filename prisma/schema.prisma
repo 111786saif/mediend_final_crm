@@ -1896,6 +1896,10 @@ model KYPSubmission {
   submittedBy   User      @relation("KYPSubmitter", fields: [submittedById], references: [id])
   submittedAt   DateTime  @default(now())
 
+  // Document edit tracking (BD can edit uploaded docs up to 3 times)
+  documentEditCounts  Json?   // { "aadhar": 1, "pan": 0, "prescription": 2, ... }
+  documentEditHistory Json?   // [{ field, oldUrl, newUrl, editedAt, editedById }]
+
   // Pre-authorization (filled by Insurance)
   preAuthData PreAuthorization?
 

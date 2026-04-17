@@ -578,40 +578,44 @@ export default function PatientDetailsPage() {
 
   // Collect all uploaded documents for grid (KYP + PreAuth)
   const uploadedDocuments = (() => {
-    const items: { title: string; url: string; isImage: boolean }[] = []
+    const items: { title: string; url: string; isImage: boolean; documentField?: string; editCount?: number; kypId?: string; isEdited?: boolean }[] = []
     // Prefer the separately fetched kypSubmission as it might have more details (e.g. preAuthData)
     const kyp = kypSubmission || lead?.kypSubmission
     if (!kyp) return items
-    
-    const add = (title: string, url: string) => {
+
+    const editCounts = ((kyp as any).documentEditCounts as Record<string, number>) || {}
+
+    const add = (title: string, url: string, documentField?: string) => {
       if (!url) return
       const u = url.toLowerCase()
       const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(u) || u.includes('jpg') || u.includes('png')
-      items.push({ title, url, isImage })
+      const fieldKey = documentField?.replace(/FileUrl$/, '').replace(/Files$/, '')
+      const editCount = fieldKey ? (editCounts[fieldKey] || 0) : 0
+      items.push({ title, url, isImage, documentField, editCount, kypId: kyp.id, isEdited: editCount > 0 })
     }
 
-    if (kyp.insuranceCardFileUrl) add('Insurance Card', kyp.insuranceCardFileUrl)
+    if (kyp.insuranceCardFileUrl) add('Insurance Card', kyp.insuranceCardFileUrl, 'insuranceCardFileUrl')
     kypMultiDocUrls(kyp.aadharFiles, kyp.aadharFileUrl).forEach((url, i, a) => {
-      add(a.length > 1 ? `Aadhaar ${i + 1}` : 'Aadhaar', url)
+      add(a.length > 1 ? `Aadhaar ${i + 1}` : 'Aadhaar', url, kyp.aadharFiles ? 'aadharFiles' : 'aadharFileUrl')
     })
     kypMultiDocUrls(kyp.panFiles, kyp.panFileUrl).forEach((url, i, a) => {
-      add(a.length > 1 ? `PAN ${i + 1}` : 'PAN', url)
+      add(a.length > 1 ? `PAN ${i + 1}` : 'PAN', url, kyp.panFiles ? 'panFiles' : 'panFileUrl')
     })
-    if (kyp.prescriptionFileUrl) add('Prescription', kyp.prescriptionFileUrl)
+    if (kyp.prescriptionFileUrl) add('Prescription', kyp.prescriptionFileUrl, 'prescriptionFileUrl')
 
-    const processFiles = (files: any, typeLabel: string) => {
+    const processFiles = (files: any, typeLabel: string, documentField?: string) => {
       if (!files) return
       const fileList = Array.isArray(files) ? files : []
       fileList.forEach((p: any, index: number) => {
         const url = typeof p === 'string' ? p : p?.url
         if (!url) return
         const title = fileList.length > 1 ? `${typeLabel} ${index + 1}` : typeLabel
-        add(title, url)
+        add(title, url, documentField)
       })
     }
 
-    processFiles(kyp.diseasePhotos, 'Disease photo')
-    processFiles(kyp.otherFiles, 'Additional document')
+    processFiles(kyp.diseasePhotos, 'Disease photo', 'diseasePhotos')
+    processFiles(kyp.otherFiles, 'Additional document', 'otherFiles')
     processFiles(kyp.preAuthData?.diseaseImages, 'Disease image')
     processFiles(kyp.preAuthData?.investigationFileUrls, 'Investigation')
     processFiles(kyp.preAuthData?.prescriptionFiles, 'Prescription')
@@ -622,7 +626,7 @@ export default function PatientDetailsPage() {
         t.url === item.url
       ))
     )
-    
+
     return uniqueItems
   })()
 
@@ -933,12 +937,27 @@ export default function PatientDetailsPage() {
         {/* Uploaded Documents Grid */}
         {uploadedDocuments.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {uploadedDocuments.map((doc, index) => (
+                {uploadedDocuments.map((doc, index) => {
+                  const isBd = user?.role === 'BD'
+                  const canEdit = isBd && doc.documentField && doc.kypId && (doc.editCount ?? 0) < 1
+                  const remainingEdits = 1 - (doc.editCount ?? 0)
+
+                  return (
                   <div
                     key={`${doc.url}-${index}`}
-                    className="flex flex-col rounded-lg border-2 border-gray-200 dark:border-gray-800 overflow-hidden hover:border-blue-400 dark:hover:border-blue-600 hover:shadow-md transition-all"
+                    className={cn(
+                      "flex flex-col rounded-lg border-2 overflow-hidden hover:shadow-md transition-all",
+                      doc.isEdited
+                        ? "border-amber-300 dark:border-amber-700"
+                        : "border-gray-200 dark:border-gray-800 hover:border-blue-400 dark:hover:border-blue-600"
+                    )}
                   >
-                    <div className="w-full h-[200px] shrink-0 overflow-hidden bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
+                    <div className="w-full h-[200px] shrink-0 overflow-hidden bg-gray-100 dark:bg-gray-900 flex items-center justify-center relative">
+                      {doc.isEdited && (
+                        <span className="absolute top-1.5 right-1.5 z-10 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-[10px] font-bold">
+                          <Pencil className="w-2.5 h-2.5" /> Edited ({doc.editCount}x)
+                        </span>
+                      )}
                       {doc.isImage ? (
                         <iframe
                           src={doc.url}
@@ -963,18 +982,73 @@ export default function PatientDetailsPage() {
                       <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate" title={doc.title}>
                         {doc.title}
                       </p>
-                      <a
-                        href={doc.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 mt-0.5"
-                      >
-                        <ExternalLink className="h-3 w-3" />
-                        Open in new tab
-                      </a>
+                      <div className="flex items-center justify-between mt-0.5">
+                        <a
+                          href={doc.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Open
+                        </a>
+                        {canEdit && (
+                          <label className="text-xs text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 cursor-pointer">
+                            <Pencil className="h-3 w-3" />
+                            Edit ({remainingEdits} left)
+                            <input
+                              type="file"
+                              className="hidden"
+                              accept="image/*,application/pdf"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0]
+                                if (!file) return
+                                try {
+                                  const formData = new FormData()
+                                  formData.append('file', file)
+                                  formData.append('folder', 'kyp')
+                                  const uploadRes = await fetch('/api/kyp/upload', {
+                                    method: 'POST',
+                                    body: formData,
+                                    credentials: 'include',
+                                  })
+                                  const uploadData = await uploadRes.json()
+                                  if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed')
+
+                                  const fileUrl = uploadData.data?.url || uploadData.url
+                                  const isJsonField = ['aadharFiles', 'panFiles', 'diseasePhotos', 'otherFiles'].includes(doc.documentField!)
+                                  const editBody: Record<string, unknown> = { documentField: doc.documentField }
+                                  if (isJsonField) {
+                                    editBody.newFiles = [{ name: file.name, url: fileUrl }]
+                                  } else {
+                                    editBody.newFileUrl = fileUrl
+                                  }
+
+                                  const editRes = await fetch(`/api/kyp/${doc.kypId}/edit-document`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(editBody),
+                                    credentials: 'include',
+                                  })
+                                  const editData = await editRes.json()
+                                  if (!editRes.ok) throw new Error(editData.error || 'Edit failed')
+
+                                  toast.success(`Document updated (${editData.data?.remainingEdits ?? 0} edits remaining)`)
+                                  queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+                                  queryClient.invalidateQueries({ queryKey: ['kyp-submission', leadId] })
+                                } catch (err) {
+                                  toast.error(err instanceof Error ? err.message : 'Failed to edit document')
+                                }
+                                e.target.value = ''
+                              }}
+                            />
+                          </label>
+                        )}
+                      </div>
                     </div>
                   </div>
-                ))}
+                  )
+                })}
               </div>
         )}
 

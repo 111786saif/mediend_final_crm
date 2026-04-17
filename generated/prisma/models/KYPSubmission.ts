@@ -93,6 +93,8 @@ export type KYPSubmissionCountAggregateOutputType = {
   status: number
   submittedById: number
   submittedAt: number
+  documentEditCounts: number
+  documentEditHistory: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -168,6 +170,8 @@ export type KYPSubmissionCountAggregateInputType = {
   status?: true
   submittedById?: true
   submittedAt?: true
+  documentEditCounts?: true
+  documentEditHistory?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -268,6 +272,8 @@ export type KYPSubmissionGroupByOutputType = {
   status: $Enums.KYPStatus
   submittedById: string
   submittedAt: Date
+  documentEditCounts: runtime.JsonValue | null
+  documentEditHistory: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: KYPSubmissionCountAggregateOutputType | null
@@ -316,6 +322,8 @@ export type KYPSubmissionWhereInput = {
   status?: Prisma.EnumKYPStatusFilter<"KYPSubmission"> | $Enums.KYPStatus
   submittedById?: Prisma.StringFilter<"KYPSubmission"> | string
   submittedAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
+  documentEditCounts?: Prisma.JsonNullableFilter<"KYPSubmission">
+  documentEditHistory?: Prisma.JsonNullableFilter<"KYPSubmission">
   createdAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
@@ -347,6 +355,8 @@ export type KYPSubmissionOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   submittedById?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
+  documentEditCounts?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentEditHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lead?: Prisma.LeadOrderByWithRelationInput
@@ -381,6 +391,8 @@ export type KYPSubmissionWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumKYPStatusFilter<"KYPSubmission"> | $Enums.KYPStatus
   submittedById?: Prisma.StringFilter<"KYPSubmission"> | string
   submittedAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
+  documentEditCounts?: Prisma.JsonNullableFilter<"KYPSubmission">
+  documentEditHistory?: Prisma.JsonNullableFilter<"KYPSubmission">
   createdAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
@@ -412,6 +424,8 @@ export type KYPSubmissionOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   submittedById?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
+  documentEditCounts?: Prisma.SortOrderInput | Prisma.SortOrder
+  documentEditHistory?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.KYPSubmissionCountOrderByAggregateInput
@@ -445,6 +459,8 @@ export type KYPSubmissionScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumKYPStatusWithAggregatesFilter<"KYPSubmission"> | $Enums.KYPStatus
   submittedById?: Prisma.StringWithAggregatesFilter<"KYPSubmission"> | string
   submittedAt?: Prisma.DateTimeWithAggregatesFilter<"KYPSubmission"> | Date | string
+  documentEditCounts?: Prisma.JsonNullableWithAggregatesFilter<"KYPSubmission">
+  documentEditHistory?: Prisma.JsonNullableWithAggregatesFilter<"KYPSubmission">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"KYPSubmission"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"KYPSubmission"> | Date | string
 }
@@ -470,6 +486,8 @@ export type KYPSubmissionCreateInput = {
   patientConsent?: boolean
   status?: $Enums.KYPStatus
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutKypSubmissionInput
@@ -501,6 +519,8 @@ export type KYPSubmissionUncheckedCreateInput = {
   status?: $Enums.KYPStatus
   submittedById: string
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   preAuthData?: Prisma.PreAuthorizationUncheckedCreateNestedOneWithoutKypSubmissionInput
@@ -528,6 +548,8 @@ export type KYPSubmissionUpdateInput = {
   patientConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutKypSubmissionNestedInput
@@ -559,6 +581,8 @@ export type KYPSubmissionUncheckedUpdateInput = {
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedById?: Prisma.StringFieldUpdateOperationsInput | string
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preAuthData?: Prisma.PreAuthorizationUncheckedUpdateOneWithoutKypSubmissionNestedInput
@@ -588,6 +612,8 @@ export type KYPSubmissionCreateManyInput = {
   status?: $Enums.KYPStatus
   submittedById: string
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -613,6 +639,8 @@ export type KYPSubmissionUpdateManyMutationInput = {
   patientConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -640,6 +668,8 @@ export type KYPSubmissionUncheckedUpdateManyInput = {
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedById?: Prisma.StringFieldUpdateOperationsInput | string
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -682,6 +712,8 @@ export type KYPSubmissionCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   submittedById?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
+  documentEditCounts?: Prisma.SortOrder
+  documentEditHistory?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -870,6 +902,8 @@ export type KYPSubmissionCreateWithoutSubmittedByInput = {
   patientConsent?: boolean
   status?: $Enums.KYPStatus
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutKypSubmissionInput
@@ -899,6 +933,8 @@ export type KYPSubmissionUncheckedCreateWithoutSubmittedByInput = {
   patientConsent?: boolean
   status?: $Enums.KYPStatus
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   preAuthData?: Prisma.PreAuthorizationUncheckedCreateNestedOneWithoutKypSubmissionInput
@@ -957,6 +993,8 @@ export type KYPSubmissionScalarWhereInput = {
   status?: Prisma.EnumKYPStatusFilter<"KYPSubmission"> | $Enums.KYPStatus
   submittedById?: Prisma.StringFilter<"KYPSubmission"> | string
   submittedAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
+  documentEditCounts?: Prisma.JsonNullableFilter<"KYPSubmission">
+  documentEditHistory?: Prisma.JsonNullableFilter<"KYPSubmission">
   createdAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KYPSubmission"> | Date | string
 }
@@ -982,6 +1020,8 @@ export type KYPSubmissionCreateWithoutLeadInput = {
   patientConsent?: boolean
   status?: $Enums.KYPStatus
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   submittedBy: Prisma.UserCreateNestedOneWithoutKypSubmissionsInput
@@ -1011,6 +1051,8 @@ export type KYPSubmissionUncheckedCreateWithoutLeadInput = {
   status?: $Enums.KYPStatus
   submittedById: string
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   preAuthData?: Prisma.PreAuthorizationUncheckedCreateNestedOneWithoutKypSubmissionInput
@@ -1054,6 +1096,8 @@ export type KYPSubmissionUpdateWithoutLeadInput = {
   patientConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   submittedBy?: Prisma.UserUpdateOneRequiredWithoutKypSubmissionsNestedInput
@@ -1083,6 +1127,8 @@ export type KYPSubmissionUncheckedUpdateWithoutLeadInput = {
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedById?: Prisma.StringFieldUpdateOperationsInput | string
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preAuthData?: Prisma.PreAuthorizationUncheckedUpdateOneWithoutKypSubmissionNestedInput
@@ -1110,6 +1156,8 @@ export type KYPSubmissionCreateWithoutPreAuthDataInput = {
   patientConsent?: boolean
   status?: $Enums.KYPStatus
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutKypSubmissionInput
@@ -1140,6 +1188,8 @@ export type KYPSubmissionUncheckedCreateWithoutPreAuthDataInput = {
   status?: $Enums.KYPStatus
   submittedById: string
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutKypSubmissionInput
@@ -1182,6 +1232,8 @@ export type KYPSubmissionUpdateWithoutPreAuthDataInput = {
   patientConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutKypSubmissionNestedInput
@@ -1212,6 +1264,8 @@ export type KYPSubmissionUncheckedUpdateWithoutPreAuthDataInput = {
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedById?: Prisma.StringFieldUpdateOperationsInput | string
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutKypSubmissionNestedInput
@@ -1238,6 +1292,8 @@ export type KYPSubmissionCreateWithoutDischargeSheetInput = {
   patientConsent?: boolean
   status?: $Enums.KYPStatus
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutKypSubmissionInput
@@ -1268,6 +1324,8 @@ export type KYPSubmissionUncheckedCreateWithoutDischargeSheetInput = {
   status?: $Enums.KYPStatus
   submittedById: string
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   preAuthData?: Prisma.PreAuthorizationUncheckedCreateNestedOneWithoutKypSubmissionInput
@@ -1310,6 +1368,8 @@ export type KYPSubmissionUpdateWithoutDischargeSheetInput = {
   patientConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutKypSubmissionNestedInput
@@ -1340,6 +1400,8 @@ export type KYPSubmissionUncheckedUpdateWithoutDischargeSheetInput = {
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedById?: Prisma.StringFieldUpdateOperationsInput | string
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preAuthData?: Prisma.PreAuthorizationUncheckedUpdateOneWithoutKypSubmissionNestedInput
@@ -1367,6 +1429,8 @@ export type KYPSubmissionCreateManySubmittedByInput = {
   patientConsent?: boolean
   status?: $Enums.KYPStatus
   submittedAt?: Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1392,6 +1456,8 @@ export type KYPSubmissionUpdateWithoutSubmittedByInput = {
   patientConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutKypSubmissionNestedInput
@@ -1421,6 +1487,8 @@ export type KYPSubmissionUncheckedUpdateWithoutSubmittedByInput = {
   patientConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   preAuthData?: Prisma.PreAuthorizationUncheckedUpdateOneWithoutKypSubmissionNestedInput
@@ -1449,6 +1517,8 @@ export type KYPSubmissionUncheckedUpdateManyWithoutSubmittedByInput = {
   patientConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumKYPStatusFieldUpdateOperationsInput | $Enums.KYPStatus
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentEditCounts?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  documentEditHistory?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1478,6 +1548,8 @@ export type KYPSubmissionSelect<ExtArgs extends runtime.Types.Extensions.Interna
   status?: boolean
   submittedById?: boolean
   submittedAt?: boolean
+  documentEditCounts?: boolean
+  documentEditHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
@@ -1509,6 +1581,8 @@ export type KYPSubmissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   submittedById?: boolean
   submittedAt?: boolean
+  documentEditCounts?: boolean
+  documentEditHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
@@ -1538,6 +1612,8 @@ export type KYPSubmissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   status?: boolean
   submittedById?: boolean
   submittedAt?: boolean
+  documentEditCounts?: boolean
+  documentEditHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
@@ -1567,11 +1643,13 @@ export type KYPSubmissionSelectScalar = {
   status?: boolean
   submittedById?: boolean
   submittedAt?: boolean
+  documentEditCounts?: boolean
+  documentEditHistory?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type KYPSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "aadhar" | "pan" | "insuranceCard" | "disease" | "location" | "area" | "remark" | "insuranceType" | "aadharFileUrl" | "panFileUrl" | "aadharFiles" | "panFiles" | "insuranceCardFileUrl" | "prescriptionFileUrl" | "diseasePhotos" | "otherFiles" | "patientConsent" | "status" | "submittedById" | "submittedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["kYPSubmission"]>
+export type KYPSubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "aadhar" | "pan" | "insuranceCard" | "disease" | "location" | "area" | "remark" | "insuranceType" | "aadharFileUrl" | "panFileUrl" | "aadharFiles" | "panFiles" | "insuranceCardFileUrl" | "prescriptionFileUrl" | "diseasePhotos" | "otherFiles" | "patientConsent" | "status" | "submittedById" | "submittedAt" | "documentEditCounts" | "documentEditHistory" | "createdAt" | "updatedAt", ExtArgs["result"]["kYPSubmission"]>
 export type KYPSubmissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   submittedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1624,6 +1702,8 @@ export type $KYPSubmissionPayload<ExtArgs extends runtime.Types.Extensions.Inter
     status: $Enums.KYPStatus
     submittedById: string
     submittedAt: Date
+    documentEditCounts: runtime.JsonValue | null
+    documentEditHistory: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["kYPSubmission"]>
@@ -2075,6 +2155,8 @@ export interface KYPSubmissionFieldRefs {
   readonly status: Prisma.FieldRef<"KYPSubmission", 'KYPStatus'>
   readonly submittedById: Prisma.FieldRef<"KYPSubmission", 'String'>
   readonly submittedAt: Prisma.FieldRef<"KYPSubmission", 'DateTime'>
+  readonly documentEditCounts: Prisma.FieldRef<"KYPSubmission", 'Json'>
+  readonly documentEditHistory: Prisma.FieldRef<"KYPSubmission", 'Json'>
   readonly createdAt: Prisma.FieldRef<"KYPSubmission", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"KYPSubmission", 'DateTime'>
 }

@@ -314,7 +314,15 @@ export default function IPDPrintPage() {
     return s || EM_DASH
   })()
   const roomRentDisplay = formatMoneyLike(pre?.roomRent ?? lead.roomRent)
-  const surgeonDisplay = display(lead.ipdDrName || lead.surgeonName)
+  // Prefer doctor from the pre-auth hospital suggestion, then lead fields
+  const preAuthDoctorName = (() => {
+    const hospitals = pre?.suggestedHospitals
+    const requested = pre?.requestedHospitalName?.trim()
+    if (!hospitals?.length || !requested) return null
+    const match = hospitals.find(h => h.hospitalName?.trim() === requested)
+    return match?.suggestedDoctor ?? null
+  })()
+  const surgeonDisplay = display(preAuthDoctorName || lead.ipdDrName || lead.surgeonName)
   const initForm = lead.insuranceInitiateForm
   const tentativeBillFromHospital = (() => {
     const hospitals = pre?.suggestedHospitals
@@ -458,13 +466,13 @@ export default function IPDPrintPage() {
             {/* ── Hospital + key dates strip ── */}
             {(rec || lead.hospitalName) && (
               <div className="mt-5 pt-4 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {(rec?.admittingHospital || lead.hospitalName) && (
+                {(pre?.requestedHospitalName || rec?.admittingHospital || lead.hospitalName) && (
                   <div className="rounded-lg bg-slate-50 px-3 py-2 border border-slate-100">
                     <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">
                       Hospital
                     </p>
                     <p className="text-sm font-semibold text-slate-800">
-                      {display(rec?.admittingHospital || lead.hospitalName)}
+                      {display(pre?.requestedHospitalName || rec?.admittingHospital || lead.hospitalName)}
                     </p>
                   </div>
                 )}
@@ -604,7 +612,7 @@ export default function IPDPrintPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-3 gap-x-6 gap-y-4">
                 <Field
                   label="Hospital / Clinic"
-                  value={display(rec?.admittingHospital || lead.hospitalName)}
+                  value={display(pre?.requestedHospitalName || rec?.admittingHospital || lead.hospitalName)}
                   className="sm:col-span-2 print:col-span-2"
                 />
                 {rec?.hospitalAddress && (

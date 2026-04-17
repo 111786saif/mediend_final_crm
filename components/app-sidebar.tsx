@@ -287,7 +287,7 @@ export function AppSidebar() {
                 const label = item.title.startsWith('MD ') ? item.title.replace('MD ', '') : item.title
                 const badgeCount =
                   item.title === 'Meets'
-                    ? meetNotificationBadge
+                    ? (badgeCounts as any)?.upcomingMeetsToday ?? 0
                     : getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
                 return (
                   <SidebarMenuItem key={item.title}>
