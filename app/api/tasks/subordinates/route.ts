@@ -14,7 +14,7 @@ export async function GET(_request: NextRequest) {
       createdBy: { select: { id: true, name: true } },
       project: { select: { id: true, name: true } },
     },
-    orderBy: [{ dueDate: "asc" }, { createdAt: "desc" }],
+    orderBy: [{ dueDate: "desc" }, { createdAt: "desc" }],
   })
 
   return successResponse(tasks)

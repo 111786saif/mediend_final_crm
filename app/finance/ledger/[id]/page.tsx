@@ -75,6 +75,21 @@ interface LedgerEntry {
     email: string
   } | null
   editCount: number
+  deleteRequestStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | null
+  deleteRequestReason: string | null
+  deleteRequestedAt: string | null
+  deleteRequestedBy: {
+    id: string
+    name: string
+    email: string
+  } | null
+  deleteApprovalReason: string | null
+  deleteApprovedAt: string | null
+  deleteApprovedBy: {
+    id: string
+    name: string
+    email: string
+  } | null
   party: {
     id: string
     name: string
@@ -155,6 +170,8 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [requestDeleteDialogOpen, setRequestDeleteDialogOpen] = useState(false)
+  const [rejectDeleteDialogOpen, setRejectDeleteDialogOpen] = useState(false)
   
   const [editFormData, setEditFormData] = useState({
     description: '',
@@ -176,6 +193,8 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
 
   const [rejectionReason, setRejectionReason] = useState('')
   const [deleteReason, setDeleteReason] = useState('')
+  const [requestDeleteReason, setRequestDeleteReason] = useState('')
+  const [rejectDeleteReason, setRejectDeleteReason] = useState('')
 
   const { data: entry, isLoading, error } = useQuery<LedgerEntry>({
     queryKey: ['ledger-entry', id],
@@ -276,6 +295,52 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to delete entry')
+    },
+  })
+
+  const requestDeleteMutation = useMutation({
+    mutationFn: (data: { reason: string }) =>
+      apiPost(`/api/finance/ledger/${id}/request-delete`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ledger-entry', id] })
+      queryClient.invalidateQueries({ queryKey: ['ledger'] })
+      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
+      setRequestDeleteDialogOpen(false)
+      setRequestDeleteReason('')
+      toast.success('Delete request submitted')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to request deletion')
+    },
+  })
+
+  const approveDeleteMutation = useMutation({
+    mutationFn: (data: { reason: string }) =>
+      apiPost(`/api/finance/ledger/${id}/approve-delete`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ledger-entry', id] })
+      queryClient.invalidateQueries({ queryKey: ['ledger'] })
+      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
+      toast.success('Delete request approved — entry deleted')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to approve delete request')
+    },
+  })
+
+  const rejectDeleteMutation = useMutation({
+    mutationFn: (data: { reason: string }) =>
+      apiPost(`/api/finance/ledger/${id}/reject-delete`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ledger-entry', id] })
+      queryClient.invalidateQueries({ queryKey: ['ledger'] })
+      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
+      setRejectDeleteDialogOpen(false)
+      setRejectDeleteReason('')
+      toast.success('Delete request rejected')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to reject delete request')
     },
   })
 
@@ -416,6 +481,26 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
     deleteMutation.mutate({ reason: deleteReason })
   }
 
+  const handleRequestDelete = () => {
+    if (!requestDeleteReason.trim()) {
+      toast.error('Please provide a reason for deletion')
+      return
+    }
+    requestDeleteMutation.mutate({ reason: requestDeleteReason })
+  }
+
+  const handleApproveDelete = () => {
+    approveDeleteMutation.mutate({ reason: '' })
+  }
+
+  const handleRejectDelete = () => {
+    if (!rejectDeleteReason.trim()) {
+      toast.error('Please provide a rejection reason')
+      return
+    }
+    rejectDeleteMutation.mutate({ reason: rejectDeleteReason })
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -466,6 +551,8 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
   const amount = isCredit ? entry.receivedAmount || 0 : isSelfTransfer ? entry.transferAmount || 0 : entry.paymentAmount || 0
   const canRequestEdit = isFinance && entry.status === 'APPROVED' && entry.editRequestStatus !== 'PENDING' && entry.editCount < 5
   const canApproveEdit = isAdmin && entry.editRequestStatus === 'PENDING'
+  const canRequestDelete = isFinance && entry.status === 'APPROVED' && !entry.isDeleted && entry.deleteRequestStatus !== 'PENDING'
+  const canApproveDelete = isAdmin && entry.deleteRequestStatus === 'PENDING'
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto px-4 sm:px-0 pb-24 sm:pb-6">
@@ -483,6 +570,11 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
               {entry.editRequestStatus && (
                 <Badge variant="outline" className={entry.editRequestStatus === 'APPROVED' ? 'border-green-500 text-green-600' : entry.editRequestStatus === 'REJECTED' ? 'border-red-500 text-red-600' : 'border-yellow-500 text-yellow-600'}>
                   Edit {entry.editRequestStatus}
+                </Badge>
+              )}
+              {entry.deleteRequestStatus && (
+                <Badge variant="outline" className={entry.deleteRequestStatus === 'REJECTED' ? 'border-red-500 text-red-600' : 'border-red-500 text-red-600 bg-red-50 dark:bg-red-900/20'}>
+                  Delete {entry.deleteRequestStatus}
                 </Badge>
               )}
               {entry.editCount > 0 && (
@@ -805,6 +897,86 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
                   </div>
                 </DialogContent>
               </Dialog>
+            </>
+          )}
+          {canRequestDelete && (
+            <AlertDialog open={requestDeleteDialogOpen} onOpenChange={setRequestDeleteDialogOpen}>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Request Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Request Deletion</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will send a delete request for MD/Admin approval.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="requestDeleteReason">Reason *</Label>
+                    <Textarea
+                      id="requestDeleteReason"
+                      value={requestDeleteReason}
+                      onChange={(e) => setRequestDeleteReason(e.target.value)}
+                      placeholder="Why should this entry be deleted..."
+                      rows={3}
+                      required
+                    />
+                  </div>
+                </div>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleRequestDelete} disabled={requestDeleteMutation.isPending} className="bg-red-600 hover:bg-red-700">
+                    Submit Request
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+          {canApproveDelete && (
+            <>
+              <Button size="sm" variant="destructive" onClick={handleApproveDelete} disabled={approveDeleteMutation.isPending}>
+                <Check className="h-4 w-4 mr-2" />
+                Approve Delete
+              </Button>
+              <AlertDialog open={rejectDeleteDialogOpen} onOpenChange={setRejectDeleteDialogOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <X className="h-4 w-4 mr-2" />
+                    Reject Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Reject Delete Request</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Provide a reason for rejecting this delete request.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="rejectDeleteReason">Rejection Reason *</Label>
+                      <Textarea
+                        id="rejectDeleteReason"
+                        value={rejectDeleteReason}
+                        onChange={(e) => setRejectDeleteReason(e.target.value)}
+                        placeholder="Why is this delete request being rejected..."
+                        rows={3}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleRejectDelete} disabled={rejectDeleteMutation.isPending} className="bg-red-600 hover:bg-red-700">
+                      Reject
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </>
           )}
           {isAdmin && !entry.isDeleted && (
@@ -1157,6 +1329,86 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
             </Dialog>
           </>
         )}
+        {canRequestDelete && (
+          <AlertDialog open={requestDeleteDialogOpen} onOpenChange={setRequestDeleteDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" className="w-full">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Request Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Request Deletion</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will send a delete request for MD/Admin approval.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="requestDeleteReason-mobile">Reason *</Label>
+                  <Textarea
+                    id="requestDeleteReason-mobile"
+                    value={requestDeleteReason}
+                    onChange={(e) => setRequestDeleteReason(e.target.value)}
+                    placeholder="Why should this entry be deleted..."
+                    rows={3}
+                    required
+                  />
+                </div>
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleRequestDelete} disabled={requestDeleteMutation.isPending} className="bg-red-600 hover:bg-red-700">
+                  Submit Request
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+        {canApproveDelete && (
+          <>
+            <Button variant="destructive" className="w-full" onClick={handleApproveDelete} disabled={approveDeleteMutation.isPending}>
+              <Check className="h-4 w-4 mr-2" />
+              Approve Delete
+            </Button>
+            <AlertDialog open={rejectDeleteDialogOpen} onOpenChange={setRejectDeleteDialogOpen}>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  <X className="h-4 w-4 mr-2" />
+                  Reject Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Reject Delete Request</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Provide a reason for rejecting this delete request.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="rejectDeleteReason-mobile">Rejection Reason *</Label>
+                    <Textarea
+                      id="rejectDeleteReason-mobile"
+                      value={rejectDeleteReason}
+                      onChange={(e) => setRejectDeleteReason(e.target.value)}
+                      placeholder="Why is this delete request being rejected..."
+                      rows={3}
+                      required
+                    />
+                  </div>
+                </div>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleRejectDelete} disabled={rejectDeleteMutation.isPending} className="bg-red-600 hover:bg-red-700">
+                    Reject
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </>
+        )}
         {isAdmin && !entry.isDeleted && (
           <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
             <AlertDialogTrigger asChild>
@@ -1195,6 +1447,45 @@ export default function LedgerEntryDetailPage({ params }: { params: Promise<{ id
           </AlertDialog>
         )}
       </div>
+
+      {/* Delete Request Status */}
+      {entry.deleteRequestStatus && (
+        <Card className={entry.deleteRequestStatus === 'REJECTED' ? 'border-red-200 bg-red-50 dark:bg-red-900/10' : 'border-red-200 bg-red-50 dark:bg-red-900/10'}>
+          <CardHeader>
+            <CardTitle className="text-red-700 dark:text-red-400">
+              Delete Request {entry.deleteRequestStatus}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {entry.deleteRequestReason && (
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Reason</p>
+                <p className="text-sm">{entry.deleteRequestReason}</p>
+              </div>
+            )}
+            {entry.deleteApprovalReason && (
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {entry.deleteRequestStatus === 'REJECTED' ? 'Rejection reason' : 'Approval reason'}
+                </p>
+                <p className="text-sm">{entry.deleteApprovalReason}</p>
+              </div>
+            )}
+            {entry.deleteRequestedBy && (
+              <p className="text-xs text-muted-foreground">
+                Requested by {entry.deleteRequestedBy.name}
+                {entry.deleteRequestedAt && ` on ${format(new Date(entry.deleteRequestedAt), 'PPP p')}`}
+              </p>
+            )}
+            {entry.deleteApprovedBy && (
+              <p className="text-xs text-muted-foreground">
+                {entry.deleteRequestStatus === 'REJECTED' ? 'Rejected' : 'Approved'} by {entry.deleteApprovedBy.name}
+                {entry.deleteApprovedAt && ` on ${format(new Date(entry.deleteApprovedAt), 'PPP p')}`}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Edit Request Status */}
       {entry.editRequestStatus && (

@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
     const transactionType = searchParams.get('transactionType') as TransactionType | null
     const status = searchParams.get('status') as LedgerStatus | null
     const editRequestStatus = searchParams.get('editRequestStatus') as LedgerStatus | null
+    const deleteRequestStatus = searchParams.get('deleteRequestStatus') as LedgerStatus | null
     const partyId = searchParams.get('partyId')
     const headId = searchParams.get('headId')
     const paymentModeId = searchParams.get('paymentModeId')
@@ -46,6 +47,10 @@ export async function GET(request: NextRequest) {
 
     if (editRequestStatus) {
       where.editRequestStatus = editRequestStatus
+    }
+
+    if (deleteRequestStatus) {
+      where.deleteRequestStatus = deleteRequestStatus
     }
 
     if (partyId) {
@@ -178,6 +183,13 @@ export async function GET(request: NextRequest) {
             },
           },
           editRequestedBy: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          deleteRequestedBy: {
             select: {
               id: true,
               name: true,

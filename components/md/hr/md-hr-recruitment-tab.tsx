@@ -27,7 +27,7 @@ import {
   ChartLegendContent,
 } from '@/components/ui/chart'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
-import { Briefcase, ChevronDown, ChevronRight, Phone, Target, UserPlus, Users } from 'lucide-react'
+import { Briefcase, ChevronRight, Phone, Target, UserPlus, Users } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import type { InterviewMeet } from '@/components/hr/interview-list'
@@ -49,6 +49,7 @@ interface EmployeeForTargets {
   joinDate: string | null
   departmentId: string | null
   employeeCode?: string
+  salary?: number | null
   user?: { name: string }
 }
 
@@ -91,7 +92,7 @@ function getInitials(name: string): string {
 export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
   const { user } = useAuth()
   const [detailDeptId, setDetailDeptId] = useState<string | null>(null)
-  const [joinersExpanded, setJoinersExpanded] = useState(false)
+  const [joinersDrawerOpen, setJoinersDrawerOpen] = useState(false)
 
   const weekBounds = useMemo(() => {
     const now = new Date()
@@ -167,6 +168,7 @@ export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
       joinDate: e.joinDate ?? null,
       departmentId: e.departmentId ?? null,
       employeeCode: e.employeeCode ?? '',
+      salary: e.salary ?? null,
       user: e.user ?? { name: 'Unknown' },
     }))
   }, [employeesRaw])
@@ -231,7 +233,15 @@ export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <StatCard label="Interviews Today" value={todayInterviewCount} subValue="Scheduled" accent="purple" valueAccent />
         <StatCard label="This Week" value={weekInterviews.length} subValue="Interviews" accent="blue" />
-        <StatCard label="New Joiners" value={newJoinersCount} subValue={MONTHS[filters.month - 1]} accent="teal" valueAccent />
+        <StatCard
+          label="New Joiners"
+          value={newJoinersCount}
+          subValue={MONTHS[filters.month - 1]}
+          accent="teal"
+          valueAccent
+          className={newJoinersCount > 0 ? 'cursor-pointer active:scale-[0.97] transition-transform' : undefined}
+          onClick={newJoinersCount > 0 ? () => setJoinersDrawerOpen(true) : undefined}
+        />
         <StatCard
           label="Open Positions"
           value={achievement ? openPositions : '—'}
@@ -241,13 +251,14 @@ export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
         />
       </div>
 
-      {/* Headcount Target Progress */}
+      {/* Headcount & Department Targets */}
       {achievement && hrTarget?.activeTarget && (
-        <Card className="border-2 border-amber-200/80 dark:border-amber-800/60 bg-gradient-to-br from-amber-50/60 to-orange-50/40 dark:from-amber-950/20 dark:to-orange-950/10">
-          <CardContent className="p-5">
+        <Card>
+          <CardContent className="p-4 sm:p-5">
+            {/* Overall Target */}
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shrink-0">
                   <Target className="h-5 w-5 text-amber-600" />
                 </div>
                 <div>
@@ -262,94 +273,32 @@ export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
               </Badge>
             </div>
             <Progress value={Math.min(achievement.percentage, 100)} className="mt-4 h-2.5" />
-          </CardContent>
-        </Card>
-      )}
 
-      {/* New Joiners - Collapsible */}
-      <Card className="overflow-hidden">
-        <button
-          type="button"
-          className="w-full text-left px-4 sm:px-6 py-4 flex items-center gap-3 hover:bg-muted/30 transition-colors"
-          onClick={() => newJoinersCount > 0 && setJoinersExpanded((v) => !v)}
-        >
-          <div className="h-9 w-9 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center shrink-0">
-            <UserPlus className="h-4 w-4 text-teal-600 dark:text-teal-400" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold">New Joiners</p>
-            <p className="text-xs text-muted-foreground">{MONTHS[filters.month - 1]} {filters.year}</p>
-          </div>
-          <Badge className="bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 border-0 text-sm font-bold tabular-nums px-2.5">
-            {newJoinersCount}
-          </Badge>
-          {newJoinersCount > 0 && (
-            <ChevronDown className={cn('h-4 w-4 text-muted-foreground transition-transform duration-200', joinersExpanded && 'rotate-180')} />
-          )}
-        </button>
-        {joinersExpanded && newJoiners.length > 0 && (
-          <CardContent className="px-2 sm:px-4 pb-4 pt-0 border-t">
-            <div className="max-h-[400px] overflow-y-auto overscroll-contain">
-              {joinersByDept.map(([dept, joiners]) => (
-                <div key={dept} className="mt-3 first:mt-2">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-3 mb-1">{dept}</p>
-                  <ul className="space-y-0.5">
-                    {joiners.map((j, i) => (
-                      <li key={`${j.employeeName}-${i}`} className="flex items-center gap-3 rounded-lg px-3 py-2.5">
-                        <Avatar className="h-8 w-8 shrink-0">
-                          <AvatarFallback className="text-[10px] font-semibold bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">
-                            {getInitials(j.employeeName)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium leading-tight truncate">{j.employeeName}</p>
-                          <p className="text-xs text-muted-foreground truncate">{j.employeeCode}</p>
-                        </div>
-                        <span className="text-xs text-teal-600 dark:text-teal-400 font-medium shrink-0 tabular-nums">
-                          {new Date(j.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        )}
-      </Card>
-
-      {/* Department Breakdown */}
-      {departmentBreakdown.length > 0 && (
-        <Card>
-          <CardHeader className="px-4 sm:px-6 pb-3">
-            <div className="flex items-center gap-2.5">
-              <Users className="h-5 w-5 text-amber-600" />
-              <CardTitle className="text-lg">Department Targets</CardTitle>
-            </div>
-            <CardDescription>Hiring progress by department</CardDescription>
-          </CardHeader>
-          <CardContent className="px-4 sm:px-6 pb-4">
-            <div className="space-y-2.5">
-              {departmentBreakdown.map((dept) => (
-                <button
-                  key={dept.departmentId}
-                  type="button"
-                  className="w-full text-left rounded-xl border bg-card p-3.5 shadow-sm hover:bg-muted/50 active:scale-[0.99] transition-all"
-                  onClick={() => setDetailDeptId(dept.departmentId)}
-                >
-                  <div className="flex items-center justify-between gap-3 mb-2">
-                    <p className="text-sm font-semibold truncate">{dept.departmentName}</p>
-                    <span className="text-sm font-medium tabular-nums shrink-0">{dept.actual}/{dept.target}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Progress value={Math.min(dept.percentage, 100)} className="h-2 flex-1" />
-                    <Badge variant={dept.percentage >= 100 ? 'default' : 'outline'} className={cn('text-xs tabular-nums shrink-0', dept.percentage >= 100 && 'bg-emerald-600')}>
-                      {dept.percentage}%
-                    </Badge>
-                  </div>
-                </button>
-              ))}
-            </div>
+            {/* Department Breakdown */}
+            {departmentBreakdown.length > 0 && (
+              <div className="mt-5 pt-5 border-t space-y-2.5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">By Department</p>
+                {departmentBreakdown.map((dept) => (
+                  <button
+                    key={dept.departmentId}
+                    type="button"
+                    className="w-full text-left rounded-xl border bg-card p-3.5 shadow-sm hover:bg-muted/50 active:scale-[0.99] transition-all"
+                    onClick={() => setDetailDeptId(dept.departmentId)}
+                  >
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <p className="text-sm font-semibold truncate">{dept.departmentName}</p>
+                      <span className="text-sm font-medium tabular-nums shrink-0">{dept.actual}/{dept.target}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Progress value={Math.min(dept.percentage, 100)} className="h-2 flex-1" />
+                      <Badge variant={dept.percentage >= 100 ? 'default' : 'outline'} className={cn('text-xs tabular-nums shrink-0', dept.percentage >= 100 && 'bg-emerald-600')}>
+                        {dept.percentage}%
+                      </Badge>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -455,6 +404,48 @@ export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
         <Link href="/md/targets" className="gap-1.5">View all department targets<ChevronRight className="h-4 w-4" /></Link>
       </Button>
 
+      {/* New Joiners Drawer */}
+      <Drawer open={joinersDrawerOpen} onOpenChange={setJoinersDrawerOpen}>
+        <DrawerContent className="max-h-[85dvh]">
+          <DrawerHeader className="text-left px-4 pb-2">
+            <DrawerTitle className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5 text-teal-500" />
+              New Joiners — {MONTHS[filters.month - 1]} {filters.year}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="overflow-y-auto overscroll-contain px-2 pb-6 max-h-[70dvh]">
+            {newJoiners.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">No new joiners this month</p>
+            ) : (
+              <>
+                {joinersByDept.map(([dept, joiners]) => (
+                  <div key={dept} className="mt-3 first:mt-1">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-3 mb-1">{dept}</p>
+                    <ul className="space-y-0.5">
+                      {joiners.map((j, i) => (
+                        <li key={`${j.employeeName}-${i}`} className="flex items-center gap-3 rounded-lg px-3 py-2.5">
+                          <Avatar className="h-8 w-8 shrink-0">
+                            <AvatarFallback className="text-[10px] font-semibold bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">
+                              {getInitials(j.employeeName)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium leading-tight truncate">{j.employeeName}</p>
+                          </div>
+                          <span className="text-xs text-teal-600 dark:text-teal-400 font-medium shrink-0 tabular-nums">
+                            {new Date(j.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </>
+            )}
+          </div>
+        </DrawerContent>
+      </Drawer>
+
       {/* Department Detail Drawer */}
       <Drawer open={!!detailDeptId} onOpenChange={(open) => !open && setDetailDeptId(null)}>
         <DrawerContent className="max-h-[85dvh]">
@@ -479,13 +470,13 @@ export function MdHrRecruitmentTab({ filters }: MdHrRecruitmentTabProps) {
                   ) : (
                     <div className="overflow-y-auto max-h-[50dvh]">
                       <Table>
-                        <TableHeader><TableRow><TableHead className="text-sm">Name</TableHead><TableHead className="text-sm text-right">Join date</TableHead></TableRow></TableHeader>
+                        <TableHeader><TableRow><TableHead className="text-sm">Name</TableHead><TableHead className="text-sm text-right">Salary</TableHead></TableRow></TableHeader>
                         <TableBody>
                           {selectedDeptJoiners.map((e, i) => (
                             <TableRow key={i}>
                               <TableCell className="text-sm font-medium py-3">{e.user?.name ?? 'Unknown'}</TableCell>
-                              <TableCell className="text-sm py-3 text-right text-teal-600 dark:text-teal-400 font-medium">
-                                {e.joinDate ? new Date(e.joinDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—'}
+                              <TableCell className="text-sm py-3 text-right tabular-nums font-medium">
+                                {e.salary ? `₹${e.salary.toLocaleString('en-IN')}` : '—'}
                               </TableCell>
                             </TableRow>
                           ))}

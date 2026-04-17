@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       assignee: { select: { id: true, name: true, email: true } },
       createdBy: { select: { id: true, name: true } },
     },
-    orderBy: [{ dueDate: "asc" }, { createdAt: "desc" }],
+    orderBy: [{ dueDate: "desc" }, { createdAt: "desc" }],
   })
 
   return successResponse(tasks)

@@ -348,8 +348,6 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
           subValue="Approved leave"
           accent="purple"
           valueAccent
-          className={onLeaveToday.length > 0 ? 'cursor-pointer active:scale-[0.97] transition-transform' : undefined}
-          onClick={onLeaveToday.length > 0 ? () => setActiveDrawer('leave') : undefined}
         />
         <StatCard
           label="New Joiners"
@@ -360,6 +358,55 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
           onClick={merged.newJoiners.length > 0 ? () => setActiveDrawer('joiners') : undefined}
         />
       </div>
+
+      {/* On Leave Today - Collapsible */}
+      <Card className="overflow-hidden">
+        <button
+          type="button"
+          className="w-full text-left px-4 sm:px-6 py-4 flex items-center gap-3 hover:bg-muted/30 transition-colors"
+          onClick={() => onLeaveToday.length > 0 && toggleSection('onLeave')}
+        >
+          <div className="h-9 w-9 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center shrink-0">
+            <CalendarHeart className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold">On Leave Today</p>
+            <p className="text-xs text-muted-foreground">Approved leave</p>
+          </div>
+          <Badge className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-0 text-sm font-bold tabular-nums px-2.5">
+            {onLeaveToday.length}
+          </Badge>
+          {onLeaveToday.length > 0 && (
+            <ChevronDown className={cn('h-4 w-4 text-muted-foreground transition-transform duration-200', expandedSections.onLeave && 'rotate-180')} />
+          )}
+        </button>
+        {expandedSections.onLeave && onLeaveToday.length > 0 && (
+          <CardContent className="px-2 sm:px-4 pb-4 pt-0 border-t">
+            <ul className="space-y-0.5 max-h-[360px] overflow-y-auto overscroll-contain">
+              {onLeaveToday.map((e) => (
+                <li key={e.employeeId}>
+                  <button
+                    type="button"
+                    className="w-full text-left rounded-lg px-3 py-2.5 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
+                    onClick={() => handleEmployeeClick(e.employeeId, e.employeeName, e.departmentName)}
+                  >
+                    <Avatar className="h-8 w-8 shrink-0">
+                      <AvatarFallback className="text-[10px] font-semibold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                        {getInitials(e.employeeName)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium leading-tight truncate">{e.employeeName}</p>
+                      <p className="text-xs text-muted-foreground truncate">{e.departmentName}</p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        )}
+      </Card>
 
       {/* Absent Today - Collapsible */}
       <Card className="overflow-hidden">
@@ -596,47 +643,6 @@ export function MdHrTodayTab({ filters }: MdHrTodayTabProps) {
         </DrawerContent>
       </Drawer>
 
-      <Drawer open={activeDrawer === 'leave'} onOpenChange={(open) => !open && setActiveDrawer(null)}>
-        <DrawerContent className="max-h-[85dvh]">
-          <DrawerHeader className="text-left px-4 pb-2">
-            <DrawerTitle className="flex items-center gap-2">
-              <CalendarHeart className="h-5 w-5 text-purple-500" />
-              On Leave Today — {onLeaveToday.length}
-            </DrawerTitle>
-          </DrawerHeader>
-          <div className="overflow-y-auto overscroll-contain px-2 pb-6 max-h-[70dvh]">
-            {onLeaveToday.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">No one on leave today</p>
-            ) : (
-              <ul className="space-y-1">
-                {onLeaveToday.map((e) => (
-                  <li key={e.employeeId}>
-                    <button
-                      type="button"
-                      className="w-full text-left rounded-lg px-3 py-3 hover:bg-muted/50 active:bg-muted/70 transition-colors flex items-center gap-3"
-                      onClick={() => {
-                        setActiveDrawer(null)
-                        setTimeout(() => handleEmployeeClick(e.employeeId, e.employeeName, e.departmentName), 300)
-                      }}
-                    >
-                      <Avatar className="h-9 w-9 shrink-0">
-                        <AvatarFallback className="text-xs font-semibold bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
-                          {getInitials(e.employeeName)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium leading-tight truncate">{e.employeeName}</p>
-                        <p className="text-xs text-muted-foreground truncate">{e.departmentName}</p>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </DrawerContent>
-      </Drawer>
 
       <Drawer open={activeDrawer === 'joiners'} onOpenChange={(open) => !open && setActiveDrawer(null)}>
         <DrawerContent className="max-h-[85dvh]">

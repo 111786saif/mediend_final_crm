@@ -73,6 +73,13 @@ export type LedgerEntryMinAggregateOutputType = {
   deletedAt: Date | null
   deletedById: string | null
   deletedReason: string | null
+  deleteRequestStatus: $Enums.LedgerStatus | null
+  deleteRequestReason: string | null
+  deleteRequestedById: string | null
+  deleteRequestedAt: Date | null
+  deleteApprovalReason: string | null
+  deleteApprovedById: string | null
+  deleteApprovedAt: Date | null
   editRequestStatus: $Enums.LedgerStatus | null
   editRequestReason: string | null
   editRequestedById: string | null
@@ -113,6 +120,13 @@ export type LedgerEntryMaxAggregateOutputType = {
   deletedAt: Date | null
   deletedById: string | null
   deletedReason: string | null
+  deleteRequestStatus: $Enums.LedgerStatus | null
+  deleteRequestReason: string | null
+  deleteRequestedById: string | null
+  deleteRequestedAt: Date | null
+  deleteApprovalReason: string | null
+  deleteApprovedById: string | null
+  deleteApprovedAt: Date | null
   editRequestStatus: $Enums.LedgerStatus | null
   editRequestReason: string | null
   editRequestedById: string | null
@@ -153,6 +167,13 @@ export type LedgerEntryCountAggregateOutputType = {
   deletedAt: number
   deletedById: number
   deletedReason: number
+  deleteRequestStatus: number
+  deleteRequestReason: number
+  deleteRequestedById: number
+  deleteRequestedAt: number
+  deleteApprovalReason: number
+  deleteApprovedById: number
+  deleteApprovedAt: number
   editRequestStatus: number
   editRequestReason: number
   editRequestData: number
@@ -219,6 +240,13 @@ export type LedgerEntryMinAggregateInputType = {
   deletedAt?: true
   deletedById?: true
   deletedReason?: true
+  deleteRequestStatus?: true
+  deleteRequestReason?: true
+  deleteRequestedById?: true
+  deleteRequestedAt?: true
+  deleteApprovalReason?: true
+  deleteApprovedById?: true
+  deleteApprovedAt?: true
   editRequestStatus?: true
   editRequestReason?: true
   editRequestedById?: true
@@ -259,6 +287,13 @@ export type LedgerEntryMaxAggregateInputType = {
   deletedAt?: true
   deletedById?: true
   deletedReason?: true
+  deleteRequestStatus?: true
+  deleteRequestReason?: true
+  deleteRequestedById?: true
+  deleteRequestedAt?: true
+  deleteApprovalReason?: true
+  deleteApprovedById?: true
+  deleteApprovedAt?: true
   editRequestStatus?: true
   editRequestReason?: true
   editRequestedById?: true
@@ -299,6 +334,13 @@ export type LedgerEntryCountAggregateInputType = {
   deletedAt?: true
   deletedById?: true
   deletedReason?: true
+  deleteRequestStatus?: true
+  deleteRequestReason?: true
+  deleteRequestedById?: true
+  deleteRequestedAt?: true
+  deleteApprovalReason?: true
+  deleteApprovedById?: true
+  deleteApprovedAt?: true
   editRequestStatus?: true
   editRequestReason?: true
   editRequestData?: true
@@ -428,6 +470,13 @@ export type LedgerEntryGroupByOutputType = {
   deletedAt: Date | null
   deletedById: string | null
   deletedReason: string | null
+  deleteRequestStatus: $Enums.LedgerStatus | null
+  deleteRequestReason: string | null
+  deleteRequestedById: string | null
+  deleteRequestedAt: Date | null
+  deleteApprovalReason: string | null
+  deleteApprovedById: string | null
+  deleteApprovedAt: Date | null
   editRequestStatus: $Enums.LedgerStatus | null
   editRequestReason: string | null
   editRequestData: runtime.JsonValue | null
@@ -493,6 +542,13 @@ export type LedgerEntryWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
   deletedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   deletedReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestStatus?: Prisma.EnumLedgerStatusNullableFilter<"LedgerEntry"> | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
+  deleteApprovalReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteApprovedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteApprovedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
   editRequestStatus?: Prisma.EnumLedgerStatusNullableFilter<"LedgerEntry"> | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   editRequestData?: Prisma.JsonNullableFilter<"LedgerEntry">
@@ -515,6 +571,8 @@ export type LedgerEntryWhereInput = {
   fromPaymentMode?: Prisma.XOR<Prisma.PaymentModeMasterNullableScalarRelationFilter, Prisma.PaymentModeMasterWhereInput> | null
   toPaymentMode?: Prisma.XOR<Prisma.PaymentModeMasterNullableScalarRelationFilter, Prisma.PaymentModeMasterWhereInput> | null
   deletedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  deleteRequestedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  deleteApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   editRequestedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   editApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -547,6 +605,13 @@ export type LedgerEntryOrderByWithRelationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedById?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteRequestStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteRequestReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteRequestedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteApprovalReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteApprovedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteApprovedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   editRequestStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   editRequestReason?: Prisma.SortOrderInput | Prisma.SortOrder
   editRequestData?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -569,6 +634,8 @@ export type LedgerEntryOrderByWithRelationInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterOrderByWithRelationInput
   toPaymentMode?: Prisma.PaymentModeMasterOrderByWithRelationInput
   deletedBy?: Prisma.UserOrderByWithRelationInput
+  deleteRequestedBy?: Prisma.UserOrderByWithRelationInput
+  deleteApprovedBy?: Prisma.UserOrderByWithRelationInput
   editRequestedBy?: Prisma.UserOrderByWithRelationInput
   editApprovedBy?: Prisma.UserOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
@@ -604,6 +671,13 @@ export type LedgerEntryWhereUniqueInput = Prisma.AtLeast<{
   deletedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
   deletedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   deletedReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestStatus?: Prisma.EnumLedgerStatusNullableFilter<"LedgerEntry"> | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
+  deleteApprovalReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteApprovedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteApprovedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
   editRequestStatus?: Prisma.EnumLedgerStatusNullableFilter<"LedgerEntry"> | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   editRequestData?: Prisma.JsonNullableFilter<"LedgerEntry">
@@ -626,6 +700,8 @@ export type LedgerEntryWhereUniqueInput = Prisma.AtLeast<{
   fromPaymentMode?: Prisma.XOR<Prisma.PaymentModeMasterNullableScalarRelationFilter, Prisma.PaymentModeMasterWhereInput> | null
   toPaymentMode?: Prisma.XOR<Prisma.PaymentModeMasterNullableScalarRelationFilter, Prisma.PaymentModeMasterWhereInput> | null
   deletedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  deleteRequestedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  deleteApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   editRequestedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   editApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -658,6 +734,13 @@ export type LedgerEntryOrderByWithAggregationInput = {
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedById?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteRequestStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteRequestReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteRequestedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteApprovalReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteApprovedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  deleteApprovedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   editRequestStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   editRequestReason?: Prisma.SortOrderInput | Prisma.SortOrder
   editRequestData?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -708,6 +791,13 @@ export type LedgerEntryScalarWhereWithAggregatesInput = {
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LedgerEntry"> | Date | string | null
   deletedById?: Prisma.StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
   deletedReason?: Prisma.StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
+  deleteRequestStatus?: Prisma.EnumLedgerStatusNullableWithAggregatesFilter<"LedgerEntry"> | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
+  deleteRequestedById?: Prisma.StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
+  deleteRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LedgerEntry"> | Date | string | null
+  deleteApprovalReason?: Prisma.StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
+  deleteApprovedById?: Prisma.StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
+  deleteApprovedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LedgerEntry"> | Date | string | null
   editRequestStatus?: Prisma.EnumLedgerStatusNullableWithAggregatesFilter<"LedgerEntry"> | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
   editRequestData?: Prisma.JsonNullableWithAggregatesFilter<"LedgerEntry">
@@ -743,6 +833,11 @@ export type LedgerEntryCreateInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -761,6 +856,8 @@ export type LedgerEntryCreateInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -793,6 +890,13 @@ export type LedgerEntryUncheckedCreateInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -829,6 +933,11 @@ export type LedgerEntryUpdateInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -847,6 +956,8 @@ export type LedgerEntryUpdateInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -879,6 +990,13 @@ export type LedgerEntryUncheckedUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -922,6 +1040,13 @@ export type LedgerEntryCreateManyInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -957,6 +1082,11 @@ export type LedgerEntryUpdateManyMutationInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -995,6 +1125,13 @@ export type LedgerEntryUncheckedUpdateManyInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1047,6 +1184,13 @@ export type LedgerEntryCountOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder
   deletedById?: Prisma.SortOrder
   deletedReason?: Prisma.SortOrder
+  deleteRequestStatus?: Prisma.SortOrder
+  deleteRequestReason?: Prisma.SortOrder
+  deleteRequestedById?: Prisma.SortOrder
+  deleteRequestedAt?: Prisma.SortOrder
+  deleteApprovalReason?: Prisma.SortOrder
+  deleteApprovedById?: Prisma.SortOrder
+  deleteApprovedAt?: Prisma.SortOrder
   editRequestStatus?: Prisma.SortOrder
   editRequestReason?: Prisma.SortOrder
   editRequestData?: Prisma.SortOrder
@@ -1100,6 +1244,13 @@ export type LedgerEntryMaxOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder
   deletedById?: Prisma.SortOrder
   deletedReason?: Prisma.SortOrder
+  deleteRequestStatus?: Prisma.SortOrder
+  deleteRequestReason?: Prisma.SortOrder
+  deleteRequestedById?: Prisma.SortOrder
+  deleteRequestedAt?: Prisma.SortOrder
+  deleteApprovalReason?: Prisma.SortOrder
+  deleteApprovedById?: Prisma.SortOrder
+  deleteApprovedAt?: Prisma.SortOrder
   editRequestStatus?: Prisma.SortOrder
   editRequestReason?: Prisma.SortOrder
   editRequestedById?: Prisma.SortOrder
@@ -1140,6 +1291,13 @@ export type LedgerEntryMinOrderByAggregateInput = {
   deletedAt?: Prisma.SortOrder
   deletedById?: Prisma.SortOrder
   deletedReason?: Prisma.SortOrder
+  deleteRequestStatus?: Prisma.SortOrder
+  deleteRequestReason?: Prisma.SortOrder
+  deleteRequestedById?: Prisma.SortOrder
+  deleteRequestedAt?: Prisma.SortOrder
+  deleteApprovalReason?: Prisma.SortOrder
+  deleteApprovedById?: Prisma.SortOrder
+  deleteApprovedAt?: Prisma.SortOrder
   editRequestStatus?: Prisma.SortOrder
   editRequestReason?: Prisma.SortOrder
   editRequestedById?: Prisma.SortOrder
@@ -1206,6 +1364,20 @@ export type LedgerEntryCreateNestedManyWithoutEditApprovedByInput = {
   connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
 }
 
+export type LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput = {
+  create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput> | Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput[]
+  connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput | Prisma.LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput[]
+  createMany?: Prisma.LedgerEntryCreateManyDeleteRequestedByInputEnvelope
+  connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+}
+
+export type LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput = {
+  create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput> | Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput[]
+  connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput | Prisma.LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput[]
+  createMany?: Prisma.LedgerEntryCreateManyDeleteApprovedByInputEnvelope
+  connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+}
+
 export type LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput = {
   create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutCreatedByInput, Prisma.LedgerEntryUncheckedCreateWithoutCreatedByInput> | Prisma.LedgerEntryCreateWithoutCreatedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutCreatedByInput | Prisma.LedgerEntryCreateOrConnectWithoutCreatedByInput[]
@@ -1238,6 +1410,20 @@ export type LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput = {
   create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutEditApprovedByInput, Prisma.LedgerEntryUncheckedCreateWithoutEditApprovedByInput> | Prisma.LedgerEntryCreateWithoutEditApprovedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutEditApprovedByInput[]
   connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutEditApprovedByInput | Prisma.LedgerEntryCreateOrConnectWithoutEditApprovedByInput[]
   createMany?: Prisma.LedgerEntryCreateManyEditApprovedByInputEnvelope
+  connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+}
+
+export type LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput = {
+  create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput> | Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput[]
+  connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput | Prisma.LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput[]
+  createMany?: Prisma.LedgerEntryCreateManyDeleteRequestedByInputEnvelope
+  connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+}
+
+export type LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput = {
+  create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput> | Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput[]
+  connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput | Prisma.LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput[]
+  createMany?: Prisma.LedgerEntryCreateManyDeleteApprovedByInputEnvelope
   connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
 }
 
@@ -1311,6 +1497,34 @@ export type LedgerEntryUpdateManyWithoutEditApprovedByNestedInput = {
   deleteMany?: Prisma.LedgerEntryScalarWhereInput | Prisma.LedgerEntryScalarWhereInput[]
 }
 
+export type LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput = {
+  create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput> | Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput[]
+  connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput | Prisma.LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput[]
+  upsert?: Prisma.LedgerEntryUpsertWithWhereUniqueWithoutDeleteRequestedByInput | Prisma.LedgerEntryUpsertWithWhereUniqueWithoutDeleteRequestedByInput[]
+  createMany?: Prisma.LedgerEntryCreateManyDeleteRequestedByInputEnvelope
+  set?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  disconnect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  delete?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  update?: Prisma.LedgerEntryUpdateWithWhereUniqueWithoutDeleteRequestedByInput | Prisma.LedgerEntryUpdateWithWhereUniqueWithoutDeleteRequestedByInput[]
+  updateMany?: Prisma.LedgerEntryUpdateManyWithWhereWithoutDeleteRequestedByInput | Prisma.LedgerEntryUpdateManyWithWhereWithoutDeleteRequestedByInput[]
+  deleteMany?: Prisma.LedgerEntryScalarWhereInput | Prisma.LedgerEntryScalarWhereInput[]
+}
+
+export type LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput = {
+  create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput> | Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput[]
+  connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput | Prisma.LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput[]
+  upsert?: Prisma.LedgerEntryUpsertWithWhereUniqueWithoutDeleteApprovedByInput | Prisma.LedgerEntryUpsertWithWhereUniqueWithoutDeleteApprovedByInput[]
+  createMany?: Prisma.LedgerEntryCreateManyDeleteApprovedByInputEnvelope
+  set?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  disconnect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  delete?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  update?: Prisma.LedgerEntryUpdateWithWhereUniqueWithoutDeleteApprovedByInput | Prisma.LedgerEntryUpdateWithWhereUniqueWithoutDeleteApprovedByInput[]
+  updateMany?: Prisma.LedgerEntryUpdateManyWithWhereWithoutDeleteApprovedByInput | Prisma.LedgerEntryUpdateManyWithWhereWithoutDeleteApprovedByInput[]
+  deleteMany?: Prisma.LedgerEntryScalarWhereInput | Prisma.LedgerEntryScalarWhereInput[]
+}
+
 export type LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput = {
   create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutCreatedByInput, Prisma.LedgerEntryUncheckedCreateWithoutCreatedByInput> | Prisma.LedgerEntryCreateWithoutCreatedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutCreatedByInput[]
   connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutCreatedByInput | Prisma.LedgerEntryCreateOrConnectWithoutCreatedByInput[]
@@ -1378,6 +1592,34 @@ export type LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput = {
   connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
   update?: Prisma.LedgerEntryUpdateWithWhereUniqueWithoutEditApprovedByInput | Prisma.LedgerEntryUpdateWithWhereUniqueWithoutEditApprovedByInput[]
   updateMany?: Prisma.LedgerEntryUpdateManyWithWhereWithoutEditApprovedByInput | Prisma.LedgerEntryUpdateManyWithWhereWithoutEditApprovedByInput[]
+  deleteMany?: Prisma.LedgerEntryScalarWhereInput | Prisma.LedgerEntryScalarWhereInput[]
+}
+
+export type LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput = {
+  create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput> | Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput[]
+  connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput | Prisma.LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput[]
+  upsert?: Prisma.LedgerEntryUpsertWithWhereUniqueWithoutDeleteRequestedByInput | Prisma.LedgerEntryUpsertWithWhereUniqueWithoutDeleteRequestedByInput[]
+  createMany?: Prisma.LedgerEntryCreateManyDeleteRequestedByInputEnvelope
+  set?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  disconnect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  delete?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  update?: Prisma.LedgerEntryUpdateWithWhereUniqueWithoutDeleteRequestedByInput | Prisma.LedgerEntryUpdateWithWhereUniqueWithoutDeleteRequestedByInput[]
+  updateMany?: Prisma.LedgerEntryUpdateManyWithWhereWithoutDeleteRequestedByInput | Prisma.LedgerEntryUpdateManyWithWhereWithoutDeleteRequestedByInput[]
+  deleteMany?: Prisma.LedgerEntryScalarWhereInput | Prisma.LedgerEntryScalarWhereInput[]
+}
+
+export type LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput = {
+  create?: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput> | Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput[] | Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput[]
+  connectOrCreate?: Prisma.LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput | Prisma.LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput[]
+  upsert?: Prisma.LedgerEntryUpsertWithWhereUniqueWithoutDeleteApprovedByInput | Prisma.LedgerEntryUpsertWithWhereUniqueWithoutDeleteApprovedByInput[]
+  createMany?: Prisma.LedgerEntryCreateManyDeleteApprovedByInputEnvelope
+  set?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  disconnect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  delete?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  connect?: Prisma.LedgerEntryWhereUniqueInput | Prisma.LedgerEntryWhereUniqueInput[]
+  update?: Prisma.LedgerEntryUpdateWithWhereUniqueWithoutDeleteApprovedByInput | Prisma.LedgerEntryUpdateWithWhereUniqueWithoutDeleteApprovedByInput[]
+  updateMany?: Prisma.LedgerEntryUpdateManyWithWhereWithoutDeleteApprovedByInput | Prisma.LedgerEntryUpdateManyWithWhereWithoutDeleteApprovedByInput[]
   deleteMany?: Prisma.LedgerEntryScalarWhereInput | Prisma.LedgerEntryScalarWhereInput[]
 }
 
@@ -1677,6 +1919,11 @@ export type LedgerEntryCreateWithoutCreatedByInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1695,6 +1942,8 @@ export type LedgerEntryCreateWithoutCreatedByInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedLedgerEntriesInput
@@ -1726,6 +1975,13 @@ export type LedgerEntryUncheckedCreateWithoutCreatedByInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1771,6 +2027,11 @@ export type LedgerEntryCreateWithoutApprovedByInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1789,6 +2050,8 @@ export type LedgerEntryCreateWithoutApprovedByInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -1820,6 +2083,13 @@ export type LedgerEntryUncheckedCreateWithoutApprovedByInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1865,6 +2135,11 @@ export type LedgerEntryCreateWithoutDeletedByInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1882,6 +2157,8 @@ export type LedgerEntryCreateWithoutDeletedByInput = {
   paymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutLedgerEntriesInput
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -1913,6 +2190,13 @@ export type LedgerEntryUncheckedCreateWithoutDeletedByInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1959,6 +2243,11 @@ export type LedgerEntryCreateWithoutEditRequestedByInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1977,6 +2266,8 @@ export type LedgerEntryCreateWithoutEditRequestedByInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedLedgerEntriesInput
@@ -2008,6 +2299,13 @@ export type LedgerEntryUncheckedCreateWithoutEditRequestedByInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2053,6 +2351,11 @@ export type LedgerEntryCreateWithoutEditApprovedByInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2071,6 +2374,8 @@ export type LedgerEntryCreateWithoutEditApprovedByInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
   approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedLedgerEntriesInput
@@ -2102,6 +2407,13 @@ export type LedgerEntryUncheckedCreateWithoutEditApprovedByInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2126,6 +2438,222 @@ export type LedgerEntryCreateOrConnectWithoutEditApprovedByInput = {
 
 export type LedgerEntryCreateManyEditApprovedByInputEnvelope = {
   data: Prisma.LedgerEntryCreateManyEditApprovedByInput | Prisma.LedgerEntryCreateManyEditApprovedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type LedgerEntryCreateWithoutDeleteRequestedByInput = {
+  id?: string
+  serialNumber: string
+  transactionType: $Enums.TransactionType
+  transactionDate?: Date | string
+  description: string
+  paymentAmount?: number | null
+  componentA?: number | null
+  componentB?: number | null
+  receivedAmount?: number | null
+  transferAmount?: number | null
+  openingBalance: number
+  currentBalance: number
+  status?: $Enums.LedgerStatus
+  rejectionReason?: string | null
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
+  editRequestStatus?: $Enums.LedgerStatus | null
+  editRequestReason?: string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedAt?: Date | string | null
+  editApprovalReason?: string | null
+  editApprovedAt?: Date | string | null
+  editCount?: number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  party?: Prisma.PartyMasterCreateNestedOneWithoutLedgerEntriesInput
+  head?: Prisma.HeadMasterCreateNestedOneWithoutLedgerEntriesInput
+  paymentType?: Prisma.PaymentTypeMasterCreateNestedOneWithoutLedgerEntriesInput
+  paymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutLedgerEntriesInput
+  fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
+  toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
+  deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
+  editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
+  editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedLedgerEntriesInput
+  auditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutLedgerEntryInput
+}
+
+export type LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput = {
+  id?: string
+  serialNumber: string
+  transactionType: $Enums.TransactionType
+  transactionDate?: Date | string
+  partyId?: string | null
+  description: string
+  headId?: string | null
+  paymentTypeId?: string | null
+  paymentAmount?: number | null
+  componentA?: number | null
+  componentB?: number | null
+  receivedAmount?: number | null
+  paymentModeId?: string | null
+  fromPaymentModeId?: string | null
+  toPaymentModeId?: string | null
+  transferAmount?: number | null
+  openingBalance: number
+  currentBalance: number
+  status?: $Enums.LedgerStatus
+  rejectionReason?: string | null
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  deletedById?: string | null
+  deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
+  editRequestStatus?: $Enums.LedgerStatus | null
+  editRequestReason?: string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedById?: string | null
+  editRequestedAt?: Date | string | null
+  editApprovalReason?: string | null
+  editApprovedById?: string | null
+  editApprovedAt?: Date | string | null
+  editCount?: number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdById: string
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  auditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutLedgerEntryInput
+}
+
+export type LedgerEntryCreateOrConnectWithoutDeleteRequestedByInput = {
+  where: Prisma.LedgerEntryWhereUniqueInput
+  create: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput>
+}
+
+export type LedgerEntryCreateManyDeleteRequestedByInputEnvelope = {
+  data: Prisma.LedgerEntryCreateManyDeleteRequestedByInput | Prisma.LedgerEntryCreateManyDeleteRequestedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type LedgerEntryCreateWithoutDeleteApprovedByInput = {
+  id?: string
+  serialNumber: string
+  transactionType: $Enums.TransactionType
+  transactionDate?: Date | string
+  description: string
+  paymentAmount?: number | null
+  componentA?: number | null
+  componentB?: number | null
+  receivedAmount?: number | null
+  transferAmount?: number | null
+  openingBalance: number
+  currentBalance: number
+  status?: $Enums.LedgerStatus
+  rejectionReason?: string | null
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
+  editRequestStatus?: $Enums.LedgerStatus | null
+  editRequestReason?: string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedAt?: Date | string | null
+  editApprovalReason?: string | null
+  editApprovedAt?: Date | string | null
+  editCount?: number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  party?: Prisma.PartyMasterCreateNestedOneWithoutLedgerEntriesInput
+  head?: Prisma.HeadMasterCreateNestedOneWithoutLedgerEntriesInput
+  paymentType?: Prisma.PaymentTypeMasterCreateNestedOneWithoutLedgerEntriesInput
+  paymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutLedgerEntriesInput
+  fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
+  toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
+  deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
+  editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedLedgerEntriesInput
+  auditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutLedgerEntryInput
+}
+
+export type LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput = {
+  id?: string
+  serialNumber: string
+  transactionType: $Enums.TransactionType
+  transactionDate?: Date | string
+  partyId?: string | null
+  description: string
+  headId?: string | null
+  paymentTypeId?: string | null
+  paymentAmount?: number | null
+  componentA?: number | null
+  componentB?: number | null
+  receivedAmount?: number | null
+  paymentModeId?: string | null
+  fromPaymentModeId?: string | null
+  toPaymentModeId?: string | null
+  transferAmount?: number | null
+  openingBalance: number
+  currentBalance: number
+  status?: $Enums.LedgerStatus
+  rejectionReason?: string | null
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  deletedById?: string | null
+  deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
+  editRequestStatus?: $Enums.LedgerStatus | null
+  editRequestReason?: string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedById?: string | null
+  editRequestedAt?: Date | string | null
+  editApprovalReason?: string | null
+  editApprovedById?: string | null
+  editApprovedAt?: Date | string | null
+  editCount?: number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdById: string
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  auditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutLedgerEntryInput
+}
+
+export type LedgerEntryCreateOrConnectWithoutDeleteApprovedByInput = {
+  where: Prisma.LedgerEntryWhereUniqueInput
+  create: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput>
+}
+
+export type LedgerEntryCreateManyDeleteApprovedByInputEnvelope = {
+  data: Prisma.LedgerEntryCreateManyDeleteApprovedByInput | Prisma.LedgerEntryCreateManyDeleteApprovedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -2173,6 +2701,13 @@ export type LedgerEntryScalarWhereInput = {
   deletedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
   deletedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   deletedReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestStatus?: Prisma.EnumLedgerStatusNullableFilter<"LedgerEntry"> | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteRequestedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
+  deleteApprovalReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteApprovedById?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
+  deleteApprovedAt?: Prisma.DateTimeNullableFilter<"LedgerEntry"> | Date | string | null
   editRequestStatus?: Prisma.EnumLedgerStatusNullableFilter<"LedgerEntry"> | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   editRequestData?: Prisma.JsonNullableFilter<"LedgerEntry">
@@ -2254,6 +2789,38 @@ export type LedgerEntryUpdateManyWithWhereWithoutEditApprovedByInput = {
   data: Prisma.XOR<Prisma.LedgerEntryUpdateManyMutationInput, Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByInput>
 }
 
+export type LedgerEntryUpsertWithWhereUniqueWithoutDeleteRequestedByInput = {
+  where: Prisma.LedgerEntryWhereUniqueInput
+  update: Prisma.XOR<Prisma.LedgerEntryUpdateWithoutDeleteRequestedByInput, Prisma.LedgerEntryUncheckedUpdateWithoutDeleteRequestedByInput>
+  create: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteRequestedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteRequestedByInput>
+}
+
+export type LedgerEntryUpdateWithWhereUniqueWithoutDeleteRequestedByInput = {
+  where: Prisma.LedgerEntryWhereUniqueInput
+  data: Prisma.XOR<Prisma.LedgerEntryUpdateWithoutDeleteRequestedByInput, Prisma.LedgerEntryUncheckedUpdateWithoutDeleteRequestedByInput>
+}
+
+export type LedgerEntryUpdateManyWithWhereWithoutDeleteRequestedByInput = {
+  where: Prisma.LedgerEntryScalarWhereInput
+  data: Prisma.XOR<Prisma.LedgerEntryUpdateManyMutationInput, Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByInput>
+}
+
+export type LedgerEntryUpsertWithWhereUniqueWithoutDeleteApprovedByInput = {
+  where: Prisma.LedgerEntryWhereUniqueInput
+  update: Prisma.XOR<Prisma.LedgerEntryUpdateWithoutDeleteApprovedByInput, Prisma.LedgerEntryUncheckedUpdateWithoutDeleteApprovedByInput>
+  create: Prisma.XOR<Prisma.LedgerEntryCreateWithoutDeleteApprovedByInput, Prisma.LedgerEntryUncheckedCreateWithoutDeleteApprovedByInput>
+}
+
+export type LedgerEntryUpdateWithWhereUniqueWithoutDeleteApprovedByInput = {
+  where: Prisma.LedgerEntryWhereUniqueInput
+  data: Prisma.XOR<Prisma.LedgerEntryUpdateWithoutDeleteApprovedByInput, Prisma.LedgerEntryUncheckedUpdateWithoutDeleteApprovedByInput>
+}
+
+export type LedgerEntryUpdateManyWithWhereWithoutDeleteApprovedByInput = {
+  where: Prisma.LedgerEntryScalarWhereInput
+  data: Prisma.XOR<Prisma.LedgerEntryUpdateManyMutationInput, Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByInput>
+}
+
 export type LedgerEntryCreateWithoutPartyInput = {
   id?: string
   serialNumber: string
@@ -2272,6 +2839,11 @@ export type LedgerEntryCreateWithoutPartyInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2289,6 +2861,8 @@ export type LedgerEntryCreateWithoutPartyInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -2320,6 +2894,13 @@ export type LedgerEntryUncheckedCreateWithoutPartyInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2382,6 +2963,11 @@ export type LedgerEntryCreateWithoutHeadInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2399,6 +2985,8 @@ export type LedgerEntryCreateWithoutHeadInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -2430,6 +3018,13 @@ export type LedgerEntryUncheckedCreateWithoutHeadInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2492,6 +3087,11 @@ export type LedgerEntryCreateWithoutPaymentTypeInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2509,6 +3109,8 @@ export type LedgerEntryCreateWithoutPaymentTypeInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -2540,6 +3142,13 @@ export type LedgerEntryUncheckedCreateWithoutPaymentTypeInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2602,6 +3211,11 @@ export type LedgerEntryCreateWithoutPaymentModeInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2619,6 +3233,8 @@ export type LedgerEntryCreateWithoutPaymentModeInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -2650,6 +3266,13 @@ export type LedgerEntryUncheckedCreateWithoutPaymentModeInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2696,6 +3319,11 @@ export type LedgerEntryCreateWithoutFromPaymentModeInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2713,6 +3341,8 @@ export type LedgerEntryCreateWithoutFromPaymentModeInput = {
   paymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutLedgerEntriesInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -2744,6 +3374,13 @@ export type LedgerEntryUncheckedCreateWithoutFromPaymentModeInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2790,6 +3427,11 @@ export type LedgerEntryCreateWithoutToPaymentModeInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2807,6 +3449,8 @@ export type LedgerEntryCreateWithoutToPaymentModeInput = {
   paymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutLedgerEntriesInput
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -2838,6 +3482,13 @@ export type LedgerEntryUncheckedCreateWithoutToPaymentModeInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2932,6 +3583,11 @@ export type LedgerEntryCreateWithoutAuditLogsInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -2950,6 +3606,8 @@ export type LedgerEntryCreateWithoutAuditLogsInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutFromTransfersInput
   toPaymentMode?: Prisma.PaymentModeMasterCreateNestedOneWithoutToTransfersInput
   deletedBy?: Prisma.UserCreateNestedOneWithoutDeletedLedgerEntriesInput
+  deleteRequestedBy?: Prisma.UserCreateNestedOneWithoutDeleteRequestedLedgerEntriesInput
+  deleteApprovedBy?: Prisma.UserCreateNestedOneWithoutDeleteApprovedLedgerEntriesInput
   editRequestedBy?: Prisma.UserCreateNestedOneWithoutEditRequestedLedgerEntriesInput
   editApprovedBy?: Prisma.UserCreateNestedOneWithoutEditApprovedLedgerEntriesInput
   createdBy: Prisma.UserCreateNestedOneWithoutCreatedLedgerEntriesInput
@@ -2981,6 +3639,13 @@ export type LedgerEntryUncheckedCreateWithoutAuditLogsInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3032,6 +3697,11 @@ export type LedgerEntryUpdateWithoutAuditLogsInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3050,6 +3720,8 @@ export type LedgerEntryUpdateWithoutAuditLogsInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -3081,6 +3753,13 @@ export type LedgerEntryUncheckedUpdateWithoutAuditLogsInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3123,6 +3802,13 @@ export type LedgerEntryCreateManyCreatedByInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3164,6 +3850,13 @@ export type LedgerEntryCreateManyApprovedByInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3204,6 +3897,13 @@ export type LedgerEntryCreateManyDeletedByInput = {
   isDeleted?: boolean
   deletedAt?: Date | string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3246,6 +3946,13 @@ export type LedgerEntryCreateManyEditRequestedByInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3287,12 +3994,115 @@ export type LedgerEntryCreateManyEditApprovedByInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   editRequestedById?: string | null
   editRequestedAt?: Date | string | null
   editApprovalReason?: string | null
+  editApprovedAt?: Date | string | null
+  editCount?: number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdById: string
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LedgerEntryCreateManyDeleteRequestedByInput = {
+  id?: string
+  serialNumber: string
+  transactionType: $Enums.TransactionType
+  transactionDate?: Date | string
+  partyId?: string | null
+  description: string
+  headId?: string | null
+  paymentTypeId?: string | null
+  paymentAmount?: number | null
+  componentA?: number | null
+  componentB?: number | null
+  receivedAmount?: number | null
+  paymentModeId?: string | null
+  fromPaymentModeId?: string | null
+  toPaymentModeId?: string | null
+  transferAmount?: number | null
+  openingBalance: number
+  currentBalance: number
+  status?: $Enums.LedgerStatus
+  rejectionReason?: string | null
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  deletedById?: string | null
+  deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
+  editRequestStatus?: $Enums.LedgerStatus | null
+  editRequestReason?: string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedById?: string | null
+  editRequestedAt?: Date | string | null
+  editApprovalReason?: string | null
+  editApprovedById?: string | null
+  editApprovedAt?: Date | string | null
+  editCount?: number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdById: string
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LedgerEntryCreateManyDeleteApprovedByInput = {
+  id?: string
+  serialNumber: string
+  transactionType: $Enums.TransactionType
+  transactionDate?: Date | string
+  partyId?: string | null
+  description: string
+  headId?: string | null
+  paymentTypeId?: string | null
+  paymentAmount?: number | null
+  componentA?: number | null
+  componentB?: number | null
+  receivedAmount?: number | null
+  paymentModeId?: string | null
+  fromPaymentModeId?: string | null
+  toPaymentModeId?: string | null
+  transferAmount?: number | null
+  openingBalance: number
+  currentBalance: number
+  status?: $Enums.LedgerStatus
+  rejectionReason?: string | null
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  deletedById?: string | null
+  deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedAt?: Date | string | null
+  editRequestStatus?: $Enums.LedgerStatus | null
+  editRequestReason?: string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedById?: string | null
+  editRequestedAt?: Date | string | null
+  editApprovalReason?: string | null
+  editApprovedById?: string | null
   editApprovedAt?: Date | string | null
   editCount?: number
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3321,6 +4131,11 @@ export type LedgerEntryUpdateWithoutCreatedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3339,6 +4154,8 @@ export type LedgerEntryUpdateWithoutCreatedByInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedLedgerEntriesNestedInput
@@ -3370,6 +4187,13 @@ export type LedgerEntryUncheckedUpdateWithoutCreatedByInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3412,6 +4236,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutCreatedByInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3446,6 +4277,11 @@ export type LedgerEntryUpdateWithoutApprovedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3464,6 +4300,8 @@ export type LedgerEntryUpdateWithoutApprovedByInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -3495,6 +4333,13 @@ export type LedgerEntryUncheckedUpdateWithoutApprovedByInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3537,6 +4382,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutApprovedByInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3571,6 +4423,11 @@ export type LedgerEntryUpdateWithoutDeletedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3588,6 +4445,8 @@ export type LedgerEntryUpdateWithoutDeletedByInput = {
   paymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutLedgerEntriesNestedInput
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -3619,6 +4478,13 @@ export type LedgerEntryUncheckedUpdateWithoutDeletedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3661,6 +4527,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutDeletedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3696,6 +4569,11 @@ export type LedgerEntryUpdateWithoutEditRequestedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3714,6 +4592,8 @@ export type LedgerEntryUpdateWithoutEditRequestedByInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedLedgerEntriesNestedInput
@@ -3745,6 +4625,13 @@ export type LedgerEntryUncheckedUpdateWithoutEditRequestedByInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3787,6 +4674,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutEditRequestedByInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3821,6 +4715,11 @@ export type LedgerEntryUpdateWithoutEditApprovedByInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3839,6 +4738,8 @@ export type LedgerEntryUpdateWithoutEditApprovedByInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
   approvedBy?: Prisma.UserUpdateOneWithoutApprovedLedgerEntriesNestedInput
@@ -3870,6 +4771,13 @@ export type LedgerEntryUncheckedUpdateWithoutEditApprovedByInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3912,12 +4820,311 @@ export type LedgerEntryUncheckedUpdateManyWithoutEditApprovedByInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   editRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editCount?: Prisma.IntFieldUpdateOperationsInput | number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LedgerEntryUpdateWithoutDeleteRequestedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentA?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentB?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  receivedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  transferAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editCount?: Prisma.IntFieldUpdateOperationsInput | number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  party?: Prisma.PartyMasterUpdateOneWithoutLedgerEntriesNestedInput
+  head?: Prisma.HeadMasterUpdateOneWithoutLedgerEntriesNestedInput
+  paymentType?: Prisma.PaymentTypeMasterUpdateOneWithoutLedgerEntriesNestedInput
+  paymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutLedgerEntriesNestedInput
+  fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
+  toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
+  deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
+  editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
+  editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedLedgerEntriesNestedInput
+  auditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutLedgerEntryNestedInput
+}
+
+export type LedgerEntryUncheckedUpdateWithoutDeleteRequestedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  headId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentA?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentB?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  receivedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fromPaymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toPaymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editCount?: Prisma.IntFieldUpdateOperationsInput | number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutLedgerEntryNestedInput
+}
+
+export type LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  headId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentA?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentB?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  receivedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fromPaymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toPaymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editCount?: Prisma.IntFieldUpdateOperationsInput | number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LedgerEntryUpdateWithoutDeleteApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentA?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentB?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  receivedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  transferAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editCount?: Prisma.IntFieldUpdateOperationsInput | number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  party?: Prisma.PartyMasterUpdateOneWithoutLedgerEntriesNestedInput
+  head?: Prisma.HeadMasterUpdateOneWithoutLedgerEntriesNestedInput
+  paymentType?: Prisma.PaymentTypeMasterUpdateOneWithoutLedgerEntriesNestedInput
+  paymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutLedgerEntriesNestedInput
+  fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
+  toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
+  deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
+  editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedLedgerEntriesNestedInput
+  auditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutLedgerEntryNestedInput
+}
+
+export type LedgerEntryUncheckedUpdateWithoutDeleteApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  headId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentA?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentB?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  receivedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fromPaymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toPaymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editCount?: Prisma.IntFieldUpdateOperationsInput | number
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutLedgerEntryNestedInput
+}
+
+export type LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  serialNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionType?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  transactionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  headId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTypeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentA?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  componentB?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  receivedAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  paymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fromPaymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  toPaymentModeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transferAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  openingBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  editRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  editApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  editApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editCount?: Prisma.IntFieldUpdateOperationsInput | number
   attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3952,6 +5159,13 @@ export type LedgerEntryCreateManyPartyInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -3987,6 +5201,11 @@ export type LedgerEntryUpdateWithoutPartyInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4004,6 +5223,8 @@ export type LedgerEntryUpdateWithoutPartyInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -4035,6 +5256,13 @@ export type LedgerEntryUncheckedUpdateWithoutPartyInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4077,6 +5305,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutPartyInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4118,6 +5353,13 @@ export type LedgerEntryCreateManyHeadInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4153,6 +5395,11 @@ export type LedgerEntryUpdateWithoutHeadInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4170,6 +5417,8 @@ export type LedgerEntryUpdateWithoutHeadInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -4201,6 +5450,13 @@ export type LedgerEntryUncheckedUpdateWithoutHeadInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4243,6 +5499,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutHeadInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4284,6 +5547,13 @@ export type LedgerEntryCreateManyPaymentTypeInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4319,6 +5589,11 @@ export type LedgerEntryUpdateWithoutPaymentTypeInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4336,6 +5611,8 @@ export type LedgerEntryUpdateWithoutPaymentTypeInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -4367,6 +5644,13 @@ export type LedgerEntryUncheckedUpdateWithoutPaymentTypeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4409,6 +5693,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutPaymentTypeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4450,6 +5741,13 @@ export type LedgerEntryCreateManyPaymentModeInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4491,6 +5789,13 @@ export type LedgerEntryCreateManyFromPaymentModeInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4532,6 +5837,13 @@ export type LedgerEntryCreateManyToPaymentModeInput = {
   deletedAt?: Date | string | null
   deletedById?: string | null
   deletedReason?: string | null
+  deleteRequestStatus?: $Enums.LedgerStatus | null
+  deleteRequestReason?: string | null
+  deleteRequestedById?: string | null
+  deleteRequestedAt?: Date | string | null
+  deleteApprovalReason?: string | null
+  deleteApprovedById?: string | null
+  deleteApprovedAt?: Date | string | null
   editRequestStatus?: $Enums.LedgerStatus | null
   editRequestReason?: string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4567,6 +5879,11 @@ export type LedgerEntryUpdateWithoutPaymentModeInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4584,6 +5901,8 @@ export type LedgerEntryUpdateWithoutPaymentModeInput = {
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -4615,6 +5934,13 @@ export type LedgerEntryUncheckedUpdateWithoutPaymentModeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4657,6 +5983,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutPaymentModeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4692,6 +6025,11 @@ export type LedgerEntryUpdateWithoutFromPaymentModeInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4709,6 +6047,8 @@ export type LedgerEntryUpdateWithoutFromPaymentModeInput = {
   paymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutLedgerEntriesNestedInput
   toPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutToTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -4740,6 +6080,13 @@ export type LedgerEntryUncheckedUpdateWithoutFromPaymentModeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4782,6 +6129,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutFromPaymentModeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4817,6 +6171,11 @@ export type LedgerEntryUpdateWithoutToPaymentModeInput = {
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4834,6 +6193,8 @@ export type LedgerEntryUpdateWithoutToPaymentModeInput = {
   paymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutLedgerEntriesNestedInput
   fromPaymentMode?: Prisma.PaymentModeMasterUpdateOneWithoutFromTransfersNestedInput
   deletedBy?: Prisma.UserUpdateOneWithoutDeletedLedgerEntriesNestedInput
+  deleteRequestedBy?: Prisma.UserUpdateOneWithoutDeleteRequestedLedgerEntriesNestedInput
+  deleteApprovedBy?: Prisma.UserUpdateOneWithoutDeleteApprovedLedgerEntriesNestedInput
   editRequestedBy?: Prisma.UserUpdateOneWithoutEditRequestedLedgerEntriesNestedInput
   editApprovedBy?: Prisma.UserUpdateOneWithoutEditApprovedLedgerEntriesNestedInput
   createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLedgerEntriesNestedInput
@@ -4865,6 +6226,13 @@ export type LedgerEntryUncheckedUpdateWithoutToPaymentModeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4907,6 +6275,13 @@ export type LedgerEntryUncheckedUpdateManyWithoutToPaymentModeInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deletedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
+  deleteRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deleteApprovalReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deleteApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   editRequestStatus?: Prisma.NullableEnumLedgerStatusFieldUpdateOperationsInput | $Enums.LedgerStatus | null
   editRequestReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   editRequestData?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -4980,6 +6355,13 @@ export type LedgerEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   deletedAt?: boolean
   deletedById?: boolean
   deletedReason?: boolean
+  deleteRequestStatus?: boolean
+  deleteRequestReason?: boolean
+  deleteRequestedById?: boolean
+  deleteRequestedAt?: boolean
+  deleteApprovalReason?: boolean
+  deleteApprovedById?: boolean
+  deleteApprovedAt?: boolean
   editRequestStatus?: boolean
   editRequestReason?: boolean
   editRequestData?: boolean
@@ -5002,6 +6384,8 @@ export type LedgerEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   fromPaymentMode?: boolean | Prisma.LedgerEntry$fromPaymentModeArgs<ExtArgs>
   toPaymentMode?: boolean | Prisma.LedgerEntry$toPaymentModeArgs<ExtArgs>
   deletedBy?: boolean | Prisma.LedgerEntry$deletedByArgs<ExtArgs>
+  deleteRequestedBy?: boolean | Prisma.LedgerEntry$deleteRequestedByArgs<ExtArgs>
+  deleteApprovedBy?: boolean | Prisma.LedgerEntry$deleteApprovedByArgs<ExtArgs>
   editRequestedBy?: boolean | Prisma.LedgerEntry$editRequestedByArgs<ExtArgs>
   editApprovedBy?: boolean | Prisma.LedgerEntry$editApprovedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -5035,6 +6419,13 @@ export type LedgerEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   deletedAt?: boolean
   deletedById?: boolean
   deletedReason?: boolean
+  deleteRequestStatus?: boolean
+  deleteRequestReason?: boolean
+  deleteRequestedById?: boolean
+  deleteRequestedAt?: boolean
+  deleteApprovalReason?: boolean
+  deleteApprovedById?: boolean
+  deleteApprovedAt?: boolean
   editRequestStatus?: boolean
   editRequestReason?: boolean
   editRequestData?: boolean
@@ -5057,6 +6448,8 @@ export type LedgerEntrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   fromPaymentMode?: boolean | Prisma.LedgerEntry$fromPaymentModeArgs<ExtArgs>
   toPaymentMode?: boolean | Prisma.LedgerEntry$toPaymentModeArgs<ExtArgs>
   deletedBy?: boolean | Prisma.LedgerEntry$deletedByArgs<ExtArgs>
+  deleteRequestedBy?: boolean | Prisma.LedgerEntry$deleteRequestedByArgs<ExtArgs>
+  deleteApprovedBy?: boolean | Prisma.LedgerEntry$deleteApprovedByArgs<ExtArgs>
   editRequestedBy?: boolean | Prisma.LedgerEntry$editRequestedByArgs<ExtArgs>
   editApprovedBy?: boolean | Prisma.LedgerEntry$editApprovedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -5088,6 +6481,13 @@ export type LedgerEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   deletedAt?: boolean
   deletedById?: boolean
   deletedReason?: boolean
+  deleteRequestStatus?: boolean
+  deleteRequestReason?: boolean
+  deleteRequestedById?: boolean
+  deleteRequestedAt?: boolean
+  deleteApprovalReason?: boolean
+  deleteApprovedById?: boolean
+  deleteApprovedAt?: boolean
   editRequestStatus?: boolean
   editRequestReason?: boolean
   editRequestData?: boolean
@@ -5110,6 +6510,8 @@ export type LedgerEntrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   fromPaymentMode?: boolean | Prisma.LedgerEntry$fromPaymentModeArgs<ExtArgs>
   toPaymentMode?: boolean | Prisma.LedgerEntry$toPaymentModeArgs<ExtArgs>
   deletedBy?: boolean | Prisma.LedgerEntry$deletedByArgs<ExtArgs>
+  deleteRequestedBy?: boolean | Prisma.LedgerEntry$deleteRequestedByArgs<ExtArgs>
+  deleteApprovedBy?: boolean | Prisma.LedgerEntry$deleteApprovedByArgs<ExtArgs>
   editRequestedBy?: boolean | Prisma.LedgerEntry$editRequestedByArgs<ExtArgs>
   editApprovedBy?: boolean | Prisma.LedgerEntry$editApprovedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -5141,6 +6543,13 @@ export type LedgerEntrySelectScalar = {
   deletedAt?: boolean
   deletedById?: boolean
   deletedReason?: boolean
+  deleteRequestStatus?: boolean
+  deleteRequestReason?: boolean
+  deleteRequestedById?: boolean
+  deleteRequestedAt?: boolean
+  deleteApprovalReason?: boolean
+  deleteApprovedById?: boolean
+  deleteApprovedAt?: boolean
   editRequestStatus?: boolean
   editRequestReason?: boolean
   editRequestData?: boolean
@@ -5158,7 +6567,7 @@ export type LedgerEntrySelectScalar = {
   updatedAt?: boolean
 }
 
-export type LedgerEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serialNumber" | "transactionType" | "transactionDate" | "partyId" | "description" | "headId" | "paymentTypeId" | "paymentAmount" | "componentA" | "componentB" | "receivedAmount" | "paymentModeId" | "fromPaymentModeId" | "toPaymentModeId" | "transferAmount" | "openingBalance" | "currentBalance" | "status" | "rejectionReason" | "isDeleted" | "deletedAt" | "deletedById" | "deletedReason" | "editRequestStatus" | "editRequestReason" | "editRequestData" | "editRequestedById" | "editRequestedAt" | "editApprovalReason" | "editApprovedById" | "editApprovedAt" | "editCount" | "attachments" | "createdById" | "approvedById" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ledgerEntry"]>
+export type LedgerEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serialNumber" | "transactionType" | "transactionDate" | "partyId" | "description" | "headId" | "paymentTypeId" | "paymentAmount" | "componentA" | "componentB" | "receivedAmount" | "paymentModeId" | "fromPaymentModeId" | "toPaymentModeId" | "transferAmount" | "openingBalance" | "currentBalance" | "status" | "rejectionReason" | "isDeleted" | "deletedAt" | "deletedById" | "deletedReason" | "deleteRequestStatus" | "deleteRequestReason" | "deleteRequestedById" | "deleteRequestedAt" | "deleteApprovalReason" | "deleteApprovedById" | "deleteApprovedAt" | "editRequestStatus" | "editRequestReason" | "editRequestData" | "editRequestedById" | "editRequestedAt" | "editApprovalReason" | "editApprovedById" | "editApprovedAt" | "editCount" | "attachments" | "createdById" | "approvedById" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["ledgerEntry"]>
 export type LedgerEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   party?: boolean | Prisma.LedgerEntry$partyArgs<ExtArgs>
   head?: boolean | Prisma.LedgerEntry$headArgs<ExtArgs>
@@ -5167,6 +6576,8 @@ export type LedgerEntryInclude<ExtArgs extends runtime.Types.Extensions.Internal
   fromPaymentMode?: boolean | Prisma.LedgerEntry$fromPaymentModeArgs<ExtArgs>
   toPaymentMode?: boolean | Prisma.LedgerEntry$toPaymentModeArgs<ExtArgs>
   deletedBy?: boolean | Prisma.LedgerEntry$deletedByArgs<ExtArgs>
+  deleteRequestedBy?: boolean | Prisma.LedgerEntry$deleteRequestedByArgs<ExtArgs>
+  deleteApprovedBy?: boolean | Prisma.LedgerEntry$deleteApprovedByArgs<ExtArgs>
   editRequestedBy?: boolean | Prisma.LedgerEntry$editRequestedByArgs<ExtArgs>
   editApprovedBy?: boolean | Prisma.LedgerEntry$editApprovedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -5182,6 +6593,8 @@ export type LedgerEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.
   fromPaymentMode?: boolean | Prisma.LedgerEntry$fromPaymentModeArgs<ExtArgs>
   toPaymentMode?: boolean | Prisma.LedgerEntry$toPaymentModeArgs<ExtArgs>
   deletedBy?: boolean | Prisma.LedgerEntry$deletedByArgs<ExtArgs>
+  deleteRequestedBy?: boolean | Prisma.LedgerEntry$deleteRequestedByArgs<ExtArgs>
+  deleteApprovedBy?: boolean | Prisma.LedgerEntry$deleteApprovedByArgs<ExtArgs>
   editRequestedBy?: boolean | Prisma.LedgerEntry$editRequestedByArgs<ExtArgs>
   editApprovedBy?: boolean | Prisma.LedgerEntry$editApprovedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -5195,6 +6608,8 @@ export type LedgerEntryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
   fromPaymentMode?: boolean | Prisma.LedgerEntry$fromPaymentModeArgs<ExtArgs>
   toPaymentMode?: boolean | Prisma.LedgerEntry$toPaymentModeArgs<ExtArgs>
   deletedBy?: boolean | Prisma.LedgerEntry$deletedByArgs<ExtArgs>
+  deleteRequestedBy?: boolean | Prisma.LedgerEntry$deleteRequestedByArgs<ExtArgs>
+  deleteApprovedBy?: boolean | Prisma.LedgerEntry$deleteApprovedByArgs<ExtArgs>
   editRequestedBy?: boolean | Prisma.LedgerEntry$editRequestedByArgs<ExtArgs>
   editApprovedBy?: boolean | Prisma.LedgerEntry$editApprovedByArgs<ExtArgs>
   createdBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -5211,6 +6626,8 @@ export type $LedgerEntryPayload<ExtArgs extends runtime.Types.Extensions.Interna
     fromPaymentMode: Prisma.$PaymentModeMasterPayload<ExtArgs> | null
     toPaymentMode: Prisma.$PaymentModeMasterPayload<ExtArgs> | null
     deletedBy: Prisma.$UserPayload<ExtArgs> | null
+    deleteRequestedBy: Prisma.$UserPayload<ExtArgs> | null
+    deleteApprovedBy: Prisma.$UserPayload<ExtArgs> | null
     editRequestedBy: Prisma.$UserPayload<ExtArgs> | null
     editApprovedBy: Prisma.$UserPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs>
@@ -5242,6 +6659,13 @@ export type $LedgerEntryPayload<ExtArgs extends runtime.Types.Extensions.Interna
     deletedAt: Date | null
     deletedById: string | null
     deletedReason: string | null
+    deleteRequestStatus: $Enums.LedgerStatus | null
+    deleteRequestReason: string | null
+    deleteRequestedById: string | null
+    deleteRequestedAt: Date | null
+    deleteApprovalReason: string | null
+    deleteApprovedById: string | null
+    deleteApprovedAt: Date | null
     editRequestStatus: $Enums.LedgerStatus | null
     editRequestReason: string | null
     editRequestData: runtime.JsonValue | null
@@ -5658,6 +7082,8 @@ export interface Prisma__LedgerEntryClient<T, Null = never, ExtArgs extends runt
   fromPaymentMode<T extends Prisma.LedgerEntry$fromPaymentModeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerEntry$fromPaymentModeArgs<ExtArgs>>): Prisma.Prisma__PaymentModeMasterClient<runtime.Types.Result.GetResult<Prisma.$PaymentModeMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   toPaymentMode<T extends Prisma.LedgerEntry$toPaymentModeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerEntry$toPaymentModeArgs<ExtArgs>>): Prisma.Prisma__PaymentModeMasterClient<runtime.Types.Result.GetResult<Prisma.$PaymentModeMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   deletedBy<T extends Prisma.LedgerEntry$deletedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerEntry$deletedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  deleteRequestedBy<T extends Prisma.LedgerEntry$deleteRequestedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerEntry$deleteRequestedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  deleteApprovedBy<T extends Prisma.LedgerEntry$deleteApprovedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerEntry$deleteApprovedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   editRequestedBy<T extends Prisma.LedgerEntry$editRequestedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerEntry$editRequestedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   editApprovedBy<T extends Prisma.LedgerEntry$editApprovedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerEntry$editApprovedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -5716,6 +7142,13 @@ export interface LedgerEntryFieldRefs {
   readonly deletedAt: Prisma.FieldRef<"LedgerEntry", 'DateTime'>
   readonly deletedById: Prisma.FieldRef<"LedgerEntry", 'String'>
   readonly deletedReason: Prisma.FieldRef<"LedgerEntry", 'String'>
+  readonly deleteRequestStatus: Prisma.FieldRef<"LedgerEntry", 'LedgerStatus'>
+  readonly deleteRequestReason: Prisma.FieldRef<"LedgerEntry", 'String'>
+  readonly deleteRequestedById: Prisma.FieldRef<"LedgerEntry", 'String'>
+  readonly deleteRequestedAt: Prisma.FieldRef<"LedgerEntry", 'DateTime'>
+  readonly deleteApprovalReason: Prisma.FieldRef<"LedgerEntry", 'String'>
+  readonly deleteApprovedById: Prisma.FieldRef<"LedgerEntry", 'String'>
+  readonly deleteApprovedAt: Prisma.FieldRef<"LedgerEntry", 'DateTime'>
   readonly editRequestStatus: Prisma.FieldRef<"LedgerEntry", 'LedgerStatus'>
   readonly editRequestReason: Prisma.FieldRef<"LedgerEntry", 'String'>
   readonly editRequestData: Prisma.FieldRef<"LedgerEntry", 'Json'>
@@ -6249,6 +7682,44 @@ export type LedgerEntry$toPaymentModeArgs<ExtArgs extends runtime.Types.Extensio
  * LedgerEntry.deletedBy
  */
 export type LedgerEntry$deletedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * LedgerEntry.deleteRequestedBy
+ */
+export type LedgerEntry$deleteRequestedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * LedgerEntry.deleteApprovedBy
+ */
+export type LedgerEntry$deleteApprovedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the User
    */

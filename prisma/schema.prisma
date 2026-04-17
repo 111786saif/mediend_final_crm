@@ -389,8 +389,10 @@ model User {
   createdLedgerEntries       LedgerEntry[]    @relation("LedgerCreator")
   approvedLedgerEntries      LedgerEntry[]    @relation("LedgerApprover")
   deletedLedgerEntries       LedgerEntry[]    @relation("LedgerDeleter")
-  editRequestedLedgerEntries LedgerEntry[]    @relation("LedgerEditRequester")
-  editApprovedLedgerEntries  LedgerEntry[]    @relation("LedgerEditApprover")
+  editRequestedLedgerEntries   LedgerEntry[]    @relation("LedgerEditRequester")
+  editApprovedLedgerEntries    LedgerEntry[]    @relation("LedgerEditApprover")
+  deleteRequestedLedgerEntries LedgerEntry[]    @relation("LedgerDeleteRequester")
+  deleteApprovedLedgerEntries  LedgerEntry[]    @relation("LedgerDeleteApprover")
   ledgerAuditLogs            LedgerAuditLog[] @relation("LedgerAuditPerformer")
   
   // Finance Sales Relations
@@ -1473,6 +1475,9 @@ enum LedgerAuditAction {
   EDIT_REQUESTED
   EDIT_APPROVED
   EDIT_REJECTED
+  DELETE_REQUESTED
+  DELETE_APPROVED
+  DELETE_REJECTED
 }
 
 // Party Master - Centralized list of all parties
@@ -1600,6 +1605,16 @@ model LedgerEntry {
   deletedById        String?
   deletedBy          User?             @relation("LedgerDeleter", fields: [deletedById], references: [id])
   deletedReason      String?
+  // Delete request fields (approval flow for FINANCE_HEAD)
+  deleteRequestStatus    LedgerStatus?
+  deleteRequestReason    String?
+  deleteRequestedById    String?
+  deleteRequestedBy      User?             @relation("LedgerDeleteRequester", fields: [deleteRequestedById], references: [id])
+  deleteRequestedAt      DateTime?
+  deleteApprovalReason   String?
+  deleteApprovedById     String?
+  deleteApprovedBy       User?             @relation("LedgerDeleteApprover", fields: [deleteApprovedById], references: [id])
+  deleteApprovedAt       DateTime?
   // Edit request fields
   editRequestStatus  LedgerStatus? // PENDING, APPROVED, or REJECTED for edit requests
   editRequestReason  String? // Why edit is needed (required when requesting)
@@ -1635,6 +1650,7 @@ model LedgerEntry {
   @@index([createdById])
   @@index([isDeleted])
   @@index([editRequestStatus])
+  @@index([deleteRequestStatus])
 }
 
 // Ledger Audit Log - Tracks all changes and approvals

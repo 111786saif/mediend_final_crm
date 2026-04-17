@@ -1,13 +1,13 @@
 /**
  * Normalization deadline rules:
- * - From April 1, 2026: normalization must be applied within the same ISO week (Monday-Sunday)
- * - Before April 1, 2026: deadline is end of 5th of next month
+ * - From May 20, 2026: normalization must be applied within the same ISO week (Monday-Sunday)
+ * - Before May 20, 2026: deadline is end of 5th of next month
  */
 
 /** Minimum characters for employee normalization reason (request to manager / self-normalize). */
 export const NORMALIZATION_REASON_MIN_CHARS = 15
 
-const WEEK_RULE_START = new Date(Date.UTC(2026, 3, 1, 0, 0, 0, 0)) // April 1, 2026 UTC
+const WEEK_RULE_START = new Date(Date.UTC(2026, 4, 20, 0, 0, 0, 0)) // May 20, 2026 UTC
 
 function toDayStart(d: Date): Date {
   const [y, m, day] = d.toISOString().split('T')[0].split('-').map(Number)
@@ -33,8 +33,8 @@ function getMonthBasedDeadline(monthDate: Date): Date {
 
 /**
  * Returns the deadline for applying normalization for a given date.
- * - For dates >= April 1, 2026: end of that date's ISO week (Sunday)
- * - For dates before April 1, 2026: end of 5th of next month
+ * - For dates >= May 20, 2026: end of that date's ISO week (Sunday)
+ * - For dates before May 20, 2026: end of 5th of next month
  */
 export function getNormalizationDeadline(date: Date): Date {
   const dayStart = toDayStart(date)

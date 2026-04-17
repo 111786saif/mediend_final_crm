@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
-import { Check, X, ArrowDownCircle, AlertTriangle, Clock, Edit, LayoutGrid, LayoutList, ChevronLeft, ChevronRight, Search, RotateCcw, FileText, Image as ImageIcon, Maximize2, ExternalLink } from 'lucide-react'
+import { Check, X, ArrowDownCircle, AlertTriangle, Clock, Edit, LayoutGrid, LayoutList, ChevronLeft, ChevronRight, Search, RotateCcw, FileText, Image as ImageIcon, Maximize2, ExternalLink, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
 import Link from 'next/link'
@@ -235,6 +235,108 @@ function EditRequestCard({ entry, onApprove, onReject }: EditRequestCardProps) {
           >
             <Check className="h-4 w-4 mr-1" />
             Approve
+          </Button>
+          <Link href={`/finance/ledger/${entry.id}`}>
+            <Button size="sm" variant="outline">
+              View
+            </Button>
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function DeleteRequestCard({ entry, onApprove, onReject }: EditRequestCardProps) {
+  const amount = entry.transactionType === 'CREDIT'
+    ? entry.receivedAmount || 0
+    : entry.paymentAmount || 0
+  const isDebit = entry.transactionType === 'DEBIT'
+  return (
+    <Card className="border-2 border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-800">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="font-mono">
+              {entry.serialNumber}
+            </Badge>
+            <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
+              Delete Request
+            </Badge>
+          </div>
+          <span className="text-sm text-muted-foreground">
+            {format(new Date(entry.transactionDate), 'dd MMM yyyy')}
+          </span>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div>
+          <div className="font-semibold text-lg">{entry.party?.name ?? 'N/A'}</div>
+          <div className="text-xs text-muted-foreground">{entry.party?.partyType}</div>
+        </div>
+
+        <div>
+          <div className="text-xs text-muted-foreground mb-1">Description</div>
+          <div className="text-sm wrap-break-word">{entry.description}</div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <div className="text-muted-foreground text-xs">Head</div>
+            <div className="font-medium">{entry.head?.name || 'N/A'}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground text-xs">Amount</div>
+            <div className={`font-bold ${isDebit ? 'text-red-600' : 'text-green-600'}`}>
+              {isDebit ? '-' : '+'}{formatCurrency(amount)}
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t pt-3 space-y-2">
+          <div>
+            <div className="text-xs text-muted-foreground">Requested by</div>
+            <div className="text-sm font-medium">{(entry as any).deleteRequestedBy?.name || 'Unknown'}</div>
+            {(entry as any).deleteRequestedAt && (
+              <div className="text-xs text-muted-foreground">
+                {format(new Date((entry as any).deleteRequestedAt), 'dd MMM yyyy HH:mm')}
+              </div>
+            )}
+          </div>
+          {(entry as any).deleteRequestReason && (
+            <div>
+              <div className="text-xs text-muted-foreground mb-1">Reason</div>
+              <div className="text-sm wrap-break-word bg-red-100/50 dark:bg-red-900/20 p-2 rounded">
+                {(entry as any).deleteRequestReason}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex gap-2 pt-2">
+          <Button
+            size="sm"
+            variant="outline"
+            className="flex-1"
+            onClick={(e) => {
+              e.stopPropagation()
+              onReject()
+            }}
+          >
+            <X className="h-4 w-4 mr-1" />
+            Reject
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            className="flex-1"
+            onClick={(e) => {
+              e.stopPropagation()
+              onApprove()
+            }}
+          >
+            <Trash2 className="h-4 w-4 mr-1" />
+            Approve Delete
           </Button>
           <Link href={`/finance/ledger/${entry.id}`}>
             <Button size="sm" variant="outline">
@@ -574,7 +676,7 @@ export default function ApprovalsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [rejectionReason, setRejectionReason] = useState('')
   const [dialogAction, setDialogAction] = useState<'approve' | 'reject'>('approve')
-  const [dialogType, setDialogType] = useState<'debit' | 'edit'>('debit')
+  const [dialogType, setDialogType] = useState<'debit' | 'edit' | 'delete'>('debit')
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [headFilter, setHeadFilter] = useState<string>('all')
@@ -605,6 +707,12 @@ export default function ApprovalsPage() {
   const { data: editRequestsData, isLoading: isLoadingEdits } = useQuery<LedgerResponse>({
     queryKey: ['pending-edit-requests'],
     queryFn: () => apiGet<LedgerResponse>('/api/finance/ledger?editRequestStatus=PENDING&status=APPROVED&limit=1000'),
+  })
+
+  // Fetch pending delete requests
+  const { data: deleteRequestsData, isLoading: isLoadingDeletes } = useQuery<LedgerResponse>({
+    queryKey: ['pending-delete-requests'],
+    queryFn: () => apiGet<LedgerResponse>('/api/finance/ledger?deleteRequestStatus=PENDING&status=APPROVED&limit=1000'),
   })
 
   // Fetch approved and rejected entries for history tab
@@ -753,6 +861,39 @@ export default function ApprovalsPage() {
     },
   })
 
+  const approveDeleteMutation = useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      return apiPost(`/api/finance/ledger/${id}/approve-delete`, { reason: '' })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pending-delete-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['ledger'] })
+      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
+      toast.success('Delete request approved — entry deleted')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to approve delete request')
+    },
+  })
+
+  const rejectDeleteMutation = useMutation({
+    mutationFn: async ({ id, reason }: { id: string; reason: string }) => {
+      return apiPost(`/api/finance/ledger/${id}/reject-delete`, { reason })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pending-delete-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['ledger'] })
+      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
+      setIsDialogOpen(false)
+      setSelectedEntry(null)
+      setRejectionReason('')
+      toast.success('Delete request rejected')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to reject delete request')
+    },
+  })
+
   const undoMutation = useMutation({
     mutationFn: (id: string) => apiPost(`/api/finance/ledger/${id}/undo`, {}),
     onSuccess: () => {
@@ -768,9 +909,13 @@ export default function ApprovalsPage() {
     },
   })
 
-  const handleApprove = (entry: LedgerEntry, type: 'debit' | 'edit' = 'debit') => {
+  const handleApprove = (entry: LedgerEntry, type: 'debit' | 'edit' | 'delete' = 'debit') => {
     if (type === 'debit') {
       approveMutation.mutate({ id: entry.id, action: 'approve' })
+      return
+    }
+    if (type === 'delete') {
+      approveDeleteMutation.mutate({ id: entry.id })
       return
     }
     // Edit request - approve directly without modal
@@ -780,7 +925,7 @@ export default function ApprovalsPage() {
     })
   }
 
-  const handleReject = (entry: LedgerEntry, type: 'debit' | 'edit' = 'debit') => {
+  const handleReject = (entry: LedgerEntry, type: 'debit' | 'edit' | 'delete' = 'debit') => {
     setSelectedEntry(entry)
     setDialogAction('reject')
     setDialogType(type)
@@ -807,6 +952,15 @@ export default function ApprovalsPage() {
         id: selectedEntry.id,
         action: dialogAction,
         rejectionReason: dialogAction === 'reject' ? rejectionReason.trim() : undefined,
+      })
+    } else if (dialogType === 'delete') {
+      if (!rejectionReason.trim()) {
+        toast.error('Rejection reason is required')
+        return
+      }
+      rejectDeleteMutation.mutate({
+        id: selectedEntry.id,
+        reason: rejectionReason.trim(),
       })
     } else {
       // Edit request - only reject goes through dialog (approve is handled directly)
@@ -850,6 +1004,7 @@ export default function ApprovalsPage() {
   const pendingCount = filteredPendingData.length
   const totalPendingAmount = filteredPendingData.reduce((sum, e) => sum + (e.paymentAmount || 0), 0)
   const editRequestsCount = editRequestsData?.pagination.total || 0
+  const deleteRequestsCount = deleteRequestsData?.pagination.total || 0
 
   // Trigger confetti when all approvals are done
   useEffect(() => {
@@ -920,13 +1075,13 @@ export default function ApprovalsPage() {
             )}
           </TabsTrigger>
           <TabsTrigger value="edits" className="min-w-0 px-1.5 sm:px-3">
-            <span className="truncate sm:whitespace-normal">Edit Requests</span>
-            {editRequestsCount > 0 && (
+            <span className="truncate sm:whitespace-normal">Edits & Deletes</span>
+            {(editRequestsCount + deleteRequestsCount) > 0 && (
               <Badge
                 variant="secondary"
                 className="ml-1 shrink-0 group-data-[state=active]:border-white/40 group-data-[state=active]:bg-white/20 group-data-[state=active]:text-white"
               >
-                {editRequestsCount}
+                {editRequestsCount + deleteRequestsCount}
               </Badge>
             )}
           </TabsTrigger>
@@ -1124,22 +1279,59 @@ export default function ApprovalsPage() {
         </TabsContent>
 
         <TabsContent value="edits" className="space-y-6">
-          {/* Edit Requests Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Summary */}
+          <div className="grid grid-cols-2 gap-4">
             <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/10 dark:border-yellow-800">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-yellow-600 dark:text-yellow-400">Pending Edit Requests</p>
+                    <p className="text-sm text-yellow-600 dark:text-yellow-400">Edit Requests</p>
                     <p className="text-3xl font-bold">{editRequestsCount}</p>
                   </div>
                   <Edit className="h-10 w-10 text-yellow-400" />
                 </div>
               </CardContent>
             </Card>
+            <Card className="border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-800">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-red-600 dark:text-red-400">Delete Requests</p>
+                    <p className="text-3xl font-bold">{deleteRequestsCount}</p>
+                  </div>
+                  <Trash2 className="h-10 w-10 text-red-400" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Edit Requests Table */}
+          {/* Delete Requests */}
+          {deleteRequestsCount > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-red-700 dark:text-red-400">Pending Delete Requests</CardTitle>
+                <CardDescription>Review and approve/reject delete requests from finance team</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoadingDeletes ? (
+                  <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                ) : (
+                  <div className="space-y-4">
+                    {deleteRequestsData?.data.map((entry) => (
+                      <DeleteRequestCard
+                        key={entry.id}
+                        entry={entry}
+                        onApprove={() => handleApprove(entry, 'delete')}
+                        onReject={() => handleReject(entry, 'delete')}
+                      />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Edit Requests */}
           <Card>
             <CardHeader>
               <CardTitle>Pending Edit Requests</CardTitle>

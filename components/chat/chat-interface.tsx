@@ -44,6 +44,7 @@ export function ChatInterface({ leadId }: ChatInterfaceProps) {
     if (!leadId || !user) return
     apiPost(`/api/leads/${leadId}/chat/read`, {}).then(() => {
       queryClient.invalidateQueries({ queryKey: ['chat-conversations'] })
+      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
     }).catch(() => {})
   }, [leadId, user, messages.length, queryClient])
 

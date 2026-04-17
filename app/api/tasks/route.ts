@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
         select: { lastSeenAt: true },
       },
     },
-    orderBy: [{ dueDate: "asc" }, { createdAt: "desc" }],
+    orderBy: [{ dueDate: "desc" }, { createdAt: "desc" }],
   })
 
   const lastSeenByTaskId = new Map<string, Date>()

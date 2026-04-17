@@ -235,6 +235,19 @@ export async function GET(request: NextRequest) {
             counts.pendingFinanceApprovals += c
           })
       )
+      promises.push(
+        prisma.ledgerEntry
+          .count({
+            where: {
+              isDeleted: false,
+              status: LedgerStatus.APPROVED,
+              deleteRequestStatus: LedgerStatus.PENDING,
+            },
+          })
+          .then((c) => {
+            counts.pendingFinanceApprovals += c
+          })
+      )
     }
 
     // Anonymous messages (MD/ADMIN only)

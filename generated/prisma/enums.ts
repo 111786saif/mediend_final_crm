@@ -569,7 +569,10 @@ export const LedgerAuditAction = {
   DELETED: 'DELETED',
   EDIT_REQUESTED: 'EDIT_REQUESTED',
   EDIT_APPROVED: 'EDIT_APPROVED',
-  EDIT_REJECTED: 'EDIT_REJECTED'
+  EDIT_REJECTED: 'EDIT_REJECTED',
+  DELETE_REQUESTED: 'DELETE_REQUESTED',
+  DELETE_APPROVED: 'DELETE_APPROVED',
+  DELETE_REJECTED: 'DELETE_REJECTED'
 } as const
 
 export type LedgerAuditAction = (typeof LedgerAuditAction)[keyof typeof LedgerAuditAction]
