@@ -1428,15 +1428,18 @@ export type $AttendanceNormalizationPayload<ExtArgs extends runtime.Types.Extens
     status: $Enums.NormalizationStatus
     reason: string | null
     /**
-     * * Filled when HR rejects (min length enforced in API).
+     * *
+     *    * Filled when HR rejects (min length enforced in API).
      */
     hrRejectionReason: string | null
     /**
-     * * For SELF type: 1, 2, or 3 hours of monthly allowance used. MANAGER/EMPLOYEE_REQUEST: null.
+     * *
+     *    * For SELF type: 1, 2, or 3 hours of monthly allowance used. MANAGER/EMPLOYEE_REQUEST: null.
      */
     hoursUsed: number | null
     /**
-     * * FULL_DAY or HALF_DAY - set by manager when approving.
+     * *
+     *    * FULL_DAY or HALF_DAY - set by manager when approving.
      */
     normalizeAs: string | null
     createdAt: Date

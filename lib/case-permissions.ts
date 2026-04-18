@@ -195,7 +195,15 @@ export function canEditOutstanding(user: User, lead: Lead): boolean {
 // Only INSURANCE_HEAD and ADMIN can view patient phone numbers
 export function canViewPhoneNumber(user: { role: string } | null | undefined): boolean {
   if (!user) return false
-  return ['INSURANCE_HEAD', 'ADMIN'].includes(user.role)
+  return ['INSURANCE_HEAD', 'ADMIN', 'COMPLIANCE_HEAD'].includes(user.role)
+}
+
+// Compliance Head sees the patient page in a fully read-only mode —
+// no action buttons, no form submissions. Every gated action should be
+// additionally wrapped with `&& !isReadOnlyPatientRole(user)`.
+export function isReadOnlyPatientRole(user: { role: string } | null | undefined): boolean {
+  if (!user) return false
+  return user.role === 'COMPLIANCE_HEAD'
 }
 
 // Insurance can fill initiate form after pre-auth is raised or complete

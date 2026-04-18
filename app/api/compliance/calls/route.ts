@@ -1,0 +1,95 @@
+import { NextRequest } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/generated/prisma/client'
+import { getSessionFromRequest } from '@/lib/session'
+import { hasPermission } from '@/lib/rbac'
+import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+
+const PAGE_SIZE = 20
+
+export async function GET(request: NextRequest) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) return unauthorizedResponse()
+    if (!hasPermission(user, 'compliance:read')) return errorResponse('Forbidden', 403)
+
+    const { searchParams } = new URL(request.url)
+    const status = searchParams.get('status')
+    const ratingParam = searchParams.get('rating')
+    const startDate = searchParams.get('startDate')
+    const endDate = searchParams.get('endDate')
+    const sort = searchParams.get('sort') ?? 'recent'
+    const cursor = searchParams.get('cursor')
+    const limitParam = searchParams.get('limit')
+    const limit = limitParam ? Math.min(parseInt(limitParam, 10), 100) : PAGE_SIZE
+
+    const where: Prisma.ComplianceCallWhereInput = {}
+
+    if (status) {
+      where.status = status as Prisma.EnumComplianceCallStatusFilter['equals']
+    }
+    if (ratingParam) {
+      const rating = parseInt(ratingParam, 10)
+      if (!Number.isNaN(rating)) where.rating = rating
+    }
+    if (startDate || endDate) {
+      where.createdAt = {}
+      if (startDate) where.createdAt.gte = new Date(startDate)
+      if (endDate) where.createdAt.lte = new Date(endDate)
+    }
+
+    let orderBy: Prisma.ComplianceCallOrderByWithRelationInput[]
+    switch (sort) {
+      case 'highest':
+        orderBy = [{ rating: 'desc' }, { completedAt: 'desc' }]
+        break
+      case 'lowest':
+        orderBy = [{ rating: 'asc' }, { completedAt: 'desc' }]
+        break
+      case 'pending':
+        // status=PENDING first, then most recent
+        orderBy = [{ status: 'asc' }, { createdAt: 'desc' }]
+        break
+      case 'recent':
+      default:
+        orderBy = [{ completedAt: 'desc' }, { createdAt: 'desc' }]
+        break
+    }
+
+    const calls = await prisma.complianceCall.findMany({
+      where,
+      orderBy,
+      take: limit + 1,
+      ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+      include: {
+        lead: {
+          select: {
+            id: true,
+            leadRef: true,
+            patientName: true,
+            phoneNumber: true,
+            treatment: true,
+            hospitalName: true,
+            surgeonName: true,
+            caseStage: true,
+            flowType: true,
+            bd: { select: { id: true, name: true } },
+            dischargeSheet: {
+              select: { id: true, dischargeDate: true, bdmName: true, managerName: true },
+            },
+          },
+        },
+        calledBy: { select: { id: true, name: true } },
+      },
+    })
+
+    const hasMore = calls.length > limit
+    const items = hasMore ? calls.slice(0, limit) : calls
+    const nextCursor = hasMore ? items[items.length - 1].id : null
+
+    return successResponse({ calls: items, nextCursor })
+  } catch (error) {
+    console.error('Error fetching compliance calls:', error)
+    return errorResponse('Failed to fetch compliance calls', 500)
+  }
+}

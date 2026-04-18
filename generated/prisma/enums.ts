@@ -25,12 +25,24 @@ export const UserRole = {
   DIGITAL_MARKETING_HEAD: 'DIGITAL_MARKETING_HEAD',
   IT_HEAD: 'IT_HEAD',
   LOAN_DEMAT_HEAD: 'LOAN_DEMAT_HEAD',
+  COMPLIANCE_HEAD: 'COMPLIANCE_HEAD',
   ADMIN: 'ADMIN',
   USER: 'USER',
   TESTER: 'TESTER'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const ComplianceCallStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  DID_NOT_PICK: 'DID_NOT_PICK',
+  WRONG_NUMBER: 'WRONG_NUMBER',
+  CALLBACK_SCHEDULED: 'CALLBACK_SCHEDULED'
+} as const
+
+export type ComplianceCallStatus = (typeof ComplianceCallStatus)[keyof typeof ComplianceCallStatus]
 
 
 export const FlowType = {

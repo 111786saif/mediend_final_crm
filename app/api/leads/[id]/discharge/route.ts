@@ -59,6 +59,13 @@ export async function POST(
       },
     })
 
+    // Auto-create the compliance call row so the Compliance Head has it in queue
+    await prisma.complianceCall.upsert({
+      where: { leadId },
+      create: { leadId },
+      update: {},
+    })
+
     await postCaseChatSystemMessage(leadId, 'BD marked patient discharged. Insurance can fill the discharge form.')
 
     // Create notifications for Insurance team

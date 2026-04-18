@@ -46,7 +46,8 @@ import {
   canStartCashMode,
   canSuggestHospitals,
   canViewInitiateForm,
-  isDischargeBlockedByInitiateForm
+  isDischargeBlockedByInitiateForm,
+  isReadOnlyPatientRole
 } from '@/lib/case-permissions'
 import { getKYPStatusLabel } from '@/lib/kyp-status-labels'
 import { CaseStage, FlowType } from '@/generated/prisma/enums'
@@ -455,18 +456,19 @@ export default function PatientDetailsPage() {
   }
 
   // Permission checks - cast user to match expected type
-  const canRaise = user && canRaisePreAuth(user as any, lead)
-  const canAddDetails = user && canAddKYPDetails(user as any, lead)
-  const canComplete = user && canCompletePreAuth(user as any, lead)
-  const canEdit = user && canEditKYP(user as any, lead)
-  const canInit = user && canInitiate(user as any, lead)
-  const canMarkIPDStatus = user && canMarkIPD(user as any, lead)
-  const canPDF = user && canGeneratePDF(user as any, lead)
-  const canFillDischargeForm = user && canEditDischargeSheet(user as any, lead)
-  const showMarkLost = user && canMarkLost(user as any, lead)
-  const showSuggestHospitals = user && canSuggestHospitals(user as any, lead)
-  const showModifyHospitals = user && canModifyHospitals(user as any, lead)
-  const canFillInitiate = user && canFillInitiateForm(user as any, lead)
+  const readOnly = !!(user && isReadOnlyPatientRole(user as any))
+  const canRaise = !readOnly && user && canRaisePreAuth(user as any, lead)
+  const canAddDetails = !readOnly && user && canAddKYPDetails(user as any, lead)
+  const canComplete = !readOnly && user && canCompletePreAuth(user as any, lead)
+  const canEdit = !readOnly && user && canEditKYP(user as any, lead)
+  const canInit = !readOnly && user && canInitiate(user as any, lead)
+  const canMarkIPDStatus = !readOnly && user && canMarkIPD(user as any, lead)
+  const canPDF = !readOnly && user && canGeneratePDF(user as any, lead)
+  const canFillDischargeForm = !readOnly && user && canEditDischargeSheet(user as any, lead)
+  const showMarkLost = !readOnly && user && canMarkLost(user as any, lead)
+  const showSuggestHospitals = !readOnly && user && canSuggestHospitals(user as any, lead)
+  const showModifyHospitals = !readOnly && user && canModifyHospitals(user as any, lead)
+  const canFillInitiate = !readOnly && user && canFillInitiateForm(user as any, lead)
   const isDischargeBlocked = user && isDischargeBlockedByInitiateForm(user as any, lead)
   const initiateForm = initiateFormData?.initiateForm
   const isInitiateFormFilled =
@@ -571,10 +573,10 @@ export default function PatientDetailsPage() {
   }
 
   // Cash Flow Permissions
-  const canStartCash = user && canStartCashMode(user as any, lead)
-  const canRevertCash = user && canRevertCashMode(user as any, lead)
-  const canFillIPDCash = user && canFillIPDCashForm(user as any, lead)
-  const canFillCashDischargeSheet = user && canFillCashDischarge(user as any, lead)
+  const canStartCash = !readOnly && user && canStartCashMode(user as any, lead)
+  const canRevertCash = !readOnly && user && canRevertCashMode(user as any, lead)
+  const canFillIPDCash = !readOnly && user && canFillIPDCashForm(user as any, lead)
+  const canFillCashDischargeSheet = !readOnly && user && canFillCashDischarge(user as any, lead)
 
   // Collect all uploaded documents for grid (KYP + PreAuth)
   const uploadedDocuments = (() => {

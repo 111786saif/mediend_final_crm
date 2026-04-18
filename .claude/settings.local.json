@@ -12,7 +12,8 @@
       "Bash(npx prisma *)",
       "Bash(grep *)",
       "Bash(python3 -c ' *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(git -C /c/Users/DHRUV/OneDrive/Desktop/mediend-crm-v2 log --oneline --all)"
     ]
   }
 }

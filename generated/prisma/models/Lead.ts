@@ -1129,6 +1129,7 @@ export type LeadWhereInput = {
   kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionNullableScalarRelationFilter, Prisma.KYPSubmissionWhereInput> | null
   dischargeSheet?: Prisma.XOR<Prisma.DischargeSheetNullableScalarRelationFilter, Prisma.DischargeSheetWhereInput> | null
   outstandingCase?: Prisma.XOR<Prisma.OutstandingCaseNullableScalarRelationFilter, Prisma.OutstandingCaseWhereInput> | null
+  complianceCall?: Prisma.XOR<Prisma.ComplianceCallNullableScalarRelationFilter, Prisma.ComplianceCallWhereInput> | null
   admissionRecord?: Prisma.XOR<Prisma.AdmissionRecordNullableScalarRelationFilter, Prisma.AdmissionRecordWhereInput> | null
   insuranceInitiateForm?: Prisma.XOR<Prisma.InsuranceInitiateFormNullableScalarRelationFilter, Prisma.InsuranceInitiateFormWhereInput> | null
   caseStageHistory?: Prisma.CaseStageHistoryListRelationFilter
@@ -1252,6 +1253,7 @@ export type LeadOrderByWithRelationInput = {
   kypSubmission?: Prisma.KYPSubmissionOrderByWithRelationInput
   dischargeSheet?: Prisma.DischargeSheetOrderByWithRelationInput
   outstandingCase?: Prisma.OutstandingCaseOrderByWithRelationInput
+  complianceCall?: Prisma.ComplianceCallOrderByWithRelationInput
   admissionRecord?: Prisma.AdmissionRecordOrderByWithRelationInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormOrderByWithRelationInput
   caseStageHistory?: Prisma.CaseStageHistoryOrderByRelationAggregateInput
@@ -1378,6 +1380,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   kypSubmission?: Prisma.XOR<Prisma.KYPSubmissionNullableScalarRelationFilter, Prisma.KYPSubmissionWhereInput> | null
   dischargeSheet?: Prisma.XOR<Prisma.DischargeSheetNullableScalarRelationFilter, Prisma.DischargeSheetWhereInput> | null
   outstandingCase?: Prisma.XOR<Prisma.OutstandingCaseNullableScalarRelationFilter, Prisma.OutstandingCaseWhereInput> | null
+  complianceCall?: Prisma.XOR<Prisma.ComplianceCallNullableScalarRelationFilter, Prisma.ComplianceCallWhereInput> | null
   admissionRecord?: Prisma.XOR<Prisma.AdmissionRecordNullableScalarRelationFilter, Prisma.AdmissionRecordWhereInput> | null
   insuranceInitiateForm?: Prisma.XOR<Prisma.InsuranceInitiateFormNullableScalarRelationFilter, Prisma.InsuranceInitiateFormWhereInput> | null
   caseStageHistory?: Prisma.CaseStageHistoryListRelationFilter
@@ -1722,6 +1725,7 @@ export type LeadCreateInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -1842,6 +1846,7 @@ export type LeadUncheckedCreateInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -1962,6 +1967,7 @@ export type LeadUpdateInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -2082,6 +2088,7 @@ export type LeadUncheckedUpdateInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -3156,6 +3163,20 @@ export type LeadUpdateOneRequiredWithoutOutstandingCaseNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutOutstandingCaseInput, Prisma.LeadUpdateWithoutOutstandingCaseInput>, Prisma.LeadUncheckedUpdateWithoutOutstandingCaseInput>
 }
 
+export type LeadCreateNestedOneWithoutComplianceCallInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutComplianceCallInput, Prisma.LeadUncheckedCreateWithoutComplianceCallInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutComplianceCallInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneRequiredWithoutComplianceCallNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutComplianceCallInput, Prisma.LeadUncheckedCreateWithoutComplianceCallInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutComplianceCallInput
+  upsert?: Prisma.LeadUpsertWithoutComplianceCallInput
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutComplianceCallInput, Prisma.LeadUpdateWithoutComplianceCallInput>, Prisma.LeadUncheckedUpdateWithoutComplianceCallInput>
+}
+
 export type LeadCreateWithoutCreatedByInput = {
   id?: string
   leadRef: string
@@ -3267,6 +3288,7 @@ export type LeadCreateWithoutCreatedByInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -3386,6 +3408,7 @@ export type LeadUncheckedCreateWithoutCreatedByInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -3515,6 +3538,7 @@ export type LeadCreateWithoutBdInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -3634,6 +3658,7 @@ export type LeadUncheckedCreateWithoutBdInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -3763,6 +3788,7 @@ export type LeadCreateWithoutUpdatedByInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -3882,6 +3908,7 @@ export type LeadUncheckedCreateWithoutUpdatedByInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -4171,6 +4198,7 @@ export type LeadCreateWithoutCallNotesInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -4290,6 +4318,7 @@ export type LeadUncheckedCreateWithoutCallNotesInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -4425,6 +4454,7 @@ export type LeadUpdateWithoutCallNotesInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -4544,6 +4574,7 @@ export type LeadUncheckedUpdateWithoutCallNotesInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -4662,6 +4693,7 @@ export type LeadCreateWithoutStageEventsInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -4781,6 +4813,7 @@ export type LeadUncheckedCreateWithoutStageEventsInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -4916,6 +4949,7 @@ export type LeadUpdateWithoutStageEventsInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -5035,6 +5069,7 @@ export type LeadUncheckedUpdateWithoutStageEventsInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -5154,6 +5189,7 @@ export type LeadCreateWithoutInsuranceCaseInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -5273,6 +5309,7 @@ export type LeadUncheckedCreateWithoutInsuranceCaseInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -5408,6 +5445,7 @@ export type LeadUpdateWithoutInsuranceCaseInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -5527,6 +5565,7 @@ export type LeadUncheckedUpdateWithoutInsuranceCaseInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -5646,6 +5685,7 @@ export type LeadCreateWithoutPlRecordInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -5765,6 +5805,7 @@ export type LeadUncheckedCreateWithoutPlRecordInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -5900,6 +5941,7 @@ export type LeadUpdateWithoutPlRecordInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -6019,6 +6061,7 @@ export type LeadUncheckedUpdateWithoutPlRecordInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -6138,6 +6181,7 @@ export type LeadCreateWithoutKypSubmissionInput = {
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -6257,6 +6301,7 @@ export type LeadUncheckedCreateWithoutKypSubmissionInput = {
   plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -6392,6 +6437,7 @@ export type LeadUpdateWithoutKypSubmissionInput = {
   plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -6511,6 +6557,7 @@ export type LeadUncheckedUpdateWithoutKypSubmissionInput = {
   plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -6631,6 +6678,7 @@ export type LeadCreateWithoutAdmissionRecordInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
   caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
@@ -6750,6 +6798,7 @@ export type LeadUncheckedCreateWithoutAdmissionRecordInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
   caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
@@ -6885,6 +6934,7 @@ export type LeadUpdateWithoutAdmissionRecordInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
   caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
@@ -7004,6 +7054,7 @@ export type LeadUncheckedUpdateWithoutAdmissionRecordInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
   caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
@@ -7123,6 +7174,7 @@ export type LeadCreateWithoutInsuranceInitiateFormInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
   caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
@@ -7242,6 +7294,7 @@ export type LeadUncheckedCreateWithoutInsuranceInitiateFormInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
   caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
@@ -7377,6 +7430,7 @@ export type LeadUpdateWithoutInsuranceInitiateFormInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
   caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
@@ -7496,6 +7550,7 @@ export type LeadUncheckedUpdateWithoutInsuranceInitiateFormInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
   caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
@@ -7615,6 +7670,7 @@ export type LeadCreateWithoutCaseStageHistoryInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
@@ -7734,6 +7790,7 @@ export type LeadUncheckedCreateWithoutCaseStageHistoryInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
@@ -7869,6 +7926,7 @@ export type LeadUpdateWithoutCaseStageHistoryInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
@@ -7988,6 +8046,7 @@ export type LeadUncheckedUpdateWithoutCaseStageHistoryInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
@@ -8107,6 +8166,7 @@ export type LeadCreateWithoutCaseChatMessagesInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -8226,6 +8286,7 @@ export type LeadUncheckedCreateWithoutCaseChatMessagesInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -8361,6 +8422,7 @@ export type LeadUpdateWithoutCaseChatMessagesInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -8480,6 +8542,7 @@ export type LeadUncheckedUpdateWithoutCaseChatMessagesInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -8599,6 +8662,7 @@ export type LeadCreateWithoutChatReadReceiptsInput = {
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -8718,6 +8782,7 @@ export type LeadUncheckedCreateWithoutChatReadReceiptsInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -8853,6 +8918,7 @@ export type LeadUpdateWithoutChatReadReceiptsInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -8972,6 +9038,7 @@ export type LeadUncheckedUpdateWithoutChatReadReceiptsInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -9090,6 +9157,7 @@ export type LeadCreateWithoutDischargeSheetInput = {
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -9209,6 +9277,7 @@ export type LeadUncheckedCreateWithoutDischargeSheetInput = {
   plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -9344,6 +9413,7 @@ export type LeadUpdateWithoutDischargeSheetInput = {
   plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -9463,6 +9533,7 @@ export type LeadUncheckedUpdateWithoutDischargeSheetInput = {
   plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -9582,6 +9653,7 @@ export type LeadCreateWithoutOutstandingCaseInput = {
   plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
   kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
@@ -9701,6 +9773,7 @@ export type LeadUncheckedCreateWithoutOutstandingCaseInput = {
   plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
   kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
+  complianceCall?: Prisma.ComplianceCallUncheckedCreateNestedOneWithoutLeadInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
@@ -9836,6 +9909,7 @@ export type LeadUpdateWithoutOutstandingCaseInput = {
   plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -9955,6 +10029,503 @@ export type LeadUncheckedUpdateWithoutOutstandingCaseInput = {
   plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadCreateWithoutComplianceCallInput = {
+  id?: string
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdDate?: Date | string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  leadDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  bd: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  createdBy: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
+  updatedBy: Prisma.UserCreateNestedOneWithoutUpdatedLeadsInput
+  stageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutComplianceCallInput = {
+  id?: string
+  leadRef: string
+  patientName: string
+  age: number
+  dateOfBirth?: Date | string | null
+  sex: string
+  phoneNumber: string
+  alternateNumber?: string | null
+  attendantName?: string | null
+  bdId: string
+  status: string
+  pipelineStage?: $Enums.PipelineStage
+  caseStage?: $Enums.CaseStage
+  circle: string
+  category?: string | null
+  treatment?: string | null
+  anesthesia?: string | null
+  quantityGrade?: string | null
+  surgeonName?: string | null
+  surgeonType?: string | null
+  hospitalName: string
+  flowType?: $Enums.FlowType
+  modeOfPayment?: string | null
+  discount?: number
+  copay?: number
+  deduction?: number
+  settledTotal?: number
+  billAmount?: number
+  insuranceName?: string | null
+  tpa?: string | null
+  sumInsured?: number | null
+  roomRent?: number | null
+  icu?: number | null
+  capping?: number | null
+  arrivalDate?: Date | string | null
+  arrivalTime?: string | null
+  surgeryDate?: Date | string | null
+  operationTime?: string | null
+  implantType?: string | null
+  implantAmount?: number
+  instrument?: string | null
+  consumables?: string | null
+  createdById: string
+  createdDate?: Date | string
+  updatedById: string
+  updatedDate?: Date | string
+  remarks?: string | null
+  source?: string | null
+  campaignName?: string | null
+  bdeName?: string | null
+  conversionDate?: Date | string | null
+  mediendProfit?: number
+  hospitalShare?: number
+  doctorShare?: number
+  othersShare?: number
+  netProfit?: number
+  ticketSize?: number
+  collectedByMediend?: number
+  collectedByHospital?: number
+  month?: string | null
+  leadDate?: Date | string | null
+  leadEntryDate?: Date | string | null
+  patientEmail?: string | null
+  whatsapp?: string | null
+  address?: string | null
+  docUpload?: string | null
+  diseaseDetails?: string | null
+  followUpDate?: Date | string | null
+  subStatus?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number
+  opdScheduleDate?: Date | string | null
+  opdMeeting?: number | null
+  ipdAdmissionDate?: Date | string | null
+  ipdHospital?: string | null
+  ipdDrName?: string | null
+  ipdContactNo?: string | null
+  ipdTotalPayment?: number
+  ipdDetails?: string | null
+  paymentDetails?: number | null
+  attendantContactNo?: string | null
+  waFormat?: string | null
+  leadSource?: number | null
+  whatsappMessage?: string | null
+  notification?: boolean
+  emailSent?: boolean
+  smsSent?: boolean
+  whatsappSent?: boolean
+  website?: string | null
+  description?: string | null
+  refId?: string | null
+  duplCount?: number
+  aes?: boolean
+  profession?: string | null
+  qr?: string | null
+  removeRemarks?: boolean
+  adId?: string | null
+  campaignId?: string | null
+  formId?: string | null
+  teamLeadId?: number | null
+  remarksId?: string | null
+  lostReason?: string | null
+  lostAt?: Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutLeadInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedCreateNestedOneWithoutLeadInput
+  plRecord?: Prisma.PLRecordUncheckedCreateNestedOneWithoutLeadInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedCreateNestedOneWithoutLeadInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedCreateNestedOneWithoutLeadInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedCreateNestedOneWithoutLeadInput
+  admissionRecord?: Prisma.AdmissionRecordUncheckedCreateNestedOneWithoutLeadInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedCreateNestedOneWithoutLeadInput
+  caseStageHistory?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutLeadInput
+  caseChatMessages?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutLeadInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutLeadInput
+  callNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutComplianceCallInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutComplianceCallInput, Prisma.LeadUncheckedCreateWithoutComplianceCallInput>
+}
+
+export type LeadUpsertWithoutComplianceCallInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutComplianceCallInput, Prisma.LeadUncheckedUpdateWithoutComplianceCallInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutComplianceCallInput, Prisma.LeadUncheckedCreateWithoutComplianceCallInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutComplianceCallInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutComplianceCallInput, Prisma.LeadUncheckedUpdateWithoutComplianceCallInput>
+}
+
+export type LeadUpdateWithoutComplianceCallInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bd?: Prisma.UserUpdateOneRequiredWithoutAssignedLeadsNestedInput
+  createdBy?: Prisma.UserUpdateOneRequiredWithoutCreatedLeadsNestedInput
+  updatedBy?: Prisma.UserUpdateOneRequiredWithoutUpdatedLeadsNestedInput
+  stageEvents?: Prisma.LeadStageEventUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
+  insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
+  caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
+  caseChatMessages?: Prisma.CaseChatMessageUpdateManyWithoutLeadNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutLeadNestedInput
+  callNotes?: Prisma.CallNoteUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutComplianceCallInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadRef?: Prisma.StringFieldUpdateOperationsInput | string
+  patientName?: Prisma.StringFieldUpdateOperationsInput | string
+  age?: Prisma.IntFieldUpdateOperationsInput | number
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sex?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  alternateNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attendantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineStage?: Prisma.EnumPipelineStageFieldUpdateOperationsInput | $Enums.PipelineStage
+  caseStage?: Prisma.EnumCaseStageFieldUpdateOperationsInput | $Enums.CaseStage
+  circle?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  anesthesia?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quantityGrade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeonType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalName?: Prisma.StringFieldUpdateOperationsInput | string
+  flowType?: Prisma.EnumFlowTypeFieldUpdateOperationsInput | $Enums.FlowType
+  modeOfPayment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discount?: Prisma.FloatFieldUpdateOperationsInput | number
+  copay?: Prisma.FloatFieldUpdateOperationsInput | number
+  deduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  settledTotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  billAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  insuranceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumInsured?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  roomRent?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  icu?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  capping?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  arrivalDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  arrivalTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  operationTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  implantAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  instrument?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  consumables?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.StringFieldUpdateOperationsInput | string
+  createdDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedById?: Prisma.StringFieldUpdateOperationsInput | string
+  updatedDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  hospitalShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  othersShare?: Prisma.FloatFieldUpdateOperationsInput | number
+  netProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  ticketSize?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  month?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  leadEntryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  patientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsapp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  docUpload?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  diseaseDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subStatus?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  opdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdCharges?: Prisma.IntFieldUpdateOperationsInput | number
+  opdScheduleDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  opdMeeting?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipdAdmissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ipdHospital?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdDrName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipdTotalPayment?: Prisma.IntFieldUpdateOperationsInput | number
+  ipdDetails?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentDetails?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  attendantContactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  waFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadSource?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duplCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aes?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  profession?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  removeRemarks?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  adId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campaignId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamLeadId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remarksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lostAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  stageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutLeadNestedInput
+  insuranceCase?: Prisma.InsuranceCaseUncheckedUpdateOneWithoutLeadNestedInput
+  plRecord?: Prisma.PLRecordUncheckedUpdateOneWithoutLeadNestedInput
+  kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
+  dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
+  outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -10395,6 +10966,7 @@ export type LeadUpdateWithoutCreatedByInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -10514,6 +11086,7 @@ export type LeadUncheckedUpdateWithoutCreatedByInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -10740,6 +11313,7 @@ export type LeadUpdateWithoutBdInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -10859,6 +11433,7 @@ export type LeadUncheckedUpdateWithoutBdInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -11085,6 +11660,7 @@ export type LeadUpdateWithoutUpdatedByInput = {
   kypSubmission?: Prisma.KYPSubmissionUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUpdateManyWithoutLeadNestedInput
@@ -11204,6 +11780,7 @@ export type LeadUncheckedUpdateWithoutUpdatedByInput = {
   kypSubmission?: Prisma.KYPSubmissionUncheckedUpdateOneWithoutLeadNestedInput
   dischargeSheet?: Prisma.DischargeSheetUncheckedUpdateOneWithoutLeadNestedInput
   outstandingCase?: Prisma.OutstandingCaseUncheckedUpdateOneWithoutLeadNestedInput
+  complianceCall?: Prisma.ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput
   admissionRecord?: Prisma.AdmissionRecordUncheckedUpdateOneWithoutLeadNestedInput
   insuranceInitiateForm?: Prisma.InsuranceInitiateFormUncheckedUpdateOneWithoutLeadNestedInput
   caseStageHistory?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutLeadNestedInput
@@ -11501,6 +12078,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   kypSubmission?: boolean | Prisma.Lead$kypSubmissionArgs<ExtArgs>
   dischargeSheet?: boolean | Prisma.Lead$dischargeSheetArgs<ExtArgs>
   outstandingCase?: boolean | Prisma.Lead$outstandingCaseArgs<ExtArgs>
+  complianceCall?: boolean | Prisma.Lead$complianceCallArgs<ExtArgs>
   admissionRecord?: boolean | Prisma.Lead$admissionRecordArgs<ExtArgs>
   insuranceInitiateForm?: boolean | Prisma.Lead$insuranceInitiateFormArgs<ExtArgs>
   caseStageHistory?: boolean | Prisma.Lead$caseStageHistoryArgs<ExtArgs>
@@ -11851,6 +12429,7 @@ export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   kypSubmission?: boolean | Prisma.Lead$kypSubmissionArgs<ExtArgs>
   dischargeSheet?: boolean | Prisma.Lead$dischargeSheetArgs<ExtArgs>
   outstandingCase?: boolean | Prisma.Lead$outstandingCaseArgs<ExtArgs>
+  complianceCall?: boolean | Prisma.Lead$complianceCallArgs<ExtArgs>
   admissionRecord?: boolean | Prisma.Lead$admissionRecordArgs<ExtArgs>
   insuranceInitiateForm?: boolean | Prisma.Lead$insuranceInitiateFormArgs<ExtArgs>
   caseStageHistory?: boolean | Prisma.Lead$caseStageHistoryArgs<ExtArgs>
@@ -11882,6 +12461,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     kypSubmission: Prisma.$KYPSubmissionPayload<ExtArgs> | null
     dischargeSheet: Prisma.$DischargeSheetPayload<ExtArgs> | null
     outstandingCase: Prisma.$OutstandingCasePayload<ExtArgs> | null
+    complianceCall: Prisma.$ComplianceCallPayload<ExtArgs> | null
     admissionRecord: Prisma.$AdmissionRecordPayload<ExtArgs> | null
     insuranceInitiateForm: Prisma.$InsuranceInitiateFormPayload<ExtArgs> | null
     caseStageHistory: Prisma.$CaseStageHistoryPayload<ExtArgs>[]
@@ -12398,6 +12978,7 @@ export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Typ
   kypSubmission<T extends Prisma.Lead$kypSubmissionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$kypSubmissionArgs<ExtArgs>>): Prisma.Prisma__KYPSubmissionClient<runtime.Types.Result.GetResult<Prisma.$KYPSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   dischargeSheet<T extends Prisma.Lead$dischargeSheetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$dischargeSheetArgs<ExtArgs>>): Prisma.Prisma__DischargeSheetClient<runtime.Types.Result.GetResult<Prisma.$DischargeSheetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   outstandingCase<T extends Prisma.Lead$outstandingCaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$outstandingCaseArgs<ExtArgs>>): Prisma.Prisma__OutstandingCaseClient<runtime.Types.Result.GetResult<Prisma.$OutstandingCasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  complianceCall<T extends Prisma.Lead$complianceCallArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$complianceCallArgs<ExtArgs>>): Prisma.Prisma__ComplianceCallClient<runtime.Types.Result.GetResult<Prisma.$ComplianceCallPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   admissionRecord<T extends Prisma.Lead$admissionRecordArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$admissionRecordArgs<ExtArgs>>): Prisma.Prisma__AdmissionRecordClient<runtime.Types.Result.GetResult<Prisma.$AdmissionRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   insuranceInitiateForm<T extends Prisma.Lead$insuranceInitiateFormArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$insuranceInitiateFormArgs<ExtArgs>>): Prisma.Prisma__InsuranceInitiateFormClient<runtime.Types.Result.GetResult<Prisma.$InsuranceInitiateFormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   caseStageHistory<T extends Prisma.Lead$caseStageHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$caseStageHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CaseStageHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13055,6 +13636,25 @@ export type Lead$outstandingCaseArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.OutstandingCaseInclude<ExtArgs> | null
   where?: Prisma.OutstandingCaseWhereInput
+}
+
+/**
+ * Lead.complianceCall
+ */
+export type Lead$complianceCallArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ComplianceCall
+   */
+  select?: Prisma.ComplianceCallSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ComplianceCall
+   */
+  omit?: Prisma.ComplianceCallOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ComplianceCallInclude<ExtArgs> | null
+  where?: Prisma.ComplianceCallWhereInput
 }
 
 /**

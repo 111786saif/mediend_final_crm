@@ -153,6 +153,13 @@ export async function POST(request: NextRequest) {
       data: { plRecordId: plRecord.id },
     })
 
+    // Auto-create compliance call row for post-discharge patient feedback
+    await prisma.complianceCall.upsert({
+      where: { leadId: validatedData.leadId },
+      create: { leadId: validatedData.leadId },
+      update: {},
+    })
+
     // Notify BD
     await prisma.notification.create({
       data: {

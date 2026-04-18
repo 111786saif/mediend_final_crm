@@ -363,6 +363,11 @@ export type DischargeSheet = Prisma.DischargeSheetModel
  */
 export type OutstandingCase = Prisma.OutstandingCaseModel
 /**
+ * Model ComplianceCall
+ * 
+ */
+export type ComplianceCall = Prisma.ComplianceCallModel
+/**
  * Model Task
  * 
  */

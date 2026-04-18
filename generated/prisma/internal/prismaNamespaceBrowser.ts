@@ -120,6 +120,7 @@ export const ModelName = {
   ChatReadReceipt: 'ChatReadReceipt',
   DischargeSheet: 'DischargeSheet',
   OutstandingCase: 'OutstandingCase',
+  ComplianceCall: 'ComplianceCall',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
   UserTaskSeen: 'UserTaskSeen',
@@ -1606,6 +1607,23 @@ export const OutstandingCaseScalarFieldEnum = {
 } as const
 
 export type OutstandingCaseScalarFieldEnum = (typeof OutstandingCaseScalarFieldEnum)[keyof typeof OutstandingCaseScalarFieldEnum]
+
+
+export const ComplianceCallScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  status: 'status',
+  rating: 'rating',
+  notes: 'notes',
+  lastAttemptedAt: 'lastAttemptedAt',
+  completedAt: 'completedAt',
+  callbackAt: 'callbackAt',
+  calledByUserId: 'calledByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ComplianceCallScalarFieldEnum = (typeof ComplianceCallScalarFieldEnum)[keyof typeof ComplianceCallScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {

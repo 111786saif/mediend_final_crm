@@ -321,6 +321,13 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Auto-create compliance call row (idempotent) for post-discharge feedback
+    await prisma.complianceCall.upsert({
+      where: { leadId: data.leadId },
+      create: { leadId: data.leadId },
+      update: {},
+    })
+
     // Create notification for PL team
     const plUsers = await prisma.user.findMany({
       where: {

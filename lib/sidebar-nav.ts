@@ -25,6 +25,8 @@ import {
   Plus,
   Shield,
   ShieldCheck,
+  Star,
+  Stethoscope,
   Target,
   Ticket,
   TrendingUp,
@@ -377,6 +379,18 @@ export const navItems: NavItem[] = [
     icon: ShieldCheck,
     permission: 'it:permissions',
   },
+  {
+    title: 'Compliance',
+    url: '/compliance/dashboard',
+    icon: Stethoscope,
+    roles: ['COMPLIANCE_HEAD', 'ADMIN'],
+  },
+  {
+    title: 'MD Compliance',
+    url: '/md/compliance',
+    icon: Star,
+    roles: ['MD', 'ADMIN'],
+  },
 ]
 
 /** Merged in app-sidebar when user has `cpl_access` (IT Permissions). Not in `navItems`. */
@@ -391,6 +405,7 @@ export function getCampaignCplNavItem(): NavItem & { url: string } {
 export function getDashboardUrl(role: string): string {
   if (role === 'SALES_HEAD') return '/sales/dashboard'
   if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
+  if (role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
   return '/md/tasks'
 }
 
@@ -491,6 +506,7 @@ export function getFirstNavUrl(user: SessionUser | null): string {
   // MD/ADMIN land on the MD Command Center; everyone else on the generic home page
   if (user) {
     if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
+    if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
     return '/home'
   }
   const items = getFilteredNavItemsWithUrls(user)

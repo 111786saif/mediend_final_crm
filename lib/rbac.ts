@@ -51,6 +51,8 @@ export type Permission =
   | 'sales:pnl:read'
   | 'masters:read'
   | 'masters:write'
+  | 'compliance:read'
+  | 'compliance:write'
 
 const rolePermissions: Record<UserRole, Permission[]> = {
   MD: [
@@ -85,6 +87,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'loan-demat:write',
     'masters:read',
     'masters:write',
+    'compliance:read',
   ],
   EXECUTIVE_ASSISTANT: [
     'analytics:read',
@@ -276,6 +279,12 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:team:read',
     'hierarchy:leave:approve',
   ],
+  COMPLIANCE_HEAD: [
+    'leads:read',
+    'compliance:read',
+    'compliance:write',
+    'hierarchy:read',
+  ],
   ADMIN: [
     'leads:read',
     'leads:write',
@@ -324,6 +333,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'it:pnl:write',
     'loan-demat:read',
     'loan-demat:write',
+    'compliance:read',
+    'compliance:write',
   ],
   USER: [
     'hrms:read',
@@ -374,6 +385,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'loan-demat:read',
     'loan-demat:write',
     'sales:pnl:read',
+    'compliance:read',
+    'compliance:write',
   ],
 }
 
@@ -423,6 +436,7 @@ const DEPT_HEAD_ROLES: UserRole[] = [
   'DIGITAL_MARKETING_HEAD',
   'IT_HEAD',
   'LOAN_DEMAT_HEAD',
+  'COMPLIANCE_HEAD',
 ]
 
 export function isDepartmentHead(role: UserRole): boolean {
@@ -489,6 +503,7 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
     'DIGITAL_MARKETING_HEAD',
     'IT_HEAD',
     'LOAN_DEMAT_HEAD',
+    'COMPLIANCE_HEAD',
     'ADMIN',
     'USER',
     'TESTER',
@@ -510,6 +525,7 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
       'DIGITAL_MARKETING_HEAD',
       'IT_HEAD',
       'LOAN_DEMAT_HEAD',
+      'COMPLIANCE_HEAD',
       'EXECUTIVE_ASSISTANT',
       'CATEGORY_MANAGER',
       'ASSISTANT_CATEGORY_MANAGER',
