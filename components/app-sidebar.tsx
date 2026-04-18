@@ -217,6 +217,16 @@ export function AppSidebar() {
                 item.title === 'Calendar' ||
                 item.title.startsWith('My ')
             )
+          : user.role === 'COMPLIANCE_HEAD'
+          ? itemsWithUrls.filter(
+              (item) =>
+                item.title === 'Home' ||
+                item.title === 'Tasks' ||
+                item.title === 'Meets' ||
+                item.title === 'Calendar' ||
+                item.title === 'Chat' ||
+                item.title === 'Compliance'
+            )
           : itemsWithUrls.filter(
               (item) => {
                 if (user.role === 'SALES_HEAD' && HRM_TITLES.includes(item.title)) return false
