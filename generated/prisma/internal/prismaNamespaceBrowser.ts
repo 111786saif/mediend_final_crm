@@ -504,6 +504,8 @@ export const EmployeeScalarFieldEnum = {
   noticePeriodEndDate: 'noticePeriodEndDate',
   finalWorkingDay: 'finalWorkingDay',
   terminationReason: 'terminationReason',
+  statusNote: 'statusNote',
+  fnfDeadline: 'fnfDeadline',
   fnfCompleted: 'fnfCompleted',
   fnfCompletedAt: 'fnfCompletedAt',
   fnfCompletedById: 'fnfCompletedById',

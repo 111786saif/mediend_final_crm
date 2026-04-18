@@ -63,6 +63,8 @@ export type EmployeeMinAggregateOutputType = {
   noticePeriodEndDate: Date | null
   finalWorkingDay: Date | null
   terminationReason: string | null
+  statusNote: string | null
+  fnfDeadline: Date | null
   fnfCompleted: boolean | null
   fnfCompletedAt: Date | null
   fnfCompletedById: string | null
@@ -97,6 +99,8 @@ export type EmployeeMaxAggregateOutputType = {
   noticePeriodEndDate: Date | null
   finalWorkingDay: Date | null
   terminationReason: string | null
+  statusNote: string | null
+  fnfDeadline: Date | null
   fnfCompleted: boolean | null
   fnfCompletedAt: Date | null
   fnfCompletedById: string | null
@@ -131,6 +135,8 @@ export type EmployeeCountAggregateOutputType = {
   noticePeriodEndDate: number
   finalWorkingDay: number
   terminationReason: number
+  statusNote: number
+  fnfDeadline: number
   fnfCompleted: number
   fnfCompletedAt: number
   fnfCompletedById: number
@@ -177,6 +183,8 @@ export type EmployeeMinAggregateInputType = {
   noticePeriodEndDate?: true
   finalWorkingDay?: true
   terminationReason?: true
+  statusNote?: true
+  fnfDeadline?: true
   fnfCompleted?: true
   fnfCompletedAt?: true
   fnfCompletedById?: true
@@ -211,6 +219,8 @@ export type EmployeeMaxAggregateInputType = {
   noticePeriodEndDate?: true
   finalWorkingDay?: true
   terminationReason?: true
+  statusNote?: true
+  fnfDeadline?: true
   fnfCompleted?: true
   fnfCompletedAt?: true
   fnfCompletedById?: true
@@ -245,6 +255,8 @@ export type EmployeeCountAggregateInputType = {
   noticePeriodEndDate?: true
   finalWorkingDay?: true
   terminationReason?: true
+  statusNote?: true
+  fnfDeadline?: true
   fnfCompleted?: true
   fnfCompletedAt?: true
   fnfCompletedById?: true
@@ -366,6 +378,8 @@ export type EmployeeGroupByOutputType = {
   noticePeriodEndDate: Date | null
   finalWorkingDay: Date | null
   terminationReason: string | null
+  statusNote: string | null
+  fnfDeadline: Date | null
   fnfCompleted: boolean
   fnfCompletedAt: Date | null
   fnfCompletedById: string | null
@@ -423,6 +437,8 @@ export type EmployeeWhereInput = {
   noticePeriodEndDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   finalWorkingDay?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   terminationReason?: Prisma.StringNullableFilter<"Employee"> | string | null
+  statusNote?: Prisma.StringNullableFilter<"Employee"> | string | null
+  fnfDeadline?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   fnfCompleted?: Prisma.BoolFilter<"Employee"> | boolean
   fnfCompletedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   fnfCompletedById?: Prisma.StringNullableFilter<"Employee"> | string | null
@@ -486,6 +502,8 @@ export type EmployeeOrderByWithRelationInput = {
   noticePeriodEndDate?: Prisma.SortOrderInput | Prisma.SortOrder
   finalWorkingDay?: Prisma.SortOrderInput | Prisma.SortOrder
   terminationReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  statusNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  fnfDeadline?: Prisma.SortOrderInput | Prisma.SortOrder
   fnfCompleted?: Prisma.SortOrder
   fnfCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   fnfCompletedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -552,6 +570,8 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   noticePeriodEndDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   finalWorkingDay?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   terminationReason?: Prisma.StringNullableFilter<"Employee"> | string | null
+  statusNote?: Prisma.StringNullableFilter<"Employee"> | string | null
+  fnfDeadline?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   fnfCompleted?: Prisma.BoolFilter<"Employee"> | boolean
   fnfCompletedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   fnfCompletedById?: Prisma.StringNullableFilter<"Employee"> | string | null
@@ -615,6 +635,8 @@ export type EmployeeOrderByWithAggregationInput = {
   noticePeriodEndDate?: Prisma.SortOrderInput | Prisma.SortOrder
   finalWorkingDay?: Prisma.SortOrderInput | Prisma.SortOrder
   terminationReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  statusNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  fnfDeadline?: Prisma.SortOrderInput | Prisma.SortOrder
   fnfCompleted?: Prisma.SortOrder
   fnfCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   fnfCompletedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -657,6 +679,8 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   noticePeriodEndDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
   finalWorkingDay?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
   terminationReason?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  statusNote?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
+  fnfDeadline?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
   fnfCompleted?: Prisma.BoolWithAggregatesFilter<"Employee"> | boolean
   fnfCompletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
   fnfCompletedById?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
@@ -687,6 +711,8 @@ export type EmployeeCreateInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -749,6 +775,8 @@ export type EmployeeUncheckedCreateInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -803,6 +831,8 @@ export type EmployeeUpdateInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -865,6 +895,8 @@ export type EmployeeUncheckedUpdateInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -923,6 +955,8 @@ export type EmployeeCreateManyInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -953,6 +987,8 @@ export type EmployeeUpdateManyMutationInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -986,6 +1022,8 @@ export type EmployeeUncheckedUpdateManyInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1035,6 +1073,8 @@ export type EmployeeCountOrderByAggregateInput = {
   noticePeriodEndDate?: Prisma.SortOrder
   finalWorkingDay?: Prisma.SortOrder
   terminationReason?: Prisma.SortOrder
+  statusNote?: Prisma.SortOrder
+  fnfDeadline?: Prisma.SortOrder
   fnfCompleted?: Prisma.SortOrder
   fnfCompletedAt?: Prisma.SortOrder
   fnfCompletedById?: Prisma.SortOrder
@@ -1074,6 +1114,8 @@ export type EmployeeMaxOrderByAggregateInput = {
   noticePeriodEndDate?: Prisma.SortOrder
   finalWorkingDay?: Prisma.SortOrder
   terminationReason?: Prisma.SortOrder
+  statusNote?: Prisma.SortOrder
+  fnfDeadline?: Prisma.SortOrder
   fnfCompleted?: Prisma.SortOrder
   fnfCompletedAt?: Prisma.SortOrder
   fnfCompletedById?: Prisma.SortOrder
@@ -1108,6 +1150,8 @@ export type EmployeeMinOrderByAggregateInput = {
   noticePeriodEndDate?: Prisma.SortOrder
   finalWorkingDay?: Prisma.SortOrder
   terminationReason?: Prisma.SortOrder
+  statusNote?: Prisma.SortOrder
+  fnfDeadline?: Prisma.SortOrder
   fnfCompleted?: Prisma.SortOrder
   fnfCompletedAt?: Prisma.SortOrder
   fnfCompletedById?: Prisma.SortOrder
@@ -1702,6 +1746,8 @@ export type EmployeeCreateWithoutUserInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -1762,6 +1808,8 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -1821,6 +1869,8 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -1882,6 +1932,8 @@ export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -1956,6 +2008,8 @@ export type EmployeeUpdateWithoutUserInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2016,6 +2070,8 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2093,6 +2149,8 @@ export type EmployeeScalarWhereInput = {
   noticePeriodEndDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   finalWorkingDay?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   terminationReason?: Prisma.StringNullableFilter<"Employee"> | string | null
+  statusNote?: Prisma.StringNullableFilter<"Employee"> | string | null
+  fnfDeadline?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   fnfCompleted?: Prisma.BoolFilter<"Employee"> | boolean
   fnfCompletedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   fnfCompletedById?: Prisma.StringNullableFilter<"Employee"> | string | null
@@ -2123,6 +2181,8 @@ export type EmployeeCreateWithoutDepartmentInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -2183,6 +2243,8 @@ export type EmployeeUncheckedCreateWithoutDepartmentInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -2263,6 +2325,8 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -2324,6 +2388,8 @@ export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -2382,6 +2448,8 @@ export type EmployeeCreateWithoutTeamInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -2442,6 +2510,8 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -2517,6 +2587,8 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2578,6 +2650,8 @@ export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2647,6 +2721,8 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -2708,6 +2784,8 @@ export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -2766,6 +2844,8 @@ export type EmployeeCreateWithoutManagerInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -2826,6 +2906,8 @@ export type EmployeeUncheckedCreateWithoutManagerInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -2901,6 +2983,8 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2962,6 +3046,8 @@ export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3031,6 +3117,8 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -3092,6 +3180,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -3161,6 +3251,8 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3222,6 +3314,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3275,6 +3369,8 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -3336,6 +3432,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -3394,6 +3492,8 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -3455,6 +3555,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -3513,6 +3615,8 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -3574,6 +3678,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput 
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -3632,6 +3738,8 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -3693,6 +3801,8 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprove
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -3762,6 +3872,8 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3823,6 +3935,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3887,6 +4001,8 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3948,6 +4064,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4012,6 +4130,8 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4073,6 +4193,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput 
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4137,6 +4259,8 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4198,6 +4322,8 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprove
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4251,6 +4377,8 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -4312,6 +4440,8 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -4370,6 +4500,8 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -4431,6 +4563,8 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -4500,6 +4634,8 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4561,6 +4697,8 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4625,6 +4763,8 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4686,6 +4826,8 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4739,6 +4881,8 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -4800,6 +4944,8 @@ export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -4869,6 +5015,8 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4930,6 +5078,8 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4983,6 +5133,8 @@ export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -5044,6 +5196,8 @@ export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -5113,6 +5267,8 @@ export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5174,6 +5330,8 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5227,6 +5385,8 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -5288,6 +5448,8 @@ export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -5357,6 +5519,8 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5418,6 +5582,8 @@ export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5471,6 +5637,8 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -5532,6 +5700,8 @@ export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -5601,6 +5771,8 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5662,6 +5834,8 @@ export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5715,6 +5889,8 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -5776,6 +5952,8 @@ export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -5845,6 +6023,8 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5906,6 +6086,8 @@ export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5959,6 +6141,8 @@ export type EmployeeCreateWithoutDocumentsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -6020,6 +6204,8 @@ export type EmployeeUncheckedCreateWithoutDocumentsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -6089,6 +6275,8 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6150,6 +6338,8 @@ export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6203,6 +6393,8 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -6264,6 +6456,8 @@ export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -6333,6 +6527,8 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6394,6 +6590,8 @@ export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6447,6 +6645,8 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -6508,6 +6708,8 @@ export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -6577,6 +6779,8 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6638,6 +6842,8 @@ export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6691,6 +6897,8 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -6752,6 +6960,8 @@ export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -6821,6 +7031,8 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6882,6 +7094,8 @@ export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6935,6 +7149,8 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -6996,6 +7212,8 @@ export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -7065,6 +7283,8 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7126,6 +7346,8 @@ export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7179,6 +7401,8 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -7240,6 +7464,8 @@ export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -7309,6 +7535,8 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7370,6 +7598,8 @@ export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7423,6 +7653,8 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -7484,6 +7716,8 @@ export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -7553,6 +7787,8 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7614,6 +7850,8 @@ export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7667,6 +7905,8 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -7728,6 +7968,8 @@ export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -7797,6 +8039,8 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7858,6 +8102,8 @@ export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7911,6 +8157,8 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -7972,6 +8220,8 @@ export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -8041,6 +8291,8 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8102,6 +8354,8 @@ export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8155,6 +8409,8 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -8216,6 +8472,8 @@ export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -8285,6 +8543,8 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8346,6 +8606,8 @@ export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8403,6 +8665,8 @@ export type EmployeeCreateManyFnfCompletedByInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   createdAt?: Date | string
@@ -8432,6 +8696,8 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8493,6 +8759,8 @@ export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8550,6 +8818,8 @@ export type EmployeeUncheckedUpdateManyWithoutFnfCompletedByInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8582,6 +8852,8 @@ export type EmployeeCreateManyDepartmentInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -8612,6 +8884,8 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8672,6 +8946,8 @@ export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8729,6 +9005,8 @@ export type EmployeeUncheckedUpdateManyWithoutDepartmentInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8762,6 +9040,8 @@ export type EmployeeCreateManyTeamInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -8792,6 +9072,8 @@ export type EmployeeUpdateWithoutTeamInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8852,6 +9134,8 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8909,6 +9193,8 @@ export type EmployeeUncheckedUpdateManyWithoutTeamInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8942,6 +9228,8 @@ export type EmployeeCreateManyManagerInput = {
   noticePeriodEndDate?: Date | string | null
   finalWorkingDay?: Date | string | null
   terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
   fnfCompletedById?: string | null
@@ -8972,6 +9260,8 @@ export type EmployeeUpdateWithoutManagerInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -9032,6 +9322,8 @@ export type EmployeeUncheckedUpdateWithoutManagerInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9089,6 +9381,8 @@ export type EmployeeUncheckedUpdateManyWithoutManagerInput = {
   noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9352,6 +9646,8 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   noticePeriodEndDate?: boolean
   finalWorkingDay?: boolean
   terminationReason?: boolean
+  statusNote?: boolean
+  fnfDeadline?: boolean
   fnfCompleted?: boolean
   fnfCompletedAt?: boolean
   fnfCompletedById?: boolean
@@ -9416,6 +9712,8 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   noticePeriodEndDate?: boolean
   finalWorkingDay?: boolean
   terminationReason?: boolean
+  statusNote?: boolean
+  fnfDeadline?: boolean
   fnfCompleted?: boolean
   fnfCompletedAt?: boolean
   fnfCompletedById?: boolean
@@ -9455,6 +9753,8 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   noticePeriodEndDate?: boolean
   finalWorkingDay?: boolean
   terminationReason?: boolean
+  statusNote?: boolean
+  fnfDeadline?: boolean
   fnfCompleted?: boolean
   fnfCompletedAt?: boolean
   fnfCompletedById?: boolean
@@ -9494,6 +9794,8 @@ export type EmployeeSelectScalar = {
   noticePeriodEndDate?: boolean
   finalWorkingDay?: boolean
   terminationReason?: boolean
+  statusNote?: boolean
+  fnfDeadline?: boolean
   fnfCompleted?: boolean
   fnfCompletedAt?: boolean
   fnfCompletedById?: boolean
@@ -9501,7 +9803,7 @@ export type EmployeeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeCode" | "bdNumber" | "joinDate" | "salary" | "departmentId" | "teamId" | "managerId" | "dateOfBirth" | "aadharNumber" | "panNumber" | "aadharDocUrl" | "panDocUrl" | "designation" | "bankAccountName" | "bankAccountNumber" | "ifscCode" | "uanNumber" | "status" | "pipStartDate" | "pipEndDate" | "noticePeriodStartDate" | "noticePeriodEndDate" | "finalWorkingDay" | "terminationReason" | "fnfCompleted" | "fnfCompletedAt" | "fnfCompletedById" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeCode" | "bdNumber" | "joinDate" | "salary" | "departmentId" | "teamId" | "managerId" | "dateOfBirth" | "aadharNumber" | "panNumber" | "aadharDocUrl" | "panDocUrl" | "designation" | "bankAccountName" | "bankAccountNumber" | "ifscCode" | "uanNumber" | "status" | "pipStartDate" | "pipEndDate" | "noticePeriodStartDate" | "noticePeriodEndDate" | "finalWorkingDay" | "terminationReason" | "statusNote" | "fnfDeadline" | "fnfCompleted" | "fnfCompletedAt" | "fnfCompletedById" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.Employee$departmentArgs<ExtArgs>
@@ -9609,6 +9911,8 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     noticePeriodEndDate: Date | null
     finalWorkingDay: Date | null
     terminationReason: string | null
+    statusNote: string | null
+    fnfDeadline: Date | null
     fnfCompleted: boolean
     fnfCompletedAt: Date | null
     fnfCompletedById: string | null
@@ -10092,6 +10396,8 @@ export interface EmployeeFieldRefs {
   readonly noticePeriodEndDate: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly finalWorkingDay: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly terminationReason: Prisma.FieldRef<"Employee", 'String'>
+  readonly statusNote: Prisma.FieldRef<"Employee", 'String'>
+  readonly fnfDeadline: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly fnfCompleted: Prisma.FieldRef<"Employee", 'Boolean'>
   readonly fnfCompletedAt: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly fnfCompletedById: Prisma.FieldRef<"Employee", 'String'>

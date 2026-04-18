@@ -31,7 +31,11 @@ import {
   LogOut,
   Edit,
   Database,
+  Wallet,
+  StickyNote,
+  CheckCircle2,
 } from 'lucide-react'
+import { differenceInCalendarDays } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import { EmployeeActionDialog, type EmployeeActionType } from './employee-action-dialog'
@@ -79,12 +83,22 @@ interface EmployeeData {
   panNumber: string | null
   aadharNumber: string | null
   uanNumber: string | null
+  aadharDocUrl: string | null
+  panDocUrl: string | null
   bankAccountName: string | null
   bankAccountNumber: string | null
   ifscCode: string | null
   status: string
+  pipStartDate: string | null
+  pipEndDate: string | null
+  noticePeriodStartDate: string | null
+  noticePeriodEndDate: string | null
   finalWorkingDay: string | null
   terminationReason: string | null
+  statusNote: string | null
+  fnfDeadline: string | null
+  fnfCompleted: boolean
+  fnfCompletedAt: string | null
   user: { id: string; name: string; email: string; role: string; phoneNumber: string | null; address: string | null; profilePicture?: string | null }
   department: { id: string; name: string } | null
   leaveBalances?: { leaveTypeName: string; allocated: number; used: number; remaining: number }[]
@@ -153,6 +167,143 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       </h2>
       {children}
     </section>
+  )
+}
+
+function fnfUrgency(daysRemaining: number) {
+  if (daysRemaining < 0) {
+    return {
+      cardClass: 'border-red-300 bg-red-50 dark:border-red-900/50 dark:bg-red-950/30',
+      textClass: 'text-red-700 dark:text-red-300',
+      label: `${Math.abs(daysRemaining)} days overdue`,
+    }
+  }
+  if (daysRemaining <= 5) {
+    return {
+      cardClass: 'border-red-200 bg-red-50/50 dark:border-red-900/40 dark:bg-red-950/20',
+      textClass: 'text-amber-700 dark:text-amber-300',
+      label: `${daysRemaining} days remaining`,
+    }
+  }
+  if (daysRemaining <= 15) {
+    return {
+      cardClass: 'border-amber-200 bg-amber-50/50 dark:border-amber-900/40 dark:bg-amber-950/20',
+      textClass: 'text-amber-700 dark:text-amber-300',
+      label: `${daysRemaining} days remaining`,
+    }
+  }
+  return {
+    cardClass: 'border-emerald-200 bg-emerald-50/50 dark:border-emerald-900/40 dark:bg-emerald-950/20',
+    textClass: 'text-muted-foreground',
+    label: `${daysRemaining} days remaining`,
+  }
+}
+
+function StatusDetailsSection({ employee }: { employee: EmployeeData }) {
+  const note = employee.statusNote ?? employee.terminationReason ?? null
+  const status = employee.status
+
+  const heading: Record<string, { label: string; tone: string; icon: React.ElementType }> = {
+    ON_PIP: { label: 'On PIP', tone: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300', icon: AlertTriangle },
+    ON_NOTICE: { label: 'On Notice', tone: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300', icon: Clock },
+    TERMINATED: { label: 'Terminated', tone: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300', icon: LogOut },
+    ABSCONDED: { label: 'Absconded', tone: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300', icon: AlertTriangle },
+  }
+
+  const head = heading[status]
+  if (!head) return null
+  const HeadIcon = head.icon
+
+  const fwd = employee.finalWorkingDay ? new Date(employee.finalWorkingDay) : null
+  const fnfDeadline = employee.fnfDeadline
+    ? new Date(employee.fnfDeadline)
+    : status === 'TERMINATED' && fwd
+      ? new Date(fwd.getTime() + 45 * 24 * 60 * 60 * 1000)
+      : null
+
+  const daysRemaining = fnfDeadline
+    ? differenceInCalendarDays(fnfDeadline, new Date())
+    : null
+  const urgency = daysRemaining !== null ? fnfUrgency(daysRemaining) : null
+
+  return (
+    <Section title="Status Details">
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <Badge className={cn('font-normal', head.tone)}>
+            <HeadIcon className="h-3 w-3 mr-1" />
+            {head.label}
+          </Badge>
+          {status === 'TERMINATED' && employee.fnfCompleted && (
+            <Badge variant="outline" className="text-xs font-normal border-emerald-300 text-emerald-700 dark:border-emerald-800 dark:text-emerald-300">
+              <CheckCircle2 className="h-3 w-3 mr-1" />
+              FnF completed
+            </Badge>
+          )}
+        </div>
+
+        <div className="divide-y divide-border/60 -mx-4">
+          {status === 'ON_PIP' && (
+            <>
+              <div className="px-4">
+                <FieldRow icon={Calendar} label="PIP start" value={employee.pipStartDate ? format(new Date(employee.pipStartDate), 'PPP') : null} />
+              </div>
+              <div className="px-4">
+                <FieldRow icon={Calendar} label="PIP end" value={employee.pipEndDate ? format(new Date(employee.pipEndDate), 'PPP') : null} />
+              </div>
+            </>
+          )}
+          {status === 'ON_NOTICE' && (
+            <>
+              <div className="px-4">
+                <FieldRow icon={Calendar} label="Notice start" value={employee.noticePeriodStartDate ? format(new Date(employee.noticePeriodStartDate), 'PPP') : null} />
+              </div>
+              <div className="px-4">
+                <FieldRow icon={Calendar} label="Notice end" value={employee.noticePeriodEndDate ? format(new Date(employee.noticePeriodEndDate), 'PPP') : null} />
+              </div>
+              {fwd && (
+                <div className="px-4">
+                  <FieldRow icon={LogOut} label="Final working day" value={format(fwd, 'PPP')} />
+                </div>
+              )}
+            </>
+          )}
+          {status === 'TERMINATED' && fwd && (
+            <div className="px-4">
+              <FieldRow icon={LogOut} label="Final working day" value={format(fwd, 'PPP')} />
+            </div>
+          )}
+        </div>
+
+        {status === 'TERMINATED' && fnfDeadline && urgency && (
+          <div className={cn('rounded-lg border p-3', urgency.cardClass)}>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-xs text-muted-foreground">FnF deadline</p>
+                <p className="text-sm font-medium">{format(fnfDeadline, 'PPP')}</p>
+              </div>
+              <p className={cn('text-xs font-medium', urgency.textClass)}>
+                {employee.fnfCompleted ? 'Completed' : urgency.label}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {note && (
+          <div className="rounded-lg border bg-muted/30 p-3">
+            <div className="flex items-center gap-2 mb-1">
+              <StickyNote className="h-3.5 w-3.5 text-muted-foreground" />
+              <p className="text-xs font-medium text-muted-foreground">Note</p>
+            </div>
+            <p className="text-sm whitespace-pre-wrap">{note}</p>
+          </div>
+        )}
+
+        {!note && (
+          <p className="text-xs text-muted-foreground italic">No note recorded for this status.</p>
+        )}
+      </div>
+    </Section>
   )
 }
 
@@ -310,6 +461,9 @@ export function EmployeeDetailDrawer({
                   </div>
 
                   <div className="space-y-4">
+                    {employee.status !== 'ACTIVE' && (
+                      <StatusDetailsSection employee={employee} />
+                    )}
                     <Section title="Bank account">
                       <div className="space-y-2">
                         <div>
@@ -396,6 +550,17 @@ export function EmployeeDetailDrawer({
                             >
                               <LogOut className="h-3.5 w-3.5" />
                               Terminate
+                            </Button>
+                          )}
+                          {employee.status !== 'ABSCONDED' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="gap-1.5 border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300 dark:hover:bg-purple-900/30"
+                              onClick={() => setActionDialog({ action: 'FNF_PROCESS' })}
+                            >
+                              <Wallet className="h-3.5 w-3.5" />
+                              FnF Process
                             </Button>
                           )}
                           {employee.status !== 'ABSCONDED' && employee.status !== 'TERMINATED' && (

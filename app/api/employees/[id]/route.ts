@@ -356,44 +356,29 @@ export async function PATCH(
       },
     })
 
-    // Re-sync leads if bdNumber changed
+    // Clear stale records when identifiers change. The frontend will then
+    // trigger /api/employees/sync to re-populate via SyncProgressModal.
     const bdNumberChanged = data.bdNumber !== undefined && data.bdNumber !== currentEmployee.bdNumber
     if (bdNumberChanged) {
-      // Delete old leads tied to this user and re-sync with new bdNumber
-      prisma.lead.deleteMany({ where: { bdId: currentEmployee.user.id } })
-        .then(async (result) => {
-          console.log(`Deleted ${result.count} leads for user ${currentEmployee.user.id} (old bdNumber: ${currentEmployee.bdNumber})`)
-          if (data.bdNumber) {
-            const { syncLeadsForEmployee } = await import('@/lib/sync/sync-leads-for-employee')
-            syncLeadsForEmployee(id, currentEmployee.user.name, data.bdNumber).catch((err) =>
-              console.error('Lead re-sync error:', err)
-            )
-          }
-        })
-        .catch((err) => console.error('Failed to delete old leads:', err))
+      try {
+        const result = await prisma.lead.deleteMany({ where: { bdId: currentEmployee.user.id } })
+        console.log(`Deleted ${result.count} leads for user ${currentEmployee.user.id} (old bdNumber: ${currentEmployee.bdNumber})`)
+      } catch (err) {
+        console.error('Failed to delete old leads:', err)
+      }
     }
 
-    // Re-sync attendance if employeeCode changed
     const employeeCodeChanged = data.employeeCode !== undefined && data.employeeCode !== currentEmployee.employeeCode
     if (employeeCodeChanged) {
-      prisma.attendanceLog.deleteMany({ where: { employeeId: id } })
-        .then(async (result) => {
-          console.log(`Deleted ${result.count} attendance logs for employee ${id} (old code: ${currentEmployee.employeeCode})`)
-          if (data.employeeCode) {
-            const { syncAttendanceForEmployee } = await import('@/lib/sync/sync-attendance-for-employee')
-            syncAttendanceForEmployee(id, currentEmployee.user.name, data.employeeCode).catch((err) =>
-              console.error('Attendance re-sync error:', err)
-            )
-          }
-        })
-        .catch((err) => console.error('Failed to delete old attendance:', err))
+      try {
+        const result = await prisma.attendanceLog.deleteMany({ where: { employeeId: id } })
+        console.log(`Deleted ${result.count} attendance logs for employee ${id} (old code: ${currentEmployee.employeeCode})`)
+      } catch (err) {
+        console.error('Failed to delete old attendance:', err)
+      }
     }
 
-    const resyncMessage = bdNumberChanged || employeeCodeChanged
-      ? ` Re-syncing ${[bdNumberChanged && 'leads', employeeCodeChanged && 'attendance'].filter(Boolean).join(' and ')} in background.`
-      : ''
-
-    return successResponse(updated, `Employee updated successfully.${resyncMessage}`)
+    return successResponse(updated, 'Employee updated successfully.')
   } catch (error) {
     if (error instanceof z.ZodError) {
       return errorResponse('Invalid request data', 400)

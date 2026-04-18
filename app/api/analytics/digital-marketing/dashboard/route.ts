@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { loadCampaignCplMap, cplLookupKey } from '@/lib/pnl/surgery-marketing-cpl'
+import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -47,20 +48,13 @@ export async function GET(request: NextRequest) {
 
     // Completed leads filter (for IPD/conversions)
     const completedWhere: Prisma.LeadWhereInput = {
-      pipelineStage: 'COMPLETED',
-      ...(hasDateFilter
-        ? {
-            OR: [
-              { conversionDate: dateFilter },
-              { AND: [{ conversionDate: { equals: null } }, { leadDate: dateFilter }] },
-            ],
-          }
-        : {}),
+      pipelineStage: { in: ['PL', 'COMPLETED'] },
+      ...(hasDateFilter ? ipdDoneDateFilter(dateFilter) : {}),
     }
 
     // Prior period calculation for comparison
     let priorLeadDateFilter: Prisma.LeadWhereInput = {}
-    let priorCompletedWhere: Prisma.LeadWhereInput = { pipelineStage: 'COMPLETED' }
+    let priorCompletedWhere: Prisma.LeadWhereInput = { pipelineStage: { in: ['PL', 'COMPLETED'] } }
     if (startDate && endDate) {
       const s = new Date(startDate)
       const e = new Date(endDate)
@@ -77,11 +71,8 @@ export async function GET(request: NextRequest) {
         ],
       }
       priorCompletedWhere = {
-        pipelineStage: 'COMPLETED',
-        OR: [
-          { conversionDate: priorDateFilter },
-          { AND: [{ conversionDate: { equals: null } }, { leadDate: priorDateFilter }] },
-        ],
+        pipelineStage: { in: ['PL', 'COMPLETED'] },
+        ...ipdDoneDateFilter(priorDateFilter),
       }
     }
 
@@ -257,7 +248,7 @@ export async function GET(request: NextRequest) {
 
     // Count conversions per month
     for (const lead of completedForMonth) {
-      const d = lead.conversionDate ?? lead.surgeryDate ?? lead.leadDate ?? lead.createdDate
+      const d = lead.surgeryDate ?? lead.conversionDate ?? lead.leadDate ?? lead.createdDate
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
       const cur = monthMap.get(key) ?? { leads: 0, ipd: 0, revenue: 0, spend: 0 }
       cur.ipd += 1

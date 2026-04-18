@@ -17,7 +17,18 @@ export async function surgeryRevenueByMonth(months: MonthYear[]): Promise<Map<st
     map.set(`${m.year}-${m.month}`, 0)
   }
 
+  // Compute date bounds from the requested months to avoid loading all PLRecords
+  const earliest = new Date(months[0].year, months[0].month - 1, 1)
+  const last = months[months.length - 1]
+  const latest = new Date(last.year, last.month, 0, 23, 59, 59, 999)
+
   const records = await prisma.pLRecord.findMany({
+    where: {
+      OR: [
+        { surgeryDate: { gte: earliest, lte: latest } },
+        { AND: [{ surgeryDate: null }, { month: { gte: earliest, lte: latest } }] },
+      ],
+    },
     select: {
       month: true,
       surgeryDate: true,

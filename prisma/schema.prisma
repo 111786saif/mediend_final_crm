@@ -903,6 +903,8 @@ model Employee {
   noticePeriodEndDate DateTime?
   finalWorkingDay    DateTime?
   terminationReason String?
+  statusNote         String?
+  fnfDeadline        DateTime?
   fnfCompleted       Boolean      @default(false)
   fnfCompletedAt     DateTime?
   fnfCompletedById   String?

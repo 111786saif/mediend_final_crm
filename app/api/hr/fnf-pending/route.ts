@@ -36,7 +36,7 @@ export async function GET(_request: NextRequest) {
 
     const result = employees.map((emp) => {
       const finalWorkingDay = emp.finalWorkingDay!
-      const fnfDeadline = addDays(finalWorkingDay, 45)
+      const fnfDeadline = emp.fnfDeadline ?? addDays(finalWorkingDay, 45)
       const daysRemaining = Math.ceil((fnfDeadline.getTime() - Date.now()) / (24 * 60 * 60 * 1000))
 
       return {

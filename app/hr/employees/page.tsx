@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { useState } from 'react'
-import { Building, Hash, Calendar, Search, Filter, X, Plus, Eye } from 'lucide-react'
+import { Building, Hash, Calendar, Search, Filter, X, Plus, Eye, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
@@ -32,6 +32,20 @@ interface Employee {
   joinDate: Date | null
   designation: string | null
   status: string
+  bdNumber: number | null
+  fnfDeadline: string | null
+  statusNote: string | null
+  finalWorkingDay: string | null
+  fnfCompleted: boolean
+  dateOfBirth: string | null
+  panNumber: string | null
+  aadharNumber: string | null
+  uanNumber: string | null
+  aadharDocUrl: string | null
+  panDocUrl: string | null
+  bankAccountName: string | null
+  bankAccountNumber: string | null
+  ifscCode: string | null
   user: {
     id: string
     name: string
@@ -62,6 +76,42 @@ const ROW_STATUS_CLASS: Record<string, string> = {
   ON_NOTICE: 'bg-amber-50/50 dark:bg-amber-950/20',
   TERMINATED: 'bg-red-50/50 dark:bg-red-950/20',
   ABSCONDED: 'bg-rose-50/50 dark:bg-rose-950/20',
+}
+
+interface EditFormData {
+  employeeCode: string
+  bdNumber: string
+  joinDate: string
+  departmentId: string
+  managerId: string
+  designation: string
+  dateOfBirth: string
+  panNumber: string
+  aadharNumber: string
+  uanNumber: string
+  aadharDocUrl: string
+  panDocUrl: string
+  bankAccountName: string
+  bankAccountNumber: string
+  ifscCode: string
+}
+
+interface EditPatchPayload {
+  employeeCode?: string
+  joinDate?: string | null
+  departmentId?: string | null
+  designation?: string | null
+  managerId?: string | null
+  bdNumber?: number | null
+  dateOfBirth?: string | null
+  panNumber?: string | null
+  aadharNumber?: string | null
+  uanNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
 }
 
 export default function HREmployeesPage() {
@@ -99,21 +149,6 @@ export default function HREmployeesPage() {
     queryFn: () => apiGet<Department[]>('/api/departments'),
   })
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { employeeCode?: string; joinDate?: string | null; departmentId?: string | null; designation?: string | null; managerId?: string | null } }) =>
-      apiPatch<Employee>(`/api/employees/${id}`, data),
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['employees'] })
-      queryClient.invalidateQueries({ queryKey: ['employee', variables.id] })
-      setIsDialogOpen(false)
-      setSelectedEmployee(null)
-      toast.success('Employee updated successfully')
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update employee')
-    },
-  })
-
   const syncMutation = useMutation({
     mutationFn: (data: { employees: Array<{ employeeId: string; syncLeads: boolean; syncAttendance: boolean }> }) =>
       apiPost<{ jobId: string }>('/api/employees/sync', data),
@@ -123,6 +158,44 @@ export default function HREmployeesPage() {
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to start sync')
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: EditPatchPayload }) =>
+      apiPatch<Employee>(`/api/employees/${id}`, data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] })
+      queryClient.invalidateQueries({ queryKey: ['employee', variables.id] })
+
+      const previous = selectedEmployee
+      const codeChanged =
+        variables.data.employeeCode !== undefined &&
+        previous != null &&
+        variables.data.employeeCode !== previous.employeeCode
+      const bdChanged =
+        variables.data.bdNumber !== undefined &&
+        previous != null &&
+        (variables.data.bdNumber ?? null) !== (previous.bdNumber ?? null)
+
+      setIsDialogOpen(false)
+      setSelectedEmployee(null)
+      toast.success('Employee updated successfully')
+
+      if (codeChanged || bdChanged) {
+        syncMutation.mutate({
+          employees: [
+            {
+              employeeId: variables.id,
+              syncLeads: bdChanged,
+              syncAttendance: codeChanged,
+            },
+          ],
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update employee')
     },
   })
 
@@ -301,18 +374,35 @@ export default function HREmployeesPage() {
                       <Badge variant="secondary">{employee.user.role.replace('_', ' ')}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          employee.status === 'ACTIVE' && 'border-emerald-300 text-emerald-700 bg-emerald-50/80 dark:border-emerald-800 dark:text-emerald-300 dark:bg-emerald-950/30',
-                          employee.status === 'ON_PIP' && 'border-orange-300 text-orange-700 bg-orange-50/80 dark:border-orange-800 dark:text-orange-300 dark:bg-orange-950/30',
-                          employee.status === 'ON_NOTICE' && 'border-amber-300 text-amber-700 bg-amber-50/80 dark:border-amber-800 dark:text-amber-300 dark:bg-amber-950/30',
-                          employee.status === 'TERMINATED' && 'border-red-300 text-red-700 bg-red-50/80 dark:border-red-800 dark:text-red-300 dark:bg-red-950/30',
-                          employee.status === 'ABSCONDED' && 'border-rose-300 text-rose-700 bg-rose-50/80 dark:border-rose-800 dark:text-rose-300 dark:bg-rose-950/30'
+                      <div className="flex flex-col gap-1">
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            'w-fit',
+                            employee.status === 'ACTIVE' && 'border-emerald-300 text-emerald-700 bg-emerald-50/80 dark:border-emerald-800 dark:text-emerald-300 dark:bg-emerald-950/30',
+                            employee.status === 'ON_PIP' && 'border-orange-300 text-orange-700 bg-orange-50/80 dark:border-orange-800 dark:text-orange-300 dark:bg-orange-950/30',
+                            employee.status === 'ON_NOTICE' && 'border-amber-300 text-amber-700 bg-amber-50/80 dark:border-amber-800 dark:text-amber-300 dark:bg-amber-950/30',
+                            employee.status === 'TERMINATED' && 'border-red-300 text-red-700 bg-red-50/80 dark:border-red-800 dark:text-red-300 dark:bg-red-950/30',
+                            employee.status === 'ABSCONDED' && 'border-rose-300 text-rose-700 bg-rose-50/80 dark:border-rose-800 dark:text-rose-300 dark:bg-rose-950/30'
+                          )}
+                        >
+                          {STATUS_LABELS[employee.status] ?? employee.status}
+                        </Badge>
+                        {employee.status === 'TERMINATED' && employee.fnfDeadline && (
+                          <span
+                            className={cn(
+                              'inline-flex items-center gap-1 text-[10px] font-medium',
+                              employee.fnfCompleted
+                                ? 'text-emerald-700 dark:text-emerald-300'
+                                : 'text-purple-700 dark:text-purple-300'
+                            )}
+                          >
+                            <Wallet className="h-3 w-3" />
+                            FnF: {format(new Date(employee.fnfDeadline), 'MMM d')}
+                            {employee.fnfCompleted ? ' ✓' : ''}
+                          </span>
                         )}
-                      >
-                        {STATUS_LABELS[employee.status] ?? employee.status}
-                      </Badge>
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -365,10 +455,10 @@ export default function HREmployeesPage() {
         setIsDialogOpen(open)
         if (!open) setSelectedEmployee(null)
       }}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Employee Details</DialogTitle>
-            <DialogDescription>Update employee information</DialogDescription>
+            <DialogDescription>Update employee information. Salary and salary structure are managed separately by Finance.</DialogDescription>
           </DialogHeader>
           {selectedEmployee && (
             <EmployeeEditForm
@@ -376,15 +466,7 @@ export default function HREmployeesPage() {
               employee={selectedEmployee}
               departments={departments || []}
               managerOptions={employees?.filter((e) => e.id !== selectedEmployee.id) ?? []}
-              onSubmit={(data) => {
-                const updateData: { employeeCode?: string; joinDate?: string | null; departmentId?: string | null; designation?: string | null; managerId?: string | null } = {}
-                if (data.employeeCode) updateData.employeeCode = data.employeeCode
-                if (data.joinDate !== undefined) updateData.joinDate = data.joinDate
-                if (data.departmentId !== undefined) updateData.departmentId = data.departmentId
-                if (data.designation !== undefined) updateData.designation = data.designation
-                if (data.managerId !== undefined) updateData.managerId = data.managerId
-                updateMutation.mutate({ id: selectedEmployee.id, data: updateData })
-              }}
+              onSubmit={(data) => updateMutation.mutate({ id: selectedEmployee.id, data })}
               isLoading={updateMutation.isPending}
             />
           )}
@@ -415,6 +497,13 @@ export default function HREmployeesPage() {
   )
 }
 
+function toDateInput(value: string | Date | null | undefined): string {
+  if (!value) return ''
+  const d = value instanceof Date ? value : new Date(value)
+  if (isNaN(d.getTime())) return ''
+  return format(d, 'yyyy-MM-dd')
+}
+
 function EmployeeEditForm({
   employee,
   departments,
@@ -425,79 +514,253 @@ function EmployeeEditForm({
   employee: Employee
   departments: Department[]
   managerOptions: Employee[]
-  onSubmit: (data: {
-    employeeCode?: string
-    joinDate?: string | null
-    departmentId?: string | null
-    designation?: string | null
-    managerId?: string | null
-  }) => void
+  onSubmit: (data: EditPatchPayload) => void
   isLoading: boolean
 }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<EditFormData>({
     employeeCode: employee.employeeCode,
-    joinDate: employee.joinDate ? format(new Date(employee.joinDate), 'yyyy-MM-dd') : '',
+    bdNumber: employee.bdNumber != null ? String(employee.bdNumber) : '',
+    joinDate: toDateInput(employee.joinDate),
     departmentId: employee.department?.id || 'none',
-    designation: employee.designation || employee.user.role.replace('_', ' ') || '',
     managerId: employee.manager?.id || 'none',
+    designation: employee.designation || employee.user.role.replace('_', ' ') || '',
+    dateOfBirth: toDateInput(employee.dateOfBirth),
+    panNumber: employee.panNumber || '',
+    aadharNumber: employee.aadharNumber || '',
+    uanNumber: employee.uanNumber || '',
+    aadharDocUrl: employee.aadharDocUrl || '',
+    panDocUrl: employee.panDocUrl || '',
+    bankAccountName: employee.bankAccountName || '',
+    bankAccountNumber: employee.bankAccountNumber || '',
+    ifscCode: employee.ifscCode || '',
   })
+
+  const set = <K extends keyof EditFormData>(key: K, value: EditFormData[K]) =>
+    setFormData((prev) => ({ ...prev, [key]: value }))
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onSubmit({
-      employeeCode: formData.employeeCode,
-      joinDate: formData.joinDate ? formData.joinDate : null,
+    if (!formData.employeeCode.trim()) {
+      toast.error('Employee code is required')
+      return
+    }
+
+    const trimmedBd = formData.bdNumber.trim()
+    let bdNumber: number | null = null
+    if (trimmedBd) {
+      const parsed = Number(trimmedBd)
+      if (!Number.isInteger(parsed) || parsed <= 0) {
+        toast.error('CRM Number must be a positive integer')
+        return
+      }
+      bdNumber = parsed
+    }
+
+    const payload: EditPatchPayload = {
+      employeeCode: formData.employeeCode.trim(),
+      joinDate: formData.joinDate || null,
       departmentId: formData.departmentId === 'none' ? null : formData.departmentId || null,
-      designation: formData.designation || null,
       managerId: formData.managerId === 'none' ? null : formData.managerId || null,
-    })
+      designation: formData.designation.trim() || null,
+      bdNumber,
+      dateOfBirth: formData.dateOfBirth || null,
+      panNumber: formData.panNumber.trim() || null,
+      aadharNumber: formData.aadharNumber.trim() || null,
+      uanNumber: formData.uanNumber.trim() || null,
+      aadharDocUrl: formData.aadharDocUrl.trim() || null,
+      panDocUrl: formData.panDocUrl.trim() || null,
+      bankAccountName: formData.bankAccountName.trim() || null,
+      bankAccountNumber: formData.bankAccountNumber.trim() || null,
+      ifscCode: formData.ifscCode.trim().toUpperCase() || null,
+    }
+
+    onSubmit(payload)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label>Position</Label>
-        <Input value={formData.designation} onChange={(e) => setFormData({ ...formData, designation: e.target.value })} placeholder="e.g. Business Development Executive" />
-      </div>
-      <div>
-        <Label>Employee Code</Label>
-        <Input value={formData.employeeCode} onChange={(e) => setFormData({ ...formData, employeeCode: e.target.value })} required />
-      </div>
-      <div>
-        <Label>Join Date</Label>
-        <Input type="date" value={formData.joinDate} onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })} />
-      </div>
-      <div>
-        <Label>Manager</Label>
-        <Select value={formData.managerId} onValueChange={(value) => setFormData({ ...formData, managerId: value })}>
-          <SelectTrigger><SelectValue placeholder="Select manager" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="none">No manager</SelectItem>
-            {[...managerOptions]
-              .sort((a, b) => a.user.name.localeCompare(b.user.name))
-              .map((e) => (
-                <SelectItem key={e.id} value={e.id}>
-                  {e.user.name} ({e.employeeCode})
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        <Label>Department</Label>
-        <Select value={formData.departmentId} onValueChange={(value) => setFormData({ ...formData, departmentId: value })}>
-          <SelectTrigger><SelectValue placeholder="Select department" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="none">No Department</SelectItem>
-            {departments.map((dept) => (<SelectItem key={dept.id} value={dept.id}>{dept.name}</SelectItem>))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex justify-end gap-2">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <FormSection title="Employment">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label>Position</Label>
+            <Input
+              value={formData.designation}
+              onChange={(e) => set('designation', e.target.value)}
+              placeholder="e.g. Business Development Executive"
+            />
+          </div>
+          <div>
+            <Label>Employee Code *</Label>
+            <Input
+              value={formData.employeeCode}
+              onChange={(e) => set('employeeCode', e.target.value)}
+              required
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Changing this will resync attendance from biometrics.
+            </p>
+          </div>
+          <div>
+            <Label>CRM Number</Label>
+            <Input
+              type="number"
+              min={1}
+              value={formData.bdNumber}
+              onChange={(e) => set('bdNumber', e.target.value)}
+              placeholder="e.g. 1234"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Changing this will resync leads from the CRM.
+            </p>
+          </div>
+          <div>
+            <Label>Join Date</Label>
+            <Input
+              type="date"
+              value={formData.joinDate}
+              onChange={(e) => set('joinDate', e.target.value)}
+            />
+          </div>
+          <div>
+            <Label>Department</Label>
+            <Select value={formData.departmentId} onValueChange={(v) => set('departmentId', v)}>
+              <SelectTrigger><SelectValue placeholder="Select department" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No Department</SelectItem>
+                {departments.map((dept) => (
+                  <SelectItem key={dept.id} value={dept.id}>{dept.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Manager</Label>
+            <Select value={formData.managerId} onValueChange={(v) => set('managerId', v)}>
+              <SelectTrigger><SelectValue placeholder="Select manager" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No manager</SelectItem>
+                {[...managerOptions]
+                  .sort((a, b) => a.user.name.localeCompare(b.user.name))
+                  .map((e) => (
+                    <SelectItem key={e.id} value={e.id}>
+                      {e.user.name} ({e.employeeCode})
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </FormSection>
+
+      <FormSection title="Personal">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label>Date of Birth</Label>
+            <Input
+              type="date"
+              value={formData.dateOfBirth}
+              onChange={(e) => set('dateOfBirth', e.target.value)}
+            />
+          </div>
+          <div>
+            <Label>PAN</Label>
+            <Input
+              value={formData.panNumber}
+              onChange={(e) => set('panNumber', e.target.value.toUpperCase())}
+              maxLength={10}
+              placeholder="ABCDE1234F"
+            />
+          </div>
+          <div>
+            <Label>Aadhar Number</Label>
+            <Input
+              value={formData.aadharNumber}
+              onChange={(e) => set('aadharNumber', e.target.value.replace(/\D/g, ''))}
+              maxLength={12}
+              placeholder="12 digits"
+            />
+          </div>
+          <div>
+            <Label>UAN</Label>
+            <Input
+              value={formData.uanNumber}
+              onChange={(e) => set('uanNumber', e.target.value)}
+              maxLength={50}
+              placeholder="Universal Account Number"
+            />
+          </div>
+        </div>
+      </FormSection>
+
+      <FormSection title="Documents">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label>PAN Document URL</Label>
+            <Input
+              type="url"
+              value={formData.panDocUrl}
+              onChange={(e) => set('panDocUrl', e.target.value)}
+              placeholder="https://..."
+            />
+          </div>
+          <div>
+            <Label>Aadhar Document URL</Label>
+            <Input
+              type="url"
+              value={formData.aadharDocUrl}
+              onChange={(e) => set('aadharDocUrl', e.target.value)}
+              placeholder="https://..."
+            />
+          </div>
+        </div>
+      </FormSection>
+
+      <FormSection title="Bank Account">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="md:col-span-2">
+            <Label>Account Holder Name</Label>
+            <Input
+              value={formData.bankAccountName}
+              onChange={(e) => set('bankAccountName', e.target.value)}
+              placeholder="Name as on bank account"
+            />
+          </div>
+          <div>
+            <Label>Account Number</Label>
+            <Input
+              value={formData.bankAccountNumber}
+              onChange={(e) => set('bankAccountNumber', e.target.value)}
+              placeholder="Bank account number"
+            />
+          </div>
+          <div>
+            <Label>IFSC Code</Label>
+            <Input
+              value={formData.ifscCode}
+              onChange={(e) => set('ifscCode', e.target.value.toUpperCase())}
+              maxLength={11}
+              placeholder="ABCD0123456"
+            />
+          </div>
+        </div>
+      </FormSection>
+
+      <div className="flex justify-end gap-2 pt-2 border-t">
         <Button type="submit" disabled={isLoading}>
           {isLoading ? 'Updating...' : 'Update Employee'}
         </Button>
       </div>
     </form>
+  )
+}
+
+function FormSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="space-y-3">
+      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        {title}
+      </h3>
+      {children}
+    </section>
   )
 }

@@ -2,7 +2,7 @@ import { Prisma } from '@/generated/prisma/client'
 
 /**
  * Canonical IPD date fallback chain:
- *   conversionDate → surgeryDate → leadDate → createdDate
+ *   surgeryDate → conversionDate → leadDate → createdDate
  *
  * All endpoints that count "IPD done" must use this same chain
  * for both date-range filtering and in-memory month bucketing.
@@ -19,29 +19,30 @@ export function ipdDoneDateFilter(
 
   return {
     OR: [
-      { conversionDate: dateFilter },
-      { AND: [{ conversionDate: null }, { surgeryDate: dateFilter }] },
-      { AND: [{ conversionDate: null }, { surgeryDate: null }, { leadDate: dateFilter }] },
-      { AND: [{ conversionDate: null }, { surgeryDate: null }, { leadDate: null }, { createdDate: dateFilter }] },
+      { surgeryDate: dateFilter },
+      { AND: [{ surgeryDate: null }, { conversionDate: dateFilter }] },
+      { AND: [{ surgeryDate: null }, { conversionDate: null }, { leadDate: dateFilter }] },
+      { AND: [{ surgeryDate: null }, { conversionDate: null }, { leadDate: null }, { createdDate: dateFilter }] },
     ],
   }
 }
 
 /**
- * Convenience wrapper: `pipelineStage = 'COMPLETED'` + date fallback filter.
+ * Convenience wrapper: `pipelineStage IN (PL, COMPLETED)` + date fallback filter.
+ * PL-stage leads have had their IPD done — they are awaiting financial closure.
  */
 export function ipdDoneWhere(
   dateFilter: Prisma.DateTimeFilter,
 ): Prisma.LeadWhereInput {
   return {
-    pipelineStage: 'COMPLETED',
+    pipelineStage: { in: ['PL', 'COMPLETED'] },
     ...ipdDoneDateFilter(dateFilter),
   }
 }
 
 /**
  * In-memory date resolver for month bucketing.
- * Mirrors the SQL: COALESCE(conversionDate, surgeryDate, leadDate, createdDate)
+ * Mirrors the SQL: COALESCE(surgeryDate, conversionDate, leadDate, createdDate)
  */
 export function resolveIpdDate(lead: {
   conversionDate: Date | null
@@ -49,5 +50,5 @@ export function resolveIpdDate(lead: {
   leadDate: Date | null
   createdDate: Date
 }): Date {
-  return lead.conversionDate ?? lead.surgeryDate ?? lead.leadDate ?? lead.createdDate
+  return lead.surgeryDate ?? lead.conversionDate ?? lead.leadDate ?? lead.createdDate
 }

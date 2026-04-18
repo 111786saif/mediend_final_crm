@@ -16,7 +16,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { apiPatch } from '@/lib/api-client'
 import { toast } from 'sonner'
 
-export type EmployeeActionType = 'START_PIP' | 'START_NOTICE' | 'TERMINATE' | 'REACTIVATE' | 'ABSCOND'
+export type EmployeeActionType =
+  | 'START_PIP'
+  | 'START_NOTICE'
+  | 'TERMINATE'
+  | 'FNF_PROCESS'
+  | 'REACTIVATE'
+  | 'ABSCOND'
 
 export interface EmployeeActionDialogProps {
   open: boolean
@@ -39,21 +45,30 @@ export function EmployeeActionDialog({
 }: EmployeeActionDialogProps) {
   const [days, setDays] = useState<number>(30)
   const [finalWorkingDay, setFinalWorkingDay] = useState('')
-  const [terminationReason, setTerminationReason] = useState('')
+  const [fnfDeadline, setFnfDeadline] = useState('')
   const [note, setNote] = useState('')
   const [loading, setLoading] = useState(false)
 
   const isDaysAction = action === 'START_PIP' || action === 'START_NOTICE'
   const isTerminate = action === 'TERMINATE'
+  const isFnfProcess = action === 'FNF_PROCESS'
   const isReactivate = action === 'REACTIVATE'
   const isAbscond = action === 'ABSCOND'
+  const noteRequired = isFnfProcess
+
+  const reset = () => {
+    setDays(30)
+    setFinalWorkingDay('')
+    setFnfDeadline('')
+    setNote('')
+  }
 
   const handleSubmit = async () => {
     if (isDaysAction && (!days || days < 1)) {
       toast.error('Please enter a valid number of days')
       return
     }
-    if (isTerminate) {
+    if (isTerminate || isFnfProcess) {
       if (!finalWorkingDay) {
         toast.error('Please select the final working day')
         return
@@ -64,16 +79,38 @@ export function EmployeeActionDialog({
         return
       }
     }
+    if (isFnfProcess) {
+      if (!fnfDeadline) {
+        toast.error('Please select the FnF deadline')
+        return
+      }
+      const fwd = new Date(finalWorkingDay)
+      const fnfd = new Date(fnfDeadline)
+      if (isNaN(fnfd.getTime())) {
+        toast.error('Invalid FnF deadline')
+        return
+      }
+      if (fnfd < fwd) {
+        toast.error('FnF deadline must be on or after the final working day')
+        return
+      }
+    }
+    if (noteRequired && !note.trim()) {
+      toast.error('Please add a note')
+      return
+    }
 
     setLoading(true)
     try {
       const body: Record<string, unknown> = { action }
       if (isDaysAction) body.days = days
-      if (isTerminate) {
+      if (isTerminate || isFnfProcess) {
         body.finalWorkingDay = new Date(finalWorkingDay).toISOString()
-        if (terminationReason.trim()) body.terminationReason = terminationReason.trim()
       }
-      if (isAbscond && note.trim()) body.note = note.trim()
+      if (isFnfProcess) {
+        body.fnfDeadline = new Date(fnfDeadline).toISOString()
+      }
+      if (note.trim()) body.note = note.trim()
 
       await apiPatch(`/api/employees/${employeeId}/status`, body)
       toast.success(
@@ -83,16 +120,15 @@ export function EmployeeActionDialog({
             ? `Notice period started for ${days} days`
             : action === 'TERMINATE'
               ? 'Employee terminated'
-              : action === 'ABSCOND'
-                ? 'Employee marked as absconded'
-                : 'Employee reactivated'
+              : action === 'FNF_PROCESS'
+                ? 'FnF process started'
+                : action === 'ABSCOND'
+                  ? 'Employee marked as absconded'
+                  : 'Employee reactivated'
       )
       onSuccess()
       onOpenChange(false)
-      setDays(30)
-      setFinalWorkingDay('')
-      setTerminationReason('')
-      setNote('')
+      reset()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update')
     } finally {
@@ -107,9 +143,11 @@ export function EmployeeActionDialog({
         ? 'Start Notice Period'
         : action === 'TERMINATE'
           ? 'Terminate Employee'
-          : action === 'ABSCOND'
-            ? 'Mark as Absconded'
-            : 'Reactivate Employee'
+          : action === 'FNF_PROCESS'
+            ? 'Start FnF Process'
+            : action === 'ABSCOND'
+              ? 'Mark as Absconded'
+              : 'Reactivate Employee'
 
   const description =
     action === 'START_PIP'
@@ -118,9 +156,11 @@ export function EmployeeActionDialog({
         ? `Put ${employeeName} on notice period. Final working day will be set automatically.`
         : action === 'TERMINATE'
           ? `Record ${employeeName}'s termination. This will set status to Inactive.`
-          : action === 'ABSCOND'
-            ? `Mark ${employeeName} as absconded. No FNF will be processed.`
-            : `Clear PIP/Notice/Termination status and set ${employeeName} back to Active.`
+          : action === 'FNF_PROCESS'
+            ? `Record ${employeeName}'s termination and the full-and-final settlement deadline.`
+            : action === 'ABSCOND'
+              ? `Mark ${employeeName} as absconded. No FNF will be processed.`
+              : `Clear PIP/Notice/Termination status and set ${employeeName} back to Active.`
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -130,8 +170,8 @@ export function EmployeeActionDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        {isDaysAction && (
-          <div className="space-y-4 py-4">
+        <div className="space-y-4 py-4">
+          {isDaysAction && (
             <div>
               <Label>Number of days</Label>
               <div className="mt-2 flex gap-2">
@@ -155,17 +195,9 @@ export function EmployeeActionDialog({
                 className="mt-2 max-w-[120px]"
               />
             </div>
-          </div>
-        )}
+          )}
 
-        {isReactivate && (
-          <p className="text-sm text-muted-foreground py-4">
-            This will clear all PIP, notice period, and termination data and set the employee back to Active status.
-          </p>
-        )}
-
-        {isTerminate && (
-          <div className="space-y-4 py-4">
+          {(isTerminate || isFnfProcess) && (
             <div>
               <Label htmlFor="finalWorkingDay">Final working day</Label>
               <Input
@@ -176,35 +208,55 @@ export function EmployeeActionDialog({
                 className="mt-2"
               />
             </div>
-            <div>
-              <Label htmlFor="terminationReason">Reason (optional)</Label>
-              <Textarea
-                id="terminationReason"
-                value={terminationReason}
-                onChange={(e) => setTerminationReason(e.target.value)}
-                placeholder="e.g. Resignation, Performance, etc."
-                rows={3}
-                className="mt-2 resize-none"
-              />
-            </div>
-          </div>
-        )}
+          )}
 
-        {isAbscond && (
-          <div className="space-y-4 py-4">
+          {isFnfProcess && (
             <div>
-              <Label htmlFor="abscondNote">Note</Label>
+              <Label htmlFor="fnfDeadline">FnF settlement deadline</Label>
+              <Input
+                id="fnfDeadline"
+                type="date"
+                value={fnfDeadline}
+                onChange={(e) => setFnfDeadline(e.target.value)}
+                className="mt-2"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">
+                Must be on or after the final working day.
+              </p>
+            </div>
+          )}
+
+          {!isReactivate && (
+            <div>
+              <Label htmlFor="actionNote">
+                Note{noteRequired ? '' : ' (optional)'}
+              </Label>
               <Textarea
-                id="abscondNote"
+                id="actionNote"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="e.g. Absent since 3rd April without any communication..."
+                placeholder={
+                  isAbscond
+                    ? 'e.g. Absent since 3rd April without any communication...'
+                    : isFnfProcess
+                      ? 'e.g. Settlement scope, pending dues, exit checklist owner...'
+                      : isTerminate
+                        ? 'e.g. Resignation, performance, etc.'
+                        : 'Reason or context for this action...'
+                }
                 rows={3}
                 className="mt-2 resize-none"
               />
             </div>
-          </div>
-        )}
+          )}
+
+          {isReactivate && (
+            <p className="text-sm text-muted-foreground">
+              This will clear all PIP, notice period, termination, and FnF data and set the employee
+              back to Active status.
+            </p>
+          )}
+        </div>
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
