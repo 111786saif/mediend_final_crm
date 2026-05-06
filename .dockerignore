@@ -1,9 +1,22 @@
 node_modules
 .next
 .git
+.gitignore
 .env*
-*.md
-deploy.sh
+
+# Editor / agent metadata
 .cursor
 .vscode
-.gitignore
+.claude
+
+# Build/test artifacts
+coverage
+playwright-report
+test-results
+tmp
+*.log
+.DS_Store
+
+# Docs and local-only files
+*.md
+deploy.sh

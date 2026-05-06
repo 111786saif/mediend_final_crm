@@ -259,9 +259,12 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/seed-insurance-tpa.ts"]
 
-  # One-off: backfill leadDate from createdDate for existing leads
-  # Usage: docker compose --profile tools run --rm backfill-lead-date
-  backfill-lead-date:
+  # One-off: backfill Lead.createdDate from MySQL create_date / LeadEntryDate.
+  # Required after migration 20260506120000_rename_lead_date_to_assigned_date —
+  # historic rows had createdDate populated from MySQL Lead_Date (the assign date).
+  # Only updates rows where the new value differs; old value is preserved in assignedDate.
+  # Usage: docker compose --profile tools run --rm backfill-created-date
+  backfill-created-date:
     build:
       context: .
       dockerfile: Dockerfile
@@ -273,7 +276,7 @@ services:
         condition: service_healthy
     profiles:
       - tools
-    entrypoint: ["bun", "run", "scripts/backfill-lead-date.ts"]
+    entrypoint: ["bun", "run", "scripts/backfill-created-date-from-mysql.ts"]
 
   # One-off: backfill PLRecord + DischargeSheet people/case/date/billing fields
   # from Lead + AdmissionRecord for historical rows. Only fills empty fields;

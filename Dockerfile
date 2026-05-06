@@ -1,16 +1,21 @@
+# syntax=docker/dockerfile:1.7
 FROM oven/bun:1-alpine AS base
 
 FROM base AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
+# Install deps first — only re-runs when package.json / bun.lock change.
 COPY package.json bun.lock* ./
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile
+# Prisma generate is cheap and depends only on the schema.
 COPY prisma ./prisma
-RUN bun install --frozen-lockfile
 RUN bunx prisma generate
 
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/generated ./generated
 COPY . .
 ARG DEPLOY_COMMIT=unknown
 ARG DEPLOY_TIME=unknown
@@ -20,7 +25,9 @@ ENV DEPLOY_TIME=$DEPLOY_TIME
 ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 ENV DIRECT_URL=postgresql://dummy:dummy@localhost:5432/dummy
 ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
-RUN bun run build
+# Persist Next.js incremental compile cache across builds.
+RUN --mount=type=cache,target=/app/.next/cache \
+    bun run build
 
 FROM base AS runner
 WORKDIR /app
