@@ -5,6 +5,15 @@ const nextConfig: NextConfig = {
   output: "standalone",
   // PWA plugin uses webpack; use `next build --webpack` so build uses webpack. Empty turbopack silences config check.
   turbopack: {},
+  // Skip the in-build typecheck — it OOMs on the 2GB KVM build host. We run
+  // `bunx tsc --noEmit` separately in CI, so safety isn't reduced.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  // Lint runs separately too; don't pay the RAM cost here.
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     // Allows larger multipart bodies for Server Actions; pair with `/api/kyp/upload` + useFileUpload 20 MB cap.
     serverActions: {
