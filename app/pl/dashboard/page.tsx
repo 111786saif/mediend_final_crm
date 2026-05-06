@@ -217,17 +217,12 @@ export default function PLLedgerPage() {
         r.plRecord?.hospitalPayoutStatus === 'PENDING' || r.plRecord?.doctorPayoutStatus === 'PENDING'
     ).length || 0
 
-  // Table only shows leads that have reached the discharge stage or beyond.
+  // Table only shows leads whose discharge sheet has been filled (insurance or cash).
   // Info cards above still reflect the full PL/COMPLETED dataset.
-  const tableRecords = useMemo(() => {
-    const afterDischarge = new Set([
-      'DISCHARGED',
-      'PL_PENDING',
-      'OUTSTANDING',
-      'CASH_DISCHARGED',
-    ])
-    return records?.filter((r) => afterDischarge.has((r as Lead).caseStage as unknown as string))
-  }, [records])
+  const tableRecords = useMemo(
+    () => records?.filter((r) => Boolean((r as Lead).dischargeSheet)),
+    [records]
+  )
 
   const visibleCount = useMemo(() => 1 + Object.values(visibleCols).filter(Boolean).length, [visibleCols])
 
