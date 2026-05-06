@@ -2,7 +2,7 @@ import { Prisma } from '@/generated/prisma/client'
 
 /**
  * Canonical IPD date fallback chain:
- *   surgeryDate → conversionDate → leadDate → createdDate
+ *   surgeryDate → conversionDate → leadEntryDate → createdDate
  *
  * All endpoints that count "IPD done" must use this same chain
  * for both date-range filtering and in-memory month bucketing.
@@ -21,8 +21,8 @@ export function ipdDoneDateFilter(
     OR: [
       { surgeryDate: dateFilter },
       { AND: [{ surgeryDate: null }, { conversionDate: dateFilter }] },
-      { AND: [{ surgeryDate: null }, { conversionDate: null }, { leadDate: dateFilter }] },
-      { AND: [{ surgeryDate: null }, { conversionDate: null }, { leadDate: null }, { createdDate: dateFilter }] },
+      { AND: [{ surgeryDate: null }, { conversionDate: null }, { leadEntryDate: dateFilter }] },
+      { AND: [{ surgeryDate: null }, { conversionDate: null }, { leadEntryDate: null }, { createdDate: dateFilter }] },
     ],
   }
 }
@@ -42,13 +42,13 @@ export function ipdDoneWhere(
 
 /**
  * In-memory date resolver for month bucketing.
- * Mirrors the SQL: COALESCE(surgeryDate, conversionDate, leadDate, createdDate)
+ * Mirrors the SQL: COALESCE(surgeryDate, conversionDate, leadEntryDate, createdDate)
  */
 export function resolveIpdDate(lead: {
   conversionDate: Date | null
   surgeryDate: Date | null
-  leadDate: Date | null
+  leadEntryDate: Date | null
   createdDate: Date
 }): Date {
-  return lead.surgeryDate ?? lead.conversionDate ?? lead.leadDate ?? lead.createdDate
+  return lead.surgeryDate ?? lead.conversionDate ?? lead.leadEntryDate ?? lead.createdDate
 }

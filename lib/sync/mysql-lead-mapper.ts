@@ -12,10 +12,6 @@ export interface MySQLLeadRow {
   Lead_Date?: Date | string | null
   LeadEntryDate?: Date | string | null
   create_date?: Date | string | null
-  assignedDate?: Date | string | null
-  assigned_date?: Date | string | null
-  assignmentDate?: Date | string | null
-  assign_date?: Date | string | null
   Patient_Number: string
   AlternativePhone?: string | null
   Whatsapp?: string | null
@@ -165,34 +161,43 @@ function parseDate(value: Date | string | null | undefined): Date | null {
 }
 
 /**
- * Get the canonical "lead received" date: Lead_Date (primary) → LeadEntryDate → create_date.
+ * MySQL Lead_Date is the BDM-assignment timestamp (despite the column name).
  */
-export function getLeadReceivedDate(row: {
+export function getLeadAssignedDate(row: {
+  Lead_Date?: Date | string | null
+}): Date | null {
+  return parseDate(row.Lead_Date)
+}
+
+/**
+ * Canonical "lead received / created in source" date: create_date → LeadEntryDate.
+ * Used for the Lead.createdDate column and for the sync incremental cursor.
+ */
+export function getLeadCreatedDate(row: {
+  create_date?: Date | string | null
+  LeadEntryDate?: Date | string | null
+}): Date | null {
+  return parseDate(row.create_date) ?? parseDate(row.LeadEntryDate)
+}
+
+/**
+ * Latest known activity timestamp on a row — used to advance the sync cursor so
+ * we never re-process the same row repeatedly. Picks max of create/entry/assign/update.
+ */
+export function getLeadLatestActivityDate(row: {
   Lead_Date?: Date | string | null
   LeadEntryDate?: Date | string | null
   create_date?: Date | string | null
+  update_date?: Date | string | null
 }): Date {
-  return (
-    parseDate(row.Lead_Date) ??
-    parseDate(row.LeadEntryDate) ??
-    parseDate(row.create_date) ??
-    new Date(0)
-  )
-}
-
-export function getLeadAssignmentDate(row: {
-  assignedDate?: Date | string | null
-  assigned_date?: Date | string | null
-  assignmentDate?: Date | string | null
-  assign_date?: Date | string | null
-}): Date | null {
-  return (
-    parseDate(row.assignedDate) ??
-    parseDate(row.assigned_date) ??
-    parseDate(row.assignmentDate) ??
-    parseDate(row.assign_date) ??
-    null
-  )
+  const candidates = [
+    parseDate(row.create_date),
+    parseDate(row.LeadEntryDate),
+    parseDate(row.Lead_Date),
+    parseDate(row.update_date),
+  ].filter((d): d is Date => d !== null)
+  if (candidates.length === 0) return new Date(0)
+  return candidates.reduce((max, d) => (d > max ? d : max))
 }
 
 function parseBoolean(value: number | boolean | null | undefined): boolean {
@@ -386,14 +391,15 @@ function buildLeadData(
 
   const statusName = resolveStatus(mysqlRow.Status, lookups)
 
-  const leadDate = getLeadReceivedDate(mysqlRow)
+  const assignedDate = getLeadAssignedDate(mysqlRow)
+  const createdDate = getLeadCreatedDate(mysqlRow) ?? assignedDate ?? new Date(0)
   const updateDate = parseDate(mysqlRow.update_date)
   const pipelineStage = inferPipelineStage(statusName)
   const surgeryDate = parseDate(mysqlRow.Surgery_Date)
   const ipdAdmissionDate = parseDate(mysqlRow.IPD_AdmisisonDate)
   const conversionDate =
     pipelineStage === PipelineStage.COMPLETED
-      ? surgeryDate ?? ipdAdmissionDate ?? updateDate ?? leadDate
+      ? surgeryDate ?? ipdAdmissionDate ?? updateDate ?? assignedDate ?? createdDate
       : null
 
   return {
@@ -415,11 +421,11 @@ function buildLeadData(
     hospitalName: mysqlRow.OPD_Hospital || mysqlRow.IPD_Hospital || 'Not Specified',
     createdById: systemUserId,
     updatedById: systemUserId,
-    createdDate: leadDate,
+    createdDate,
     updatedDate: updateDate ?? null,
 
     month: toString(mysqlRow.month),
-    leadDate,
+    assignedDate,
     leadEntryDate: parseDate(mysqlRow.LeadEntryDate),
     patientEmail: toString(mysqlRow.PatientEmail),
     whatsapp: toString(mysqlRow.Whatsapp),

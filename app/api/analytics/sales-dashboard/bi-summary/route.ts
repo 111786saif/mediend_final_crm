@@ -96,8 +96,8 @@ export async function GET(request: NextRequest) {
       Object.keys(dateFilter).length > 0
         ? {
             OR: [
-              { leadDate: dateFilter },
-              { AND: [{ leadDate: null }, { createdDate: dateFilter }] },
+              { leadEntryDate: dateFilter },
+              { AND: [{ leadEntryDate: null }, { createdDate: dateFilter }] },
             ],
           }
         : {}

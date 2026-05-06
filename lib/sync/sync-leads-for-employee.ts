@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { queryMySQL, testMySQLConnection } from '@/lib/mysql-source-client'
-import { mapMySQLLeadToPrisma, mapMySQLLeadToPrismaAsyncFallback, getLeadReceivedDate, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
+import { mapMySQLLeadToPrisma, mapMySQLLeadToPrismaAsyncFallback, getLeadLatestActivityDate, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { UserRole } from '@/generated/prisma/client'
@@ -135,8 +135,8 @@ export async function syncLeadsForEmployee(
       const leads = await queryMySQL<MySQLLeadRow>(
         `SELECT * FROM lead 
          WHERE BDM = ? 
-         AND (COALESCE(Lead_Date, LeadEntryDate, create_date) > ? OR (COALESCE(Lead_Date, LeadEntryDate, create_date) = ? AND id > ?))
-         ORDER BY COALESCE(Lead_Date, LeadEntryDate, create_date) ASC, id ASC 
+         AND (COALESCE(LeadEntryDate, create_date, Lead_Date) > ? OR (COALESCE(LeadEntryDate, create_date, Lead_Date) = ? AND id > ?))
+         ORDER BY COALESCE(LeadEntryDate, create_date, Lead_Date) ASC, id ASC 
          LIMIT ?`,
         [bdNumber, cursorDate, cursorDate, cursorId, BATCH_SIZE]
       )
@@ -154,8 +154,7 @@ export async function syncLeadsForEmployee(
       const processLead = async (mysqlLead: MySQLLeadRow) => {
         try {
           const leadRef = String(mysqlLead.id)
-          const leadDate = getLeadReceivedDate(mysqlLead)
-          leadDates.push(leadDate)
+          leadDates.push(getLeadLatestActivityDate(mysqlLead))
           leadIds.push(mysqlLead.id)
           let leadData = mapMySQLLeadToPrisma(mysqlLead, systemUser!.id, lookups, bdMap)
           if (!leadData) leadData = await mapMySQLLeadToPrismaAsyncFallback(mysqlLead, systemUser!.id, lookups)

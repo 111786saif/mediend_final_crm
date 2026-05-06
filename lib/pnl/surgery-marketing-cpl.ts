@@ -32,8 +32,8 @@ export async function loadCampaignCplMap(
       select: { campaignName: true, date: true, spend: true },
     }),
     prisma.lead.findMany({
-      where: { leadDate: { gte: rangeStart, lte: rangeEnd }, campaignName: { not: null } },
-      select: { campaignName: true, leadDate: true },
+      where: { leadEntryDate: { gte: rangeStart, lte: rangeEnd }, campaignName: { not: null } },
+      select: { campaignName: true, leadEntryDate: true },
     }),
     prisma.campaignCPL.findMany({
       where: { OR: months.map((m) => ({ month: m.month, year: m.year })) },
@@ -52,8 +52,8 @@ export async function loadCampaignCplMap(
   // Count leads by campaign+month
   const leadsByCampaignMonth = new Map<string, number>()
   for (const l of leads) {
-    if (!l.leadDate || !l.campaignName) continue
-    const d = new Date(l.leadDate)
+    if (!l.leadEntryDate || !l.campaignName) continue
+    const d = new Date(l.leadEntryDate)
     const key = cplLookupKey(l.campaignName.trim(), d.getMonth() + 1, d.getFullYear())
     leadsByCampaignMonth.set(key, (leadsByCampaignMonth.get(key) || 0) + 1)
   }
@@ -79,7 +79,7 @@ export async function loadCampaignCplMap(
   return map
 }
 
-type LeadRow = { bdId: string; campaignName: string | null; leadDate: Date | null }
+type LeadRow = { bdId: string; campaignName: string | null; leadEntryDate: Date | null }
 
 /**
  * Sum CPL × 1 for each lead in range that has a campaign name and a positive CPL for that lead's calendar month.
@@ -95,11 +95,11 @@ export function allocateCplMarketingByBdAndGroup(
   let total = 0
 
   for (const L of leads) {
-    if (!L.leadDate) continue
+    if (!L.leadEntryDate) continue
     const name = L.campaignName?.trim()
     if (!name) continue
-    const month = L.leadDate.getMonth() + 1
-    const year = L.leadDate.getFullYear()
+    const month = L.leadEntryDate.getMonth() + 1
+    const year = L.leadEntryDate.getFullYear()
     const cpl = cplMap.get(cplLookupKey(name, month, year))
     if (cpl == null || cpl <= 0) continue
 

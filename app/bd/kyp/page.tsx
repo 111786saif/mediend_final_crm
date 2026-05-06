@@ -288,7 +288,7 @@ export default function CaseTrackerPage() {
                       ) : (
                         filteredRows.map((lead) => {
                           const cfg = lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage)) : null
-                          const d = lead.leadDate || lead.createdDate
+                          const d = lead.leadEntryDate || lead.createdDate
                           return (
                             <TableRow
                               key={lead.id}

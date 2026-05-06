@@ -245,7 +245,7 @@ export async function GET(request: NextRequest) {
       Object.keys(leadDateWhere).length > 0
         ? await prisma.lead.groupBy({
             by: ['bdId'],
-            where: { leadDate: leadDateWhere },
+            where: { leadEntryDate: leadDateWhere },
             _count: { _all: true },
           })
         : []
@@ -262,10 +262,10 @@ export async function GET(request: NextRequest) {
       const cplMap = await loadCampaignCplMap(prisma, monthsInRange)
       const leadsForCpl = await prisma.lead.findMany({
         where: {
-          leadDate: leadDateWhere,
+          leadEntryDate: leadDateWhere,
           campaignName: { not: null },
         },
-        select: { bdId: true, campaignName: true, leadDate: true },
+        select: { bdId: true, campaignName: true, leadEntryDate: true },
       })
       const { total, perBd, perGroup } = allocateCplMarketingByBdAndGroup(
         leadsForCpl,

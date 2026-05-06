@@ -3,7 +3,7 @@
  * Uses MySQL lead_remarks (MIN(UpdateDate) WHERE LeadStatus=13) as the true
  * "when IPD was marked done" timestamp, falling back to lead.update_date.
  *
- * Phase 1: Reset wrong conversionDates (from previous bad backfill) to leadDate.
+ * Phase 1: Reset wrong conversionDates (from previous bad backfill) to assignedDate.
  * Phase 2: Query MySQL for true IPD-marked dates and update Postgres.
  *
  * Requires DATABASE_URL and MYSQL_SOURCE_URL in .env.
@@ -36,15 +36,15 @@ async function backfillConversionDates() {
   console.log('='.repeat(60))
 
   try {
-    // Phase 1: Reset wrong conversionDates (from previous bad backfill) to leadDate
+    // Phase 1: Reset wrong conversionDates (from previous bad backfill) to assignedDate
     const resetCount = await prisma.$executeRaw`
       UPDATE "Lead"
-      SET "conversionDate" = "leadDate"
+      SET "conversionDate" = "assignedDate"
       WHERE "pipelineStage" = 'COMPLETED'
         AND "surgeryDate" IS NULL
         AND "ipdAdmissionDate" IS NULL
     `
-    console.log(`\nPhase 1 (reset): Set conversionDate = leadDate for ${resetCount} leads`)
+    console.log(`\nPhase 1 (reset): Set conversionDate = assignedDate for ${resetCount} leads`)
 
     // Phase 2: Query MySQL for true IPD-marked dates
     const postgresLeads = await prisma.lead.findMany({
@@ -74,11 +74,11 @@ async function backfillConversionDates() {
     const updates: { leadRef: string; conversionDate: Date }[] = []
     for (const row of rows) {
       if (!postgresRefs.has(String(row.id))) continue
-      const leadDate = parseDate(row.Lead_Date)
+      const assignedDate = parseDate(row.Lead_Date)
       const bestDate = parseDate(row.ipd_at) ?? parseDate(row.update_date)
-      if (!leadDate) continue
-      // Use bestDate only if it's after leadDate (IPD marked in a later month)
-      const conversionDate = bestDate && bestDate > leadDate ? bestDate : leadDate
+      if (!assignedDate) continue
+      // Use bestDate only if it's after assignedDate (IPD marked in a later month)
+      const conversionDate = bestDate && bestDate > assignedDate ? bestDate : assignedDate
       updates.push({ leadRef: String(row.id), conversionDate })
     }
 

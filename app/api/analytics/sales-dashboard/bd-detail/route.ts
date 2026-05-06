@@ -53,13 +53,13 @@ export async function GET(request: NextRequest) {
         where: {
           bdId,
           OR: [
-            { leadDate: { gte: start, lte: end } },
-            { AND: [{ leadDate: null }, { createdDate: { gte: start, lte: end } }] },
+            { leadEntryDate: { gte: start, lte: end } },
+            { AND: [{ leadEntryDate: null }, { createdDate: { gte: start, lte: end } }] },
           ],
         },
         select: {
           id: true,
-          leadDate: true,
+          leadEntryDate: true,
           createdDate: true,
           pipelineStage: true,
           netProfit: true,
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
           surgeonName: true,
           conversionDate: true,
           surgeryDate: true,
-          leadDate: true,
+          leadEntryDate: true,
           createdDate: true,
           billAmount: true,
           netProfit: true,
@@ -112,11 +112,11 @@ export async function GET(request: NextRequest) {
     const avgTicketSize = ipdDone > 0 ? billAmount / ipdDone : 0
 
     // Month-wise breakdown (all leads for this BD, all time, no date filter)
-    // Leads bucketed by leadDate, IPDs bucketed by conversionDate (when done, not when received)
+    // Leads bucketed by leadEntryDate, IPDs bucketed by conversionDate (when done, not when received)
     const [leadsByMonth, ipdByMonth] = await Promise.all([
       prisma.$queryRaw<{ month: string; count: number }[]>`
         SELECT
-          TO_CHAR(COALESCE(l."leadDate", l."createdDate"), 'YYYY-MM') AS month,
+          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
           COUNT(*)::int AS count
         FROM "Lead" l
         WHERE l."bdId" = ${bdId}
@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
       `,
       prisma.$queryRaw<{ month: string; count: number }[]>`
         SELECT
-          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadDate", l."createdDate"), 'YYYY-MM') AS month,
+          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
           COUNT(*)::int AS count
         FROM "Lead" l
         WHERE l."bdId" = ${bdId} AND l."pipelineStage" IN ('PL', 'COMPLETED')

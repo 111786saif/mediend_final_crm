@@ -589,8 +589,8 @@ model Lead {
 
   // Additional MySQL fields
   month              String?
-  leadDate           DateTime? // MySQL Lead_Date - canonical "when lead was received" for age/stats
-  leadEntryDate      DateTime?
+  assignedDate       DateTime? // MySQL Lead_Date - when the lead was assigned to a BDM
+  leadEntryDate      DateTime? // MySQL LeadEntryDate - when the lead was received/entered (canonical "lead date" for age/stats)
   patientEmail       String?
   whatsapp           String?
   address            String?
@@ -664,7 +664,7 @@ model Lead {
   @@index([conversionDate])
   @@index([surgeryDate])
   @@index([leadEntryDate])
-  @@index([leadDate])
+  @@index([assignedDate])
   @@index([followUpDate])
 }
 
@@ -2156,7 +2156,7 @@ model UserFeaturePermission {
   @@index([featureKey])
 }
 
-/// Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + leadDate
+/// Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + month-of-leadEntryDate
 model CampaignCPL {
   id           String   @id @default(cuid())
   campaignName String

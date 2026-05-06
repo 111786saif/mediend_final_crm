@@ -412,7 +412,7 @@ async function main() {
         }
 
         const surgeryDate = parseDateFlexible(row[13])
-        const leadDate = parseDateFlexible(row[1])
+        const leadEntryDate = parseDateFlexible(row[1])
         const arrivalDate = parseDateFlexible(row[12])
         const monthDate = parseMonthStr(row[0])
 
@@ -440,7 +440,7 @@ async function main() {
           surgeryDate,
           conversionDate: statusInfo.createPL ? surgeryDate : null,
           source: row[26]?.trim() || null,
-          leadDate,
+          leadEntryDate,
           month: row[0]?.trim() || null,
           settledTotal: parseNumber(row[17]),
           deduction: parseNumber(row[18]),
@@ -452,7 +452,7 @@ async function main() {
           netProfit: parseNumber(row[46]),
           createdById: bdId,
           updatedById: bdId,
-          createdDate: leadDate || monthDate || new Date(),
+          createdDate: leadEntryDate || monthDate || new Date(),
         }
 
         leadPayloads.push(leadPayload)

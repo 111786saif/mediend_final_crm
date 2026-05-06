@@ -7,11 +7,38 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 
 const PAGE_SIZE = 20
 
+const DISCHARGED_STAGES = [
+  'DISCHARGED',
+  'CASH_DISCHARGED',
+  'PL_PENDING',
+  'OUTSTANDING',
+  'IPD_DONE',
+] as const
+
+async function backfillComplianceCalls() {
+  const orphans = await prisma.lead.findMany({
+    where: {
+      caseStage: { in: DISCHARGED_STAGES as unknown as Prisma.EnumCaseStageFilter['in'] },
+      complianceCall: null,
+    },
+    select: { id: true },
+  })
+  if (orphans.length === 0) return
+  await prisma.complianceCall.createMany({
+    data: orphans.map((l) => ({ leadId: l.id })),
+    skipDuplicates: true,
+  })
+}
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
     if (!hasPermission(user, 'compliance:read')) return errorResponse('Forbidden', 403)
+
+    // Lazy backfill: auto-create PENDING ComplianceCall for any discharged lead missing one.
+    // Covers leads discharged before the compliance feature shipped.
+    await backfillComplianceCalls()
 
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')

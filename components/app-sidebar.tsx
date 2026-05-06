@@ -225,7 +225,8 @@ export function AppSidebar() {
                 item.title === 'Meets' ||
                 item.title === 'Calendar' ||
                 item.title === 'Chat' ||
-                item.title === 'Compliance'
+                item.title === 'Compliance' ||
+                item.title.startsWith('My ')
             )
           : itemsWithUrls.filter(
               (item) => {

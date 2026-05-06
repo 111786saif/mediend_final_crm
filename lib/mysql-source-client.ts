@@ -117,16 +117,6 @@ export async function getMySQLLeadColumns(): Promise<Set<string>> {
 }
 
 /**
- * Detect the assignment timestamp column, if present.
- */
-export async function getMySQLLeadAssignmentDateColumn(): Promise<string | null> {
-  const columns = await getMySQLLeadColumns()
-  const candidates = ['assigneddate', 'assigned_date', 'assignmentdate', 'assign_date']
-  const match = candidates.find((candidate) => columns.has(candidate))
-  return match ?? null
-}
-
-/**
  * Test MySQL connection
  */
 export async function testMySQLConnection(): Promise<boolean> {

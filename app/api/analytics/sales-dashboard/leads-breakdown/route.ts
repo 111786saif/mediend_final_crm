@@ -59,16 +59,16 @@ export async function GET(request: NextRequest) {
       dateFilter.lte = end
     }
 
-    const leadDateFilter: Prisma.LeadWhereInput =
+    const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
         ? {
             OR: [
-              { leadDate: dateFilter },
-              { AND: [{ leadDate: { equals: null } }, { createdDate: dateFilter }] },
+              { leadEntryDate: dateFilter },
+              { AND: [{ leadEntryDate: { equals: null } }, { createdDate: dateFilter }] },
             ],
           }
         : {}
-    const allLeadsWhere: Prisma.LeadWhereInput = { ...leadDateFilter, ...teamScope }
+    const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter, ...teamScope }
 
     const completedWhere: Prisma.LeadWhereInput = {
       pipelineStage: { in: ['PL', 'COMPLETED'] },
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       prisma.lead.groupBy({ by: ['campaignName'], where: { ...completedWhere, campaignName: { not: null } }, _count: { id: true } }),
       prisma.lead.findMany({
         where: allLeadsWhere,
-        select: { id: true, bdId: true, pipelineStage: true, leadDate: true, createdDate: true },
+        select: { id: true, bdId: true, pipelineStage: true, leadEntryDate: true, createdDate: true },
       }),
     ])
 
@@ -157,7 +157,7 @@ export async function GET(request: NextRequest) {
     const asOf = endDate ? new Date(endDate) : new Date()
     const ageBuckets = { new: { total: 0, converted: 0 }, oneMonth: { total: 0, converted: 0 }, twoMonths: { total: 0, converted: 0 }, old: { total: 0, converted: 0 } }
     allLeadsForAge.forEach((lead) => {
-      const effectiveLeadDate = lead.leadDate ?? lead.createdDate
+      const effectiveLeadDate = lead.leadEntryDate ?? lead.createdDate
       const bucket = getLeadAgeBucket(effectiveLeadDate, asOf)
       ageBuckets[bucket].total += 1
       if (lead.pipelineStage === 'COMPLETED' || lead.pipelineStage === 'PL') ageBuckets[bucket].converted += 1

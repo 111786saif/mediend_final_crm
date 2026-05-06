@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
           ...completedWhereBase,
           ...ipdDoneDateFilter({ gte: new Date(currentYear, 0, 1), lte: today }),
         },
-        select: { conversionDate: true, surgeryDate: true, leadDate: true, createdDate: true },
+        select: { conversionDate: true, surgeryDate: true, leadEntryDate: true, createdDate: true },
       }),
     ])
 

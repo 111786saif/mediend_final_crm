@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       // Leads by month by BD with manager info
       prisma.$queryRaw<LeadRow[]>`
         SELECT
-          TO_CHAR(COALESCE(l."leadDate", l."createdDate"), 'YYYY-MM')  AS month,
+          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')  AS month,
           u.id                                                           AS "bdId",
           u.name                                                         AS "bdName",
           me.id                                                          AS "managerId",
@@ -72,19 +72,19 @@ export async function GET(request: NextRequest) {
         LEFT JOIN "Employee" e ON e."userId" = u.id
         LEFT JOIN "Employee" me ON me.id = e."managerId"
         LEFT JOIN "User" mu ON mu.id = me."userId"
-        WHERE COALESCE(l."leadDate", l."createdDate") >= ${start}
-          AND COALESCE(l."leadDate", l."createdDate") <= ${end}
+        WHERE COALESCE(l."leadEntryDate", l."createdDate") >= ${start}
+          AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
           ${bdIdFilter}
         GROUP BY u.id, u.name, me.id, mu.name,
-                 TO_CHAR(COALESCE(l."leadDate", l."createdDate"), 'YYYY-MM')
+                 TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
         ORDER BY u.name,
-                 TO_CHAR(COALESCE(l."leadDate", l."createdDate"), 'YYYY-MM')
+                 TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
       `,
 
       // IPD (pipelineStage = COMPLETED) by month by BD
       prisma.$queryRaw<IpdRow[]>`
         SELECT
-          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadDate", l."createdDate"), 'YYYY-MM') AS month,
+          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
           u.id                                                                                              AS "bdId",
           u.name                                                                                            AS "bdName",
           me.id                                                                                             AS "managerId",
@@ -96,13 +96,13 @@ export async function GET(request: NextRequest) {
         LEFT JOIN "Employee" me ON me.id = e."managerId"
         LEFT JOIN "User" mu ON mu.id = me."userId"
         WHERE l."pipelineStage" IN ('PL', 'COMPLETED')
-          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadDate", l."createdDate") >= ${start}
-          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadDate", l."createdDate") <= ${end}
+          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") >= ${start}
+          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") <= ${end}
           ${bdIdFilter}
         GROUP BY u.id, u.name, me.id, mu.name,
-                 TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadDate", l."createdDate"), 'YYYY-MM')
+                 TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM')
         ORDER BY u.name,
-                 TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadDate", l."createdDate"), 'YYYY-MM')
+                 TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM')
       `,
     ])
 

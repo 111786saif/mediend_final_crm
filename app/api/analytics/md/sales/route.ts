@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
               { 
                 AND: [
                   { conversionDate: { equals: null } },
-                  { leadDate: dateFilter }
+                  { leadEntryDate: dateFilter }
                 ]
               },
             ],
@@ -59,17 +59,17 @@ export async function GET(request: NextRequest) {
     }
 
     // Base where clause for all leads (for conversion rate)
-    const leadDateFilter: Prisma.LeadWhereInput =
+    const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
         ? {
             OR: [
-              { leadDate: dateFilter },
-              { AND: [{ leadDate: { equals: null } }, { createdDate: dateFilter }] },
+              { leadEntryDate: dateFilter },
+              { AND: [{ leadEntryDate: { equals: null } }, { createdDate: dateFilter }] },
             ],
           }
         : {}
     const allLeadsWhere: Prisma.LeadWhereInput = {
-      ...leadDateFilter,
+      ...leadEntryDateFilter,
     }
 
     // Overall KPIs
@@ -335,7 +335,7 @@ export async function GET(request: NextRequest) {
       where: completedWhere,
       select: {
         conversionDate: true,
-        leadDate: true,
+        leadEntryDate: true,
         createdDate: true,
         billAmount: true,
         netProfit: true,
@@ -345,7 +345,7 @@ export async function GET(request: NextRequest) {
     // Group by date
     const trendsMap = new Map<string, { revenue: number; profit: number; surgeries: number }>()
     completedLeadsForTrends.forEach((lead) => {
-      const dateKey = (lead.conversionDate || lead.leadDate || lead.createdDate).toISOString().split('T')[0]
+      const dateKey = (lead.conversionDate || lead.leadEntryDate || lead.createdDate).toISOString().split('T')[0]
       const existing = trendsMap.get(dateKey) || { revenue: 0, profit: 0, surgeries: 0 }
       existing.revenue += lead.billAmount || 0
       existing.profit += lead.netProfit || 0

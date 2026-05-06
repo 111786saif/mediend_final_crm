@@ -129,6 +129,7 @@ interface Lead {
   collectedByHospital?: number | null
   bd?: { name?: string; manager?: { name?: string } | null } | null
   leadEntryDate?: string | null
+  assignedDate?: string | null
   createdDate?: string | null
   month?: string | null
   profession?: string | null
@@ -872,7 +873,11 @@ export default function PatientDetailsPage() {
                       <div>
                         <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Lead Date</p>
                         <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">
-                          {lead.createdDate ? format(new Date(lead.createdDate), 'dd MMM yyyy') : '-'}
+                          {lead.leadEntryDate
+                            ? format(new Date(lead.leadEntryDate), 'dd MMM yyyy')
+                            : lead.createdDate
+                              ? format(new Date(lead.createdDate), 'dd MMM yyyy')
+                              : '-'}
                         </p>
                       </div>
                     </div>
@@ -883,7 +888,7 @@ export default function PatientDetailsPage() {
                       <div>
                         <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Assign Date</p>
                         <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">
-                          {lead.leadEntryDate ? format(new Date(lead.leadEntryDate), 'dd MMM yyyy') : '-'}
+                          {lead.assignedDate ? format(new Date(lead.assignedDate), 'dd MMM yyyy') : '-'}
                         </p>
                       </div>
                     </div>

@@ -228,7 +228,7 @@ async function calculateActual(
     OR: [
       { conversionDate: { gte: start, lte: end } },
       { AND: [{ conversionDate: null }, { surgeryDate: { gte: start, lte: end } }] },
-      { AND: [{ conversionDate: null }, { surgeryDate: null }, { leadDate: { gte: start, lte: end } }] },
+      { AND: [{ conversionDate: null }, { surgeryDate: null }, { leadEntryDate: { gte: start, lte: end } }] },
     ],
   }
 

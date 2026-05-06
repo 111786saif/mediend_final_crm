@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model CampaignCPL
- * Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + leadDate
+ * Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + month-of-leadEntryDate
  */
 export type CampaignCPLModel = runtime.Types.Result.DefaultSelection<Prisma.$CampaignCPLPayload>
 

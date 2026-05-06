@@ -72,8 +72,8 @@ export async function GET(request: NextRequest) {
         where: {
           bdId: { in: allUserIds },
           OR: [
-            { leadDate: { gte: start, lte: end } },
-            { AND: [{ leadDate: null }, { createdDate: { gte: start, lte: end } }] },
+            { leadEntryDate: { gte: start, lte: end } },
+            { AND: [{ leadEntryDate: null }, { createdDate: { gte: start, lte: end } }] },
           ],
         },
         _count: { id: true },
@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
     const [leadsByMonth, ipdByMonth] = await Promise.all([
       prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
         SELECT
-          TO_CHAR(COALESCE(l."leadDate", l."createdDate"), 'YYYY-MM') AS month,
+          TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
           u.id AS "bdId",
           u.name AS "bdName",
           COUNT(*)::int AS count
@@ -131,7 +131,7 @@ export async function GET(request: NextRequest) {
       `,
       prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
         SELECT
-          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadDate", l."createdDate"), 'YYYY-MM') AS month,
+          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
           u.id AS "bdId",
           u.name AS "bdName",
           COUNT(*)::int AS count

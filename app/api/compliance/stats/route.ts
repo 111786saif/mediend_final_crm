@@ -5,11 +5,36 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
+const DISCHARGED_STAGES = [
+  'DISCHARGED',
+  'CASH_DISCHARGED',
+  'PL_PENDING',
+  'OUTSTANDING',
+  'IPD_DONE',
+] as const
+
+async function backfillComplianceCalls() {
+  const orphans = await prisma.lead.findMany({
+    where: {
+      caseStage: { in: DISCHARGED_STAGES as unknown as Prisma.EnumCaseStageFilter['in'] },
+      complianceCall: null,
+    },
+    select: { id: true },
+  })
+  if (orphans.length === 0) return
+  await prisma.complianceCall.createMany({
+    data: orphans.map((l) => ({ leadId: l.id })),
+    skipDuplicates: true,
+  })
+}
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
     if (!hasPermission(user, 'compliance:read')) return errorResponse('Forbidden', 403)
+
+    await backfillComplianceCalls()
 
     const { searchParams } = new URL(request.url)
     const startDate = searchParams.get('startDate')

@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         const groups = await prisma.lead.groupBy({
           by: ['campaignName'],
           where: {
-            leadDate: { gte: start, lte: end },
+            leadEntryDate: { gte: start, lte: end },
             campaignName: { not: null },
           },
           _count: { _all: true },
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
     const groups = await prisma.lead.groupBy({
       by: ['campaignName'],
       where: {
-        leadDate: { gte: start, lte: end },
+        leadEntryDate: { gte: start, lte: end },
         campaignName: { not: null },
       },
       _count: { _all: true },

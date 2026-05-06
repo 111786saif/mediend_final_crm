@@ -3,14 +3,12 @@ import {
   queryMySQL,
   closeMySQLPool,
   testMySQLConnection,
-  getMySQLLeadAssignmentDateColumn,
 } from '@/lib/mysql-source-client'
 import { prisma } from '@/lib/prisma'
 import {
   mapMySQLLeadToPrisma,
   mapMySQLLeadToPrismaAsyncFallback,
-  getLeadReceivedDate,
-  getLeadAssignmentDate,
+  getLeadLatestActivityDate,
   type MySQLLeadRow,
 } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
@@ -248,42 +246,31 @@ async function syncOneBatch(
   systemUserId: string,
   totalSyncedSoFar: number,
   lookups: Awaited<ReturnType<typeof loadLookupMaps>>,
-  bdMap: Map<string, { id: string }>,
-  assignmentDateColumn: string | null
+  bdMap: Map<string, { id: string }>
 ): Promise<{ fetched: number; maxDate: Date; maxId: number; synced: number; updated: number; errors: number }> {
   console.log(`\n📥 Fetching leads from MySQL (batch size: ${BATCH_SIZE})...`)
-  const assignmentDateSelect = assignmentDateColumn ? `, \`${assignmentDateColumn}\` AS assignedDate` : ''
-  const assignmentDateWhere = assignmentDateColumn ? ` OR (\`${assignmentDateColumn}\` IS NOT NULL AND \`${assignmentDateColumn}\` >= ?)` : ''
 
-  // id > lastMaxId ensures we never re-fetch the same batch (prevents infinite loops).
-  // Date conditions filter to new/modified leads; for full re-sync they match everything.
-  const baseParams = assignmentDateColumn
-    ? [lastMaxId, lastSyncedDate, lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
-    : [lastMaxId, lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
+  // id > lastMaxId ensures forward progress. We pull rows whose receive (LeadEntryDate /
+  // create_date), assignment (Lead_Date) or last update is newer than the cursor.
   const leads = await queryMySQL<MySQLLeadRow>(
-    `SELECT lead.*${assignmentDateSelect} FROM lead
+    `SELECT lead.* FROM lead
      WHERE id > ?
        AND (
-         (Lead_Date >= ? OR (Lead_Date IS NULL AND COALESCE(LeadEntryDate, create_date) >= ?))
-         OR (update_date IS NOT NULL AND update_date >= ?)${assignmentDateWhere}
+         COALESCE(LeadEntryDate, create_date) >= ?
+         OR (Lead_Date IS NOT NULL AND Lead_Date >= ?)
+         OR (update_date IS NOT NULL AND update_date >= ?)
        )
      ORDER BY id ASC
      LIMIT ?`,
-    baseParams
+    [lastMaxId, lastSyncedDate, lastSyncedDate, lastSyncedDate, BATCH_SIZE]
   )
 
   if (leads.length === 0) return { fetched: 0, maxDate: lastSyncedDate, maxId: lastMaxId, synced: 0, updated: 0, errors: 0 }
 
   console.log(`✅ Found ${leads.length} leads to sync`)
-  const dateRange = {
-    earliest:
-      leads[0].Lead_Date != null ? new Date(leads[0].Lead_Date as string | Date).toISOString() : 'N/A',
-    latest:
-      leads[leads.length - 1].Lead_Date != null
-        ? new Date(leads[leads.length - 1].Lead_Date as string | Date).toISOString()
-        : 'N/A',
-  }
-  console.log(`   Date range: ${dateRange.earliest} to ${dateRange.latest}`)
+  const earliestActivity = getLeadLatestActivityDate(leads[0])
+  const latestActivity = getLeadLatestActivityDate(leads[leads.length - 1])
+  console.log(`   Activity range: ${earliestActivity.toISOString()} to ${latestActivity.toISOString()}`)
 
   const leadRefs = leads.map((l) => String(l.id))
   const existingLeadsMap = await fetchExistingLeads(leadRefs)
@@ -295,24 +282,14 @@ async function syncOneBatch(
   const syncedLeadIds: number[] = []
   const leadsToCreate: Record<string, unknown>[] = []
   const leadsToUpdate: Array<{ leadRef: string; data: Record<string, unknown> }> = []
-  const leadDates: Date[] = []
+  const activityDates: Date[] = []
   const leadIds: number[] = []
-  const updateDates: Date[] = []
 
   for (const mysqlLead of leads) {
     try {
       const leadRef = String(mysqlLead.id)
-      const leadDate = getLeadReceivedDate(mysqlLead)
-      const assignmentDate = getLeadAssignmentDate(mysqlLead)
-      leadDates.push(leadDate)
+      activityDates.push(getLeadLatestActivityDate(mysqlLead))
       leadIds.push(mysqlLead.id)
-      if (mysqlLead.update_date) {
-        const ud = new Date(mysqlLead.update_date)
-        if (!isNaN(ud.getTime())) updateDates.push(ud)
-      }
-      if (assignmentDate) {
-        updateDates.push(assignmentDate)
-      }
 
       let leadData = mapMySQLLeadToPrisma(mysqlLead, systemUserId, lookups, bdMap)
       if (!leadData) {
@@ -354,12 +331,12 @@ async function syncOneBatch(
   // Cursor advances by max(id) — guaranteed unique and forward-progressing.
   // maxDate is computed for the final sync state record only.
   const maxId = Math.max(...leadIds)
-  const maxLeadDate =
-    leadDates.length > 0
-      ? new Date(Math.max(...leadDates.map((d) => d.getTime())))
+  const maxActivityDate =
+    activityDates.length > 0
+      ? new Date(Math.max(...activityDates.map((d) => d.getTime())))
       : lastSyncedDate
-  const maxDate = maxLeadDate > lastSyncedDate ? maxLeadDate : lastSyncedDate
-  console.log(`   Cursor: id ${lastMaxId} → ${maxId}, Lead_Date max=${maxLeadDate.toISOString().slice(0,10)}`)
+  const maxDate = maxActivityDate > lastSyncedDate ? maxActivityDate : lastSyncedDate
+  console.log(`   Cursor: id ${lastMaxId} → ${maxId}, activity max=${maxActivityDate.toISOString().slice(0,10)}`)
 
   // Batch create
   if (leadsToCreate.length > 0) {
@@ -465,8 +442,6 @@ async function syncLeads() {
     console.log('📋 Loading BD users map...')
     const bdMap = await fetchBDUsersMap()
     console.log(`✅ BD map loaded — ${bdMap.size} entries`)
-    const assignmentDateColumn = await getMySQLLeadAssignmentDateColumn()
-    console.log(`📌 Assignment date column: ${assignmentDateColumn ?? 'not found'}`)
 
     let totalSynced = 0
     let totalUpdated = 0
@@ -488,8 +463,7 @@ async function syncLeads() {
         systemUser.id,
         totalSynced + totalUpdated,
         lookups,
-        bdMap,
-        assignmentDateColumn
+        bdMap
       )
       totalSynced += result.synced
       totalUpdated += result.updated

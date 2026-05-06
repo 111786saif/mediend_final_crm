@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
           where: { date: start },
         }),
         prisma.lead.findMany({
-          where: { leadDate: { gte: start, lte: end } },
+          where: { leadEntryDate: { gte: start, lte: end } },
           select: { campaignName: true, source: true },
         }),
       ])
@@ -90,8 +90,8 @@ export async function GET(request: NextRequest) {
           orderBy: { date: 'asc' },
         }),
         prisma.lead.findMany({
-          where: { leadDate: { gte: rangeStart, lte: rangeEnd } },
-          select: { campaignName: true, leadDate: true },
+          where: { leadEntryDate: { gte: rangeStart, lte: rangeEnd } },
+          select: { campaignName: true, leadEntryDate: true },
         }),
       ])
 
@@ -104,8 +104,8 @@ export async function GET(request: NextRequest) {
         dayMap.set(dk, entry)
       }
       for (const l of leads) {
-        if (!l.leadDate) continue
-        const dk = l.leadDate.toISOString().split('T')[0]
+        if (!l.leadEntryDate) continue
+        const dk = l.leadEntryDate.toISOString().split('T')[0]
         const entry = dayMap.get(dk) || { spend: 0, leads: 0 }
         entry.leads += 1
         dayMap.set(dk, entry)

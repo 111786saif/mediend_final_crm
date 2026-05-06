@@ -28,12 +28,12 @@ export async function GET(request: NextRequest) {
     if (startDate) dateFilter.gte = new Date(startDate)
     if (endDate) dateFilter.lte = new Date(endDate)
 
-    const leadDateFilter: Prisma.LeadWhereInput =
+    const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
         ? {
             OR: [
-              { leadDate: dateFilter },
-              { AND: [{ leadDate: { equals: null } }, { createdDate: dateFilter }] },
+              { leadEntryDate: dateFilter },
+              { AND: [{ leadEntryDate: { equals: null } }, { createdDate: dateFilter }] },
             ],
           }
         : {}
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       where.bdId = { in: [user.id, ...subIds] }
     }
 
-    const allLeadsWhere: Prisma.LeadWhereInput = { ...leadDateFilter }
+    const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter }
     if (circle) allLeadsWhere.circle = circle
     if (user.role === 'BD') {
       allLeadsWhere.bdId = user.id

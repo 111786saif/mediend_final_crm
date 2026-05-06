@@ -26,18 +26,18 @@ export async function GET(request: NextRequest) {
     if (startDate) dateFilter.gte = new Date(startDate)
     if (endDate) dateFilter.lte = new Date(endDate)
 
-    const leadDateFilter: Prisma.LeadWhereInput =
+    const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
         ? {
             OR: [
-              { leadDate: dateFilter },
-              { AND: [{ leadDate: { equals: null } }, { createdDate: dateFilter }] },
+              { leadEntryDate: dateFilter },
+              { AND: [{ leadEntryDate: { equals: null } }, { createdDate: dateFilter }] },
             ],
           }
         : {}
 
     const baseWhere: Prisma.LeadWhereInput = {
-      ...leadDateFilter,
+      ...leadEntryDateFilter,
     }
 
     // Role-based filtering
@@ -61,8 +61,8 @@ export async function GET(request: NextRequest) {
         ...baseWhere,
         pipelineStage: 'SALES',
         OR: [
-          { leadDate: { lt: thirtyDaysAgo } },
-          { AND: [{ leadDate: { equals: null } }, { createdDate: { lt: thirtyDaysAgo } }] },
+          { leadEntryDate: { lt: thirtyDaysAgo } },
+          { AND: [{ leadEntryDate: { equals: null } }, { createdDate: { lt: thirtyDaysAgo } }] },
         ],
       },
       select: {
@@ -86,8 +86,8 @@ export async function GET(request: NextRequest) {
         ...baseWhere,
         pipelineStage: 'INSURANCE',
         OR: [
-          { leadDate: { lt: fourteenDaysAgo } },
-          { AND: [{ leadDate: { equals: null } }, { createdDate: { lt: fourteenDaysAgo } }] },
+          { leadEntryDate: { lt: fourteenDaysAgo } },
+          { AND: [{ leadEntryDate: { equals: null } }, { createdDate: { lt: fourteenDaysAgo } }] },
         ],
       },
       select: {

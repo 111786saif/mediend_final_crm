@@ -39,7 +39,7 @@ async function computeAchievement(
               AND: [
                 { conversionDate: null },
                 { surgeryDate: null },
-                { leadDate: { gte: start, lte: end } },
+                { leadEntryDate: { gte: start, lte: end } },
               ],
             },
           ],

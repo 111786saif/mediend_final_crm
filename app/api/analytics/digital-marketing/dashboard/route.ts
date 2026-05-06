@@ -37,11 +37,11 @@ export async function GET(request: NextRequest) {
     const hasDateFilter = Object.keys(dateFilter).length > 0
 
     // Lead date filter (for all leads)
-    const leadDateFilter: Prisma.LeadWhereInput = hasDateFilter
+    const leadEntryDateFilter: Prisma.LeadWhereInput = hasDateFilter
       ? {
           OR: [
-            { leadDate: dateFilter },
-            { AND: [{ leadDate: { equals: null } }, { createdDate: dateFilter }] },
+            { leadEntryDate: dateFilter },
+            { AND: [{ leadEntryDate: { equals: null } }, { createdDate: dateFilter }] },
           ],
         }
       : {}
@@ -66,8 +66,8 @@ export async function GET(request: NextRequest) {
       const priorDateFilter: Prisma.DateTimeFilter = { gte: priorStart, lte: priorEnd }
       priorLeadDateFilter = {
         OR: [
-          { leadDate: priorDateFilter },
-          { AND: [{ leadDate: { equals: null } }, { createdDate: priorDateFilter }] },
+          { leadEntryDate: priorDateFilter },
+          { AND: [{ leadEntryDate: { equals: null } }, { createdDate: priorDateFilter }] },
         ],
       }
       priorCompletedWhere = {
@@ -106,13 +106,13 @@ export async function GET(request: NextRequest) {
       completedForMonth,
       cplMap,
     ] = await Promise.all([
-      prisma.lead.count({ where: leadDateFilter }),
+      prisma.lead.count({ where: leadEntryDateFilter }),
       prisma.lead.count({ where: completedWhere }),
       startDate && endDate ? prisma.lead.count({ where: priorLeadDateFilter }) : Promise.resolve(0),
       startDate && endDate ? prisma.lead.count({ where: priorCompletedWhere }) : Promise.resolve(0),
       prisma.lead.groupBy({
         by: ['campaignName'],
-        where: { ...leadDateFilter, campaignName: { not: null } },
+        where: { ...leadEntryDateFilter, campaignName: { not: null } },
         _count: { id: true },
       }),
       prisma.lead.groupBy({
@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
       }),
       prisma.lead.groupBy({
         by: ['source'],
-        where: { ...leadDateFilter, source: { not: null } },
+        where: { ...leadEntryDateFilter, source: { not: null } },
         _count: { id: true },
       }),
       prisma.lead.groupBy({
@@ -134,7 +134,7 @@ export async function GET(request: NextRequest) {
       }),
       prisma.lead.groupBy({
         by: ['circle'],
-        where: leadDateFilter,
+        where: leadEntryDateFilter,
         _count: { id: true },
       }),
       prisma.lead.groupBy({
@@ -143,13 +143,13 @@ export async function GET(request: NextRequest) {
         _count: { id: true },
       }),
       prisma.lead.findMany({
-        where: { ...leadDateFilter, campaignName: { not: null } },
-        select: { campaignName: true, leadDate: true, createdDate: true },
+        where: { ...leadEntryDateFilter, campaignName: { not: null } },
+        select: { campaignName: true, leadEntryDate: true, createdDate: true },
       }),
       prisma.lead.findMany({
         where: completedWhere,
         select: {
-          conversionDate: true, surgeryDate: true, leadDate: true, createdDate: true,
+          conversionDate: true, surgeryDate: true, leadEntryDate: true, createdDate: true,
           billAmount: true, netProfit: true, campaignName: true,
         },
       }),
@@ -162,7 +162,7 @@ export async function GET(request: NextRequest) {
     // Compute total marketing spend from CPL data
     let totalMarketingSpend = 0
     for (const lead of allLeadsForCpl) {
-      const d = lead.leadDate ?? lead.createdDate
+      const d = lead.leadEntryDate ?? lead.createdDate
       const name = lead.campaignName?.trim()
       if (!name || !d) continue
       const cpl = cplMap.get(cplLookupKey(name, d.getMonth() + 1, d.getFullYear()))
@@ -193,7 +193,7 @@ export async function GET(request: NextRequest) {
     // Compute per-campaign CPL spend
     const campaignSpendMap = new Map<string, number>()
     for (const lead of allLeadsForCpl) {
-      const d = lead.leadDate ?? lead.createdDate
+      const d = lead.leadEntryDate ?? lead.createdDate
       const name = lead.campaignName?.trim()
       if (!name || !d) continue
       const cpl = cplMap.get(cplLookupKey(name, d.getMonth() + 1, d.getFullYear()))
@@ -233,7 +233,7 @@ export async function GET(request: NextRequest) {
 
     // Count leads per month
     for (const lead of allLeadsForCpl) {
-      const d = lead.leadDate ?? lead.createdDate
+      const d = lead.leadEntryDate ?? lead.createdDate
       if (!d) continue
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
       const cur = monthMap.get(key) ?? { leads: 0, ipd: 0, revenue: 0, spend: 0 }
@@ -248,7 +248,7 @@ export async function GET(request: NextRequest) {
 
     // Count conversions per month
     for (const lead of completedForMonth) {
-      const d = lead.surgeryDate ?? lead.conversionDate ?? lead.leadDate ?? lead.createdDate
+      const d = lead.surgeryDate ?? lead.conversionDate ?? lead.leadEntryDate ?? lead.createdDate
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
       const cur = monthMap.get(key) ?? { leads: 0, ipd: 0, revenue: 0, spend: 0 }
       cur.ipd += 1

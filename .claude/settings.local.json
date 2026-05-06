@@ -13,7 +13,9 @@
       "Bash(grep *)",
       "Bash(python3 -c ' *)",
       "Bash(node *)",
-      "Bash(git -C /c/Users/DHRUV/OneDrive/Desktop/mediend-crm-v2 log --oneline --all)"
+      "Bash(git -C /c/Users/DHRUV/OneDrive/Desktop/mediend-crm-v2 log --oneline --all)",
+      "Bash(bunx tsc *)",
+      "Bash(bunx eslint *)"
     ]
   }
 }

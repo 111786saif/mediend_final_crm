@@ -39,16 +39,16 @@ export async function GET(_request: NextRequest) {
       prisma.lead.count({
         where: {
           OR: [
-            { leadDate: { gte: sevenDaysAgo, lte: nowEnd } },
-            { AND: [{ leadDate: { equals: null } }, { createdDate: { gte: sevenDaysAgo, lte: nowEnd } }] },
+            { leadEntryDate: { gte: sevenDaysAgo, lte: nowEnd } },
+            { AND: [{ leadEntryDate: { equals: null } }, { createdDate: { gte: sevenDaysAgo, lte: nowEnd } }] },
           ],
         },
       }),
       prisma.lead.count({
         where: {
           OR: [
-            { leadDate: { gte: thirtyDaysAgo, lte: nowEnd } },
-            { AND: [{ leadDate: { equals: null } }, { createdDate: { gte: thirtyDaysAgo, lte: nowEnd } }] },
+            { leadEntryDate: { gte: thirtyDaysAgo, lte: nowEnd } },
+            { AND: [{ leadEntryDate: { equals: null } }, { createdDate: { gte: thirtyDaysAgo, lte: nowEnd } }] },
           ],
         },
       }),

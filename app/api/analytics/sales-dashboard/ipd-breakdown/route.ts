@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
       // Month series uses the same completed + date filter as the rest of the breakdown
       prisma.lead.findMany({
         where: completedWhere,
-        select: { conversionDate: true, surgeryDate: true, leadDate: true, createdDate: true, billAmount: true, netProfit: true },
+        select: { conversionDate: true, surgeryDate: true, leadEntryDate: true, createdDate: true, billAmount: true, netProfit: true },
       }),
     ])
 

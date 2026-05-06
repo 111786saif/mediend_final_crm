@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { queryMySQL, closeMySQLPool, testMySQLConnection } from '@/lib/mysql-source-client'
 import { prisma } from '@/lib/prisma'
-import { mapMySQLLeadToPrisma, mapMySQLLeadToPrismaAsyncFallback, getLeadReceivedDate, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
+import { mapMySQLLeadToPrisma, mapMySQLLeadToPrismaAsyncFallback, getLeadLatestActivityDate, type MySQLLeadRow } from '@/lib/sync/mysql-lead-mapper'
 import { loadLookupMaps } from '@/lib/sync/mysql-lookup-cache'
 import { fetchBDUsersMap } from '@/lib/sync/mysql-bd-map'
 import { UserRole } from '@/generated/prisma/client'
@@ -168,7 +168,7 @@ async function runHistoricSync() {
     try {
       const countRows = await queryMySQL<{ cnt: number }>(
         `SELECT COUNT(*) AS cnt FROM lead 
-         WHERE COALESCE(Lead_Date, LeadEntryDate, create_date) >= ?`,
+         WHERE COALESCE(LeadEntryDate, create_date, Lead_Date) >= ?`,
         [fromDate]
       )
       if (countRows[0]?.cnt != null) approximateTotal = Number(countRows[0].cnt)
@@ -201,8 +201,8 @@ async function runHistoricSync() {
 
       const leads = await queryMySQL<MySQLLeadRow>(
         `SELECT * FROM lead 
-         WHERE (COALESCE(Lead_Date, LeadEntryDate, create_date) > ? OR (COALESCE(Lead_Date, LeadEntryDate, create_date) = ? AND id > ?))
-         ORDER BY COALESCE(Lead_Date, LeadEntryDate, create_date) ASC, id ASC 
+         WHERE (COALESCE(LeadEntryDate, create_date, Lead_Date) > ? OR (COALESCE(LeadEntryDate, create_date, Lead_Date) = ? AND id > ?))
+         ORDER BY COALESCE(LeadEntryDate, create_date, Lead_Date) ASC, id ASC 
          LIMIT ?`,
         [cursorDate, cursorDate, cursorId, BATCH_SIZE]
       )
@@ -224,8 +224,7 @@ async function runHistoricSync() {
       const processLead = async (mysqlLead: MySQLLeadRow) => {
         try {
           const leadRef = String(mysqlLead.id)
-          const leadDate = getLeadReceivedDate(mysqlLead)
-          leadDates.push(leadDate)
+          leadDates.push(getLeadLatestActivityDate(mysqlLead))
           leadIds.push(mysqlLead.id)
           let leadData = mapMySQLLeadToPrisma(mysqlLead, systemUser!.id, lookups, bdMap)
           if (!leadData) {

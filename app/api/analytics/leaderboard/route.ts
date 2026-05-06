@@ -33,12 +33,12 @@ export async function GET(request: NextRequest) {
     if (startDate) dateFilter.gte = new Date(startDate)
     if (endDate) dateFilter.lte = new Date(endDate)
 
-    const leadDateFilter: Prisma.LeadWhereInput =
+    const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
         ? {
             OR: [
-              { leadDate: dateFilter },
-              { AND: [{ leadDate: { equals: null } }, { createdDate: dateFilter }] },
+              { leadEntryDate: dateFilter },
+              { AND: [{ leadEntryDate: { equals: null } }, { createdDate: dateFilter }] },
             ],
           }
         : {}
@@ -55,8 +55,8 @@ export async function GET(request: NextRequest) {
     }
 
     if (type === 'bd') {
-      const closedWhere: Prisma.LeadWhereInput = { status: { in: CLOSED_STATUS_CODES }, ...leadDateFilter, ...scopeFilter }
-      const allLeadsWhere: Prisma.LeadWhereInput = { ...leadDateFilter, ...scopeFilter }
+      const closedWhere: Prisma.LeadWhereInput = { status: { in: CLOSED_STATUS_CODES }, ...leadEntryDateFilter, ...scopeFilter }
+      const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter, ...scopeFilter }
       const ipdDoneWhere: Prisma.LeadWhereInput = { pipelineStage: { in: ['PL', 'COMPLETED'] }, ...conversionDateFilter, ...scopeFilter }
 
       const [bdStats, bdLeads, ipdDoneStats] = await Promise.all([
@@ -113,8 +113,8 @@ export async function GET(request: NextRequest) {
 
     } else if (type === 'team') {
       // Team leaderboard = manager groups (each manager + their direct subordinates)
-      const closedWhere: Prisma.LeadWhereInput = { status: { in: CLOSED_STATUS_CODES }, ...leadDateFilter, ...scopeFilter }
-      const allLeadsWhere: Prisma.LeadWhereInput = { ...leadDateFilter, ...scopeFilter }
+      const closedWhere: Prisma.LeadWhereInput = { status: { in: CLOSED_STATUS_CODES }, ...leadEntryDateFilter, ...scopeFilter }
+      const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter, ...scopeFilter }
       const ipdDoneWhere: Prisma.LeadWhereInput = { pipelineStage: { in: ['PL', 'COMPLETED'] }, ...conversionDateFilter, ...scopeFilter }
 
       const [teamStats, teamLeads, ipdDoneStats] = await Promise.all([
@@ -185,7 +185,7 @@ export async function GET(request: NextRequest) {
 
           const closedWhere: Prisma.LeadWhereInput = {
             status: { in: CLOSED_STATUS_CODES },
-            ...leadDateFilter,
+            ...leadEntryDateFilter,
             bdId: { in: teamUserIds },
           }
           const ipdDoneWhere: Prisma.LeadWhereInput = {

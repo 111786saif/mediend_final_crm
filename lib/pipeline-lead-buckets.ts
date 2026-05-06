@@ -144,14 +144,14 @@ export function countBuckets(leads: { status?: string | null }[]) {
 
 export type LeadAgeFilter = 'all' | 'new' | 'lt1m' | '1to2m' | '2to3m' | '3plus'
 
-export function getLeadReceiptDate(lead: { leadDate?: string | Date | null; createdDate?: string | Date | null }): Date | null {
-  const raw = lead.leadDate ?? lead.createdDate
+export function getLeadReceiptDate(lead: { leadEntryDate?: string | Date | null; createdDate?: string | Date | null }): Date | null {
+  const raw = lead.leadEntryDate ?? lead.createdDate
   if (!raw) return null
   const d = typeof raw === 'string' ? new Date(raw) : raw
   return Number.isNaN(d.getTime()) ? null : d
 }
 
-function leadAgeBucket(lead: { leadDate?: string | Date | null; createdDate?: string | Date | null }): LeadAgeFilter {
+function leadAgeBucket(lead: { leadEntryDate?: string | Date | null; createdDate?: string | Date | null }): LeadAgeFilter {
   const d = getLeadReceiptDate(lead)
   if (!d) return 'all'
   const now = new Date()
@@ -164,7 +164,7 @@ function leadAgeBucket(lead: { leadDate?: string | Date | null; createdDate?: st
 }
 
 /** Label + tailwind classes for badge */
-export function getLeadAgeInfo(lead: { leadDate?: string | Date | null; createdDate?: string | Date | null }): {
+export function getLeadAgeInfo(lead: { leadEntryDate?: string | Date | null; createdDate?: string | Date | null }): {
   label: string
   filter: LeadAgeFilter
   className: string
@@ -190,7 +190,7 @@ export function getLeadAgeInfo(lead: { leadDate?: string | Date | null; createdD
 }
 
 export function matchesLeadAgeFilter(
-  lead: { leadDate?: string | Date | null; createdDate?: string | Date | null },
+  lead: { leadEntryDate?: string | Date | null; createdDate?: string | Date | null },
   filter: LeadAgeFilter
 ): boolean {
   if (filter === 'all') return true
