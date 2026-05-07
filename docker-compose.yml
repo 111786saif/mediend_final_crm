@@ -330,6 +330,34 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/import-ipd-pnl-csv.ts"]
 
+  # One-off: import historical daily campaign spend (CPL) from the legacy Excel
+  # sheets. Two phases:
+  #   1. Build mapping review CSV (default — no DB writes):
+  #        docker compose --profile tools run --rm import-cpl-history
+  #      Then download/edit scripts/cpl-mapping-review.csv (filter
+  #      needs_review=YES_FIX, fill proposed_db_name where wanted), commit it,
+  #      and re-deploy the image so the edited CSV is baked in.
+  #   2. Apply (writes DailyCampaignSpend rows; idempotent — safe to re-run):
+  #        docker compose --profile tools run --rm import-cpl-history -- --apply --fix-dec2025
+  #
+  # Requires scripts/cpl-backfill-data.json (extracted from the source xlsx
+  # via the python pre-processor) and scripts/cpl-mapping-review.csv to be
+  # present in the repo at build time. Override the createdBy attribution with
+  #   -- --apply --created-by=<email>
+  import-cpl-history:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/import-cpl-history.ts"]
+
   # One-off: migrate lead pipeline stages and conversion dates from status
   # Usage: docker compose --profile tools run --rm migrate-lead-pipeline
   migrate-lead-pipeline:

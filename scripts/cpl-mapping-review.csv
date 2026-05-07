@@ -1,0 +1,151 @@
+needs_review,sheet_name,dominant_source_code,channel_hint,proposed_db_name,db_lead_count,days_with_spend,total_spend,has_dec2025_anomaly,match_reason,match_score,alternatives,action
+,"ACL-Tears-Meniscus-ACL-M1 & M2, Facebook",ACL-M1& M2,facebook,ACL-Tears-Meniscus-ACL-M2,9,13,18381.00,,treatment+code-tail+fb,91,ACL-Tears-Meniscus-ACL-M1 (45),MAP
+,"ACL-Tears-Meniscus-ACL-M1, Facebook",ACL-M1,facebook,ACL-Tears-Meniscus-ACL-M1,67,25,37085.00,,treatment+code-tail+fb,95,ACL-Tears-Meniscus-ACL-M2 (41),MAP
+,Axillary-Breast-Pune-ABP1 January 2026,ABP1,,Axillary-Breast-Pune-ABP1,1,2,9691.00,,treatment+city+code-tail,105,,MAP
+,Bariatric-Mumbai- Feb 2026,BM1,,Bariatric-Mumbai-BM1,3,2,1711.00,,treatment+city+code-tail,105,,MAP
+,Bariatric-Mumbai- January 2026,BM1,,Bariatric-Mumbai-BM1,3,20,15556.00,,treatment+city+code-tail,105,,MAP
+,Bariatric-Pune-Feb 2026,BP1 & BP1.1,,Bariatric-Pune-BP1.1,10,3,4983.00,,treatment+city,56,,MAP
+,Bariatric-Pune-January 2026,BP1,,Bariatric-Pune-BP1.1,10,22,36994.00,,treatment+city+code-substr,76,,MAP
+,Bariatric-Pune-March 2026,BP1 & BP1.1,,Bariatric-Pune-BP1.1,10,0,0.00,,treatment+city,56,,MAP
+,Cataract - Mumbai FB January 2026,CL M1,facebook,Cataract-Mumbai-CL-M1,3,17,29734.00,,treatment+city+code-tail+fb,115,,MAP
+,Cataract -Delhi FB January 2026,CL D2,facebook,Cataract-Delhi-CL-D1,1,8,10710.00,,treatment+city+fb,65,,MAP
+,Cataract leads,CL-D1,,Cataract-Delhi-CL-D1,1,0,0.00,,treatment+code-tail,80,Cataract-Mumbai-CL-M1 (30),MAP
+,"Cataract-Delhi-CL-D1, Facebook",CL-D1,facebook,Cataract-Delhi-CL-D1,1,2,827.00,,treatment+city+code-tail+fb,115,,MAP
+,"Cataract-Mumbai-CL-M1, Facebook",CL-M1,facebook,Cataract-Mumbai-CL-M1,3,1,415.00,,treatment+city+code-tail+fb,115,,MAP
+,Circumcision Delhi Google April 2026,Cir D,google,Circumcision-Delhi,3,12,24604.00,,treatment+city+google,70,,MAP
+,Circumcision Delhi Google January 2026,CirD,google,Circumcision-Delhi,3,1,2202.00,,treatment+city+google,70,,MAP
+,Circumcision Delhi Google March 2026,Cir Noida,google,Circumcision-Delhi,3,5,16714.00,,treatment+city+google,70,,MAP
+,Circumcision Mumbai Google April 2026,Cir MUM,google,Circumcision-Mumbai,118,23,91212.00,,treatment+city+google,75,,MAP
+,Circumcision Mumbai Google Feb 2026,Cir MUM,google,Circumcision-Mumbai,118,25,90531.00,,treatment+city+google,75,,MAP
+,Circumcision Mumbai Google January 2026,Cir MUM,google,Circumcision-Mumbai,118,22,72322.00,,treatment+city+google,75,,MAP
+,Circumcision Mumbai Google March 2026,Cir MUM,google,Circumcision-Mumbai,118,27,65192.00,,treatment+city+google,75,,MAP
+info,Circumcision Noida Google March 2026,Cir Noida,google,,0,0,0.00,,no-match,0,,SKIP
+,Circumcision Pune Google April 2026,Cir P,google,Circumcision-Pune,87,27,101067.00,,treatment+city+google,75,,MAP
+,Circumcision Pune Google Feb 2026,Cir P,google,Circumcision-Pune,87,17,76232.00,,treatment+city+google,75,,MAP
+,Circumcision Pune Google January 2026,Cir P,google,Circumcision-Pune,87,24,97357.00,,treatment+city+google,75,,MAP
+,Circumcision Pune Google March 2026,Cir P,google,Circumcision-Pune,87,22,81860.00,,treatment+city+google,75,,MAP
+YES_FIX,Circumcision-Bangalore-CB1,CB1,,,0,5,5769.00,,distinctive-code-no-db-match,0,,SKIP
+YES_FIX,Circumcision-Delhi CD3,CD3,,,0,6,8493.00,,distinctive-code-no-db-match,0,,SKIP
+,Circumcision-Delhi-CD-1 - April 2026,CD1,,Circumcision-Delhi-CD-1,190,25,33063.00,,treatment+city+code-tail,110,Circumcision-Delhi-CD-2 (58) | Circumcision-Noida-East-Delhi-Offer-C-ND01 (57) | Circumcision-Delhi (55),MAP
+,Circumcision-Delhi-CD-1 - Feb 2026,CD1,,Circumcision-Delhi-CD-1,190,27,49427.00,,treatment+city+code-tail,110,Circumcision-Delhi-CD-2 (58) | Circumcision-Noida-East-Delhi-Offer-C-ND01 (57) | Circumcision-Delhi (55),MAP
+,Circumcision-Delhi-CD-1 - March  2026,CD1,,Circumcision-Delhi-CD-1,190,29,55002.00,,treatment+city+code-tail,110,Circumcision-Delhi-CD-2 (58) | Circumcision-Noida-East-Delhi-Offer-C-ND01 (57) | Circumcision-Delhi (55),MAP
+YES_DEC,Circumcision-Delhi-CD-1 -January 2026,CD1,,Circumcision-Delhi-CD-1,190,25,55141.00,YES,treatment+city+code-tail,110,Circumcision-Delhi-CD-2 (58) | Circumcision-Noida-East-Delhi-Offer-C-ND01 (57) | Circumcision-Delhi (55),MAP
+,Circumcision-Delhi-CD-2 -April 2026,CD2,,Circumcision-Delhi-CD-2,33,22,18669.00,,treatment+city+code-tail,108,Circumcision-Delhi-CD-1 (60) | Circumcision-Noida-East-Delhi-Offer-C-ND01 (57) | Circumcision-Delhi (55),MAP
+,Circumcision-Delhi-CD-2 -Feb 2026,CD2,,Circumcision-Delhi-CD-2,33,9,11278.00,,treatment+city+code-tail,108,Circumcision-Delhi-CD-1 (60) | Circumcision-Noida-East-Delhi-Offer-C-ND01 (57) | Circumcision-Delhi (55),MAP
+,Circumcision-Delhi-CD-2 -January 2026,CD2,,Circumcision-Delhi-CD-2,33,24,26672.00,,treatment+city+code-tail,108,Circumcision-Delhi-CD-1 (60) | Circumcision-Noida-East-Delhi-Offer-C-ND01 (57) | Circumcision-Delhi (55),MAP
+,Circumcision-Delhi-CD-2 -March 2026,CD2,,Circumcision-Delhi-CD-2,33,19,20652.00,,treatment+city+code-tail,108,Circumcision-Delhi-CD-1 (60) | Circumcision-Noida-East-Delhi-Offer-C-ND01 (57) | Circumcision-Delhi (55),MAP
+YES_FIX,Circumcision-Mumbai CM4.0,CM4.0,,,0,15,29874.00,,distinctive-code-no-db-match,0,,SKIP
+YES_FIX,Circumcision-Mumbai CM4.1,CM4.1,,,0,14,18944.00,,distinctive-code-no-db-match,0,,SKIP
+YES_FIX,Circumcision-Mumbai CM4.2,CM4.2,,,0,6,10373.00,,distinctive-code-no-db-match,0,,SKIP
+,Circumcision-Mumbai- CM-1 - April 2026,CM1,,Circumcision-Mumbai-CM-1,68,24,63772.00,,treatment+city+code-tail,110,Circumcision--Mumbai-CM-1 (110) | Circumcision-Mumbai-CM-2 (60) | Circumcision-Mumbai (60),MAP
+,Circumcision-Mumbai- CM-1 - Feb 2026,CM1,,Circumcision-Mumbai-CM-1,68,25,50197.00,,treatment+city+code-tail,110,Circumcision--Mumbai-CM-1 (110) | Circumcision-Mumbai-CM-2 (60) | Circumcision-Mumbai (60),MAP
+,Circumcision-Mumbai- CM-1 - January 2026,CM1,,Circumcision-Mumbai-CM-1,68,24,51254.00,,treatment+city+code-tail,110,Circumcision--Mumbai-CM-1 (110) | Circumcision-Mumbai-CM-2 (60) | Circumcision-Mumbai (60),MAP
+,Circumcision-Mumbai- CM-1 - March 2026,CM1,,Circumcision-Mumbai-CM-1,68,29,63059.00,,treatment+city+code-tail,110,Circumcision--Mumbai-CM-1 (110) | Circumcision-Mumbai-CM-2 (60) | Circumcision-Mumbai (60),MAP
+,Circumcision-Mumbai- CM-2 - April 2026,CM2,,Circumcision-Mumbai-CM-2,92,21,26374.00,,treatment+city+code-tail,110,Circumcision-Mumbai-CM-1 (60) | Circumcision-Mumbai (60) | Circumcision--Mumbai-CM-1 (60),MAP
+,Circumcision-Mumbai- CM-2 - Feb 2026,CM2,,Circumcision-Mumbai-CM-2,92,24,30202.00,,treatment+city+code-tail,110,Circumcision-Mumbai-CM-1 (60) | Circumcision-Mumbai (60) | Circumcision--Mumbai-CM-1 (60),MAP
+,Circumcision-Mumbai- CM-2 - January 2026,CM2,,Circumcision-Mumbai-CM-2,92,23,26304.00,,treatment+city+code-tail,110,Circumcision-Mumbai-CM-1 (60) | Circumcision-Mumbai (60) | Circumcision--Mumbai-CM-1 (60),MAP
+,Circumcision-Mumbai- CM-2 - March 2026,CM2,,Circumcision-Mumbai-CM-2,92,26,18123.00,,treatment+city+code-tail,110,Circumcision-Mumbai-CM-1 (60) | Circumcision-Mumbai (60) | Circumcision--Mumbai-CM-1 (60),MAP
+YES_FIX,Circumcision-Mumbai- CM-3 - April 2026,CM3,,,0,2,3826.00,,distinctive-code-no-db-match,0,,SKIP
+YES_FIX,Circumcision-Mumbai- CM-3 - March 2026,CM3,,,0,18,29887.00,,distinctive-code-no-db-match,0,,SKIP
+,Circumcision-Noida-East-Delhi-Offer-C-ND01,C-ND01,,Circumcision-Noida-East-Delhi-Offer-C-ND01,24,6,16832.00,,treatment+city+code-tail,107,,MAP
+,Circumcision-Pune- CP-1 - Feb 2026,CP1,,Circumcision-Pune-CP-1,72,15,25492.00,,treatment+city+code-tail,110,Circumcision-Pune (60) | Circumcision-Pune-CP-4 (60),MAP
+,Circumcision-Pune- CP-1 - January 2026,CP1,,Circumcision-Pune-CP-1,72,23,39692.00,,treatment+city+code-tail,110,Circumcision-Pune (60) | Circumcision-Pune-CP-4 (60),MAP
+,Circumcision-Pune- CP-1 - March 2026,CP1,,Circumcision-Pune-CP-1,72,13,24952.00,,treatment+city+code-tail,110,Circumcision-Pune (60) | Circumcision-Pune-CP-4 (60),MAP
+,Circumcision-Pune- CP-4 - April 2026,CP4,,Circumcision-Pune-CP-4,81,26,43629.00,,treatment+city+code-tail,110,Circumcision-Pune (60) | Circumcision-Pune-CP-1 (60),MAP
+,Circumcision-Pune- CP-4 - Feb 2026,CP4,,Circumcision-Pune-CP-4,81,15,26554.00,,treatment+city+code-tail,110,Circumcision-Pune (60) | Circumcision-Pune-CP-1 (60),MAP
+,Circumcision-Pune- CP-4 - January 2026,CP4,,Circumcision-Pune-CP-4,81,24,34730.00,,treatment+city+code-tail,110,Circumcision-Pune (60) | Circumcision-Pune-CP-1 (60),MAP
+,Circumcision-Pune- CP-4 - March 2026,CP4,,Circumcision-Pune-CP-4,81,24,41236.00,,treatment+city+code-tail,110,Circumcision-Pune (60) | Circumcision-Pune-CP-1 (60),MAP
+YES_FIX,Circumcision-Pune- CP-5 - April 2026,CP5,,,0,5,6823.00,,distinctive-code-no-db-match,0,,SKIP
+,Facebook- Gynecomastia-GM1-Mumbai April 2026,GM1,facebook,Gynecomastia-Mumbai-GM1,191,24,82369.00,,treatment+city+code-tail+fb,120,,MAP
+,Facebook- Gynecomastia-GM1-Mumbai Feb 2026,GM1,facebook,Gynecomastia-Mumbai-GM1,191,25,141129.00,,treatment+city+code-tail+fb,120,,MAP
+,Facebook- Gynecomastia-GM1-Mumbai January 2026,GM1,facebook,Gynecomastia-Mumbai-GM1,191,3,16512.00,,treatment+city+code-tail+fb,120,,MAP
+,Facebook- Gynecomastia-GM1-Mumbai March 2026,GM1,facebook,Gynecomastia-Mumbai-GM1,191,29,106220.00,,treatment+city+code-tail+fb,120,,MAP
+,Facebook- Liposuction- Lipo-M1-Mumbai Feb 2026,Lipo-M1,facebook,Liposuction-Mumai-Lipo-M1,60,25,72067.00,,treatment+city+code-tail+fb,120,,MAP
+,Facebook- Liposuction- Lipo-M1-Mumbai January 2026,Lipo-M1,facebook,Liposuction-Mumai-Lipo-M1,60,3,13411.00,,treatment+city+code-tail+fb,120,,MAP
+,Facebook- Liposuction- Lipo-M1-Mumbai March 2026,Lipo-M1,facebook,Liposuction-Mumai-Lipo-M1,60,3,5679.00,,treatment+city+code-tail+fb,120,,MAP
+,Gynecomastia Delhi FB-GD3 FB January 2026,Gyno,facebook,Gynecomastia-Delhi-GD6,52,2,3993.00,,treatment+city+fb,70,Gynecomastia-Delhi-GD1.0 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Delhi GD6 FB April 2026,GD6,facebook,Gynecomastia-Delhi-GD6,52,7,14300.00,,treatment+city+code-tail+fb,120,Gynecomastia-Delhi-GD1.0 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Delhi GD6 FB Feb 2026,GD6,facebook,Gynecomastia-Delhi-GD6,52,24,27549.00,,treatment+city+code-tail+fb,120,Gynecomastia-Delhi-GD1.0 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Delhi GD6 FB January 2026,Gyno GD6,facebook,Gynecomastia-Delhi-GD6,52,5,12829.00,,treatment+city+code-tail+fb,120,Gynecomastia-Delhi-GD1.0 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Delhi GD6 FB March 2026,GD6,facebook,Gynecomastia-Delhi-GD6,52,28,64804.00,,treatment+city+code-tail+fb,120,Gynecomastia-Delhi-GD1.0 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Delhi Google April 2026,Gyno delhi,google,Gynecomastia-Delhi,107,19,102138.00,,treatment+city+code-tail+google,125,,MAP
+,Gynecomastia Delhi Google Feb 2026,Gyno delhi,google,Gynecomastia-Delhi,107,24,129476.00,,treatment+city+code-tail+google,125,,MAP
+,Gynecomastia Delhi Google January 2026,Gyno,google,Gynecomastia-Delhi,107,25,123382.00,,treatment+city+google,75,,MAP
+,Gynecomastia Delhi Google March 2026,Gyno delhi,google,Gynecomastia-Delhi,107,0,0.00,,treatment+city+code-tail+google,125,,MAP
+,Gynecomastia FB Pune April 2026,GP1 &GP1.1,facebook,Gynecomastia-Pune-GP-1,13,0,0.00,,treatment+city+code-tail+fb,116,Gynecomastia-Pune-GP1.1 (67),MAP
+,Gynecomastia FB Pune Feb 2026,GP1 &GP1.1,facebook,Gynecomastia-Pune-GP-1,13,14,30039.00,,treatment+city+code-tail+fb,116,Gynecomastia-Pune-GP1.1 (67),MAP
+,Gynecomastia FB Pune January 2026,GP1,facebook,Gynecomastia-Pune-GP-1,13,24,49099.00,,treatment+city+code-tail+fb,116,Gynecomastia-Pune-GP1.1 (87),MAP
+,Gynecomastia FB Pune March 2026,GP1 &GP1.1,facebook,Gynecomastia-Pune-GP-1,13,10,11722.00,,treatment+city+code-tail+fb,116,Gynecomastia-Pune-GP1.1 (67),MAP
+,Gynecomastia Facebook Delhi April 2026,GD1.0,facebook,Gynecomastia-Delhi-GD1.0,152,23,38228.00,,treatment+city+code-suffix+fb,120,Gynecomastia-Delhi-GD6 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Facebook Delhi Feb 2026,GD1.0,facebook,Gynecomastia-Delhi-GD1.0,152,25,54531.00,,treatment+city+code-suffix+fb,120,Gynecomastia-Delhi-GD6 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Facebook Delhi January 2026,GD1.0,facebook,Gynecomastia-Delhi-GD1.0,152,23,32668.00,,treatment+city+code-suffix+fb,120,Gynecomastia-Delhi-GD6 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Facebook Delhi March 2026,GD1.0,facebook,Gynecomastia-Delhi-GD1.0,152,21,56081.00,,treatment+city+code-suffix+fb,120,Gynecomastia-Delhi-GD6 (70) | Gynecomastia-Delhi-GD5 (66) | Gynecomastia-Delhi-FBGD3 (65),MAP
+,Gynecomastia Facebook GD5 April 2026,GD5,facebook,Gynecomastia-Delhi-GD5,7,16,14951.00,,treatment+code-tail+fb,91,Gynecomastia-Delhi-GD6 (45) | Gynecomastia-Delhi-GD1.0 (45) | Gynecomastia-Mumbai-GM1 (45),MAP
+,Gynecomastia Facebook GD5 March 2026,GD5,facebook,Gynecomastia-Delhi-GD5,7,14,12233.00,,treatment+code-tail+fb,91,Gynecomastia-Delhi-GD6 (45) | Gynecomastia-Delhi-GD1.0 (45) | Gynecomastia-Mumbai-GM1 (45),MAP
+info,"Hernia--Mumbai-HM1, Facebook",HM1,facebook,,0,0,0.00,,distinctive-code-no-db-match,0,,SKIP
+,"Hernia-Delhi-HD1, Facebook",HD1,facebook,Hernia-Delhi-HD1,7,8,17236.00,,treatment+city+code-tail+fb,116,,MAP
+,"Lasik-Delhi, Facebook",Lasik D1,facebook,Lasik-Delhi,101,78,213497.00,,treatment+city+fb,70,,MAP
+,"Lasik-Delhi-Lasik-DN-02, Facebook",Lasik-DN-02,facebook,Lasik-Delhi,101,3,4546.00,,treatment+city+fb,70,,MAP
+,"Lasik-Mumabi-Lasik-M1, Facebook",Lasik-M1,facebook,Lasik-Mumbai-Lasik-M1,8,44,63302.00,,treatment+city+code-tail+fb,116,,MAP
+,"Lasik-Pune-Lasik-PN-01, Facebook",Lasik-PN-01,facebook,Lasik-Pune-Lasik-PN-01,74,71,104928.00,,treatment+city+code-tail+fb,120,,MAP
+,Lipoma HYD LHYD1 April 2026,LHYD1,,Lipoma-HYD-LHYD1,64,10,20108.00,,treatment+city+code-tail,110,,MAP
+,Lipoma Mumbai Google April 2026,Lipoma M,google,Lipoma-Mumbai,3,21,95164.00,,treatment+city+code-substr+google,90,,MAP
+,Lipoma Mumbai Google March 2026,Lipoma M,google,Lipoma-Mumbai,3,20,43699.00,,treatment+city+code-substr+google,90,,MAP
+,Lipoma Mumbai LM10 April 2026,LM10,,Lipoma-Mumbai-LM10,89,27,74283.00,,treatment+city+code-tail,110,Lipoma-Mumbai--LM10 (110) | Lipoma-Mumbai-LM12 (60) | Lipoma-Mumbai--LM11 (58),MAP
+,Lipoma Mumbai LM10 Feb 2026,LM10,,Lipoma-Mumbai-LM10,89,27,92070.00,,treatment+city+code-tail,110,Lipoma-Mumbai--LM10 (110) | Lipoma-Mumbai-LM12 (60) | Lipoma-Mumbai--LM11 (58),MAP
+,Lipoma Mumbai LM10 January 2026,LM10,,Lipoma-Mumbai-LM10,89,24,78190.00,,treatment+city+code-tail,110,Lipoma-Mumbai--LM10 (110) | Lipoma-Mumbai-LM12 (60) | Lipoma-Mumbai--LM11 (58),MAP
+,Lipoma Mumbai LM10 March 2026,LM10,,Lipoma-Mumbai-LM10,89,28,81618.00,,treatment+city+code-tail,110,Lipoma-Mumbai--LM10 (110) | Lipoma-Mumbai-LM12 (60) | Lipoma-Mumbai--LM11 (58),MAP
+,Lipoma Mumbai LM11 Feb  2026,LM11,,Lipoma-Mumbai--LM11,27,15,42427.00,,treatment+city+code-tail,108,Lipoma-Mumbai-LM11 (107) | Lipoma-Mumbai-LM12 (60) | Lipoma-Mumbai-LM10 (60),MAP
+,Lipoma Mumbai LM11 January 2026,LM11,,Lipoma-Mumbai--LM11,27,25,105138.00,,treatment+city+code-tail,108,Lipoma-Mumbai-LM11 (107) | Lipoma-Mumbai-LM12 (60) | Lipoma-Mumbai-LM10 (60),MAP
+,Lipoma Mumbai LM11 March 2026,LM11,,Lipoma-Mumbai--LM11,27,0,0.00,,treatment+city+code-tail,108,Lipoma-Mumbai-LM11 (107) | Lipoma-Mumbai-LM12 (60) | Lipoma-Mumbai-LM10 (60),MAP
+,Lipoma Mumbai LM12 April 2026,LM12,,Lipoma-Mumbai-LM12,307,6,10593.00,,treatment+city+code-tail,110,Lipoma-Mumbai-LM10 (60) | Lipoma-Mumbai--LM10 (60) | Lipoma-Mumbai--LM11 (58),MAP
+,Lipoma Mumbai LM12 Feb 2026,LM12,,Lipoma-Mumbai-LM12,307,27,214657.00,,treatment+city+code-tail,110,Lipoma-Mumbai-LM10 (60) | Lipoma-Mumbai--LM10 (60) | Lipoma-Mumbai--LM11 (58),MAP
+,Lipoma Mumbai LM12 January 2026,LM12,,Lipoma-Mumbai-LM12,307,18,109461.00,,treatment+city+code-tail,110,Lipoma-Mumbai-LM10 (60) | Lipoma-Mumbai--LM10 (60) | Lipoma-Mumbai--LM11 (58),MAP
+,Lipoma Mumbai LM12 March 2026,LM12,,Lipoma-Mumbai-LM12,307,28,150039.00,,treatment+city+code-tail,110,Lipoma-Mumbai-LM10 (60) | Lipoma-Mumbai--LM10 (60) | Lipoma-Mumbai--LM11 (58),MAP
+,Lipoma Pune Google April 2026,Lipoma P,google,Lipoma-Pune,67,24,242226.00,,treatment+city+code-substr+google,95,,MAP
+,Lipoma Pune Google Feb 2026,Lipoma P,google,Lipoma-Pune,67,24,75888.00,,treatment+city+code-substr+google,95,,MAP
+,Lipoma Pune Google January 2026,Lipoma P,google,Lipoma-Pune,67,22,54051.00,,treatment+city+code-substr+google,95,,MAP
+,Lipoma Pune Google March 2026,Lipoma P,google,Lipoma-Pune,67,28,255559.00,,treatment+city+code-substr+google,95,,MAP
+,Lipoma Pune LP11 Feb 2026,LP11,,Lipoma-Pune-LP11,57,3,21675.00,,treatment+city+code-tail,110,Lipoma-Pune-LP3 (60) | Lipoma-Pune (60) | Lipoma-Pune-LP5 (56),MAP
+,Lipoma Pune LP11 January 2026,LP11,,Lipoma-Pune-LP11,57,18,141290.00,,treatment+city+code-tail,110,Lipoma-Pune-LP3 (60) | Lipoma-Pune (60) | Lipoma-Pune-LP5 (56),MAP
+,Lipoma Pune LP11 March 2026,LP11,,Lipoma-Pune-LP11,57,0,0.00,,treatment+city+code-tail,110,Lipoma-Pune-LP3 (60) | Lipoma-Pune (60) | Lipoma-Pune-LP5 (56),MAP
+,Lipoma Pune LP3 & LP10 Feb 2026,LP3,,Lipoma-Pune-LP3,90,25,44294.00,,treatment+city+code-tail,110,Lipoma-Pune-LP11 (60) | Lipoma-Pune (60) | Lipoma-Pune-LP5 (56),MAP
+,Lipoma Pune LP3 & LP10 January 2026,LP3,,Lipoma-Pune-LP3,90,20,35692.00,,treatment+city+code-tail,110,Lipoma-Pune-LP11 (60) | Lipoma-Pune (60) | Lipoma-Pune-LP5 (56),MAP
+,Lipoma Pune LP3 April 2026,LP3,,Lipoma-Pune-LP3,90,28,104985.00,,treatment+city+code-tail,110,Lipoma-Pune-LP11 (60) | Lipoma-Pune (60) | Lipoma-Pune-LP5 (56),MAP
+,Lipoma Pune LP3 March 2026,LP3,,Lipoma-Pune-LP3,90,29,59757.00,,treatment+city+code-tail,110,Lipoma-Pune-LP11 (60) | Lipoma-Pune (60) | Lipoma-Pune-LP5 (56),MAP
+,Lipoma-HYD-LHYD1 Feb 2026,LHYD1,,Lipoma-HYD-LHYD1,64,26,44188.00,,treatment+city+code-tail,110,,MAP
+,Lipoma-HYD-LHYD1 January 2026,LHYD1,,Lipoma-HYD-LHYD1,64,23,38574.00,,treatment+city+code-tail,110,,MAP
+,Lipoma-HYD-LHYD1 March 2026,LHYD1,,Lipoma-HYD-LHYD1,64,21,28275.00,,treatment+city+code-tail,110,,MAP
+,Liposuction-Delhi-Lipo-D1- Feb 2026,Lipos-D1,,Liposuction-Delhi-Lipo-D1,108,25,74816.00,,treatment+city+code-tail,110,Liposuction-Delhi-Lipo-D2 (57),MAP
+,Liposuction-Delhi-Lipo-D1- January 2026,Lipos-D1,,Liposuction-Delhi-Lipo-D1,108,24,78655.00,,treatment+city+code-tail,110,Liposuction-Delhi-Lipo-D2 (57),MAP
+,Liposuction-Delhi-Lipo-D1- March 2026,Lipos-D1,,Liposuction-Delhi-Lipo-D1,108,5,6043.00,,treatment+city+code-tail,110,Liposuction-Delhi-Lipo-D2 (57),MAP
+,Liposuction-Delhi-Lipo-D2- Feb 2026,Lipos-D2,,Liposuction-Delhi-Lipo-D2,21,9,35002.00,,treatment+city+code-tail,107,Liposuction-Delhi-Lipo-D1 (60),MAP
+,Liposuction-Delhi-Lipo-D2- January 2026,Lipos-D2,,Liposuction-Delhi-Lipo-D2,21,9,29625.00,,treatment+city+code-tail,107,Liposuction-Delhi-Lipo-D1 (60),MAP
+,Liposuction-Delhi-Lipo-D2- March 2026,Lipos-D2,,Liposuction-Delhi-Lipo-D2,21,0,0.00,,treatment+city+code-tail,107,Liposuction-Delhi-Lipo-D1 (60),MAP
+,Liposuction-Pune-Lipo-P1- Feb 2026,Lipos-P1,,Liposuction-Pune-Lipo-P1,111,25,76357.00,,treatment+city+code-tail,110,,MAP
+,Liposuction-Pune-Lipo-P1- January 2026,Lipos-P1,,Liposuction-Pune-Lipo-P1,111,17,67727.00,,treatment+city+code-tail,110,,MAP
+,Liposuction-Pune-Lipo-P1- March 2026,Lipos-P1,,Liposuction-Pune-Lipo-P1,111,5,7252.00,,treatment+city+code-tail,110,,MAP
+YES_FIX,Piles-Delhi FB January 2026,PD1 & PD2,facebook,,0,19,31303.00,,distinctive-code-no-db-match,0,,SKIP
+,Piles-Delhi Google Feb 2026,PD-GGL,google,Piles-Delh-PD-GGL-Google,17,14,29451.00,,treatment+city+code-substr+google,92,,MAP
+,Piles-Delhi Google January 2026,PD GL,google,Piles-Delh-PD-GGL-Google,17,18,38567.00,,treatment+city+google,72,,MAP
+,Piles-Delhi Google March 2026,PD-GGL,google,Piles-Delh-PD-GGL-Google,17,15,37991.00,,treatment+city+code-substr+google,92,,MAP
+,"Piles-Delhi-PD1, Facebook",PD1,facebook,Piles-Delhi-PD1,1,1,712.00,,treatment+city+code-tail+fb,115,,MAP
+,Piles-Mumbai FB January 2026,PM1 & PM1.1,facebook,Piles-Mumbai-PM1,1,22,67083.00,,treatment+city+code-tail+fb,115,,MAP
+,Piles-Mumbai Google Feb 2026,PM-GGL,google,Piles-Mumbai-PM-GGL-Google,20,14,38977.00,,treatment+city+code-substr+google,92,,MAP
+,Piles-Mumbai Google March 2026,PM-GGL,google,Piles-Mumbai-PM-GGL-Google,20,7,15129.00,,treatment+city+code-substr+google,92,,MAP
+,Piles-Pune FB January 2026,PP1 & PP2,facebook,Piles-Pune-PP2,1,23,37458.00,,treatment+city+code-tail+fb,115,,MAP
+,Piles-Pune Google Feb 2026,PP-GGL,google,Piles-Pune-PP-GGL-Google,16,15,41656.00,,treatment+city+code-substr+google,92,,MAP
+,Piles-Pune Google March 2026,PP-GGL,google,Piles-Pune-PP-GGL-Google,16,5,12913.00,,treatment+city+code-substr+google,92,,MAP
+,Rhinoplasty-Mumbai-RM2 April 2026,RM2,,Rhinoplasty-Mumbai-RM2,162,23,84824.00,,treatment+city+code-tail,110,Rhinoplasty-Mumbai--RM2 (106),MAP
+,Rhinoplasty-Mumbai-RM2 Feb 2026,RM2,,Rhinoplasty-Mumbai-RM2,162,25,67415.00,,treatment+city+code-tail,110,Rhinoplasty-Mumbai--RM2 (106),MAP
+,Rhinoplasty-Mumbai-RM2 January 2026,RM2,,Rhinoplasty-Mumbai-RM2,162,6,11522.00,,treatment+city+code-tail,110,Rhinoplasty-Mumbai--RM2 (106),MAP
+,Rhinoplasty-Mumbai-RM2 March 2026,RM2,,Rhinoplasty-Mumbai-RM2,162,29,108988.00,,treatment+city+code-tail,110,Rhinoplasty-Mumbai--RM2 (106),MAP
+info,VVM-1& Cataract-Delhi-CL-D1(MUL ),VVM1,,,0,0,0.00,,distinctive-code-no-db-match,0,,SKIP
+YES_FIX,Varicose-Mumbai-Google April 2026,VVM Google,google,,0,15,59563.00,,no-match,0,,SKIP
+YES_FIX,"Varicose-Pune-VVD-1, Facebook",VVD1,facebook,,0,23,26310.00,,distinctive-code-no-db-match,0,,SKIP
+YES_FIX,"Varicose-Pune-VVM-1, Facebook",VVM1,facebook,,0,6,4853.00,,distinctive-code-no-db-match,0,,SKIP
+,"Varicose-Pune-VVP-1, Facebook",VVP1,facebook,Varicose-Pune-VVP-1,1,20,32124.00,,treatment+city+code-tail+fb,115,,MAP
+,lipma Pune LP5 FB January 2026,LP5,facebook,Lipoma-Pune-LP5,8,12,28303.00,,treatment+city+code-tail+fb,116,Lipoma-Pune-LP11 (70) | Lipoma-Pune-LP3 (70) | Lipoma-Pune-LP10 (65),MAP
+,lipoma-Delhi FB Feb 2026,LD2,facebook,Lipoma-Delhi- LD2,65,26,50537.00,,treatment+city+code-tail+fb,120,Lipoma-Delhi--LD2 (115),MAP
+,lipoma-Delhi FB January 2026,LD2,facebook,Lipoma-Delhi- LD2,65,20,34504.00,,treatment+city+code-tail+fb,120,Lipoma-Delhi--LD2 (115),MAP
+,lipoma-Delhi FB March 2026,LD2,facebook,Lipoma-Delhi- LD2,65,0,0.00,,treatment+city+code-tail+fb,120,Lipoma-Delhi--LD2 (115),MAP

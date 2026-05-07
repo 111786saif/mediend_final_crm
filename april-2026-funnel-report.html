@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mediend CRM — April 2026 Patient Flow Analysis</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #161a22;
+    --panel-2: #1c2230;
+    --border: #232a3a;
+    --text: #e6e9ef;
+    --muted: #8a93a6;
+    --accent: #4f8cff;
+    --good: #3ddc97;
+    --warn: #f5a623;
+    --bad: #ff5c7c;
+    --neutral: #9aa3b2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font: 14px/1.55 -apple-system, "Segoe UI", system-ui, sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 28px 80px; }
+  h1 { font-size: 28px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h2 { font-size: 20px; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); letter-spacing: -0.01em; }
+  h3 { font-size: 15px; margin: 24px 0 10px; color: var(--text); }
+  p, li { color: var(--text); }
+  .lede { color: var(--muted); margin: 0 0 8px; font-size: 14px; }
+  .meta { color: var(--muted); font-size: 12px; margin-bottom: 28px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 0 8px; }
+  .kpi { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .kpi .value { font-size: 24px; font-weight: 600; margin-top: 4px; letter-spacing: -0.01em; }
+  .kpi .sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .kpi.good .value { color: var(--good); }
+  .kpi.warn .value { color: var(--warn); }
+  .kpi.bad .value { color: var(--bad); }
+
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin: 16px 0; }
+  .callout { border-left: 3px solid var(--warn); background: var(--panel-2); padding: 14px 16px; border-radius: 6px; margin: 16px 0; }
+  .callout.bad { border-left-color: var(--bad); }
+  .callout.good { border-left-color: var(--good); }
+  .callout strong { color: var(--text); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .scroll { overflow-x: auto; }
+
+  .funnel { margin: 8px 0 18px; }
+  .funnel-row { display: grid; grid-template-columns: 180px 1fr 100px 110px; align-items: center; gap: 14px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .funnel-row:last-child { border-bottom: none; }
+  .funnel-bar-wrap { background: var(--panel-2); height: 24px; border-radius: 4px; overflow: hidden; }
+  .funnel-bar { height: 100%; background: linear-gradient(90deg, var(--accent), #6aa1ff); display: flex; align-items: center; padding: 0 10px; font-size: 12px; color: #fff; white-space: nowrap; }
+  .funnel-bar.good { background: linear-gradient(90deg, var(--good), #6ee7b1); color: #0a2418; }
+  .funnel-bar.warn { background: linear-gradient(90deg, var(--warn), #ffc35b); color: #2a1a00; }
+  .funnel-bar.bad { background: linear-gradient(90deg, var(--bad), #ff8aa3); color: #2a000d; }
+  .funnel-name { color: var(--text); font-size: 13px; }
+  .funnel-pct { color: var(--muted); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+  .funnel-drop { font-size: 11px; text-align: right; }
+  .drop-bad { color: var(--bad); }
+  .drop-warn { color: var(--warn); }
+  .drop-ok { color: var(--good); }
+  .drop-zero { color: var(--muted); }
+
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; line-height: 1.6; }
+  .pill.completed { background: rgba(61,220,151,0.15); color: var(--good); }
+  .pill.lost { background: rgba(255,92,124,0.15); color: var(--bad); }
+  .pill.sales { background: rgba(245,166,35,0.15); color: var(--warn); }
+  .pill.insurance { background: rgba(79,140,255,0.15); color: var(--accent); }
+  .pill.muted { background: rgba(154,163,178,0.15); color: var(--neutral); }
+
+  code, pre { font: 12.5px/1.6 "JetBrains Mono", "SF Mono", Consolas, monospace; }
+  pre { background: #0a0c11; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; color: #c8d3e6; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  .legend { display: flex; gap: 16px; margin: 8px 0 4px; font-size: 11px; color: var(--muted); }
+  .legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .legend .l-good::before { background: var(--good); }
+  .legend .l-warn::before { background: var(--warn); }
+  .legend .l-bad::before { background: var(--bad); }
+  .legend .l-neutral::before { background: var(--accent); }
+
+  .footnote { color: var(--muted); font-size: 11.5px; margin-top: 6px; }
+  ul.tight { margin: 6px 0; padding-left: 20px; }
+  ul.tight li { margin: 3px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>April 2026 — Patient Flow Analysis</h1>
+<p class="lede">Where patients are getting stuck, where the funnel is leaking, and what the data actually means once CRM hygiene is accounted for.</p>
+<div class="meta">Cohort: 3,402 leads received between 1 Apr 2026 and 30 Apr 2026 (by <code>leadEntryDate</code>). Snapshot taken 7 May 2026.</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="label">April leads received</div><div class="value">3,402</div><div class="sub">100% baseline</div></div>
+  <div class="kpi bad"><div class="label">Marked LOST</div><div class="value">2,195</div><div class="sub">64.5% of all leads</div></div>
+  <div class="kpi good"><div class="label">Marked COMPLETED</div><div class="value">64</div><div class="sub">1.9% conversion</div></div>
+  <div class="kpi warn"><div class="label">Still open (open + active)</div><div class="value">1,143</div><div class="sub">33.6% — most untouched</div></div>
+</div>
+
+<h2>1. The headline finding</h2>
+<div class="callout bad">
+  <strong>97.1% of April leads never moved past <code>NEW_LEAD</code> in the CRM.</strong>
+  Of the 1,143 leads still open, 1,092 are sitting in <code>NEW_LEAD</code>, and <strong>not a single one of those has any entry in <code>CaseStageHistory</code></strong>. They were never touched — never qualified, never lost, just sitting. Median age: 20.9 days. 929 have been there >14 days.
+</div>
+<div class="callout">
+  <strong>Only 99 leads ever got KYP'd.</strong> That is the entire qualified funnel for April. Everything downstream — hospital suggestions, pre-auth, surgery — happens within those 99.
+</div>
+<div class="callout good">
+  <strong>The "71% drop after pre-auth approval" is mostly a CRM data-hygiene problem, not a real leak.</strong>
+  Of 32 patients with <code>PREAUTH_COMPLETE</code> who never had an admission stage logged, <strong>22 are already marked COMPLETED at the pipeline level</strong> — they had surgery, got paid out, but the case stage was never advanced. Real post-approval drop-off is closer to ~11%, not 71%.
+</div>
+
+<h2>2. The April funnel</h2>
+<p class="lede">Counts of leads that <em>ever</em> reached each case stage (via <code>CaseStageHistory.toStage</code>). Drop column = % retention vs the previous step.</p>
+
+<div class="card">
+<div class="legend"><span class="l-neutral">Baseline</span><span class="l-good">≥80% retention</span><span class="l-warn">50–80%</span><span class="l-bad">&lt;50% retention</span></div>
+<div class="funnel">
+  <div class="funnel-row">
+    <div class="funnel-name"><strong>Total April leads</strong></div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%">3,402</div></div>
+    <div class="funnel-pct">100.00%</div>
+    <div class="funnel-drop drop-zero">—</div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-name">KYP done</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar bad" style="width:2.91%">99</div></div>
+    <div class="funnel-pct">2.91%</div>
+    <div class="funnel-drop drop-bad">−97.09%</div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-name">Hospitals suggested</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar good" style="width:2.88%">98</div></div>
+    <div class="funnel-pct">2.88%</div>
+    <div class="funnel-drop drop-ok">−1.01% (vs KYP)</div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-name">Pre-auth raised</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar warn" style="width:1.50%">51</div></div>
+    <div class="funnel-pct">1.50%</div>
+    <div class="funnel-drop drop-bad">−47.96% (vs hosp suggested)</div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-name">Pre-auth complete</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar good" style="width:1.32%">45</div></div>
+    <div class="funnel-pct">1.32%</div>
+    <div class="funnel-drop drop-ok">−11.76% (vs PA raised)</div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-name">Admitted (CRM-recorded)</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar bad" style="width:0.38%">13</div></div>
+    <div class="funnel-pct">0.38%</div>
+    <div class="funnel-drop drop-bad">−71.11% (vs PA complete)</div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-name">Discharged</div>
+    <div class="funnel-bar-wrap"><div class="funnel-bar good" style="width:0.38%">13</div></div>
+    <div class="funnel-pct">0.38%</div>
+    <div class="funnel-drop drop-ok">0% (vs admitted)</div>
+  </div>
+</div>
+<p class="footnote">"Admitted" and "Discharged" are CRM-recorded values. The actual admission rate is materially higher — see Section 4.</p>
+</div>
+
+<h2>3. What we actually care about — life after KYP</h2>
+<p class="lede">99 leads got KYP'd. Here is where each ended up, and the post-KYP retention.</p>
+
+<div class="grid-3">
+  <div class="kpi"><div class="label">KYPs raised</div><div class="value">99</div></div>
+  <div class="kpi"><div class="label">Reached hospitals suggested</div><div class="value">98</div><div class="sub">99% of KYPs</div></div>
+  <div class="kpi warn"><div class="label">Reached pre-auth raised</div><div class="value">51</div><div class="sub">52% of KYPs — biggest post-KYP leak</div></div>
+</div>
+<div class="grid-3" style="margin-top: 12px;">
+  <div class="kpi good"><div class="label">Pre-auth approved</div><div class="value">45</div><div class="sub">88% of PA raised</div></div>
+  <div class="kpi"><div class="label">Surgery actually completed</div><div class="value">~35</div><div class="sub">22 marked COMPLETED + 13 admitted-stage entries (overlap likely)</div></div>
+  <div class="kpi bad"><div class="label">Lost after pre-auth approved</div><div class="value">5</div><div class="sub">11% real drop-off</div></div>
+</div>
+
+<h3>The post-KYP funnel, stage by stage</h3>
+<div class="card">
+<table>
+  <thead>
+    <tr>
+      <th>Stage reached</th>
+      <th class="num">Patients</th>
+      <th class="num">% of KYP'd (99)</th>
+      <th class="num">Drop from previous step</th>
+      <th>Verdict</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>KYP done</td><td class="num">99</td><td class="num">100.0%</td><td class="num">—</td><td class="pill muted">baseline</td></tr>
+    <tr><td>Hospitals suggested</td><td class="num">98</td><td class="num">99.0%</td><td class="num drop-ok">−1.0%</td><td class="pill completed">healthy</td></tr>
+    <tr><td>Pre-auth raised</td><td class="num">51</td><td class="num">51.5%</td><td class="num drop-bad">−48.0%</td><td class="pill lost">major leak</td></tr>
+    <tr><td>Pre-auth complete</td><td class="num">45</td><td class="num">45.5%</td><td class="num drop-ok">−11.8%</td><td class="pill completed">healthy</td></tr>
+    <tr><td>Admitted (CRM)</td><td class="num">13</td><td class="num">13.1%</td><td class="num drop-bad">−71.1%</td><td class="pill sales">CRM hygiene, not real</td></tr>
+    <tr><td>Admitted (real, est.)</td><td class="num">~35</td><td class="num">~35.4%</td><td class="num drop-warn">~−22%</td><td class="pill insurance">estimated from completions</td></tr>
+    <tr><td>Discharged (CRM)</td><td class="num">13</td><td class="num">13.1%</td><td class="num drop-ok">0%</td><td class="pill sales">stage not updated post-surgery</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout bad">
+  <strong>The single biggest fixable leak: hospitals suggested → pre-auth raised.</strong>
+  47 of 98 patients who received hospital suggestions never had a pre-auth filed for them. Either the patient didn't like the options, the documents never came in, or the BD/Insurance handoff broke. That's nearly half the qualified pipeline lost at one step.
+</div>
+
+<h3>Where each post-KYP patient ended up — by current case stage</h3>
+<div class="card">
+<table>
+  <thead>
+    <tr>
+      <th>Current case stage</th>
+      <th>Pipeline status</th>
+      <th class="num">Patients</th>
+      <th>What this means</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>HOSPITALS_SUGGESTED</td><td><span class="pill sales">SALES (open)</span></td><td class="num">47</td><td>Got hospital options, no pre-auth raised yet — actively stuck</td></tr>
+    <tr><td>PREAUTH_RAISED</td><td><span class="pill sales">SALES (open)</span></td><td class="num">6</td><td>Pre-auth filed, awaiting TPA decision</td></tr>
+    <tr><td>PREAUTH_COMPLETE</td><td><span class="pill completed">COMPLETED</span></td><td class="num">22</td><td>Surgery happened — case stage was never updated past PA approval</td></tr>
+    <tr><td>PREAUTH_COMPLETE</td><td><span class="pill sales">SALES (open)</span></td><td class="num">5</td><td>PA approved, awaiting surgery / scheduling</td></tr>
+    <tr><td>PREAUTH_COMPLETE</td><td><span class="pill lost">LOST</span></td><td class="num">5</td><td><strong>Real drop-off after approval</strong> — patients who had insurance approval and walked away</td></tr>
+    <tr><td>INITIATED / ADMITTED</td><td>—</td><td class="num">4</td><td>Currently in surgery / hospital</td></tr>
+    <tr><td>DISCHARGED / IPD_DONE</td><td>—</td><td class="num">9</td><td>Surgery completed, recorded in CRM</td></tr>
+    <tr><td>CASH_* track</td><td>—</td><td class="num">~11</td><td>Cash flow patients spread across CASH_IPD_* stages</td></tr>
+  </tbody>
+</table>
+<p class="footnote">Counts cross-referenced from the open-patients query (1,143 still-open snapshot) and the 32-patient post-PA-complete list. Some overlap is possible where stage was advanced but pipeline status not updated.</p>
+</div>
+
+<h2>4. The 32 patients stuck at <code>PREAUTH_COMPLETE</code></h2>
+<p class="lede">Of 45 leads with approved pre-auths, 32 never had a CRM stage advance to <code>INITIATED</code>/<code>ADMITTED</code>. Breakdown of what's actually going on:</p>
+
+<div class="grid-3">
+  <div class="kpi good"><div class="label">Already COMPLETED at pipeline level</div><div class="value">22</div><div class="sub">surgery happened, stage just not updated</div></div>
+  <div class="kpi warn"><div class="label">Still SALES (open / scheduled)</div><div class="value">5</div><div class="sub">surgery pending or in queue</div></div>
+  <div class="kpi bad"><div class="label">LOST after approval</div><div class="value">5</div><div class="sub">real drop-off — patients walked away with approved insurance</div></div>
+</div>
+
+<h3>The 5 LOST after approval — recoverable revenue?</h3>
+<div class="card scroll">
+<table>
+  <thead>
+    <tr><th>Lead Ref</th><th>Patient</th><th>Treatment</th><th>BD</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>240074</td><td>Dhananjay D Gaikwad</td><td>Circumcision</td><td>Divyanshu Sharma</td><td><span class="pill lost">LOST</span></td></tr>
+    <tr><td>241594</td><td>Vikash Kumar</td><td>Rhinoplasty</td><td>Mani Prakash</td><td><span class="pill lost">LOST</span></td></tr>
+    <tr><td>241765</td><td>Umesh Verma</td><td>Circumcision</td><td>Lalit Kumar</td><td><span class="pill lost">LOST</span></td></tr>
+    <tr><td>237713</td><td>Ravi Bhartiya</td><td>Circumcision</td><td>Divyanshu Sharma</td><td><span class="pill lost">LOST</span></td></tr>
+    <tr><td>239591</td><td>Vaibhav Karpe</td><td>Lipoma</td><td>ASHWANI</td><td><span class="pill lost">LOST</span></td></tr>
+  </tbody>
+</table>
+<p class="footnote">Pulling lostReason for these 5 would help identify whether the loss was patient-side (cold feet, found alternative) or process-side (we dropped follow-up). See Appendix A.</p>
+</div>
+
+<h3>The 5 still-SALES with approved pre-auth — needs follow-up</h3>
+<div class="card scroll">
+<table>
+  <thead><tr><th>Lead Ref</th><th>Patient</th><th>Treatment</th><th>BD</th></tr></thead>
+  <tbody>
+    <tr><td>239520</td><td>veer vikram</td><td>Circumcision</td><td>Arsh Saifi</td></tr>
+    <tr><td>239974</td><td>Vijay Takawane</td><td>Circumcision</td><td>Akshat Bajpai</td></tr>
+    <tr><td>241749</td><td>Kishore</td><td>Circumcision</td><td>MAYANK</td></tr>
+    <tr><td>240652</td><td>Mayur Chheda</td><td>Circumcision</td><td>Lalit Kumar</td></tr>
+    <tr><td>241329</td><td>Sagar</td><td>Lipoma</td><td>Sumit Pal</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>The 22 already-COMPLETED with stuck stage — CRM hygiene</h3>
+<div class="card scroll">
+<table>
+  <thead><tr><th>Lead Ref</th><th>Patient</th><th>Treatment</th><th>BD</th><th>Surgery date</th></tr></thead>
+  <tbody>
+    <tr><td>237691</td><td>Kiran</td><td>Gynecomastia</td><td>Neha Raj</td><td>2026-04-10</td></tr>
+    <tr><td>237498</td><td>Priyanka Meher</td><td>Lipoma</td><td>PRASHANT SINGH</td><td>2026-04-11</td></tr>
+    <tr><td>237960</td><td>Girish Laddha</td><td>Circumcision</td><td>Lalit Kumar</td><td>2026-04-13</td></tr>
+    <tr><td>238860</td><td>panchshila lokhande</td><td>Rhinoplasty</td><td>PRASHANT SINGH</td><td>2026-04-16</td></tr>
+    <tr><td>238953</td><td>Vikas Kishan Grover</td><td>Circumcision</td><td>Arsh Saifi</td><td>2026-04-18</td></tr>
+    <tr><td>241191</td><td>Santosh Prakash Kari</td><td>Circumcision</td><td>Amir Saifi</td><td>2026-04-23</td></tr>
+    <tr><td>239179</td><td>prakash kadganchikar</td><td>Circumcision</td><td>Arsh Saifi</td><td>2026-04-25</td></tr>
+    <tr><td>239133</td><td>Shekhar Rawal</td><td>Lipoma</td><td>Rajat Srivastav</td><td>—</td></tr>
+    <tr><td>240028</td><td>Shiv Malviya</td><td>Tummy Tuck</td><td>Ayan Siddhiqui</td><td>—</td></tr>
+    <tr><td>241534</td><td>Vinayak Ambadas Gudur</td><td>Gynecomastia</td><td>Ayan Siddhiqui</td><td>—</td></tr>
+    <tr><td>239802</td><td>Akshay</td><td>Lipoma</td><td>Rajat Srivastav</td><td>—</td></tr>
+    <tr><td>242277</td><td>Arun Anap</td><td>Lipoma</td><td>Adarsh Upadhyay</td><td>—</td></tr>
+    <tr><td>238999</td><td>Nitin Shinde</td><td>Lipoma</td><td>Alakh Narayan Tiwari</td><td>—</td></tr>
+    <tr><td>239840</td><td>Girish Suvarna</td><td>Lipoma</td><td>Rajat Srivastav</td><td>—</td></tr>
+    <tr><td>237504</td><td>ROSHAN GAWDE</td><td>Lipoma</td><td>Rajat Srivastav</td><td>—</td></tr>
+    <tr><td>240296</td><td>Gautam S</td><td>Lipoma</td><td>Sumit Pal</td><td>—</td></tr>
+    <tr><td>238376</td><td>Bharat</td><td>Circumcision</td><td>Ayan Siddhiqui</td><td>—</td></tr>
+    <tr><td>238319</td><td>Nitin Ghadi</td><td>Lipoma</td><td>Sumit Pal</td><td>—</td></tr>
+    <tr><td>237348</td><td>Suraj Chame (Mohit Refferal)</td><td>Chest wall lump</td><td>Rajat Srivastav</td><td>—</td></tr>
+    <tr><td>237701</td><td>vijay</td><td>Gynecomastia</td><td>Sumit Pal</td><td>—</td></tr>
+    <tr><td>241505</td><td>Nilesh Jadhav</td><td>Lipoma</td><td>Mani Prakash</td><td>—</td></tr>
+    <tr><td>237592</td><td>Priyam</td><td>Gynecomastia</td><td>Sumit Pal</td><td>—</td></tr>
+  </tbody>
+</table>
+<p class="footnote">These 22 patients all have <code>pipelineStage = COMPLETED</code> but their <code>caseStage</code> is still <code>PREAUTH_COMPLETE</code>. Backfilling the missing stage transitions would correct the funnel.</p>
+</div>
+
+<h2>5. BD performance</h2>
+<p class="lede">Per-BD breakdown of April leads: how many were assigned, how many were touched in the CRM at all, how many got KYP'd, and how many got admitted.</p>
+
+<div class="callout">
+  <strong>Caveat on inactive BDs.</strong> The "0% touched" group at the bottom contains several BD accounts that are inactive (former employees, dormant accounts) but still appearing in lead assignment. The real concern is the <em>active</em> BDs in this list — and the high-volume BDs whose touch rate is near zero.
+</div>
+
+<h3>High-volume BDs — these are where the real bottleneck lives</h3>
+<div class="card scroll">
+<table>
+  <thead>
+    <tr>
+      <th>BD</th>
+      <th class="num">Leads received</th>
+      <th class="num">Touched</th>
+      <th class="num">% Touched</th>
+      <th class="num">KYP done</th>
+      <th class="num">Admitted</th>
+      <th>Verdict</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Khushi Singh</td><td class="num">270</td><td class="num">4</td><td class="num">1.5%</td><td class="num">3</td><td class="num">0</td><td><span class="pill lost">very low engagement on huge volume</span></td></tr>
+    <tr><td>Divyanshu Sharma</td><td class="num">238</td><td class="num">9</td><td class="num">3.8%</td><td class="num">9</td><td class="num">4</td><td><span class="pill sales">low touch but admission rate good</span></td></tr>
+    <tr><td>Pankaj Pal</td><td class="num">228</td><td class="num">2</td><td class="num">0.9%</td><td class="num">0</td><td class="num">0</td><td><span class="pill lost">zero qualified — flag for review</span></td></tr>
+    <tr><td>NAMAN KATIYAR</td><td class="num">214</td><td class="num">2</td><td class="num">0.9%</td><td class="num">2</td><td class="num">0</td><td><span class="pill lost">huge volume, near-zero touch</span></td></tr>
+    <tr><td>Lalit Kumar</td><td class="num">179</td><td class="num">5</td><td class="num">2.8%</td><td class="num">5</td><td class="num">0</td><td><span class="pill sales">below average</span></td></tr>
+    <tr><td>Arsh Saifi</td><td class="num">173</td><td class="num">7</td><td class="num">4.0%</td><td class="num">7</td><td class="num">1</td><td><span class="pill sales">below average</span></td></tr>
+    <tr><td>Akash Pandey</td><td class="num">167</td><td class="num">3</td><td class="num">1.8%</td><td class="num">3</td><td class="num">0</td><td><span class="pill lost">low engagement</span></td></tr>
+    <tr><td>Mani Prakash</td><td class="num">158</td><td class="num">5</td><td class="num">3.2%</td><td class="num">5</td><td class="num">0</td><td><span class="pill sales">below average</span></td></tr>
+    <tr><td>MAYANK</td><td class="num">152</td><td class="num">5</td><td class="num">3.3%</td><td class="num">5</td><td class="num">0</td><td><span class="pill sales">below average</span></td></tr>
+    <tr><td>ASHWANI</td><td class="num">147</td><td class="num">9</td><td class="num">6.1%</td><td class="num">9</td><td class="num">0</td><td><span class="pill insurance">decent engagement, no admissions</span></td></tr>
+    <tr><td>Rajat Srivastav</td><td class="num">146</td><td class="num">10</td><td class="num">6.8%</td><td class="num">10</td><td class="num">1</td><td><span class="pill insurance">decent engagement</span></td></tr>
+    <tr><td>Kaushal Kumar Pandey</td><td class="num">144</td><td class="num">6</td><td class="num">4.2%</td><td class="num">5</td><td class="num">2</td><td><span class="pill insurance">decent</span></td></tr>
+    <tr><td>Adarsh Upadhyay</td><td class="num">124</td><td class="num">1</td><td class="num">0.8%</td><td class="num">1</td><td class="num">0</td><td><span class="pill lost">huge volume, basically nothing done</span></td></tr>
+    <tr><td>Sumit Pal</td><td class="num">117</td><td class="num">7</td><td class="num">6.0%</td><td class="num">7</td><td class="num">0</td><td><span class="pill insurance">decent engagement</span></td></tr>
+    <tr><td>PRASHANT SINGH</td><td class="num">108</td><td class="num">3</td><td class="num">2.8%</td><td class="num">3</td><td class="num">0</td><td><span class="pill sales">below average</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Top performers by engagement %</h3>
+<div class="card scroll">
+<table>
+  <thead>
+    <tr>
+      <th>BD</th>
+      <th class="num">Leads</th>
+      <th class="num">Touched</th>
+      <th class="num">% Touched</th>
+      <th class="num">KYP done</th>
+      <th class="num">Admitted</th>
+      <th class="num">Lead → admission rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Ayan Siddhiqui</strong></td><td class="num">14</td><td class="num">6</td><td class="num">42.9%</td><td class="num">6</td><td class="num">0</td><td class="num">0%</td></tr>
+    <tr><td><strong>Harsh Kumar</strong></td><td class="num">32</td><td class="num">9</td><td class="num">28.1%</td><td class="num">8</td><td class="num">4</td><td class="num"><strong style="color: var(--good)">12.5%</strong></td></tr>
+    <tr><td>Neha Raj</td><td class="num">11</td><td class="num">1</td><td class="num">9.1%</td><td class="num">1</td><td class="num">0</td><td class="num">0%</td></tr>
+    <tr><td>Alakh Narayan Tiwari</td><td class="num">50</td><td class="num">4</td><td class="num">8.0%</td><td class="num">4</td><td class="num">0</td><td class="num">0%</td></tr>
+    <tr><td>Rajat Srivastav</td><td class="num">146</td><td class="num">10</td><td class="num">6.8%</td><td class="num">10</td><td class="num">1</td><td class="num">0.7%</td></tr>
+    <tr><td>ASHWANI</td><td class="num">147</td><td class="num">9</td><td class="num">6.1%</td><td class="num">9</td><td class="num">0</td><td class="num">0%</td></tr>
+    <tr><td>Sumit Pal</td><td class="num">117</td><td class="num">7</td><td class="num">6.0%</td><td class="num">7</td><td class="num">0</td><td class="num">0%</td></tr>
+    <tr><td>Ujjwal Bhardwaj</td><td class="num">19</td><td class="num">1</td><td class="num">5.3%</td><td class="num">1</td><td class="num">0</td><td class="num">0%</td></tr>
+    <tr><td>Kaushal Kumar Pandey</td><td class="num">144</td><td class="num">6</td><td class="num">4.2%</td><td class="num">5</td><td class="num">2</td><td class="num">1.4%</td></tr>
+    <tr><td>Amir Saifi</td><td class="num">49</td><td class="num">2</td><td class="num">4.1%</td><td class="num">2</td><td class="num">0</td><td class="num">0%</td></tr>
+  </tbody>
+</table>
+<p class="footnote"><strong>Harsh Kumar is running ~30x the company average lead→admission rate (12.5% vs 0.4%).</strong> Worth understanding what he's doing differently and feeding more leads to him.</p>
+</div>
+
+<h3>Zero-touch BDs (likely inactive accounts — verify before action)</h3>
+<div class="card scroll">
+<table>
+  <thead><tr><th>BD account</th><th class="num">Leads received</th><th>Note</th></tr></thead>
+  <tbody>
+    <tr><td>vishal Kumar</td><td class="num">98</td><td>Verify if active employee</td></tr>
+    <tr><td>Neelu Singh</td><td class="num">90</td><td>Verify if active employee</td></tr>
+    <tr><td>Anishika Singh</td><td class="num">73</td><td>Verify if active employee</td></tr>
+    <tr><td>Ankit Yadav</td><td class="num">55</td><td>Verify if active employee</td></tr>
+    <tr><td>Ishant sharma</td><td class="num">46</td><td>Verify if active employee</td></tr>
+    <tr><td>Abhishek Kashyap</td><td class="num">41</td><td>Verify if active employee</td></tr>
+    <tr><td>BD-611</td><td class="num">41</td><td>Generic ID — likely inactive / placeholder account</td></tr>
+    <tr><td>Ahbab</td><td class="num">20</td><td>Verify if active employee</td></tr>
+    <tr><td>Amit Shukla</td><td class="num">18</td><td>Verify if active employee</td></tr>
+    <tr><td>Avnish Thakur</td><td class="num">8</td><td>Verify if active employee</td></tr>
+  </tbody>
+</table>
+<p class="footnote"><strong>490 leads were assigned to BDs who did not record a single CRM action all month.</strong> If any of these accounts are inactive, those leads need to be reassigned or the routing logic fixed to skip them. Either way, this many leads vanishing into dormant accounts is a routing-layer bug, not a BD-performance issue.</p>
+</div>
+
+<h2>6. The two priorities</h2>
+
+<div class="callout bad">
+<strong>Priority 1 — Fix the lead routing so it doesn't dump into inactive BD accounts.</strong>
+490 leads (14% of all April leads) went to BDs who never touched the CRM. Disable inactive BD accounts from the assignment pool, or filter <code>User.status = 'ACTIVE'</code> wherever leads are auto-assigned. This is a code/config fix, not a behavior fix.
+</div>
+
+<div class="callout bad">
+<strong>Priority 2 — Mandate stage updates through to discharge.</strong>
+The <code>PREAUTH_COMPLETE</code> stage is treated as the end of the journey by the team, but the schema has six stages after it (INITIATED, ADMITTED, DISCHARGED, IPD_DONE, PL_PENDING, OUTSTANDING). Without these, every funnel report past pre-auth will understate reality by 60–80%. Either enforce stage advancement at the UI layer, or auto-advance to DISCHARGED when <code>pipelineStage</code> moves to COMPLETED.
+</div>
+
+<div class="callout">
+<strong>Priority 3 — Investigate the hospitals-suggested → pre-auth-raised drop.</strong>
+This is the largest fixable funnel leak with active patients in it (47 leads). Sample 10 of these patients, find out from the BD what happened, and categorize: docs missing? patient went silent? hospital options rejected? This will tell you whether the fix is process (faster doc collection), product (better hospital matching), or training.
+</div>
+
+<h2>Appendix A — Drill-down queries</h2>
+
+<h3>Why did the 5 LOST-after-approval patients walk away?</h3>
+<pre>SELECT "leadRef", "patientName", "treatment", "lostReason", "lostAt"
+FROM "Lead"
+WHERE id IN (
+  SELECT id FROM "Lead"
+  WHERE "leadEntryDate" >= '2026-04-01' AND "leadEntryDate" < '2026-05-01'
+    AND "pipelineStage" = 'LOST'
+    AND "caseStage" = 'PREAUTH_COMPLETE'
+);</pre>
+
+<h3>The 47 patients stuck at hospitals-suggested with no pre-auth (Priority 3)</h3>
+<pre>WITH ever AS (SELECT DISTINCT "leadId", "toStage" FROM "CaseStageHistory")
+SELECT l."leadRef", l."patientName", l."treatment", l."hospitalName",
+       u.name AS bd, l."followUpDate",
+       EXTRACT(DAY FROM NOW() - h."changedAt")::int AS days_at_hosp_suggested
+FROM "Lead" l
+JOIN "User" u ON u.id = l."bdId"
+JOIN "CaseStageHistory" h ON h."leadId" = l.id AND h."toStage" = 'HOSPITALS_SUGGESTED'
+WHERE l."leadEntryDate" >= '2026-04-01' AND l."leadEntryDate" < '2026-05-01'
+  AND l."pipelineStage" NOT IN ('COMPLETED', 'LOST')
+  AND l."caseStage" = 'HOSPITALS_SUGGESTED'
+  AND NOT EXISTS (SELECT 1 FROM ever WHERE "leadId" = l.id AND "toStage" = 'PREAUTH_RAISED')
+ORDER BY days_at_hosp_suggested DESC;</pre>
+
+<h3>BD activity status — confirm which zero-touch BDs are actually inactive</h3>
+<pre>SELECT u.name, u.email, u.role, u."isActive", u."employeeStatus",
+       COUNT(l.id) AS april_leads
+FROM "User" u
+LEFT JOIN "Lead" l ON l."bdId" = u.id
+  AND l."leadEntryDate" >= '2026-04-01' AND l."leadEntryDate" < '2026-05-01'
+WHERE u.id IN (
+  SELECT DISTINCT "bdId" FROM "Lead"
+  WHERE "leadEntryDate" >= '2026-04-01' AND "leadEntryDate" < '2026-05-01'
+)
+GROUP BY u.id, u.name, u.email, u.role, u."isActive", u."employeeStatus"
+ORDER BY april_leads DESC;</pre>
+<p class="footnote">Adjust column names to match the actual <code>User</code> model — <code>isActive</code>/<code>employeeStatus</code> are best guesses.</p>
+
+<h3>Daily LOST-marking pattern — bulk dumping or genuine triage?</h3>
+<pre>SELECT DATE_TRUNC('day', "lostAt")::date AS lost_day,
+       COUNT(*) AS marked_lost,
+       COUNT(DISTINCT "bdId") AS distinct_bds
+FROM "Lead"
+WHERE "leadEntryDate" >= '2026-04-01' AND "leadEntryDate" < '2026-05-01'
+  AND "pipelineStage" = 'LOST' AND "lostAt" IS NOT NULL
+GROUP BY 1 ORDER BY 1;</pre>
+
+<h3>Backfill query — fix the 22 stuck-stage COMPLETED patients</h3>
+<pre>-- Sanity check first; do NOT run blindly
+SELECT id, "leadRef", "patientName", "pipelineStage", "caseStage"
+FROM "Lead"
+WHERE "leadEntryDate" >= '2026-04-01' AND "leadEntryDate" < '2026-05-01'
+  AND "pipelineStage" = 'COMPLETED'
+  AND "caseStage" IN ('PREAUTH_COMPLETE', 'HOSPITALS_SUGGESTED', 'PREAUTH_RAISED');
+
+-- Then, after review, advance to DISCHARGED:
+-- UPDATE "Lead" SET "caseStage" = 'DISCHARGED'
+-- WHERE id IN (...);
+-- And insert backfilled CaseStageHistory rows for audit trail.</pre>
+
+<h2>Appendix B — Method notes</h2>
+<ul class="tight">
+  <li><strong>Cohort definition:</strong> <code>Lead.leadEntryDate</code> in [2026-04-01, 2026-05-01). This is the canonical "when the lead was received" field per the Prisma schema.</li>
+  <li><strong>Funnel counts</strong> use <code>CaseStageHistory.toStage</code> with <code>DISTINCT leadId</code> — i.e. how many leads ever passed through that stage, not how many are currently in it.</li>
+  <li><strong>"Touched"</strong> = lead has at least one row in <code>CaseStageHistory</code>. Untouched leads are the ones whose case stage was never advanced from <code>NEW_LEAD</code>.</li>
+  <li><strong>Days in stage</strong> = NOW() − most recent <code>CaseStageHistory.changedAt</code>, falling back to <code>Lead.createdDate</code> when no history exists.</li>
+  <li><strong>"Real" admission estimate</strong> combines CRM-recorded admissions (13) with COMPLETED-but-stage-stuck cases (22). Some of the 13 may be inside the 22, so the upper bound of unique completions is ~35 and the lower bound is 22. Treat as a range, not a point estimate.</li>
+</ul>
+
+</div>
+</body>
+</html>

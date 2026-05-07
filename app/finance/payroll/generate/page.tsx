@@ -138,8 +138,9 @@ export default function GeneratePayrollPage() {
   const updateMutation = useMutation({
     mutationFn: (data: Record<string, unknown>) =>
       apiPatch<MonthlyPayroll>(`/api/finance/payroll/${existingPayroll!.id}`, data),
-    onSuccess: () => {
+    onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: ['finance-payroll'] })
+      queryClient.setQueryData(['payroll-record', employeeId, month, year], updated)
       toast.success('Payroll updated')
       if (createMore && nextId) {
         router.push(`/finance/payroll/generate?employeeId=${nextId}&month=${month}&year=${year}${queue.length ? `&queue=${queue.join(',')}` : ''}`)
