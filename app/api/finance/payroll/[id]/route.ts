@@ -7,6 +7,7 @@ import { calculateNetPay } from '@/lib/hrms/salary-calculation'
 import { z } from 'zod'
 
 const updatePayrollSchema = z.object({
+  payableDays: z.number().min(0).optional(),
   adjustedBasic: z.number().min(0).optional(),
   adjustedHra: z.number().min(0).optional(),
   adjustedMedical: z.number().min(0).optional(),
@@ -98,6 +99,7 @@ export async function PATCH(
     const payroll = await prisma.monthlyPayroll.update({
       where: { id },
       data: {
+        ...(data.payableDays != null && { payableDays: data.payableDays }),
         ...(data.adjustedBasic != null && { adjustedBasic: data.adjustedBasic }),
         ...(data.adjustedHra != null && { adjustedHra: data.adjustedHra }),
         ...(data.adjustedMedical != null && { adjustedMedical: data.adjustedMedical }),

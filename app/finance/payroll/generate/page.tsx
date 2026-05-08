@@ -116,12 +116,38 @@ export default function GeneratePayrollPage() {
   const currentIndex = queue.length && employeeId ? queue.indexOf(employeeId) + 1 : 0
 
   const generateMutation = useMutation({
-    mutationFn: () =>
-      apiPost<MonthlyPayroll>('/api/finance/payroll/generate', {
+    mutationFn: async () => {
+      const created = await apiPost<MonthlyPayroll>('/api/finance/payroll/generate', {
         employeeId: employee!.id,
         month,
         year,
-      }),
+      })
+      const overrideDays = formData.payableDays
+      const calculatedDays = attendanceSummary?.payableDays ?? created.payableDays ?? 0
+      if (
+        overrideDays > 0 &&
+        Math.abs(overrideDays - (created.payableDays ?? calculatedDays)) > 0.001
+      ) {
+        return await apiPatch<MonthlyPayroll>(`/api/finance/payroll/${created.id}`, {
+          payableDays: formData.payableDays,
+          adjustedBasic: formData.adjustedBasic,
+          adjustedHra: formData.adjustedHra,
+          adjustedMedical: formData.adjustedMedical,
+          adjustedConveyance: formData.adjustedConveyance,
+          adjustedOther: formData.adjustedOther,
+          adjustedSpecial: formData.adjustedSpecial,
+          adjustedGross: formData.adjustedGross,
+          epfEmployee: formData.epfEmployee,
+          applyEsic: formData.applyEsic,
+          esicAmount: formData.esicAmount,
+          applyTds: formData.applyTds,
+          tdsAmount: formData.tdsAmount,
+          insurance: formData.insurance,
+          lateFines: formData.lateFines,
+        })
+      }
+      return created
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['finance-payroll'] })
       queryClient.invalidateQueries({ queryKey: ['payroll-record', employeeId, month, year] })
@@ -197,6 +223,7 @@ export default function GeneratePayrollPage() {
   }
 
   const [formData, setFormData] = useState({
+    payableDays: 0,
     adjustedBasic: 0,
     adjustedHra: 0,
     adjustedMedical: 0,
@@ -264,6 +291,7 @@ export default function GeneratePayrollPage() {
   useEffect(() => {
     if (existingPayroll) {
       setFormData({
+        payableDays: existingPayroll.payableDays ?? 0,
         adjustedBasic: existingPayroll.adjustedBasic ?? 0,
         adjustedHra: existingPayroll.adjustedHra ?? 0,
         adjustedMedical: existingPayroll.adjustedMedical ?? 0,
@@ -287,6 +315,7 @@ export default function GeneratePayrollPage() {
   useEffect(() => {
     if (previewData && !existingPayroll) {
       setFormData({
+        payableDays: attendanceSummary?.payableDays ?? totalDaysInMonth,
         adjustedBasic: previewData.adjustedBasic ?? 0,
         adjustedHra: previewData.adjustedHra ?? 0,
         adjustedMedical: previewData.adjustedMedical ?? 0,
@@ -353,6 +382,51 @@ export default function GeneratePayrollPage() {
     if (scrollEl) scrollEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [employeeId])
 
+  const recomputeFromPayableDays = (rawDays: number) => {
+    if (!structure) {
+      setFormData((f) => ({ ...f, payableDays: Math.max(0, rawDays) }))
+      return
+    }
+    const totalDays = attendanceSummary?.totalDaysInMonth ?? totalDaysInMonth
+    const newDays = Math.max(0, Math.min(totalDays, rawDays))
+    const breakup = {
+      basicSalary: structure.basicSalary,
+      hraAllowance: structure.hraAllowance ?? structure.basicSalary * 0.5,
+      medicalAllowance: structure.medicalAllowance,
+      conveyanceAllowance: structure.conveyanceAllowance,
+      otherAllowance: structure.otherAllowance,
+      specialAllowance: structure.specialAllowance,
+      monthlyGross: structure.monthlyGross,
+    }
+    const proRated = calculateProRatedSalary(breakup, newDays, totalDays)
+    const applyPf = structure.applyPf ?? true
+    const epfEmployee = applyPf ? calculateEPF(proRated.adjustedBasic) : 0
+    setFormData((f) => {
+      const applyEsic = f.applyEsic
+      const esicAmount = applyEsic
+        ? calculateESIC(proRated.adjustedGross, structure.monthlyGross)
+        : 0
+      const applyTds = f.applyTds
+      const tdsAmount = applyTds
+        ? calculateTDSAmount(proRated.adjustedGross, structure.tdsMonthly, structure.tdsRatePercent ?? null)
+        : 0
+      return {
+        ...f,
+        payableDays: newDays,
+        adjustedBasic: proRated.adjustedBasic,
+        adjustedHra: proRated.adjustedHra,
+        adjustedMedical: proRated.adjustedMedical,
+        adjustedConveyance: proRated.adjustedConveyance,
+        adjustedOther: proRated.adjustedOther,
+        adjustedSpecial: proRated.adjustedSpecial,
+        adjustedGross: proRated.adjustedGross,
+        epfEmployee,
+        esicAmount,
+        tdsAmount,
+      }
+    })
+  }
+
   if (!employeeId) {
     return (
       <div className="space-y-6 p-6">
@@ -381,6 +455,7 @@ export default function GeneratePayrollPage() {
   const canEdit = true
   const displayData = hasPayroll
     ? {
+        payableDays: formData.payableDays || payroll!.payableDays || 0,
         adjustedBasic: formData.adjustedBasic || payroll!.adjustedBasic,
         adjustedHra: formData.adjustedHra ?? payroll!.adjustedHra ?? 0,
         adjustedMedical: formData.adjustedMedical ?? payroll!.adjustedMedical,
@@ -417,6 +492,7 @@ export default function GeneratePayrollPage() {
   const handleSave = () => {
     if (!payroll) return
     updateMutation.mutate({
+      payableDays: displayData.payableDays,
       adjustedBasic: displayData.adjustedBasic,
       adjustedHra: displayData.adjustedHra,
       adjustedMedical: displayData.adjustedMedical,
@@ -643,6 +719,70 @@ export default function GeneratePayrollPage() {
           ) : (
             <p className="text-muted-foreground text-sm">No attendance data for this month.</p>
           )}
+
+          <div className="mt-4 rounded-lg border border-dashed p-4 space-y-3">
+            <div className="flex items-end gap-3 flex-wrap">
+              <div className="flex-1 min-w-[160px]">
+                <Label>Payable days</Label>
+                <Input
+                  type="number"
+                  step="0.5"
+                  min={0}
+                  max={attendanceSummary?.totalDaysInMonth ?? totalDaysInMonth}
+                  value={formData.payableDays}
+                  onChange={(e) => recomputeFromPayableDays(Number(e.target.value))}
+                  disabled={!canEdit || !hasStructure}
+                  className="mt-1"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Calculated from attendance: {attendanceSummary?.payableDays ?? '—'}
+                {' · '}Total days: {attendanceSummary?.totalDaysInMonth ?? totalDaysInMonth}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => recomputeFromPayableDays(attendanceSummary?.totalDaysInMonth ?? totalDaysInMonth)}
+                disabled={!canEdit || !hasStructure}
+              >
+                Pay full month
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() =>
+                  recomputeFromPayableDays(
+                    (attendanceSummary?.totalDaysInMonth ?? totalDaysInMonth) -
+                      (attendanceSummary?.unpaidLeaves ?? 0)
+                  )
+                }
+                disabled={!canEdit || !hasStructure}
+              >
+                Pay all days except unpaid leaves
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() =>
+                  recomputeFromPayableDays(attendanceSummary?.payableDays ?? totalDaysInMonth)
+                }
+                disabled={!canEdit || !hasStructure || !attendanceSummary}
+              >
+                Reset to calculated
+              </Button>
+            </div>
+            {attendanceSummary != null &&
+              Math.abs(formData.payableDays - attendanceSummary.payableDays) > 0.001 && (
+                <Badge variant="outline" className="text-amber-700 border-amber-300">
+                  Overridden — earnings re-pro-rated
+                </Badge>
+              )}
+            <p className="text-xs text-muted-foreground">
+              Late fines are not affected by these presets.
+            </p>
+          </div>
         </CardContent>
       </Card>
 

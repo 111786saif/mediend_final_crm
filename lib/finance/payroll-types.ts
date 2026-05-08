@@ -48,6 +48,9 @@ export interface MonthlyPayroll {
   status: string
   adjustedGross: number
   netPayable: number
+  payableDays?: number
+  totalDaysInMonth?: number
+  unpaidLeaves?: number
   adjustedBasic?: number
   adjustedHra?: number
   adjustedMedical?: number

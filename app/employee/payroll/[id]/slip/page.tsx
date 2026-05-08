@@ -292,9 +292,8 @@ export default function PayslipPage() {
                   <>
                     {m.epfEmployee > 0 && <div className="ed-row"><span className="ed-label">EPF (Employee)</span><span className="ed-value">{formatCurrency(m.epfEmployee)}</span></div>}
                     {m.applyEsic && (m.esicAmount ?? 0) > 0 && <div className="ed-row"><span className="ed-label">ESIC</span><span className="ed-value">{formatCurrency(m.esicAmount)}</span></div>}
-                    {m.insurance > 0 && <div className="ed-row"><span className="ed-label">Miscellaneous</span><span className="ed-value">{formatCurrency(m.insurance)}</span></div>}
                     {m.tdsAmount > 0 && <div className="ed-row"><span className="ed-label">TDS</span><span className="ed-value">{formatCurrency(m.tdsAmount)}</span></div>}
-                    {(m.lateFines ?? 0) > 0 && <div className="ed-row"><span className="ed-label">Late Fines</span><span className="ed-value">{formatCurrency(m.lateFines!)}</span></div>}
+                    {(m.insurance + (m.lateFines ?? 0)) > 0 && <div className="ed-row"><span className="ed-label">Other Deductions</span><span className="ed-value">{formatCurrency(m.insurance + (m.lateFines ?? 0))}</span></div>}
                     <div className="ed-total deductions-total"><span>Total Deductions</span><span className="ed-value">{formatCurrency(m.totalDeductions)}</span></div>
                   </>
                 ) : (
