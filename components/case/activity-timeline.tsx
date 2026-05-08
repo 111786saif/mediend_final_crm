@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import { CaseStage } from '@/generated/prisma/enums'
 import { CheckCircle2, FileText, Clock, Activity, Receipt, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -299,12 +299,15 @@ export function ActivityTimeline({ history, className }: ActivityTimelineProps) 
                       'rounded-lg border-l-4 p-3 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900/50',
                       stageColor.border
                     )}>
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2">
                         <Badge className={cn('border-0', stageColor.bg, stageColor.text)}>
                           {getTimelineBadgeLabel(entry)}
                         </Badge>
+                        <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                          {format(new Date(entry.changedAt), 'MMM dd, yyyy · h:mm a')}
+                        </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {formatDistanceToNow(new Date(entry.changedAt), { addSuffix: true })}
+                          ({formatDistanceToNow(new Date(entry.changedAt), { addSuffix: true })})
                         </span>
                       </div>
                       <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{changedByName}</p>

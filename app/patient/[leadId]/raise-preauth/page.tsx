@@ -60,6 +60,8 @@ interface KYPSubmission {
   pan: string | null
   aadharFileUrl: string | null
   panFileUrl: string | null
+  aadharFiles: Array<{ name: string; url: string }> | null
+  panFiles: Array<{ name: string; url: string }> | null
   prescriptionFileUrl: string | null
   location: string | null
   area: string | null
@@ -358,6 +360,8 @@ export default function RaisePreAuthPage() {
                   pan: kypSubmission.pan,
                   aadharFileUrl: kypSubmission.aadharFileUrl,
                   panFileUrl: kypSubmission.panFileUrl,
+                  aadharFiles: kypSubmission.aadharFiles,
+                  panFiles: kypSubmission.panFiles,
                   prescriptionFileUrl: kypSubmission.prescriptionFileUrl,
                   location: kypSubmission.location,
                   area: kypSubmission.area,

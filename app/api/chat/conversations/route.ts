@@ -37,8 +37,23 @@ export async function GET(request: NextRequest) {
       where.caseStage = 'OUTSTANDING'
     }
 
-    // Get leads with their latest chat message
-    const leads = await prisma.lead.findMany({
+    // Find leads with chat activity, ordered by most recent message
+    const latestPerLead = await prisma.caseChatMessage.groupBy({
+      by: ['leadId'],
+      _max: { createdAt: true },
+      orderBy: { _max: { createdAt: 'desc' } },
+      take: 200,
+    })
+    const candidateLeadIds = latestPerLead.map((r) => r.leadId)
+
+    if (candidateLeadIds.length === 0) {
+      return successResponse([])
+    }
+
+    where.id = { in: candidateLeadIds }
+
+    // Get leads with their latest chat message (access-filtered)
+    const leadsRaw = await prisma.lead.findMany({
       where,
       include: {
         bd: {
@@ -75,11 +90,13 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: {
-        updatedDate: 'desc',
-      },
-      take: 100,
     })
+
+    // Preserve groupBy ordering (latest message first), cap to 100
+    const orderIndex = new Map(candidateLeadIds.map((id, i) => [id, i]))
+    const leads = leadsRaw
+      .sort((a, b) => (orderIndex.get(a.id) ?? 0) - (orderIndex.get(b.id) ?? 0))
+      .slice(0, 100)
 
     // Batch-fetch read receipts for the current user
     const leadIds = leads.map((l) => l.id)
@@ -118,6 +135,8 @@ export async function GET(request: NextRequest) {
             phoneNumber: canViewPhone ? lead.phoneNumber : (lead.phoneNumber ? maskPhoneNumber(lead.phoneNumber) : null),
             circle: lead.circle,
             caseStage: lead.caseStage,
+            createdDate: lead.createdDate,
+            bd: lead.bd ? { id: lead.bd.id, name: lead.bd.name } : null,
             latestMessage: latestMessage
               ? {
                   id: latestMessage.id,

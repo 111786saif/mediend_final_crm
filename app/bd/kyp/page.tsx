@@ -7,11 +7,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { KYPBasicForm } from '@/components/kyp/kyp-basic-form'
 import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
+import { getLatestActivityTime } from '@/lib/lead-activity'
 import { formatLeadAgeSex } from '@/lib/lead-display'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { CaseStage } from '@/generated/prisma/enums'
@@ -82,6 +84,8 @@ export default function CaseTrackerPage() {
   const [showForm, setShowForm] = useState(false)
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null)
   const [stageFilter, setStageFilter] = useState<StageFilterKey>('all')
+  const [monthFilter, setMonthFilter] = useState<string>('all')
+  const [bdFilter, setBdFilter] = useState<string>('all')
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebouncedValue(search, 250)
   const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
@@ -104,6 +108,28 @@ export default function CaseTrackerPage() {
   const { leads, isLoading } = useLeads(leadFilters)
 
   const activeLeads = useMemo(() => leads.filter(isActivePipelineLead), [leads])
+
+  const monthOptions = useMemo(() => {
+    const months = new Set<string>()
+    for (const l of activeLeads) {
+      if (!l.createdDate) continue
+      const d = new Date(l.createdDate as string)
+      if (Number.isNaN(d.getTime())) continue
+      months.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+    }
+    return Array.from(months).sort((a, b) => b.localeCompare(a))
+  }, [activeLeads])
+
+  const showBdFilter = user?.role === 'TEAM_LEAD'
+  const bdOptions = useMemo(() => {
+    if (!showBdFilter) return []
+    const map = new Map<string, string>()
+    for (const l of activeLeads) {
+      const bd = l.bd as { id?: string; name?: string } | undefined
+      if (bd?.id && bd.name) map.set(bd.id, bd.name)
+    }
+    return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]))
+  }, [activeLeads, showBdFilter])
 
   const counts = useMemo(() => {
     const base = {
@@ -148,6 +174,17 @@ export default function CaseTrackerPage() {
     } else if (stageFilter !== 'all') {
       rows = rows.filter((l) => l.caseStage === stageFilter)
     }
+    if (monthFilter !== 'all') {
+      rows = rows.filter((l) => {
+        if (!l.createdDate) return false
+        const d = new Date(l.createdDate as string)
+        if (Number.isNaN(d.getTime())) return false
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === monthFilter
+      })
+    }
+    if (bdFilter !== 'all') {
+      rows = rows.filter((l) => (l.bd as { id?: string } | undefined)?.id === bdFilter)
+    }
     if (search.trim() && !phoneParsed) {
       const q = search.toLowerCase()
       rows = rows.filter(
@@ -158,13 +195,9 @@ export default function CaseTrackerPage() {
           String(l.treatment ?? '').toLowerCase().includes(q)
       )
     }
-    rows = [...rows].sort((a, b) => {
-      const ta = a.updatedDate ? new Date(a.updatedDate as string).getTime() : a.createdDate ? new Date(a.createdDate as string).getTime() : 0
-      const tb = b.updatedDate ? new Date(b.updatedDate as string).getTime() : b.createdDate ? new Date(b.createdDate as string).getTime() : 0
-      return tb - ta
-    })
+    rows = [...rows].sort((a, b) => getLatestActivityTime(b) - getLatestActivityTime(a))
     return rows
-  }, [activeLeads, stageFilter, search, phoneParsed])
+  }, [activeLeads, stageFilter, monthFilter, bdFilter, search, phoneParsed])
 
   const pickerLeads = useMemo(() => leads.filter((l) => l.caseStage === CaseStage.NEW_LEAD), [leads])
 
@@ -247,14 +280,48 @@ export default function CaseTrackerPage() {
                     {filteredRows.length} shown Â· {activeLeads.length} in active pipeline
                   </CardDescription>
                 </div>
-                <div className="relative max-w-sm flex-1">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    className="pl-9"
-                    placeholder="Name, ref, hospital… — or full mobile (10 digits or 91…)"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
+                <div className="flex flex-wrap items-center gap-2">
+                  <Select value={monthFilter} onValueChange={setMonthFilter}>
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All months</SelectItem>
+                      {monthOptions.map((m) => {
+                        const [y, mo] = m.split('-')
+                        const label = format(new Date(Number(y), Number(mo) - 1, 1), 'MMM yyyy')
+                        return (
+                          <SelectItem key={m} value={m}>
+                            {label}
+                          </SelectItem>
+                        )
+                      })}
+                    </SelectContent>
+                  </Select>
+                  {showBdFilter && (
+                    <Select value={bdFilter} onValueChange={setBdFilter}>
+                      <SelectTrigger className="w-[160px]">
+                        <SelectValue placeholder="BD" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All BDs</SelectItem>
+                        {bdOptions.map(([id, name]) => (
+                          <SelectItem key={id} value={id}>
+                            {name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                  <div className="relative w-full max-w-sm flex-1 sm:w-64">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      className="pl-9"
+                      placeholder="Name, ref, hospital… — or full mobile (10 digits or 91…)"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
             </CardHeader>

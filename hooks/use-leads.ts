@@ -55,7 +55,23 @@ export interface Lead {
     name: string
     email: string
   }
-  kypSubmission?: { id: string; status?: string } | null
+  kypSubmission?: {
+    id: string
+    status?: string
+    updatedAt?: string | Date
+    preAuthData?: {
+      updatedAt?: string | Date
+      queries?: { updatedAt?: string | Date }[]
+    } | null
+  } | null
+  insuranceInitiateForm?: { updatedAt?: string | Date } | null
+  admissionRecord?: {
+    ipdStatusUpdatedAt?: string | Date | null
+    initiatedAt?: string | Date
+  } | null
+  dischargeSheet?: { updatedAt?: string | Date } | null
+  caseStageHistory?: { changedAt?: string | Date }[]
+  caseChatMessages?: { createdAt?: string | Date }[]
   insuranceCase?: {
     caseStatus: string
     approvalAmount?: number
@@ -78,6 +94,7 @@ export interface Lead {
     managerName?: string
     bdmName?: string
     closedAt?: string | null
+    updatedAt?: string | Date
   }
   [key: string]: unknown
 }

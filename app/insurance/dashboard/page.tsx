@@ -19,6 +19,7 @@ import {
 import { PreAuthStatus } from '@/generated/prisma/enums'
 import { useAuth } from '@/hooks/use-auth'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
+import { getLatestActivityTime } from '@/lib/lead-activity'
 import { canViewPhoneNumber } from '@/lib/case-permissions'
 import { getPhoneDisplay } from '@/lib/phone-utils'
 import { Input } from '@/components/ui/input'
@@ -51,6 +52,7 @@ interface LeadWithStage {
     id: string
     status: string
     submittedAt: string
+    updatedAt?: string
     preAuthData?: {
       id: string
       requestedHospitalName?: string | null
@@ -72,6 +74,8 @@ interface LeadWithStage {
       handledAt?: string | null
       approvalStatus?: PreAuthStatus
       rejectionReason?: string | null
+      updatedAt?: string
+      queries?: { updatedAt?: string }[]
       handledBy?: { id: string; name: string } | null
       preAuthRaisedBy?: { id: string; name: string } | null
     } | null
@@ -82,9 +86,13 @@ interface LeadWithStage {
     admittingHospital: string
     ipdStatus?: string | null
     ipdStatusUpdatedAt?: string | null
+    initiatedAt?: string
   } | null
-  dischargeSheet?: { id: string } | null
-  insuranceInitiateForm?: { id: string } | null
+  dischargeSheet?: { id: string; updatedAt?: string } | null
+  insuranceInitiateForm?: { id: string; updatedAt?: string } | null
+  plRecord?: { updatedAt?: string } | null
+  caseStageHistory?: { changedAt?: string }[]
+  caseChatMessages?: { createdAt?: string }[]
 }
 
 const IPD_MARK_OPTIONS = [
@@ -278,14 +286,12 @@ export default function InsuranceDashboardPage() {
       result = result.filter(l => l.admissionRecord?.ipdStatus === ipdMarkFilter)
     }
 
-    // Priority sort: tier 3 > tier 1 > tier 2 > rest, then by date
+    // Priority sort: tier 3 > tier 1 > tier 2 > rest, then by latest activity
     return result.sort((a, b) => {
       const tierA = getPriorityTier(a)
       const tierB = getPriorityTier(b)
       if (tierA !== tierB) return tierB - tierA // higher tier first
-      const dateA = new Date(a.updatedDate || a.createdDate).getTime()
-      const dateB = new Date(b.updatedDate || b.createdDate).getTime()
-      return dateB - dateA
+      return getLatestActivityTime(b) - getLatestActivityTime(a)
     })
   }, [leads, activeTab, searchQuery, ipdMarkFilter, preAuthFilter])
 
@@ -685,9 +691,10 @@ export default function InsuranceDashboardPage() {
                               )}
                             </TableCell>
                             <TableCell className="text-gray-600 dark:text-gray-400">
-                              {lead.updatedDate || lead.createdDate
-                                ? format(new Date(lead.updatedDate || lead.createdDate), 'MMM dd, HH:mm')
-                                : '-'}
+                              {(() => {
+                                const t = getLatestActivityTime(lead)
+                                return t ? format(new Date(t), 'MMM dd, HH:mm') : '-'
+                              })()}
                             </TableCell>
                             <TableCell>
                               <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>

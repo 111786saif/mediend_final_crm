@@ -152,8 +152,37 @@ export async function GET(request: NextRequest) {
           employee: { select: { team: { select: { id: true } } } },
         },
       },
-      kypSubmission: { select: { id: true, status: true } },
-      plRecord: { select: { bdmName: true } },
+      kypSubmission: {
+        select: {
+          id: true,
+          status: true,
+          updatedAt: true,
+          preAuthData: {
+            select: {
+              updatedAt: true,
+              queries: {
+                select: { updatedAt: true },
+                orderBy: { updatedAt: 'desc' },
+                take: 1,
+              },
+            },
+          },
+        },
+      },
+      insuranceInitiateForm: { select: { updatedAt: true } },
+      admissionRecord: { select: { ipdStatusUpdatedAt: true, initiatedAt: true } },
+      dischargeSheet: { select: { updatedAt: true } },
+      plRecord: { select: { bdmName: true, updatedAt: true } },
+      caseStageHistory: {
+        select: { changedAt: true },
+        orderBy: { changedAt: 'desc' },
+        take: 1,
+      },
+      caseChatMessages: {
+        select: { createdAt: true },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+      },
       ...(phoneLast10 ? { phoneNumber: true, alternateNumber: true } : {}),
     } satisfies Prisma.LeadSelect
 
@@ -188,6 +217,7 @@ export async function GET(request: NextRequest) {
           id: true,
           status: true,
           submittedAt: true,
+          updatedAt: true,
           preAuthData: {
             select: {
               id: true,
@@ -212,6 +242,12 @@ export async function GET(request: NextRequest) {
               approvalStatus: true,
               rejectionReason: true,
               suggestedHospitals: true,
+              updatedAt: true,
+              queries: {
+                select: { updatedAt: true },
+                orderBy: { updatedAt: 'desc' },
+                take: 1,
+              },
               handledBy: {
                 select: {
                   id: true,
@@ -235,12 +271,25 @@ export async function GET(request: NextRequest) {
           surgeryDate: true,
           admittingHospital: true,
           ipdStatus: true,
+          ipdStatusUpdatedAt: true,
+          initiatedAt: true,
         },
       },
       insuranceInitiateForm: {
         select: {
           id: true,
+          updatedAt: true,
         },
+      },
+      caseStageHistory: {
+        select: { changedAt: true },
+        orderBy: { changedAt: 'desc' },
+        take: 1,
+      },
+      caseChatMessages: {
+        select: { createdAt: true },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
       },
       dischargeSheet: {
         select: {
@@ -269,10 +318,11 @@ export async function GET(request: NextRequest) {
           totalAmount: true,
           billAmount: true,
           cashOrDedPaid: true,
+          updatedAt: true,
         },
       },
       plRecord: true,
-    }
+    } satisfies Prisma.LeadInclude
 
     const leads = isPipelineView
       ? await prisma.lead.findMany({

@@ -5,8 +5,12 @@ import { apiGet } from '@/lib/api-client'
 import { useRouter } from 'next/navigation'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, MessageSquare } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/hooks/use-auth'
+import { getCaseStageLabel } from '@/lib/case-stage-labels'
+import { useMemo, useState } from 'react'
 
 interface Conversation {
   leadId: string
@@ -15,6 +19,8 @@ interface Conversation {
   phoneNumber: string
   circle: string
   caseStage: string
+  createdDate: string | Date | null
+  bd: { id: string; name: string } | null
   latestMessage: {
     id: string
     content: string
@@ -37,6 +43,10 @@ interface ChatListProps {
 
 export function ChatList({ selectedLeadId }: ChatListProps) {
   const router = useRouter()
+  const { user } = useAuth()
+  const [monthFilter, setMonthFilter] = useState<string>('all')
+  const [stageFilter, setStageFilter] = useState<string>('all')
+  const [bdFilter, setBdFilter] = useState<string>('all')
 
   const { data: conversations, isLoading } = useQuery<Conversation[]>({
     queryKey: ['chat-conversations'],
@@ -57,25 +67,142 @@ export function ChatList({ selectedLeadId }: ChatListProps) {
     refetchInterval: 30000, // Refetch every 30 seconds
   })
 
+  const showBdFilter = user?.role === 'TEAM_LEAD'
+
+  const monthOptions = useMemo(() => {
+    if (!conversations) return []
+    const months = new Set<string>()
+    for (const c of conversations) {
+      if (!c.createdDate) continue
+      const d = new Date(c.createdDate)
+      if (Number.isNaN(d.getTime())) continue
+      months.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+    }
+    return Array.from(months).sort((a, b) => b.localeCompare(a))
+  }, [conversations])
+
+  const stageOptions = useMemo(() => {
+    if (!conversations) return []
+    const stages = new Set<string>()
+    for (const c of conversations) {
+      if (c.caseStage) stages.add(c.caseStage)
+    }
+    return Array.from(stages).sort()
+  }, [conversations])
+
+  const bdOptions = useMemo(() => {
+    if (!showBdFilter || !conversations) return []
+    const map = new Map<string, string>()
+    for (const c of conversations) {
+      if (c.bd?.id && c.bd.name) map.set(c.bd.id, c.bd.name)
+    }
+    return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]))
+  }, [conversations, showBdFilter])
+
+  const filteredConversations = useMemo(() => {
+    if (!conversations) return []
+    return conversations.filter((c) => {
+      if (monthFilter !== 'all') {
+        if (!c.createdDate) return false
+        const d = new Date(c.createdDate)
+        if (Number.isNaN(d.getTime())) return false
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+        if (key !== monthFilter) return false
+      }
+      if (stageFilter !== 'all' && c.caseStage !== stageFilter) return false
+      if (bdFilter !== 'all' && c.bd?.id !== bdFilter) return false
+      return true
+    })
+  }, [conversations, monthFilter, stageFilter, bdFilter])
+
+  const filterBar = (
+    <div className="flex flex-wrap items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-800">
+      <Select value={monthFilter} onValueChange={setMonthFilter}>
+        <SelectTrigger className="h-8 w-[120px] text-xs">
+          <SelectValue placeholder="Month" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All months</SelectItem>
+          {monthOptions.map((m) => {
+            const [y, mo] = m.split('-')
+            const label = format(new Date(Number(y), Number(mo) - 1, 1), 'MMM yyyy')
+            return (
+              <SelectItem key={m} value={m}>
+                {label}
+              </SelectItem>
+            )
+          })}
+        </SelectContent>
+      </Select>
+      <Select value={stageFilter} onValueChange={setStageFilter}>
+        <SelectTrigger className="h-8 w-[140px] text-xs">
+          <SelectValue placeholder="Stage" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All stages</SelectItem>
+          {stageOptions.map((s) => (
+            <SelectItem key={s} value={s}>
+              {getCaseStageLabel(s)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {showBdFilter && (
+        <Select value={bdFilter} onValueChange={setBdFilter}>
+          <SelectTrigger className="h-8 w-[140px] text-xs">
+            <SelectValue placeholder="BD" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All BDs</SelectItem>
+            {bdOptions.map(([id, name]) => (
+              <SelectItem key={id} value={id}>
+                {name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+    </div>
+  )
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      <div>
+        {filterBar}
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        </div>
       </div>
     )
   }
 
   if (!conversations || conversations.length === 0) {
     return (
-      <div className="p-4 text-center text-sm text-muted-foreground">
-        No conversations yet
+      <div>
+        {filterBar}
+        <div className="p-4 text-center text-sm text-muted-foreground">
+          No conversations yet
+        </div>
+      </div>
+    )
+  }
+
+  if (filteredConversations.length === 0) {
+    return (
+      <div>
+        {filterBar}
+        <div className="p-4 text-center text-sm text-muted-foreground">
+          No conversations match the selected filters
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="divide-y divide-gray-200 dark:divide-gray-800">
-      {conversations.map((conversation) => {
+    <div>
+      {filterBar}
+      <div className="divide-y divide-gray-200 dark:divide-gray-800">
+      {filteredConversations.map((conversation) => {
         const isSelected = selectedLeadId === conversation.leadId
         const preview = conversation.latestMessage
           ? conversation.latestMessage.content.substring(0, 50) + (conversation.latestMessage.content.length > 50 ? '...' : '')
@@ -126,6 +253,7 @@ export function ChatList({ selectedLeadId }: ChatListProps) {
           </button>
         )
       })}
+      </div>
     </div>
   )
 }

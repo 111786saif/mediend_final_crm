@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { canViewPhoneNumber } from '@/lib/case-permissions'
+import { getLatestActivityTime } from '@/lib/lead-activity'
 import { getPhoneDisplay } from '@/lib/phone-utils'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
@@ -43,7 +44,22 @@ interface LeadWithStage {
   flowType: FlowType
   createdDate: string
   updatedDate: string
-  dischargeSheet?: { id: string } | null
+  dischargeSheet?: { id: string; updatedAt?: string } | null
+  kypSubmission?: {
+    updatedAt?: string
+    preAuthData?: {
+      updatedAt?: string
+      queries?: { updatedAt?: string }[]
+    } | null
+  } | null
+  insuranceInitiateForm?: { id: string; updatedAt?: string } | null
+  admissionRecord?: {
+    ipdStatusUpdatedAt?: string | null
+    initiatedAt?: string
+  } | null
+  plRecord?: { updatedAt?: string } | null
+  caseStageHistory?: { changedAt?: string }[]
+  caseChatMessages?: { createdAt?: string }[]
 }
 
 type TabKey =
@@ -125,12 +141,8 @@ export default function InsuranceCashCasesPage() {
       )
     }
 
-    // Sort by date (newest first)
-    return result.sort((a, b) => {
-      const dateA = new Date(a.updatedDate || a.createdDate).getTime()
-      const dateB = new Date(b.updatedDate || b.createdDate).getTime()
-      return dateB - dateA
-    })
+    // Sort by latest activity (newest first)
+    return result.sort((a, b) => getLatestActivityTime(b) - getLatestActivityTime(a))
   }, [leads, activeTab, searchQuery])
 
   // ── Review Handler ─────────────────────────────────────────────────────────
@@ -294,7 +306,10 @@ export default function InsuranceCashCasesPage() {
                           <TableCell className="text-gray-700 dark:text-gray-300">{lead.hospitalName}</TableCell>
                           <TableCell>{getStageBadge(lead.caseStage)}</TableCell>
                           <TableCell className="text-gray-600 dark:text-gray-400">
-                            {lead.updatedDate ? format(new Date(lead.updatedDate), 'MMM dd, HH:mm') : '-'}
+                            {(() => {
+                              const t = getLatestActivityTime(lead)
+                              return t ? format(new Date(t), 'MMM dd, HH:mm') : '-'
+                            })()}
                           </TableCell>
                           <TableCell>
                             <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>

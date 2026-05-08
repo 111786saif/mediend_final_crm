@@ -75,6 +75,8 @@ export interface PreAuthRaiseFormProps {
     pan?: string | null
     aadharFileUrl?: string | null
     panFileUrl?: string | null
+    aadharFiles?: Array<{ name: string; url: string }> | null
+    panFiles?: Array<{ name: string; url: string }> | null
     prescriptionFileUrl?: string | null
     location?: string | null
     area?: string | null
@@ -110,9 +112,19 @@ export function PreAuthRaiseForm({
   const legacyRoomTypes = initialData?.roomTypes ?? []
   const hasSuggestedCards = suggestedHospitals.length > 0
 
-  // Aadhar / PAN pre-fills from KYP
-  const existingAadharUrl = kypData?.aadharFileUrl ?? null
-  const existingPanUrl = kypData?.panFileUrl ?? null
+  // Aadhar / PAN pre-fills from KYP. Prefer multi-file arrays; fall back to legacy single-url fields.
+  const initialAadharFiles: FilePreview[] =
+    kypData?.aadharFiles && kypData.aadharFiles.length > 0
+      ? kypData.aadharFiles
+      : kypData?.aadharFileUrl
+        ? [{ name: 'Existing Aadhar', url: kypData.aadharFileUrl }]
+        : []
+  const initialPanFiles: FilePreview[] =
+    kypData?.panFiles && kypData.panFiles.length > 0
+      ? kypData.panFiles
+      : kypData?.panFileUrl
+        ? [{ name: 'Existing PAN', url: kypData.panFileUrl }]
+        : []
 
   const [formData, setFormData] = useState({
     requestedHospitalName: initialData?.requestedHospitalName || '',
@@ -127,11 +139,9 @@ export function PreAuthRaiseForm({
     // Aadhaar / PAN numbers
     aadhar: initialData?.diseaseDescription ? (kypData?.aadhar || '') : (kypData?.aadhar || ''),
     pan: initialData?.diseaseDescription ? (kypData?.pan || '') : (kypData?.pan || ''),
-    // Aadhaar / PAN files: user can replace if needed
-    aadharFileUrl: existingAadharUrl || '',
-    aadharFileName: existingAadharUrl ? 'Existing Aadhar' : '',
-    panFileUrl: existingPanUrl || '',
-    panFileName: existingPanUrl ? 'Existing PAN' : '',
+    // Aadhaar / PAN files (multi)
+    aadharFiles: initialAadharFiles,
+    panFiles: initialPanFiles,
   })
   
   // Update aadhar/pan if kypData changes or on initial load
@@ -157,7 +167,7 @@ export function PreAuthRaiseForm({
 
   const uploadMultipleFile = async (
     file: File,
-    field: 'prescriptionFiles' | 'investigationFileUrls' | 'diseaseImages'
+    field: 'prescriptionFiles' | 'investigationFileUrls' | 'diseaseImages' | 'aadharFiles' | 'panFiles'
   ) => {
     try {
       const result = await uploadFile(file)
@@ -173,7 +183,7 @@ export function PreAuthRaiseForm({
   }
 
   const removeMultipleFile = (
-    field: 'prescriptionFiles' | 'investigationFileUrls' | 'diseaseImages',
+    field: 'prescriptionFiles' | 'investigationFileUrls' | 'diseaseImages' | 'aadharFiles' | 'panFiles',
     index: number
   ) => {
     setFormData((prev) => ({
@@ -205,12 +215,12 @@ export function PreAuthRaiseForm({
       toast.error('Date of Surgery is required')
       return
     }
-    if (!formData.aadharFileUrl) {
-      toast.error('Aadhar Card upload is required')
+    if (formData.aadharFiles.length === 0) {
+      toast.error('At least one Aadhar Card upload is required')
       return
     }
-    if (!formData.panFileUrl) {
-      toast.error('PAN Card upload is required')
+    if (formData.panFiles.length === 0) {
+      toast.error('At least one PAN Card upload is required')
       return
     }
     if (formData.prescriptionFiles.length === 0) {
@@ -229,8 +239,10 @@ export function PreAuthRaiseForm({
           notes: formData.notes || undefined,
           aadhar: formData.aadhar || undefined,
           pan: formData.pan || undefined,
-          aadharFileUrl: formData.aadharFileUrl || undefined,
-          panFileUrl: formData.panFileUrl || undefined,
+          aadharFiles: formData.aadharFiles,
+          panFiles: formData.panFiles,
+          aadharFileUrl: formData.aadharFiles[0]?.url || undefined,
+          panFileUrl: formData.panFiles[0]?.url || undefined,
           prescriptionFiles: formData.prescriptionFiles,
           investigationFileUrls: formData.investigationFileUrls,
           diseaseImages: formData.diseaseImages,
@@ -717,22 +729,14 @@ export function PreAuthRaiseForm({
             />
           </div>
 
-          {/* Aadhaar File */}
-          <FileUploadRow
+          {/* Aadhaar Files (multiple) */}
+          <MultiFileUploadRow
             id="aadhar-upload"
             label="Aadhar Card"
             required
-            existingUrl={existingAadharUrl}
-            currentUrl={formData.aadharFileUrl}
-            currentName={formData.aadharFileName}
-            onUpload={(file) =>
-              uploadSingleFile(file, (url, name) =>
-                setFormData((prev) => ({ ...prev, aadharFileUrl: url, aadharFileName: name }))
-              )
-            }
-            onClear={() =>
-              setFormData((prev) => ({ ...prev, aadharFileUrl: '', aadharFileName: '' }))
-            }
+            files={formData.aadharFiles}
+            onAdd={(file) => uploadMultipleFile(file, 'aadharFiles')}
+            onRemove={(i) => removeMultipleFile('aadharFiles', i)}
           />
 
           {/* PAN Number */}
@@ -746,22 +750,14 @@ export function PreAuthRaiseForm({
             />
           </div>
 
-          {/* PAN File */}
-          <FileUploadRow
+          {/* PAN Files (multiple) */}
+          <MultiFileUploadRow
             id="pan-upload"
             label="PAN Card"
             required
-            existingUrl={existingPanUrl}
-            currentUrl={formData.panFileUrl}
-            currentName={formData.panFileName}
-            onUpload={(file) =>
-              uploadSingleFile(file, (url, name) =>
-                setFormData((prev) => ({ ...prev, panFileUrl: url, panFileName: name }))
-              )
-            }
-            onClear={() =>
-              setFormData((prev) => ({ ...prev, panFileUrl: '', panFileName: '' }))
-            }
+            files={formData.panFiles}
+            onAdd={(file) => uploadMultipleFile(file, 'panFiles')}
+            onRemove={(i) => removeMultipleFile('panFiles', i)}
           />
 
           {/* Prescription (multiple) */}
@@ -830,8 +826,8 @@ export function PreAuthRaiseForm({
         </div>
       ),
       validate: () =>
-        formData.aadharFileUrl.length > 0 &&
-        formData.panFileUrl.length > 0 &&
+        formData.aadharFiles.length > 0 &&
+        formData.panFiles.length > 0 &&
         formData.prescriptionFiles.length > 0 &&
         formData.diseaseDescription.trim().length > 0,
     },
@@ -911,11 +907,11 @@ export function PreAuthRaiseForm({
             <div className="space-y-1 text-sm">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span>Aadhar Card: {formData.aadharFileName || 'uploaded'}</span>
+                <span>Aadhar Card: {formData.aadharFiles.length} file(s)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span>PAN Card: {formData.panFileName || 'uploaded'}</span>
+                <span>PAN Card: {formData.panFiles.length} file(s)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-500" />

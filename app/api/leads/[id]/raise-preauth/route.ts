@@ -16,6 +16,14 @@ const raisePreAuthSchema = z.object({
   pan: z.string().optional(),
   aadharFileUrl: z.string().optional(),
   panFileUrl: z.string().optional(),
+  aadharFiles: z.array(z.object({
+    name: z.string(),
+    url: z.string(),
+  })).optional(),
+  panFiles: z.array(z.object({
+    name: z.string(),
+    url: z.string(),
+  })).optional(),
   prescriptionFileUrl: z.string().optional(),
   prescriptionFiles: z.array(z.object({
     name: z.string(),
@@ -122,12 +130,24 @@ export async function POST(
     })
 
     // Update KYP submission with any new aadhar/pan files provided
-    if (data.aadhar || data.pan || data.aadharFileUrl || data.panFileUrl || data.prescriptionFileUrl) {
+    const hasAadharFiles = data.aadharFiles && data.aadharFiles.length > 0
+    const hasPanFiles = data.panFiles && data.panFiles.length > 0
+    if (
+      data.aadhar ||
+      data.pan ||
+      data.aadharFileUrl ||
+      data.panFileUrl ||
+      hasAadharFiles ||
+      hasPanFiles ||
+      data.prescriptionFileUrl
+    ) {
       await prisma.kYPSubmission.update({
         where: { id: lead.kypSubmission.id },
         data: {
           ...(data.aadhar ? { aadhar: data.aadhar } : {}),
           ...(data.pan ? { pan: data.pan } : {}),
+          ...(hasAadharFiles ? { aadharFiles: data.aadharFiles } : {}),
+          ...(hasPanFiles ? { panFiles: data.panFiles } : {}),
           ...(data.aadharFileUrl ? { aadharFileUrl: data.aadharFileUrl } : {}),
           ...(data.panFileUrl ? { panFileUrl: data.panFileUrl } : {}),
           ...(data.prescriptionFileUrl ? { prescriptionFileUrl: data.prescriptionFileUrl } : {}),
