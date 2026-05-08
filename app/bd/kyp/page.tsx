@@ -376,7 +376,7 @@ export default function CaseTrackerPage() {
                               <TableCell>{typeof lead.circle === 'string' ? lead.circle : '—'}</TableCell>
                               <TableCell className="max-w-[140px] truncate">{lead.treatment ?? 'â€”'}</TableCell>
                               <TableCell className="max-w-[120px] truncate">
-                                {(lead.plRecord?.bdmName ?? '').trim() || '—'}
+                                {(lead.plRecord?.bdmName ?? lead.bd?.name ?? '').trim() || '—'}
                               </TableCell>
                               <TableCell className="max-w-[160px] truncate">{lead.hospitalName}</TableCell>
                               <TableCell>

@@ -5,8 +5,9 @@ import { apiGet } from '@/lib/api-client'
 import { useRouter } from 'next/navigation'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2, MessageSquare } from 'lucide-react'
+import { Loader2, MessageSquare, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
 import { getCaseStageLabel } from '@/lib/case-stage-labels'
@@ -47,6 +48,7 @@ export function ChatList({ selectedLeadId }: ChatListProps) {
   const [monthFilter, setMonthFilter] = useState<string>('all')
   const [stageFilter, setStageFilter] = useState<string>('all')
   const [bdFilter, setBdFilter] = useState<string>('all')
+  const [search, setSearch] = useState<string>('')
 
   const { data: conversations, isLoading } = useQuery<Conversation[]>({
     queryKey: ['chat-conversations'],
@@ -101,6 +103,7 @@ export function ChatList({ selectedLeadId }: ChatListProps) {
 
   const filteredConversations = useMemo(() => {
     if (!conversations) return []
+    const q = search.trim().toLowerCase()
     return conversations.filter((c) => {
       if (monthFilter !== 'all') {
         if (!c.createdDate) return false
@@ -111,12 +114,31 @@ export function ChatList({ selectedLeadId }: ChatListProps) {
       }
       if (stageFilter !== 'all' && c.caseStage !== stageFilter) return false
       if (bdFilter !== 'all' && c.bd?.id !== bdFilter) return false
+      if (q) {
+        const matches =
+          String(c.patientName ?? '').toLowerCase().includes(q) ||
+          String(c.leadRef ?? '').toLowerCase().includes(q) ||
+          String(c.circle ?? '').toLowerCase().includes(q) ||
+          String(c.bd?.name ?? '').toLowerCase().includes(q) ||
+          String(c.latestMessage?.content ?? '').toLowerCase().includes(q)
+        if (!matches) return false
+      }
       return true
     })
-  }, [conversations, monthFilter, stageFilter, bdFilter])
+  }, [conversations, monthFilter, stageFilter, bdFilter, search])
 
   const filterBar = (
-    <div className="flex flex-wrap items-center gap-2 p-3 border-b border-gray-200 dark:border-gray-800">
+    <div className="flex flex-col gap-2 p-3 border-b border-gray-200 dark:border-gray-800">
+      <div className="relative">
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input
+          className="h-8 pl-8 text-xs"
+          placeholder="Search name, ref, BD, message…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
       <Select value={monthFilter} onValueChange={setMonthFilter}>
         <SelectTrigger className="h-8 w-[120px] text-xs">
           <SelectValue placeholder="Month" />
@@ -162,6 +184,7 @@ export function ChatList({ selectedLeadId }: ChatListProps) {
           </SelectContent>
         </Select>
       )}
+      </div>
     </div>
   )
 

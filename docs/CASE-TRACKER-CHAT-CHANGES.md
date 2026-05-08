@@ -109,6 +109,7 @@ UI: dropdowns sit in the same flex row as the search input (above the leads tabl
 
 ### Chat List — `components/chat/chat-list.tsx`
 
+- **Search** — free-text input at the top of the filter bar; matches against `patientName`, `leadRef`, `circle`, `bd.name`, and the `latestMessage.content` (case-insensitive).
 - **Month** — same shape as case tracker.
 - **Stage** — dropdown of stages present in the conversations, labelled via `getCaseStageLabel`.
 - **BD** — TL-only.
@@ -160,6 +161,37 @@ The Pre-Auth Raise form (`/patient/[leadId]/raise-preauth`) only accepted a sing
 
 ---
 
+---
+
+## 7. Targets Progress — TLs Now See BD Targets They Assign
+
+### Problem
+On `/team-lead/targets`, after a TL assigned a BD target (e.g. "Ravi → 10 IPDs"), the page kept showing "No BD activity yet" instead of the leaderboard with `0/10`. The target was being created in the DB but didn't surface for the TL.
+
+### Root cause
+`app/api/targets/progress/route.ts` role-based filter for `TEAM_LEAD` returned only:
+- BD targets where `targetForId = TL.user.id` (i.e. a target on the TL personally)
+- The TEAM target for the TL's team
+
+It never included BD targets assigned to the TL's subordinate BDs — so the targets the TL had just assigned were filtered out before any progress could be computed.
+
+### Fix
+**`app/api/targets/progress/route.ts`** — TL branch now also resolves direct subordinate user IDs (BDs only, matching how `/api/targets/teams` defines team membership) and OR-includes `{ targetType: 'BD', targetForId: { in: [TL.id, ...subordinateUserIds] } }` in the where clause. Empty state resolves to the BD leaderboard with each BD's actual/target counts (e.g. `0/10`) as soon as any target exists.
+
+---
+
+---
+
+## 8. Case Tracker — BDM Column Fallback to Assigned BD
+
+### Problem
+On `/bd/kyp`, the BDM column read only from `lead.plRecord?.bdmName`. PLRecord is created at discharge, so for the active pipeline (the case tracker's entire scope) there's no `plRecord` yet — the column was permanently `—`. TLs viewing their team's cases noticed it most.
+
+### Fix
+**`app/bd/kyp/page.tsx`** — column now falls back to `lead.bd?.name` (the assigned BD, already in `pipelineSelect`) when `plRecord.bdmName` isn't set yet. Once a discharge sheet writes `plRecord.bdmName`, that takes precedence.
+
+---
+
 ## File Summary
 
 | File | Change |
@@ -176,6 +208,8 @@ The Pre-Auth Raise form (`/patient/[leadId]/raise-preauth`) only accepted a sing
 | `components/case/preauth-raise-form.tsx` | Multi-file Aadhar / PAN uploads; replaced single-file UI with `MultiFileUploadRow`, validation and submit body updated |
 | `app/patient/[leadId]/raise-preauth/page.tsx` | Forward `aadharFiles` / `panFiles` from `KYPSubmission` to form's `kypData` |
 | `app/api/leads/[id]/raise-preauth/route.ts` | Accept and persist `aadharFiles` / `panFiles` arrays on `KYPSubmission` |
+| `app/api/targets/progress/route.ts` | TL filter now includes BD targets assigned to their subordinate BDs (was only returning targets *on* the TL personally) |
+| `app/bd/kyp/page.tsx` | BDM column falls back to `lead.bd?.name` for active cases that don't have a `plRecord.bdmName` yet |
 
 ## Future Tightening
 

@@ -47,10 +47,20 @@ export async function GET(request: NextRequest) {
       where.targetType = 'BD'
       where.targetForId = user.id
     } else if (user.role === 'TEAM_LEAD') {
-      const emp = await prisma.employee.findUnique({ where: { userId: user.id }, select: { id: true } })
+      const emp = await prisma.employee.findUnique({
+        where: { userId: user.id },
+        select: {
+          id: true,
+          subordinates: {
+            select: { userId: true },
+            where: { user: { role: UserRole.BD } },
+          },
+        },
+      })
+      const subordinateUserIds = emp?.subordinates.map((s) => s.userId) ?? []
       if (!teamId) {
         where.OR = [
-          { targetType: 'BD', targetForId: user.id },
+          { targetType: 'BD', targetForId: { in: [user.id, ...subordinateUserIds] } },
           ...(emp ? [{ targetType: 'TEAM' as const, targetForId: emp.id }] : []),
         ]
       }
