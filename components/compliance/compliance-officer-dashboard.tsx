@@ -1,8 +1,9 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { Stethoscope } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
+import { Search, Stethoscope, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -12,12 +13,15 @@ import {
 } from "@/components/ui/select"
 import {
   useComplianceCalls,
+  useComplianceFilterOptions,
   useComplianceStats,
   type ComplianceCall,
   type ComplianceCallStatus,
 } from "@/hooks/use-compliance-calls"
 import { ComplianceCallRow } from "./compliance-call-row"
 import { ComplianceFeedbackDrawer } from "./compliance-feedback-drawer"
+
+const ALL = "ALL"
 
 type StatusFilter = "ALL" | ComplianceCallStatus
 
@@ -72,14 +76,25 @@ function currentMonthValue() {
 export function ComplianceOfficerDashboard() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL")
   const [monthFilter, setMonthFilter] = useState<string>(() => currentMonthValue())
+  const [hospitalFilter, setHospitalFilter] = useState<string>(ALL)
+  const [doctorFilter, setDoctorFilter] = useState<string>(ALL)
+  const [bdFilter, setBdFilter] = useState<string>(ALL)
+  const [searchInput, setSearchInput] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
   const [editing, setEditing] = useState<ComplianceCall | null>(null)
 
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchInput.trim()), 300)
+    return () => clearTimeout(t)
+  }, [searchInput])
+
   const monthOptions = useMemo(() => buildMonthOptions(12), [])
+  const { data: filterOptions } = useComplianceFilterOptions()
 
   const { data: stats } = useComplianceStats({})
 
   const surgeryRange = useMemo(
-    () => (monthFilter === "ALL" ? null : monthRange(monthFilter)),
+    () => (monthFilter === ALL ? null : monthRange(monthFilter)),
     [monthFilter],
   )
 
@@ -89,12 +104,32 @@ export function ComplianceOfficerDashboard() {
       sort: statusFilter === "ALL" ? "pending" : "recent",
       surgeryStart: surgeryRange?.start ?? null,
       surgeryEnd: surgeryRange?.end ?? null,
+      q: debouncedSearch || null,
+      hospitalName: hospitalFilter === ALL ? null : hospitalFilter,
+      surgeonName: doctorFilter === ALL ? null : doctorFilter,
+      bdId: bdFilter === ALL ? null : bdFilter,
     })
 
   const allCalls = useMemo(
     () => data?.pages.flatMap((p) => p.calls) ?? [],
     [data],
   )
+
+  const hasNonStatusFilter =
+    debouncedSearch !== "" ||
+    hospitalFilter !== ALL ||
+    doctorFilter !== ALL ||
+    bdFilter !== ALL ||
+    monthFilter !== ALL
+
+  const clearFilters = () => {
+    setSearchInput("")
+    setDebouncedSearch("")
+    setHospitalFilter(ALL)
+    setDoctorFilter(ALL)
+    setBdFilter(ALL)
+    setMonthFilter(ALL)
+  }
 
   return (
     <div className="space-y-5 pb-10">
@@ -113,7 +148,7 @@ export function ComplianceOfficerDashboard() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent align="end">
-            <SelectItem value="ALL">All months</SelectItem>
+            <SelectItem value={ALL}>All months</SelectItem>
             {monthOptions.map((m) => (
               <SelectItem key={m.value} value={m.value}>
                 {m.label}
@@ -122,6 +157,84 @@ export function ComplianceOfficerDashboard() {
           </SelectContent>
         </Select>
       </header>
+
+      <div className="space-y-2">
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search by patient name, phone, or lead reference"
+            className="pl-9 pr-9"
+            aria-label="Search"
+          />
+          {searchInput && (
+            <button
+              type="button"
+              onClick={() => setSearchInput("")}
+              aria-label="Clear search"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          <Select value={hospitalFilter} onValueChange={setHospitalFilter}>
+            <SelectTrigger aria-label="Filter by hospital">
+              <SelectValue placeholder="All hospitals" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL}>All hospitals</SelectItem>
+              {filterOptions?.hospitals.map((h) => (
+                <SelectItem key={h} value={h}>
+                  {h}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={doctorFilter} onValueChange={setDoctorFilter}>
+            <SelectTrigger aria-label="Filter by doctor">
+              <SelectValue placeholder="All doctors" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL}>All doctors</SelectItem>
+              {filterOptions?.surgeons.map((d) => (
+                <SelectItem key={d} value={d}>
+                  {d}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={bdFilter} onValueChange={setBdFilter}>
+            <SelectTrigger aria-label="Filter by BD">
+              <SelectValue placeholder="All BDs" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL}>All BDs</SelectItem>
+              {filterOptions?.bds.map((b) => (
+                <SelectItem key={b.id} value={b.id}>
+                  {b.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {hasNonStatusFilter && (
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="text-xs font-medium text-muted-foreground underline-offset-4 hover:underline"
+          >
+            Clear filters
+          </button>
+        )}
+      </div>
 
       <div className="-mx-1 overflow-x-auto">
         <div className="flex gap-2 px-1 snap-x">
@@ -155,9 +268,20 @@ export function ComplianceOfficerDashboard() {
           </div>
         ) : allCalls.length === 0 ? (
           <div className="p-8 text-center text-sm text-muted-foreground">
-            {monthFilter === "ALL"
-              ? "No patients to follow up."
-              : `No surgeries in ${monthOptions.find((m) => m.value === monthFilter)?.label ?? "this month"}.`}
+            {hasNonStatusFilter ? (
+              <>
+                No patients match these filters.{" "}
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="font-medium text-primary underline-offset-4 hover:underline"
+                >
+                  Clear filters
+                </button>
+              </>
+            ) : (
+              "No patients to follow up."
+            )}
           </div>
         ) : (
           allCalls.map((call) => (

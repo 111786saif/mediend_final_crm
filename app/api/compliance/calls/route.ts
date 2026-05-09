@@ -47,6 +47,10 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get('endDate')
     const surgeryStart = searchParams.get('surgeryStart')
     const surgeryEnd = searchParams.get('surgeryEnd')
+    const q = searchParams.get('q')?.trim() ?? ''
+    const hospitalName = searchParams.get('hospitalName')?.trim() ?? ''
+    const surgeonName = searchParams.get('surgeonName')?.trim() ?? ''
+    const bdId = searchParams.get('bdId')?.trim() ?? ''
     const sort = searchParams.get('sort') ?? 'recent'
     const cursor = searchParams.get('cursor')
     const limitParam = searchParams.get('limit')
@@ -66,11 +70,26 @@ export async function GET(request: NextRequest) {
       if (startDate) where.createdAt.gte = new Date(startDate)
       if (endDate) where.createdAt.lte = new Date(endDate)
     }
+
+    const leadFilters: Prisma.LeadWhereInput = {}
     if (surgeryStart || surgeryEnd) {
       const surgeryDate: Prisma.DateTimeFilter = {}
       if (surgeryStart) surgeryDate.gte = new Date(surgeryStart)
       if (surgeryEnd) surgeryDate.lt = new Date(surgeryEnd)
-      where.lead = { surgeryDate }
+      leadFilters.surgeryDate = surgeryDate
+    }
+    if (hospitalName) leadFilters.hospitalName = { contains: hospitalName, mode: 'insensitive' }
+    if (surgeonName) leadFilters.surgeonName = { contains: surgeonName, mode: 'insensitive' }
+    if (bdId) leadFilters.bdId = bdId
+    if (q) {
+      leadFilters.OR = [
+        { patientName: { contains: q, mode: 'insensitive' } },
+        { phoneNumber: { contains: q } },
+        { leadRef: { contains: q, mode: 'insensitive' } },
+      ]
+    }
+    if (Object.keys(leadFilters).length > 0) {
+      where.lead = leadFilters
     }
 
     let orderBy: Prisma.ComplianceCallOrderByWithRelationInput[]

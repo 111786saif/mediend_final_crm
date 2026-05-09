@@ -112,7 +112,17 @@ export interface ComplianceCallsFilters {
   endDate?: string | null
   surgeryStart?: string | null
   surgeryEnd?: string | null
+  q?: string | null
+  hospitalName?: string | null
+  surgeonName?: string | null
+  bdId?: string | null
   sort?: ComplianceCallSort
+}
+
+export interface ComplianceFilterOptions {
+  hospitals: string[]
+  surgeons: string[]
+  bds: { id: string; name: string }[]
 }
 
 export interface ComplianceStats {
@@ -135,6 +145,10 @@ function buildQueryString(filters: ComplianceCallsFilters, cursor?: string) {
   if (filters.endDate) params.set("endDate", filters.endDate)
   if (filters.surgeryStart) params.set("surgeryStart", filters.surgeryStart)
   if (filters.surgeryEnd) params.set("surgeryEnd", filters.surgeryEnd)
+  if (filters.q) params.set("q", filters.q)
+  if (filters.hospitalName) params.set("hospitalName", filters.hospitalName)
+  if (filters.surgeonName) params.set("surgeonName", filters.surgeonName)
+  if (filters.bdId) params.set("bdId", filters.bdId)
   if (filters.sort) params.set("sort", filters.sort)
   if (cursor) params.set("cursor", cursor)
   const qs = params.toString()
@@ -216,5 +230,13 @@ export function useComplianceCall(id: string | null) {
     queryKey: ["compliance", "calls", "detail", id],
     queryFn: () => apiGet<ComplianceCall>(`/api/compliance/calls/${id}`),
     enabled: !!id,
+  })
+}
+
+export function useComplianceFilterOptions() {
+  return useQuery<ComplianceFilterOptions>({
+    queryKey: ["compliance", "filter-options"],
+    queryFn: () => apiGet<ComplianceFilterOptions>("/api/compliance/filter-options"),
+    staleTime: 5 * 60 * 1000, // 5 min — these change rarely
   })
 }
