@@ -124,6 +124,12 @@ export async function GET(request: NextRequest) {
                 name: true,
               },
             },
+            heldBy: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         });
         return { ...kyp, preAuthData };

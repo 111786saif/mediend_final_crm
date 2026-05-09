@@ -145,6 +145,23 @@ export function canMarkLost(user: User, lead: Lead): boolean {
   return allowedStages.includes(lead.caseStage)
 }
 
+// Insurance can reset a patient back to HOSPITALS_SUGGESTED. Destructive: clears
+// the BD-raised pre-auth fields, approval state, initiate form, admission record,
+// and documents uploaded after KYP basic. Blocked once the patient is actually
+// admitted (ADMITTED or beyond).
+export function canResetPatient(user: User, lead: Lead): boolean {
+  if (!user || !lead) return false
+  if (lead.flowType === FlowType.CASH) return false
+
+  const isInsurance = ['INSURANCE', 'INSURANCE_HEAD', 'ADMIN'].includes(user.role)
+  const allowedStages: CaseStage[] = [
+    CaseStage.PREAUTH_RAISED,
+    CaseStage.PREAUTH_COMPLETE,
+    CaseStage.INITIATED,
+  ]
+  return isInsurance && allowedStages.includes(lead.caseStage)
+}
+
 // Insurance can suggest hospitals when BD has submitted KYP Basic (KYP_BASIC_COMPLETE)
 export function canSuggestHospitals(user: User, lead: Lead): boolean {
   if (!user || !lead) return false

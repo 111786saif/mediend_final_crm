@@ -248,6 +248,7 @@ export type UserWhereInput = {
   issuesReceived?: Prisma.IssueTransactionListRelationFilter
   kypSubmissions?: Prisma.KYPSubmissionListRelationFilter
   preAuthHandled?: Prisma.PreAuthorizationListRelationFilter
+  preAuthHeld?: Prisma.PreAuthorizationListRelationFilter
   queriesRaised?: Prisma.InsuranceQueryListRelationFilter
   queriesAnswered?: Prisma.InsuranceQueryListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
@@ -338,6 +339,7 @@ export type UserOrderByWithRelationInput = {
   issuesReceived?: Prisma.IssueTransactionOrderByRelationAggregateInput
   kypSubmissions?: Prisma.KYPSubmissionOrderByRelationAggregateInput
   preAuthHandled?: Prisma.PreAuthorizationOrderByRelationAggregateInput
+  preAuthHeld?: Prisma.PreAuthorizationOrderByRelationAggregateInput
   queriesRaised?: Prisma.InsuranceQueryOrderByRelationAggregateInput
   queriesAnswered?: Prisma.InsuranceQueryOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
@@ -431,6 +433,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   issuesReceived?: Prisma.IssueTransactionListRelationFilter
   kypSubmissions?: Prisma.KYPSubmissionListRelationFilter
   preAuthHandled?: Prisma.PreAuthorizationListRelationFilter
+  preAuthHeld?: Prisma.PreAuthorizationListRelationFilter
   queriesRaised?: Prisma.InsuranceQueryListRelationFilter
   queriesAnswered?: Prisma.InsuranceQueryListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
@@ -553,6 +556,7 @@ export type UserCreateInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -643,6 +647,7 @@ export type UserUncheckedCreateInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -733,6 +738,7 @@ export type UserUpdateInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -823,6 +829,7 @@ export type UserUncheckedUpdateInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1450,6 +1457,12 @@ export type UserCreateNestedOneWithoutPreAuthHandledInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutPreAuthHeldInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPreAuthHeldInput, Prisma.UserUncheckedCreateWithoutPreAuthHeldInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPreAuthHeldInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneWithoutPreAuthsRaisedNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutPreAuthsRaisedInput, Prisma.UserUncheckedCreateWithoutPreAuthsRaisedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutPreAuthsRaisedInput
@@ -1468,6 +1481,16 @@ export type UserUpdateOneWithoutPreAuthHandledNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPreAuthHandledInput, Prisma.UserUpdateWithoutPreAuthHandledInput>, Prisma.UserUncheckedUpdateWithoutPreAuthHandledInput>
+}
+
+export type UserUpdateOneWithoutPreAuthHeldNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPreAuthHeldInput, Prisma.UserUncheckedCreateWithoutPreAuthHeldInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPreAuthHeldInput
+  upsert?: Prisma.UserUpsertWithoutPreAuthHeldInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPreAuthHeldInput, Prisma.UserUpdateWithoutPreAuthHeldInput>, Prisma.UserUncheckedUpdateWithoutPreAuthHeldInput>
 }
 
 export type UserCreateNestedOneWithoutNotificationsInput = {
@@ -2145,6 +2168,7 @@ export type UserCreateWithoutStatusesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -2234,6 +2258,7 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -2339,6 +2364,7 @@ export type UserUpdateWithoutStatusesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -2428,6 +2454,7 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -2516,6 +2543,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -2605,6 +2633,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -2699,6 +2728,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -2788,6 +2818,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -2882,6 +2913,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -2971,6 +3003,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -3076,6 +3109,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -3165,6 +3199,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -3265,6 +3300,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -3354,6 +3390,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -3454,6 +3491,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -3543,6 +3581,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -3633,6 +3672,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -3722,6 +3762,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -3827,6 +3868,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -3916,6 +3958,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -4004,6 +4047,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -4093,6 +4137,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -4198,6 +4243,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -4287,6 +4333,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -4376,6 +4423,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -4465,6 +4513,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -4570,6 +4619,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -4659,6 +4709,7 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -4748,6 +4799,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -4837,6 +4889,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -4942,6 +4995,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -5031,6 +5085,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -5120,6 +5175,7 @@ export type UserCreateWithoutPlRecordsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -5209,6 +5265,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -5314,6 +5371,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -5403,6 +5461,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -5493,6 +5552,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -5582,6 +5642,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -5687,6 +5748,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -5776,6 +5838,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -5864,6 +5927,7 @@ export type UserCreateWithoutEmployeeInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -5953,6 +6017,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -6048,6 +6113,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -6137,6 +6203,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -6241,6 +6308,7 @@ export type UserUpdateWithoutEmployeeInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -6330,6 +6398,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -6431,6 +6500,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -6520,6 +6590,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -6608,6 +6679,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -6697,6 +6769,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -6802,6 +6875,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -6891,6 +6965,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -6980,6 +7055,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -7069,6 +7145,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -7163,6 +7240,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -7252,6 +7330,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -7357,6 +7436,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -7446,6 +7526,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -7546,6 +7627,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -7635,6 +7717,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -7725,6 +7808,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -7814,6 +7898,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -7919,6 +8004,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -8008,6 +8094,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -8097,6 +8184,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -8186,6 +8274,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -8291,6 +8380,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -8380,6 +8470,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -8468,6 +8559,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -8557,6 +8649,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -8651,6 +8744,7 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -8740,6 +8834,7 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -8834,6 +8929,7 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -8923,6 +9019,7 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -9017,6 +9114,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -9106,6 +9204,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -9200,6 +9299,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -9289,6 +9389,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -9383,6 +9484,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -9472,6 +9574,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -9566,6 +9669,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -9655,6 +9759,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -9760,6 +9865,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -9849,6 +9955,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -9949,6 +10056,7 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -10038,6 +10146,7 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -10138,6 +10247,7 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -10227,6 +10337,7 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -10327,6 +10438,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -10416,6 +10528,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -10516,6 +10629,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -10605,6 +10719,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -10705,6 +10820,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -10794,6 +10910,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -10894,6 +11011,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -10983,6 +11101,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -11072,6 +11191,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -11161,6 +11281,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -11266,6 +11387,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -11355,6 +11477,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -11444,6 +11567,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -11533,6 +11657,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -11638,6 +11763,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -11727,6 +11853,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -11816,6 +11943,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -11905,6 +12033,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -12010,6 +12139,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -12099,6 +12229,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -12188,6 +12319,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -12277,6 +12409,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -12382,6 +12515,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -12471,6 +12605,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -12560,6 +12695,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -12649,6 +12785,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -12743,6 +12880,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -12832,6 +12970,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -12937,6 +13076,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -13026,6 +13166,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -13126,6 +13267,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -13215,6 +13357,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -13304,6 +13447,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -13393,6 +13537,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -13498,6 +13643,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -13587,6 +13733,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -13677,6 +13824,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -13766,6 +13914,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -13859,6 +14008,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -13948,6 +14098,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -14006,6 +14157,191 @@ export type UserCreateOrConnectWithoutPreAuthHandledInput = {
   create: Prisma.XOR<Prisma.UserCreateWithoutPreAuthHandledInput, Prisma.UserUncheckedCreateWithoutPreAuthHandledInput>
 }
 
+export type UserCreateWithoutPreAuthHeldInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPreAuthHeldInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPreAuthHeldInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPreAuthHeldInput, Prisma.UserUncheckedCreateWithoutPreAuthHeldInput>
+}
+
 export type UserUpsertWithoutPreAuthsRaisedInput = {
   update: Prisma.XOR<Prisma.UserUpdateWithoutPreAuthsRaisedInput, Prisma.UserUncheckedUpdateWithoutPreAuthsRaisedInput>
   create: Prisma.XOR<Prisma.UserCreateWithoutPreAuthsRaisedInput, Prisma.UserUncheckedCreateWithoutPreAuthsRaisedInput>
@@ -14054,6 +14390,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -14143,6 +14480,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -14242,6 +14580,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -14331,6 +14670,198 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutPreAuthHeldInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPreAuthHeldInput, Prisma.UserUncheckedUpdateWithoutPreAuthHeldInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPreAuthHeldInput, Prisma.UserUncheckedCreateWithoutPreAuthHeldInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPreAuthHeldInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPreAuthHeldInput, Prisma.UserUncheckedUpdateWithoutPreAuthHeldInput>
+}
+
+export type UserUpdateWithoutPreAuthHeldInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -14421,6 +14952,7 @@ export type UserCreateWithoutNotificationsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
@@ -14510,6 +15042,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14615,6 +15148,7 @@ export type UserUpdateWithoutNotificationsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
@@ -14704,6 +15238,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14793,6 +15328,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -14882,6 +15418,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -14987,6 +15524,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -15076,6 +15614,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -15165,6 +15704,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -15254,6 +15794,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -15359,6 +15900,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -15448,6 +15990,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -15537,6 +16080,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -15626,6 +16170,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -15720,6 +16265,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -15809,6 +16355,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -15903,6 +16450,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -15992,6 +16540,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -16097,6 +16646,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -16186,6 +16736,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -16286,6 +16837,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -16375,6 +16927,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -16475,6 +17028,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -16564,6 +17118,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -16653,6 +17208,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -16742,6 +17298,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -16836,6 +17393,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -16925,6 +17483,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -17030,6 +17589,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -17119,6 +17679,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -17219,6 +17780,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -17308,6 +17870,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -17397,6 +17960,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -17486,6 +18050,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -17591,6 +18156,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -17680,6 +18246,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -17769,6 +18336,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -17858,6 +18426,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -17963,6 +18532,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -18052,6 +18622,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -18141,6 +18712,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
@@ -18230,6 +18802,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18324,6 +18897,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
@@ -18413,6 +18987,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18518,6 +19093,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
@@ -18607,6 +19183,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18707,6 +19284,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
@@ -18796,6 +19374,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18885,6 +19464,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -18974,6 +19554,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -19079,6 +19660,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -19168,6 +19750,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -19257,6 +19840,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -19346,6 +19930,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -19451,6 +20036,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -19540,6 +20126,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -19629,6 +20216,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -19718,6 +20306,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -19823,6 +20412,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -19912,6 +20502,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -20001,6 +20592,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -20090,6 +20682,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -20195,6 +20788,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -20284,6 +20878,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -20373,6 +20968,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -20462,6 +21058,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -20567,6 +21164,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -20656,6 +21254,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -20745,6 +21344,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -20834,6 +21434,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -20939,6 +21540,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -21028,6 +21630,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -21117,6 +21720,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -21206,6 +21810,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -21311,6 +21916,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -21400,6 +22006,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -21489,6 +22096,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -21578,6 +22186,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -21683,6 +22292,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -21772,6 +22382,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -21861,6 +22472,7 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -21950,6 +22562,7 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22055,6 +22668,7 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -22144,6 +22758,7 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -22233,6 +22848,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -22322,6 +22938,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22416,6 +23033,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -22505,6 +23123,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22599,6 +23218,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -22688,6 +23308,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22793,6 +23414,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -22882,6 +23504,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -22982,6 +23605,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -23071,6 +23695,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -23171,6 +23796,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -23260,6 +23886,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -23349,6 +23976,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -23438,6 +24066,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -23543,6 +24172,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -23632,6 +24262,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -23721,6 +24352,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -23810,6 +24442,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -23915,6 +24548,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -24004,6 +24638,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -24093,6 +24728,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -24182,6 +24818,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -24276,6 +24913,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -24365,6 +25003,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -24470,6 +25109,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -24559,6 +25199,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -24659,6 +25300,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -24748,6 +25390,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -24837,6 +25480,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -24926,6 +25570,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -25031,6 +25676,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -25120,6 +25766,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -25209,6 +25856,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -25298,6 +25946,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -25403,6 +26052,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -25492,6 +26142,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -25581,6 +26232,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -25670,6 +26322,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -25775,6 +26428,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -25864,6 +26518,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -25953,6 +26608,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -26042,6 +26698,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -26136,6 +26793,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -26225,6 +26883,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -26330,6 +26989,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -26419,6 +27079,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -26519,6 +27180,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -26608,6 +27270,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -26697,6 +27360,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -26786,6 +27450,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -26891,6 +27556,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -26980,6 +27646,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -27069,6 +27736,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -27158,6 +27826,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -27263,6 +27932,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -27352,6 +28022,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -27441,6 +28112,7 @@ export type UserCreateWithoutWorkLogsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -27530,6 +28202,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -27635,6 +28308,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -27724,6 +28398,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -27813,6 +28488,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -27902,6 +28578,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -28007,6 +28684,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -28096,6 +28774,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -28185,6 +28864,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -28274,6 +28954,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -28379,6 +29060,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -28468,6 +29150,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -28557,6 +29240,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -28646,6 +29330,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -28751,6 +29436,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -28840,6 +29526,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -28929,6 +29616,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -29018,6 +29706,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -29123,6 +29812,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -29212,6 +29902,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -29301,6 +29992,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -29390,6 +30082,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -29495,6 +30188,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -29584,6 +30278,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -29673,6 +30368,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -29762,6 +30458,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -29867,6 +30564,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -29956,6 +30654,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -30045,6 +30744,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -30134,6 +30834,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -30239,6 +30940,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -30328,6 +31030,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -30417,6 +31120,7 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -30506,6 +31210,7 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -30611,6 +31316,7 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -30700,6 +31406,7 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
   kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
   preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
   queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
   queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -30783,6 +31490,7 @@ export type UserCountOutputType = {
   issuesReceived: number
   kypSubmissions: number
   preAuthHandled: number
+  preAuthHeld: number
   queriesRaised: number
   queriesAnswered: number
   notifications: number
@@ -30862,6 +31570,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   issuesReceived?: boolean | UserCountOutputTypeCountIssuesReceivedArgs
   kypSubmissions?: boolean | UserCountOutputTypeCountKypSubmissionsArgs
   preAuthHandled?: boolean | UserCountOutputTypeCountPreAuthHandledArgs
+  preAuthHeld?: boolean | UserCountOutputTypeCountPreAuthHeldArgs
   queriesRaised?: boolean | UserCountOutputTypeCountQueriesRaisedArgs
   queriesAnswered?: boolean | UserCountOutputTypeCountQueriesAnsweredArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
@@ -31097,6 +31806,13 @@ export type UserCountOutputTypeCountKypSubmissionsArgs<ExtArgs extends runtime.T
  * UserCountOutputType without action
  */
 export type UserCountOutputTypeCountPreAuthHandledArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PreAuthorizationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPreAuthHeldArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PreAuthorizationWhereInput
 }
 
@@ -31495,6 +32211,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   issuesReceived?: boolean | Prisma.User$issuesReceivedArgs<ExtArgs>
   kypSubmissions?: boolean | Prisma.User$kypSubmissionsArgs<ExtArgs>
   preAuthHandled?: boolean | Prisma.User$preAuthHandledArgs<ExtArgs>
+  preAuthHeld?: boolean | Prisma.User$preAuthHeldArgs<ExtArgs>
   queriesRaised?: boolean | Prisma.User$queriesRaisedArgs<ExtArgs>
   queriesAnswered?: boolean | Prisma.User$queriesAnsweredArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
@@ -31616,6 +32333,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   issuesReceived?: boolean | Prisma.User$issuesReceivedArgs<ExtArgs>
   kypSubmissions?: boolean | Prisma.User$kypSubmissionsArgs<ExtArgs>
   preAuthHandled?: boolean | Prisma.User$preAuthHandledArgs<ExtArgs>
+  preAuthHeld?: boolean | Prisma.User$preAuthHeldArgs<ExtArgs>
   queriesRaised?: boolean | Prisma.User$queriesRaisedArgs<ExtArgs>
   queriesAnswered?: boolean | Prisma.User$queriesAnsweredArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
@@ -31701,6 +32419,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     issuesReceived: Prisma.$IssueTransactionPayload<ExtArgs>[]
     kypSubmissions: Prisma.$KYPSubmissionPayload<ExtArgs>[]
     preAuthHandled: Prisma.$PreAuthorizationPayload<ExtArgs>[]
+    preAuthHeld: Prisma.$PreAuthorizationPayload<ExtArgs>[]
     queriesRaised: Prisma.$InsuranceQueryPayload<ExtArgs>[]
     queriesAnswered: Prisma.$InsuranceQueryPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
@@ -32184,6 +32903,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   issuesReceived<T extends Prisma.User$issuesReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$issuesReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IssueTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   kypSubmissions<T extends Prisma.User$kypSubmissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$kypSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KYPSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   preAuthHandled<T extends Prisma.User$preAuthHandledArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$preAuthHandledArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PreAuthorizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  preAuthHeld<T extends Prisma.User$preAuthHeldArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$preAuthHeldArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PreAuthorizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   queriesRaised<T extends Prisma.User$queriesRaisedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$queriesRaisedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceQueryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   queriesAnswered<T extends Prisma.User$queriesAnsweredArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$queriesAnsweredArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InsuranceQueryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -33265,6 +33985,30 @@ export type User$kypSubmissionsArgs<ExtArgs extends runtime.Types.Extensions.Int
  * User.preAuthHandled
  */
 export type User$preAuthHandledArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PreAuthorization
+   */
+  select?: Prisma.PreAuthorizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PreAuthorization
+   */
+  omit?: Prisma.PreAuthorizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PreAuthorizationInclude<ExtArgs> | null
+  where?: Prisma.PreAuthorizationWhereInput
+  orderBy?: Prisma.PreAuthorizationOrderByWithRelationInput | Prisma.PreAuthorizationOrderByWithRelationInput[]
+  cursor?: Prisma.PreAuthorizationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PreAuthorizationScalarFieldEnum | Prisma.PreAuthorizationScalarFieldEnum[]
+}
+
+/**
+ * User.preAuthHeld
+ */
+export type User$preAuthHeldArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the PreAuthorization
    */

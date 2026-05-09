@@ -341,6 +341,7 @@ enum PreAuthStatus {
   APPROVED
   REJECTED
   TEMP_APPROVED
+  ON_HOLD
 }
 
 enum EmployeeStatus {
@@ -433,6 +434,7 @@ model User {
   // KYP Relations
   kypSubmissions  KYPSubmission[]    @relation("KYPSubmitter")
   preAuthHandled  PreAuthorization[] @relation("PreAuthHandler")
+  preAuthHeld     PreAuthorization[] @relation("PreAuthHolder")
   queriesRaised   InsuranceQuery[]   @relation("QueryRaiser")
   queriesAnswered InsuranceQuery[]   @relation("QueryAnswerer")
   notifications   Notification[]
@@ -2031,6 +2033,14 @@ model PreAuthorization {
   rejectionLetterUrl String?
   approvedAt         DateTime?
   rejectedAt         DateTime?
+
+  // On-hold (internal status — pre-auth raised but Insurance is pausing review).
+  // Cleared automatically when status moves to APPROVED / TEMP_APPROVED / REJECTED,
+  // or when Insurance explicitly releases the hold or resets the patient.
+  holdReason String?   @db.Text
+  heldAt     DateTime?
+  heldById   String?
+  heldBy     User?     @relation("PreAuthHolder", fields: [heldById], references: [id])
 
   // Q&A Queries (kept for backward compat; chat is primary)
   queries InsuranceQuery[]

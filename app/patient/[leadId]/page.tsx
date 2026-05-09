@@ -332,10 +332,12 @@ interface KYPSubmission {
 function DossierField({
   label,
   value,
+  icon: Icon,
   mono = false,
 }: {
   label: string
   value: React.ReactNode
+  icon?: React.ComponentType<{ className?: string }>
   mono?: boolean
 }) {
   const isEmpty =
@@ -343,14 +345,15 @@ function DossierField({
     value === undefined ||
     (typeof value === 'string' && (value.trim() === '' || value.trim() === '—'))
   return (
-    <div className="flex items-baseline justify-between gap-3 py-[3px]">
-      <dt className="shrink-0 text-[10.5px] uppercase tracking-[0.14em] text-gray-400 dark:text-gray-500">
-        {label}
+    <div className="grid grid-cols-[88px_1fr] items-center gap-3 py-1.5">
+      <dt className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        {Icon && <Icon className="h-3 w-3 text-gray-400 dark:text-gray-500" />}
+        <span>{label}</span>
       </dt>
       <dd
         className={cn(
-          'min-w-0 truncate text-right text-[13px] text-gray-800 dark:text-gray-100',
-          mono && 'font-mono text-[12px]',
+          'min-w-0 truncate text-sm font-medium text-gray-900 dark:text-gray-100',
+          mono && 'font-mono text-[13px]',
         )}
         title={typeof value === 'string' ? value : undefined}
       >
@@ -372,9 +375,11 @@ function DossierSectionHeader({
   label: string
 }) {
   return (
-    <div className="mb-2.5 flex items-center gap-2 border-b border-dashed border-gray-200 pb-2 dark:border-gray-800">
-      <Icon className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-700 dark:text-gray-300">
+    <div className="mb-3 flex items-center gap-2 border-b border-gray-200 pb-2 dark:border-gray-800">
+      <div className="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400">
+        <Icon className="h-3.5 w-3.5" />
+      </div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-700 dark:text-gray-200">
         {label}
       </p>
     </div>
@@ -801,51 +806,39 @@ export default function PatientDetailsPage() {
                     </span>
                   ) : null
                   return (
-                    <div className="grid grid-cols-1 gap-px bg-gray-100 dark:bg-gray-900 sm:grid-cols-2 lg:grid-cols-4">
-                      <dl className="bg-white px-5 py-4 dark:bg-gray-950 sm:px-6">
-                        <DossierSectionHeader icon={Phone} label="Contact" />
-                        <DossierField label="Phone" value={lead.phoneNumber} mono />
-                        <DossierField
-                          label="Alternate"
-                          value={lead.alternateNumber}
-                          mono
-                        />
-                        <DossierField label="Attendant" value={lead.attendantName} />
-                        <DossierField
-                          label="Attendant Ph."
-                          value={lead.attendantContactNo}
-                          mono
-                        />
-                      </dl>
-                      <dl className="bg-white px-5 py-4 dark:bg-gray-950 sm:px-6">
+                    <div className="grid grid-cols-1 gap-px bg-gray-100 dark:bg-gray-900 md:grid-cols-3">
+                      <dl className="bg-white px-5 py-4 dark:bg-gray-950">
                         <DossierSectionHeader icon={Stethoscope} label="Clinical" />
-                        <DossierField label="Treatment" value={lead.treatment} />
-                        <DossierField label="Category" value={lead.category} />
-                        <DossierField label="Surgeon" value={surgeonLine || null} />
-                        <DossierField label="Anesthesia" value={lead.anesthesia} />
-                        <DossierField label="Grade" value={lead.quantityGrade} />
+                        <DossierField icon={Activity} label="Treatment" value={lead.treatment} />
+                        <DossierField icon={Tag} label="Category" value={lead.category} />
+                        <DossierField icon={User} label="Surgeon" value={surgeonLine || null} />
+                        <DossierField icon={Activity} label="Anesthesia" value={lead.anesthesia} />
+                        <DossierField icon={Tag} label="Grade" value={lead.quantityGrade} />
                         <DossierField
+                          icon={Stethoscope}
                           label="Disease"
                           value={lead.kypSubmission?.disease}
                         />
                       </dl>
-                      <dl className="bg-white px-5 py-4 dark:bg-gray-950 sm:px-6">
-                        <DossierSectionHeader icon={MapPin} label="Hospital & Cover" />
-                        <DossierField label="Hospital" value={lead.hospitalName} />
-                        <DossierField label="IPD Doctor" value={lead.ipdDrName} />
-                        <DossierField label="City" value={location} />
-                        <DossierField label="Area" value={area} />
-                        <DossierField label="Insurance" value={lead.insuranceName} />
-                        <DossierField label="Type" value={lead.insuranceType} />
+                      <dl className="bg-white px-5 py-4 dark:bg-gray-950">
+                        <DossierSectionHeader icon={Building2} label="Hospital & Cover" />
+                        <DossierField icon={Building2} label="Hospital" value={lead.hospitalName} />
+                        <DossierField icon={User} label="IPD Doctor" value={lead.ipdDrName} />
+                        <DossierField icon={MapPin} label="City" value={location} />
+                        <DossierField icon={MapPin} label="Area" value={area} />
+                        <DossierField icon={Shield} label="Insurance" value={lead.insuranceName} />
+                        <DossierField icon={Shield} label="Type" value={lead.insuranceType} />
                       </dl>
-                      <dl className="bg-white px-5 py-4 dark:bg-gray-950 sm:px-6">
+                      <dl className="bg-white px-5 py-4 dark:bg-gray-950">
                         <DossierSectionHeader icon={CalendarIcon} label="Team & Timeline" />
-                        <DossierField label="BD" value={lead.bd?.name} />
+                        <DossierField icon={User} label="BD" value={lead.bd?.name} />
                         <DossierField
+                          icon={User}
                           label="Manager"
                           value={lead.bd?.manager?.name}
                         />
                         <DossierField
+                          icon={CalendarIcon}
                           label="Lead Date"
                           value={
                             leadDate ? format(new Date(leadDate), 'dd MMM yyyy') : null
@@ -853,6 +846,7 @@ export default function PatientDetailsPage() {
                           mono
                         />
                         <DossierField
+                          icon={CalendarIcon}
                           label="Assigned"
                           value={
                             lead.assignedDate
@@ -862,11 +856,13 @@ export default function PatientDetailsPage() {
                           mono
                         />
                         <DossierField
+                          icon={CalendarIcon}
                           label="Surgery"
                           value={surgeryDateNode}
                           mono
                         />
                         <DossierField
+                          icon={CalendarIcon}
                           label="Admission"
                           value={
                             rec?.admissionDate
@@ -876,6 +872,7 @@ export default function PatientDetailsPage() {
                           mono
                         />
                         <DossierField
+                          icon={CalendarIcon}
                           label="Discharge"
                           value={
                             rec?.ipdDischargeDate

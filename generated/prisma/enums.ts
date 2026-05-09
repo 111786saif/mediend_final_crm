@@ -451,7 +451,8 @@ export const PreAuthStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
-  TEMP_APPROVED: 'TEMP_APPROVED'
+  TEMP_APPROVED: 'TEMP_APPROVED',
+  ON_HOLD: 'ON_HOLD'
 } as const
 
 export type PreAuthStatus = (typeof PreAuthStatus)[keyof typeof PreAuthStatus]

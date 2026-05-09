@@ -116,6 +116,9 @@ export async function GET(
               preAuthRaisedBy: {
                 select: { id: true, name: true }
               },
+              heldBy: {
+                select: { id: true, name: true }
+              },
               suggestedHospitals: true
             }
           });

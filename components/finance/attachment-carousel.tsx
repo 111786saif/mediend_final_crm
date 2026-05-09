@@ -16,6 +16,31 @@ interface AttachmentCarouselProps {
   attachments: Attachment[]
 }
 
+const OFFICE_EXTS = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']
+
+function getExt(name: string, url: string): string {
+  const fromName = name.split('.').pop()?.toLowerCase() ?? ''
+  if (fromName) return fromName
+  return url.split('?')[0].split('.').pop()?.toLowerCase() ?? ''
+}
+
+function getKind(att: Attachment): 'image' | 'pdf' | 'office' | 'other' {
+  if (att.type?.startsWith('image/')) return 'image'
+  const ext = getExt(att.name, att.url)
+  if (att.type === 'application/pdf' || ext === 'pdf') return 'pdf'
+  if (OFFICE_EXTS.includes(ext)) return 'office'
+  return 'other'
+}
+
+/** URL safe to put in `target="_blank"` without triggering a browser download. */
+function getOpenInTabUrl(att: Attachment): string {
+  const kind = getKind(att)
+  if (kind === 'office') {
+    return `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(att.url)}`
+  }
+  return att.url
+}
+
 export function AttachmentCarousel({ attachments }: AttachmentCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -30,7 +55,9 @@ export function AttachmentCarousel({ attachments }: AttachmentCarouselProps) {
   if (!attachments || attachments.length === 0) return null
 
   const current = attachments[currentIndex]
-  const isImage = current.type.startsWith('image/')
+  const currentKind = getKind(current)
+  const isImage = currentKind === 'image'
+  const isPdf = currentKind === 'pdf'
 
   return (
     <div className="space-y-2">
@@ -38,43 +65,54 @@ export function AttachmentCarousel({ attachments }: AttachmentCarouselProps) {
         {/* Swipe Area */}
         <div {...handlers} className="w-full h-full flex items-center justify-center cursor-pointer overflow-hidden p-2">
            {isImage ? (
-             <img 
-               src={current.url} 
-               alt={current.name} 
+             <img
+               src={current.url}
+               alt={current.name}
                className="max-w-full max-h-full object-contain hover:scale-105 transition-transform duration-300"
                onClick={() => {
                  setSelectedAttachment(current)
                  setIsFullscreen(true)
                }}
              />
-           ) : (
-             <div 
+           ) : isPdf ? (
+             <div
                className="relative w-full h-full bg-white flex flex-col items-center justify-center p-0 overflow-hidden"
                onClick={() => {
                 setSelectedAttachment(current)
                 setIsFullscreen(true)
                }}
              >
-               <iframe 
-                 src={current.url} 
+               <iframe
+                 src={`${current.url}#toolbar=0&navpanes=0`}
                  className="w-full h-full pointer-events-none scale-110 origin-top"
                  title={current.name}
                />
                <div className="absolute inset-0 bg-black/5 hover:bg-black/0 transition-colors pointer-events-none" />
-               <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-auto">
-                 <div className="p-3 rounded-full bg-white/90 shadow-lg border border-slate-200">
-                    <FileText className="h-8 w-8 text-red-500" />
-                 </div>
-                 <Button variant="secondary" size="sm" className="rounded-full px-6 shadow-md bg-white hover:bg-slate-50 text-slate-900 border" asChild onClick={(e) => e.stopPropagation()}>
-                    <a href={current.url} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Open Original
-                    </a>
-                 </Button>
-               </div>
                <div className="absolute top-12 left-0 right-0 p-4 text-center bg-gradient-to-b from-white/80 to-transparent pointer-events-none">
                   <p className="font-semibold text-sm line-clamp-1 px-4">{current.name}</p>
                </div>
+             </div>
+           ) : (
+             <div className="relative w-full h-full bg-white flex flex-col items-center justify-center gap-3 p-6">
+               <div className="p-4 rounded-full bg-slate-100 border border-slate-200">
+                 <FileText className="h-10 w-10 text-slate-500" />
+               </div>
+               <p className="font-semibold text-sm line-clamp-2 text-center px-4">{current.name}</p>
+               <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                 {getExt(current.name, current.url) || 'document'}
+               </p>
+               <Button
+                 variant="secondary"
+                 size="sm"
+                 className="rounded-full px-6 shadow-md bg-white hover:bg-slate-50 text-slate-900 border"
+                 asChild
+                 onClick={(e) => e.stopPropagation()}
+               >
+                 <a href={getOpenInTabUrl(current)} target="_blank" rel="noopener noreferrer">
+                   <ExternalLink className="h-4 w-4 mr-2" />
+                   Open in new tab
+                 </a>
+               </Button>
              </div>
            )}
         </div>
@@ -151,32 +189,53 @@ export function AttachmentCarousel({ attachments }: AttachmentCarouselProps) {
           </DialogHeader>
           
           <div className="w-full h-full flex items-center justify-center">
-            {selectedAttachment?.type.startsWith('image/') ? (
-              <img 
-                src={selectedAttachment.url} 
-                alt={selectedAttachment.name} 
-                className="max-w-full max-h-full object-contain p-4"
-              />
-            ) : (
-              <iframe 
-                src={selectedAttachment?.url} 
-                className="w-full h-full bg-zinc-100 border-none"
-                title={selectedAttachment?.name}
-              />
-            )}
+            {selectedAttachment && (() => {
+              const kind = getKind(selectedAttachment)
+              if (kind === 'image') {
+                return (
+                  <img
+                    src={selectedAttachment.url}
+                    alt={selectedAttachment.name}
+                    className="max-w-full max-h-full object-contain p-4"
+                  />
+                )
+              }
+              if (kind === 'pdf') {
+                return (
+                  <iframe
+                    src={`${selectedAttachment.url}#toolbar=0&navpanes=0`}
+                    className="w-full h-full bg-zinc-100 border-none"
+                    title={selectedAttachment.name}
+                  />
+                )
+              }
+              return (
+                <div className="flex flex-col items-center justify-center gap-4 text-white">
+                  <div className="p-6 rounded-full bg-white/10 border border-white/15">
+                    <FileText className="h-14 w-14 text-white/80" />
+                  </div>
+                  <p className="font-semibold text-lg max-w-[80vw] text-center line-clamp-2">{selectedAttachment.name}</p>
+                  <p className="text-xs text-white/60 uppercase tracking-wide">
+                    {getExt(selectedAttachment.name, selectedAttachment.url) || 'document'}
+                  </p>
+                </div>
+              )
+            })()}
           </div>
 
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-50">
-            <a 
-              href={selectedAttachment?.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-8 py-3.5 bg-white text-black font-bold rounded-full hover:bg-slate-100 transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)] active:scale-95 group"
-            >
-              <ExternalLink className="h-5 w-5 group-hover:scale-110 transition-transform" />
-              Open Original PDF
-            </a>
-          </div>
+          {selectedAttachment && getKind(selectedAttachment) !== 'image' && (
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-50">
+              <a
+                href={getOpenInTabUrl(selectedAttachment)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-8 py-3.5 bg-white text-black font-bold rounded-full hover:bg-slate-100 transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)] active:scale-95 group"
+              >
+                <ExternalLink className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                Open in new tab
+              </a>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

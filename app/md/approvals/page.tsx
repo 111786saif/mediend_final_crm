@@ -107,6 +107,17 @@ function formatCurrency(amount: number) {
   }).format(amount)
 }
 
+/** Compact INR formatter: 10L, 10.4L, 1.1Cr (Indian lakh/crore, up to 1 decimal, trailing .0 stripped) */
+function formatCompactINR(amount: number): string {
+  const sign = amount < 0 ? '-' : ''
+  const abs = Math.abs(amount)
+  const trim = (n: number) => n.toFixed(1).replace(/\.0$/, '')
+  if (abs >= 1_00_00_000) return `${sign}₹${trim(abs / 1_00_00_000)}Cr`
+  if (abs >= 1_00_000) return `${sign}₹${trim(abs / 1_00_000)}L`
+  if (abs >= 1_000) return `${sign}₹${trim(abs / 1_000)}K`
+  return `${sign}₹${abs}`
+}
+
 /** For edit requests: show requested amount from editRequestData (e.g. paymentAmount when changing to DEBIT); otherwise current entry amount. */
 function getEditRequestDisplayAmount(entry: LedgerEntry): { amount: number; isDebit: boolean } {
   const data = entry.editRequestData as Record<string, unknown> | null | undefined
@@ -1123,26 +1134,28 @@ export default function ApprovalsPage() {
           </Card>
 
           {/* Summary */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-2 gap-3">
             <Card className="border-blue-200/80 bg-blue-50/80 dark:border-blue-800/60 dark:bg-blue-950/25">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-blue-700 dark:text-blue-300">Pending Approvals</p>
-                    <p className="text-3xl font-bold text-blue-950 dark:text-blue-50">{pendingCount}</p>
+              <CardContent className="px-3 py-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-[11px] text-blue-700 dark:text-blue-300 truncate">Pending</p>
+                    <p className="text-lg font-bold text-blue-950 dark:text-blue-50 leading-tight">{pendingCount}</p>
                   </div>
-                  <Clock className="h-10 w-10 text-blue-400" />
+                  <Clock className="h-5 w-5 text-blue-400 shrink-0" />
                 </div>
               </CardContent>
             </Card>
             <Card className="border-blue-200/80 bg-blue-50/80 dark:border-blue-800/60 dark:bg-blue-950/25">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-blue-700 dark:text-blue-300">Total Pending Amount</p>
-                    <p className="text-3xl font-bold text-blue-950 dark:text-blue-50">{formatCurrency(totalPendingAmount)}</p>
+              <CardContent className="px-3 py-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-[11px] text-blue-700 dark:text-blue-300 truncate">Total Amount</p>
+                    <p className="text-lg font-bold text-blue-950 dark:text-blue-50 leading-tight" title={formatCurrency(totalPendingAmount)}>
+                      {formatCompactINR(totalPendingAmount)}
+                    </p>
                   </div>
-                  <ArrowDownCircle className="h-10 w-10 text-blue-400" />
+                  <ArrowDownCircle className="h-5 w-5 text-blue-400 shrink-0" />
                 </div>
               </CardContent>
             </Card>

@@ -45,8 +45,9 @@ export async function GET(request: NextRequest) {
     const ratingParam = searchParams.get('rating')
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
-    const surgeryStart = searchParams.get('surgeryStart')
-    const surgeryEnd = searchParams.get('surgeryEnd')
+    // Accepts both new (caseStart/caseEnd) and legacy (surgeryStart/surgeryEnd) param names.
+    const caseStart = searchParams.get('caseStart') ?? searchParams.get('surgeryStart')
+    const caseEnd = searchParams.get('caseEnd') ?? searchParams.get('surgeryEnd')
     const q = searchParams.get('q')?.trim() ?? ''
     const hospitalName = searchParams.get('hospitalName')?.trim() ?? ''
     const surgeonName = searchParams.get('surgeonName')?.trim() ?? ''
@@ -72,22 +73,34 @@ export async function GET(request: NextRequest) {
     }
 
     const leadFilters: Prisma.LeadWhereInput = {}
-    if (surgeryStart || surgeryEnd) {
-      const surgeryDate: Prisma.DateTimeFilter = {}
-      if (surgeryStart) surgeryDate.gte = new Date(surgeryStart)
-      if (surgeryEnd) surgeryDate.lt = new Date(surgeryEnd)
-      leadFilters.surgeryDate = surgeryDate
+    const leadAnd: Prisma.LeadWhereInput[] = []
+
+    // Match if EITHER admission date OR surgery date falls in the selected window.
+    if (caseStart || caseEnd) {
+      const dateFilter: Prisma.DateTimeFilter = {}
+      if (caseStart) dateFilter.gte = new Date(caseStart)
+      if (caseEnd) dateFilter.lt = new Date(caseEnd)
+      leadAnd.push({
+        OR: [
+          { ipdAdmissionDate: dateFilter },
+          { admissionRecord: { admissionDate: dateFilter } },
+          { surgeryDate: dateFilter },
+        ],
+      })
     }
     if (hospitalName) leadFilters.hospitalName = { contains: hospitalName, mode: 'insensitive' }
     if (surgeonName) leadFilters.surgeonName = { contains: surgeonName, mode: 'insensitive' }
     if (bdId) leadFilters.bdId = bdId
     if (q) {
-      leadFilters.OR = [
-        { patientName: { contains: q, mode: 'insensitive' } },
-        { phoneNumber: { contains: q } },
-        { leadRef: { contains: q, mode: 'insensitive' } },
-      ]
+      leadAnd.push({
+        OR: [
+          { patientName: { contains: q, mode: 'insensitive' } },
+          { phoneNumber: { contains: q } },
+          { leadRef: { contains: q, mode: 'insensitive' } },
+        ],
+      })
     }
+    if (leadAnd.length > 0) leadFilters.AND = leadAnd
     if (Object.keys(leadFilters).length > 0) {
       where.lead = leadFilters
     }

@@ -102,6 +102,10 @@ export async function POST(
         handledById: user.id,
         handledAt: new Date(),
         approvedAt: new Date(),
+        // Auto-release any active hold when a decision is made
+        holdReason: null,
+        heldAt: null,
+        heldById: null,
       },
     })
 

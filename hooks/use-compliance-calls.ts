@@ -110,8 +110,8 @@ export interface ComplianceCallsFilters {
   rating?: number | null
   startDate?: string | null
   endDate?: string | null
-  surgeryStart?: string | null
-  surgeryEnd?: string | null
+  caseStart?: string | null
+  caseEnd?: string | null
   q?: string | null
   hospitalName?: string | null
   surgeonName?: string | null
@@ -143,8 +143,8 @@ function buildQueryString(filters: ComplianceCallsFilters, cursor?: string) {
   if (filters.rating != null) params.set("rating", String(filters.rating))
   if (filters.startDate) params.set("startDate", filters.startDate)
   if (filters.endDate) params.set("endDate", filters.endDate)
-  if (filters.surgeryStart) params.set("surgeryStart", filters.surgeryStart)
-  if (filters.surgeryEnd) params.set("surgeryEnd", filters.surgeryEnd)
+  if (filters.caseStart) params.set("caseStart", filters.caseStart)
+  if (filters.caseEnd) params.set("caseEnd", filters.caseEnd)
   if (filters.q) params.set("q", filters.q)
   if (filters.hospitalName) params.set("hospitalName", filters.hospitalName)
   if (filters.surgeonName) params.set("surgeonName", filters.surgeonName)

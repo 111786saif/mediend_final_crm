@@ -93,7 +93,7 @@ export function ComplianceOfficerDashboard() {
 
   const { data: stats } = useComplianceStats({})
 
-  const surgeryRange = useMemo(
+  const caseRange = useMemo(
     () => (monthFilter === ALL ? null : monthRange(monthFilter)),
     [monthFilter],
   )
@@ -102,8 +102,8 @@ export function ComplianceOfficerDashboard() {
     useComplianceCalls({
       status: statusFilter === "ALL" ? null : statusFilter,
       sort: statusFilter === "ALL" ? "pending" : "recent",
-      surgeryStart: surgeryRange?.start ?? null,
-      surgeryEnd: surgeryRange?.end ?? null,
+      caseStart: caseRange?.start ?? null,
+      caseEnd: caseRange?.end ?? null,
       q: debouncedSearch || null,
       hospitalName: hospitalFilter === ALL ? null : hospitalFilter,
       surgeonName: doctorFilter === ALL ? null : doctorFilter,
@@ -144,7 +144,11 @@ export function ComplianceOfficerDashboard() {
           </p>
         </div>
         <Select value={monthFilter} onValueChange={setMonthFilter}>
-          <SelectTrigger className="w-[140px] shrink-0" aria-label="Filter by surgery month">
+          <SelectTrigger
+            className="w-[160px] shrink-0"
+            aria-label="Filter by admission or surgery month"
+            title="Filter by admission or surgery month"
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent align="end">

@@ -85,6 +85,10 @@ export async function POST(
         handledById: user.id,
         handledAt: new Date(),
         rejectedAt: new Date(),
+        // Auto-release any active hold when rejection is recorded
+        holdReason: null,
+        heldAt: null,
+        heldById: null,
       },
     })
 

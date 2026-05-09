@@ -12,7 +12,7 @@ import { apiPost, apiGet } from '@/lib/api-client'
 import { useQueryClient, useQuery } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { CheckCircle2, XCircle, Clock, Loader2, Hospital, FileText } from 'lucide-react'
+import { CheckCircle2, XCircle, Clock, Loader2, Hospital, FileText, PauseCircle, PlayCircle } from 'lucide-react'
 import { HospitalSuggestionForm } from '@/components/kyp/hospital-suggestion-form'
 import { InsuranceInitiateForm } from '@/components/insurance/insurance-initiate-form'
 import { InitiateFormCard } from '@/components/insurance/initiate-form-card'
@@ -34,6 +34,9 @@ interface PreAuthInlineApprovalProps {
     rejectionLetterUrl?: string | null
     approvalNotes?: string | null
     approvedAmount?: number | null
+    holdReason?: string | null
+    heldAt?: string | null
+    heldBy?: { id: string; name: string } | null
     isNewHospitalRequest?: boolean
     newHospitalPreAuthRaised?: boolean
     sumInsured?: string | null
@@ -59,7 +62,7 @@ interface PreAuthInlineApprovalProps {
   onSuccess?: () => void
 }
 
-type ApprovalAction = 'approve' | 'temp_approve' | 'reject' | null
+type ApprovalAction = 'approve' | 'temp_approve' | 'reject' | 'hold' | null
 
 export function PreAuthInlineApproval({
   leadId,
@@ -75,6 +78,7 @@ export function PreAuthInlineApproval({
   const [approvalNotes, setApprovalNotes] = useState(preAuthData?.approvalNotes || '')
   const [rejectionReason, setRejectionReason] = useState('')
   const [rejectionLetterFile, setRejectionLetterFile] = useState<{ name: string; url: string } | null>(null)
+  const [holdReasonInput, setHoldReasonInput] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { uploadFile, uploading: uploadUploading } = useFileUpload()
   const [showHospitalForm, setShowHospitalForm] = useState(false)
@@ -98,6 +102,7 @@ export function PreAuthInlineApproval({
     preAuthData?.approvalStatus === PreAuthStatus.REJECTED
 
   const isTempApproved = preAuthData?.approvalStatus === PreAuthStatus.TEMP_APPROVED
+  const isOnHold = preAuthData?.approvalStatus === PreAuthStatus.ON_HOLD
 
   const initiateForm = initiateFormData?.initiateForm
   const isInitiateFormFilled =
@@ -225,6 +230,45 @@ export function PreAuthInlineApproval({
       onSuccess?.()
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to reject pre-auth')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleHold = async () => {
+    const reason = holdReasonInput.trim()
+    if (!reason) {
+      toast.error('Please provide a reason for the hold')
+      return
+    }
+    setIsSubmitting(true)
+    try {
+      await apiPost(`/api/pre-auth/${kypSubmissionId}/hold`, { reason })
+      toast.success('Pre-auth put on hold')
+      queryClient.invalidateQueries({ queryKey: ['leads', 'insurance'] })
+      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['kyp-submission', leadId] })
+      setAction(null)
+      setHoldReasonInput('')
+      onSuccess?.()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to hold pre-auth')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleReleaseHold = async () => {
+    setIsSubmitting(true)
+    try {
+      await apiPost(`/api/pre-auth/${kypSubmissionId}/release-hold`, {})
+      toast.success('Hold released')
+      queryClient.invalidateQueries({ queryKey: ['leads', 'insurance'] })
+      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['kyp-submission', leadId] })
+      onSuccess?.()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to release hold')
     } finally {
       setIsSubmitting(false)
     }
@@ -596,6 +640,39 @@ export function PreAuthInlineApproval({
         {/* Approval section — only visible after pre-auth is raised */}
         {hasAnyHospitalData && !showHospitalForm && isPreAuthRaised && (
           <div className="space-y-5 border-t pt-5">
+            {/* On-hold banner (informational; visible to BD too) */}
+            {isOnHold && (
+              <div className="p-4 rounded-lg border bg-orange-50 border-orange-200 dark:bg-orange-950/30 dark:border-orange-800">
+                <div className="flex items-center gap-2">
+                  <PauseCircle className="h-5 w-5 text-orange-600" />
+                  <span className="font-medium text-orange-700 dark:text-orange-400">
+                    Pre-authorization is on hold
+                  </span>
+                  <Badge className="bg-orange-500 text-white ml-2">On Hold</Badge>
+                </div>
+                {preAuthData?.holdReason && (
+                  <p className="mt-2 text-sm text-orange-800 dark:text-orange-300">
+                    Reason: {preAuthData.holdReason}
+                  </p>
+                )}
+                {preAuthData?.heldBy?.name && (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Held by {preAuthData.heldBy.name}
+                  </p>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleReleaseHold}
+                  disabled={isSubmitting}
+                  className="mt-3 border-orange-300 text-orange-700 hover:bg-orange-100 dark:border-orange-800 dark:text-orange-300 dark:hover:bg-orange-950/50"
+                >
+                  {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlayCircle className="w-4 h-4 mr-2" />}
+                  Release Hold
+                </Button>
+              </div>
+            )}
+
             {showMarkNewHospitalFirst && (
               <Button onClick={handleMarkNewHospitalRaised} disabled={isSubmitting}>
                 Mark pre-auth raised for new hospital
@@ -656,6 +733,17 @@ export function PreAuthInlineApproval({
                   Reject
                 </Button>
 
+                {!isOnHold && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setAction('hold')}
+                    className="flex-1 border-orange-300 text-orange-700 hover:bg-orange-50 dark:border-orange-800 dark:text-orange-400 dark:hover:bg-orange-950/40"
+                  >
+                    <PauseCircle className="w-4 h-4 mr-2" />
+                    Hold
+                  </Button>
+                )}
+
                 {isTempApproved && !showInitiateForm && (
                   <Button
                     onClick={() => setShowInitiateForm(true)}
@@ -674,6 +762,43 @@ export function PreAuthInlineApproval({
 
             {/* Temp approve detail form */}
             {action === 'temp_approve' && tempApprovalDetailJsx}
+
+            {/* Hold form */}
+            {action === 'hold' && (
+              <div className="space-y-4 rounded-lg border border-orange-200 dark:border-orange-800 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="font-medium text-orange-700 dark:text-orange-400">Put Pre-Auth On Hold</p>
+                  <Button variant="ghost" size="sm" onClick={() => { setAction(null); setHoldReasonInput('') }}>
+                    Cancel
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Use Hold to pause review (e.g. waiting on docs from BD or hospital). BD will be notified
+                  with the reason. Approving, temp-approving, or rejecting later will automatically clear the hold.
+                </p>
+                <div>
+                  <Label htmlFor="holdReason">
+                    Hold Reason <span className="text-red-500">*</span>
+                  </Label>
+                  <Textarea
+                    id="holdReason"
+                    placeholder="Why are you holding this pre-auth? (e.g. awaiting investigation reports, hospital query)"
+                    value={holdReasonInput}
+                    onChange={(e) => setHoldReasonInput(e.target.value)}
+                    rows={3}
+                    className="mt-1"
+                  />
+                </div>
+                <Button
+                  onClick={handleHold}
+                  disabled={isSubmitting || !holdReasonInput.trim()}
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                >
+                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isSubmitting ? 'Holding...' : 'Confirm Hold'}
+                </Button>
+              </div>
+            )}
 
             {/* Reject form */}
             {action === 'reject' && (

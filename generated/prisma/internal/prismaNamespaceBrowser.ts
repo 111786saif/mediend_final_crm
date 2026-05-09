@@ -1247,6 +1247,9 @@ export const PreAuthorizationScalarFieldEnum = {
   rejectionLetterUrl: 'rejectionLetterUrl',
   approvedAt: 'approvedAt',
   rejectedAt: 'rejectedAt',
+  holdReason: 'holdReason',
+  heldAt: 'heldAt',
+  heldById: 'heldById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

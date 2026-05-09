@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,11 +8,12 @@ import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet } from '@/lib/api-client'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { ArrowLeft, MapPin, Shield, Stethoscope, Tag, User } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, MapPin, Shield, Stethoscope, Tag, User } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 import { PreAuthInlineApproval } from '@/components/insurance/pre-auth-inline-approval'
-import { canCompletePreAuth } from '@/lib/case-permissions'
+import { ResetPatientDialog } from '@/components/insurance/reset-patient-dialog'
+import { canCompletePreAuth, canResetPatient } from '@/lib/case-permissions'
 import { PreAuthStatus } from '@/generated/prisma/enums'
 
 interface KYPSubmission {
@@ -72,6 +74,7 @@ export default function PreAuthPage() {
   const params = useParams()
   const queryClient = useQueryClient()
   const leadId = params.leadId as string
+  const [showResetDialog, setShowResetDialog] = useState(false)
 
   const { data: lead } = useQuery<any>({
     queryKey: ['lead', leadId],
@@ -120,6 +123,7 @@ export default function PreAuthPage() {
   }
 
   const canComplete = lead && user && canCompletePreAuth({ role: user.role } as any, lead)
+  const canReset = lead && user && canResetPatient({ role: user.role } as any, lead)
 
   return (
     <AuthenticatedLayout>
@@ -132,12 +136,23 @@ export default function PreAuthPage() {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div>
+          <div className="flex-1">
             <h1 className="text-3xl font-bold">Pre-Authorization</h1>
             <p className="text-muted-foreground">
               {kypSubmission?.lead.leadRef} - {kypSubmission?.lead.patientName}
             </p>
           </div>
+          {canReset && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowResetDialog(true)}
+              className="border-red-300 text-red-700 hover:bg-red-50 hover:text-red-800 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950/40"
+            >
+              <AlertTriangle className="h-4 w-4 mr-2" />
+              Reset Patient
+            </Button>
+          )}
         </div>
 
         {/* Patient overview */}
@@ -290,6 +305,12 @@ export default function PreAuthPage() {
             }}
           />
         )}
+
+        <ResetPatientDialog
+          leadId={leadId}
+          open={showResetDialog}
+          onOpenChange={setShowResetDialog}
+        />
       </div>
     </AuthenticatedLayout>
   )

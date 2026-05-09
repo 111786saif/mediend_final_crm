@@ -230,6 +230,24 @@ Step 3 is review only (no new fields).
 - **Full `APPROVED`** requires the Insurance Initiate Form to be filled first (totalBillAmount > 0, copay set)
 - On approval: `lead.ipdDrName` may be set from the selected hospital's `suggestedDoctor`
 
+#### 5.5a Put Pre-Auth On Hold (internal Insurance status)
+
+Insurance can pause review of a raised pre-auth without making a decision — for example, while waiting on documents from BD or a hospital query. This sets `PreAuthorization.approvalStatus = ON_HOLD` and stores a reason. Case stage stays at `PREAUTH_RAISED`. BD sees the hold + reason as informational on the patient page.
+
+- **Who:** INSURANCE, INSURANCE_HEAD, ADMIN, TESTER (anyone with `insurance:write`)
+- **When:** `caseStage === PREAUTH_RAISED` and current `approvalStatus` is `PENDING` (not yet `APPROVED` / `TEMP_APPROVED` / `REJECTED`)
+- **API:** `POST /api/pre-auth/[kypSubmissionId]/hold`
+- **Body:** `{ reason: string }` (required)
+- **Result:** `approvalStatus → ON_HOLD`; `holdReason`, `heldAt`, `heldById` populated; CaseStageHistory entry written; system chat message posted; BD notified.
+
+**Releasing the hold** (any of these):
+- Explicit `POST /api/pre-auth/[kypSubmissionId]/release-hold` → returns status to `PENDING`.
+- `POST /api/pre-auth/[kypSubmissionId]/approve` (full or temp) → auto-clears the hold.
+- `POST /api/pre-auth/[kypSubmissionId]/reject` → auto-clears the hold.
+- `POST /api/leads/[id]/reset-patient` → auto-clears the hold (along with the rest of pre-auth state).
+
+The hold is **not** a stage transition — pipeline stage and case stage are unchanged. It is a status flag on `PreAuthorization` so Insurance can manage their own queue, and BD has visibility into why approval is delayed.
+
 ---
 
 ### 5.6 Stage 5: Insurance Initiate Form — Insurance
@@ -562,6 +580,53 @@ Post-P&L money still to be collected or paid out for discharged cases: hospital 
 
 ---
 
+## 10b. Reset Patient (Insurance — Danger Action)
+
+Insurance can roll a case back to **`HOSPITALS_SUGGESTED`** when a hospital becomes unavailable, the policy changes, or BD raised pre-auth against the wrong hospital. This is the only insurance-driven backward stage transition (other than the implicit revert when modifying hospital suggestions on `/api/kyp/pre-auth`).
+
+- **Who:** INSURANCE, INSURANCE_HEAD, ADMIN
+- **When:** `caseStage` is `PREAUTH_RAISED`, `PREAUTH_COMPLETE`, or `INITIATED`. **Blocked once `ADMITTED` or beyond.** Insurance flow only — disabled for cash-flow leads.
+- **Page:** `/patient/[leadId]/pre-auth` (header → "Reset Patient" button)
+- **Component:** `ResetPatientDialog` (`components/insurance/reset-patient-dialog.tsx`)
+- **API:** `POST /api/leads/[id]/reset-patient`
+- **Result:** **case stage → `HOSPITALS_SUGGESTED`**; pipeline stage stays `INSURANCE`; activity timeline gets a new entry with the reason; system message posted to case chat; BD + Insurance Head notified.
+
+**Confirmation gate (UI):**
+
+| Field | Type | Required |
+|-------|------|----------|
+| reason | textarea | Yes |
+| confirmation phrase | text — must equal `yes reset this lead` (case-insensitive) | Yes |
+
+Submit stays disabled until both validate.
+
+**Reset effect on data:**
+
+| Entity | Action |
+|--------|--------|
+| `Lead.caseStage` | → `HOSPITALS_SUGGESTED` |
+| `Lead.pipelineStage` | unchanged (`INSURANCE`) |
+| `Lead.ipdDrName` | cleared |
+| `PreAuthorization` (BD raise inputs) | `requestedHospitalName`, `requestedRoomType`, `expectedAdmissionDate`, `expectedSurgeryDate`, `diseaseDescription`, `diseaseImages`, `investigationFileUrls`, `prescriptionFiles`, `notes` cleared |
+| `PreAuthorization` (BD new-hospital sub-flow) | `bdSuggestedHospital`, `isNewHospitalRequest`, `newHospitalPreAuthRaised` cleared |
+| `PreAuthorization` (approval state) | `approvalStatus → PENDING`; `approvedAmount`, `approvalNotes`, `approvedAt`, `rejectionReason`, `rejectionLetterUrl`, `rejectedAt`, `preAuthRaisedAt`, `preAuthRaisedById`, `handledAt`, `handledById` all cleared |
+| `PreAuthorization.suggestedHospitals` | **kept** (Insurance's hospital list) |
+| `PreAuthorization.queries` (Q&A) | **kept** as audit trail |
+| `KYPSubmission.aadharFiles` / `panFiles` / `aadharFileUrl` / `panFileUrl` / `insuranceCardFileUrl` | **kept** |
+| `KYPSubmission.prescriptionFileUrl` / `diseasePhotos` / `otherFiles` | cleared |
+| `InsuranceInitiateForm` | **deleted** (if exists) |
+| `AdmissionRecord` | **deleted** (if reset is from `INITIATED`) |
+| `CaseStageHistory` | new row with `note` containing reason |
+| `CaseChatMessage` | system message posted with reason |
+| `Notification` | sent to lead's BD + all `INSURANCE_HEAD` users (excluding actor) |
+| `DischargeSheet` / `PLRecord` / `OutstandingCase` | not touched (cannot exist at allowed reset stages) |
+
+**Notes:**
+- Files uploaded to object storage are **not** hard-deleted; only the DB references are cleared. This keeps the action reversible at the storage layer if mistakenly invoked.
+- The cleared fields are exactly the inputs BD provides during pre-auth raise, so after reset the case is structurally identical to a fresh `HOSPITALS_SUGGESTED` state and BD can re-raise pre-auth normally.
+
+---
+
 ## 11. Mark Lost
 
 - **Who:** BD, TEAM_LEAD, ADMIN
@@ -581,12 +646,14 @@ Post-P&L money still to be collected or paid out for discharged cases: hospital 
 | **Modify Hospital Suggestions** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `HOSPITALS_SUGGESTED` or `PREAUTH_RAISED` |
 | **Raise Pre-Auth** | BD, TEAM_LEAD, ADMIN | `HOSPITALS_SUGGESTED` |
 | **Complete Pre-Auth (approve/reject)** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` |
+| **Hold / Release Pre-Auth** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` and not yet APPROVED/TEMP_APPROVED/REJECTED |
 | **Fill Initiate Form** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` or `PREAUTH_COMPLETE` |
 | **View Initiate Form** | INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, OUTSTANDING_HEAD, ADMIN, FINANCE_HEAD, BD, TEAM_LEAD | No stage check |
 | **Mark Admitted (Initiate)** | BD, TEAM_LEAD, ADMIN | `PREAUTH_COMPLETE` |
 | **Update IPD Status** | BD, TEAM_LEAD, ADMIN | `INITIATED` |
 | **Generate PDF** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` or `PREAUTH_COMPLETE` |
 | **Edit Discharge Sheet** | INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, ADMIN | `DISCHARGED` and initiate form exists |
+| **Reset Patient** | INSURANCE, INSURANCE_HEAD, ADMIN | Insurance flow; `PREAUTH_RAISED`, `PREAUTH_COMPLETE`, or `INITIATED`; requires typed confirmation + reason |
 | **Mark Lost** | BD, TEAM_LEAD, ADMIN | Not `NEW_LEAD`; not post-admission; stage in allowed list |
 | **Start Cash Mode** | BD, TEAM_LEAD, ADMIN | `flowType !== CASH`; stage in early/cash-allowed list |
 | **Revert Cash Mode** | BD, TEAM_LEAD, ADMIN | `flowType === CASH` and `CASH_IPD_PENDING` |
@@ -611,6 +678,7 @@ Post-P&L money still to be collected or paid out for discharged cases: hospital 
 | `PREAUTH_COMPLETE` | `INITIATED` | `POST /api/leads/:id/initiate` (Mark Admitted) | BD |
 | `INITIATED` / `ADMITTED` | `DISCHARGED` | `POST /api/leads/:id/discharge` | BD |
 | `DISCHARGED` | (PLRecord created) | `POST /api/discharge-sheet` | Insurance |
+| `PREAUTH_RAISED` / `PREAUTH_COMPLETE` / `INITIATED` | `HOSPITALS_SUGGESTED` | `POST /api/leads/:id/reset-patient` (Reset Patient — danger action) | Insurance |
 
 Pipeline: `SALES → INSURANCE` (on hospital suggestion) → `PL` (on discharge sheet creation)
 
@@ -682,6 +750,7 @@ Cash flow uses `CashStageProgress` with 4 steps: IPD Cash Form → Insurance Rev
 | `/api/leads/[id]/initiate` | POST | BD marks admitted |
 | `/api/leads/[id]/ipd-mark` | POST | BD updates IPD status |
 | `/api/leads/[id]/discharge` | POST | BD marks discharged |
+| `/api/leads/[id]/reset-patient` | POST | Insurance resets patient back to Hospitals Suggested (danger action) |
 | `/api/leads/[id]/cash-review` | POST | Insurance approve/hold cash case |
 | `/api/leads/[id]/preauth-pdf` | GET | Generate pre-auth PDF |
 | `/api/kyp/submit` | POST | Submit KYP basic form |
@@ -689,6 +758,8 @@ Cash flow uses `CashStageProgress` with 4 steps: IPD Cash Form → Insurance Rev
 | `/api/kyp/queries` | POST | Insurance raises query |
 | `/api/pre-auth/[kypSubId]/approve` | POST | Insurance approves pre-auth |
 | `/api/pre-auth/[kypSubId]/reject` | POST | Insurance rejects pre-auth |
+| `/api/pre-auth/[kypSubId]/hold` | POST | Insurance puts pre-auth on hold (internal status) |
+| `/api/pre-auth/[kypSubId]/release-hold` | POST | Insurance releases an active hold |
 | `/api/pre-auth/[kypSubId]/mark-new-hospital-raised` | POST | Mark new hospital pre-auth raised |
 | `/api/insurance-initiate-form` | POST / GET | Create / read initiate form |
 | `/api/insurance-initiate-form/[id]` | GET / PATCH | Read / update initiate form |
