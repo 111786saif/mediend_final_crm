@@ -39,8 +39,8 @@ export async function GET(request: NextRequest) {
       if (status) {
         where.status = status as any
       }
-    } else if (user.role === 'SALES_HEAD' || user.role === 'TESTER') {
-      // Sales Head and Tester can see all KYP submissions
+    } else if (user.role === 'SALES_HEAD' || user.role === 'TESTER' || user.role === 'COMPLIANCE_HEAD') {
+      // Sales Head, Tester, Compliance Head can see all KYP submissions (read-only for compliance)
       if (status) {
         where.status = status as any
       }

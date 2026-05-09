@@ -68,6 +68,7 @@ export async function GET(
         where: { employeeId: monthlyPayroll.employeeId },
         orderBy: [{ effectiveFrom: 'desc' }],
       })
+      const applyPf = (salaryStructure as { applyPf?: boolean } | null)?.applyPf ?? true
       const doc = new jsPDF()
       const pageW = (doc as unknown as { internal: { pageSize: { getWidth(): number } } }).internal.pageSize.getWidth()
       const logoData = getLogoBase64()
@@ -162,17 +163,16 @@ export async function GET(
       doc.setTextColor(...MEDIEND_TEAL)
       doc.text('DEDUCTIONS', 20, y)
       y += 6
+      const miscellaneous = (monthlyPayroll.insurance ?? 0) + lateFines
+      const epfEmployeeAmount = applyPf ? monthlyPayroll.epfEmployee : 0
       const deductions: [string, string][] = [
-        [monthlyPayroll.epfEmployee, 'EPF (Employee)'],
+        [epfEmployeeAmount, 'EPF (Employee)'],
         [monthlyPayroll.esicAmount ?? 0, 'ESIC'],
-        [monthlyPayroll.insurance ?? 0, 'Miscellaneous'],
+        [miscellaneous, 'Miscellaneous'],
         [monthlyPayroll.tdsAmount ?? 0, 'TDS'],
       ]
         .filter(([amt]) => (amt as number) > 0)
         .map(([amt, label]) => [label as string, formatCurrency(amt as number)])
-      if (lateFines > 0) {
-        deductions.push(['Late fines', formatCurrency(lateFines)])
-      }
       autoTable(doc, {
         startY: y,
         head: [['Description', 'Amount']],
@@ -184,13 +184,15 @@ export async function GET(
         margin: { left: 20 },
         tableWidth: 65,
       })
+      const totalDeductions = epfEmployeeAmount + (monthlyPayroll.esicAmount ?? 0) + miscellaneous + (monthlyPayroll.tdsAmount ?? 0)
+      const netPayable = Math.max(0, Math.round(monthlyPayroll.adjustedGross - totalDeductions))
       y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 4
       doc.setFont('helvetica', 'bold')
       doc.text('TOTAL DEDUCTIONS', 20, y)
-      doc.text(formatCurrency(monthlyPayroll.totalDeductions), pageW - 20, y, { align: 'right' })
+      doc.text(formatCurrency(totalDeductions), pageW - 20, y, { align: 'right' })
       y += 8
 
-      if (monthlyPayroll.epfEmployer > 0) {
+      if (applyPf && monthlyPayroll.epfEmployer > 0) {
         doc.setFont('helvetica', 'normal')
         doc.setFontSize(9)
         doc.setTextColor(...MEDIEND_TEAL)
@@ -205,11 +207,11 @@ export async function GET(
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(12)
       doc.setTextColor(...MEDIEND_DARK)
-      doc.text('NET PAYABLE: ' + formatCurrency(monthlyPayroll.netPayable), 20, y)
+      doc.text('NET PAYABLE: ' + formatCurrency(netPayable), 20, y)
       y += 6
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(9)
-      doc.text('(Rupees ' + numberToWordsINR(monthlyPayroll.netPayable) + ')', 20, y)
+      doc.text('(Rupees ' + numberToWordsINR(netPayable) + ')', 20, y)
       y += 12
 
       doc.setFontSize(8)

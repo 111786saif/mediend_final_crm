@@ -404,8 +404,8 @@ export function canAccessLead(
 ): boolean {
   if (!user) return false
 
-  // MD, Sales Head, Insurance Head, PL Head, Admin, Tester, Executive Assistant can access all leads
-  if (['MD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT'].includes(user.role)) {
+  // MD, Sales Head, Insurance Head, PL Head, Admin, Tester, Executive Assistant, Compliance Head can access all leads
+  if (['MD', 'SALES_HEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD'].includes(user.role)) {
     return true
   }
 

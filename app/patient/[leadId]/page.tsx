@@ -13,7 +13,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Phone, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -329,6 +329,58 @@ interface KYPSubmission {
   } | null
 }
 
+function DossierField({
+  label,
+  value,
+  mono = false,
+}: {
+  label: string
+  value: React.ReactNode
+  mono?: boolean
+}) {
+  const isEmpty =
+    value === null ||
+    value === undefined ||
+    (typeof value === 'string' && (value.trim() === '' || value.trim() === '—'))
+  return (
+    <div className="flex items-baseline justify-between gap-3 py-[3px]">
+      <dt className="shrink-0 text-[10.5px] uppercase tracking-[0.14em] text-gray-400 dark:text-gray-500">
+        {label}
+      </dt>
+      <dd
+        className={cn(
+          'min-w-0 truncate text-right text-[13px] text-gray-800 dark:text-gray-100',
+          mono && 'font-mono text-[12px]',
+        )}
+        title={typeof value === 'string' ? value : undefined}
+      >
+        {isEmpty ? (
+          <span className="text-gray-300 dark:text-gray-700">—</span>
+        ) : (
+          value
+        )}
+      </dd>
+    </div>
+  )
+}
+
+function DossierSectionHeader({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  label: string
+}) {
+  return (
+    <div className="mb-2.5 flex items-center gap-2 border-b border-dashed border-gray-200 pb-2 dark:border-gray-800">
+      <Icon className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-700 dark:text-gray-300">
+        {label}
+      </p>
+    </div>
+  )
+}
+
 export default function PatientDetailsPage() {
   const { user } = useAuth()
   const router = useRouter()
@@ -639,44 +691,204 @@ export default function PatientDetailsPage() {
         {/* Professional Header Section */}
 
             <div className="space-y-6">
-              {/* Top Row: Back Button and Patient Name */}
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => router.back()}
-                    className="hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                  </Button>
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <User className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              {/* Patient Dossier Card */}
+              <Card className="overflow-hidden border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
+                <div className="h-[3px] bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
+
+                {/* Identity strip */}
+                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 px-5 pb-4 pt-5 dark:border-gray-900 sm:px-6">
+                  <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => router.back()}
+                      className="-ml-2 mt-0.5 shrink-0 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                    </Button>
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-700 text-lg font-semibold text-white shadow-sm ring-4 ring-emerald-50 dark:ring-emerald-950/40">
+                      {(() => {
+                        const parts = (lead.patientName || '')
+                          .trim()
+                          .split(/\s+/)
+                          .filter(Boolean)
+                        if (parts.length === 0) return '·'
+                        if (parts.length === 1)
+                          return (parts[0][0] ?? '·').toUpperCase()
+                        return (
+                          (parts[0][0] ?? '') +
+                          (parts[parts.length - 1][0] ?? '')
+                        ).toUpperCase()
+                      })()}
                     </div>
-                    <div>
-                      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{lead.patientName}</h1>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                        {lead.leadRef}
+                    <div className="min-w-0">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400">
+                        Patient Dossier · {lead.leadRef}
                       </p>
+                      <h1 className="mt-0.5 truncate text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-50 sm:text-3xl">
+                        {lead.patientName}
+                      </h1>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-gray-600 dark:text-gray-400">
+                        <span>
+                          {lead.age ?? '—'} / {lead.sex ?? '—'}
+                        </span>
+                        {lead.profession && (
+                          <>
+                            <span className="text-gray-300 dark:text-gray-700">·</span>
+                            <span>{lead.profession}</span>
+                          </>
+                        )}
+                        {lead.phoneNumber && lead.phoneNumber !== '—' && (
+                          <>
+                            <span className="text-gray-300 dark:text-gray-700">·</span>
+                            <span className="font-mono text-xs">{lead.phoneNumber}</span>
+                          </>
+                        )}
+                        {lead.status && (
+                          <>
+                            <span className="text-gray-300 dark:text-gray-700">·</span>
+                            <span className="text-gray-500 dark:text-gray-400">{lead.status}</span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <div className="flex shrink-0 flex-wrap items-center gap-2">
+                    <Button asChild size="sm" variant="outline" className="gap-2">
+                      <Link href={`/chat/${leadId}`}>
+                        <MessageCircle className="h-4 w-4" />
+                        Chat
+                      </Link>
+                    </Button>
+                    <Badge
+                      variant="outline"
+                      className="border-gray-300 font-mono text-[10px] uppercase tracking-wider dark:border-gray-700"
+                    >
+                      {lead.pipelineStage}
+                    </Badge>
+                    <Badge className={`border-2 ${getStageBadgeColor(lead.caseStage)}`}>
+                      {lead.caseStage.replace(/_/g, ' ')}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button asChild size="sm" variant="outline" className="gap-2">
-                    <Link href={`/chat/${leadId}`}>
-                      <MessageCircle className="h-4 w-4" />
-                      Open Chat
-                    </Link>
-                  </Button>
-                  <Badge variant="outline" className="border-gray-300 dark:border-gray-700">
-                    {lead.pipelineStage}
-                  </Badge>
-                  <Badge className={`border-2 ${getStageBadgeColor(lead.caseStage)}`}>
-                    {lead.caseStage.replace(/_/g, ' ')}
-                  </Badge>
-                </div>
-              </div>
+
+                {/* Dossier grid — 4 sections, paper-style dividers via gap-px */}
+                {(() => {
+                  const location =
+                    lead.kypSubmission?.location?.trim() || lead.circle || null
+                  const area = lead.kypSubmission?.area?.trim() || null
+                  const surgeonLine = [lead.surgeonName, lead.surgeonType]
+                    .filter(Boolean)
+                    .join(' · ')
+                  const leadDate = lead.leadEntryDate || lead.createdDate
+                  const rec = lead.admissionRecord
+                  const isPostponed = rec?.ipdStatus === 'POSTPONED'
+                  const effectiveSurgeryDate =
+                    isPostponed && rec?.newSurgeryDate
+                      ? rec.newSurgeryDate
+                      : rec?.surgeryDate
+                  const surgeryDateNode = effectiveSurgeryDate ? (
+                    <span className="inline-flex items-center gap-1.5">
+                      <span>
+                        {format(new Date(effectiveSurgeryDate), 'dd MMM yyyy')}
+                        {rec?.surgeryTime && !isPostponed ? ` · ${rec.surgeryTime}` : ''}
+                      </span>
+                      {isPostponed && (
+                        <span className="rounded-sm bg-amber-100 px-1 py-px font-mono text-[9px] uppercase tracking-wider text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                          rescheduled
+                        </span>
+                      )}
+                    </span>
+                  ) : null
+                  return (
+                    <div className="grid grid-cols-1 gap-px bg-gray-100 dark:bg-gray-900 sm:grid-cols-2 lg:grid-cols-4">
+                      <dl className="bg-white px-5 py-4 dark:bg-gray-950 sm:px-6">
+                        <DossierSectionHeader icon={Phone} label="Contact" />
+                        <DossierField label="Phone" value={lead.phoneNumber} mono />
+                        <DossierField
+                          label="Alternate"
+                          value={lead.alternateNumber}
+                          mono
+                        />
+                        <DossierField label="Attendant" value={lead.attendantName} />
+                        <DossierField
+                          label="Attendant Ph."
+                          value={lead.attendantContactNo}
+                          mono
+                        />
+                      </dl>
+                      <dl className="bg-white px-5 py-4 dark:bg-gray-950 sm:px-6">
+                        <DossierSectionHeader icon={Stethoscope} label="Clinical" />
+                        <DossierField label="Treatment" value={lead.treatment} />
+                        <DossierField label="Category" value={lead.category} />
+                        <DossierField label="Surgeon" value={surgeonLine || null} />
+                        <DossierField label="Anesthesia" value={lead.anesthesia} />
+                        <DossierField label="Grade" value={lead.quantityGrade} />
+                        <DossierField
+                          label="Disease"
+                          value={lead.kypSubmission?.disease}
+                        />
+                      </dl>
+                      <dl className="bg-white px-5 py-4 dark:bg-gray-950 sm:px-6">
+                        <DossierSectionHeader icon={MapPin} label="Hospital & Cover" />
+                        <DossierField label="Hospital" value={lead.hospitalName} />
+                        <DossierField label="IPD Doctor" value={lead.ipdDrName} />
+                        <DossierField label="City" value={location} />
+                        <DossierField label="Area" value={area} />
+                        <DossierField label="Insurance" value={lead.insuranceName} />
+                        <DossierField label="Type" value={lead.insuranceType} />
+                      </dl>
+                      <dl className="bg-white px-5 py-4 dark:bg-gray-950 sm:px-6">
+                        <DossierSectionHeader icon={CalendarIcon} label="Team & Timeline" />
+                        <DossierField label="BD" value={lead.bd?.name} />
+                        <DossierField
+                          label="Manager"
+                          value={lead.bd?.manager?.name}
+                        />
+                        <DossierField
+                          label="Lead Date"
+                          value={
+                            leadDate ? format(new Date(leadDate), 'dd MMM yyyy') : null
+                          }
+                          mono
+                        />
+                        <DossierField
+                          label="Assigned"
+                          value={
+                            lead.assignedDate
+                              ? format(new Date(lead.assignedDate), 'dd MMM yyyy')
+                              : null
+                          }
+                          mono
+                        />
+                        <DossierField
+                          label="Surgery"
+                          value={surgeryDateNode}
+                          mono
+                        />
+                        <DossierField
+                          label="Admission"
+                          value={
+                            rec?.admissionDate
+                              ? `${format(new Date(rec.admissionDate), 'dd MMM yyyy')}${rec.admissionTime ? ` · ${rec.admissionTime}` : ''}`
+                              : null
+                          }
+                          mono
+                        />
+                        <DossierField
+                          label="Discharge"
+                          value={
+                            rec?.ipdDischargeDate
+                              ? format(new Date(rec.ipdDischargeDate), 'dd MMM yyyy')
+                              : null
+                          }
+                          mono
+                        />
+                      </dl>
+                    </div>
+                  )
+                })()}
+              </Card>
 
               {/* Surgery / IPD status banner — updates when postponed, cancelled, or discharged */}
               {lead.admissionRecord && (() => {
@@ -810,109 +1022,6 @@ export default function PatientDetailsPage() {
                       </div>
                     </CardContent>
                   </Card>
-                )
-              })()}
-
-              {/* Patient Info Grid */}
-              {(() => {
-                const location = lead.kypSubmission?.location?.trim() || lead.circle
-                const area = lead.kypSubmission?.area?.trim() || null
-                return (
-                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 border border-gray-200 dark:border-gray-800">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-teal-50 dark:bg-teal-950/30 rounded-lg border border-teal-200 dark:border-teal-800">
-                        <MapPin className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Location</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">{location || '-'}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-indigo-50 dark:bg-indigo-950/30 rounded-lg border border-indigo-200 dark:border-indigo-800">
-                        <User className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Age / Sex</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">
-                          {lead.age || '-'} / {lead.sex || '-'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800">
-                        <MapPin className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Circle</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">{lead.circle || '-'}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-800">
-                        <Stethoscope className="w-4 h-4 text-green-600 dark:text-green-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Treatment</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">{lead.treatment || '-'}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700">
-                        <Tag className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Category</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">{lead.category || '-'}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <CalendarIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Lead Date</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">
-                          {lead.leadEntryDate
-                            ? format(new Date(lead.leadEntryDate), 'dd MMM yyyy')
-                            : lead.createdDate
-                              ? format(new Date(lead.createdDate), 'dd MMM yyyy')
-                              : '-'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-teal-50 dark:bg-teal-950/30 rounded-lg border border-teal-200 dark:border-teal-800">
-                        <CalendarIcon className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Assign Date</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">
-                          {lead.assignedDate ? format(new Date(lead.assignedDate), 'dd MMM yyyy') : '-'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-purple-50 dark:bg-purple-950/30 rounded-lg border border-purple-200 dark:border-purple-800">
-                        <User className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">BDM / TL</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">
-                          {lead.bd?.name || '-'} {lead.teamLeadId ? `/ TL-${lead.teamLeadId}` : ''}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-orange-50 dark:bg-orange-950/30 rounded-lg border border-orange-200 dark:border-orange-800">
-                        <Activity className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-                      </div>
-                      <div>
-                        <p className="text-gray-500 dark:text-gray-400 text-xs font-medium">Status</p>
-                        <p className="text-gray-900 dark:text-gray-100 font-semibold text-sm">{lead.status || '-'}</p>
-                      </div>
-                    </div>
-                  </div>
                 )
               })()}
 

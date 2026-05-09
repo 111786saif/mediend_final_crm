@@ -80,8 +80,15 @@ export async function PATCH(
     const body = await request.json()
     const data = updatePayrollSchema.parse(body)
 
+    const salaryStructure = await prisma.salaryStructure.findFirst({
+      where: { employeeId: existing.employeeId },
+      orderBy: [{ effectiveFrom: 'desc' }],
+      select: { applyPf: true },
+    })
+    const applyPf = salaryStructure?.applyPf ?? true
+
     const adjustedGross = Math.round(data.adjustedGross ?? existing.adjustedGross)
-    const epfEmployee = data.epfEmployee ?? existing.epfEmployee
+    const epfEmployee = applyPf ? (data.epfEmployee ?? existing.epfEmployee) : 0
     const esicAmount = data.applyEsic === false ? 0 : (data.esicAmount ?? existing.esicAmount)
     const applyEsic = data.applyEsic ?? existing.applyEsic
     const tdsAmount = data.applyTds === false ? 0 : (data.tdsAmount ?? existing.tdsAmount)
@@ -94,7 +101,7 @@ export async function PATCH(
       Math.max(0, Math.ceil(adjustedGross - totalDeductions))
 
     const finalAdjustedBasic = data.adjustedBasic ?? existing.adjustedBasic
-    const epfEmployer = Math.round(finalAdjustedBasic * 0.12)
+    const epfEmployer = applyPf ? Math.round(finalAdjustedBasic * 0.12) : 0
 
     const payroll = await prisma.monthlyPayroll.update({
       where: { id },
@@ -107,7 +114,7 @@ export async function PATCH(
         ...(data.adjustedOther != null && { adjustedOther: data.adjustedOther }),
         ...(data.adjustedSpecial != null && { adjustedSpecial: data.adjustedSpecial }),
         ...(data.adjustedGross != null && { adjustedGross: data.adjustedGross }),
-        ...(data.epfEmployee != null && { epfEmployee: data.epfEmployee }),
+        epfEmployee,
         applyEsic,
         esicAmount,
         applyTds,

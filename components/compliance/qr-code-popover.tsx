@@ -51,7 +51,6 @@ export function QRCodePopover({ phoneNumber, patientName }: QRCodePopoverProps) 
           ) : (
             <p className="text-sm text-destructive">No phone number</p>
           )}
-          <p className="font-mono text-sm">{normalized || "—"}</p>
           {telUri && (
             <a href={telUri} className="w-full">
               <Button type="button" size="sm" className="w-full gap-2">

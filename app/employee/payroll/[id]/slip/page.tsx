@@ -45,6 +45,7 @@ interface MonthlyPayrollSlip {
     specialAllowance: number
     monthlyGross: number
     annualCtc: number
+    applyPf?: boolean
   } | null
   employee: {
     id: string
@@ -144,7 +145,18 @@ export default function PayslipPage() {
   const monthName = MONTHS[payrollData.month - 1] ?? ''
   const employee = payrollData.employee
   const m = isMonthly ? (payrollData as MonthlyPayrollSlip) : null
-  const netPay = isMonthly ? m!.netPayable : (payrollData as LegacyPayrollSlip).netSalary
+  const applyPf = m?.salaryStructure?.applyPf ?? true
+  const epfEmployeeShown = m ? (applyPf ? m.epfEmployee : 0) : 0
+  const epfEmployerShown = m ? (applyPf ? m.epfEmployer : 0) : 0
+  const miscellaneous = m ? m.insurance + (m.lateFines ?? 0) : 0
+  const recomputedDeductions = m
+    ? epfEmployeeShown +
+      (m.applyEsic ? (m.esicAmount ?? 0) : 0) +
+      (m.tdsAmount ?? 0) +
+      miscellaneous
+    : 0
+  const recomputedNet = m ? Math.max(0, Math.round(m.adjustedGross - recomputedDeductions)) : 0
+  const netPay = isMonthly ? recomputedNet : (payrollData as LegacyPayrollSlip).netSalary
   const monthlyGross = isMonthly ? m!.adjustedGross : (payrollData as LegacyPayrollSlip).grossSalary
 
   return (
@@ -290,11 +302,11 @@ export default function PayslipPage() {
                 <div className="ed-col-title deductions">Deductions</div>
                 {isMonthly && m ? (
                   <>
-                    {m.epfEmployee > 0 && <div className="ed-row"><span className="ed-label">EPF (Employee)</span><span className="ed-value">{formatCurrency(m.epfEmployee)}</span></div>}
+                    {epfEmployeeShown > 0 && <div className="ed-row"><span className="ed-label">EPF (Employee)</span><span className="ed-value">{formatCurrency(epfEmployeeShown)}</span></div>}
                     {m.applyEsic && (m.esicAmount ?? 0) > 0 && <div className="ed-row"><span className="ed-label">ESIC</span><span className="ed-value">{formatCurrency(m.esicAmount)}</span></div>}
                     {m.tdsAmount > 0 && <div className="ed-row"><span className="ed-label">TDS</span><span className="ed-value">{formatCurrency(m.tdsAmount)}</span></div>}
-                    {(m.insurance + (m.lateFines ?? 0)) > 0 && <div className="ed-row"><span className="ed-label">Other Deductions</span><span className="ed-value">{formatCurrency(m.insurance + (m.lateFines ?? 0))}</span></div>}
-                    <div className="ed-total deductions-total"><span>Total Deductions</span><span className="ed-value">{formatCurrency(m.totalDeductions)}</span></div>
+                    {miscellaneous > 0 && <div className="ed-row"><span className="ed-label">Miscellaneous</span><span className="ed-value">{formatCurrency(miscellaneous)}</span></div>}
+                    <div className="ed-total deductions-total"><span>Total Deductions</span><span className="ed-value">{formatCurrency(recomputedDeductions)}</span></div>
                   </>
                 ) : (
                   (() => {
@@ -315,13 +327,13 @@ export default function PayslipPage() {
             </div>
           </div>
 
-          {isMonthly && m && (m.epfEmployer > 0) && (
+          {isMonthly && m && epfEmployerShown > 0 && (
             <>
               <hr className="divider" />
               <div className="section" style={{ paddingTop: 12, paddingBottom: 12 }}>
                 <div className="section-title">Employer Contributions <span style={{ fontWeight: 400, fontSize: '10px', letterSpacing: 0, textTransform: 'none', color: '#999' }}>(Not deducted from salary)</span></div>
                 <div className="employer-grid">
-                  <div className="employer-row"><span>Employer PF</span><span className="value">{formatCurrency(m.epfEmployer)}</span></div>
+                  <div className="employer-row"><span>Employer PF</span><span className="value">{formatCurrency(epfEmployerShown)}</span></div>
                 </div>
               </div>
             </>

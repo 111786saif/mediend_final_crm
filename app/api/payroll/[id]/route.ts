@@ -56,6 +56,7 @@ export async function GET(
           specialAllowance: true,
           monthlyGross: true,
           annualCtc: true,
+          applyPf: true,
         },
       })
       return successResponse({ type: 'monthly', ...monthlyPayroll, salaryStructure: salaryStructure ?? null })
