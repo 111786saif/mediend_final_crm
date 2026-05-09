@@ -45,6 +45,29 @@ export const ComplianceCallStatus = {
 export type ComplianceCallStatus = (typeof ComplianceCallStatus)[keyof typeof ComplianceCallStatus]
 
 
+export const SatisfactionLevel = {
+  SATISFIED: 'SATISFIED',
+  NEUTRAL: 'NEUTRAL',
+  NOT_SATISFIED: 'NOT_SATISFIED'
+} as const
+
+export type SatisfactionLevel = (typeof SatisfactionLevel)[keyof typeof SatisfactionLevel]
+
+
+export const ConcernCategory = {
+  HOSPITAL_STAFF: 'HOSPITAL_STAFF',
+  PAYMENT: 'PAYMENT',
+  BD: 'BD',
+  NO_UPDATE_FOLLOWUP: 'NO_UPDATE_FOLLOWUP',
+  DOCTOR: 'DOCTOR',
+  SURGERY_RELATED: 'SURGERY_RELATED',
+  CAB_PAYMENT: 'CAB_PAYMENT',
+  OTHERS: 'OTHERS'
+} as const
+
+export type ConcernCategory = (typeof ConcernCategory)[keyof typeof ConcernCategory]
+
+
 export const FlowType = {
   INSURANCE: 'INSURANCE',
   CASH: 'CASH'

@@ -9466,6 +9466,24 @@ export const ComplianceCallScalarFieldEnum = {
   completedAt: 'completedAt',
   callbackAt: 'callbackAt',
   calledByUserId: 'calledByUserId',
+  problemDuringSurgery: 'problemDuringSurgery',
+  problemAfterSurgery: 'problemAfterSurgery',
+  commitmentStatus: 'commitmentStatus',
+  concernResolved: 'concernResolved',
+  doctorBehaviour: 'doctorBehaviour',
+  hospitalStaffBehaviour: 'hospitalStaffBehaviour',
+  bdmBehaviour: 'bdmBehaviour',
+  mediendService: 'mediendService',
+  overallExperience: 'overallExperience',
+  paymentQuery: 'paymentQuery',
+  referralConfirmation: 'referralConfirmation',
+  referralName: 'referralName',
+  referralContact: 'referralContact',
+  opdStatus: 'opdStatus',
+  opdMode: 'opdMode',
+  additionalRemark: 'additionalRemark',
+  satisfaction: 'satisfaction',
+  concernCategories: 'concernCategories',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -10667,6 +10685,34 @@ export type EnumComplianceCallStatusFieldRefInput<$PrismaModel> = FieldRefInputT
  * Reference to a field of type 'ComplianceCallStatus[]'
  */
 export type ListEnumComplianceCallStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ComplianceCallStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SatisfactionLevel'
+ */
+export type EnumSatisfactionLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SatisfactionLevel'>
+    
+
+
+/**
+ * Reference to a field of type 'SatisfactionLevel[]'
+ */
+export type ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SatisfactionLevel[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ConcernCategory[]'
+ */
+export type ListEnumConcernCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConcernCategory[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ConcernCategory'
+ */
+export type EnumConcernCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConcernCategory'>
     
 
 

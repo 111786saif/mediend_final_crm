@@ -40,6 +40,23 @@ enum ComplianceCallStatus {
   CALLBACK_SCHEDULED
 }
 
+enum SatisfactionLevel {
+  SATISFIED
+  NEUTRAL
+  NOT_SATISFIED
+}
+
+enum ConcernCategory {
+  HOSPITAL_STAFF
+  PAYMENT
+  BD
+  NO_UPDATE_FOLLOWUP
+  DOCTOR
+  SURGERY_RELATED
+  CAB_PAYMENT
+  OTHERS
+}
+
 enum FlowType {
   INSURANCE
   CASH
@@ -2560,6 +2577,36 @@ model ComplianceCall {
   calledByUserId String?
   calledBy       User?   @relation("ComplianceCallCaller", fields: [calledByUserId], references: [id])
 
+  // Patient experience (Excel cols O, P, Q, AB)
+  problemDuringSurgery   String? @db.Text
+  problemAfterSurgery    String? @db.Text
+  commitmentStatus       String?
+  concernResolved        String?
+
+  // Service quality (cols R, S, X, Y, Z)
+  doctorBehaviour        String?
+  hospitalStaffBehaviour String?
+  bdmBehaviour           String?
+  mediendService         String?
+  overallExperience      String?
+
+  // Payment & referral (cols T, U, V, W)
+  paymentQuery           String?
+  referralConfirmation   String?
+  referralName           String?
+  referralContact        String?
+
+  // OPD follow-up (cols AC, AD)
+  opdStatus              String?
+  opdMode                String?
+
+  // Long-form (col AA)
+  additionalRemark       String? @db.Text
+
+  // Structured for the monthly rollup
+  satisfaction      SatisfactionLevel?
+  concernCategories ConcernCategory[]  @default([])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -2567,6 +2614,7 @@ model ComplianceCall {
   @@index([createdAt])
   @@index([rating])
   @@index([completedAt])
+  @@index([satisfaction])
 }
 
 // ==========================================

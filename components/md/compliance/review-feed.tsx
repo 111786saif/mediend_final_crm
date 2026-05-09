@@ -3,15 +3,20 @@
 import { useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useComplianceCalls, type ComplianceCallsFilters } from "@/hooks/use-compliance-calls"
+import {
+  useComplianceCalls,
+  type ComplianceCall,
+  type ComplianceCallsFilters,
+} from "@/hooks/use-compliance-calls"
 import { ReviewCard } from "./review-card"
 
 interface Props {
   filters: ComplianceCallsFilters
   onClear: () => void
+  onOpen?: (call: ComplianceCall) => void
 }
 
-export function ReviewFeed({ filters, onClear }: Props) {
+export function ReviewFeed({ filters, onClear, onOpen }: Props) {
   const query = useComplianceCalls(filters)
   const {
     data,
@@ -77,7 +82,7 @@ export function ReviewFeed({ filters, onClear }: Props) {
   return (
     <div className="space-y-3">
       {calls.map((c) => (
-        <ReviewCard key={c.id} call={c} />
+        <ReviewCard key={c.id} call={c} onOpen={onOpen} />
       ))}
       <div ref={sentinel} />
       {isFetchingNextPage && <Skeleton className="h-28 w-full rounded-xl" />}

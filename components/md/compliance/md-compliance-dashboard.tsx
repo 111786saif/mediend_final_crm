@@ -2,8 +2,10 @@
 
 import { useMemo, useState } from "react"
 import { Star } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   useComplianceStats,
+  type ComplianceCall,
   type ComplianceCallSort,
   type ComplianceCallStatus,
 } from "@/hooks/use-compliance-calls"
@@ -11,12 +13,15 @@ import { RatingHero } from "./rating-hero"
 import { FilterBar } from "./filter-bar"
 import { RatingChips } from "./rating-chips"
 import { ReviewFeed } from "./review-feed"
+import { MonthlyReportSection } from "./monthly-report-section"
+import { FeedbackDetailDialog } from "./feedback-detail-dialog"
 import type { DateRange } from "./date-range-sheet"
 
 export function MDComplianceDashboard() {
   const [dateRange, setDateRange] = useState<DateRange>({})
   const [rating, setRating] = useState<number | null>(null)
   const [sort, setSort] = useState<ComplianceCallSort>("recent")
+  const [activeCall, setActiveCall] = useState<ComplianceCall | null>(null)
 
   const dateParams = useMemo(
     () => ({
@@ -60,22 +65,45 @@ export function MDComplianceDashboard() {
         </div>
       </header>
 
-      <RatingHero
-        stats={stats}
-        activeRating={rating}
-        onRatingClick={(r) => setRating(rating === r ? null : r)}
+      <Tabs defaultValue="reviews" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2 sm:w-auto sm:inline-flex">
+          <TabsTrigger value="reviews">Reviews</TabsTrigger>
+          <TabsTrigger value="report">Monthly report</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="reviews" className="space-y-4">
+          <RatingHero
+            stats={stats}
+            activeRating={rating}
+            onRatingClick={(r) => setRating(rating === r ? null : r)}
+          />
+
+          <FilterBar
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            sort={sort}
+            onSortChange={setSort}
+          />
+
+          <RatingChips stats={stats} activeRating={rating} onChange={setRating} />
+
+          <ReviewFeed
+            filters={feedFilters}
+            onClear={clearFilters}
+            onOpen={(c) => setActiveCall(c)}
+          />
+        </TabsContent>
+
+        <TabsContent value="report">
+          <MonthlyReportSection />
+        </TabsContent>
+      </Tabs>
+
+      <FeedbackDetailDialog
+        callId={activeCall?.id ?? null}
+        open={!!activeCall}
+        onOpenChange={(o) => !o && setActiveCall(null)}
       />
-
-      <FilterBar
-        dateRange={dateRange}
-        onDateRangeChange={setDateRange}
-        sort={sort}
-        onSortChange={setSort}
-      />
-
-      <RatingChips stats={stats} activeRating={rating} onChange={setRating} />
-
-      <ReviewFeed filters={feedFilters} onClear={clearFilters} />
     </div>
   )
 }

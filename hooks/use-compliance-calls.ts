@@ -16,6 +16,40 @@ export type ComplianceCallStatus =
 
 export type ComplianceCallSort = "recent" | "highest" | "lowest" | "pending"
 
+export type SatisfactionLevel = "SATISFIED" | "NEUTRAL" | "NOT_SATISFIED"
+
+export type ConcernCategory =
+  | "HOSPITAL_STAFF"
+  | "PAYMENT"
+  | "BD"
+  | "NO_UPDATE_FOLLOWUP"
+  | "DOCTOR"
+  | "SURGERY_RELATED"
+  | "CAB_PAYMENT"
+  | "OTHERS"
+
+export const CONCERN_CATEGORY_LABEL: Record<ConcernCategory, string> = {
+  HOSPITAL_STAFF: "Hospital / staff",
+  PAYMENT: "Payment",
+  BD: "BD",
+  NO_UPDATE_FOLLOWUP: "No update follow-up",
+  DOCTOR: "Doctor",
+  SURGERY_RELATED: "Surgery related",
+  CAB_PAYMENT: "Cab payment",
+  OTHERS: "Others",
+}
+
+export const CONCERN_CATEGORIES: ConcernCategory[] = [
+  "HOSPITAL_STAFF",
+  "PAYMENT",
+  "BD",
+  "NO_UPDATE_FOLLOWUP",
+  "DOCTOR",
+  "SURGERY_RELATED",
+  "CAB_PAYMENT",
+  "OTHERS",
+]
+
 export interface ComplianceCallLead {
   id: string
   leadRef: string
@@ -24,6 +58,7 @@ export interface ComplianceCallLead {
   treatment: string | null
   hospitalName: string
   surgeonName: string | null
+  surgeryDate: string | null
   caseStage: string
   flowType: string
   bd: { id: string; name: string } | null
@@ -48,6 +83,26 @@ export interface ComplianceCall {
   updatedAt: string
   lead: ComplianceCallLead
   calledBy: { id: string; name: string } | null
+
+  problemDuringSurgery: string | null
+  problemAfterSurgery: string | null
+  commitmentStatus: string | null
+  concernResolved: string | null
+  doctorBehaviour: string | null
+  hospitalStaffBehaviour: string | null
+  bdmBehaviour: string | null
+  mediendService: string | null
+  overallExperience: string | null
+  paymentQuery: string | null
+  referralConfirmation: string | null
+  referralName: string | null
+  referralContact: string | null
+  opdStatus: string | null
+  opdMode: string | null
+  additionalRemark: string | null
+
+  satisfaction: SatisfactionLevel | null
+  concernCategories: ConcernCategory[]
 }
 
 export interface ComplianceCallsFilters {
@@ -55,6 +110,8 @@ export interface ComplianceCallsFilters {
   rating?: number | null
   startDate?: string | null
   endDate?: string | null
+  surgeryStart?: string | null
+  surgeryEnd?: string | null
   sort?: ComplianceCallSort
 }
 
@@ -76,6 +133,8 @@ function buildQueryString(filters: ComplianceCallsFilters, cursor?: string) {
   if (filters.rating != null) params.set("rating", String(filters.rating))
   if (filters.startDate) params.set("startDate", filters.startDate)
   if (filters.endDate) params.set("endDate", filters.endDate)
+  if (filters.surgeryStart) params.set("surgeryStart", filters.surgeryStart)
+  if (filters.surgeryEnd) params.set("surgeryEnd", filters.surgeryEnd)
   if (filters.sort) params.set("sort", filters.sort)
   if (cursor) params.set("cursor", cursor)
   const qs = params.toString()
@@ -117,6 +176,26 @@ export interface UpdateComplianceCallInput {
   rating?: number | null
   notes?: string | null
   callbackAt?: string | null
+
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+
+  satisfaction?: SatisfactionLevel | null
+  concernCategories?: ConcernCategory[]
 }
 
 export function useUpdateComplianceCall() {
@@ -127,6 +206,15 @@ export function useUpdateComplianceCall() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["compliance", "calls"] })
       qc.invalidateQueries({ queryKey: ["compliance", "stats"] })
+      qc.invalidateQueries({ queryKey: ["compliance", "monthly-report"] })
     },
+  })
+}
+
+export function useComplianceCall(id: string | null) {
+  return useQuery<ComplianceCall>({
+    queryKey: ["compliance", "calls", "detail", id],
+    queryFn: () => apiGet<ComplianceCall>(`/api/compliance/calls/${id}`),
+    enabled: !!id,
   })
 }

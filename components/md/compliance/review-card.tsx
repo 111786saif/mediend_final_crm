@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { Star } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -9,6 +8,7 @@ import type { ComplianceCall } from "@/hooks/use-compliance-calls"
 
 interface Props {
   call: ComplianceCall
+  onOpen?: (call: ComplianceCall) => void
 }
 
 function initials(name: string) {
@@ -20,22 +20,22 @@ function initials(name: string) {
     .join("")
 }
 
-export function ReviewCard({ call }: Props) {
-  const router = useRouter()
+export function ReviewCard({ call, onOpen }: Props) {
   const [expanded, setExpanded] = useState(false)
   const rating = call.rating ?? 0
   const dateLabel = call.completedAt
     ? format(new Date(call.completedAt), "d MMM yyyy")
     : format(new Date(call.createdAt), "d MMM yyyy")
   const bdmName = call.lead.dischargeSheet?.bdmName
+  const handleOpen = () => onOpen?.(call)
 
   return (
     <article
       role="button"
       tabIndex={0}
-      onClick={() => router.push(`/patient/${call.leadId}`)}
+      onClick={handleOpen}
       onKeyDown={(e) => {
-        if (e.key === "Enter") router.push(`/patient/${call.leadId}`)
+        if (e.key === "Enter") handleOpen()
       }}
       className="cursor-pointer rounded-xl border bg-card p-4 transition hover:shadow-sm active:scale-[0.99]"
     >

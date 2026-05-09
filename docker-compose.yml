@@ -358,6 +358,34 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/import-cpl-history.ts"]
 
+  # One-off: import historical compliance feedback from the team's Excel sheet
+  # (Sheet1) into ComplianceCall rows. Matches by phone (last 10 digits) +
+  # patient-name token overlap; only fills currently-NULL fields, never
+  # overwrites; auto-derives `satisfaction` from "Overall Experience" text.
+  #
+  # Mount the xlsx into /app/feedback.xlsx and pass that path as the arg.
+  # Dry run (default — no DB writes):
+  #   docker compose --profile tools run --rm \
+  #     -v "$(pwd)/Feedback sheet 2026 Jan.xlsx:/app/feedback.xlsx:ro" \
+  #     import-compliance-feedback /app/feedback.xlsx
+  # Live (writes to DB):
+  #   docker compose --profile tools run --rm \
+  #     -v "$(pwd)/Feedback sheet 2026 Jan.xlsx:/app/feedback.xlsx:ro" \
+  #     import-compliance-feedback /app/feedback.xlsx --commit
+  import-compliance-feedback:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/import-compliance-feedback.ts"]
+
   # One-off: migrate lead pipeline stages and conversion dates from status
   # Usage: docker compose --profile tools run --rm migrate-lead-pipeline
   migrate-lead-pipeline:

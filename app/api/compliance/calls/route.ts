@@ -45,6 +45,8 @@ export async function GET(request: NextRequest) {
     const ratingParam = searchParams.get('rating')
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
+    const surgeryStart = searchParams.get('surgeryStart')
+    const surgeryEnd = searchParams.get('surgeryEnd')
     const sort = searchParams.get('sort') ?? 'recent'
     const cursor = searchParams.get('cursor')
     const limitParam = searchParams.get('limit')
@@ -63,6 +65,12 @@ export async function GET(request: NextRequest) {
       where.createdAt = {}
       if (startDate) where.createdAt.gte = new Date(startDate)
       if (endDate) where.createdAt.lte = new Date(endDate)
+    }
+    if (surgeryStart || surgeryEnd) {
+      const surgeryDate: Prisma.DateTimeFilter = {}
+      if (surgeryStart) surgeryDate.gte = new Date(surgeryStart)
+      if (surgeryEnd) surgeryDate.lt = new Date(surgeryEnd)
+      where.lead = { surgeryDate }
     }
 
     let orderBy: Prisma.ComplianceCallOrderByWithRelationInput[]
@@ -98,6 +106,7 @@ export async function GET(request: NextRequest) {
             treatment: true,
             hospitalName: true,
             surgeonName: true,
+            surgeryDate: true,
             caseStage: true,
             flowType: true,
             bd: { select: { id: true, name: true } },

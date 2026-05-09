@@ -44,6 +44,23 @@ export type ComplianceCallMinAggregateOutputType = {
   completedAt: Date | null
   callbackAt: Date | null
   calledByUserId: string | null
+  problemDuringSurgery: string | null
+  problemAfterSurgery: string | null
+  commitmentStatus: string | null
+  concernResolved: string | null
+  doctorBehaviour: string | null
+  hospitalStaffBehaviour: string | null
+  bdmBehaviour: string | null
+  mediendService: string | null
+  overallExperience: string | null
+  paymentQuery: string | null
+  referralConfirmation: string | null
+  referralName: string | null
+  referralContact: string | null
+  opdStatus: string | null
+  opdMode: string | null
+  additionalRemark: string | null
+  satisfaction: $Enums.SatisfactionLevel | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +75,23 @@ export type ComplianceCallMaxAggregateOutputType = {
   completedAt: Date | null
   callbackAt: Date | null
   calledByUserId: string | null
+  problemDuringSurgery: string | null
+  problemAfterSurgery: string | null
+  commitmentStatus: string | null
+  concernResolved: string | null
+  doctorBehaviour: string | null
+  hospitalStaffBehaviour: string | null
+  bdmBehaviour: string | null
+  mediendService: string | null
+  overallExperience: string | null
+  paymentQuery: string | null
+  referralConfirmation: string | null
+  referralName: string | null
+  referralContact: string | null
+  opdStatus: string | null
+  opdMode: string | null
+  additionalRemark: string | null
+  satisfaction: $Enums.SatisfactionLevel | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +106,24 @@ export type ComplianceCallCountAggregateOutputType = {
   completedAt: number
   callbackAt: number
   calledByUserId: number
+  problemDuringSurgery: number
+  problemAfterSurgery: number
+  commitmentStatus: number
+  concernResolved: number
+  doctorBehaviour: number
+  hospitalStaffBehaviour: number
+  bdmBehaviour: number
+  mediendService: number
+  overallExperience: number
+  paymentQuery: number
+  referralConfirmation: number
+  referralName: number
+  referralContact: number
+  opdStatus: number
+  opdMode: number
+  additionalRemark: number
+  satisfaction: number
+  concernCategories: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -96,6 +148,23 @@ export type ComplianceCallMinAggregateInputType = {
   completedAt?: true
   callbackAt?: true
   calledByUserId?: true
+  problemDuringSurgery?: true
+  problemAfterSurgery?: true
+  commitmentStatus?: true
+  concernResolved?: true
+  doctorBehaviour?: true
+  hospitalStaffBehaviour?: true
+  bdmBehaviour?: true
+  mediendService?: true
+  overallExperience?: true
+  paymentQuery?: true
+  referralConfirmation?: true
+  referralName?: true
+  referralContact?: true
+  opdStatus?: true
+  opdMode?: true
+  additionalRemark?: true
+  satisfaction?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -110,6 +179,23 @@ export type ComplianceCallMaxAggregateInputType = {
   completedAt?: true
   callbackAt?: true
   calledByUserId?: true
+  problemDuringSurgery?: true
+  problemAfterSurgery?: true
+  commitmentStatus?: true
+  concernResolved?: true
+  doctorBehaviour?: true
+  hospitalStaffBehaviour?: true
+  bdmBehaviour?: true
+  mediendService?: true
+  overallExperience?: true
+  paymentQuery?: true
+  referralConfirmation?: true
+  referralName?: true
+  referralContact?: true
+  opdStatus?: true
+  opdMode?: true
+  additionalRemark?: true
+  satisfaction?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +210,24 @@ export type ComplianceCallCountAggregateInputType = {
   completedAt?: true
   callbackAt?: true
   calledByUserId?: true
+  problemDuringSurgery?: true
+  problemAfterSurgery?: true
+  commitmentStatus?: true
+  concernResolved?: true
+  doctorBehaviour?: true
+  hospitalStaffBehaviour?: true
+  bdmBehaviour?: true
+  mediendService?: true
+  overallExperience?: true
+  paymentQuery?: true
+  referralConfirmation?: true
+  referralName?: true
+  referralContact?: true
+  opdStatus?: true
+  opdMode?: true
+  additionalRemark?: true
+  satisfaction?: true
+  concernCategories?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -225,6 +329,24 @@ export type ComplianceCallGroupByOutputType = {
   completedAt: Date | null
   callbackAt: Date | null
   calledByUserId: string | null
+  problemDuringSurgery: string | null
+  problemAfterSurgery: string | null
+  commitmentStatus: string | null
+  concernResolved: string | null
+  doctorBehaviour: string | null
+  hospitalStaffBehaviour: string | null
+  bdmBehaviour: string | null
+  mediendService: string | null
+  overallExperience: string | null
+  paymentQuery: string | null
+  referralConfirmation: string | null
+  referralName: string | null
+  referralContact: string | null
+  opdStatus: string | null
+  opdMode: string | null
+  additionalRemark: string | null
+  satisfaction: $Enums.SatisfactionLevel | null
+  concernCategories: $Enums.ConcernCategory[]
   createdAt: Date
   updatedAt: Date
   _count: ComplianceCallCountAggregateOutputType | null
@@ -262,6 +384,24 @@ export type ComplianceCallWhereInput = {
   completedAt?: Prisma.DateTimeNullableFilter<"ComplianceCall"> | Date | string | null
   callbackAt?: Prisma.DateTimeNullableFilter<"ComplianceCall"> | Date | string | null
   calledByUserId?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  problemDuringSurgery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  problemAfterSurgery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  commitmentStatus?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  concernResolved?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  doctorBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  hospitalStaffBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  bdmBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  mediendService?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  overallExperience?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  paymentQuery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralConfirmation?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralName?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralContact?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  opdStatus?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  opdMode?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  additionalRemark?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  satisfaction?: Prisma.EnumSatisfactionLevelNullableFilter<"ComplianceCall"> | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.EnumConcernCategoryNullableListFilter<"ComplianceCall">
   createdAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
@@ -278,6 +418,24 @@ export type ComplianceCallOrderByWithRelationInput = {
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   callbackAt?: Prisma.SortOrderInput | Prisma.SortOrder
   calledByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  problemDuringSurgery?: Prisma.SortOrderInput | Prisma.SortOrder
+  problemAfterSurgery?: Prisma.SortOrderInput | Prisma.SortOrder
+  commitmentStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  concernResolved?: Prisma.SortOrderInput | Prisma.SortOrder
+  doctorBehaviour?: Prisma.SortOrderInput | Prisma.SortOrder
+  hospitalStaffBehaviour?: Prisma.SortOrderInput | Prisma.SortOrder
+  bdmBehaviour?: Prisma.SortOrderInput | Prisma.SortOrder
+  mediendService?: Prisma.SortOrderInput | Prisma.SortOrder
+  overallExperience?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentQuery?: Prisma.SortOrderInput | Prisma.SortOrder
+  referralConfirmation?: Prisma.SortOrderInput | Prisma.SortOrder
+  referralName?: Prisma.SortOrderInput | Prisma.SortOrder
+  referralContact?: Prisma.SortOrderInput | Prisma.SortOrder
+  opdStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  opdMode?: Prisma.SortOrderInput | Prisma.SortOrder
+  additionalRemark?: Prisma.SortOrderInput | Prisma.SortOrder
+  satisfaction?: Prisma.SortOrderInput | Prisma.SortOrder
+  concernCategories?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lead?: Prisma.LeadOrderByWithRelationInput
@@ -297,6 +455,24 @@ export type ComplianceCallWhereUniqueInput = Prisma.AtLeast<{
   completedAt?: Prisma.DateTimeNullableFilter<"ComplianceCall"> | Date | string | null
   callbackAt?: Prisma.DateTimeNullableFilter<"ComplianceCall"> | Date | string | null
   calledByUserId?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  problemDuringSurgery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  problemAfterSurgery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  commitmentStatus?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  concernResolved?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  doctorBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  hospitalStaffBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  bdmBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  mediendService?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  overallExperience?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  paymentQuery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralConfirmation?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralName?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralContact?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  opdStatus?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  opdMode?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  additionalRemark?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  satisfaction?: Prisma.EnumSatisfactionLevelNullableFilter<"ComplianceCall"> | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.EnumConcernCategoryNullableListFilter<"ComplianceCall">
   createdAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
   lead?: Prisma.XOR<Prisma.LeadScalarRelationFilter, Prisma.LeadWhereInput>
@@ -313,6 +489,24 @@ export type ComplianceCallOrderByWithAggregationInput = {
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   callbackAt?: Prisma.SortOrderInput | Prisma.SortOrder
   calledByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  problemDuringSurgery?: Prisma.SortOrderInput | Prisma.SortOrder
+  problemAfterSurgery?: Prisma.SortOrderInput | Prisma.SortOrder
+  commitmentStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  concernResolved?: Prisma.SortOrderInput | Prisma.SortOrder
+  doctorBehaviour?: Prisma.SortOrderInput | Prisma.SortOrder
+  hospitalStaffBehaviour?: Prisma.SortOrderInput | Prisma.SortOrder
+  bdmBehaviour?: Prisma.SortOrderInput | Prisma.SortOrder
+  mediendService?: Prisma.SortOrderInput | Prisma.SortOrder
+  overallExperience?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentQuery?: Prisma.SortOrderInput | Prisma.SortOrder
+  referralConfirmation?: Prisma.SortOrderInput | Prisma.SortOrder
+  referralName?: Prisma.SortOrderInput | Prisma.SortOrder
+  referralContact?: Prisma.SortOrderInput | Prisma.SortOrder
+  opdStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  opdMode?: Prisma.SortOrderInput | Prisma.SortOrder
+  additionalRemark?: Prisma.SortOrderInput | Prisma.SortOrder
+  satisfaction?: Prisma.SortOrderInput | Prisma.SortOrder
+  concernCategories?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ComplianceCallCountOrderByAggregateInput
@@ -335,6 +529,24 @@ export type ComplianceCallScalarWhereWithAggregatesInput = {
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ComplianceCall"> | Date | string | null
   callbackAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ComplianceCall"> | Date | string | null
   calledByUserId?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  problemDuringSurgery?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  problemAfterSurgery?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  commitmentStatus?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  concernResolved?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  doctorBehaviour?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  hospitalStaffBehaviour?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  bdmBehaviour?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  mediendService?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  overallExperience?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  paymentQuery?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  referralConfirmation?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  referralName?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  referralContact?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  opdStatus?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  opdMode?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  additionalRemark?: Prisma.StringNullableWithAggregatesFilter<"ComplianceCall"> | string | null
+  satisfaction?: Prisma.EnumSatisfactionLevelNullableWithAggregatesFilter<"ComplianceCall"> | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.EnumConcernCategoryNullableListFilter<"ComplianceCall">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ComplianceCall"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ComplianceCall"> | Date | string
 }
@@ -347,6 +559,24 @@ export type ComplianceCallCreateInput = {
   lastAttemptedAt?: Date | string | null
   completedAt?: Date | string | null
   callbackAt?: Date | string | null
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+  satisfaction?: $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutComplianceCallInput
@@ -363,6 +593,24 @@ export type ComplianceCallUncheckedCreateInput = {
   completedAt?: Date | string | null
   callbackAt?: Date | string | null
   calledByUserId?: string | null
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+  satisfaction?: $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -375,6 +623,24 @@ export type ComplianceCallUpdateInput = {
   lastAttemptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutComplianceCallNestedInput
@@ -391,6 +657,24 @@ export type ComplianceCallUncheckedUpdateInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   calledByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -405,6 +689,24 @@ export type ComplianceCallCreateManyInput = {
   completedAt?: Date | string | null
   callbackAt?: Date | string | null
   calledByUserId?: string | null
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+  satisfaction?: $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -417,6 +719,24 @@ export type ComplianceCallUpdateManyMutationInput = {
   lastAttemptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -431,6 +751,24 @@ export type ComplianceCallUncheckedUpdateManyInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   calledByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -450,6 +788,14 @@ export type ComplianceCallNullableScalarRelationFilter = {
   isNot?: Prisma.ComplianceCallWhereInput | null
 }
 
+export type EnumConcernCategoryNullableListFilter<$PrismaModel = never> = {
+  equals?: $Enums.ConcernCategory[] | Prisma.ListEnumConcernCategoryFieldRefInput<$PrismaModel> | null
+  has?: $Enums.ConcernCategory | Prisma.EnumConcernCategoryFieldRefInput<$PrismaModel> | null
+  hasEvery?: $Enums.ConcernCategory[] | Prisma.ListEnumConcernCategoryFieldRefInput<$PrismaModel>
+  hasSome?: $Enums.ConcernCategory[] | Prisma.ListEnumConcernCategoryFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type ComplianceCallCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
@@ -460,6 +806,24 @@ export type ComplianceCallCountOrderByAggregateInput = {
   completedAt?: Prisma.SortOrder
   callbackAt?: Prisma.SortOrder
   calledByUserId?: Prisma.SortOrder
+  problemDuringSurgery?: Prisma.SortOrder
+  problemAfterSurgery?: Prisma.SortOrder
+  commitmentStatus?: Prisma.SortOrder
+  concernResolved?: Prisma.SortOrder
+  doctorBehaviour?: Prisma.SortOrder
+  hospitalStaffBehaviour?: Prisma.SortOrder
+  bdmBehaviour?: Prisma.SortOrder
+  mediendService?: Prisma.SortOrder
+  overallExperience?: Prisma.SortOrder
+  paymentQuery?: Prisma.SortOrder
+  referralConfirmation?: Prisma.SortOrder
+  referralName?: Prisma.SortOrder
+  referralContact?: Prisma.SortOrder
+  opdStatus?: Prisma.SortOrder
+  opdMode?: Prisma.SortOrder
+  additionalRemark?: Prisma.SortOrder
+  satisfaction?: Prisma.SortOrder
+  concernCategories?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -478,6 +842,23 @@ export type ComplianceCallMaxOrderByAggregateInput = {
   completedAt?: Prisma.SortOrder
   callbackAt?: Prisma.SortOrder
   calledByUserId?: Prisma.SortOrder
+  problemDuringSurgery?: Prisma.SortOrder
+  problemAfterSurgery?: Prisma.SortOrder
+  commitmentStatus?: Prisma.SortOrder
+  concernResolved?: Prisma.SortOrder
+  doctorBehaviour?: Prisma.SortOrder
+  hospitalStaffBehaviour?: Prisma.SortOrder
+  bdmBehaviour?: Prisma.SortOrder
+  mediendService?: Prisma.SortOrder
+  overallExperience?: Prisma.SortOrder
+  paymentQuery?: Prisma.SortOrder
+  referralConfirmation?: Prisma.SortOrder
+  referralName?: Prisma.SortOrder
+  referralContact?: Prisma.SortOrder
+  opdStatus?: Prisma.SortOrder
+  opdMode?: Prisma.SortOrder
+  additionalRemark?: Prisma.SortOrder
+  satisfaction?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -492,6 +873,23 @@ export type ComplianceCallMinOrderByAggregateInput = {
   completedAt?: Prisma.SortOrder
   callbackAt?: Prisma.SortOrder
   calledByUserId?: Prisma.SortOrder
+  problemDuringSurgery?: Prisma.SortOrder
+  problemAfterSurgery?: Prisma.SortOrder
+  commitmentStatus?: Prisma.SortOrder
+  concernResolved?: Prisma.SortOrder
+  doctorBehaviour?: Prisma.SortOrder
+  hospitalStaffBehaviour?: Prisma.SortOrder
+  bdmBehaviour?: Prisma.SortOrder
+  mediendService?: Prisma.SortOrder
+  overallExperience?: Prisma.SortOrder
+  paymentQuery?: Prisma.SortOrder
+  referralConfirmation?: Prisma.SortOrder
+  referralName?: Prisma.SortOrder
+  referralContact?: Prisma.SortOrder
+  opdStatus?: Prisma.SortOrder
+  opdMode?: Prisma.SortOrder
+  additionalRemark?: Prisma.SortOrder
+  satisfaction?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -574,8 +972,21 @@ export type ComplianceCallUncheckedUpdateOneWithoutLeadNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ComplianceCallUpdateToOneWithWhereWithoutLeadInput, Prisma.ComplianceCallUpdateWithoutLeadInput>, Prisma.ComplianceCallUncheckedUpdateWithoutLeadInput>
 }
 
+export type ComplianceCallCreateconcernCategoriesInput = {
+  set: $Enums.ConcernCategory[]
+}
+
 export type EnumComplianceCallStatusFieldUpdateOperationsInput = {
   set?: $Enums.ComplianceCallStatus
+}
+
+export type NullableEnumSatisfactionLevelFieldUpdateOperationsInput = {
+  set?: $Enums.SatisfactionLevel | null
+}
+
+export type ComplianceCallUpdateconcernCategoriesInput = {
+  set?: $Enums.ConcernCategory[]
+  push?: $Enums.ConcernCategory | $Enums.ConcernCategory[]
 }
 
 export type ComplianceCallCreateWithoutCalledByInput = {
@@ -586,6 +997,24 @@ export type ComplianceCallCreateWithoutCalledByInput = {
   lastAttemptedAt?: Date | string | null
   completedAt?: Date | string | null
   callbackAt?: Date | string | null
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+  satisfaction?: $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Date | string
   updatedAt?: Date | string
   lead: Prisma.LeadCreateNestedOneWithoutComplianceCallInput
@@ -600,6 +1029,24 @@ export type ComplianceCallUncheckedCreateWithoutCalledByInput = {
   lastAttemptedAt?: Date | string | null
   completedAt?: Date | string | null
   callbackAt?: Date | string | null
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+  satisfaction?: $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -643,6 +1090,24 @@ export type ComplianceCallScalarWhereInput = {
   completedAt?: Prisma.DateTimeNullableFilter<"ComplianceCall"> | Date | string | null
   callbackAt?: Prisma.DateTimeNullableFilter<"ComplianceCall"> | Date | string | null
   calledByUserId?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  problemDuringSurgery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  problemAfterSurgery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  commitmentStatus?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  concernResolved?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  doctorBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  hospitalStaffBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  bdmBehaviour?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  mediendService?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  overallExperience?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  paymentQuery?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralConfirmation?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralName?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  referralContact?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  opdStatus?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  opdMode?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  additionalRemark?: Prisma.StringNullableFilter<"ComplianceCall"> | string | null
+  satisfaction?: Prisma.EnumSatisfactionLevelNullableFilter<"ComplianceCall"> | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.EnumConcernCategoryNullableListFilter<"ComplianceCall">
   createdAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ComplianceCall"> | Date | string
 }
@@ -655,6 +1120,24 @@ export type ComplianceCallCreateWithoutLeadInput = {
   lastAttemptedAt?: Date | string | null
   completedAt?: Date | string | null
   callbackAt?: Date | string | null
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+  satisfaction?: $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Date | string
   updatedAt?: Date | string
   calledBy?: Prisma.UserCreateNestedOneWithoutComplianceCallsHandledInput
@@ -669,6 +1152,24 @@ export type ComplianceCallUncheckedCreateWithoutLeadInput = {
   completedAt?: Date | string | null
   callbackAt?: Date | string | null
   calledByUserId?: string | null
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+  satisfaction?: $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -697,6 +1198,24 @@ export type ComplianceCallUpdateWithoutLeadInput = {
   lastAttemptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   calledBy?: Prisma.UserUpdateOneWithoutComplianceCallsHandledNestedInput
@@ -711,6 +1230,24 @@ export type ComplianceCallUncheckedUpdateWithoutLeadInput = {
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   calledByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -724,6 +1261,24 @@ export type ComplianceCallCreateManyCalledByInput = {
   lastAttemptedAt?: Date | string | null
   completedAt?: Date | string | null
   callbackAt?: Date | string | null
+  problemDuringSurgery?: string | null
+  problemAfterSurgery?: string | null
+  commitmentStatus?: string | null
+  concernResolved?: string | null
+  doctorBehaviour?: string | null
+  hospitalStaffBehaviour?: string | null
+  bdmBehaviour?: string | null
+  mediendService?: string | null
+  overallExperience?: string | null
+  paymentQuery?: string | null
+  referralConfirmation?: string | null
+  referralName?: string | null
+  referralContact?: string | null
+  opdStatus?: string | null
+  opdMode?: string | null
+  additionalRemark?: string | null
+  satisfaction?: $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallCreateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -736,6 +1291,24 @@ export type ComplianceCallUpdateWithoutCalledByInput = {
   lastAttemptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lead?: Prisma.LeadUpdateOneRequiredWithoutComplianceCallNestedInput
@@ -750,6 +1323,24 @@ export type ComplianceCallUncheckedUpdateWithoutCalledByInput = {
   lastAttemptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -763,6 +1354,24 @@ export type ComplianceCallUncheckedUpdateManyWithoutCalledByInput = {
   lastAttemptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   callbackAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  problemDuringSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  problemAfterSurgery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  commitmentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  concernResolved?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  doctorBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalStaffBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bdmBehaviour?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mediendService?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallExperience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentQuery?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralConfirmation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  referralContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  opdMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  additionalRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  satisfaction?: Prisma.NullableEnumSatisfactionLevelFieldUpdateOperationsInput | $Enums.SatisfactionLevel | null
+  concernCategories?: Prisma.ComplianceCallUpdateconcernCategoriesInput | $Enums.ConcernCategory[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -779,6 +1388,24 @@ export type ComplianceCallSelect<ExtArgs extends runtime.Types.Extensions.Intern
   completedAt?: boolean
   callbackAt?: boolean
   calledByUserId?: boolean
+  problemDuringSurgery?: boolean
+  problemAfterSurgery?: boolean
+  commitmentStatus?: boolean
+  concernResolved?: boolean
+  doctorBehaviour?: boolean
+  hospitalStaffBehaviour?: boolean
+  bdmBehaviour?: boolean
+  mediendService?: boolean
+  overallExperience?: boolean
+  paymentQuery?: boolean
+  referralConfirmation?: boolean
+  referralName?: boolean
+  referralContact?: boolean
+  opdStatus?: boolean
+  opdMode?: boolean
+  additionalRemark?: boolean
+  satisfaction?: boolean
+  concernCategories?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
@@ -795,6 +1422,24 @@ export type ComplianceCallSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   completedAt?: boolean
   callbackAt?: boolean
   calledByUserId?: boolean
+  problemDuringSurgery?: boolean
+  problemAfterSurgery?: boolean
+  commitmentStatus?: boolean
+  concernResolved?: boolean
+  doctorBehaviour?: boolean
+  hospitalStaffBehaviour?: boolean
+  bdmBehaviour?: boolean
+  mediendService?: boolean
+  overallExperience?: boolean
+  paymentQuery?: boolean
+  referralConfirmation?: boolean
+  referralName?: boolean
+  referralContact?: boolean
+  opdStatus?: boolean
+  opdMode?: boolean
+  additionalRemark?: boolean
+  satisfaction?: boolean
+  concernCategories?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
@@ -811,6 +1456,24 @@ export type ComplianceCallSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   completedAt?: boolean
   callbackAt?: boolean
   calledByUserId?: boolean
+  problemDuringSurgery?: boolean
+  problemAfterSurgery?: boolean
+  commitmentStatus?: boolean
+  concernResolved?: boolean
+  doctorBehaviour?: boolean
+  hospitalStaffBehaviour?: boolean
+  bdmBehaviour?: boolean
+  mediendService?: boolean
+  overallExperience?: boolean
+  paymentQuery?: boolean
+  referralConfirmation?: boolean
+  referralName?: boolean
+  referralContact?: boolean
+  opdStatus?: boolean
+  opdMode?: boolean
+  additionalRemark?: boolean
+  satisfaction?: boolean
+  concernCategories?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
@@ -827,11 +1490,29 @@ export type ComplianceCallSelectScalar = {
   completedAt?: boolean
   callbackAt?: boolean
   calledByUserId?: boolean
+  problemDuringSurgery?: boolean
+  problemAfterSurgery?: boolean
+  commitmentStatus?: boolean
+  concernResolved?: boolean
+  doctorBehaviour?: boolean
+  hospitalStaffBehaviour?: boolean
+  bdmBehaviour?: boolean
+  mediendService?: boolean
+  overallExperience?: boolean
+  paymentQuery?: boolean
+  referralConfirmation?: boolean
+  referralName?: boolean
+  referralContact?: boolean
+  opdStatus?: boolean
+  opdMode?: boolean
+  additionalRemark?: boolean
+  satisfaction?: boolean
+  concernCategories?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ComplianceCallOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "status" | "rating" | "notes" | "lastAttemptedAt" | "completedAt" | "callbackAt" | "calledByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["complianceCall"]>
+export type ComplianceCallOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "status" | "rating" | "notes" | "lastAttemptedAt" | "completedAt" | "callbackAt" | "calledByUserId" | "problemDuringSurgery" | "problemAfterSurgery" | "commitmentStatus" | "concernResolved" | "doctorBehaviour" | "hospitalStaffBehaviour" | "bdmBehaviour" | "mediendService" | "overallExperience" | "paymentQuery" | "referralConfirmation" | "referralName" | "referralContact" | "opdStatus" | "opdMode" | "additionalRemark" | "satisfaction" | "concernCategories" | "createdAt" | "updatedAt", ExtArgs["result"]["complianceCall"]>
 export type ComplianceCallInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   calledBy?: boolean | Prisma.ComplianceCall$calledByArgs<ExtArgs>
@@ -861,6 +1542,24 @@ export type $ComplianceCallPayload<ExtArgs extends runtime.Types.Extensions.Inte
     completedAt: Date | null
     callbackAt: Date | null
     calledByUserId: string | null
+    problemDuringSurgery: string | null
+    problemAfterSurgery: string | null
+    commitmentStatus: string | null
+    concernResolved: string | null
+    doctorBehaviour: string | null
+    hospitalStaffBehaviour: string | null
+    bdmBehaviour: string | null
+    mediendService: string | null
+    overallExperience: string | null
+    paymentQuery: string | null
+    referralConfirmation: string | null
+    referralName: string | null
+    referralContact: string | null
+    opdStatus: string | null
+    opdMode: string | null
+    additionalRemark: string | null
+    satisfaction: $Enums.SatisfactionLevel | null
+    concernCategories: $Enums.ConcernCategory[]
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["complianceCall"]>
@@ -1297,6 +1996,24 @@ export interface ComplianceCallFieldRefs {
   readonly completedAt: Prisma.FieldRef<"ComplianceCall", 'DateTime'>
   readonly callbackAt: Prisma.FieldRef<"ComplianceCall", 'DateTime'>
   readonly calledByUserId: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly problemDuringSurgery: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly problemAfterSurgery: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly commitmentStatus: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly concernResolved: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly doctorBehaviour: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly hospitalStaffBehaviour: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly bdmBehaviour: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly mediendService: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly overallExperience: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly paymentQuery: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly referralConfirmation: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly referralName: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly referralContact: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly opdStatus: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly opdMode: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly additionalRemark: Prisma.FieldRef<"ComplianceCall", 'String'>
+  readonly satisfaction: Prisma.FieldRef<"ComplianceCall", 'SatisfactionLevel'>
+  readonly concernCategories: Prisma.FieldRef<"ComplianceCall", 'ConcernCategory[]'>
   readonly createdAt: Prisma.FieldRef<"ComplianceCall", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ComplianceCall", 'DateTime'>
 }

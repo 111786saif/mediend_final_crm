@@ -1177,6 +1177,13 @@ export type EnumComplianceCallStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumComplianceCallStatusFilter<$PrismaModel> | $Enums.ComplianceCallStatus
 }
 
+export type EnumSatisfactionLevelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.SatisfactionLevel | Prisma.EnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SatisfactionLevel[] | Prisma.ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SatisfactionLevel[] | Prisma.ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel> | $Enums.SatisfactionLevel | null
+}
+
 export type EnumComplianceCallStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ComplianceCallStatus | Prisma.EnumComplianceCallStatusFieldRefInput<$PrismaModel>
   in?: $Enums.ComplianceCallStatus[] | Prisma.ListEnumComplianceCallStatusFieldRefInput<$PrismaModel>
@@ -1185,6 +1192,16 @@ export type EnumComplianceCallStatusWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumComplianceCallStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumComplianceCallStatusFilter<$PrismaModel>
+}
+
+export type EnumSatisfactionLevelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SatisfactionLevel | Prisma.EnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SatisfactionLevel[] | Prisma.ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SatisfactionLevel[] | Prisma.ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSatisfactionLevelNullableWithAggregatesFilter<$PrismaModel> | $Enums.SatisfactionLevel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel>
 }
 
 export type EnumTaskPriorityFilter<$PrismaModel = never> = {
@@ -2457,6 +2474,13 @@ export type NestedEnumComplianceCallStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumComplianceCallStatusFilter<$PrismaModel> | $Enums.ComplianceCallStatus
 }
 
+export type NestedEnumSatisfactionLevelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.SatisfactionLevel | Prisma.EnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SatisfactionLevel[] | Prisma.ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SatisfactionLevel[] | Prisma.ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel> | $Enums.SatisfactionLevel | null
+}
+
 export type NestedEnumComplianceCallStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ComplianceCallStatus | Prisma.EnumComplianceCallStatusFieldRefInput<$PrismaModel>
   in?: $Enums.ComplianceCallStatus[] | Prisma.ListEnumComplianceCallStatusFieldRefInput<$PrismaModel>
@@ -2465,6 +2489,16 @@ export type NestedEnumComplianceCallStatusWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumComplianceCallStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumComplianceCallStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSatisfactionLevelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SatisfactionLevel | Prisma.EnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.SatisfactionLevel[] | Prisma.ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.SatisfactionLevel[] | Prisma.ListEnumSatisfactionLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSatisfactionLevelNullableWithAggregatesFilter<$PrismaModel> | $Enums.SatisfactionLevel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumTaskPriorityFilter<$PrismaModel = never> = {
