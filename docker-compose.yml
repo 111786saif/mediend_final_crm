@@ -406,10 +406,7 @@ services:
   # under the old flow (admissionRecord.ipdStatus = 'IPD_DONE' but caseStage
   # still INITIATED) so they appear in Insurance's "Ready for Discharge" queue.
   # Idempotent — safe to re-run.
-  # Usage:        docker compose --profile tools run --rm migrate-ipd-done-handoff
-  # Attribute to a specific admin:
-  #               docker compose --profile tools run --rm \
-  #                 -e MIGRATION_ACTOR_USER_ID=<user-id> migrate-ipd-done-handoff
+  # Usage: docker compose --profile tools run --rm migrate-ipd-done-handoff
   migrate-ipd-done-handoff:
     build:
       context: .

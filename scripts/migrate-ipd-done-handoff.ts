@@ -24,23 +24,6 @@ import { CaseStage } from '@/generated/prisma/client'
 async function migrateIpdDoneHandoff() {
   console.log('[ipd-done-handoff] Scanning candidates...')
 
-  // CaseStageHistory.changedById is required, so attribute the migration to
-  // an ADMIN user. Prefer MIGRATION_ACTOR_USER_ID env var, fall back to the
-  // first ADMIN we find.
-  const actorEnvId = process.env.MIGRATION_ACTOR_USER_ID
-  const actor = actorEnvId
-    ? await prisma.user.findUnique({ where: { id: actorEnvId } })
-    : await prisma.user.findFirst({ where: { role: 'ADMIN' } })
-
-  if (!actor) {
-    console.error(
-      '[ipd-done-handoff] No actor user found. Set MIGRATION_ACTOR_USER_ID or ensure at least one ADMIN user exists.'
-    )
-    process.exit(1)
-  }
-
-  console.log(`[ipd-done-handoff] Attributing migration to: ${actor.email} (${actor.id})`)
-
   const candidates = await prisma.lead.findMany({
     where: {
       caseStage: CaseStage.INITIATED,
@@ -48,7 +31,7 @@ async function migrateIpdDoneHandoff() {
       admissionRecord: { ipdStatus: 'IPD_DONE' },
       dischargeSheet: null,
     },
-    select: { id: true, leadRef: true, patientName: true },
+    select: { id: true, leadRef: true, patientName: true, bdId: true },
   })
 
   console.log(`[ipd-done-handoff] Found ${candidates.length} leads to advance.`)
@@ -60,6 +43,8 @@ async function migrateIpdDoneHandoff() {
 
   let migrated = 0
   for (const lead of candidates) {
+    // Attribute the stage change to the lead's own BD — they were the one who
+    // marked IPD_DONE under the old flow; this just brings caseStage in sync.
     await prisma.$transaction([
       prisma.lead.update({
         where: { id: lead.id },
@@ -70,7 +55,7 @@ async function migrateIpdDoneHandoff() {
           leadId: lead.id,
           fromStage: CaseStage.INITIATED,
           toStage: CaseStage.IPD_DONE,
-          changedById: actor.id,
+          changedById: lead.bdId,
           note: 'Migration: BD previously marked Surgery Done; advancing case to Insurance discharge queue.',
         },
       }),
