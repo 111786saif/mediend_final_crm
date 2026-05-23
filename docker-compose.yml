@@ -402,6 +402,28 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/migrate-lead-pipeline-stages.ts"]
 
+  # One-off: advance insurance-flow leads where BD had already marked IPD_DONE
+  # under the old flow (admissionRecord.ipdStatus = 'IPD_DONE' but caseStage
+  # still INITIATED) so they appear in Insurance's "Ready for Discharge" queue.
+  # Idempotent — safe to re-run.
+  # Usage:        docker compose --profile tools run --rm migrate-ipd-done-handoff
+  # Attribute to a specific admin:
+  #               docker compose --profile tools run --rm \
+  #                 -e MIGRATION_ACTOR_USER_ID=<user-id> migrate-ipd-done-handoff
+  migrate-ipd-done-handoff:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/migrate-ipd-done-handoff.ts"]
+
   # One-off: fix leave balances to March 2026 Excel values (no April accrual)
   # Usage: docker compose --profile tools run --rm fix-leave-balances
   # Runs fix-leave-balances-april2026.sql inside a transaction and prints
