@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { apiPost } from '@/lib/api-client'
 import { toast } from 'sonner'
-import { CheckCircle, Pause, XCircle, LogOut, ArrowLeft } from 'lucide-react'
+import { CheckCircle, Pause, XCircle, ArrowLeft } from 'lucide-react'
 
 interface IPDStatusHistory {
   status: string
@@ -34,11 +34,10 @@ export function IPDMarkComponent({
   onCancel,
 }: IPDMarkComponentProps) {
   const [step, setStep] = useState<Step>('select')
-  const [selectedStatus, setSelectedStatus] = useState<'ADMITTED_DONE' | 'IPD_DONE' | 'POSTPONED' | 'CANCELLED' | 'DISCHARGED' | null>(null)
+  const [selectedStatus, setSelectedStatus] = useState<'ADMITTED_DONE' | 'IPD_DONE' | 'POSTPONED' | 'CANCELLED' | null>(null)
   const [formData, setFormData] = useState({
     reason: '',
     newSurgeryDate: '',
-    dischargeDate: '',
     notes: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -57,7 +56,7 @@ export function IPDMarkComponent({
       label: 'Surgery Done',
       icon: CheckCircle,
       color: 'bg-teal-100 dark:bg-teal-900 border-teal-300',
-      description: 'Surgery has been completed successfully',
+      description: 'Surgery complete — hands the case to Insurance for discharge. Your work is done.',
     },
     {
       value: 'POSTPONED' as const,
@@ -72,13 +71,6 @@ export function IPDMarkComponent({
       icon: XCircle,
       color: 'bg-red-100 dark:bg-red-900 border-red-300',
       description: 'Surgery has been cancelled',
-    },
-    {
-      value: 'DISCHARGED' as const,
-      label: 'Discharged',
-      icon: LogOut,
-      color: 'bg-blue-100 dark:bg-blue-900 border-blue-300',
-      description: 'Patient has been discharged',
     },
   ]
 
@@ -98,10 +90,6 @@ export function IPDMarkComponent({
       if (!formData.reason.trim()) newErrors.reason = 'Reason for cancellation is required'
     }
 
-    if (selectedStatus === 'DISCHARGED') {
-      if (!formData.dischargeDate) newErrors.dischargeDate = 'Discharge date is required'
-    }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -118,14 +106,13 @@ export function IPDMarkComponent({
         status: selectedStatus,
         reason: formData.reason.trim() || undefined,
         newSurgeryDate: selectedStatus === 'POSTPONED' ? formData.newSurgeryDate : undefined,
-        dischargeDate: selectedStatus === 'DISCHARGED' ? formData.dischargeDate : undefined,
         notes: formData.notes.trim() || undefined,
       })
 
       toast.success(`IPD status marked as ${selectedStatus}`)
       setStep('select')
       setSelectedStatus(null)
-      setFormData({ reason: '', newSurgeryDate: '', dischargeDate: '', notes: '' })
+      setFormData({ reason: '', newSurgeryDate: '', notes: '' })
       onSuccess?.()
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to mark IPD status')
@@ -164,6 +151,11 @@ export function IPDMarkComponent({
 
           {(selectedStatus === 'ADMITTED_DONE' || selectedStatus === 'IPD_DONE') && (
             <div className="space-y-4">
+              {selectedStatus === 'IPD_DONE' && (
+                <div className="rounded-md border border-teal-300 bg-teal-50 dark:bg-teal-900/40 px-3 py-2 text-sm text-teal-900 dark:text-teal-100">
+                  Once you confirm, this case will move to the Insurance team for the discharge sheet. Your part is done — you do not need to know or enter the discharge date.
+                </div>
+              )}
               <div>
                 <Label htmlFor="notes">Additional Notes (Optional)</Label>
                 <Textarea
@@ -248,34 +240,6 @@ export function IPDMarkComponent({
             </div>
           )}
 
-          {selectedStatus === 'DISCHARGED' && (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="dischargeDate">Discharge Date *</Label>
-                <Input
-                  id="dischargeDate"
-                  type="date"
-                  value={formData.dischargeDate}
-                  onChange={(e) => setFormData({ ...formData, dischargeDate: e.target.value })}
-                  required
-                  className="mt-1"
-                />
-                {errors.dischargeDate && <p className="text-xs text-destructive mt-1">{errors.dischargeDate}</p>}
-              </div>
-              <div>
-                <Label htmlFor="dischargeNotes">Additional Notes (Optional)</Label>
-                <Textarea
-                  id="dischargeNotes"
-                  value={formData.notes}
-                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder="Any remarks or observations"
-                  rows={2}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-          )}
-
           <div className="flex flex-wrap gap-2 mt-6 pt-4 border-t">
             <Button
               type="button"
@@ -311,7 +275,7 @@ export function IPDMarkComponent({
                 type="button"
                 onClick={() => {
                   setSelectedStatus(option.value)
-                  setFormData({ reason: '', newSurgeryDate: '', dischargeDate: '', notes: '' })
+                  setFormData({ reason: '', newSurgeryDate: '', notes: '' })
                   setErrors({})
                   setStep('details')
                 }}

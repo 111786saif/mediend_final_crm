@@ -59,8 +59,8 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
-      return errorResponse('Forbidden: Only BD / TL can initiate admission', 403)
+    if (!['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)) {
+      return errorResponse('Forbidden: Only BD / TL / EA can initiate admission', 403)
     }
 
     const { id: leadId } = await params

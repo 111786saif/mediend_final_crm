@@ -147,9 +147,9 @@ export async function PATCH(
       return unauthorizedResponse()
     }
 
-    // Only Insurance team can update discharge sheets
-    if (user.role !== 'INSURANCE_HEAD' && user.role !== 'ADMIN') {
-      return errorResponse('Forbidden: Only Insurance team can update discharge sheets', 403)
+    // Insurance and PL teams can update discharge sheets
+    if (!['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)) {
+      return errorResponse('Forbidden: Only Insurance / PL team can update discharge sheets', 403)
     }
 
     const { id } = await params

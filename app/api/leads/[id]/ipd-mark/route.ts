@@ -5,13 +5,12 @@ import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { z } from 'zod'
-import { CaseStage, IpdStatus } from '@/generated/prisma/client'
+import { CaseStage } from '@/generated/prisma/client'
 
 const ipdMarkSchema = z.object({
-  status: z.enum(['ADMITTED_DONE', 'IPD_DONE', 'POSTPONED', 'CANCELLED', 'DISCHARGED']),
+  status: z.enum(['ADMITTED_DONE', 'IPD_DONE', 'POSTPONED', 'CANCELLED']),
   reason: z.string().optional(),
   newSurgeryDate: z.string().optional(),
-  dischargeDate: z.string().optional(),
   notes: z.string().optional(),
 })
 
@@ -25,8 +24,8 @@ export async function POST(
       return unauthorizedResponse()
     }
 
-    if (user.role !== 'BD' && user.role !== 'TEAM_LEAD' && user.role !== 'ADMIN') {
-      return errorResponse('Forbidden: Only BD / TL can mark IPD status', 403)
+    if (!['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)) {
+      return errorResponse('Forbidden: Only BD / TL / EA can mark IPD status', 403)
     }
 
     const { id: leadId } = await params
@@ -78,12 +77,6 @@ export async function POST(
       }
     }
 
-    if (data.status === 'DISCHARGED') {
-      if (!data.dischargeDate?.trim()) {
-        return errorResponse('Discharge date is required for discharged status', 400)
-      }
-    }
-
     // Update admission record with IPD status
     const updateData: Record<string, any> = {
       ipdStatus: data.status,
@@ -96,16 +89,15 @@ export async function POST(
       updateData.newSurgeryDate = new Date(data.newSurgeryDate)
     }
 
-    if (data.status === 'DISCHARGED' && data.dischargeDate) {
-      updateData.ipdDischargeDate = new Date(data.dischargeDate)
-    }
-
     const admission = await prisma.admissionRecord.update({
       where: { leadId },
       data: updateData,
     })
 
-    // Update case stage based on status and flow type
+    // Update case stage based on status and flow type.
+    // IPD_DONE is the new "handoff to Insurance for discharge" trigger — for
+    // insurance flow it advances the case stage to IPD_DONE; Insurance then
+    // creates the discharge sheet which advances it to DISCHARGED.
     const leadUpdateData: Record<string, any> = {}
     let toStage: CaseStage = lead.caseStage
 
@@ -113,14 +105,11 @@ export async function POST(
       if (data.status === 'IPD_DONE' || data.status === 'ADMITTED_DONE') {
         toStage = CaseStage.CASH_IPD_DONE
         leadUpdateData.caseStage = CaseStage.CASH_IPD_DONE
-      } else if (data.status === 'DISCHARGED') {
-        toStage = CaseStage.CASH_DISCHARGED
-        leadUpdateData.caseStage = CaseStage.CASH_DISCHARGED
       }
     } else {
-      if (data.status === 'DISCHARGED') {
-        toStage = CaseStage.DISCHARGED
-        leadUpdateData.caseStage = CaseStage.DISCHARGED
+      if (data.status === 'IPD_DONE') {
+        toStage = CaseStage.IPD_DONE
+        leadUpdateData.caseStage = CaseStage.IPD_DONE
       }
     }
 
@@ -147,15 +136,15 @@ export async function POST(
     // Post case chat message
     const statusMessages: Record<string, string> = {
       ADMITTED_DONE: 'Patient admitted.',
-      IPD_DONE: 'Surgery confirmed done.',
+      IPD_DONE: 'Surgery done. Insurance can now fill the discharge sheet.',
       POSTPONED: `Surgery postponed - ${data.reason || 'No reason provided'}. New surgery date: ${data.newSurgeryDate}`,
       CANCELLED: `Case cancelled - ${data.reason || 'No reason provided'}`,
-      DISCHARGED: `Patient discharged on ${data.dischargeDate}`,
     }
 
     await postCaseChatSystemMessage(leadId, `BD marked IPD status: ${statusMessages[data.status]}`)
 
-    // Notify Insurance team
+    // Notify Insurance team. When IPD_DONE is marked, route Insurance Heads
+    // straight to the discharge form — the lead is now in their queue.
     const insuranceUsers = await prisma.user.findMany({
       where: {
         role: 'INSURANCE_HEAD',
@@ -164,10 +153,16 @@ export async function POST(
 
     const titleMap: Record<string, string> = {
       ADMITTED_DONE: 'Patient Admitted',
-      IPD_DONE: 'Surgery Done',
+      IPD_DONE: 'Ready for Discharge Sheet',
       POSTPONED: 'Surgery Postponed',
       CANCELLED: 'Case Cancelled',
-      DISCHARGED: 'Patient Discharged',
+    }
+
+    const messageMap: Record<string, string> = {
+      ADMITTED_DONE: `IPD status updated for ${lead.patientName} (${lead.leadRef}): ADMITTED_DONE`,
+      IPD_DONE: `${lead.patientName} (${lead.leadRef}) — surgery done, please fill the discharge sheet`,
+      POSTPONED: `IPD status updated for ${lead.patientName} (${lead.leadRef}): POSTPONED`,
+      CANCELLED: `IPD status updated for ${lead.patientName} (${lead.leadRef}): CANCELLED`,
     }
 
     await prisma.notification.createMany({
@@ -175,8 +170,8 @@ export async function POST(
         userId: insuranceUser.id,
         type: 'INITIATED', // Using INITIATED as a fallback since IPD_MARKED is not in enum
         title: titleMap[data.status],
-        message: `IPD status updated for ${lead.patientName} (${lead.leadRef}): ${data.status}`,
-        link: `/patient/${leadId}`,
+        message: messageMap[data.status],
+        link: data.status === 'IPD_DONE' ? `/patient/${leadId}/discharge` : `/patient/${leadId}`,
         relatedId: admission.id,
       })),
     })

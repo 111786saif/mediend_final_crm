@@ -2,7 +2,9 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { postCaseChatSystemMessage } from '@/lib/case-chat'
 import { z } from 'zod'
+import { CaseStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import {
   LEAD_HYDRATE_INCLUDE,
@@ -175,8 +177,8 @@ export async function POST(request: NextRequest) {
       return unauthorizedResponse()
     }
 
-    // Only Insurance team can create discharge sheets
-    if (user.role !== 'INSURANCE_HEAD' && user.role !== 'ADMIN') {
+    // Insurance team can create discharge sheets
+    if (!['INSURANCE', 'INSURANCE_HEAD', 'ADMIN', 'TESTER'].includes(user.role)) {
       return errorResponse('Forbidden: Only Insurance team can create discharge sheets', 403)
     }
 
@@ -192,6 +194,17 @@ export async function POST(request: NextRequest) {
 
     if (!lead) {
       return errorResponse('Lead not found', 404)
+    }
+
+    // Stage guard: a discharge sheet can only be created once BD has marked
+    // IPD_DONE. DISCHARGED is retained to support legacy leads that were
+    // already advanced under the previous BD-marks-discharged flow.
+    const allowedStages: CaseStage[] = [CaseStage.IPD_DONE, CaseStage.DISCHARGED]
+    if (!allowedStages.includes(lead.caseStage)) {
+      return errorResponse(
+        `Cannot create discharge sheet. Current stage: ${lead.caseStage}. BD must mark IPD Done first.`,
+        400
+      )
     }
 
     // Check if discharge sheet already exists
@@ -299,6 +312,25 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    // Advance case stage to DISCHARGED if it was at IPD_DONE — the discharge
+    // sheet existing is the new signal that BD's part is done and Insurance
+    // has finalised. (Already-DISCHARGED legacy leads are left untouched.)
+    if (lead.caseStage === CaseStage.IPD_DONE) {
+      await prisma.lead.update({
+        where: { id: data.leadId },
+        data: { caseStage: CaseStage.DISCHARGED },
+      })
+      await prisma.caseStageHistory.create({
+        data: {
+          leadId: data.leadId,
+          fromStage: CaseStage.IPD_DONE,
+          toStage: CaseStage.DISCHARGED,
+          changedById: user.id,
+          note: 'Insurance filled discharge sheet',
+        },
+      })
+    }
+
     // Auto-create PL record from discharge sheet so it shows on PL dashboard
     const existingPL = await prisma.pLRecord.findUnique({
       where: { leadId: data.leadId },
@@ -327,6 +359,11 @@ export async function POST(request: NextRequest) {
       create: { leadId: data.leadId },
       update: {},
     })
+
+    await postCaseChatSystemMessage(
+      data.leadId,
+      'Insurance filled discharge sheet. Case moved to PL.'
+    )
 
     // Create notification for PL team
     const plUsers = await prisma.user.findMany({

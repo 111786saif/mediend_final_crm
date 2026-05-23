@@ -79,11 +79,11 @@ export function canInitiate(user: User, lead: Lead): boolean {
   return isBDOrTL && isPreAuthComplete
 }
 
-// BD / TL can mark IPD when initiated (insurance) or approved/submitted (cash)
+// BD / TL / EA can mark IPD when initiated (insurance) or approved/submitted (cash)
 export function canMarkIPD(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
-  const isBDOrTL = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
+  const isBDOrTL = ['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)
   const isInitiated = lead.caseStage === CaseStage.INITIATED
   const isCashReady = lead.caseStage === CaseStage.CASH_APPROVED || lead.caseStage === CaseStage.CASH_IPD_SUBMITTED
 
@@ -101,22 +101,22 @@ export function canGeneratePDF(user: User, lead: Lead): boolean {
   return isInsurance && afterPreAuthRaised
 }
 
-// Insurance or PL can edit discharge sheet when discharged AND initial form is filled
+// Insurance or PL can edit discharge sheet when IPD done (or already discharged for legacy) AND initial form is filled
 export function canEditDischargeSheet(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
-  
+
   const isInsuranceOrPL = ['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)
-  const isDischarged = lead.caseStage === CaseStage.DISCHARGED
+  const isReadyForDischarge = lead.caseStage === CaseStage.IPD_DONE || lead.caseStage === CaseStage.DISCHARGED
   const hasInitiateForm = !!lead.insuranceInitiateForm?.id
-  
-  return isInsuranceOrPL && isDischarged && hasInitiateForm
+
+  return isInsuranceOrPL && isReadyForDischarge && hasInitiateForm
 }
 
-// BD / TL can mark case as lost only after KYP1 and up until Mark Admitted (not before KYP1, not after admitted)
+// BD / TL / EA can mark case as lost only after KYP1 and up until Mark Admitted (not before KYP1, not after admitted)
 export function canMarkLost(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
-  const isBDOrTL = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
+  const isBDOrTL = ['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)
   if (!isBDOrTL) return false
 
   // Not allowed: before KYP1 (basic complete) or after admission
@@ -237,8 +237,8 @@ export function canFillInitiateForm(user: User, lead: Lead): boolean {
 export function isDischargeBlockedByInitiateForm(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
   const isInsuranceOrPL = ['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)
-  const isDischarged = lead.caseStage === CaseStage.DISCHARGED
-  return isInsuranceOrPL && isDischarged && !lead.insuranceInitiateForm?.id
+  const isReadyForDischarge = lead.caseStage === CaseStage.IPD_DONE || lead.caseStage === CaseStage.DISCHARGED
+  return isInsuranceOrPL && isReadyForDischarge && !lead.insuranceInitiateForm?.id
 }
 
 // Insurance, PL, Outstanding, BD, Admin can view initiate form details

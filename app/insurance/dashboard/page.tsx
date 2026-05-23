@@ -101,10 +101,9 @@ const IPD_MARK_OPTIONS = [
   { value: 'IPD_DONE', label: 'Surgery Done' },
   { value: 'POSTPONED', label: 'Postponed' },
   { value: 'CANCELLED', label: 'Cancelled' },
-  { value: 'DISCHARGED', label: 'Discharged' },
   { value: 'NONE', label: 'Not set' },
 ] as const
-type IpdMarkFilterValue = '' | 'ADMITTED_DONE' | 'IPD_DONE' | 'POSTPONED' | 'CANCELLED' | 'DISCHARGED' | 'NONE'
+type IpdMarkFilterValue = '' | 'ADMITTED_DONE' | 'IPD_DONE' | 'POSTPONED' | 'CANCELLED' | 'NONE'
 
 type TabKey =
   | 'kyp-review'
@@ -125,11 +124,18 @@ const KYP_STAGES: CaseStage[] = [
   CaseStage.HOSPITALS_SUGGESTED,
 ]
 
+function isReadyForDischarge(lead: LeadWithStage): boolean {
+  // BD has finished their work (IPD_DONE) — or legacy leads that were
+  // pushed into DISCHARGED under the old flow — and the sheet isn't filled yet.
+  const stageReady = lead.caseStage === CaseStage.IPD_DONE || lead.caseStage === CaseStage.DISCHARGED
+  return stageReady && !lead.dischargeSheet
+}
+
 function getPriorityTier(lead: LeadWithStage): 0 | 1 | 2 | 3 {
   // Tier 3: Hospital Suggestion Pending (Highest)
   if (lead.caseStage === CaseStage.HOSPITALS_SUGGESTED && lead.kypSubmission?.preAuthData?.bdSuggestedHospital) return 3
-  // Tier 1: Discharge Pending
-  if (lead.caseStage === CaseStage.DISCHARGED && !lead.dischargeSheet) return 1
+  // Tier 1: Ready for Discharge
+  if (isReadyForDischarge(lead)) return 1
   // Tier 2: Initial Form Pending
   if (lead.caseStage === CaseStage.PREAUTH_COMPLETE && !lead.insuranceInitiateForm) return 2
   return 0
@@ -191,8 +197,8 @@ export default function InsuranceDashboardPage() {
       preAuthRejected: preAuthRaisedLeads.filter(l => l.kypSubmission?.preAuthData?.approvalStatus === PreAuthStatus.REJECTED).length,
       preAuthComplete: leads.filter(l => l.caseStage === CaseStage.PREAUTH_COMPLETE).length,
       admitted: leads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
-      dischargePending: leads.filter(l => l.caseStage === CaseStage.DISCHARGED && !l.dischargeSheet).length,
-      ipdDone: leads.filter(l => l.caseStage === CaseStage.IPD_DONE).length,
+      dischargePending: leads.filter(l => isReadyForDischarge(l)).length,
+      ipdDone: leads.filter(l => l.caseStage === CaseStage.IPD_DONE || l.caseStage === CaseStage.DISCHARGED || l.caseStage === CaseStage.PL_PENDING).length,
       ipdScheduled: leads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
       allPatients: leads.length,
     }
@@ -260,9 +266,11 @@ export default function InsuranceDashboardPage() {
         case 'admitted':
           return lead.caseStage === CaseStage.INITIATED || lead.caseStage === CaseStage.ADMITTED
         case 'discharge-pending':
-          return lead.caseStage === CaseStage.DISCHARGED && !lead.dischargeSheet
+          return isReadyForDischarge(lead)
         case 'ipd-done':
           return lead.caseStage === CaseStage.IPD_DONE
+            || lead.caseStage === CaseStage.DISCHARGED
+            || lead.caseStage === CaseStage.PL_PENDING
         case 'all-patients':
           return true
         default:
@@ -315,8 +323,8 @@ export default function InsuranceDashboardPage() {
     { id: 'preauth-raised', label: 'Pre-Auth Raised', icon: ArrowRight, value: stats.preAuthRaised, gradient: 'from-purple-500 to-pink-500', bgGradient: 'from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950', iconColor: 'text-purple-600 dark:text-purple-400', borderColor: 'border-purple-200 dark:border-purple-800' },
     { id: 'preauth-complete', label: 'Pre-Auth Approved', icon: CheckCircle2, value: stats.preAuthComplete, gradient: 'from-green-500 to-emerald-500', bgGradient: 'from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950', iconColor: 'text-green-600 dark:text-green-400', borderColor: 'border-green-200 dark:border-green-800' },
     { id: 'admitted', label: 'IPD / Admitted', icon: Activity, value: stats.admitted, gradient: 'from-indigo-500 to-blue-500', bgGradient: 'from-indigo-50 to-blue-50 dark:from-indigo-950 dark:to-blue-950', iconColor: 'text-indigo-600 dark:text-indigo-400', borderColor: 'border-indigo-200 dark:border-indigo-800' },
-    { id: 'discharge-pending', label: 'Discharge Pending', icon: Receipt, value: stats.dischargePending, gradient: 'from-orange-500 to-amber-500', bgGradient: 'from-orange-50 to-amber-50 dark:from-orange-950 dark:to-amber-950', iconColor: 'text-orange-600 dark:text-orange-400', borderColor: 'border-orange-200 dark:border-orange-800' },
-    { id: 'ipd-done', label: 'IPD Done', icon: Shield, value: stats.ipdDone, gradient: 'from-teal-500 to-cyan-500', bgGradient: 'from-teal-50 to-cyan-50 dark:from-teal-950 dark:to-cyan-950', iconColor: 'text-teal-600 dark:text-teal-400', borderColor: 'border-teal-200 dark:border-teal-800' },
+    { id: 'discharge-pending', label: 'Ready for Discharge', icon: Receipt, value: stats.dischargePending, gradient: 'from-orange-500 to-amber-500', bgGradient: 'from-orange-50 to-amber-50 dark:from-orange-950 dark:to-amber-950', iconColor: 'text-orange-600 dark:text-orange-400', borderColor: 'border-orange-200 dark:border-orange-800' },
+    { id: 'ipd-done', label: 'IPD Done (all)', icon: Shield, value: stats.ipdDone, gradient: 'from-teal-500 to-cyan-500', bgGradient: 'from-teal-50 to-cyan-50 dark:from-teal-950 dark:to-cyan-950', iconColor: 'text-teal-600 dark:text-teal-400', borderColor: 'border-teal-200 dark:border-teal-800' },
     { id: 'all-patients', label: 'All Patients', icon: LayoutList, value: stats.allPatients, gradient: 'from-slate-500 to-gray-500', bgGradient: 'from-slate-50 to-gray-50 dark:from-slate-950 dark:to-gray-950', iconColor: 'text-slate-600 dark:text-slate-400', borderColor: 'border-slate-200 dark:border-slate-800' },
   ]
 
@@ -325,8 +333,8 @@ export default function InsuranceDashboardPage() {
     'preauth-raised': '🚀 Pre-Auth Raised',
     'preauth-complete': '✅ Pre-Auth Approved',
     'admitted': '🏥 IPD / Admitted',
-    'discharge-pending': '📄 Discharge Pending',
-    'ipd-done': '🛡️ IPD Done',
+    'discharge-pending': '📄 Ready for Discharge — fill the sheet',
+    'ipd-done': '🛡️ IPD Done (incl. discharged & in PL)',
     'all-patients': '📊 All Patients',
   }
 
@@ -731,7 +739,7 @@ export default function InsuranceDashboardPage() {
                                     Fill Initial Form
                                   </Button>
                                 )}
-                                {lead.caseStage === CaseStage.DISCHARGED && !lead.dischargeSheet && (
+                                {isReadyForDischarge(lead) && (
                                   <Button
                                     variant="default"
                                     size="sm"

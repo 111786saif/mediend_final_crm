@@ -51,8 +51,8 @@ Lead
 | `PREAUTH_COMPLETE` | Insurance has approved pre-auth; BD can mark admitted |
 | `INITIATED` | BD has marked patient admitted (admission details recorded) |
 | `ADMITTED` | Patient admitted (used in IPD tracking) |
-| `IPD_DONE` | IPD procedure completed |
-| `DISCHARGED` | BD has marked patient discharged; Insurance can fill discharge sheet |
+| `IPD_DONE` | BD has marked surgery done; case is now in Insurance's "Ready for Discharge" queue. BD's part is finished. |
+| `DISCHARGED` | Insurance has filled the discharge sheet (auto-set on discharge sheet creation) |
 | `PL_PENDING` | Case is in P&L pipeline |
 | `OUTSTANDING` | Case has outstanding payments/follow-up |
 
@@ -312,9 +312,9 @@ The hold is **not** a stage transition — pipeline stage and case stage are unc
 
 ---
 
-### 5.8 Stage 6b: Update IPD Status — BD
+### 5.8 Stage 6b: Update IPD Status — BD / TL / EA
 
-- **Who:** BD, TEAM_LEAD, ADMIN
+- **Who:** BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN
 - **When:** `caseStage === INITIATED`
 - **Page:** `/patient/[leadId]` (modal)
 - **Component:** `IPDMarkComponent`
@@ -322,34 +322,31 @@ The hold is **not** a stage transition — pipeline stage and case stage are unc
 
 **Status options and fields:**
 
-| Status | Fields | Required |
-|--------|--------|----------|
-| `ADMITTED_DONE` | notes | No |
-| `IPD_DONE` | notes | No |
-| `POSTPONED` | reason, newSurgeryDate, notes | reason + newSurgeryDate: Yes |
-| `CANCELLED` | reason, notes | reason: Yes |
-| `DISCHARGED` | dischargeDate, notes | dischargeDate: Yes |
+| Status | Fields | Required | Stage transition |
+|--------|--------|----------|------------------|
+| `ADMITTED_DONE` | notes | No | none |
+| `IPD_DONE` | notes | No | `INITIATED → IPD_DONE` — case appears in Insurance's "Ready for Discharge" queue. BD's work is done. |
+| `POSTPONED` | reason, newSurgeryDate, notes | reason + newSurgeryDate: Yes | none |
+| `CANCELLED` | reason, notes | reason: Yes | none |
+
+> **No `DISCHARGED` option.** BDs do not need to know the discharge date — Insurance captures it on the discharge sheet.
 
 ---
 
-### 5.9 Stage 7: BD Marks Discharged
+### 5.9 Stage 7: Discharge Sheet — Insurance (creates + finalises discharge)
 
-- **Who:** BD, TEAM_LEAD, ADMIN
-- **When:** `caseStage` is `INITIATED` or `ADMITTED`
-- **API:** `POST /api/leads/[id]/discharge`
-- **Result:** **case stage → `DISCHARGED`**; Insurance Head notified to fill discharge sheet
-- This is a status change only — no form fields.
-
----
-
-### 5.10 Stage 8: Discharge Sheet — Insurance
-
-- **Who:** INSURANCE_HEAD, ADMIN (create); INSURANCE, PL_HEAD, PL_ENTRY also for edit
-- **When:** `caseStage === DISCHARGED` **and** `insuranceInitiateForm` exists (blocked otherwise with warning)
+- **Who (create):** INSURANCE, INSURANCE_HEAD, ADMIN, TESTER
+- **Who (edit):** INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, ADMIN
+- **When:** `caseStage` is `IPD_DONE` (or legacy `DISCHARGED`) **and** `insuranceInitiateForm` exists (blocked otherwise with warning)
 - **Page:** `/patient/[leadId]/discharge`
 - **Components:** `DischargeSheetForm` (create), `DischargeSheetView` (read-only)
 - **APIs:** `POST /api/discharge-sheet` (create), `PATCH /api/discharge-sheet/[id]` (update)
-- **Result:** Discharge sheet created; **PLRecord auto-created** (if none exists) with payout statuses set to `PENDING`; **pipeline stage → `PL`**; PL team notified
+- **Result:**
+  - Discharge sheet created with `dischargeDate` captured by Insurance
+  - **case stage `IPD_DONE → DISCHARGED`** (auto, on POST)
+  - **PLRecord auto-created** (if none exists) with payout statuses set to `PENDING`
+  - **pipeline stage → `PL`**
+  - PL team notified; compliance call row upserted
 
 **Discharge Sheet Form Fields:**
 
@@ -641,20 +638,21 @@ Submit stays disabled until both validate.
 
 | Function | Roles | Condition |
 |----------|-------|-----------|
-| **Fill Card Details (KYP)** | BD, TEAM_LEAD, ADMIN | `NEW_LEAD` or `KYP_BASIC_PENDING` |
+| **Fill Card Details (KYP)** | BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN | `NEW_LEAD` or `KYP_BASIC_PENDING` |
 | **Suggest Hospitals** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `KYP_BASIC_COMPLETE` |
 | **Modify Hospital Suggestions** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `HOSPITALS_SUGGESTED` or `PREAUTH_RAISED` |
-| **Raise Pre-Auth** | BD, TEAM_LEAD, ADMIN | `HOSPITALS_SUGGESTED` |
+| **Raise Pre-Auth** | BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN | `HOSPITALS_SUGGESTED` |
 | **Complete Pre-Auth (approve/reject)** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` |
 | **Hold / Release Pre-Auth** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` and not yet APPROVED/TEMP_APPROVED/REJECTED |
 | **Fill Initiate Form** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` or `PREAUTH_COMPLETE` |
 | **View Initiate Form** | INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, OUTSTANDING_HEAD, ADMIN, FINANCE_HEAD, BD, TEAM_LEAD | No stage check |
-| **Mark Admitted (Initiate)** | BD, TEAM_LEAD, ADMIN | `PREAUTH_COMPLETE` |
-| **Update IPD Status** | BD, TEAM_LEAD, ADMIN | `INITIATED` |
+| **Mark Admitted (Initiate)** | BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN | `PREAUTH_COMPLETE` |
+| **Update IPD Status (incl. mark IPD_DONE)** | BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN | `INITIATED` |
 | **Generate PDF** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` or `PREAUTH_COMPLETE` |
-| **Edit Discharge Sheet** | INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, ADMIN | `DISCHARGED` and initiate form exists |
+| **Create Discharge Sheet** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `IPD_DONE` (or legacy `DISCHARGED`) and initiate form exists |
+| **Edit Discharge Sheet** | INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, ADMIN | `IPD_DONE` or `DISCHARGED` and initiate form exists |
 | **Reset Patient** | INSURANCE, INSURANCE_HEAD, ADMIN | Insurance flow; `PREAUTH_RAISED`, `PREAUTH_COMPLETE`, or `INITIATED`; requires typed confirmation + reason |
-| **Mark Lost** | BD, TEAM_LEAD, ADMIN | Not `NEW_LEAD`; not post-admission; stage in allowed list |
+| **Mark Lost** | BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN | Not `NEW_LEAD`; not post-admission; stage in allowed list |
 | **Start Cash Mode** | BD, TEAM_LEAD, ADMIN | `flowType !== CASH`; stage in early/cash-allowed list |
 | **Revert Cash Mode** | BD, TEAM_LEAD, ADMIN | `flowType === CASH` and `CASH_IPD_PENDING` |
 | **Fill IPD Cash Form** | BD, TEAM_LEAD, ADMIN | `flowType === CASH` and `CASH_IPD_PENDING` or `CASH_ON_HOLD` |
@@ -675,9 +673,9 @@ Submit stays disabled until both validate.
 | `KYP_BASIC_COMPLETE` | `HOSPITALS_SUGGESTED` | `POST /api/kyp/pre-auth` (with hospitals) | Insurance |
 | `HOSPITALS_SUGGESTED` | `PREAUTH_RAISED` | `POST /api/leads/:id/raise-preauth` | BD |
 | `PREAUTH_RAISED` | `PREAUTH_COMPLETE` | `POST /api/pre-auth/:kypSubId/approve` | Insurance |
-| `PREAUTH_COMPLETE` | `INITIATED` | `POST /api/leads/:id/initiate` (Mark Admitted) | BD |
-| `INITIATED` / `ADMITTED` | `DISCHARGED` | `POST /api/leads/:id/discharge` | BD |
-| `DISCHARGED` | (PLRecord created) | `POST /api/discharge-sheet` | Insurance |
+| `PREAUTH_COMPLETE` | `INITIATED` | `POST /api/leads/:id/initiate` (Mark Admitted) | BD / TL / EA |
+| `INITIATED` | `IPD_DONE` | `POST /api/leads/:id/ipd-mark` (status: `IPD_DONE`) — BD's last action | BD / TL / EA |
+| `IPD_DONE` | `DISCHARGED` (+ PLRecord auto-created) | `POST /api/discharge-sheet` | Insurance |
 | `PREAUTH_RAISED` / `PREAUTH_COMPLETE` / `INITIATED` | `HOSPITALS_SUGGESTED` | `POST /api/leads/:id/reset-patient` (Reset Patient — danger action) | Insurance |
 
 Pipeline: `SALES → INSURANCE` (on hospital suggestion) → `PL` (on discharge sheet creation)
@@ -708,7 +706,7 @@ The `StageProgress` component (`components/case/stage-progress.tsx`) shows these
 | 5 | Insurance Initial Form | Insurance | Purple |
 | 6 | IPD Details (Mark Admitted) | BD | Blue |
 | 7 | IPD Mark (Status Update) | BD | Blue |
-| 8 | Discharge Summary | Insurance | Purple |
+| 8 | Discharge Summary (Insurance fills, captures discharge date) | Insurance | Purple |
 
 Cash flow uses `CashStageProgress` with 4 steps: IPD Cash Form → Insurance Review → Approved → Discharge.
 
@@ -749,7 +747,7 @@ Cash flow uses `CashStageProgress` with 4 steps: IPD Cash Form → Insurance Rev
 | `/api/leads/[id]/raise-preauth` | POST | BD raises pre-auth |
 | `/api/leads/[id]/initiate` | POST | BD marks admitted |
 | `/api/leads/[id]/ipd-mark` | POST | BD updates IPD status |
-| `/api/leads/[id]/discharge` | POST | BD marks discharged |
+| ~~`/api/leads/[id]/discharge`~~ | — | **Removed.** Insurance now sets `DISCHARGED` as a side-effect of creating the discharge sheet. |
 | `/api/leads/[id]/reset-patient` | POST | Insurance resets patient back to Hospitals Suggested (danger action) |
 | `/api/leads/[id]/cash-review` | POST | Insurance approve/hold cash case |
 | `/api/leads/[id]/preauth-pdf` | GET | Generate pre-auth PDF |
