@@ -165,6 +165,9 @@ export type DischargeSheetMinAggregateOutputType = {
   mediendNetProfit: number | null
   packageText: string | null
   othersText: string | null
+  otherCharges: string | null
+  packageAmount: string | null
+  staplerCharges: string | null
   remarks: string | null
   isFinalized: boolean | null
   markedById: string | null
@@ -242,6 +245,9 @@ export type DischargeSheetMaxAggregateOutputType = {
   mediendNetProfit: number | null
   packageText: string | null
   othersText: string | null
+  otherCharges: string | null
+  packageAmount: string | null
+  staplerCharges: string | null
   remarks: string | null
   isFinalized: boolean | null
   markedById: string | null
@@ -319,6 +325,9 @@ export type DischargeSheetCountAggregateOutputType = {
   mediendNetProfit: number
   packageText: number
   othersText: number
+  otherCharges: number
+  packageAmount: number
+  staplerCharges: number
   remarks: number
   isFinalized: number
   markedById: number
@@ -472,6 +481,9 @@ export type DischargeSheetMinAggregateInputType = {
   mediendNetProfit?: true
   packageText?: true
   othersText?: true
+  otherCharges?: true
+  packageAmount?: true
+  staplerCharges?: true
   remarks?: true
   isFinalized?: true
   markedById?: true
@@ -549,6 +561,9 @@ export type DischargeSheetMaxAggregateInputType = {
   mediendNetProfit?: true
   packageText?: true
   othersText?: true
+  otherCharges?: true
+  packageAmount?: true
+  staplerCharges?: true
   remarks?: true
   isFinalized?: true
   markedById?: true
@@ -626,6 +641,9 @@ export type DischargeSheetCountAggregateInputType = {
   mediendNetProfit?: true
   packageText?: true
   othersText?: true
+  otherCharges?: true
+  packageAmount?: true
+  staplerCharges?: true
   remarks?: true
   isFinalized?: true
   markedById?: true
@@ -790,6 +808,9 @@ export type DischargeSheetGroupByOutputType = {
   mediendNetProfit: number
   packageText: string | null
   othersText: string | null
+  otherCharges: string | null
+  packageAmount: string | null
+  staplerCharges: string | null
   remarks: string | null
   isFinalized: boolean
   markedById: string | null
@@ -890,6 +911,9 @@ export type DischargeSheetWhereInput = {
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
   packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   isFinalized?: Prisma.BoolFilter<"DischargeSheet"> | boolean
   markedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -973,6 +997,9 @@ export type DischargeSheetOrderByWithRelationInput = {
   mediendNetProfit?: Prisma.SortOrder
   packageText?: Prisma.SortOrderInput | Prisma.SortOrder
   othersText?: Prisma.SortOrderInput | Prisma.SortOrder
+  otherCharges?: Prisma.SortOrderInput | Prisma.SortOrder
+  packageAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1060,6 +1087,9 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
   packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   isFinalized?: Prisma.BoolFilter<"DischargeSheet"> | boolean
   markedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -1142,6 +1172,9 @@ export type DischargeSheetOrderByWithAggregationInput = {
   mediendNetProfit?: Prisma.SortOrder
   packageText?: Prisma.SortOrderInput | Prisma.SortOrder
   othersText?: Prisma.SortOrderInput | Prisma.SortOrder
+  otherCharges?: Prisma.SortOrderInput | Prisma.SortOrder
+  packageAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -1227,6 +1260,9 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   mediendNetProfit?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   packageText?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   othersText?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  otherCharges?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  packageAmount?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  staplerCharges?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   isFinalized?: Prisma.BoolWithAggregatesFilter<"DischargeSheet"> | boolean
   markedById?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
@@ -1302,6 +1338,9 @@ export type DischargeSheetCreateInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -1381,6 +1420,9 @@ export type DischargeSheetUncheckedCreateInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -1456,6 +1498,9 @@ export type DischargeSheetUpdateInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1535,6 +1580,9 @@ export type DischargeSheetUncheckedUpdateInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1612,6 +1660,9 @@ export type DischargeSheetCreateManyInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -1687,6 +1738,9 @@ export type DischargeSheetUpdateManyMutationInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1760,6 +1814,9 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1852,6 +1909,9 @@ export type DischargeSheetCountOrderByAggregateInput = {
   mediendNetProfit?: Prisma.SortOrder
   packageText?: Prisma.SortOrder
   othersText?: Prisma.SortOrder
+  otherCharges?: Prisma.SortOrder
+  packageAmount?: Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrder
@@ -1966,6 +2026,9 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   mediendNetProfit?: Prisma.SortOrder
   packageText?: Prisma.SortOrder
   othersText?: Prisma.SortOrder
+  otherCharges?: Prisma.SortOrder
+  packageAmount?: Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrder
@@ -2043,6 +2106,9 @@ export type DischargeSheetMinOrderByAggregateInput = {
   mediendNetProfit?: Prisma.SortOrder
   packageText?: Prisma.SortOrder
   othersText?: Prisma.SortOrder
+  otherCharges?: Prisma.SortOrder
+  packageAmount?: Prisma.SortOrder
+  staplerCharges?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   isFinalized?: Prisma.SortOrder
   markedById?: Prisma.SortOrder
@@ -2377,6 +2443,9 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -2455,6 +2524,9 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -2539,6 +2611,9 @@ export type DischargeSheetCreateWithoutMarkedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -2617,6 +2692,9 @@ export type DischargeSheetUncheckedCreateWithoutMarkedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -2701,6 +2779,9 @@ export type DischargeSheetCreateWithoutFinalizedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -2779,6 +2860,9 @@ export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -2884,6 +2968,9 @@ export type DischargeSheetScalarWhereInput = {
   mediendNetProfit?: Prisma.FloatFilter<"DischargeSheet"> | number
   packageText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   othersText?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  otherCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  packageAmount?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  staplerCharges?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   remarks?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   isFinalized?: Prisma.BoolFilter<"DischargeSheet"> | boolean
   markedById?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
@@ -2991,6 +3078,9 @@ export type DischargeSheetCreateWithoutLeadInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -3068,6 +3158,9 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -3159,6 +3252,9 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3236,6 +3332,9 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3311,6 +3410,9 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -3389,6 +3491,9 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -3479,6 +3584,9 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3557,6 +3665,9 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3631,6 +3742,9 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -3708,6 +3822,9 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -3799,6 +3916,9 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3876,6 +3996,9 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3953,6 +4076,9 @@ export type DischargeSheetCreateManyCreatedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -4029,6 +4155,9 @@ export type DischargeSheetCreateManyMarkedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedAt?: Date | string | null
@@ -4105,6 +4234,9 @@ export type DischargeSheetCreateManyFinalizedByInput = {
   mediendNetProfit?: number
   packageText?: string | null
   othersText?: string | null
+  otherCharges?: string | null
+  packageAmount?: string | null
+  staplerCharges?: string | null
   remarks?: string | null
   isFinalized?: boolean
   markedById?: string | null
@@ -4179,6 +4311,9 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4257,6 +4392,9 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4333,6 +4471,9 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4407,6 +4548,9 @@ export type DischargeSheetUpdateWithoutMarkedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4485,6 +4629,9 @@ export type DischargeSheetUncheckedUpdateWithoutMarkedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4561,6 +4708,9 @@ export type DischargeSheetUncheckedUpdateManyWithoutMarkedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4635,6 +4785,9 @@ export type DischargeSheetUpdateWithoutFinalizedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4713,6 +4866,9 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4789,6 +4945,9 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   packageText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   othersText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  packageAmount?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staplerCharges?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isFinalized?: Prisma.BoolFieldUpdateOperationsInput | boolean
   markedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4867,6 +5026,9 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   mediendNetProfit?: boolean
   packageText?: boolean
   othersText?: boolean
+  otherCharges?: boolean
+  packageAmount?: boolean
+  staplerCharges?: boolean
   remarks?: boolean
   isFinalized?: boolean
   markedById?: boolean
@@ -4950,6 +5112,9 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   mediendNetProfit?: boolean
   packageText?: boolean
   othersText?: boolean
+  otherCharges?: boolean
+  packageAmount?: boolean
+  staplerCharges?: boolean
   remarks?: boolean
   isFinalized?: boolean
   markedById?: boolean
@@ -5033,6 +5198,9 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   mediendNetProfit?: boolean
   packageText?: boolean
   othersText?: boolean
+  otherCharges?: boolean
+  packageAmount?: boolean
+  staplerCharges?: boolean
   remarks?: boolean
   isFinalized?: boolean
   markedById?: boolean
@@ -5116,6 +5284,9 @@ export type DischargeSheetSelectScalar = {
   mediendNetProfit?: boolean
   packageText?: boolean
   othersText?: boolean
+  otherCharges?: boolean
+  packageAmount?: boolean
+  staplerCharges?: boolean
   remarks?: boolean
   isFinalized?: boolean
   markedById?: boolean
@@ -5128,7 +5299,7 @@ export type DischargeSheetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "packageText" | "othersText" | "remarks" | "isFinalized" | "markedById" | "markedAt" | "finalizedById" | "finalizedAt" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
+export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "packageText" | "othersText" | "otherCharges" | "packageAmount" | "staplerCharges" | "remarks" | "isFinalized" | "markedById" | "markedAt" | "finalizedById" | "finalizedAt" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
 export type DischargeSheetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
@@ -5229,6 +5400,9 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     mediendNetProfit: number
     packageText: string | null
     othersText: string | null
+    otherCharges: string | null
+    packageAmount: string | null
+    staplerCharges: string | null
     remarks: string | null
     isFinalized: boolean
     markedById: string | null
@@ -5732,6 +5906,9 @@ export interface DischargeSheetFieldRefs {
   readonly mediendNetProfit: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly packageText: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly othersText: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly otherCharges: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly packageAmount: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly staplerCharges: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly remarks: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly isFinalized: Prisma.FieldRef<"DischargeSheet", 'Boolean'>
   readonly markedById: Prisma.FieldRef<"DischargeSheet", 'String'>

@@ -32,6 +32,11 @@ const dischargeCashSchema = z.object({
   // Cash extras
   packageText: z.string().optional(),
   othersText: z.string().optional(),
+
+  // Bill extras shared with the insurance flow
+  otherCharges: z.string().optional(),
+  packageAmount: z.string().optional(),
+  staplerCharges: z.enum(['INCLUDED', 'OPEN']).optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -94,6 +99,9 @@ export async function POST(request: NextRequest) {
         cashPaidByPatient: validatedData.finalAmount,
         packageText: validatedData.packageText,
         othersText: validatedData.othersText,
+        otherCharges: validatedData.otherCharges,
+        packageAmount: validatedData.packageAmount,
+        staplerCharges: validatedData.staplerCharges,
 
         paymentType: 'CASH',
         approvedOrCash: 'CASH',

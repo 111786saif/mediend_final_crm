@@ -23,10 +23,10 @@ interface CompanyData {
 
 const COMPANY_DATA: CompanyData = {
   name: 'Kundkund Healthcare Pvt. Ltd.',
-  address: 'FF, H-166, Sector 63 Rd, H Block, Sector 63, Noida, Uttar Pradesh 201301',
+  address: '6th Floor, Plot No. 56A/16, Block C, Phase 2, Industrial Area, Sector 62, Noida, Uttar Pradesh 201309',
   city: 'Noida',
   state: 'Uttar Pradesh',
-  pincode: '201301',
+  pincode: '201309',
   email: 'info@mediend.com',
   website: 'www.mediend.com',
   cin: 'U74999UP2022PTC174636',
@@ -227,7 +227,7 @@ export function generateOfferLetterHTML(
     <p>Casual Leave: 6 Leaves (1 per month), Sick Leave: 3 Leaves (0.5 per month), Earned Leave: 3 Leaves (1 per month) - credited after successful completion of 6 months' probation period.</p>
     ${salesSection}
 
-    <p>Initially, you will be posted at our Noida office (Address: FF, H-166, Sector-63, Noida 201301). This position reports to HOD. Your working hours will be intimated by your reporting manager.</p>
+    <p>Initially, you will be posted at our Noida office (Address: 6th Floor, Plot No. 56A/16, Block C, Phase 2, Industrial Area, Sector 62, Noida, Uttar Pradesh 201309). This position reports to HOD. Your working hours will be intimated by your reporting manager.</p>
 
     <p>We would like you to start work on <strong>${joiningDate}</strong>. If this date is not acceptable, please contact undersigned immediately.</p>
 
@@ -313,7 +313,7 @@ export function generateIncrementLetterHTML(
 
   <div>
     <p><strong>Company - Kundkund Healthcare Pvt. Ltd.</strong></p>
-    <p>Add - H-166 First Floor, Sector 63, Noida, 201301</p>
+    <p>Add - 6th Floor, Plot No. 56A/16, Block C, Phase 2, Industrial Area, Sector 62, Noida, Uttar Pradesh 201309</p>
   </div>
 
   <div class="subject">SALARY INCREMENT LETTER</div>
@@ -477,7 +477,7 @@ export function generateInternshipOfferLetterHTML(
   const stipend = metadata?.stipend || 0
   const duration = metadata?.duration || '3 Months'
   const department = metadata?.department || employee.department || 'Operations'
-  const location = metadata?.location || 'FF, H-166, Sector-63, Noida 201301'
+  const location = metadata?.location || '6th Floor, Plot No. 56A/16, Block C, Phase 2, Industrial Area, Sector 62, Noida, Uttar Pradesh 201309'
   const internshipType = metadata?.internshipType || 'Full-time'
   const guardianName = metadata?.guardianName || ''
   const guardianRelation = metadata?.guardianRelation || 'S/O'

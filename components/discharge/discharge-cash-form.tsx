@@ -58,6 +58,9 @@ export function DischargeCashForm({ leadId, patientName, hospitalName, onSuccess
     consumablesAmount: '',
     implantsAmount: '',
     instrumentsAmount: '',
+    otherCharges: '',
+    packageAmount: '',
+    staplerCharges: '',
   })
   
   const [totalFinalBill, setTotalFinalBill] = useState(0)
@@ -155,6 +158,9 @@ export function DischargeCashForm({ leadId, patientName, hospitalName, onSuccess
         consumablesAmount: parseFloat(formData.consumablesAmount),
         implantsAmount: parseFloat(formData.implantsAmount) || 0,
         instrumentsAmount: parseFloat(formData.instrumentsAmount) || 0,
+        otherCharges: formData.otherCharges.trim() || undefined,
+        packageAmount: formData.packageAmount.trim() || undefined,
+        staplerCharges: formData.staplerCharges || undefined,
         totalFinalBill,
       })
       
@@ -364,6 +370,41 @@ export function DischargeCashForm({ leadId, patientName, hospitalName, onSuccess
                 onChange={(e) => set('instrumentsAmount', e.target.value)}
                 className="mt-1"
               />
+            </div>
+            <div>
+              <Label htmlFor="otherCharges">Other Charges</Label>
+              <Input
+                id="otherCharges"
+                type="text"
+                value={formData.otherCharges}
+                onChange={(e) => set('otherCharges', e.target.value)}
+                placeholder="Optional"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="packageAmount">Package Amount</Label>
+              <Input
+                id="packageAmount"
+                type="text"
+                value={formData.packageAmount}
+                onChange={(e) => set('packageAmount', e.target.value)}
+                placeholder="Optional"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="staplerCharges">Stapler Charges</Label>
+              <select
+                id="staplerCharges"
+                value={formData.staplerCharges}
+                onChange={(e) => set('staplerCharges', e.target.value)}
+                className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">Select…</option>
+                <option value="INCLUDED">Included</option>
+                <option value="OPEN">Open</option>
+              </select>
             </div>
           </div>
 

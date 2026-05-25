@@ -31,6 +31,9 @@ interface DischargeSheetViewProps {
     consumablesAmount?: number
     implantsAmount?: number
     instrumentsAmount?: number | null
+    otherCharges?: string | null
+    packageAmount?: string | null
+    staplerCharges?: string | null
     totalFinalBill?: number
     finalApprovedAmount?: number
     deductionAmount?: number
@@ -204,6 +207,26 @@ export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) 
               <span className="text-sm font-medium">₹{Number(value).toLocaleString()}</span>
             </div>
           ))}
+          {dischargeSheet.otherCharges && (
+            <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
+              <span className="text-sm">Other Charges</span>
+              <span className="text-sm font-medium">{dischargeSheet.otherCharges}</span>
+            </div>
+          )}
+          {dischargeSheet.packageAmount && (
+            <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
+              <span className="text-sm">Package Amount</span>
+              <span className="text-sm font-medium">{dischargeSheet.packageAmount}</span>
+            </div>
+          )}
+          {dischargeSheet.staplerCharges && (
+            <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
+              <span className="text-sm">Stapler Charges</span>
+              <span className="text-sm font-medium">
+                {dischargeSheet.staplerCharges === 'INCLUDED' ? 'Included' : 'Open'}
+              </span>
+            </div>
+          )}
         </CardContent>
       </Card>
 

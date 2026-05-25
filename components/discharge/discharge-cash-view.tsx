@@ -99,7 +99,15 @@ export function DischargeCashView({ data }: DischargeCashViewProps) {
           <InfoRow label="Consumables" value={data.consumablesAmount} isCurrency />
           <InfoRow label="Implants" value={data.implantsAmount} isCurrency />
           <InfoRow label="Instruments" value={data.instrumentsAmount} isCurrency />
-          
+          {data.otherCharges && <InfoRow label="Other Charges" value={data.otherCharges} />}
+          {data.packageAmount && <InfoRow label="Package Amount" value={data.packageAmount} />}
+          {data.staplerCharges && (
+            <InfoRow
+              label="Stapler Charges"
+              value={data.staplerCharges === 'INCLUDED' ? 'Included' : 'Open'}
+            />
+          )}
+
           <div className="col-span-1 md:col-span-2 mt-4 pt-4 border-t flex justify-between items-center bg-muted/30 p-2 rounded">
             <span className="font-semibold">Total Final Bill</span>
             <span className="font-bold text-lg">₹ {Number(data.totalFinalBill || 0).toLocaleString('en-IN')}</span>

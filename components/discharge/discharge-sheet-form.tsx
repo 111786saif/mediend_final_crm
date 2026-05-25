@@ -62,6 +62,9 @@ export function DischargeSheetForm({
     consumablesAmount: '',
     implantsAmount: '',
     instrumentsAmount: '',
+    otherCharges: '',
+    packageAmount: '',
+    staplerCharges: '',
     totalFinalBill: '',
     // Deductions
     finalApprovedAmount: '',
@@ -159,6 +162,9 @@ export function DischargeSheetForm({
         consumablesAmount: parseFloat(formData.consumablesAmount),
         implantsAmount: formData.implantsAmount ? parseFloat(formData.implantsAmount) : 0,
         instrumentsAmount: formData.instrumentsAmount ? parseFloat(formData.instrumentsAmount) : undefined,
+        otherCharges: formData.otherCharges.trim() || undefined,
+        packageAmount: formData.packageAmount.trim() || undefined,
+        staplerCharges: formData.staplerCharges || undefined,
         totalFinalBill: calculateTotals().totalBill,
         finalApprovedAmount: parseFloat(formData.finalApprovedAmount),
         cashOrDedPaid: formData.paidByInsured ? parseFloat(formData.paidByInsured) : 0,
@@ -403,6 +409,36 @@ export function DischargeSheetForm({
                   value={formData.instrumentsAmount}
                   onChange={(e) => setFormData({ ...formData, instrumentsAmount: e.target.value })}
                 />
+              </div>
+              <div>
+                <Label>Other Charges</Label>
+                <Input
+                  type="text"
+                  value={formData.otherCharges}
+                  onChange={(e) => setFormData({ ...formData, otherCharges: e.target.value })}
+                  placeholder="Optional"
+                />
+              </div>
+              <div>
+                <Label>Package Amount</Label>
+                <Input
+                  type="text"
+                  value={formData.packageAmount}
+                  onChange={(e) => setFormData({ ...formData, packageAmount: e.target.value })}
+                  placeholder="Optional"
+                />
+              </div>
+              <div>
+                <Label>Stapler Charges</Label>
+                <select
+                  value={formData.staplerCharges}
+                  onChange={(e) => setFormData({ ...formData, staplerCharges: e.target.value })}
+                  className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">Select…</option>
+                  <option value="INCLUDED">Included</option>
+                  <option value="OPEN">Open</option>
+                </select>
               </div>
             </div>
             <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded mt-3">

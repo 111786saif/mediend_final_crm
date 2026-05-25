@@ -2494,6 +2494,11 @@ model DischargeSheet {
   packageText String? // Package description (cash flow)
   othersText  String? // Other details (cash flow)
 
+  // Optional bill-breakup extras (used by both insurance and cash flows)
+  otherCharges   String? // Free text: "Other Charges" line on the bill
+  packageAmount  String? // Free text: "Package Amount" line on the bill
+  staplerCharges String? // "INCLUDED" or "OPEN"
+
   // Meta
   remarks String? @db.Text // Free text
 
