@@ -12,16 +12,37 @@ ALTER TABLE "DischargeSheet"
   ADD COLUMN IF NOT EXISTS "finalizedById" TEXT,
   ADD COLUMN IF NOT EXISTS "finalizedAt" TIMESTAMP(3);
 
+-- Clean up any invalid backfill from a previous failed run of this migration —
+-- the old version copied createdById into markedById/finalizedById without
+-- checking that the user still existed, which can leave dangling references
+-- that block the FK addition below.
+UPDATE "DischargeSheet" ds
+  SET "markedById" = NULL
+  WHERE ds."markedById" IS NOT NULL
+    AND NOT EXISTS (SELECT 1 FROM "User" u WHERE u."id" = ds."markedById");
+
+UPDATE "DischargeSheet" ds
+  SET "finalizedById" = NULL
+  WHERE ds."finalizedById" IS NOT NULL
+    AND NOT EXISTS (SELECT 1 FROM "User" u WHERE u."id" = ds."finalizedById");
+
 -- Backfill: any pre-existing DischargeSheet rows were created under the old
 -- single-step flow (POST = create + finalize), so they are by definition
--- finalized.
-UPDATE "DischargeSheet"
+-- finalized. Only copy createdById into markedById/finalizedById when that
+-- user still exists — otherwise leave NULL (FK is ON DELETE SET NULL).
+UPDATE "DischargeSheet" ds
   SET "isFinalized" = true,
-      "finalizedAt" = COALESCE("finalizedAt", "createdAt"),
-      "finalizedById" = COALESCE("finalizedById", "createdById"),
-      "markedAt" = COALESCE("markedAt", "createdAt"),
-      "markedById" = COALESCE("markedById", "createdById")
-  WHERE "isFinalized" = false;
+      "finalizedAt" = COALESCE(ds."finalizedAt", ds."createdAt"),
+      "markedAt"    = COALESCE(ds."markedAt", ds."createdAt"),
+      "finalizedById" = COALESCE(
+        ds."finalizedById",
+        (SELECT u."id" FROM "User" u WHERE u."id" = ds."createdById")
+      ),
+      "markedById" = COALESCE(
+        ds."markedById",
+        (SELECT u."id" FROM "User" u WHERE u."id" = ds."createdById")
+      )
+  WHERE ds."isFinalized" = false;
 
 -- AddForeignKey
 DO $$
