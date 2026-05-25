@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getInternalBaseUrl } from "@/lib/cron-internal-url";
 
 /**
  * Cron wrapper for attendance sync
@@ -19,18 +20,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Call the actual sync endpoint - use reliable base URL for serverless
-    let baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NEXT_PUBLIC_APP_URL
-    if (!baseUrl && request.url) {
-      try {
-        baseUrl = new URL(request.url).origin
-      } catch {
-        baseUrl = 'http://localhost:3000'
-      }
-    }
-    baseUrl = baseUrl || 'http://localhost:3000'
+    // Use INTERNAL_API_URL (loopback) when set so this fetch doesn't egress
+    // through the public hostname and trip the Nginx IP allowlist.
+    const baseUrl = getInternalBaseUrl(request)
     const syncUrl = new URL('/api/attendance/sync/daily', baseUrl)
     const syncRequest = new Request(syncUrl.toString(), {
       method: "POST",

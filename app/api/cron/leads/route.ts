@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getInternalBaseUrl } from "@/lib/cron-internal-url";
 
 /** mysql-leads returns ApiResponse<{ synced, updated, processed, ... }>; tolerate extra nesting or string numbers */
 function parseMysqlLeadsPayload(syncData: unknown): {
@@ -52,8 +53,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Call the actual sync endpoint
-    const syncUrl = new URL("/api/sync/mysql-leads", request.url);
+    // Use INTERNAL_API_URL (loopback) when set so this fetch doesn't egress
+    // through the public hostname and trip the Nginx IP allowlist.
+    const syncUrl = new URL("/api/sync/mysql-leads", getInternalBaseUrl(request));
     const syncRequest = new Request(syncUrl.toString(), {
       method: "POST",
       headers: {
