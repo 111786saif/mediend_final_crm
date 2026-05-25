@@ -333,20 +333,39 @@ The hold is **not** a stage transition — pipeline stage and case stage are unc
 
 ---
 
-### 5.9 Stage 7: Discharge Sheet — Insurance (creates + finalises discharge)
+### 5.9 Stage 7: Discharge — Insurance (two-step: Mark then Fill Sheet)
 
-- **Who (create):** INSURANCE, INSURANCE_HEAD, ADMIN, TESTER
-- **Who (edit):** INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, ADMIN
-- **When:** `caseStage` is `IPD_DONE` (or legacy `DISCHARGED`) **and** `insuranceInitiateForm` exists (blocked otherwise with warning)
-- **Page:** `/patient/[leadId]/discharge`
-- **Components:** `DischargeSheetForm` (create), `DischargeSheetView` (read-only)
-- **APIs:** `POST /api/discharge-sheet` (create), `PATCH /api/discharge-sheet/[id]` (update)
+Insurance handles discharge in **two explicit steps**. There is no automatic transition from IPD Done — Insurance must mark the patient discharged first, and only then can fill the full sheet. The PL/compliance side effects fire on sheet finalization, not on the mark.
+
+#### 5.9a Step 1 — Mark Discharged (date only)
+
+- **Who:** INSURANCE, INSURANCE_HEAD, ADMIN, TESTER
+- **When:** `caseStage === IPD_DONE` AND `insuranceInitiateForm` exists AND no `dischargeSheet` yet
+- **Page:** `/patient/[leadId]/discharge` (Mark Discharged dialog)
+- **Component:** `MarkDischargedDialog` (`components/discharge/mark-discharged-dialog.tsx`)
+- **API:** `POST /api/leads/[id]/mark-discharged`
+- **Body:** `{ dischargeDate: string }`
 - **Result:**
-  - Discharge sheet created with `dischargeDate` captured by Insurance
-  - **case stage `IPD_DONE → DISCHARGED`** (auto, on POST)
-  - **PLRecord auto-created** (if none exists) with payout statuses set to `PENDING`
-  - **pipeline stage → `PL`**
-  - PL team notified; compliance call row upserted
+  - Minimal `DischargeSheet` row created (`dischargeDate`, `markedById`, `markedAt`, `isFinalized: false`)
+  - **case stage `IPD_DONE → DISCHARGED`**
+  - **pipeline stage stays `INSURANCE`** — no PLRecord, no compliance call yet
+  - CaseStageHistory row + system chat + BD notification
+  - Case now appears in the Insurance dashboard's **"To Fill Sheet"** bucket
+
+#### 5.9b Step 2 — Fill Discharge Sheet (finalize)
+
+- **Who (fill):** INSURANCE, INSURANCE_HEAD, ADMIN, TESTER
+- **Who (edit after finalize):** INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, ADMIN
+- **When:** `dischargeSheet` exists AND `dischargeSheet.isFinalized === false` (or legacy `IPD_DONE` lead with no sheet — direct finalize path)
+- **Page:** `/patient/[leadId]/discharge`
+- **Components:** `DischargeSheetForm` (fill), `DischargeSheetView` (read-only after finalize)
+- **APIs:** `POST /api/discharge-sheet` (fill → upserts and finalizes), `PATCH /api/discharge-sheet/[id]` (post-finalize edits, no side effects)
+- **Result on finalize:**
+  - Sheet upgraded to `isFinalized: true`, `finalizedAt`, `finalizedById`
+  - **PLRecord auto-created** with payout statuses `PENDING`
+  - **pipeline stage `INSURANCE → PL`**
+  - ComplianceCall row upserted (post-discharge feedback queue)
+  - PL team notified
 
 **Discharge Sheet Form Fields:**
 
@@ -649,8 +668,9 @@ Submit stays disabled until both validate.
 | **Mark Admitted (Initiate)** | BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN | `PREAUTH_COMPLETE` |
 | **Update IPD Status (incl. mark IPD_DONE)** | BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN | `INITIATED` |
 | **Generate PDF** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `PREAUTH_RAISED` or `PREAUTH_COMPLETE` |
-| **Create Discharge Sheet** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `IPD_DONE` (or legacy `DISCHARGED`) and initiate form exists |
-| **Edit Discharge Sheet** | INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, ADMIN | `IPD_DONE` or `DISCHARGED` and initiate form exists |
+| **Mark Discharged** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `IPD_DONE`, initiate form exists, no `dischargeSheet` yet |
+| **Fill Discharge Sheet (finalize)** | INSURANCE, INSURANCE_HEAD, ADMIN, TESTER | `DISCHARGED` with `dischargeSheet.isFinalized === false` (or legacy `IPD_DONE` direct-finalize) |
+| **Edit Discharge Sheet (post-finalize)** | INSURANCE, INSURANCE_HEAD, PL_HEAD, PL_ENTRY, ADMIN | `DISCHARGED` and initiate form exists |
 | **Reset Patient** | INSURANCE, INSURANCE_HEAD, ADMIN | Insurance flow; `PREAUTH_RAISED`, `PREAUTH_COMPLETE`, or `INITIATED`; requires typed confirmation + reason |
 | **Mark Lost** | BD, TEAM_LEAD, EXECUTIVE_ASSISTANT, ADMIN | Not `NEW_LEAD`; not post-admission; stage in allowed list |
 | **Start Cash Mode** | BD, TEAM_LEAD, ADMIN | `flowType !== CASH`; stage in early/cash-allowed list |
@@ -675,10 +695,11 @@ Submit stays disabled until both validate.
 | `PREAUTH_RAISED` | `PREAUTH_COMPLETE` | `POST /api/pre-auth/:kypSubId/approve` | Insurance |
 | `PREAUTH_COMPLETE` | `INITIATED` | `POST /api/leads/:id/initiate` (Mark Admitted) | BD / TL / EA |
 | `INITIATED` | `IPD_DONE` | `POST /api/leads/:id/ipd-mark` (status: `IPD_DONE`) — BD's last action | BD / TL / EA |
-| `IPD_DONE` | `DISCHARGED` (+ PLRecord auto-created) | `POST /api/discharge-sheet` | Insurance |
+| `IPD_DONE` | `DISCHARGED` | `POST /api/leads/:id/mark-discharged` (Step 1 — mark only, captures date) | Insurance |
+| `DISCHARGED` (sheet `!isFinalized`) | `DISCHARGED` (sheet `isFinalized: true` + PLRecord auto-created) | `POST /api/discharge-sheet` (Step 2 — fill & finalize) | Insurance |
 | `PREAUTH_RAISED` / `PREAUTH_COMPLETE` / `INITIATED` | `HOSPITALS_SUGGESTED` | `POST /api/leads/:id/reset-patient` (Reset Patient — danger action) | Insurance |
 
-Pipeline: `SALES → INSURANCE` (on hospital suggestion) → `PL` (on discharge sheet creation)
+Pipeline: `SALES → INSURANCE` (on hospital suggestion) → `PL` (on discharge sheet **finalization**, not on mark-discharged)
 
 ### Cash Flow
 
@@ -709,6 +730,26 @@ The `StageProgress` component (`components/case/stage-progress.tsx`) shows these
 | 8 | Discharge Summary (Insurance fills, captures discharge date) | Insurance | Purple |
 
 Cash flow uses `CashStageProgress` with 4 steps: IPD Cash Form → Insurance Review → Approved → Discharge.
+
+---
+
+## 14b. Insurance Dashboard Filters & Buckets
+
+The Insurance dashboard (`/insurance/dashboard`) has a global filter bar above the stat-card tabs:
+
+| Filter | Default | Behavior |
+|--------|---------|----------|
+| **Active in** (month + year) | Current month / current year | Server-side: `GET /api/leads?activityMonth=&activityYear=` filters by `caseStageHistory.some.changedAt` in the window. Shows cases that **moved** this month — KYP submit, hospitals suggested, pre-auth raised/approved, admitted, IPD done, mark-discharged. Lead creation date is **not** used. |
+| **BD** | All BDs | Server-side: `?bdId=`. Options derived from the unfiltered universe so the dropdown is always complete. |
+| **Circle** | All | Client-side filter (keeps dropdown universe full). |
+| **Treatment** | All | Client-side filter (keeps dropdown universe full). |
+
+Selections persist in `localStorage` under `insurance-dashboard-filters-v1` and rehydrate on next visit. "Reset" button clears back to current month and no other filters.
+
+The previous single "Ready for Discharge" tab is split into two buckets that match the two-step flow:
+
+- **To Mark Discharged** — `caseStage === IPD_DONE` AND no `dischargeSheet`. Action: opens Mark Discharged dialog.
+- **To Fill Sheet** — `caseStage === DISCHARGED` AND `dischargeSheet.isFinalized === false` (plus legacy `DISCHARGED` with no sheet). Action: opens the discharge sheet form.
 
 ---
 
@@ -749,6 +790,7 @@ Cash flow uses `CashStageProgress` with 4 steps: IPD Cash Form → Insurance Rev
 | `/api/leads/[id]/ipd-mark` | POST | BD updates IPD status |
 | ~~`/api/leads/[id]/discharge`~~ | — | **Removed.** Insurance now sets `DISCHARGED` as a side-effect of creating the discharge sheet. |
 | `/api/leads/[id]/reset-patient` | POST | Insurance resets patient back to Hospitals Suggested (danger action) |
+| `/api/leads/[id]/mark-discharged` | POST | Insurance Step 1: mark patient discharged with date (no PL side effects) |
 | `/api/leads/[id]/cash-review` | POST | Insurance approve/hold cash case |
 | `/api/leads/[id]/preauth-pdf` | GET | Generate pre-auth PDF |
 | `/api/kyp/submit` | POST | Submit KYP basic form |

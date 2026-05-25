@@ -177,9 +177,9 @@ export async function POST(request: NextRequest) {
       return unauthorizedResponse()
     }
 
-    // Insurance team can create discharge sheets
+    // Insurance team can finalize discharge sheets
     if (!['INSURANCE', 'INSURANCE_HEAD', 'ADMIN', 'TESTER'].includes(user.role)) {
-      return errorResponse('Forbidden: Only Insurance team can create discharge sheets', 403)
+      return errorResponse('Forbidden: Only Insurance team can fill discharge sheets', 403)
     }
 
     const body = await request.json()
@@ -196,35 +196,39 @@ export async function POST(request: NextRequest) {
       return errorResponse('Lead not found', 404)
     }
 
-    // Stage guard: a discharge sheet can only be created once BD has marked
-    // IPD_DONE. DISCHARGED is retained to support legacy leads that were
-    // already advanced under the previous BD-marks-discharged flow.
-    const allowedStages: CaseStage[] = [CaseStage.IPD_DONE, CaseStage.DISCHARGED]
-    if (!allowedStages.includes(lead.caseStage)) {
+    // Two-step flow: a minimal DischargeSheet should already exist from the
+    // "Mark Discharged" step (POST /api/leads/:id/mark-discharged). This POST
+    // now FINALIZES that row — fills the full form, sets isFinalized=true, and
+    // runs the side effects (PLRecord, pipeline → PL, compliance upsert).
+    // Legacy DISCHARGED leads without any sheet are also accepted to keep old
+    // data migrate-able.
+    if (lead.caseStage !== CaseStage.DISCHARGED && lead.caseStage !== CaseStage.IPD_DONE) {
       return errorResponse(
-        `Cannot create discharge sheet. Current stage: ${lead.caseStage}. BD must mark IPD Done first.`,
+        `Cannot fill discharge sheet. Current stage: ${lead.caseStage}.`,
         400
       )
     }
 
-    // Check if discharge sheet already exists
     const existing = await prisma.dischargeSheet.findUnique({
       where: { leadId: data.leadId },
     })
 
-    if (existing) {
-      return errorResponse('Discharge sheet already exists for this lead', 400)
+    if (existing?.isFinalized) {
+      return errorResponse('Discharge sheet already finalized for this lead', 400)
     }
 
-    // Prepare data for creation — hydrate defaults from Lead/AdmissionRecord
-    // first, then overlay whatever the client sent so client values always win.
+    // Prepare data — hydrate defaults from Lead/AdmissionRecord first, then
+    // overlay whatever the client sent so client values always win.
     const defaults = buildDischargeSheetDefaults(lead)
     const instrumentsCostNum =
       data.instrumentsAmount != null ? Number(data.instrumentsAmount) : 0
 
     const dischargeData: any = {
       leadId: data.leadId,
-      createdById: user.id,
+      createdById: existing?.createdById ?? user.id,
+      isFinalized: true,
+      finalizedById: user.id,
+      finalizedAt: new Date(),
       month: data.month ? new Date(data.month) : defaults.month,
       dischargeDate: data.dischargeDate ? new Date(data.dischargeDate) : null,
       admissionDate: defaults.admissionDate,
@@ -291,9 +295,16 @@ export async function POST(request: NextRequest) {
       dischargeData.kypSubmissionId = data.kypSubmissionId
     }
 
-    // Create discharge sheet
-    const dischargeSheet = await prisma.dischargeSheet.create({
-      data: dischargeData,
+    // Upsert — if the mark-discharged step ran first, we have a row to update;
+    // otherwise (legacy IPD_DONE leads) we create + finalize in one shot.
+    const dischargeSheet = await prisma.dischargeSheet.upsert({
+      where: { leadId: data.leadId },
+      create: {
+        ...dischargeData,
+        markedById: user.id,
+        markedAt: new Date(),
+      },
+      update: dischargeData,
       include: {
         lead: {
           select: {
@@ -312,9 +323,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Advance case stage to DISCHARGED if it was at IPD_DONE — the discharge
-    // sheet existing is the new signal that BD's part is done and Insurance
-    // has finalised. (Already-DISCHARGED legacy leads are left untouched.)
+    // Legacy path: if a lead skipped the mark step, advance the stage now.
     if (lead.caseStage === CaseStage.IPD_DONE) {
       await prisma.lead.update({
         where: { id: data.leadId },
@@ -326,7 +335,7 @@ export async function POST(request: NextRequest) {
           fromStage: CaseStage.IPD_DONE,
           toStage: CaseStage.DISCHARGED,
           changedById: user.id,
-          note: 'Insurance filled discharge sheet',
+          note: 'Insurance filled discharge sheet (legacy direct-finalize)',
         },
       })
     }

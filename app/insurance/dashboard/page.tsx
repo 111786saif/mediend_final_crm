@@ -10,11 +10,11 @@ import { apiGet } from '@/lib/api-client'
 import { format, startOfDay, startOfMonth } from 'date-fns'
 import { useRouter } from 'next/navigation'
 import { CaseStage } from '@/generated/prisma/enums'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import {
   FileText, AlertCircle, CheckCircle2, Clock, ArrowRight,
   Receipt, Shield, Activity, Search, LayoutList, CalendarDays, BarChart3,
-  AlertTriangle,
+  AlertTriangle, CalendarCheck, X,
 } from 'lucide-react'
 import { PreAuthStatus } from '@/generated/prisma/enums'
 import { useAuth } from '@/hooks/use-auth'
@@ -46,6 +46,8 @@ interface LeadWithStage {
   hospitalName: string
   treatment?: string
   caseStage: CaseStage
+  bdId?: string | null
+  bd?: { id: string; name: string } | null
   createdDate: string
   updatedDate: string
   kypSubmission?: {
@@ -88,7 +90,7 @@ interface LeadWithStage {
     ipdStatusUpdatedAt?: string | null
     initiatedAt?: string
   } | null
-  dischargeSheet?: { id: string; updatedAt?: string } | null
+  dischargeSheet?: { id: string; isFinalized?: boolean; dischargeDate?: string | null; markedAt?: string | null; updatedAt?: string } | null
   insuranceInitiateForm?: { id: string; updatedAt?: string } | null
   plRecord?: { updatedAt?: string } | null
   caseStageHistory?: { changedAt?: string }[]
@@ -110,7 +112,8 @@ type TabKey =
   | 'preauth-raised'
   | 'preauth-complete'
   | 'admitted'
-  | 'discharge-pending'
+  | 'to-mark-discharged'
+  | 'to-fill-sheet'
   | 'ipd-done'
   | 'all-patients'
 
@@ -124,22 +127,31 @@ const KYP_STAGES: CaseStage[] = [
   CaseStage.HOSPITALS_SUGGESTED,
 ]
 
-function isReadyForDischarge(lead: LeadWithStage): boolean {
-  // BD has finished their work (IPD_DONE) — or legacy leads that were
-  // pushed into DISCHARGED under the old flow — and the sheet isn't filled yet.
-  const stageReady = lead.caseStage === CaseStage.IPD_DONE || lead.caseStage === CaseStage.DISCHARGED
-  return stageReady && !lead.dischargeSheet
+// BD has marked IPD_DONE, no sheet yet → Insurance needs to mark discharge date.
+function needsMarkDischarged(lead: LeadWithStage): boolean {
+  return lead.caseStage === CaseStage.IPD_DONE && !lead.dischargeSheet
+}
+
+// Insurance has marked discharged (or legacy DISCHARGED leads), full sheet not filled yet.
+function needsSheetFilled(lead: LeadWithStage): boolean {
+  if (lead.caseStage !== CaseStage.DISCHARGED) return false
+  if (!lead.dischargeSheet) return true // legacy: skipped mark step
+  return lead.dischargeSheet.isFinalized === false
 }
 
 function getPriorityTier(lead: LeadWithStage): 0 | 1 | 2 | 3 {
   // Tier 3: Hospital Suggestion Pending (Highest)
   if (lead.caseStage === CaseStage.HOSPITALS_SUGGESTED && lead.kypSubmission?.preAuthData?.bdSuggestedHospital) return 3
-  // Tier 1: Ready for Discharge
-  if (isReadyForDischarge(lead)) return 1
+  // Tier 1: needs Insurance touch on the discharge flow
+  if (needsMarkDischarged(lead) || needsSheetFilled(lead)) return 1
   // Tier 2: Initial Form Pending
   if (lead.caseStage === CaseStage.PREAUTH_COMPLETE && !lead.insuranceInitiateForm) return 2
   return 0
 }
+
+const FILTER_STORAGE_KEY = 'insurance-dashboard-filters-v1'
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const ANY_VALUE = '__any__'
 
 function getIpdMarkBadgeClass(status: string | null | undefined): string {
   switch (status) {
@@ -172,42 +184,152 @@ export default function InsuranceDashboardPage() {
   const [ipdMarkFilter, setIpdMarkFilter] = useState<IpdMarkFilterValue>('')
   const [preAuthFilter, setPreAuthFilter] = useState<'all' | 'pending' | 'rejected'>('all')
 
+  // ── Filter bar (persisted) ───────────────────────────────────────────────
+  const now = new Date()
+  const [activityMonth, setActivityMonth] = useState<number>(now.getMonth() + 1)
+  const [activityYear, setActivityYear] = useState<number>(now.getFullYear())
+  const [bdFilter, setBdFilter] = useState<string>('') // bd user id, '' = all
+  const [circleFilter, setCircleFilter] = useState<string>('')
+  const [treatmentFilter, setTreatmentFilter] = useState<string>('')
+  const [hydrated, setHydrated] = useState(false)
+
+  // Restore from localStorage (client-only)
+  useEffect(() => {
+    try {
+      const raw = typeof window !== 'undefined' && window.localStorage.getItem(FILTER_STORAGE_KEY)
+      if (raw) {
+        const saved = JSON.parse(raw) as Partial<{
+          activityMonth: number; activityYear: number;
+          bdFilter: string; circleFilter: string; treatmentFilter: string;
+        }>
+        if (typeof saved.activityMonth === 'number') setActivityMonth(saved.activityMonth)
+        if (typeof saved.activityYear === 'number') setActivityYear(saved.activityYear)
+        if (typeof saved.bdFilter === 'string') setBdFilter(saved.bdFilter)
+        if (typeof saved.circleFilter === 'string') setCircleFilter(saved.circleFilter)
+        if (typeof saved.treatmentFilter === 'string') setTreatmentFilter(saved.treatmentFilter)
+      }
+    } catch { /* ignore */ }
+    setHydrated(true)
+  }, [])
+
+  // Persist on change (skip first render before hydration)
+  useEffect(() => {
+    if (!hydrated) return
+    try {
+      window.localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({
+        activityMonth, activityYear, bdFilter, circleFilter, treatmentFilter,
+      }))
+    } catch { /* ignore */ }
+  }, [hydrated, activityMonth, activityYear, bdFilter, circleFilter, treatmentFilter])
+
+  // Build server query: only send activity window + bd to server. Circle and
+  // treatment are filtered client-side so they don't shrink the dropdown lists.
+  const leadsQueryString = useMemo(() => {
+    const params = new URLSearchParams()
+    params.set('activityMonth', String(activityMonth))
+    params.set('activityYear', String(activityYear))
+    if (bdFilter) params.set('bdId', bdFilter)
+    return params.toString()
+  }, [activityMonth, activityYear, bdFilter])
+
   const { data: leads, isLoading, error } = useQuery<LeadWithStage[]>({
-    queryKey: ['leads', 'insurance'],
+    queryKey: ['leads', 'insurance', leadsQueryString],
     queryFn: async () => {
       try {
-        const data = await apiGet<LeadWithStage[]>('/api/leads')
+        const data = await apiGet<LeadWithStage[]>(`/api/leads?${leadsQueryString}`)
         return data || []
       } catch (err) {
         console.error('Error fetching leads:', err)
         return []
       }
     },
-    enabled: true,
+    enabled: hydrated,
   })
+
+  // Universe for dropdown options — unfiltered by activity month so users can
+  // always find their BD / circle / treatment regardless of the active window.
+  const { data: universeLeads } = useQuery<Pick<LeadWithStage, 'bdId' | 'bd' | 'circle' | 'treatment'>[]>({
+    queryKey: ['leads', 'insurance', 'universe'],
+    queryFn: async () => {
+      try {
+        const data = await apiGet<LeadWithStage[]>('/api/leads')
+        return (data || []).map(l => ({ bdId: l.bdId, bd: l.bd, circle: l.circle, treatment: l.treatment }))
+      } catch { return [] }
+    },
+    enabled: hydrated,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const bdOptions = useMemo(() => {
+    const map = new Map<string, string>()
+    ;(universeLeads || []).forEach(l => {
+      if (l.bdId && l.bd?.name) map.set(l.bdId, l.bd.name)
+    })
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name))
+  }, [universeLeads])
+
+  const circleOptions = useMemo(() => {
+    const set = new Set<string>()
+    ;(universeLeads || []).forEach(l => { if (l.circle) set.add(l.circle) })
+    return Array.from(set).sort()
+  }, [universeLeads])
+
+  const treatmentOptions = useMemo(() => {
+    const set = new Set<string>()
+    ;(universeLeads || []).forEach(l => { if (l.treatment) set.add(l.treatment) })
+    return Array.from(set).sort()
+  }, [universeLeads])
+
+  const yearOptions = useMemo(() => {
+    const y = now.getFullYear()
+    return [y - 2, y - 1, y, y + 1]
+  }, [now])
+
+  const resetFilters = () => {
+    setActivityMonth(now.getMonth() + 1)
+    setActivityYear(now.getFullYear())
+    setBdFilter('')
+    setCircleFilter('')
+    setTreatmentFilter('')
+  }
+  const filtersActive =
+    activityMonth !== now.getMonth() + 1 ||
+    activityYear !== now.getFullYear() ||
+    !!bdFilter || !!circleFilter || !!treatmentFilter
+
+  // Apply client-side circle + treatment filters so dropdown universe stays full
+  const scopedLeads = useMemo(() => {
+    if (!leads) return []
+    return leads.filter(l => {
+      if (circleFilter && l.circle !== circleFilter) return false
+      if (treatmentFilter && l.treatment !== treatmentFilter) return false
+      return true
+    })
+  }, [leads, circleFilter, treatmentFilter])
 
   // ── Stats ─────────────────────────────────────────────────────────────────
   const stats = useMemo(() => {
-    if (!leads) return { kypReview: 0, preAuthRaised: 0, preAuthPending: 0, preAuthRejected: 0, preAuthComplete: 0, admitted: 0, dischargePending: 0, ipdDone: 0, allPatients: 0, ipdScheduled: 0 }
-    const preAuthRaisedLeads = leads.filter(l => l.caseStage === CaseStage.PREAUTH_RAISED)
+    if (!scopedLeads.length && !leads) return { kypReview: 0, preAuthRaised: 0, preAuthPending: 0, preAuthRejected: 0, preAuthComplete: 0, admitted: 0, toMarkDischarged: 0, toFillSheet: 0, ipdDone: 0, allPatients: 0, ipdScheduled: 0 }
+    const preAuthRaisedLeads = scopedLeads.filter(l => l.caseStage === CaseStage.PREAUTH_RAISED)
     return {
-      kypReview: leads.filter(l => KYP_STAGES.includes(l.caseStage) || (l.kypSubmission && l.caseStage === CaseStage.NEW_LEAD)).length,
+      kypReview: scopedLeads.filter(l => KYP_STAGES.includes(l.caseStage) || (l.kypSubmission && l.caseStage === CaseStage.NEW_LEAD)).length,
       preAuthRaised: preAuthRaisedLeads.length,
       preAuthPending: preAuthRaisedLeads.filter(l => !l.kypSubmission?.preAuthData?.approvalStatus || l.kypSubmission.preAuthData.approvalStatus === PreAuthStatus.PENDING).length,
       preAuthRejected: preAuthRaisedLeads.filter(l => l.kypSubmission?.preAuthData?.approvalStatus === PreAuthStatus.REJECTED).length,
-      preAuthComplete: leads.filter(l => l.caseStage === CaseStage.PREAUTH_COMPLETE).length,
-      admitted: leads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
-      dischargePending: leads.filter(l => isReadyForDischarge(l)).length,
-      ipdDone: leads.filter(l => l.caseStage === CaseStage.IPD_DONE || l.caseStage === CaseStage.DISCHARGED || l.caseStage === CaseStage.PL_PENDING).length,
-      ipdScheduled: leads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
-      allPatients: leads.length,
+      preAuthComplete: scopedLeads.filter(l => l.caseStage === CaseStage.PREAUTH_COMPLETE).length,
+      admitted: scopedLeads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
+      toMarkDischarged: scopedLeads.filter(needsMarkDischarged).length,
+      toFillSheet: scopedLeads.filter(needsSheetFilled).length,
+      ipdDone: scopedLeads.filter(l => l.caseStage === CaseStage.IPD_DONE || l.caseStage === CaseStage.DISCHARGED || l.caseStage === CaseStage.PL_PENDING).length,
+      ipdScheduled: scopedLeads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
+      allPatients: scopedLeads.length,
     }
-  }, [leads])
+  }, [leads, scopedLeads])
 
   // ── IPD chart data ─────────────────────────────────────────────────────────
   const ipdChartData = useMemo(() => {
-    if (!leads) return { daily: [], monthly: [] }
-    const ipdLeads = leads.filter(l =>
+    if (!scopedLeads.length) return { daily: [], monthly: [] }
+    const ipdLeads = scopedLeads.filter(l =>
       l.caseStage === CaseStage.IPD_DONE ||
       l.caseStage === CaseStage.INITIATED ||
       l.caseStage === CaseStage.ADMITTED ||
@@ -249,9 +371,9 @@ export default function InsuranceDashboardPage() {
 
   // ── Filtered leads per tab ─────────────────────────────────────────────────
   const filteredLeads = useMemo(() => {
-    if (!leads) return []
+    if (!scopedLeads.length) return []
 
-    let result = leads.filter(lead => {
+    let result = scopedLeads.filter(lead => {
       switch (activeTab) {
         case 'kyp-review':
           return KYP_STAGES.includes(lead.caseStage) || (lead.kypSubmission && lead.caseStage === CaseStage.NEW_LEAD)
@@ -265,8 +387,10 @@ export default function InsuranceDashboardPage() {
           return lead.caseStage === CaseStage.PREAUTH_COMPLETE
         case 'admitted':
           return lead.caseStage === CaseStage.INITIATED || lead.caseStage === CaseStage.ADMITTED
-        case 'discharge-pending':
-          return isReadyForDischarge(lead)
+        case 'to-mark-discharged':
+          return needsMarkDischarged(lead)
+        case 'to-fill-sheet':
+          return needsSheetFilled(lead)
         case 'ipd-done':
           return lead.caseStage === CaseStage.IPD_DONE
             || lead.caseStage === CaseStage.DISCHARGED
@@ -301,16 +425,16 @@ export default function InsuranceDashboardPage() {
       if (tierA !== tierB) return tierB - tierA // higher tier first
       return getLatestActivityTime(b) - getLatestActivityTime(a)
     })
-  }, [leads, activeTab, searchQuery, ipdMarkFilter, preAuthFilter])
+  }, [scopedLeads, activeTab, searchQuery, ipdMarkFilter, preAuthFilter])
 
   // ── Pending Hospital Suggestions ───────────────────────────────────────────
   const pendingSuggestions = useMemo(() => {
-    if (!leads) return []
-    return leads.filter(l => 
-      l.caseStage === CaseStage.HOSPITALS_SUGGESTED && 
+    if (!scopedLeads.length) return []
+    return scopedLeads.filter(l =>
+      l.caseStage === CaseStage.HOSPITALS_SUGGESTED &&
       l.kypSubmission?.preAuthData?.bdSuggestedHospital
     )
-  }, [leads])
+  }, [scopedLeads])
 
   // ── Components ─────────────────────────────────────────────────────────────
   const getStageBadge = (stage: CaseStage) => {
@@ -323,19 +447,21 @@ export default function InsuranceDashboardPage() {
     { id: 'preauth-raised', label: 'Pre-Auth Raised', icon: ArrowRight, value: stats.preAuthRaised, gradient: 'from-purple-500 to-pink-500', bgGradient: 'from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950', iconColor: 'text-purple-600 dark:text-purple-400', borderColor: 'border-purple-200 dark:border-purple-800' },
     { id: 'preauth-complete', label: 'Pre-Auth Approved', icon: CheckCircle2, value: stats.preAuthComplete, gradient: 'from-green-500 to-emerald-500', bgGradient: 'from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950', iconColor: 'text-green-600 dark:text-green-400', borderColor: 'border-green-200 dark:border-green-800' },
     { id: 'admitted', label: 'IPD / Admitted', icon: Activity, value: stats.admitted, gradient: 'from-indigo-500 to-blue-500', bgGradient: 'from-indigo-50 to-blue-50 dark:from-indigo-950 dark:to-blue-950', iconColor: 'text-indigo-600 dark:text-indigo-400', borderColor: 'border-indigo-200 dark:border-indigo-800' },
-    { id: 'discharge-pending', label: 'Ready for Discharge', icon: Receipt, value: stats.dischargePending, gradient: 'from-orange-500 to-amber-500', bgGradient: 'from-orange-50 to-amber-50 dark:from-orange-950 dark:to-amber-950', iconColor: 'text-orange-600 dark:text-orange-400', borderColor: 'border-orange-200 dark:border-orange-800' },
+    { id: 'to-mark-discharged', label: 'To Mark Discharged', icon: CalendarCheck, value: stats.toMarkDischarged, gradient: 'from-orange-500 to-amber-500', bgGradient: 'from-orange-50 to-amber-50 dark:from-orange-950 dark:to-amber-950', iconColor: 'text-orange-600 dark:text-orange-400', borderColor: 'border-orange-200 dark:border-orange-800' },
+    { id: 'to-fill-sheet', label: 'To Fill Sheet', icon: Receipt, value: stats.toFillSheet, gradient: 'from-rose-500 to-orange-500', bgGradient: 'from-rose-50 to-orange-50 dark:from-rose-950 dark:to-orange-950', iconColor: 'text-rose-600 dark:text-rose-400', borderColor: 'border-rose-200 dark:border-rose-800' },
     { id: 'ipd-done', label: 'IPD Done (all)', icon: Shield, value: stats.ipdDone, gradient: 'from-teal-500 to-cyan-500', bgGradient: 'from-teal-50 to-cyan-50 dark:from-teal-950 dark:to-cyan-950', iconColor: 'text-teal-600 dark:text-teal-400', borderColor: 'border-teal-200 dark:border-teal-800' },
     { id: 'all-patients', label: 'All Patients', icon: LayoutList, value: stats.allPatients, gradient: 'from-slate-500 to-gray-500', bgGradient: 'from-slate-50 to-gray-50 dark:from-slate-950 dark:to-gray-950', iconColor: 'text-slate-600 dark:text-slate-400', borderColor: 'border-slate-200 dark:border-slate-800' },
   ]
 
   const tabLabels: Record<TabKey, string> = {
-    'kyp-review': '📋 Card Details & Hospitals',
-    'preauth-raised': '🚀 Pre-Auth Raised',
-    'preauth-complete': '✅ Pre-Auth Approved',
-    'admitted': '🏥 IPD / Admitted',
-    'discharge-pending': '📄 Ready for Discharge — fill the sheet',
-    'ipd-done': '🛡️ IPD Done (incl. discharged & in PL)',
-    'all-patients': '📊 All Patients',
+    'kyp-review': 'Card Details & Hospitals',
+    'preauth-raised': 'Pre-Auth Raised',
+    'preauth-complete': 'Pre-Auth Approved',
+    'admitted': 'IPD / Admitted',
+    'to-mark-discharged': 'To Mark Discharged — confirm discharge date',
+    'to-fill-sheet': 'To Fill Sheet — discharged, sheet pending',
+    'ipd-done': 'IPD Done (incl. discharged & in PL)',
+    'all-patients': 'All Patients',
   }
 
   const chartConfig = {
@@ -466,8 +592,97 @@ export default function InsuranceDashboardPage() {
             </CardContent>
           </Card>
 
+          {/* ── Filter Bar ─────────────────────────────────────────────── */}
+          <Card className="border-2 bg-white dark:bg-gray-950">
+            <CardContent className="py-3 px-4">
+              <div className="flex flex-wrap items-end gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-semibold uppercase text-gray-500">Active in</label>
+                  <div className="flex gap-1">
+                    <Select value={String(activityMonth)} onValueChange={(v) => setActivityMonth(parseInt(v, 10))}>
+                      <SelectTrigger className="w-[110px] h-9">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {MONTH_NAMES.map((name, i) => (
+                          <SelectItem key={i} value={String(i + 1)}>{name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Select value={String(activityYear)} onValueChange={(v) => setActivityYear(parseInt(v, 10))}>
+                      <SelectTrigger className="w-[90px] h-9">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {yearOptions.map(y => (
+                          <SelectItem key={y} value={String(y)}>{y}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-semibold uppercase text-gray-500">BD</label>
+                  <Select value={bdFilter || ANY_VALUE} onValueChange={(v) => setBdFilter(v === ANY_VALUE ? '' : v)}>
+                    <SelectTrigger className="w-[180px] h-9">
+                      <SelectValue placeholder="All BDs" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={ANY_VALUE}>All BDs</SelectItem>
+                      {bdOptions.map(opt => (
+                        <SelectItem key={opt.id} value={opt.id}>{opt.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-semibold uppercase text-gray-500">Circle</label>
+                  <Select value={circleFilter || ANY_VALUE} onValueChange={(v) => setCircleFilter(v === ANY_VALUE ? '' : v)}>
+                    <SelectTrigger className="w-[160px] h-9">
+                      <SelectValue placeholder="All circles" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={ANY_VALUE}>All circles</SelectItem>
+                      {circleOptions.map(c => (
+                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-semibold uppercase text-gray-500">Treatment</label>
+                  <Select value={treatmentFilter || ANY_VALUE} onValueChange={(v) => setTreatmentFilter(v === ANY_VALUE ? '' : v)}>
+                    <SelectTrigger className="w-[200px] h-9">
+                      <SelectValue placeholder="All treatments" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={ANY_VALUE}>All treatments</SelectItem>
+                      {treatmentOptions.map(t => (
+                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {filtersActive && (
+                  <Button variant="ghost" size="sm" onClick={resetFilters} className="h-9 text-gray-600">
+                    <X className="h-4 w-4 mr-1" />
+                    Reset
+                  </Button>
+                )}
+
+                <div className="ml-auto text-xs text-gray-500">
+                  Showing cases that moved in <span className="font-semibold">{MONTH_NAMES[activityMonth - 1]} {activityYear}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* ── Stage Stat Cards (tab switchers) ────────────────────────── */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             {tabs.map((card) => {
               const Icon = card.icon
               const isActive = activeTab === card.id
@@ -621,7 +836,9 @@ export default function InsuranceDashboardPage() {
                       {filteredLeads.map((lead, index) => {
                         const tier = getPriorityTier(lead)
                         const isSuggestionPending = tier === 3
-                        const isDischargeUrgent = tier === 1
+                        const isMarkUrgent = needsMarkDischarged(lead)
+                        const isFillUrgent = needsSheetFilled(lead)
+                        const isDischargeUrgent = isMarkUrgent || isFillUrgent
                         const isInitialFormUrgent = tier === 2
                         const isRejected = lead.kypSubmission?.preAuthData?.approvalStatus === PreAuthStatus.REJECTED
 
@@ -672,9 +889,14 @@ export default function InsuranceDashboardPage() {
                                       <AlertTriangle className="w-2.5 h-2.5" /> Hospital Suggestion Pending
                                     </span>
                                   )}
-                                  {isDischargeUrgent && (
+                                  {isMarkUrgent && (
                                     <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 text-[10px] font-bold">
-                                      <AlertTriangle className="w-2.5 h-2.5" /> Discharge
+                                      <AlertTriangle className="w-2.5 h-2.5" /> Mark Discharged
+                                    </span>
+                                  )}
+                                  {isFillUrgent && (
+                                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-[10px] font-bold">
+                                      <AlertTriangle className="w-2.5 h-2.5" /> Fill Sheet
                                     </span>
                                   )}
                                   {isInitialFormUrgent && (
@@ -739,15 +961,26 @@ export default function InsuranceDashboardPage() {
                                     Fill Initial Form
                                   </Button>
                                 )}
-                                {isReadyForDischarge(lead) && (
+                                {isMarkUrgent && (
                                   <Button
                                     variant="default"
                                     size="sm"
                                     onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/discharge`) }}
                                     className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-md"
                                   >
+                                    <CalendarCheck className="w-4 h-4 mr-1" />
+                                    Mark Discharged
+                                  </Button>
+                                )}
+                                {isFillUrgent && (
+                                  <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/discharge`) }}
+                                    className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white shadow-md"
+                                  >
                                     <Receipt className="w-4 h-4 mr-1" />
-                                    Fill Discharge
+                                    Fill Sheet
                                   </Button>
                                 )}
                               </div>

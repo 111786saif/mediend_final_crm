@@ -20,6 +20,7 @@ interface Lead {
   } | null
   dischargeSheet?: {
     id: string
+    isFinalized?: boolean
   } | null
   insuranceInitiateForm?: {
     id: string
@@ -101,15 +102,29 @@ export function canGeneratePDF(user: User, lead: Lead): boolean {
   return isInsurance && afterPreAuthRaised
 }
 
-// Insurance or PL can edit discharge sheet when IPD done (or already discharged for legacy) AND initial form is filled
+// Insurance can mark patient discharged once BD has marked IPD Done and the
+// initiate form is filled. Creates a minimal DischargeSheet with just the date;
+// the full sheet is filled later via canEditDischargeSheet.
+export function canMarkDischarged(user: User, lead: Lead): boolean {
+  if (!user || !lead) return false
+  const isInsurance = ['INSURANCE', 'INSURANCE_HEAD', 'ADMIN', 'TESTER'].includes(user.role)
+  const isIpdDone = lead.caseStage === CaseStage.IPD_DONE
+  const hasInitiateForm = !!lead.insuranceInitiateForm?.id
+  const notAlreadyMarked = !lead.dischargeSheet?.id
+  return isInsurance && isIpdDone && hasInitiateForm && notAlreadyMarked
+}
+
+// Insurance or PL can fill / edit the discharge sheet once the patient has
+// been marked discharged (a minimal sheet exists), or for legacy IPD_DONE
+// leads created before the two-step flow shipped.
 export function canEditDischargeSheet(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
   const isInsuranceOrPL = ['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)
-  const isReadyForDischarge = lead.caseStage === CaseStage.IPD_DONE || lead.caseStage === CaseStage.DISCHARGED
+  const stageOk = lead.caseStage === CaseStage.DISCHARGED || lead.caseStage === CaseStage.IPD_DONE
   const hasInitiateForm = !!lead.insuranceInitiateForm?.id
 
-  return isInsuranceOrPL && isReadyForDischarge && hasInitiateForm
+  return isInsuranceOrPL && stageOk && hasInitiateForm
 }
 
 // BD / TL / EA can mark case as lost only after KYP1 and up until Mark Admitted (not before KYP1, not after admitted)
@@ -239,6 +254,13 @@ export function isDischargeBlockedByInitiateForm(user: User, lead: Lead): boolea
   const isInsuranceOrPL = ['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)
   const isReadyForDischarge = lead.caseStage === CaseStage.IPD_DONE || lead.caseStage === CaseStage.DISCHARGED
   return isInsuranceOrPL && isReadyForDischarge && !lead.insuranceInitiateForm?.id
+}
+
+// True when Insurance has marked the patient discharged but the full sheet
+// hasn't been filled yet. UI gate for showing the fill-sheet form.
+export function isDischargeSheetUnfinalized(lead: Lead): boolean {
+  if (!lead?.dischargeSheet) return false
+  return lead.dischargeSheet.isFinalized === false
 }
 
 // Insurance, PL, Outstanding, BD, Admin can view initiate form details

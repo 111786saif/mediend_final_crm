@@ -20,7 +20,8 @@
       "Bash(pip install *)",
       "Bash(bun run *)",
       "Bash(npm run *)",
-      "Bash(python3 -c \"import openpyxl; print\\('ok'\\)\")"
+      "Bash(python3 -c \"import openpyxl; print\\('ok'\\)\")",
+      "Bash(git log *)"
     ]
   }
 }

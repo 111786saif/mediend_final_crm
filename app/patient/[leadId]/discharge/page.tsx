@@ -1,83 +1,39 @@
 'use client'
 
+import { useState } from 'react'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { useAuth } from '@/hooks/use-auth'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, CalendarCheck } from 'lucide-react'
 import { useRouter, useParams } from 'next/navigation'
 import { DischargeSheetView } from '@/components/discharge/discharge-sheet-view'
 import { DischargeSheetForm } from '@/components/discharge/discharge-sheet-form'
+import { MarkDischargedDialog } from '@/components/discharge/mark-discharged-dialog'
 
 interface DischargeSheet {
   id: string
   leadId: string
-  month: string | null
+  isFinalized: boolean
   dischargeDate: string | null
-  surgeryDate: string | null
-  status: string | null
-  paymentType: string | null
-  approvedOrCash: string | null
-  paymentCollectedAt: string | null
-  managerRole: string | null
-  managerName: string | null
-  bdmName: string | null
-  patientName: string | null
-  patientPhone: string | null
-  doctorName: string | null
-  hospitalName: string | null
-  category: string | null
-  treatment: string | null
-  circle: string | null
-  leadSource: string | null
-  totalAmount: number
-  billAmount: number
-  cashPaidByPatient: number
-  cashOrDedPaid: number
-  referralAmount: number
-  cabCharges: number
-  implantCost: number
-  dcCharges: number
-  doctorCharges: number
-  hospitalSharePct: number | null
-  hospitalShareAmount: number
-  mediendSharePct: number | null
-  mediendShareAmount: number
-      mediendNetProfit: number
-  remarks: string | null
-  tentativeAmount: number | null
-  copayPct: number | null
-  dischargeSummaryUrl: string | null
-  otNotesUrl: string | null
-  codesCount: number | null
-  finalBillUrl: string | null
-  settlementLetterUrl: string | null
-  roomRentAmount: number
-  pharmacyAmount: number
-  investigationAmount: number
-  consumablesAmount: number
-  implantsAmount: number
-  totalFinalBill: number
-  finalApprovedAmount: number
-  deductionAmount: number
-  discountAmount: number
-  waivedOffAmount: number
-  otherDeduction: number
-  netSettlementAmount: number
+  markedAt: string | null
+  finalizedAt: string | null
+  // remaining fields are used by view/form via index signature
   lead: {
     id: string
     leadRef: string
     patientName: string
-    kypSubmission?: {
-      preAuthData?: {
-        sumInsured?: string | null
-        roomRent?: string | null
-      } | null
-    } | null
   }
   [key: string]: unknown
+}
+
+interface LeadShape {
+  id: string
+  caseStage: string
+  insuranceInitiateForm?: { id: string } | null
+  admissionRecord?: { ipdDischargeDate?: string | null } | null
 }
 
 export default function DischargeSheetPage() {
@@ -86,8 +42,9 @@ export default function DischargeSheetPage() {
   const params = useParams()
   const queryClient = useQueryClient()
   const leadId = params.leadId as string
+  const [markDialogOpen, setMarkDialogOpen] = useState(false)
 
-  const { data: dischargeSheet, isLoading } = useQuery<DischargeSheet | null>({
+  const { data: dischargeSheet, isLoading: sheetLoading } = useQuery<DischargeSheet | null>({
     queryKey: ['discharge-sheet', leadId],
     queryFn: async () => {
       const data = await apiGet<DischargeSheet[]>(`/api/discharge-sheet?leadId=${leadId}`)
@@ -99,20 +56,29 @@ export default function DischargeSheetPage() {
     enabled: !!leadId,
   })
 
-  const isInsurance = user?.role === 'INSURANCE_HEAD' || user?.role === 'ADMIN'
-  const needForm = !dischargeSheet && isInsurance
-
-  const { data: lead } = useQuery<{ admissionRecord?: { ipdDischargeDate?: string | null } | null } | null>({
+  const { data: lead, isLoading: leadLoading } = useQuery<LeadShape | null>({
     queryKey: ['lead', leadId],
     queryFn: () => apiGet(`/api/leads/${leadId}`),
-    enabled: !!leadId && needForm,
+    enabled: !!leadId,
   })
 
-  const initialDischargeDate = lead?.admissionRecord?.ipdDischargeDate
+  const isInsurance = ['INSURANCE', 'INSURANCE_HEAD', 'ADMIN', 'TESTER'].includes(user?.role || '')
+  const hasInitiateForm = !!lead?.insuranceInitiateForm?.id
+  const isFinalized = !!dischargeSheet?.isFinalized
+  const sheetUnfinalized = !!dischargeSheet && !isFinalized
+  const canMark =
+    isInsurance &&
+    !dischargeSheet &&
+    lead?.caseStage === 'IPD_DONE' &&
+    hasInitiateForm
+
+  const initialDischargeDate = dischargeSheet?.dischargeDate
+    ? new Date(dischargeSheet.dischargeDate).toISOString().slice(0, 10)
+    : lead?.admissionRecord?.ipdDischargeDate
     ? lead.admissionRecord.ipdDischargeDate.slice(0, 10)
     : undefined
 
-  if (isLoading) {
+  if (sheetLoading || leadLoading) {
     return (
       <AuthenticatedLayout>
         <div className="flex items-center justify-center min-h-[400px]">
@@ -135,27 +101,71 @@ export default function DischargeSheetPage() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold">Discharge Sheet</h1>
+            {sheetUnfinalized && (
+              <p className="text-sm text-muted-foreground mt-1">
+                Patient marked discharged
+                {dischargeSheet?.dischargeDate
+                  ? ` on ${new Date(dischargeSheet.dischargeDate).toLocaleDateString()}`
+                  : ''}
+                . Fill the sheet to move the case to P&L.
+              </p>
+            )}
           </div>
         </div>
 
-        {dischargeSheet ? (
-          <DischargeSheetView dischargeSheet={dischargeSheet} />
-        ) : isInsurance ? (
+        {isFinalized && dischargeSheet ? (
+          <DischargeSheetView dischargeSheet={dischargeSheet as never} />
+        ) : sheetUnfinalized && isInsurance ? (
           <DischargeSheetForm
             leadId={leadId}
             initialDischargeDate={initialDischargeDate}
             onSuccess={async () => {
               await queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+              await queryClient.invalidateQueries({ queryKey: ['discharge-sheet', leadId] })
               router.push(`/patient/${leadId}`)
             }}
           />
+        ) : canMark ? (
+          <Card>
+            <CardContent className="py-12 text-center space-y-4">
+              <CalendarCheck className="h-12 w-12 mx-auto text-orange-500" />
+              <div>
+                <h3 className="text-lg font-semibold">Patient ready for discharge</h3>
+                <p className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
+                  BD has marked surgery done. Mark the patient discharged with a date — you can
+                  fill the full sheet later.
+                </p>
+              </div>
+              <Button
+                onClick={() => setMarkDialogOpen(true)}
+                className="bg-orange-600 hover:bg-orange-700 text-white"
+              >
+                <CalendarCheck className="h-4 w-4 mr-2" />
+                Mark Discharged
+              </Button>
+            </CardContent>
+          </Card>
+        ) : !dischargeSheet && isInsurance && !hasInitiateForm ? (
+          <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              Initiate form must be filled before discharge can be marked.
+            </CardContent>
+          </Card>
         ) : (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
-              No discharge sheet found. Only Insurance team can create discharge sheets.
+              No discharge sheet found.
+              {!isInsurance && ' Only Insurance team can mark and fill discharge.'}
             </CardContent>
           </Card>
         )}
+
+        <MarkDischargedDialog
+          leadId={leadId}
+          open={markDialogOpen}
+          onOpenChange={setMarkDialogOpen}
+          defaultDate={initialDischargeDate}
+        />
       </div>
     </AuthenticatedLayout>
   )

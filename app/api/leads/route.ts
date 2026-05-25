@@ -69,10 +69,30 @@ export async function GET(request: NextRequest) {
     }
     if (status) where.status = status
     if (bdId) where.bdId = bdId
+    if (circle) where.circle = circle
     if (hospitalName) where.hospitalName = { contains: hospitalName, mode: 'insensitive' }
     if (treatment) where.treatment = { contains: treatment, mode: 'insensitive' }
     if (source) where.source = source
     if (campaignName) where.campaignName = campaignName
+
+    // Activity-month filter (Insurance dashboard default view):
+    // Match leads that have AT LEAST ONE caseStageHistory row whose changedAt
+    // falls inside the given month. This captures KYP submit, hospitals
+    // suggested, pre-auth raised/approved, admitted, IPD done, mark-discharged
+    // — i.e. cases that actually moved this month, ignoring lead creation date.
+    const activityMonthParam = searchParams.get('activityMonth')
+    const activityYearParam = searchParams.get('activityYear')
+    if (activityMonthParam && activityYearParam) {
+      const m = parseInt(activityMonthParam, 10)
+      const y = parseInt(activityYearParam, 10)
+      if (!Number.isNaN(m) && !Number.isNaN(y) && m >= 1 && m <= 12) {
+        const monthStart = new Date(y, m - 1, 1)
+        const monthEnd = new Date(y, m, 1)
+        where.caseStageHistory = {
+          some: { changedAt: { gte: monthStart, lt: monthEnd } },
+        }
+      }
+    }
 
     if (startDate || endDate) {
       const range: Prisma.DateTimeFilter = {}
@@ -318,6 +338,9 @@ export async function GET(request: NextRequest) {
           totalAmount: true,
           billAmount: true,
           cashOrDedPaid: true,
+          isFinalized: true,
+          markedAt: true,
+          finalizedAt: true,
           updatedAt: true,
         },
       },
