@@ -153,6 +153,12 @@ export const navItems: NavItem[] = [
     roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
+    title: 'Pending Surgery',
+    url: '/reports/patient-cards-pending-surgery',
+    icon: ClipboardList,
+    roles: ['TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT', 'MD', 'ADMIN'],
+  },
+  {
     title: 'Targets',
     url: '/sales/targets',
     icon: Target,
