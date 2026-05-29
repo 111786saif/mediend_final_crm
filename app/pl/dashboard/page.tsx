@@ -7,6 +7,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -40,6 +47,7 @@ import {
   formatPlMonth,
   formatPlRupee,
 } from '@/lib/pl/resolve-pl-row'
+import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
@@ -81,7 +89,9 @@ type PipelineStats = {
 }
 
 const DEFAULT_COLS: Record<string, boolean> = {
+  actions: true,
   month: true,
+  leadReceived: true,
   manager: true,
   bdm: true,
   patient: true,
@@ -96,7 +106,9 @@ const DEFAULT_COLS: Record<string, boolean> = {
   status: true,
   totalBill: true,
   approvedAmount: true,
+  deductionTotal: true,
   deductionPatient: true,
+  deductionWaived: true,
   amountPaid: true,
   hospitalSharePct: true,
   hospitalShareAmt: true,
@@ -217,11 +229,53 @@ export default function PLLedgerPage() {
         r.plRecord?.hospitalPayoutStatus === 'PENDING' || r.plRecord?.doctorPayoutStatus === 'PENDING'
     ).length || 0
 
-  // Table only shows leads whose discharge sheet has been filled (insurance or cash).
+  const [bdFilter, setBdFilter] = useState('all')
+  const [hospitalFilter, setHospitalFilter] = useState('all')
+  const [doctorFilter, setDoctorFilter] = useState('all')
+
+  const filterOptions = useMemo(() => {
+    const bds = new Set<string>()
+    const hospitals = new Set<string>()
+    const doctors = new Set<string>()
+    for (const r of records ?? []) {
+      const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+      if (resolved.bdm) bds.add(resolved.bdm)
+      if (resolved.hospital) hospitals.add(resolved.hospital)
+      if (resolved.doctor) doctors.add(resolved.doctor)
+    }
+    return {
+      bds: Array.from(bds).sort((a, b) => a.localeCompare(b)),
+      hospitals: Array.from(hospitals).sort((a, b) => a.localeCompare(b)),
+      doctors: Array.from(doctors).sort((a, b) => a.localeCompare(b)),
+    }
+  }, [records])
+
+  const activeFilterCount =
+    (bdFilter !== 'all' ? 1 : 0) +
+    (hospitalFilter !== 'all' ? 1 : 0) +
+    (doctorFilter !== 'all' ? 1 : 0)
+
+  const clearFilters = () => {
+    setBdFilter('all')
+    setHospitalFilter('all')
+    setDoctorFilter('all')
+  }
+
+  // Table only shows leads whose discharge sheet has been filled (insurance or cash),
+  // then narrows further by the BD / hospital / doctor selects.
   // Info cards above still reflect the full PL/COMPLETED dataset.
   const tableRecords = useMemo(
-    () => records?.filter((r) => Boolean((r as Lead).dischargeSheet)),
-    [records]
+    () =>
+      records?.filter((r) => {
+        if (!(r as Lead).dischargeSheet) return false
+        if (activeFilterCount === 0) return true
+        const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+        if (bdFilter !== 'all' && resolved.bdm !== bdFilter) return false
+        if (hospitalFilter !== 'all' && resolved.hospital !== hospitalFilter) return false
+        if (doctorFilter !== 'all' && resolved.doctor !== doctorFilter) return false
+        return true
+      }),
+    [records, bdFilter, hospitalFilter, doctorFilter, activeFilterCount]
   )
 
   const visibleCount = useMemo(() => 1 + Object.values(visibleCols).filter(Boolean).length, [visibleCols])
@@ -314,7 +368,9 @@ export default function PLLedgerPage() {
                     Lead ref (always on)
                   </DropdownMenuCheckboxItem>
                   {[
+                    ['actions', 'Actions'],
                     ['month', 'Month'],
+                    ['leadReceived', 'Lead Received (Insurance)'],
                     ['manager', 'Manager'],
                     ['bdm', 'BDM'],
                     ['patient', 'Patient'],
@@ -329,10 +385,12 @@ export default function PLLedgerPage() {
                     ['status', 'Status'],
                     ['totalBill', 'Total bill'],
                     ['approvedAmount', 'Approved amount'],
-                    ['deductionPatient', 'Deduction (patient)'],
+                    ['deductionTotal', 'Total Deduction'],
+                    ['deductionPatient', 'Deduction Paid by Patient'],
+                    ['deductionWaived', 'Waived Off'],
                     ['amountPaid', 'Amount paid'],
-                    ['hospitalSharePct', 'Hospital %'],
-                    ['hospitalShareAmt', 'Hospital share'],
+                    ['hospitalSharePct', 'MediEND %'],
+                    ['hospitalShareAmt', 'MediEND share'],
                     ['doctorCharges', 'Doctor fee'],
                     ['implant', 'Implant'],
                     ['implantPaidBy', 'Implant by'],
@@ -341,11 +399,11 @@ export default function PLLedgerPage() {
                     ['dc', 'D&C'],
                     ['cab', 'Cab'],
                     ['referral', 'Referral'],
-                    ['mediendSharePct', 'Med %'],
-                    ['mediendShareAmt', 'Med share'],
+                    ['mediendSharePct', 'MediEND Net %'],
+                    ['mediendShareAmt', 'MediEND Net'],
                     ['netProfit', 'Net profit'],
                     ['remarks', 'Remarks'],
-                    ['hospPayout', 'Hospital payout'],
+                    ['hospPayout', 'MediEND payout'],
                     ['docPayout', 'Doctor payout'],
                     ['invoice', 'Invoice'],
                   ].map(([id, label]) => (
@@ -360,6 +418,56 @@ export default function PLLedgerPage() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Select value={bdFilter} onValueChange={setBdFilter}>
+              <SelectTrigger className="h-9 w-[180px] bg-background">
+                <SelectValue placeholder="BD" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All BDs</SelectItem>
+                {filterOptions.bds.map((b) => (
+                  <SelectItem key={b} value={b}>
+                    {b}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={hospitalFilter} onValueChange={setHospitalFilter}>
+              <SelectTrigger className="h-9 w-[220px] bg-background">
+                <SelectValue placeholder="Hospital" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All hospitals</SelectItem>
+                {filterOptions.hospitals.map((h) => (
+                  <SelectItem key={h} value={h}>
+                    {h}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={doctorFilter} onValueChange={setDoctorFilter}>
+              <SelectTrigger className="h-9 w-[200px] bg-background">
+                <SelectValue placeholder="Doctor" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All doctors</SelectItem>
+                {filterOptions.doctors.map((d) => (
+                  <SelectItem key={d} value={d}>
+                    {d}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {activeFilterCount > 0 && (
+              <Button type="button" variant="ghost" size="sm" className="h-9" onClick={clearFilters}>
+                Clear filters ({activeFilterCount})
+              </Button>
+            )}
+            <span className="text-xs text-muted-foreground ml-auto">
+              {tableRecords?.length ?? 0} of {records?.length ?? 0} rows
+            </span>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -529,7 +637,9 @@ export default function PLLedgerPage() {
                   <TableHeader>
                     <TableRow className="border-b border-teal-200/50 bg-teal-50/60 hover:bg-teal-50/60 dark:border-teal-800/35 dark:bg-teal-950/30">
                       <TableHead className="min-w-[140px] font-semibold text-teal-950 dark:text-teal-100">Lead ref</TableHead>
+                      {visibleCols.actions && <TableHead>Actions</TableHead>}
                       {visibleCols.month && <TableHead>Month</TableHead>}
+                      {visibleCols.leadReceived && <TableHead>Lead Received (Insurance)</TableHead>}
                       {visibleCols.manager && <TableHead>Manager</TableHead>}
                       {visibleCols.bdm && <TableHead>BDM</TableHead>}
                       {visibleCols.patient && <TableHead>Patient</TableHead>}
@@ -544,10 +654,12 @@ export default function PLLedgerPage() {
                       {visibleCols.status && <TableHead>Status</TableHead>}
                       {visibleCols.totalBill && <TableHead>Total bill</TableHead>}
                       {visibleCols.approvedAmount && <TableHead>Approved amount</TableHead>}
-                      {visibleCols.deductionPatient && <TableHead>Deduction (patient)</TableHead>}
+                      {visibleCols.deductionTotal && <TableHead>Total Deduction</TableHead>}
+                      {visibleCols.deductionPatient && <TableHead>Deduction Paid by Patient</TableHead>}
+                      {visibleCols.deductionWaived && <TableHead>Waived Off</TableHead>}
                       {visibleCols.amountPaid && <TableHead>Amount paid</TableHead>}
-                      {visibleCols.hospitalSharePct && <TableHead>Hosp %</TableHead>}
-                      {visibleCols.hospitalShareAmt && <TableHead>Hosp share</TableHead>}
+                      {visibleCols.hospitalSharePct && <TableHead>MediEND %</TableHead>}
+                      {visibleCols.hospitalShareAmt && <TableHead>MediEND share</TableHead>}
                       {visibleCols.doctorCharges && <TableHead>Doctor fee</TableHead>}
                       {visibleCols.implant && <TableHead>Implant</TableHead>}
                       {visibleCols.implantPaidBy && <TableHead>Implant by</TableHead>}
@@ -556,11 +668,11 @@ export default function PLLedgerPage() {
                       {visibleCols.dc && <TableHead>D&amp;C</TableHead>}
                       {visibleCols.cab && <TableHead>Cab</TableHead>}
                       {visibleCols.referral && <TableHead>Referral</TableHead>}
-                      {visibleCols.mediendSharePct && <TableHead>Med %</TableHead>}
-                      {visibleCols.mediendShareAmt && <TableHead>Med share</TableHead>}
+                      {visibleCols.mediendSharePct && <TableHead>MediEND Net %</TableHead>}
+                      {visibleCols.mediendShareAmt && <TableHead>MediEND Net</TableHead>}
                       {visibleCols.netProfit && <TableHead>Net profit</TableHead>}
                       {visibleCols.remarks && <TableHead>Remarks</TableHead>}
-                      {visibleCols.hospPayout && <TableHead>Hosp payout</TableHead>}
+                      {visibleCols.hospPayout && <TableHead>MediEND payout</TableHead>}
                       {visibleCols.docPayout && <TableHead>Dr payout</TableHead>}
                       {visibleCols.invoice && <TableHead>Invoice</TableHead>}
                     </TableRow>
@@ -587,8 +699,25 @@ export default function PLLedgerPage() {
                               )}
                             </div>
                           </TableCell>
+                          {visibleCols.actions && (
+                            <TableCell className="whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                              {record.dischargeSheet ? (
+                                <DischargeSummaryDialog
+                                  leadId={record.id}
+                                  preloaded={record.dischargeSheet as never}
+                                />
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
+                            </TableCell>
+                          )}
                           {visibleCols.month && (
                             <TableCell className="whitespace-nowrap">{formatPlMonth(resolved.month)}</TableCell>
+                          )}
+                          {visibleCols.leadReceived && (
+                            <TableCell className="whitespace-nowrap">
+                              {formatPlDate(resolved.leadReceivedFromInsuranceAt)}
+                            </TableCell>
                           )}
                           {visibleCols.manager && (
                             <TableCell className="whitespace-nowrap">{resolved.manager ?? '—'}</TableCell>
@@ -632,13 +761,19 @@ export default function PLLedgerPage() {
                           {visibleCols.approvedAmount && (
                             <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.approvedAmount)}</TableCell>
                           )}
+                          {visibleCols.deductionTotal && (
+                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionTotal)}</TableCell>
+                          )}
                           {visibleCols.deductionPatient && (
-                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionPatient)}</TableCell>
+                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionPaidByPatient)}</TableCell>
+                          )}
+                          {visibleCols.deductionWaived && (
+                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionWaived)}</TableCell>
                           )}
                           {visibleCols.amountPaid && (
                             <TableCell className="whitespace-nowrap">
                               {formatPlRupee(
-                                (resolved.approvedAmount ?? 0) + (resolved.deductionPatient ?? 0) || null
+                                (resolved.approvedAmount ?? 0) + (resolved.deductionPaidByPatient ?? 0) || null
                               )}
                             </TableCell>
                           )}

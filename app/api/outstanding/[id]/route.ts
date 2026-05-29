@@ -43,6 +43,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       'mediendInvoiceStatus',
       'hospitalAmountPending',
       'doctorAmountPending',
+      'doctorRemarks',
+      'costBreakdownRemarks',
     ]
 
     // OutstandingCase fields

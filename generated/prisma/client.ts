@@ -387,6 +387,11 @@ export type DischargeSheet = Prisma.DischargeSheetModel
  */
 export type OutstandingCase = Prisma.OutstandingCaseModel
 /**
+ * Model PaymentInstallment
+ * 
+ */
+export type PaymentInstallment = Prisma.PaymentInstallmentModel
+/**
  * Model ComplianceCall
  * 
  */

@@ -54,7 +54,18 @@ export type ResolvedPlRow = {
   status: string | null
   totalBill: number | null
   approvedAmount: number | null
+  /** Deprecated alias for deductionPaidByPatient — kept for any legacy callers. */
   deductionPatient: number | null
+  /** Total deduction (insurer-deducted from approved amount). */
+  deductionTotal: number | null
+  /** Portion of the deduction the patient paid in cash. */
+  deductionPaidByPatient: number | null
+  /** Portion of the deduction waived off — auto-derived as total − paid when not stored. */
+  deductionWaived: number | null
+  /** MediEND's share amount (collected from hospital). */
+  mediendShareAmount: number | null
+  /** When insurance team marked the patient discharged (start of PL handoff). */
+  leadReceivedFromInsuranceAt: Date | null
 }
 
 /**
@@ -138,6 +149,18 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
       pl?.approvedOrCash
     ),
     deductionPatient: pickNumber(pl?.cashOrDedPaid, ds?.deductionAmount, record.deduction),
+    deductionTotal: pickNumber(ds?.deductionAmount, record.deduction),
+    deductionPaidByPatient: pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid),
+    deductionWaived: (() => {
+      const stored = pickNumber(ds?.waivedOffAmount)
+      if (stored != null) return stored
+      const total = pickNumber(ds?.deductionAmount, record.deduction)
+      const paid = pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid)
+      if (total == null && paid == null) return null
+      return (total ?? 0) - (paid ?? 0)
+    })(),
+    mediendShareAmount: pickNumber(pl?.mediendShareAmount, ds?.mediendShareAmount),
+    leadReceivedFromInsuranceAt: pickDate(ds?.markedAt),
   }
 }
 

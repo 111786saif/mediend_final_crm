@@ -120,6 +120,7 @@ export const ModelName = {
   ChatReadReceipt: 'ChatReadReceipt',
   DischargeSheet: 'DischargeSheet',
   OutstandingCase: 'OutstandingCase',
+  PaymentInstallment: 'PaymentInstallment',
   ComplianceCall: 'ComplianceCall',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
@@ -427,6 +428,8 @@ export const PLRecordScalarFieldEnum = {
   mediendInvoiceStatus: 'mediendInvoiceStatus',
   hospitalAmountPending: 'hospitalAmountPending',
   doctorAmountPending: 'doctorAmountPending',
+  doctorRemarks: 'doctorRemarks',
+  costBreakdownRemarks: 'costBreakdownRemarks',
   remarks: 'remarks',
   closedAt: 'closedAt',
   handledById: 'handledById',
@@ -1572,6 +1575,8 @@ export const DischargeSheetScalarFieldEnum = {
   packageAmount: 'packageAmount',
   staplerCharges: 'staplerCharges',
   remarks: 'remarks',
+  doctorRemarks: 'doctorRemarks',
+  costBreakdownRemarks: 'costBreakdownRemarks',
   isFinalized: 'isFinalized',
   markedById: 'markedById',
   markedAt: 'markedAt',
@@ -1618,6 +1623,23 @@ export const OutstandingCaseScalarFieldEnum = {
 } as const
 
 export type OutstandingCaseScalarFieldEnum = (typeof OutstandingCaseScalarFieldEnum)[keyof typeof OutstandingCaseScalarFieldEnum]
+
+
+export const PaymentInstallmentScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  recipient: 'recipient',
+  amount: 'amount',
+  paidOn: 'paidOn',
+  mode: 'mode',
+  reference: 'reference',
+  notes: 'notes',
+  recordedById: 'recordedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentInstallmentScalarFieldEnum = (typeof PaymentInstallmentScalarFieldEnum)[keyof typeof PaymentInstallmentScalarFieldEnum]
 
 
 export const ComplianceCallScalarFieldEnum = {

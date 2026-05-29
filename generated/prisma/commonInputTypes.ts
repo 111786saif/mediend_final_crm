@@ -1170,6 +1170,40 @@ export type EnumChatMessageTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumChatMessageTypeFilter<$PrismaModel>
 }
 
+export type EnumInstallmentRecipientFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentRecipient | Prisma.EnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  in?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInstallmentRecipientFilter<$PrismaModel> | $Enums.InstallmentRecipient
+}
+
+export type EnumInstallmentModeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentMode | Prisma.EnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InstallmentMode[] | Prisma.ListEnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InstallmentMode[] | Prisma.ListEnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel> | $Enums.InstallmentMode | null
+}
+
+export type EnumInstallmentRecipientWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentRecipient | Prisma.EnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  in?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInstallmentRecipientWithAggregatesFilter<$PrismaModel> | $Enums.InstallmentRecipient
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInstallmentRecipientFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInstallmentRecipientFilter<$PrismaModel>
+}
+
+export type EnumInstallmentModeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentMode | Prisma.EnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InstallmentMode[] | Prisma.ListEnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InstallmentMode[] | Prisma.ListEnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInstallmentModeNullableWithAggregatesFilter<$PrismaModel> | $Enums.InstallmentMode | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel>
+}
+
 export type EnumComplianceCallStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.ComplianceCallStatus | Prisma.EnumComplianceCallStatusFieldRefInput<$PrismaModel>
   in?: $Enums.ComplianceCallStatus[] | Prisma.ListEnumComplianceCallStatusFieldRefInput<$PrismaModel>
@@ -2465,6 +2499,40 @@ export type NestedEnumChatMessageTypeWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumChatMessageTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumChatMessageTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumInstallmentRecipientFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentRecipient | Prisma.EnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  in?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInstallmentRecipientFilter<$PrismaModel> | $Enums.InstallmentRecipient
+}
+
+export type NestedEnumInstallmentModeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentMode | Prisma.EnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InstallmentMode[] | Prisma.ListEnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InstallmentMode[] | Prisma.ListEnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel> | $Enums.InstallmentMode | null
+}
+
+export type NestedEnumInstallmentRecipientWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentRecipient | Prisma.EnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  in?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InstallmentRecipient[] | Prisma.ListEnumInstallmentRecipientFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInstallmentRecipientWithAggregatesFilter<$PrismaModel> | $Enums.InstallmentRecipient
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInstallmentRecipientFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInstallmentRecipientFilter<$PrismaModel>
+}
+
+export type NestedEnumInstallmentModeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InstallmentMode | Prisma.EnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.InstallmentMode[] | Prisma.ListEnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.InstallmentMode[] | Prisma.ListEnumInstallmentModeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumInstallmentModeNullableWithAggregatesFilter<$PrismaModel> | $Enums.InstallmentMode | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInstallmentModeNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumComplianceCallStatusFilter<$PrismaModel = never> = {

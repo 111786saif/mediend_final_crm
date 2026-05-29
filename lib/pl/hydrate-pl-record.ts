@@ -326,6 +326,14 @@ export function buildPlRecordPayload(
       ov.remarks as string | undefined,
       ds.remarks as string | undefined
     ),
+    doctorRemarks: pickFirst(
+      ov.doctorRemarks as string | undefined,
+      ds.doctorRemarks as string | undefined
+    ),
+    costBreakdownRemarks: pickFirst(
+      ov.costBreakdownRemarks as string | undefined,
+      ds.costBreakdownRemarks as string | undefined
+    ),
     handledById: (ov.handledById as string | undefined) ?? userId,
   }
 

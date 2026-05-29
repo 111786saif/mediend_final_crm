@@ -638,3 +638,25 @@ export const InventoryTransactionStatus = {
 } as const
 
 export type InventoryTransactionStatus = (typeof InventoryTransactionStatus)[keyof typeof InventoryTransactionStatus]
+
+
+export const InstallmentRecipient = {
+  HOSPITAL: 'HOSPITAL',
+  DOCTOR: 'DOCTOR',
+  MEDIEND: 'MEDIEND'
+} as const
+
+export type InstallmentRecipient = (typeof InstallmentRecipient)[keyof typeof InstallmentRecipient]
+
+
+export const InstallmentMode = {
+  CASH: 'CASH',
+  UPI: 'UPI',
+  NEFT: 'NEFT',
+  RTGS: 'RTGS',
+  CHEQUE: 'CHEQUE',
+  CARD: 'CARD',
+  OTHER: 'OTHER'
+} as const
+
+export type InstallmentMode = (typeof InstallmentMode)[keyof typeof InstallmentMode]

@@ -500,6 +500,9 @@ model User {
 
   leadCallNotes CallNote[] @relation("LeadCallNoteAuthor")
 
+  // Outstanding payment installments
+  paymentInstallmentsRecorded PaymentInstallment[] @relation("InstallmentRecorder")
+
   // Company P&L / IT project tracking
   itProjectsCreated         ITProject[]          @relation("ITProjectCreator")
   itFreelancersCreated      ITFreelancer[]       @relation("ITFreelancerCreator")
@@ -672,6 +675,7 @@ model Lead {
   caseChatMessages      CaseChatMessage[]
   chatReadReceipts      ChatReadReceipt[]      @relation("ChatReadLead")
   callNotes             CallNote[]
+  paymentInstallments   PaymentInstallment[]
 
   @@index([bdId])
   @@index([status])
@@ -831,6 +835,10 @@ model PLRecord {
   // Pending amounts
   hospitalAmountPending Float @default(0) // Amount pending for hospital payout
   doctorAmountPending   Float @default(0) // Amount pending for doctor payout
+
+  // Section-specific remarks
+  doctorRemarks        String? @db.Text
+  costBreakdownRemarks String? @db.Text
 
   // Meta
   remarks     String?   @db.Text // Free text
@@ -2500,7 +2508,9 @@ model DischargeSheet {
   staplerCharges String? // "INCLUDED" or "OPEN"
 
   // Meta
-  remarks String? @db.Text // Free text
+  remarks              String? @db.Text // Free text
+  doctorRemarks        String? @db.Text
+  costBreakdownRemarks String? @db.Text
 
   // Two-step discharge flow: Insurance first MARKS the patient discharged
   // (creates this row with just dischargeDate + markedBy/At). Later, they
@@ -2585,6 +2595,46 @@ model OutstandingCase {
   @@index([dos])
   @@index([status])
   @@index([paymentReceived])
+}
+
+// ==========================================
+// Payment Installments (granular partial-payment ledger)
+// ==========================================
+
+enum InstallmentRecipient {
+  HOSPITAL
+  DOCTOR
+  MEDIEND
+}
+
+enum InstallmentMode {
+  CASH
+  UPI
+  NEFT
+  RTGS
+  CHEQUE
+  CARD
+  OTHER
+}
+
+model PaymentInstallment {
+  id           String               @id @default(cuid())
+  leadId       String
+  lead         Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  recipient    InstallmentRecipient
+  amount       Float
+  paidOn       DateTime
+  mode         InstallmentMode?
+  reference    String? // UTR / cheque no.
+  notes        String?              @db.Text
+  recordedById String
+  recordedBy   User                 @relation("InstallmentRecorder", fields: [recordedById], references: [id])
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  @@index([leadId])
+  @@index([recipient])
+  @@index([paidOn])
 }
 
 // ==========================================

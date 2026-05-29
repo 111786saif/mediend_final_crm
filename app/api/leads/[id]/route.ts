@@ -156,7 +156,6 @@ export async function GET(
     try {
       dischargeSheet = await (prisma as any).dischargeSheet.findUnique({
         where: { leadId: id },
-        select: { id: true }
       });
       console.log('[DEBUG] dischargeSheet relation fetched successfully');
     } catch (e) {
@@ -429,7 +428,7 @@ export async function PATCH(
         'hospitalSharePct', 'hospitalShareAmount', 'mediendSharePct', 'mediendShareAmount', 'mediendNetProfit',
         'finalProfit', 'hospitalPayoutStatus', 'doctorPayoutStatus', 'mediendInvoiceStatus',
         'hospitalAmountPending', 'doctorAmountPending',
-        'remarks', 'closedAt',
+        'remarks', 'doctorRemarks', 'costBreakdownRemarks', 'closedAt',
       ]
       const plUpdate: Record<string, unknown> = {}
       for (const key of plAllowed) {
@@ -450,6 +449,26 @@ export async function PATCH(
             ...(plUpdate as any),
           },
           update: plUpdate as any,
+        })
+      }
+
+      // Mirror deduction + remarks fields onto DischargeSheet so the read-time
+      // resolver (which prefers DischargeSheet for these) stays in sync.
+      const dsMirrorFields = [
+        'cashOrDedPaid',
+        'doctorRemarks',
+        'costBreakdownRemarks',
+      ] as const
+      const dsMirror: Record<string, unknown> = {}
+      for (const key of dsMirrorFields) {
+        if (plData[key] !== undefined) dsMirror[key] = plData[key]
+      }
+      if (plData.deductionAmount !== undefined) dsMirror.deductionAmount = plData.deductionAmount
+      if (plData.waivedOffAmount !== undefined) dsMirror.waivedOffAmount = plData.waivedOffAmount
+      if (Object.keys(dsMirror).length > 0) {
+        await prisma.dischargeSheet.updateMany({
+          where: { leadId: id },
+          data: dsMirror as any,
         })
       }
     }

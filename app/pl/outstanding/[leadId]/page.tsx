@@ -15,6 +15,8 @@ import { toast } from 'sonner'
 import { useState, useEffect, useRef } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
+import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
+import { PaymentInstallmentsCard } from '@/components/pl/payment-installments-card'
 
 interface Lead {
   id: string
@@ -197,9 +199,15 @@ export default function PLOutstandingEditPage() {
                 <CardTitle className="text-violet-950 dark:text-violet-100">Case context</CardTitle>
                 <CardDescription>Patient and case details (from lead)</CardDescription>
               </div>
-              <Button variant="outline" size="sm" asChild className="border-violet-200 dark:border-violet-700">
-                <Link href={`/patient/${leadId}`}>View patient</Link>
-              </Button>
+              <div className="flex items-center gap-2">
+                <DischargeSummaryDialog
+                  leadId={leadId}
+                  preloaded={(record.dischargeSheet as never) ?? null}
+                />
+                <Button variant="outline" size="sm" asChild className="border-violet-200 dark:border-violet-700">
+                  <Link href={`/patient/${leadId}`}>View patient</Link>
+                </Button>
+              </div>
             </CardHeader>
             <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-violet-50/40 to-amber-50/20 dark:from-violet-950/20 dark:to-amber-950/10 rounded-b-lg">
               <div>
@@ -234,11 +242,11 @@ export default function PLOutstandingEditPage() {
             <Card className="overflow-hidden border-teal-200/50 shadow-sm dark:border-teal-800/35">
               <CardHeader className="border-b bg-gradient-to-r from-teal-500/10 to-cyan-500/8">
                 <CardTitle className="text-teal-950 dark:text-teal-100">Payout Statuses</CardTitle>
-                <CardDescription>Update the payout status for hospital, doctor, and invoice</CardDescription>
+                <CardDescription>Update the payout status for MediEND, doctor, and invoice</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label>Hospital Payout Status</Label>
+                  <Label>MediEND Payout Status</Label>
                   <Select value={formData.hospitalPayoutStatus} onValueChange={(value) => update('hospitalPayoutStatus', value)}>
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -282,11 +290,11 @@ export default function PLOutstandingEditPage() {
             <Card className="overflow-hidden border-amber-200/50 shadow-sm dark:border-amber-800/35">
               <CardHeader className="border-b bg-gradient-to-r from-amber-500/10 to-orange-500/8">
                 <CardTitle className="text-amber-950 dark:text-amber-100">Pending Amounts</CardTitle>
-                <CardDescription>Amounts still pending for hospital and doctor payouts</CardDescription>
+                <CardDescription>Amounts still pending for MediEND and doctor payouts (auto-updated by installments below)</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label>Hospital Amount Pending</Label>
+                  <Label>MediEND Amount Pending</Label>
                   <Input
                     type="number"
                     step="0.01"
@@ -340,6 +348,8 @@ export default function PLOutstandingEditPage() {
                 </div>
               </CardContent>
             </Card>
+
+            <PaymentInstallmentsCard leadId={leadId} />
 
             <div className="flex gap-3">
               <Button

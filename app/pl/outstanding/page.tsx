@@ -6,6 +6,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { Lead } from '@/hooks/use-leads'
@@ -20,6 +27,7 @@ import {
   formatPlMonth,
   formatPlRupee,
 } from '@/lib/pl/resolve-pl-row'
+import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 
 type Preset = 'today' | 'week' | 'mtd' | 'lastMonth' | 'custom'
 
@@ -90,33 +98,77 @@ export default function PLOutstandingPage() {
     enabled: !!dateRange.startDate && !!dateRange.endDate,
   })
 
+  const [bdFilter, setBdFilter] = useState('all')
+  const [hospitalFilter, setHospitalFilter] = useState('all')
+  const [doctorFilter, setDoctorFilter] = useState('all')
+
+  const filterOptions = useMemo(() => {
+    const bds = new Set<string>()
+    const hospitals = new Set<string>()
+    const doctors = new Set<string>()
+    for (const r of records ?? []) {
+      const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+      if (resolved.bdm) bds.add(resolved.bdm)
+      if (resolved.hospital) hospitals.add(resolved.hospital)
+      if (resolved.doctor) doctors.add(resolved.doctor)
+    }
+    return {
+      bds: Array.from(bds).sort((a, b) => a.localeCompare(b)),
+      hospitals: Array.from(hospitals).sort((a, b) => a.localeCompare(b)),
+      doctors: Array.from(doctors).sort((a, b) => a.localeCompare(b)),
+    }
+  }, [records])
+
+  const filteredRecords = useMemo(() => {
+    if (!records) return [] as Lead[]
+    if (bdFilter === 'all' && hospitalFilter === 'all' && doctorFilter === 'all') return records
+    return records.filter((r) => {
+      const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+      if (bdFilter !== 'all' && resolved.bdm !== bdFilter) return false
+      if (hospitalFilter !== 'all' && resolved.hospital !== hospitalFilter) return false
+      if (doctorFilter !== 'all' && resolved.doctor !== doctorFilter) return false
+      return true
+    })
+  }, [records, bdFilter, hospitalFilter, doctorFilter])
+
+  const activeFilterCount =
+    (bdFilter !== 'all' ? 1 : 0) +
+    (hospitalFilter !== 'all' ? 1 : 0) +
+    (doctorFilter !== 'all' ? 1 : 0)
+
+  const clearFilters = () => {
+    setBdFilter('all')
+    setHospitalFilter('all')
+    setDoctorFilter('all')
+  }
+
   const totalPending = useMemo(
     () =>
-      records?.reduce((sum: number, r: Lead) => {
+      filteredRecords.reduce((sum: number, r: Lead) => {
         const plRecord = r.plRecord as { hospitalAmountPending?: number; doctorAmountPending?: number } | undefined
         const hospitalPending = plRecord?.hospitalAmountPending || 0
         const doctorPending = plRecord?.doctorAmountPending || 0
         return sum + hospitalPending + doctorPending
-      }, 0) || 0,
-    [records]
+      }, 0),
+    [filteredRecords]
   )
 
-  const pendingCases = useMemo(() => records?.filter(isPendingPayout).length || 0, [records])
+  const pendingCases = useMemo(() => filteredRecords.filter(isPendingPayout).length, [filteredRecords])
 
   const paidCases = useMemo(
     () =>
-      records?.filter(
+      filteredRecords.filter(
         (r: Lead) =>
           r.plRecord?.hospitalPayoutStatus === 'PAID' &&
           r.plRecord?.doctorPayoutStatus === 'PAID' &&
           r.plRecord?.mediendInvoiceStatus === 'PAID'
-      ).length || 0,
-    [records]
+      ).length,
+    [filteredRecords]
   )
 
   const topHospitalsPending = useMemo(() => {
     const m = new Map<string, number>()
-    for (const r of records ?? []) {
+    for (const r of filteredRecords) {
       if (!isPendingPayout(r)) continue
       const h = (r.hospitalName?.trim() || 'Unknown') as string
       m.set(h, (m.get(h) ?? 0) + 1)
@@ -124,7 +176,7 @@ export default function PLOutstandingPage() {
     return Array.from(m.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
-  }, [records])
+  }, [filteredRecords])
 
   return (
     <ProtectedRoute>
@@ -173,6 +225,56 @@ export default function PLOutstandingPage() {
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Select value={bdFilter} onValueChange={setBdFilter}>
+              <SelectTrigger className="h-9 w-[180px] bg-background">
+                <SelectValue placeholder="BD" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All BDs</SelectItem>
+                {filterOptions.bds.map((b) => (
+                  <SelectItem key={b} value={b}>
+                    {b}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={hospitalFilter} onValueChange={setHospitalFilter}>
+              <SelectTrigger className="h-9 w-[220px] bg-background">
+                <SelectValue placeholder="Hospital" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All hospitals</SelectItem>
+                {filterOptions.hospitals.map((h) => (
+                  <SelectItem key={h} value={h}>
+                    {h}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={doctorFilter} onValueChange={setDoctorFilter}>
+              <SelectTrigger className="h-9 w-[200px] bg-background">
+                <SelectValue placeholder="Doctor" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All doctors</SelectItem>
+                {filterOptions.doctors.map((d) => (
+                  <SelectItem key={d} value={d}>
+                    {d}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {activeFilterCount > 0 && (
+              <Button type="button" variant="ghost" size="sm" className="h-9" onClick={clearFilters}>
+                Clear filters ({activeFilterCount})
+              </Button>
+            )}
+            <span className="text-xs text-muted-foreground ml-auto">
+              {filteredRecords.length} of {records?.length ?? 0} rows
+            </span>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -276,7 +378,9 @@ export default function PLOutstandingPage() {
                   <TableHeader>
                     <TableRow className="border-b border-violet-200/40 bg-violet-50/50 hover:bg-violet-50/50 dark:border-violet-800/30 dark:bg-violet-950/25">
                       <TableHead>Lead Ref</TableHead>
+                      <TableHead>Actions</TableHead>
                       <TableHead>Month</TableHead>
+                      <TableHead>Lead Received (Insurance)</TableHead>
                       <TableHead>Manager</TableHead>
                       <TableHead>BDM</TableHead>
                       <TableHead>Patient</TableHead>
@@ -290,10 +394,12 @@ export default function PLOutstandingPage() {
                       <TableHead>Status</TableHead>
                       <TableHead>Total Bill</TableHead>
                       <TableHead>Approved</TableHead>
-                      <TableHead>Deduction</TableHead>
+                      <TableHead>Total Deduction</TableHead>
+                      <TableHead>Deduction Paid by Patient</TableHead>
+                      <TableHead>Waived Off</TableHead>
                       <TableHead>Net Profit</TableHead>
-                      <TableHead>Hospital Payout</TableHead>
-                      <TableHead>Hospital Pending</TableHead>
+                      <TableHead>MediEND Payout</TableHead>
+                      <TableHead>MediEND Pending</TableHead>
                       <TableHead>Doctor Payout</TableHead>
                       <TableHead>Doctor Pending</TableHead>
                       <TableHead>Invoice Status</TableHead>
@@ -302,7 +408,7 @@ export default function PLOutstandingPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {records?.map((record) => {
+                    {filteredRecords.map((record) => {
                       const pl = record.plRecord as Record<string, unknown> | undefined
                       const oc = record.outstandingCase as { paymentReceived?: boolean; remark2?: string | null } | undefined
                       const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
@@ -324,7 +430,20 @@ export default function PLOutstandingPage() {
                               {record.leadRef ? <CopyLeadRefButton leadRef={String(record.leadRef)} className="h-7 w-7" /> : null}
                             </div>
                           </TableCell>
+                          <TableCell className="whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                            {record.dischargeSheet ? (
+                              <DischargeSummaryDialog
+                                leadId={record.id}
+                                preloaded={record.dischargeSheet as never}
+                              />
+                            ) : (
+                              <span className="text-xs text-muted-foreground">—</span>
+                            )}
+                          </TableCell>
                           <TableCell className="whitespace-nowrap">{formatPlMonth(resolved.month)}</TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            {formatPlDate(resolved.leadReceivedFromInsuranceAt)}
+                          </TableCell>
                           <TableCell className="whitespace-nowrap">{resolved.manager ?? '—'}</TableCell>
                           <TableCell className="whitespace-nowrap">{resolved.bdm ?? '—'}</TableCell>
                           <TableCell className="whitespace-nowrap">{resolved.patient ?? '—'}</TableCell>
@@ -338,7 +457,9 @@ export default function PLOutstandingPage() {
                           <TableCell className="whitespace-nowrap">{resolved.status ?? '—'}</TableCell>
                           <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.totalBill)}</TableCell>
                           <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.approvedAmount)}</TableCell>
-                          <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionPatient)}</TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionTotal)}</TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionPaidByPatient)}</TableCell>
+                          <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionWaived)}</TableCell>
                           <TableCell className="whitespace-nowrap font-medium">
                             ₹
                             {(
@@ -409,10 +530,10 @@ export default function PLOutstandingPage() {
                         </TableRow>
                       )
                     })}
-                    {(!records || records.length === 0) && (
+                    {filteredRecords.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={24} className="text-center text-muted-foreground py-8">
-                          No outstanding records found
+                        <TableCell colSpan={28} className="text-center text-muted-foreground py-8">
+                          {records?.length ? 'No rows match your filters' : 'No outstanding records found'}
                         </TableCell>
                       </TableRow>
                     )}

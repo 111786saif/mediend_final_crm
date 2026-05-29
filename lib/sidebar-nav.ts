@@ -206,6 +206,18 @@ export const navItems: NavItem[] = [
     permission: 'pl:read',
   },
   {
+    title: 'Doctor List',
+    url: '/doctors',
+    icon: Stethoscope,
+    permission: 'pl:read',
+  },
+  {
+    title: 'Hospital List',
+    url: '/hospitals',
+    icon: Building2,
+    permission: 'pl:read',
+  },
+  {
     title: 'My Core HR',
     url: '/employee/dashboard/core-hr',
     icon: UserCircle,

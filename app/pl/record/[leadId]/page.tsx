@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useState, useEffect, useRef } from 'react'
+import { Textarea } from '@/components/ui/textarea'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 
 interface Lead {
@@ -36,7 +37,10 @@ interface Lead {
     hospitalPayoutStatus?: string
     doctorPayoutStatus?: string
     mediendInvoiceStatus?: string
+    doctorRemarks?: string
+    costBreakdownRemarks?: string
   }
+  dischargeSheet?: ({ id: string } & Record<string, unknown>) | null
   [key: string]: unknown
 }
 
@@ -76,6 +80,7 @@ export default function PLRecordEditPage() {
     paymentCollectedAt: '',
     totalAmount: '',
     billAmount: '',
+    deductionAmount: '',
     cashOrDedPaid: '',
     referralAmount: '',
     cabCharges: '',
@@ -91,6 +96,8 @@ export default function PLRecordEditPage() {
     mediendShareAmount: '',
     mediendNetProfit: '',
     remarks: '',
+    doctorRemarks: '',
+    costBreakdownRemarks: '',
     hospitalPayoutStatus: 'PENDING',
     doctorPayoutStatus: 'PENDING',
     mediendInvoiceStatus: 'PENDING',
@@ -117,6 +124,14 @@ export default function PLRecordEditPage() {
           ? String(pl.cashPaidByPatient)
           : ''
 
+    const ds = record.dischargeSheet as Record<string, unknown> | undefined
+    const dedTotal =
+      ds?.deductionAmount != null && Number(ds.deductionAmount) !== 0
+        ? String(ds.deductionAmount)
+        : record.deduction != null && Number(record.deduction) !== 0
+          ? String(record.deduction)
+          : ''
+
     const timer = setTimeout(() => {
       setFormData((prev) => {
         const next = {
@@ -133,6 +148,7 @@ export default function PLRecordEditPage() {
           paymentCollectedAt: (pl?.paymentCollectedAt as string) || '',
           totalAmount: pl?.totalAmount != null ? String(pl.totalAmount) : '',
           billAmount: pl?.billAmount != null ? String(pl.billAmount) : (record.billAmount != null ? String(record.billAmount) : ''),
+          deductionAmount: dedTotal,
           cashOrDedPaid: dedPatient,
           referralAmount: pl?.referralAmount != null ? String(pl.referralAmount) : '',
           cabCharges: pl?.cabCharges != null ? String(pl.cabCharges) : '',
@@ -155,6 +171,12 @@ export default function PLRecordEditPage() {
                   ? String(record.netProfit)
                   : '',
           remarks: (pl?.remarks as string) || '',
+          doctorRemarks:
+            (pl?.doctorRemarks as string) || (ds?.doctorRemarks as string) || '',
+          costBreakdownRemarks:
+            (pl?.costBreakdownRemarks as string) ||
+            (ds?.costBreakdownRemarks as string) ||
+            '',
           hospitalPayoutStatus: (record.plRecord?.hospitalPayoutStatus as string) || 'PENDING',
           doctorPayoutStatus: (record.plRecord?.doctorPayoutStatus as string) || 'PENDING',
           mediendInvoiceStatus: (record.plRecord?.mediendInvoiceStatus as string) || 'PENDING',
@@ -226,6 +248,11 @@ export default function PLRecordEditPage() {
       billAmount: parseFloat(formData.billAmount) || 0,
       cashPaidByPatient: 0,
       cashOrDedPaid: parseFloat(formData.cashOrDedPaid) || 0,
+      deductionAmount: parseFloat(formData.deductionAmount) || 0,
+      waivedOffAmount: Math.max(
+        (parseFloat(formData.deductionAmount) || 0) - (parseFloat(formData.cashOrDedPaid) || 0),
+        0
+      ),
       referralAmount: referral,
       cabCharges: cab,
       dcCharges: dc,
@@ -241,6 +268,8 @@ export default function PLRecordEditPage() {
       mediendNetProfit: mediendNet,
       finalProfit: mediendNet,
       remarks: formData.remarks || undefined,
+      doctorRemarks: formData.doctorRemarks || null,
+      costBreakdownRemarks: formData.costBreakdownRemarks || null,
       hospitalPayoutStatus: formData.hospitalPayoutStatus,
       doctorPayoutStatus: formData.doctorPayoutStatus,
       mediendInvoiceStatus: formData.mediendInvoiceStatus,
@@ -451,14 +480,40 @@ export default function PLRecordEditPage() {
                     className="mt-1"
                   />
                 </div>
-                <div className="sm:col-span-2">
-                  <Label>Deduction (paid by patient)</Label>
+                <div>
+                  <Label>Total deduction</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.deductionAmount}
+                    onChange={(e) => update('deductionAmount', e.target.value)}
+                    placeholder="0.00"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Deduction paid by patient</Label>
                   <Input
                     type="number"
                     step="0.01"
                     value={formData.cashOrDedPaid}
                     onChange={(e) => update('cashOrDedPaid', e.target.value)}
+                    placeholder="0.00"
                     className="mt-1"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label>Waived off (auto = total − paid by patient)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    readOnly
+                    value={Math.max(
+                      (parseFloat(formData.deductionAmount) || 0) -
+                        (parseFloat(formData.cashOrDedPaid) || 0),
+                      0
+                    ).toFixed(2)}
+                    className="mt-1 bg-muted/40"
                   />
                 </div>
               </CardContent>
@@ -543,17 +598,39 @@ export default function PLRecordEditPage() {
                     </Select>
                   </div>
                 </div>
+                <div className="sm:col-span-2">
+                  <Label>Doctor remarks</Label>
+                  <Textarea
+                    value={formData.doctorRemarks}
+                    onChange={(e) => update('doctorRemarks', e.target.value)}
+                    placeholder="Notes about the doctor / doctor charges for this case"
+                    className="mt-1 resize-none"
+                    rows={2}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label>Cost breakdown remarks</Label>
+                  <Textarea
+                    value={formData.costBreakdownRemarks}
+                    onChange={(e) => update('costBreakdownRemarks', e.target.value)}
+                    placeholder="Notes about implants / instruments / D&C / referral / cab costs"
+                    className="mt-1 resize-none"
+                    rows={2}
+                  />
+                </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
                 <CardTitle>Revenue split</CardTitle>
-                <CardDescription>Hospital and Mediend share; net profit</CardDescription>
+                <CardDescription>
+                  MediEND share (collected from hospital as partner) and final net profit
+                </CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
-                  <Label>Hospital share %</Label>
+                  <Label>MediEND share %</Label>
                   <Input
                     type="number"
                     step="0.01"
@@ -563,7 +640,7 @@ export default function PLRecordEditPage() {
                   />
                 </div>
                 <div>
-                  <Label>Hospital share amount</Label>
+                  <Label>MediEND share amount</Label>
                   <Input
                     type="number"
                     step="0.01"
@@ -573,7 +650,7 @@ export default function PLRecordEditPage() {
                   />
                 </div>
                 <div>
-                  <Label>Mediend share %</Label>
+                  <Label>MediEND net %</Label>
                   <Input
                     type="number"
                     step="0.01"
@@ -583,7 +660,7 @@ export default function PLRecordEditPage() {
                   />
                 </div>
                 <div>
-                  <Label>Mediend share amount</Label>
+                  <Label>MediEND net amount</Label>
                   <Input
                     type="number"
                     step="0.01"
@@ -611,7 +688,7 @@ export default function PLRecordEditPage() {
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label>Hospital payout</Label>
+                  <Label>MediEND payout</Label>
                   <Select value={formData.hospitalPayoutStatus} onValueChange={(v) => update('hospitalPayoutStatus', v)}>
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -650,7 +727,7 @@ export default function PLRecordEditPage() {
                   </Select>
                 </div>
                 <div>
-                  <Label>Hospital amount pending</Label>
+                  <Label>MediEND amount pending</Label>
                   <Input
                     type="number"
                     step="0.01"

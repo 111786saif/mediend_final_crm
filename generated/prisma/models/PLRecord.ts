@@ -112,6 +112,8 @@ export type PLRecordMinAggregateOutputType = {
   mediendInvoiceStatus: string | null
   hospitalAmountPending: number | null
   doctorAmountPending: number | null
+  doctorRemarks: string | null
+  costBreakdownRemarks: string | null
   remarks: string | null
   closedAt: Date | null
   handledById: string | null
@@ -163,6 +165,8 @@ export type PLRecordMaxAggregateOutputType = {
   mediendInvoiceStatus: string | null
   hospitalAmountPending: number | null
   doctorAmountPending: number | null
+  doctorRemarks: string | null
+  costBreakdownRemarks: string | null
   remarks: string | null
   closedAt: Date | null
   handledById: string | null
@@ -214,6 +218,8 @@ export type PLRecordCountAggregateOutputType = {
   mediendInvoiceStatus: number
   hospitalAmountPending: number
   doctorAmountPending: number
+  doctorRemarks: number
+  costBreakdownRemarks: number
   remarks: number
   closedAt: number
   handledById: number
@@ -309,6 +315,8 @@ export type PLRecordMinAggregateInputType = {
   mediendInvoiceStatus?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
+  doctorRemarks?: true
+  costBreakdownRemarks?: true
   remarks?: true
   closedAt?: true
   handledById?: true
@@ -360,6 +368,8 @@ export type PLRecordMaxAggregateInputType = {
   mediendInvoiceStatus?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
+  doctorRemarks?: true
+  costBreakdownRemarks?: true
   remarks?: true
   closedAt?: true
   handledById?: true
@@ -411,6 +421,8 @@ export type PLRecordCountAggregateInputType = {
   mediendInvoiceStatus?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
+  doctorRemarks?: true
+  costBreakdownRemarks?: true
   remarks?: true
   closedAt?: true
   handledById?: true
@@ -549,6 +561,8 @@ export type PLRecordGroupByOutputType = {
   mediendInvoiceStatus: string | null
   hospitalAmountPending: number
   doctorAmountPending: number
+  doctorRemarks: string | null
+  costBreakdownRemarks: string | null
   remarks: string | null
   closedAt: Date | null
   handledById: string | null
@@ -623,6 +637,8 @@ export type PLRecordWhereInput = {
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   hospitalAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
   doctorAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
+  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   remarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   handledById?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -677,6 +693,8 @@ export type PLRecordOrderByWithRelationInput = {
   mediendInvoiceStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   handledById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -734,6 +752,8 @@ export type PLRecordWhereUniqueInput = Prisma.AtLeast<{
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   hospitalAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
   doctorAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
+  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   remarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   handledById?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -788,6 +808,8 @@ export type PLRecordOrderByWithAggregationInput = {
   mediendInvoiceStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   handledById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -847,6 +869,8 @@ export type PLRecordScalarWhereWithAggregatesInput = {
   mediendInvoiceStatus?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   hospitalAmountPending?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   doctorAmountPending?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
+  doctorRemarks?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
+  costBreakdownRemarks?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   remarks?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
   handledById?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
@@ -897,6 +921,8 @@ export type PLRecordCreateInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
@@ -950,6 +976,8 @@ export type PLRecordUncheckedCreateInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   handledById?: string | null
@@ -1001,6 +1029,8 @@ export type PLRecordUpdateInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1054,6 +1084,8 @@ export type PLRecordUncheckedUpdateInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   handledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1106,6 +1138,8 @@ export type PLRecordCreateManyInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   handledById?: string | null
@@ -1156,6 +1190,8 @@ export type PLRecordUpdateManyMutationInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1206,6 +1242,8 @@ export type PLRecordUncheckedUpdateManyInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   handledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1272,6 +1310,8 @@ export type PLRecordCountOrderByAggregateInput = {
   mediendInvoiceStatus?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   handledById?: Prisma.SortOrder
@@ -1344,6 +1384,8 @@ export type PLRecordMaxOrderByAggregateInput = {
   mediendInvoiceStatus?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   handledById?: Prisma.SortOrder
@@ -1395,6 +1437,8 @@ export type PLRecordMinOrderByAggregateInput = {
   mediendInvoiceStatus?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
+  doctorRemarks?: Prisma.SortOrder
+  costBreakdownRemarks?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   handledById?: Prisma.SortOrder
@@ -1560,6 +1604,8 @@ export type PLRecordCreateWithoutHandledByInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
@@ -1612,6 +1658,8 @@ export type PLRecordUncheckedCreateWithoutHandledByInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
@@ -1692,6 +1740,8 @@ export type PLRecordScalarWhereInput = {
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   hospitalAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
   doctorAmountPending?: Prisma.FloatFilter<"PLRecord"> | number
+  doctorRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
+  costBreakdownRemarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   remarks?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   handledById?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -1742,6 +1792,8 @@ export type PLRecordCreateWithoutLeadInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
@@ -1793,6 +1845,8 @@ export type PLRecordUncheckedCreateWithoutLeadInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   handledById?: string | null
@@ -1860,6 +1914,8 @@ export type PLRecordUpdateWithoutLeadInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1911,6 +1967,8 @@ export type PLRecordUncheckedUpdateWithoutLeadInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   handledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1962,6 +2020,8 @@ export type PLRecordCreateWithoutDischargeSheetInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
@@ -2014,6 +2074,8 @@ export type PLRecordUncheckedCreateWithoutDischargeSheetInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   handledById?: string | null
@@ -2080,6 +2142,8 @@ export type PLRecordUpdateWithoutDischargeSheetInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2132,6 +2196,8 @@ export type PLRecordUncheckedUpdateWithoutDischargeSheetInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   handledById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2183,6 +2249,8 @@ export type PLRecordCreateManyHandledByInput = {
   mediendInvoiceStatus?: string | null
   hospitalAmountPending?: number
   doctorAmountPending?: number
+  doctorRemarks?: string | null
+  costBreakdownRemarks?: string | null
   remarks?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
@@ -2232,6 +2300,8 @@ export type PLRecordUpdateWithoutHandledByInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2284,6 +2354,8 @@ export type PLRecordUncheckedUpdateWithoutHandledByInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2335,6 +2407,8 @@ export type PLRecordUncheckedUpdateManyWithoutHandledByInput = {
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hospitalAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
   doctorAmountPending?: Prisma.FloatFieldUpdateOperationsInput | number
+  doctorRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  costBreakdownRemarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2387,6 +2461,8 @@ export type PLRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   mediendInvoiceStatus?: boolean
   hospitalAmountPending?: boolean
   doctorAmountPending?: boolean
+  doctorRemarks?: boolean
+  costBreakdownRemarks?: boolean
   remarks?: boolean
   closedAt?: boolean
   handledById?: boolean
@@ -2441,6 +2517,8 @@ export type PLRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   mediendInvoiceStatus?: boolean
   hospitalAmountPending?: boolean
   doctorAmountPending?: boolean
+  doctorRemarks?: boolean
+  costBreakdownRemarks?: boolean
   remarks?: boolean
   closedAt?: boolean
   handledById?: boolean
@@ -2494,6 +2572,8 @@ export type PLRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   mediendInvoiceStatus?: boolean
   hospitalAmountPending?: boolean
   doctorAmountPending?: boolean
+  doctorRemarks?: boolean
+  costBreakdownRemarks?: boolean
   remarks?: boolean
   closedAt?: boolean
   handledById?: boolean
@@ -2547,6 +2627,8 @@ export type PLRecordSelectScalar = {
   mediendInvoiceStatus?: boolean
   hospitalAmountPending?: boolean
   doctorAmountPending?: boolean
+  doctorRemarks?: boolean
+  costBreakdownRemarks?: boolean
   remarks?: boolean
   closedAt?: boolean
   handledById?: boolean
@@ -2554,7 +2636,7 @@ export type PLRecordSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PLRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "month" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "finalProfit" | "hospitalPayoutStatus" | "doctorPayoutStatus" | "mediendInvoiceStatus" | "hospitalAmountPending" | "doctorAmountPending" | "remarks" | "closedAt" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["pLRecord"]>
+export type PLRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "month" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "finalProfit" | "hospitalPayoutStatus" | "doctorPayoutStatus" | "mediendInvoiceStatus" | "hospitalAmountPending" | "doctorAmountPending" | "doctorRemarks" | "costBreakdownRemarks" | "remarks" | "closedAt" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["pLRecord"]>
 export type PLRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
@@ -2620,6 +2702,8 @@ export type $PLRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     mediendInvoiceStatus: string | null
     hospitalAmountPending: number
     doctorAmountPending: number
+    doctorRemarks: string | null
+    costBreakdownRemarks: string | null
     remarks: string | null
     closedAt: Date | null
     handledById: string | null
@@ -3094,6 +3178,8 @@ export interface PLRecordFieldRefs {
   readonly mediendInvoiceStatus: Prisma.FieldRef<"PLRecord", 'String'>
   readonly hospitalAmountPending: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly doctorAmountPending: Prisma.FieldRef<"PLRecord", 'Float'>
+  readonly doctorRemarks: Prisma.FieldRef<"PLRecord", 'String'>
+  readonly costBreakdownRemarks: Prisma.FieldRef<"PLRecord", 'String'>
   readonly remarks: Prisma.FieldRef<"PLRecord", 'String'>
   readonly closedAt: Prisma.FieldRef<"PLRecord", 'DateTime'>
   readonly handledById: Prisma.FieldRef<"PLRecord", 'String'>

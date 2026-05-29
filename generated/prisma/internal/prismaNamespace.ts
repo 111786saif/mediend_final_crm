@@ -453,6 +453,7 @@ export const ModelName = {
   ChatReadReceipt: 'ChatReadReceipt',
   DischargeSheet: 'DischargeSheet',
   OutstandingCase: 'OutstandingCase',
+  PaymentInstallment: 'PaymentInstallment',
   ComplianceCall: 'ComplianceCall',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
@@ -500,7 +501,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "complianceCall" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5610,6 +5611,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PaymentInstallment: {
+      payload: Prisma.$PaymentInstallmentPayload<ExtArgs>
+      fields: Prisma.PaymentInstallmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentInstallmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentInstallmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentInstallmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentInstallmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentInstallmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentInstallmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentInstallmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentInstallmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentInstallmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>
+        }
+        update: {
+          args: Prisma.PaymentInstallmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentInstallmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentInstallmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentInstallmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentInstallmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentInstallmentPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentInstallmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentInstallment>
+        }
+        groupBy: {
+          args: Prisma.PaymentInstallmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentInstallmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentInstallmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentInstallmentCountAggregateOutputType> | number
+        }
+      }
+    }
     ComplianceCall: {
       payload: Prisma.$ComplianceCallPayload<ExtArgs>
       fields: Prisma.ComplianceCallFieldRefs
@@ -8274,6 +8349,8 @@ export const PLRecordScalarFieldEnum = {
   mediendInvoiceStatus: 'mediendInvoiceStatus',
   hospitalAmountPending: 'hospitalAmountPending',
   doctorAmountPending: 'doctorAmountPending',
+  doctorRemarks: 'doctorRemarks',
+  costBreakdownRemarks: 'costBreakdownRemarks',
   remarks: 'remarks',
   closedAt: 'closedAt',
   handledById: 'handledById',
@@ -9419,6 +9496,8 @@ export const DischargeSheetScalarFieldEnum = {
   packageAmount: 'packageAmount',
   staplerCharges: 'staplerCharges',
   remarks: 'remarks',
+  doctorRemarks: 'doctorRemarks',
+  costBreakdownRemarks: 'costBreakdownRemarks',
   isFinalized: 'isFinalized',
   markedById: 'markedById',
   markedAt: 'markedAt',
@@ -9465,6 +9544,23 @@ export const OutstandingCaseScalarFieldEnum = {
 } as const
 
 export type OutstandingCaseScalarFieldEnum = (typeof OutstandingCaseScalarFieldEnum)[keyof typeof OutstandingCaseScalarFieldEnum]
+
+
+export const PaymentInstallmentScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  recipient: 'recipient',
+  amount: 'amount',
+  paidOn: 'paidOn',
+  mode: 'mode',
+  reference: 'reference',
+  notes: 'notes',
+  recordedById: 'recordedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentInstallmentScalarFieldEnum = (typeof PaymentInstallmentScalarFieldEnum)[keyof typeof PaymentInstallmentScalarFieldEnum]
 
 
 export const ComplianceCallScalarFieldEnum = {
@@ -10686,6 +10782,34 @@ export type ListEnumChatMessageTypeFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'InstallmentRecipient'
+ */
+export type EnumInstallmentRecipientFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentRecipient'>
+    
+
+
+/**
+ * Reference to a field of type 'InstallmentRecipient[]'
+ */
+export type ListEnumInstallmentRecipientFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentRecipient[]'>
+    
+
+
+/**
+ * Reference to a field of type 'InstallmentMode'
+ */
+export type EnumInstallmentModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentMode'>
+    
+
+
+/**
+ * Reference to a field of type 'InstallmentMode[]'
+ */
+export type ListEnumInstallmentModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstallmentMode[]'>
+    
+
+
+/**
  * Reference to a field of type 'ComplianceCallStatus'
  */
 export type EnumComplianceCallStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ComplianceCallStatus'>
@@ -11030,6 +11154,7 @@ export type GlobalOmitConfig = {
   chatReadReceipt?: Prisma.ChatReadReceiptOmit
   dischargeSheet?: Prisma.DischargeSheetOmit
   outstandingCase?: Prisma.OutstandingCaseOmit
+  paymentInstallment?: Prisma.PaymentInstallmentOmit
   complianceCall?: Prisma.ComplianceCallOmit
   task?: Prisma.TaskOmit
   taskDueDateApproval?: Prisma.TaskDueDateApprovalOmit
