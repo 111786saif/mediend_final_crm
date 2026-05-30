@@ -16,10 +16,8 @@ services:
       timeout: 5s
       retries: 5
 
-  # Blue/green app slots for zero-downtime deploys.
-  # Nginx on the host proxies to whichever slot is live.
-  # Only one runs at a time; deploy.sh swaps between them.
-  app-blue:
+  # Single app container. Nginx on the host proxies to 127.0.0.1:3000.
+  app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -31,24 +29,6 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:3000:3000"
-    env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  app-green:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: runner
-      args:
-        DEPLOY_COMMIT: ${DEPLOY_COMMIT:-unknown}
-        DEPLOY_TIME: ${DEPLOY_TIME:-unknown}
-        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://workspace.mediend.com}
-    restart: unless-stopped
-    ports:
-      - "127.0.0.1:3100:3000"
     env_file:
       - /opt/mediend-crm/mediend-crm2/.env
     depends_on:
