@@ -11,9 +11,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useState, useMemo } from 'react'
-import { Calendar, Clock, AlertCircle, RefreshCw, Search, ChevronLeft, ChevronRight, Users, UserCheck, UserX, CalendarOff } from 'lucide-react'
+import { Calendar, Clock, AlertCircle, RefreshCw, Search, ChevronLeft, ChevronRight, Users, UserCheck, UserX, CalendarOff, Download } from 'lucide-react'
 import { format, eachDayOfInterval } from 'date-fns'
 import { toast } from 'sonner'
+import * as XLSX from 'xlsx'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
 import { AttendanceHeatmap, type AttendanceDay } from '@/components/employee/attendance-heatmap'
 
@@ -356,6 +357,70 @@ export function AttendanceTab() {
     setPage(1)
   }
 
+  const handleExportExcel = () => {
+    const records = allAttendanceData?.data ?? []
+    if (records.length === 0) {
+      toast.error('No attendance records to export for the selected filters')
+      return
+    }
+
+    // Group records by calendar month (YYYY-MM) so each month gets its own sheet.
+    const byMonth = new Map<string, AttendanceRecord[]>()
+    records.forEach((record) => {
+      const monthKey = record.date.slice(0, 7) // YYYY-MM
+      if (!byMonth.has(monthKey)) byMonth.set(monthKey, [])
+      byMonth.get(monthKey)!.push(record)
+    })
+
+    const sortedMonths = Array.from(byMonth.keys()).sort()
+    const workbook = XLSX.utils.book_new()
+
+    sortedMonths.forEach((monthKey) => {
+      const monthRecords = byMonth
+        .get(monthKey)!
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date) || a.employee.user.name.localeCompare(b.employee.user.name))
+
+      const rows = monthRecords.map((record) => {
+        const normalizedOutTime = getNormalizedOutTime(record)
+        const workHours =
+          normalizedOutTime && record.inTime && record.workHours !== null && record.workHours > 0
+            ? Number(record.workHours.toFixed(2))
+            : ''
+        return {
+          'Employee Name': record.employee.user.name,
+          'Employee Code': record.employee.employeeCode,
+          Department: record.employee.department?.name || 'N/A',
+          Date: formatDate(record.date),
+          'Entry Time': formatTime(record.inTime),
+          'Exit Time': formatTime(normalizedOutTime),
+          'Work Hours': workHours,
+          Status: record.isLate ? 'Late' : 'On Time',
+        }
+      })
+
+      const worksheet = XLSX.utils.json_to_sheet(rows)
+      worksheet['!cols'] = [
+        { wch: 24 }, // Employee Name
+        { wch: 14 }, // Employee Code
+        { wch: 20 }, // Department
+        { wch: 18 }, // Date
+        { wch: 12 }, // Entry Time
+        { wch: 12 }, // Exit Time
+        { wch: 12 }, // Work Hours
+        { wch: 10 }, // Status
+      ]
+
+      const [y, m] = monthKey.split('-').map(Number)
+      const sheetName = format(new Date(y, m - 1, 1), 'MMM yyyy') // e.g. "May 2026"
+      XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
+    })
+
+    const fileName = `attendance_${fromDate}_to_${toDate}.xlsx`
+    XLSX.writeFile(workbook, fileName)
+    toast.success(`Exported ${records.length} records across ${sortedMonths.length} month(s)`)
+  }
+
   const todayRecords = todayAttendanceData?.data ?? []
   const presentToday = todayRecords.length
   const lateToday = todayRecords.filter((r) => r.isLate).length
@@ -368,6 +433,11 @@ export function AttendanceTab() {
           <h1 className="text-3xl font-bold">Attendance Monitoring</h1>
           <p className="text-muted-foreground mt-1">Monitor employee attendance across departments</p>
         </div>
+        <div className="flex items-center gap-2">
+        <Button variant="outline" onClick={handleExportExcel}>
+          <Download className="h-4 w-4 mr-2" />
+          Export Excel
+        </Button>
         <Dialog open={isSyncDialogOpen} onOpenChange={setIsSyncDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -415,6 +485,7 @@ export function AttendanceTab() {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
