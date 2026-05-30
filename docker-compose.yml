@@ -124,6 +124,25 @@ services:
     entrypoint: ["bun", "run", "scripts/seed-employees-from-json.ts"]
     # Mount JSON and run. Custom path: docker compose run --rm seed -- /app/other.json
 
+  # One-off: reset a single user's password to 12345678 (or a custom value).
+  # Pass the email or employeeCode as an argument; optional 2nd arg = new password.
+  # Usage: docker compose --profile tools run --rm reset-password vishal.sharma@mediend.com
+  #    or: docker compose --profile tools run --rm reset-password 2563
+  #    or: docker compose --profile tools run --rm reset-password vishal.sharma@mediend.com MyNewPass
+  reset-password:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/reset-password.js"]
+
   # One-off: seed holidays from app/holidays.json
   # Usage: docker compose --profile tools run --rm seed-holidays
   seed-holidays:
