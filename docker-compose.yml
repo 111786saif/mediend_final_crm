@@ -296,6 +296,28 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/backfill-pl-records.ts"]
 
+  # One-off: backfill Lead.hospitalName / ipdDrName from the pre-auth-approved
+  # hospital for historical approved leads, so every dashboard (insurance, case
+  # tracker, TL pipeline, compliance, PL) shows the post-approval hospital +
+  # doctor consistently. Only corrects empty/stale values; scoped to
+  # insurance-flow leads at PREAUTH_COMPLETE or beyond. New approvals are handled
+  # automatically by the write-back in /api/pre-auth/[id]/approve.
+  # Dry run: docker compose --profile tools run --rm backfill-hospital-doctor -- --dry-run
+  # Live:    docker compose --profile tools run --rm backfill-hospital-doctor
+  backfill-hospital-doctor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/backfill-hospital-doctor.ts"]
+
   # One-off: backfill conversionDate for IPD Done leads that have no surgery/admission date
   # Usage: docker compose --profile tools run --rm backfill-conversion-dates
   backfill-conversion-dates:
