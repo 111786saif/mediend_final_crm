@@ -256,13 +256,24 @@ export default function IPDPrintPage() {
   const params = useParams()
   const leadId = params.leadId as string
 
-  const isAuthorized = user && ['BD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'ADMIN'].includes(user.role)
+  // Any authenticated user may view this print summary (BD, TL, Insurance,
+  // Insurance Head, EA, Admin, etc.) — no role gate.
+  const isAuthorized = !!user
 
   const { data: lead, isLoading } = useQuery<Lead | null>({
     queryKey: ['lead', leadId],
     queryFn: () => apiGet<Lead>(`/api/leads/${leadId}`),
     enabled: !!leadId && !!isAuthorized,
   })
+
+  // Set document title for the PDF filename. Declared before any early return
+  // so the hook order stays stable across loading/loaded renders (React #310).
+  useEffect(() => {
+    if (!lead?.patientName) return
+    const prev = document.title
+    document.title = `${lead.patientName} - ${format(new Date(), 'dd MMM yyyy')}`
+    return () => { document.title = prev }
+  }, [lead?.patientName])
 
   if (!isAuthorized) return <AccessDenied onBack={() => router.back()} />
 
@@ -360,14 +371,6 @@ export default function IPDPrintPage() {
     (rec?.admittingHospital || lead.hospitalName) || (rec && (rec.hospitalAddress || rec.googleMapLocation || rec.tpa || rec.notes))
 
   const printedAt = format(new Date(), 'dd MMM yyyy, HH:mm')
-  const pdfTitle = `${lead.patientName} - ${format(new Date(), 'dd MMM yyyy')}`
-
-  // Set document title for PDF filename
-  useEffect(() => {
-    const prev = document.title
-    document.title = pdfTitle
-    return () => { document.title = prev }
-  }, [pdfTitle])
 
   return (
     <div className="min-h-screen bg-slate-50 print:bg-white">

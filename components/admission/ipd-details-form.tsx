@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
-import { apiPost } from '@/lib/api-client'
+import { apiPost, apiPatch } from '@/lib/api-client'
 import { toast } from 'sonner'
 import { User, MapPin, Stethoscope, Building2, Shield, Calendar, Package, ChevronDown, ChevronUp } from 'lucide-react'
 import { MasterCombobox } from '@/components/ui/master-combobox'
@@ -58,6 +58,9 @@ export interface IPDDetailsFormProps {
   // BD info
   bdName?: string
   bdManagerName?: string
+  /** Edit existing admission (vs. create + mark scheduled). */
+  isEditMode?: boolean
+  initialData?: any
   onSuccess?: (admissionId?: string) => void
   onCancel?: () => void
 }
@@ -117,6 +120,8 @@ export function IPDDetailsForm({
   roomRent,
   bdName = '',
   bdManagerName = '',
+  isEditMode = false,
+  initialData,
   onSuccess,
   onCancel,
 }: IPDDetailsFormProps) {
@@ -170,6 +175,25 @@ export function IPDDetailsForm({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
 
+  // Prefill admission-specific fields when editing an existing record.
+  useEffect(() => {
+    if (!initialData || !isEditMode) return
+    const d = initialData as Record<string, unknown>
+    const dateStr = (v: unknown) => (v ? new Date(v as string).toISOString().split('T')[0] : '')
+    const str = (v: unknown) => (v != null ? String(v) : '')
+    setFormData(prev => ({
+      ...prev,
+      admissionDate: dateStr(d.admissionDate) || prev.admissionDate,
+      admissionTime: str(d.admissionTime) || prev.admissionTime,
+      surgeryDate: dateStr(d.surgeryDate) || prev.surgeryDate,
+      surgeryTime: str(d.surgeryTime) || prev.surgeryTime,
+      tpa: str(d.tpa) || prev.tpa,
+      hospitalAddress: str(d.hospitalAddress) || prev.hospitalAddress,
+      googleMapLocation: str(d.googleMapLocation) || prev.googleMapLocation,
+      notes: str(d.notes) || prev.notes,
+    }))
+  }, [initialData, isEditMode])
+
   const set = (key: string, value: string) =>
     setFormData((prev) => ({ ...prev, [key]: value }))
 
@@ -205,7 +229,7 @@ export function IPDDetailsForm({
         formData.instrumentText && `Instruments: ${formData.instrumentText}${formData.instrumentAmount ? ` (₹${formData.instrumentAmount})` : ''}`,
       ].filter(Boolean).join('\n') || undefined
 
-      const response = await apiPost<{ id: string }>(`/api/leads/${leadId}/initiate`, {
+      const payload = {
         admissionDate: formData.admissionDate,
         admissionTime: formData.admissionTime.trim(),
         admittingHospital: formData.hospitalName.trim() || undefined,
@@ -234,8 +258,11 @@ export function IPDDetailsForm({
         bdManagerName: formData.bdManagerName.trim() || undefined,
         age: formData.age.trim() || undefined,
         sex: formData.sex.trim() || undefined,
-      })
-      toast.success('IPD details saved successfully')
+      }
+      const response = isEditMode
+        ? await apiPatch<{ id: string }>(`/api/leads/${leadId}/initiate`, payload)
+        : await apiPost<{ id: string }>(`/api/leads/${leadId}/initiate`, payload)
+      toast.success(isEditMode ? 'IPD details updated successfully' : 'IPD details saved successfully')
       onSuccess?.(response?.id)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to save IPD details')
@@ -637,7 +664,7 @@ export function IPDDetailsForm({
             </Button>
           )}
           <Button type="submit" disabled={submitting}>
-            {submitting ? 'Saving...' : 'Save IPD Details & Mark Scheduled'}
+            {submitting ? 'Saving...' : (isEditMode ? 'Update IPD Details' : 'Save IPD Details & Mark Scheduled')}
           </Button>
         </div>
         <p className="text-xs text-muted-foreground flex items-center gap-1">

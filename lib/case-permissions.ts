@@ -80,6 +80,19 @@ export function canInitiate(user: User, lead: Lead): boolean {
   return isBDOrTL && isPreAuthComplete
 }
 
+// BD / TL can edit the (insurance) IPD details after marking admitted, until
+// IPD Done is marked. Manager-of-the-BD scoping is enforced server-side via
+// canMutateLead; this is the client-side role + stage gate.
+export function canEditIPDDetails(user: User, lead: Lead): boolean {
+  if (!user || !lead) return false
+
+  const isBDOrTL = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
+  // Editable while admitted but before IPD Done is marked (INITIATED / ADMITTED).
+  const editableStages: CaseStage[] = [CaseStage.INITIATED, CaseStage.ADMITTED]
+
+  return isBDOrTL && editableStages.includes(lead.caseStage)
+}
+
 // BD / TL / EA can mark IPD when initiated (insurance) or approved/submitted (cash)
 export function canMarkIPD(user: User, lead: Lead): boolean {
   if (!user || !lead) return false

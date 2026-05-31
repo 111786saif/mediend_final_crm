@@ -183,3 +183,101 @@ export async function POST(
     return errorResponse('Failed to initiate admission', 500)
   }
 }
+
+// Edit IPD details after admission is marked, before IPD Done is marked.
+// Allowed for the lead's BD and that BD's TL (manager) — manager scoping is
+// enforced by canMutateLead. Updates the AdmissionRecord + lead overrides
+// without changing the case stage.
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) {
+      return unauthorizedResponse()
+    }
+
+    if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
+      return errorResponse('Forbidden: Only BD / TL can edit IPD details', 403)
+    }
+
+    const { id: leadId } = await params
+    const body = await request.json()
+    const data = initiateSchema.parse(body)
+
+    const lead = await prisma.lead.findUnique({ where: { id: leadId } })
+    if (!lead) {
+      return errorResponse('Lead not found', 404)
+    }
+
+    if (!(await canMutateLead(user, lead.bdId))) {
+      return errorResponse('Forbidden', 403)
+    }
+
+    // Locked once IPD Done is marked (or beyond).
+    const editableStages: CaseStage[] = [CaseStage.INITIATED, CaseStage.ADMITTED]
+    if (!editableStages.includes(lead.caseStage)) {
+      return errorResponse(
+        `IPD details can no longer be edited. Current stage: ${lead.caseStage}.`,
+        400
+      )
+    }
+
+    const existingAdmission = await prisma.admissionRecord.findUnique({ where: { leadId } })
+    if (!existingAdmission) {
+      return errorResponse('No admission record to edit', 404)
+    }
+
+    await prisma.admissionRecord.update({
+      where: { leadId },
+      data: {
+        admissionDate: new Date(data.admissionDate),
+        admissionTime: data.admissionTime,
+        admittingHospital: data.admittingHospital,
+        surgeryDate: new Date(data.surgeryDate),
+        surgeryTime: data.surgeryTime,
+        tpa: data.tpa,
+        // Only overwrite optional fields that were actually provided, so a
+        // partial edit (e.g. just the dates) never wipes existing values.
+        ...(data.hospitalAddress?.trim() ? { hospitalAddress: data.hospitalAddress.trim() } : {}),
+        ...(data.googleMapLocation?.trim() ? { googleMapLocation: data.googleMapLocation.trim() } : {}),
+        ...(data.instrument?.trim() ? { instrument: data.instrument.trim() } : {}),
+        ...(data.implantConsumables?.trim() ? { implantConsumables: data.implantConsumables.trim() } : {}),
+        ...(data.notes?.trim() ? { notes: data.notes.trim() } : {}),
+      },
+    })
+
+    await prisma.lead.update({
+      where: { id: leadId },
+      data: {
+        hospitalName: data.admittingHospital,
+        ipdAdmissionDate: new Date(data.admissionDate),
+        ...(data.quantityGrade ? { quantityGrade: data.quantityGrade } : {}),
+        ...(data.anesthesia ? { anesthesia: data.anesthesia } : {}),
+        ...(data.surgeonName ? { ipdDrName: data.surgeonName } : {}),
+        ...(data.surgeonType ? { surgeonType: data.surgeonType } : {}),
+        ...(data.alternateContactName ? { attendantName: data.alternateContactName } : {}),
+        ...(data.alternateContactNumber ? { alternateNumber: data.alternateContactNumber } : {}),
+        ...(data.patientName ? { patientName: data.patientName } : {}),
+        ...(data.insuranceName ? { insuranceName: data.insuranceName } : {}),
+        ...(data.age ? { age: Number(data.age) } : {}),
+        ...(data.sex ? { sex: data.sex } : {}),
+      },
+    })
+
+    await postCaseChatSystemMessage(
+      leadId,
+      `${user.role === 'TEAM_LEAD' ? 'Team Lead' : 'BD'} updated IPD details.`
+    )
+
+    const updated = await prisma.admissionRecord.findUnique({ where: { leadId } })
+    return successResponse(updated, 'IPD details updated successfully')
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return errorResponse('Invalid request data: ' + error.errors.map(e => e.message).join(', '), 400)
+    }
+    console.error('Error updating IPD details:', error)
+    return errorResponse('Failed to update IPD details', 500)
+  }
+}

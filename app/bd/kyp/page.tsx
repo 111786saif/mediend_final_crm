@@ -5,19 +5,18 @@ import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { KYPBasicForm } from '@/components/kyp/kyp-basic-form'
+import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
-import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { getLatestActivityTime } from '@/lib/lead-activity'
 import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { CaseStage } from '@/generated/prisma/enums'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { Plus, Search } from 'lucide-react'
 import Link from 'next/link'
@@ -33,59 +32,105 @@ function useDebouncedValue<T>(value: T, ms: number): T {
   return debounced
 }
 
-type StageFilterKey =
-  | 'all'
-  | 'IPD_DONE'
-  | 'KYP_RAISED'
+/* ── Unified stage buckets (cash + insurance combined) ──────────────────────
+   Both flows collapse into one minimal set of milestones. Filling the IPD
+   form = "IPD scheduled" (not admitted); the next milestone is "IPD done".
+   Discharged / PL / outstanding are handled by insurance and intentionally
+   dropped from this active tracker. */
+type Bucket =
+  | 'KYP'
   | 'HOSPITALS_SUGGESTED'
   | 'PREAUTH_RAISED'
   | 'PREAUTH_COMPLETE'
-  | 'INITIATED'
-  | 'ADMITTED'
-  | 'DISCHARGED'
-  | 'CASH_IPD_PENDING'
-  | 'CASH_IPD_SUBMITTED'
-  | 'CASH_APPROVED'
-  | 'CASH_ON_HOLD'
-  | 'CASH_DISCHARGED'
+  | 'IPD_SCHEDULED'
+  | 'IPD_DONE'
 
-const KYP_RAISED_STAGES: CaseStage[] = [
-  CaseStage.KYP_BASIC_COMPLETE,
-  CaseStage.KYP_COMPLETE,
-  CaseStage.KYP_PENDING,
-  CaseStage.KYP_BASIC_PENDING,
-]
-
-const CARD_DEFS: { key: Exclude<StageFilterKey, 'all' | 'KYP_RAISED'>; label: string; stage: CaseStage }[] = [
-  { key: 'IPD_DONE', label: 'IPD done', stage: CaseStage.IPD_DONE },
-  { key: 'HOSPITALS_SUGGESTED', label: 'Hospitals suggested', stage: CaseStage.HOSPITALS_SUGGESTED },
-  { key: 'PREAUTH_RAISED', label: 'Pre-auth raised', stage: CaseStage.PREAUTH_RAISED },
-  { key: 'PREAUTH_COMPLETE', label: 'Pre-auth complete', stage: CaseStage.PREAUTH_COMPLETE },
-  { key: 'INITIATED', label: 'Initiated', stage: CaseStage.INITIATED },
-  { key: 'ADMITTED', label: 'Admitted', stage: CaseStage.ADMITTED },
-  { key: 'DISCHARGED', label: 'Discharged', stage: CaseStage.DISCHARGED },
-  { key: 'CASH_IPD_PENDING', label: 'Cash IPD pending', stage: CaseStage.CASH_IPD_PENDING },
-  { key: 'CASH_IPD_SUBMITTED', label: 'Cash IPD submitted', stage: CaseStage.CASH_IPD_SUBMITTED },
-  { key: 'CASH_APPROVED', label: 'Cash approved', stage: CaseStage.CASH_APPROVED },
-  { key: 'CASH_ON_HOLD', label: 'Cash on hold', stage: CaseStage.CASH_ON_HOLD },
-  { key: 'CASH_DISCHARGED', label: 'Cash discharged', stage: CaseStage.CASH_DISCHARGED },
-]
-
-function isActivePipelineLead(lead: Lead): boolean {
-  const kyp = lead.kypSubmission as { id?: string } | undefined
-  if (kyp?.id) return true
-  return lead.caseStage !== CaseStage.NEW_LEAD
+const BUCKET_OF_STAGE: Partial<Record<CaseStage, Bucket>> = {
+  [CaseStage.KYP_BASIC_PENDING]: 'KYP',
+  [CaseStage.KYP_BASIC_COMPLETE]: 'KYP',
+  [CaseStage.KYP_DETAILED_PENDING]: 'KYP',
+  [CaseStage.KYP_DETAILED_COMPLETE]: 'KYP',
+  [CaseStage.KYP_PENDING]: 'KYP',
+  [CaseStage.KYP_COMPLETE]: 'KYP',
+  [CaseStage.HOSPITALS_SUGGESTED]: 'HOSPITALS_SUGGESTED',
+  [CaseStage.PREAUTH_RAISED]: 'PREAUTH_RAISED',
+  [CaseStage.PREAUTH_COMPLETE]: 'PREAUTH_COMPLETE',
+  // IPD form filled → scheduled (insurance INITIATED/ADMITTED + cash pre-done)
+  [CaseStage.INITIATED]: 'IPD_SCHEDULED',
+  [CaseStage.ADMITTED]: 'IPD_SCHEDULED',
+  [CaseStage.CASH_IPD_PENDING]: 'IPD_SCHEDULED',
+  [CaseStage.CASH_IPD_SUBMITTED]: 'IPD_SCHEDULED',
+  [CaseStage.CASH_APPROVED]: 'IPD_SCHEDULED',
+  [CaseStage.CASH_ON_HOLD]: 'IPD_SCHEDULED',
+  // IPD done (insurance + cash)
+  [CaseStage.IPD_DONE]: 'IPD_DONE',
+  [CaseStage.CASH_IPD_DONE]: 'IPD_DONE',
 }
+
+const BUCKET_DEFS: { key: Bucket; label: string; tone: string }[] = [
+  { key: 'KYP', label: 'KYP raised', tone: 'text-sky-600' },
+  { key: 'HOSPITALS_SUGGESTED', label: 'Hospitals suggested', tone: 'text-blue-600' },
+  { key: 'PREAUTH_RAISED', label: 'Pre-auth raised', tone: 'text-purple-600' },
+  { key: 'PREAUTH_COMPLETE', label: 'Pre-auth approved', tone: 'text-indigo-600' },
+  { key: 'IPD_SCHEDULED', label: 'IPD scheduled', tone: 'text-cyan-600' },
+  { key: 'IPD_DONE', label: 'IPD done', tone: 'text-emerald-600' },
+]
+
+const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
+  KYP: { label: 'KYP raised', className: 'bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300' },
+  HOSPITALS_SUGGESTED: { label: 'Hospitals suggested', className: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' },
+  PREAUTH_RAISED: { label: 'Pre-auth raised', className: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' },
+  PREAUTH_COMPLETE: { label: 'Pre-auth approved', className: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' },
+  IPD_SCHEDULED: { label: 'IPD scheduled', className: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300' },
+  IPD_DONE: { label: 'IPD done', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300' },
+}
+
+interface TargetProgress {
+  id: string
+  targetType: 'BD' | 'TEAM'
+  targetForId: string
+  entityName: string
+  metric: string
+  targetValue: number
+  actual: number
+  percentage: number
+  bdBreakdown?: { id: string; name: string; actual: number; percentage: number }[]
+}
+
+function uniqueSorted(values: (string | null | undefined)[]): string[] {
+  const set = new Set<string>()
+  for (const v of values) {
+    const s = (v ?? '').trim()
+    if (s) set.add(s)
+  }
+  return Array.from(set).sort((a, b) => a.localeCompare(b))
+}
+
+function monthKeyOf(value: unknown): string | null {
+  if (!value) return null
+  const d = new Date(value as string)
+  if (Number.isNaN(d.getTime())) return null
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+}
+
+type DecoratedLead = { lead: Lead; bucket: Bucket; hospital: string; doctor: string }
 
 export default function CaseTrackerPage() {
   const { user } = useAuth()
   const router = useRouter()
-  const queryClient = useQueryClient()
-  const [showForm, setShowForm] = useState(false)
-  const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null)
-  const [stageFilter, setStageFilter] = useState<StageFilterKey>('all')
-  const [monthFilter, setMonthFilter] = useState<string>('all')
+
+  const currentMonthKey = useMemo(() => {
+    const now = new Date()
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  }, [])
+
+  const [stageFilter, setStageFilter] = useState<Bucket | 'all'>('all')
+  const [monthFilter, setMonthFilter] = useState<string>(currentMonthKey)
   const [bdFilter, setBdFilter] = useState<string>('all')
+  const [circleFilter, setCircleFilter] = useState<string>('all')
+  const [hospitalFilter, setHospitalFilter] = useState<string>('all')
+  const [doctorFilter, setDoctorFilter] = useState<string>('all')
+  const [treatmentFilter, setTreatmentFilter] = useState<string>('all')
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebouncedValue(search, 250)
   const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
@@ -107,118 +152,177 @@ export default function CaseTrackerPage() {
 
   const { leads, isLoading } = useLeads(leadFilters)
 
-  const activeLeads = useMemo(() => leads.filter(isActivePipelineLead), [leads])
+  // Map every lead to a unified bucket; anything without a bucket (NEW_LEAD,
+  // discharged, PL, outstanding) is dropped from the active tracker.
+  const decorated = useMemo<DecoratedLead[]>(() => {
+    const out: DecoratedLead[] = []
+    for (const lead of leads) {
+      const bucket = lead.caseStage ? BUCKET_OF_STAGE[lead.caseStage as CaseStage] : undefined
+      if (!bucket) continue
+      const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
+      out.push({ lead, bucket, hospital: hospital ?? '', doctor: doctor ?? '' })
+    }
+    return out
+  }, [leads])
+
+  const monthForTarget = monthFilter !== 'all' ? monthFilter : currentMonthKey
+
+  const { data: targetProgress } = useQuery<TargetProgress[]>({
+    queryKey: ['targets', 'progress', monthForTarget],
+    queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthForTarget}`),
+    enabled: !!user,
+  })
+
+  const targetCard = useMemo(() => {
+    const list = targetProgress ?? []
+    if (!list.length) return null
+    const prefer = (arr: TargetProgress[]) =>
+      arr.find((t) => t.metric === 'IPD_DONE') ??
+      arr.find((t) => t.metric === 'SURGERIES_DONE') ??
+      arr[0]
+    const toCard = (name: string, metric: string, actual: number, goal: number, pct: number) => ({
+      name,
+      metric,
+      actual,
+      goal,
+      pct,
+    })
+
+    if (user?.role === 'TEAM_LEAD') {
+      if (bdFilter !== 'all') {
+        const bdTarget = list.find((t) => t.targetType === 'BD' && t.targetForId === bdFilter)
+        if (bdTarget) return toCard(bdTarget.entityName, bdTarget.metric, bdTarget.actual, bdTarget.targetValue, bdTarget.percentage)
+        for (const t of list) {
+          const b = t.bdBreakdown?.find((x) => x.id === bdFilter)
+          if (b) return toCard(b.name, t.metric, b.actual, t.targetValue, b.percentage)
+        }
+        return null
+      }
+      const teamTargets = list.filter((t) => t.targetType === 'TEAM')
+      const t = prefer(teamTargets.length ? teamTargets : list)
+      return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
+    }
+
+    // BD (the progress API already scopes to the signed-in BD)
+    const bdTargets = list.filter((t) => t.targetType === 'BD')
+    const t = prefer(bdTargets.length ? bdTargets : list)
+    return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
+  }, [targetProgress, user?.role, bdFilter])
 
   const monthOptions = useMemo(() => {
-    const months = new Set<string>()
-    for (const l of activeLeads) {
-      if (!l.createdDate) continue
-      const d = new Date(l.createdDate as string)
-      if (Number.isNaN(d.getTime())) continue
-      months.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+    const months = new Set<string>([currentMonthKey])
+    if (monthFilter !== 'all') months.add(monthFilter)
+    for (const { lead } of decorated) {
+      const key = monthKeyOf(lead.leadEntryDate || lead.createdDate)
+      if (key) months.add(key)
     }
     return Array.from(months).sort((a, b) => b.localeCompare(a))
-  }, [activeLeads])
+  }, [decorated, currentMonthKey, monthFilter])
 
   const showBdFilter = user?.role === 'TEAM_LEAD'
   const bdOptions = useMemo(() => {
     if (!showBdFilter) return []
     const map = new Map<string, string>()
-    for (const l of activeLeads) {
-      const bd = l.bd as { id?: string; name?: string } | undefined
+    for (const { lead } of decorated) {
+      const bd = lead.bd as { id?: string; name?: string } | undefined
       if (bd?.id && bd.name) map.set(bd.id, bd.name)
     }
     return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]))
-  }, [activeLeads, showBdFilter])
+  }, [decorated, showBdFilter])
+
+  const circleOptions = useMemo(
+    () => uniqueSorted(decorated.map((d) => (typeof d.lead.circle === 'string' ? d.lead.circle : ''))),
+    [decorated]
+  )
+  const hospitalOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.hospital)), [decorated])
+  const doctorOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.doctor)), [decorated])
+  const treatmentOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.lead.treatment)), [decorated])
 
   const counts = useMemo(() => {
-    const base = {
-      IPD_DONE: 0,
-      KYP_RAISED: 0,
+    const base: Record<Bucket, number> = {
+      KYP: 0,
       HOSPITALS_SUGGESTED: 0,
       PREAUTH_RAISED: 0,
       PREAUTH_COMPLETE: 0,
-      INITIATED: 0,
-      ADMITTED: 0,
-      DISCHARGED: 0,
-      CASH_IPD_PENDING: 0,
-      CASH_IPD_SUBMITTED: 0,
-      CASH_APPROVED: 0,
-      CASH_ON_HOLD: 0,
-      CASH_DISCHARGED: 0,
+      IPD_SCHEDULED: 0,
+      IPD_DONE: 0,
     }
-    for (const l of activeLeads) {
-      const cs = l.caseStage as CaseStage | undefined
-      if (!cs) continue
-      if (cs === CaseStage.IPD_DONE) base.IPD_DONE++
-      if (KYP_RAISED_STAGES.includes(cs)) base.KYP_RAISED++
-      if (cs === CaseStage.HOSPITALS_SUGGESTED) base.HOSPITALS_SUGGESTED++
-      if (cs === CaseStage.PREAUTH_RAISED) base.PREAUTH_RAISED++
-      if (cs === CaseStage.PREAUTH_COMPLETE) base.PREAUTH_COMPLETE++
-      if (cs === CaseStage.INITIATED) base.INITIATED++
-      if (cs === CaseStage.ADMITTED) base.ADMITTED++
-      if (cs === CaseStage.DISCHARGED) base.DISCHARGED++
-      if (cs === CaseStage.CASH_IPD_PENDING) base.CASH_IPD_PENDING++
-      if (cs === CaseStage.CASH_IPD_SUBMITTED) base.CASH_IPD_SUBMITTED++
-      if (cs === CaseStage.CASH_APPROVED) base.CASH_APPROVED++
-      if (cs === CaseStage.CASH_ON_HOLD) base.CASH_ON_HOLD++
-      if (cs === CaseStage.CASH_DISCHARGED) base.CASH_DISCHARGED++
-    }
+    for (const { bucket } of decorated) base[bucket]++
     return base
-  }, [activeLeads])
+  }, [decorated])
 
   const filteredRows = useMemo(() => {
-    let rows = activeLeads
-    if (stageFilter === 'KYP_RAISED') {
-      rows = rows.filter((l) => l.caseStage && KYP_RAISED_STAGES.includes(l.caseStage as CaseStage))
-    } else if (stageFilter !== 'all') {
-      rows = rows.filter((l) => l.caseStage === stageFilter)
-    }
+    let rows = decorated
+    if (stageFilter !== 'all') rows = rows.filter((d) => d.bucket === stageFilter)
     if (monthFilter !== 'all') {
-      rows = rows.filter((l) => {
-        if (!l.createdDate) return false
-        const d = new Date(l.createdDate as string)
-        if (Number.isNaN(d.getTime())) return false
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === monthFilter
-      })
+      rows = rows.filter((d) => monthKeyOf(d.lead.leadEntryDate || d.lead.createdDate) === monthFilter)
     }
     if (bdFilter !== 'all') {
-      rows = rows.filter((l) => (l.bd as { id?: string } | undefined)?.id === bdFilter)
+      rows = rows.filter((d) => (d.lead.bd as { id?: string } | undefined)?.id === bdFilter)
     }
+    if (circleFilter !== 'all') rows = rows.filter((d) => (d.lead.circle ?? '') === circleFilter)
+    if (hospitalFilter !== 'all') rows = rows.filter((d) => d.hospital === hospitalFilter)
+    if (doctorFilter !== 'all') rows = rows.filter((d) => d.doctor === doctorFilter)
+    if (treatmentFilter !== 'all') rows = rows.filter((d) => (d.lead.treatment ?? '') === treatmentFilter)
     if (search.trim() && !phoneParsed) {
       const q = search.toLowerCase()
       rows = rows.filter(
-        (l) =>
-          String(l.patientName ?? '').toLowerCase().includes(q) ||
-          String(l.leadRef ?? '').toLowerCase().includes(q) ||
-          String(l.hospitalName ?? '').toLowerCase().includes(q) ||
-          String(l.treatment ?? '').toLowerCase().includes(q)
+        (d) =>
+          String(d.lead.patientName ?? '').toLowerCase().includes(q) ||
+          String(d.lead.leadRef ?? '').toLowerCase().includes(q) ||
+          d.hospital.toLowerCase().includes(q) ||
+          String(d.lead.treatment ?? '').toLowerCase().includes(q)
       )
     }
-    rows = [...rows].sort((a, b) => getLatestActivityTime(b) - getLatestActivityTime(a))
-    return rows
-  }, [activeLeads, stageFilter, monthFilter, bdFilter, search, phoneParsed])
+    return [...rows].sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
+  }, [decorated, stageFilter, monthFilter, bdFilter, circleFilter, hospitalFilter, doctorFilter, treatmentFilter, search, phoneParsed])
 
-  const pickerLeads = useMemo(() => leads.filter((l) => l.caseStage === CaseStage.NEW_LEAD), [leads])
+  const pipelinePath = user?.role === 'TEAM_LEAD' ? '/team-lead/pipeline' : '/bd/pipeline'
+
+  const isMoneyMetric =
+    targetCard?.metric === 'NET_PROFIT' ||
+    targetCard?.metric === 'BILL_AMOUNT' ||
+    targetCard?.metric === 'REVENUE'
+  const fmtTarget = (n: number) =>
+    isMoneyMetric ? `₹${Math.round(n).toLocaleString('en-IN')}` : Math.round(n).toLocaleString('en-IN')
 
   return (
     <AuthenticatedLayout>
       <div className="min-h-screen bg-[#F2F2F7] dark:bg-background">
-        <div className="mx-auto max-w-7xl space-y-6 p-4 md:p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto max-w-7xl space-y-5 p-4 md:p-6">
+          {/* ── Header ── */}
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Case tracker</h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                Active insurance pipeline after KYP â€” tap a card to filter
+              <p className="mt-1 text-sm text-muted-foreground">
+                Active cash &amp; insurance cases after KYP — tap a card to filter
               </p>
             </div>
-            <Button onClick={() => setShowForm(true)} className="shrink-0">
-              <Plus className="h-4 w-4 mr-2" />
-              New case submission
-            </Button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              {targetCard && (
+                <div className="min-w-[240px] rounded-xl border bg-card p-3 shadow-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                      Target · {targetCard.metric.replace(/_/g, ' ').toLowerCase()}
+                    </p>
+                    <p className="text-xs font-semibold text-muted-foreground">{Math.round(targetCard.pct)}%</p>
+                  </div>
+                  <p className="mt-0.5 text-lg font-bold tabular-nums">
+                    {fmtTarget(targetCard.actual)}{' '}
+                    <span className="text-sm font-normal text-muted-foreground">/ {fmtTarget(targetCard.goal)}</span>
+                  </p>
+                  <Progress value={Math.min(100, targetCard.pct)} className="mt-2 h-1.5" />
+                </div>
+              )}
+              <Button onClick={() => router.push(pipelinePath)} className="shrink-0">
+                <Plus className="mr-2 h-4 w-4" />
+                New case submission
+              </Button>
+            </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-8">
+          {/* ── Stage cards ── */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
             <button
               type="button"
               onClick={() => setStageFilter('all')}
@@ -227,107 +331,138 @@ export default function CaseTrackerPage() {
               }`}
             >
               <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">All active</p>
-              <p className="mt-1 text-2xl font-bold tabular-nums">{activeLeads.length}</p>
+              <p className="mt-1 text-2xl font-bold tabular-nums">{decorated.length}</p>
             </button>
-            <button
-              type="button"
-              onClick={() => setStageFilter('IPD_DONE')}
-              className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
-                stageFilter === 'IPD_DONE' ? 'ring-2 ring-primary' : ''
-              }`}
-            >
-              <p className="text-[11px] font-medium text-muted-foreground">IPD done</p>
-              <p className="mt-1 text-2xl font-bold tabular-nums text-emerald-600">{counts.IPD_DONE}</p>
-            </button>
-            <button
-              type="button"
-              onClick={() => setStageFilter('KYP_RAISED')}
-              className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
-                stageFilter === 'KYP_RAISED' ? 'ring-2 ring-primary' : ''
-              }`}
-            >
-              <p className="text-[11px] font-medium text-muted-foreground">KYP raised</p>
-              <p className="mt-1 text-2xl font-bold tabular-nums text-sky-600">{counts.KYP_RAISED}</p>
-            </button>
-            {CARD_DEFS.filter((c) => c.key !== 'IPD_DONE').map(({ key, label }) => {
-              const isCash = key.startsWith('CASH_')
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setStageFilter(key)}
-                  className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
-                    stageFilter === key ? 'ring-2 ring-primary' : ''
-                  }`}
-                >
-                  <p className="line-clamp-2 text-[11px] font-medium text-muted-foreground">{label}</p>
-                  <p
-                    className={`mt-1 text-2xl font-bold tabular-nums ${isCash ? 'text-orange-600' : ''}`}
-                  >
-                    {counts[key as keyof typeof counts]}
-                  </p>
-                </button>
-              )
-            })}
+            {BUCKET_DEFS.map(({ key, label, tone }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setStageFilter(key)}
+                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
+                  stageFilter === key ? 'ring-2 ring-primary' : ''
+                }`}
+              >
+                <p className="line-clamp-2 text-[11px] font-medium text-muted-foreground">{label}</p>
+                <p className={`mt-1 text-2xl font-bold tabular-nums ${tone}`}>{counts[key]}</p>
+              </button>
+            ))}
           </div>
 
+          {/* ── Table ── */}
           <Card className="border-border/80 shadow-sm">
-            <CardHeader className="pb-3">
+            <CardHeader className="gap-3 pb-3">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <CardTitle>Leads</CardTitle>
                   <CardDescription>
-                    {filteredRows.length} shown Â· {activeLeads.length} in active pipeline
+                    {filteredRows.length} shown · {decorated.length} active
                   </CardDescription>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Select value={monthFilter} onValueChange={setMonthFilter}>
-                    <SelectTrigger className="w-[140px]">
-                      <SelectValue placeholder="Month" />
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    className="pl-9"
+                    placeholder="Name, ref, hospital… — or full mobile (10 digits)"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </div>
+              {/* Filters */}
+              <div className="flex flex-wrap items-center gap-2">
+                <Select value={monthFilter} onValueChange={setMonthFilter}>
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All months</SelectItem>
+                    {monthOptions.map((m) => {
+                      const [y, mo] = m.split('-')
+                      return (
+                        <SelectItem key={m} value={m}>
+                          {format(new Date(Number(y), Number(mo) - 1, 1), 'MMM yyyy')}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
+                </Select>
+
+                {showBdFilter && (
+                  <Select value={bdFilter} onValueChange={setBdFilter}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="BD" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All months</SelectItem>
-                      {monthOptions.map((m) => {
-                        const [y, mo] = m.split('-')
-                        const label = format(new Date(Number(y), Number(mo) - 1, 1), 'MMM yyyy')
-                        return (
-                          <SelectItem key={m} value={m}>
-                            {label}
-                          </SelectItem>
-                        )
-                      })}
+                      <SelectItem value="all">All BDs</SelectItem>
+                      {bdOptions.map(([id, name]) => (
+                        <SelectItem key={id} value={id}>
+                          {name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  {showBdFilter && (
-                    <Select value={bdFilter} onValueChange={setBdFilter}>
-                      <SelectTrigger className="w-[160px]">
-                        <SelectValue placeholder="BD" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All BDs</SelectItem>
-                        {bdOptions.map(([id, name]) => (
-                          <SelectItem key={id} value={id}>
-                            {name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                  <div className="relative w-full max-w-sm flex-1 sm:w-64">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      className="pl-9"
-                      placeholder="Name, ref, hospital… — or full mobile (10 digits or 91…)"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                    />
-                  </div>
-                </div>
+                )}
+
+                <Select value={circleFilter} onValueChange={setCircleFilter}>
+                  <SelectTrigger className="w-[130px]">
+                    <SelectValue placeholder="Circle" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All circles</SelectItem>
+                    {circleOptions.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={hospitalFilter} onValueChange={setHospitalFilter}>
+                  <SelectTrigger className="w-[160px]">
+                    <SelectValue placeholder="Hospital" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All hospitals</SelectItem>
+                    {hospitalOptions.map((h) => (
+                      <SelectItem key={h} value={h}>
+                        {h}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={doctorFilter} onValueChange={setDoctorFilter}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="Doctor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All doctors</SelectItem>
+                    {doctorOptions.map((d) => (
+                      <SelectItem key={d} value={d}>
+                        {d}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={treatmentFilter} onValueChange={setTreatmentFilter}>
+                  <SelectTrigger className="w-[150px]">
+                    <SelectValue placeholder="Treatment" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All treatments</SelectItem>
+                    {treatmentOptions.map((t) => (
+                      <SelectItem key={t} value={t}>
+                        {t}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <p className="py-10 text-center text-muted-foreground">Loadingâ€¦</p>
+                <p className="py-10 text-center text-muted-foreground">Loading…</p>
               ) : (
                 <div className="overflow-x-auto rounded-lg border">
                   <Table>
@@ -339,25 +474,24 @@ export default function CaseTrackerPage() {
                         <TableHead>Age/Sex</TableHead>
                         <TableHead>Circle</TableHead>
                         <TableHead>Treatment</TableHead>
-                        <TableHead>BDM</TableHead>
+                        {showBdFilter && <TableHead>BDM</TableHead>}
                         <TableHead>Hospital</TableHead>
                         <TableHead>Doctor</TableHead>
                         <TableHead>Stage</TableHead>
-                        <TableHead className="w-[100px]" />
+                        <TableHead className="w-[90px]" />
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredRows.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={11} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={showBdFilter ? 11 : 10} className="py-10 text-center text-muted-foreground">
                             No leads match
                           </TableCell>
                         </TableRow>
                       ) : (
-                        filteredRows.map((lead) => {
-                          const cfg = lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage)) : null
+                        filteredRows.map(({ lead, bucket, hospital, doctor }) => {
+                          const badge = BUCKET_BADGE[bucket]
                           const d = lead.leadEntryDate || lead.createdDate
-                          const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
                           return (
                             <TableRow
                               key={lead.id}
@@ -371,25 +505,23 @@ export default function CaseTrackerPage() {
                                 </div>
                               </TableCell>
                               <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                {d ? format(new Date(d as string), 'MMM d, yyyy') : 'â€”'}
+                                {d ? format(new Date(d as string), 'MMM d, yyyy') : '—'}
                               </TableCell>
                               <TableCell>{lead.patientName}</TableCell>
                               <TableCell className="whitespace-nowrap text-sm">{formatLeadAgeSex(lead)}</TableCell>
                               <TableCell>{typeof lead.circle === 'string' ? lead.circle : '—'}</TableCell>
-                              <TableCell className="max-w-[140px] truncate">{lead.treatment ?? 'â€”'}</TableCell>
-                              <TableCell className="max-w-[120px] truncate">
-                                {(lead.plRecord?.bdmName ?? lead.bd?.name ?? '').trim() || '—'}
-                              </TableCell>
+                              <TableCell className="max-w-[140px] truncate">{lead.treatment ?? '—'}</TableCell>
+                              {showBdFilter && (
+                                <TableCell className="max-w-[120px] truncate">
+                                  {(lead.plRecord?.bdmName ?? lead.bd?.name ?? '').trim() || '—'}
+                                </TableCell>
+                              )}
                               <TableCell className="max-w-[160px] truncate">{hospital || '—'}</TableCell>
                               <TableCell className="max-w-[160px] truncate">{doctor || '—'}</TableCell>
                               <TableCell>
-                                {cfg ? (
-                                  <Badge variant="secondary" className={cfg.className}>
-                                    {cfg.label}
-                                  </Badge>
-                                ) : (
-                                  'â€”'
-                                )}
+                                <Badge variant="secondary" className={badge.className}>
+                                  {badge.label}
+                                </Badge>
                               </TableCell>
                               <TableCell onClick={(e) => e.stopPropagation()}>
                                 <Button size="sm" variant="outline" asChild>
@@ -406,62 +538,8 @@ export default function CaseTrackerPage() {
               )}
             </CardContent>
           </Card>
-
-          <Dialog open={showForm} onOpenChange={setShowForm}>
-            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>New case submission</DialogTitle>
-                <DialogDescription>Select a new lead, then submit card details.</DialogDescription>
-              </DialogHeader>
-              {!selectedLeadId ? (
-                <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                  {pickerLeads.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No new leads available.</p>
-                  ) : (
-                    pickerLeads.map((lead) => (
-                      <Button
-                        key={lead.id}
-                        variant="outline"
-                        className="w-full justify-start"
-                        onClick={() => setSelectedLeadId(lead.id)}
-                      >
-                        {lead.leadRef} â€” {lead.patientName}
-                      </Button>
-                    ))
-                  )}
-                </div>
-              ) : (
-                (() => {
-                  const selectedLead = leads.find((l) => l.id === selectedLeadId)
-                  return (
-                    <KYPBasicForm
-                      leadId={selectedLeadId}
-                      initialPatientName={selectedLead?.patientName}
-                      initialPhone={selectedLead?.phoneNumber}
-                      initialDob={(() => {
-                        const dob = (selectedLead as { dateOfBirth?: string } | undefined)?.dateOfBirth
-                        return dob ? format(new Date(dob), 'yyyy-MM-dd') : undefined
-                      })()}
-                      onSuccess={() => {
-                        setShowForm(false)
-                        setSelectedLeadId(null)
-                        queryClient.invalidateQueries({ queryKey: ['kyp-submissions'] })
-                        queryClient.invalidateQueries({ queryKey: ['leads'] })
-                      }}
-                      onCancel={() => {
-                        setShowForm(false)
-                        setSelectedLeadId(null)
-                      }}
-                    />
-                  )
-                })()
-              )}
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
     </AuthenticatedLayout>
   )
 }
-
-

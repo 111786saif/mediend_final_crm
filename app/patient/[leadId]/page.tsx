@@ -38,6 +38,7 @@ import {
   canFillIPDCashForm,
   canGeneratePDF,
   canInitiate,
+  canEditIPDDetails,
   canMarkIPD,
   canMarkLost,
   canModifyHospitals,
@@ -432,6 +433,7 @@ export default function PatientDetailsPage() {
   })
 
   const [showAdmitModal, setShowAdmitModal] = useState(false)
+  const [admitEditMode, setAdmitEditMode] = useState(false)
   const [showIPDCashModal, setShowIPDCashModal] = useState(false)
   const [showIPDMarkModal, setShowIPDMarkModal] = useState(false)
   const [showMarkLostDialog, setShowMarkLostDialog] = useState(false)
@@ -521,6 +523,7 @@ export default function PatientDetailsPage() {
   const canComplete = !readOnly && user && canCompletePreAuth(user as any, lead)
   const canEdit = !readOnly && user && canEditKYP(user as any, lead)
   const canInit = !readOnly && user && canInitiate(user as any, lead)
+  const canEditIPD = !readOnly && user && canEditIPDDetails(user as any, lead)
   const canMarkIPDStatus = !readOnly && user && canMarkIPD(user as any, lead)
   const canPDF = !readOnly && user && canGeneratePDF(user as any, lead)
   const canFillDischargeForm = !readOnly && user && canEditDischargeSheet(user as any, lead)
@@ -1295,10 +1298,20 @@ export default function PatientDetailsPage() {
                 {canInit && (
                   <Button
                     className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white border-0"
-                    onClick={() => setShowAdmitModal(true)}
+                    onClick={() => { setAdmitEditMode(false); setShowAdmitModal(true) }}
                   >
                     <CheckCircle2 className="h-4 w-4" />
                     IPD Scheduled
+                  </Button>
+                )}
+                {canEditIPD && (
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2 border-green-600 text-green-700 hover:bg-green-50 dark:hover:bg-green-950"
+                    onClick={() => { setAdmitEditMode(true); setShowAdmitModal(true) }}
+                  >
+                    <Pencil className="h-4 w-4" />
+                    Edit IPD Details
                   </Button>
                 )}
                 {canMarkIPDStatus && (
@@ -1887,9 +1900,11 @@ export default function PatientDetailsPage() {
         <Dialog open={showAdmitModal} onOpenChange={setShowAdmitModal}>
           <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Step 6: IPD Details</DialogTitle>
+              <DialogTitle>{admitEditMode ? 'Edit IPD Details' : 'Step 6: IPD Details'}</DialogTitle>
               <DialogDescription>
-                Fill all admission details. Insurance will be notified once saved.
+                {admitEditMode
+                  ? 'Update the saved admission details. Allowed until IPD Done is marked.'
+                  : 'Fill all admission details. Insurance will be notified once saved.'}
               </DialogDescription>
             </DialogHeader>
             {lead && (
@@ -1921,6 +1936,8 @@ export default function PatientDetailsPage() {
                 roomRent={roomRentFromPreAuth ?? lead.kypSubmission?.preAuthData?.roomRent ?? undefined}
                 bdName={lead.bd?.name}
                 bdManagerName={lead.bd?.manager?.name ?? undefined}
+                isEditMode={admitEditMode}
+                initialData={lead.admissionRecord ?? undefined}
                 onSuccess={() => {
                   setShowAdmitModal(false)
                   queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
