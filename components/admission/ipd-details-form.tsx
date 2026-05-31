@@ -637,7 +637,7 @@ export function IPDDetailsForm({
             </Button>
           )}
           <Button type="submit" disabled={submitting}>
-            {submitting ? 'Saving...' : 'Save IPD Details & Mark Admitted'}
+            {submitting ? 'Saving...' : 'Save IPD Details & Mark Scheduled'}
           </Button>
         </div>
         <p className="text-xs text-muted-foreground flex items-center gap-1">

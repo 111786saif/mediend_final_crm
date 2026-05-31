@@ -182,6 +182,10 @@ export async function GET(request: NextRequest) {
           preAuthData: {
             select: {
               updatedAt: true,
+              requestedHospitalName: true,
+              hospitalNameSuggestion: true,
+              hospitalSuggestions: true,
+              suggestedHospitals: { select: { hospitalName: true, suggestedDoctor: true } },
               queries: {
                 select: { updatedAt: true },
                 orderBy: { updatedAt: 'desc' },

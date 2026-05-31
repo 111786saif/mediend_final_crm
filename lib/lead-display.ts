@@ -8,11 +8,18 @@ export function formatLeadAgeSex(lead: { age?: number | null; sex?: string | nul
   return sex
 }
 
+// The MySQL lead sync stores "Not Specified" when no hospital is known
+// (mysql-lead-mapper). Treat such placeholders as empty so the resolver falls
+// through to a real value (e.g. a hospital insurance has suggested).
+const PLACEHOLDER_VALUES = new Set(['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd'])
+
 function firstNonEmpty(...values: unknown[]): string | null {
   for (const v of values) {
     if (v == null) continue
     const s = String(v).trim()
-    if (s) return s
+    if (!s) continue
+    if (PLACEHOLDER_VALUES.has(s.toLowerCase())) continue
+    return s
   }
   return null
 }
@@ -49,15 +56,30 @@ export function resolveLeadHospitalDoctor(
   const matched =
     preAuthHospital != null ? suggested.find((s) => s.hospitalName === preAuthHospital) : undefined
   const preAuthDoctor = matched?.suggestedDoctor
+  // Earliest signal — a hospital insurance has *suggested* (before BD raises
+  // pre-auth). Surfacing it stops tables / patient details showing "Not Specified".
+  const firstSuggested = suggested[0]
+  const suggestionScalars = Array.isArray(preAuth?.hospitalSuggestions)
+    ? (preAuth?.hospitalSuggestions as unknown[])
+    : []
 
   return {
-    hospital: firstNonEmpty(pl?.hospitalName, ds?.hospitalName, preAuthHospital, rec.hospitalName),
+    hospital: firstNonEmpty(
+      pl?.hospitalName,
+      ds?.hospitalName,
+      preAuthHospital,
+      rec.hospitalName,
+      firstSuggested?.hospitalName,
+      preAuth?.hospitalNameSuggestion,
+      suggestionScalars[0]
+    ),
     doctor: firstNonEmpty(
       pl?.doctorName,
       ds?.doctorName,
       preAuthDoctor,
       rec.ipdDrName,
-      rec.surgeonName
+      rec.surgeonName,
+      firstSuggested?.suggestedDoctor
     ),
   }
 }

@@ -50,6 +50,7 @@ import {
   isReadOnlyPatientRole
 } from '@/lib/case-permissions'
 import { getKYPStatusLabel } from '@/lib/kyp-status-labels'
+import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { CaseStage, FlowType } from '@/generated/prisma/enums'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
@@ -822,7 +823,7 @@ export default function PatientDetailsPage() {
                       </dl>
                       <dl className="bg-white px-5 py-4 dark:bg-gray-950">
                         <DossierSectionHeader icon={Building2} label="Hospital & Cover" />
-                        <DossierField icon={Building2} label="Hospital" value={lead.hospitalName} />
+                        <DossierField icon={Building2} label="Hospital" value={resolveLeadHospitalDoctor(lead).hospital} />
                         <DossierField icon={User} label="IPD Doctor" value={lead.ipdDrName} />
                         <DossierField icon={MapPin} label="City" value={location} />
                         <DossierField icon={MapPin} label="Area" value={area} />
@@ -1297,7 +1298,7 @@ export default function PatientDetailsPage() {
                     onClick={() => setShowAdmitModal(true)}
                   >
                     <CheckCircle2 className="h-4 w-4" />
-                    Mark Admitted
+                    IPD Scheduled
                   </Button>
                 )}
                 {canMarkIPDStatus && (
