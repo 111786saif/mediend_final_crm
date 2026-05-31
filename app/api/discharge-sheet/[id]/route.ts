@@ -33,6 +33,8 @@ const updateDischargeSheetSchema = z.object({
   otNotesUrl: z.string().optional(),
   codesCount: z.number().optional(),
   finalBillUrl: z.string().optional(),
+  finalApprovedUrl: z.string().optional(),
+  deductionReceiptUrl: z.string().optional(),
   settlementLetterUrl: z.string().optional(),
   roomRentAmount: z.number().optional(),
   pharmacyAmount: z.number().optional(),
@@ -40,8 +42,16 @@ const updateDischargeSheetSchema = z.object({
   consumablesAmount: z.number().optional(),
   implantsAmount: z.number().optional(),
   instrumentsAmount: z.number().optional(),
+  anesthesiaAmount: z.number().optional(),
+  otherChargesAmount: z.number().optional(),
   totalFinalBill: z.number().optional(),
   finalApprovedAmount: z.number().optional(),
+  copayAmount: z.number().optional(),
+  collectedByHospital: z.number().optional(),
+  collectedByMediend: z.number().optional(),
+  axisTariffDeduction: z.number().optional(),
+  axisTariffDeductionPaid: z.number().optional(),
+  actualFinalAmount: z.number().optional(),
   deductionAmount: z.number().optional(),
   discountAmount: z.number().optional(),
   waivedOffAmount: z.number().optional(),
@@ -210,6 +220,8 @@ export async function PATCH(
     if (data.otNotesUrl !== undefined) updateData.otNotesUrl = data.otNotesUrl
     if (data.codesCount !== undefined) updateData.codesCount = data.codesCount
     if (data.finalBillUrl !== undefined) updateData.finalBillUrl = data.finalBillUrl
+    if (data.finalApprovedUrl !== undefined) updateData.finalApprovedUrl = data.finalApprovedUrl
+    if (data.deductionReceiptUrl !== undefined) updateData.deductionReceiptUrl = data.deductionReceiptUrl
     if (data.settlementLetterUrl !== undefined) updateData.settlementLetterUrl = data.settlementLetterUrl
     if (data.roomRentAmount !== undefined) updateData.roomRentAmount = data.roomRentAmount
     if (data.pharmacyAmount !== undefined) updateData.pharmacyAmount = data.pharmacyAmount
@@ -217,8 +229,16 @@ export async function PATCH(
     if (data.consumablesAmount !== undefined) updateData.consumablesAmount = data.consumablesAmount
     if (data.implantsAmount !== undefined) updateData.implantsAmount = data.implantsAmount
     if (data.instrumentsAmount !== undefined) updateData.instrumentsAmount = data.instrumentsAmount
+    if (data.anesthesiaAmount !== undefined) updateData.anesthesiaAmount = data.anesthesiaAmount
+    if (data.otherChargesAmount !== undefined) updateData.otherChargesAmount = data.otherChargesAmount
     if (data.totalFinalBill !== undefined) updateData.totalFinalBill = data.totalFinalBill
     if (data.finalApprovedAmount !== undefined) updateData.finalApprovedAmount = data.finalApprovedAmount
+    if (data.copayAmount !== undefined) updateData.copayAmount = data.copayAmount
+    if (data.collectedByHospital !== undefined) updateData.collectedByHospital = data.collectedByHospital
+    if (data.collectedByMediend !== undefined) updateData.collectedByMediend = data.collectedByMediend
+    if (data.axisTariffDeduction !== undefined) updateData.axisTariffDeduction = data.axisTariffDeduction
+    if (data.axisTariffDeductionPaid !== undefined) updateData.axisTariffDeductionPaid = data.axisTariffDeductionPaid
+    if (data.actualFinalAmount !== undefined) updateData.actualFinalAmount = data.actualFinalAmount
     if (data.deductionAmount !== undefined) updateData.deductionAmount = data.deductionAmount
     if (data.discountAmount !== undefined) updateData.discountAmount = data.discountAmount
     if (data.waivedOffAmount !== undefined) updateData.waivedOffAmount = data.waivedOffAmount

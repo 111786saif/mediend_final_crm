@@ -44,6 +44,8 @@ const createDischargeSheetSchema = z.object({
   otNotesUrl: z.string().optional(),
   codesCount: z.number().optional(),
   finalBillUrl: z.string().min(1, 'Final bill is required'),
+  finalApprovedUrl: z.string().optional(),
+  deductionReceiptUrl: z.string().optional(),
   settlementLetterUrl: z.string().optional(),
   // C. Bill Breakup
   roomRentAmount: z.number().min(0, 'Room rent amount is required'),
@@ -52,6 +54,8 @@ const createDischargeSheetSchema = z.object({
   consumablesAmount: z.number().min(0, 'Consumables amount is required'),
   implantsAmount: z.number().optional(),
   instrumentsAmount: z.number().optional(),
+  anesthesiaAmount: z.number().optional(),
+  otherChargesAmount: z.number().optional(),
   otherCharges: z.string().optional(),
   packageAmount: z.string().optional(),
   staplerCharges: z.enum(['INCLUDED', 'OPEN']).optional(),
@@ -59,6 +63,12 @@ const createDischargeSheetSchema = z.object({
   // D. Approval & Deductions
   finalApprovedAmount: z.number().min(0, 'Final approved amount is required'),
   finalAmount: z.number().optional(),
+  copayAmount: z.number().optional(),
+  collectedByHospital: z.number().optional(),
+  collectedByMediend: z.number().optional(),
+  axisTariffDeduction: z.number().optional(),
+  axisTariffDeductionPaid: z.number().optional(),
+  actualFinalAmount: z.number().optional(),
   deductionAmount: z.number().optional(),
   discountAmount: z.number().optional(),
   waivedOffAmount: z.number().optional(),
@@ -226,6 +236,21 @@ export async function POST(request: NextRequest) {
     const instrumentsCostNum =
       data.instrumentsAmount != null ? Number(data.instrumentsAmount) : 0
 
+    // Recompute derived financials server-side (never trust the client for these).
+    const dedTotal = (data.copayAmount ?? 0) + (data.otherDeduction ?? 0)
+    const dedPaidTotal = (data.collectedByHospital ?? 0) + (data.collectedByMediend ?? 0)
+    const otherChargesAmount =
+      (data.finalAmount ?? 0) -
+      ((data.roomRentAmount ?? 0) +
+        (data.pharmacyAmount ?? 0) +
+        (data.investigationAmount ?? 0) +
+        (data.consumablesAmount ?? 0) +
+        (data.implantsAmount ?? 0) +
+        instrumentsCostNum +
+        (data.anesthesiaAmount ?? 0))
+    const actualFinalAmount =
+      (data.finalApprovedAmount ?? 0) + dedPaidTotal + (data.axisTariffDeductionPaid ?? 0)
+
     const dischargeData: any = {
       leadId: data.leadId,
       createdById: existing?.createdById ?? user.id,
@@ -257,6 +282,8 @@ export async function POST(request: NextRequest) {
       otNotesUrl: data.otNotesUrl,
       codesCount: data.codesCount,
       finalBillUrl: data.finalBillUrl,
+      finalApprovedUrl: data.finalApprovedUrl,
+      deductionReceiptUrl: data.deductionReceiptUrl,
       settlementLetterUrl: data.settlementLetterUrl,
       roomRentAmount: data.roomRentAmount ?? 0,
       pharmacyAmount: data.pharmacyAmount ?? 0,
@@ -264,23 +291,31 @@ export async function POST(request: NextRequest) {
       consumablesAmount: data.consumablesAmount ?? 0,
       implantsAmount: data.implantsAmount ?? 0,
       instrumentsAmount: data.instrumentsAmount,
+      anesthesiaAmount: data.anesthesiaAmount ?? 0,
+      otherChargesAmount,
       otherCharges: data.otherCharges,
       packageAmount: data.packageAmount,
       staplerCharges: data.staplerCharges,
       totalFinalBill: data.totalFinalBill ?? 0,
       finalApprovedAmount: data.finalApprovedAmount ?? 0,
       finalAmount: data.finalAmount,
-      deductionAmount: data.deductionAmount ?? 0,
+      copayAmount: data.copayAmount ?? 0,
+      collectedByHospital: data.collectedByHospital ?? 0,
+      collectedByMediend: data.collectedByMediend ?? 0,
+      axisTariffDeduction: data.axisTariffDeduction ?? 0,
+      axisTariffDeductionPaid: data.axisTariffDeductionPaid ?? 0,
+      actualFinalAmount,
+      deductionAmount: dedTotal,
       discountAmount: data.discountAmount ?? 0,
-      waivedOffAmount: data.waivedOffAmount ?? 0,
+      waivedOffAmount: dedTotal - dedPaidTotal,
       settlementPart: data.settlementPart ?? 0,
       tdsAmount: data.tdsAmount ?? 0,
       otherDeduction: data.otherDeduction ?? 0,
-      netSettlementAmount: data.netSettlementAmount ?? 0,
+      netSettlementAmount: actualFinalAmount,
       totalAmount: data.totalAmount || 0,
       billAmount: data.billAmount || lead.billAmount || 0,
       cashPaidByPatient: data.cashPaidByPatient || 0,
-      cashOrDedPaid: data.cashOrDedPaid || 0,
+      cashOrDedPaid: dedPaidTotal,
       referralAmount: data.referralAmount || 0,
       cabCharges: data.cabCharges || 0,
       implantCost: data.implantCost || lead.implantAmount || 0,

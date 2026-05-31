@@ -124,12 +124,16 @@ export async function POST(
           )
         : null
       const ipdDrNameFromPreAuth = selectedHospital?.suggestedDoctor?.trim() || null
+      // Write the approved hospital back onto the lead so every dashboard shows
+      // the post-approval hospital (mirrors how ipdDrName is persisted here).
+      const approvedHospitalName = selectedHospital?.hospitalName?.trim() || requestedName || null
 
       await prisma.lead.update({
         where: { id: kypSubmission.lead.id },
         data: {
           caseStage: CaseStage.PREAUTH_COMPLETE,
           ...(ipdDrNameFromPreAuth ? { ipdDrName: ipdDrNameFromPreAuth } : {}),
+          ...(approvedHospitalName ? { hospitalName: approvedHospitalName } : {}),
         },
       })
 

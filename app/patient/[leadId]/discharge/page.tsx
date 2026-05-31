@@ -12,6 +12,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { DischargeSheetView } from '@/components/discharge/discharge-sheet-view'
 import { DischargeSheetForm } from '@/components/discharge/discharge-sheet-form'
 import { MarkDischargedDialog } from '@/components/discharge/mark-discharged-dialog'
+import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
 
 interface DischargeSheet {
   id: string
@@ -32,8 +33,10 @@ interface DischargeSheet {
 interface LeadShape {
   id: string
   caseStage: string
+  patientName?: string | null
   insuranceInitiateForm?: { id: string } | null
   admissionRecord?: { ipdDischargeDate?: string | null } | null
+  [key: string]: unknown
 }
 
 export default function DischargeSheetPage() {
@@ -78,6 +81,11 @@ export default function DischargeSheetPage() {
     ? lead.admissionRecord.ipdDischargeDate.slice(0, 10)
     : undefined
 
+  // Hospital + doctor chosen after pre-auth approval (single source of truth).
+  const { hospital: resolvedHospital, doctor: resolvedDoctor } = resolveLeadHospitalDoctor(lead)
+  const patientName =
+    lead?.patientName ?? (dischargeSheet?.lead?.patientName as string | undefined) ?? ''
+
   if (sheetLoading || leadLoading) {
     return (
       <AuthenticatedLayout>
@@ -118,6 +126,9 @@ export default function DischargeSheetPage() {
         ) : sheetUnfinalized && isInsurance ? (
           <DischargeSheetForm
             leadId={leadId}
+            patientName={patientName}
+            hospital={resolvedHospital ?? ''}
+            doctorName={resolvedDoctor ?? ''}
             initialDischargeDate={initialDischargeDate}
             onSuccess={async () => {
               await queryClient.invalidateQueries({ queryKey: ['lead', leadId] })

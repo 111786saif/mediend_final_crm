@@ -58,6 +58,7 @@ export interface ComplianceCallLead {
   treatment: string | null
   hospitalName: string
   surgeonName: string | null
+  ipdDrName: string | null
   surgeryDate: string | null
   caseStage: string
   flowType: string
@@ -67,6 +68,8 @@ export interface ComplianceCallLead {
     dischargeDate: string | null
     bdmName: string | null
     managerName: string | null
+    doctorName: string | null
+    hospitalName: string | null
   } | null
 }
 

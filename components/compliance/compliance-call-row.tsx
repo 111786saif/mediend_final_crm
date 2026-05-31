@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import { resolveLeadHospitalDoctor } from "@/lib/lead-display"
 import {
   useUpdateComplianceCall,
   type ComplianceCall,
@@ -46,6 +47,7 @@ export function ComplianceCallRow({ call, onEdit }: Props) {
   const update = useUpdateComplianceCall()
   const bdmName = call.lead.dischargeSheet?.bdmName
   const dischargeDate = call.lead.dischargeSheet?.dischargeDate
+  const { hospital, doctor } = resolveLeadHospitalDoctor(call.lead)
 
   const handleStatusChange = async (next: ComplianceCallStatus) => {
     if (next === call.status) return
@@ -89,7 +91,8 @@ export function ComplianceCallRow({ call, onEdit }: Props) {
             )}
           </div>
           <p className="text-xs text-muted-foreground truncate">
-            {call.lead.treatment ?? "—"} · {call.lead.hospitalName}
+            {call.lead.treatment ?? "—"} · {hospital ?? "—"}
+            {doctor ? ` · Dr. ${doctor}` : ""}
           </p>
           <p className="text-xs text-muted-foreground truncate">
             BD {call.lead.bd?.name ?? "—"}

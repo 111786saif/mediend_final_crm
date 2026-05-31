@@ -162,6 +162,8 @@ export async function GET(request: NextRequest) {
       createdDate: true,
       updatedDate: true,
       hospitalName: true,
+      ipdDrName: true,
+      surgeonName: true,
       source: true,
       netProfit: true,
       flowType: true,

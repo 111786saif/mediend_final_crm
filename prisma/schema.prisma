@@ -2455,7 +2455,9 @@ model DischargeSheet {
   otNotesUrl          String? // OT notes upload
   codesCount          Int?
   finalBillUrl        String?
-  settlementLetterUrl String?
+  finalApprovedUrl    String? // Final approval letter upload (section D)
+  deductionReceiptUrl String? // Deductions-paid receipt upload (section D)
+  settlementLetterUrl String? // Deprecated — kept for legacy records
 
   // C. Bill Breakup
   roomRentAmount      Float  @default(0)
@@ -2464,18 +2466,26 @@ model DischargeSheet {
   consumablesAmount   Float  @default(0)
   implantsAmount      Float  @default(0)
   instrumentsAmount   Float?
+  anesthesiaAmount    Float  @default(0) // Anesthesia charge (after stapler)
+  otherChargesAmount  Float  @default(0) // Computed: finalAmount − sum(line items)
   totalFinalBill      Float  @default(0)
 
   // D. Approval & Deductions
-  finalApprovedAmount Float  @default(0)
-  finalAmount         Float?
-  deductionAmount     Float  @default(0)
-  discountAmount      Float  @default(0)
-  waivedOffAmount     Float  @default(0)
-  settlementPart      Float  @default(0)
-  tdsAmount           Float  @default(0)
-  otherDeduction      Float  @default(0)
-  netSettlementAmount Float  @default(0)
+  finalApprovedAmount     Float  @default(0)
+  finalAmount             Float?
+  copayAmount             Float  @default(0) // Copay deduction amount (₹, not %)
+  collectedByHospital     Float  @default(0) // Deduction paid — collected by hospital
+  collectedByMediend      Float  @default(0) // Deduction paid — collected by Mediend
+  axisTariffDeduction     Float  @default(0) // Axis tariff — deduction
+  axisTariffDeductionPaid Float  @default(0) // Axis tariff — deduction paid
+  actualFinalAmount       Float  @default(0) // = finalApproved + deductionPaid + axisTariffPaid
+  deductionAmount         Float  @default(0) // = deduction total (copay + other)
+  discountAmount          Float  @default(0) // Hospital discount
+  waivedOffAmount         Float  @default(0) // = deduction total − deduction paid
+  settlementPart          Float  @default(0)
+  tdsAmount               Float  @default(0)
+  otherDeduction          Float  @default(0)
+  netSettlementAmount     Float  @default(0)
 
   // Financials (Raw) — legacy
   totalAmount       Float        @default(0) // Total case value

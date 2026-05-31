@@ -36,9 +36,17 @@ export type DischargeSheetAvgAggregateOutputType = {
   consumablesAmount: number | null
   implantsAmount: number | null
   instrumentsAmount: number | null
+  anesthesiaAmount: number | null
+  otherChargesAmount: number | null
   totalFinalBill: number | null
   finalApprovedAmount: number | null
   finalAmount: number | null
+  copayAmount: number | null
+  collectedByHospital: number | null
+  collectedByMediend: number | null
+  axisTariffDeduction: number | null
+  axisTariffDeductionPaid: number | null
+  actualFinalAmount: number | null
   deductionAmount: number | null
   discountAmount: number | null
   waivedOffAmount: number | null
@@ -73,9 +81,17 @@ export type DischargeSheetSumAggregateOutputType = {
   consumablesAmount: number | null
   implantsAmount: number | null
   instrumentsAmount: number | null
+  anesthesiaAmount: number | null
+  otherChargesAmount: number | null
   totalFinalBill: number | null
   finalApprovedAmount: number | null
   finalAmount: number | null
+  copayAmount: number | null
+  collectedByHospital: number | null
+  collectedByMediend: number | null
+  axisTariffDeduction: number | null
+  axisTariffDeductionPaid: number | null
+  actualFinalAmount: number | null
   deductionAmount: number | null
   discountAmount: number | null
   waivedOffAmount: number | null
@@ -129,6 +145,8 @@ export type DischargeSheetMinAggregateOutputType = {
   otNotesUrl: string | null
   codesCount: number | null
   finalBillUrl: string | null
+  finalApprovedUrl: string | null
+  deductionReceiptUrl: string | null
   settlementLetterUrl: string | null
   roomRentAmount: number | null
   pharmacyAmount: number | null
@@ -136,9 +154,17 @@ export type DischargeSheetMinAggregateOutputType = {
   consumablesAmount: number | null
   implantsAmount: number | null
   instrumentsAmount: number | null
+  anesthesiaAmount: number | null
+  otherChargesAmount: number | null
   totalFinalBill: number | null
   finalApprovedAmount: number | null
   finalAmount: number | null
+  copayAmount: number | null
+  collectedByHospital: number | null
+  collectedByMediend: number | null
+  axisTariffDeduction: number | null
+  axisTariffDeductionPaid: number | null
+  actualFinalAmount: number | null
   deductionAmount: number | null
   discountAmount: number | null
   waivedOffAmount: number | null
@@ -211,6 +237,8 @@ export type DischargeSheetMaxAggregateOutputType = {
   otNotesUrl: string | null
   codesCount: number | null
   finalBillUrl: string | null
+  finalApprovedUrl: string | null
+  deductionReceiptUrl: string | null
   settlementLetterUrl: string | null
   roomRentAmount: number | null
   pharmacyAmount: number | null
@@ -218,9 +246,17 @@ export type DischargeSheetMaxAggregateOutputType = {
   consumablesAmount: number | null
   implantsAmount: number | null
   instrumentsAmount: number | null
+  anesthesiaAmount: number | null
+  otherChargesAmount: number | null
   totalFinalBill: number | null
   finalApprovedAmount: number | null
   finalAmount: number | null
+  copayAmount: number | null
+  collectedByHospital: number | null
+  collectedByMediend: number | null
+  axisTariffDeduction: number | null
+  axisTariffDeductionPaid: number | null
+  actualFinalAmount: number | null
   deductionAmount: number | null
   discountAmount: number | null
   waivedOffAmount: number | null
@@ -293,6 +329,8 @@ export type DischargeSheetCountAggregateOutputType = {
   otNotesUrl: number
   codesCount: number
   finalBillUrl: number
+  finalApprovedUrl: number
+  deductionReceiptUrl: number
   settlementLetterUrl: number
   roomRentAmount: number
   pharmacyAmount: number
@@ -300,9 +338,17 @@ export type DischargeSheetCountAggregateOutputType = {
   consumablesAmount: number
   implantsAmount: number
   instrumentsAmount: number
+  anesthesiaAmount: number
+  otherChargesAmount: number
   totalFinalBill: number
   finalApprovedAmount: number
   finalAmount: number
+  copayAmount: number
+  collectedByHospital: number
+  collectedByMediend: number
+  axisTariffDeduction: number
+  axisTariffDeductionPaid: number
+  actualFinalAmount: number
   deductionAmount: number
   discountAmount: number
   waivedOffAmount: number
@@ -358,9 +404,17 @@ export type DischargeSheetAvgAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -395,9 +449,17 @@ export type DischargeSheetSumAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -451,6 +513,8 @@ export type DischargeSheetMinAggregateInputType = {
   otNotesUrl?: true
   codesCount?: true
   finalBillUrl?: true
+  finalApprovedUrl?: true
+  deductionReceiptUrl?: true
   settlementLetterUrl?: true
   roomRentAmount?: true
   pharmacyAmount?: true
@@ -458,9 +522,17 @@ export type DischargeSheetMinAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -533,6 +605,8 @@ export type DischargeSheetMaxAggregateInputType = {
   otNotesUrl?: true
   codesCount?: true
   finalBillUrl?: true
+  finalApprovedUrl?: true
+  deductionReceiptUrl?: true
   settlementLetterUrl?: true
   roomRentAmount?: true
   pharmacyAmount?: true
@@ -540,9 +614,17 @@ export type DischargeSheetMaxAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -615,6 +697,8 @@ export type DischargeSheetCountAggregateInputType = {
   otNotesUrl?: true
   codesCount?: true
   finalBillUrl?: true
+  finalApprovedUrl?: true
+  deductionReceiptUrl?: true
   settlementLetterUrl?: true
   roomRentAmount?: true
   pharmacyAmount?: true
@@ -622,9 +706,17 @@ export type DischargeSheetCountAggregateInputType = {
   consumablesAmount?: true
   implantsAmount?: true
   instrumentsAmount?: true
+  anesthesiaAmount?: true
+  otherChargesAmount?: true
   totalFinalBill?: true
   finalApprovedAmount?: true
   finalAmount?: true
+  copayAmount?: true
+  collectedByHospital?: true
+  collectedByMediend?: true
+  axisTariffDeduction?: true
+  axisTariffDeductionPaid?: true
+  actualFinalAmount?: true
   deductionAmount?: true
   discountAmount?: true
   waivedOffAmount?: true
@@ -784,6 +876,8 @@ export type DischargeSheetGroupByOutputType = {
   otNotesUrl: string | null
   codesCount: number | null
   finalBillUrl: string | null
+  finalApprovedUrl: string | null
+  deductionReceiptUrl: string | null
   settlementLetterUrl: string | null
   roomRentAmount: number
   pharmacyAmount: number
@@ -791,9 +885,17 @@ export type DischargeSheetGroupByOutputType = {
   consumablesAmount: number
   implantsAmount: number
   instrumentsAmount: number | null
+  anesthesiaAmount: number
+  otherChargesAmount: number
   totalFinalBill: number
   finalApprovedAmount: number
   finalAmount: number | null
+  copayAmount: number
+  collectedByHospital: number
+  collectedByMediend: number
+  axisTariffDeduction: number
+  axisTariffDeductionPaid: number
+  actualFinalAmount: number
   deductionAmount: number
   discountAmount: number
   waivedOffAmount: number
@@ -889,6 +991,8 @@ export type DischargeSheetWhereInput = {
   otNotesUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   codesCount?: Prisma.IntNullableFilter<"DischargeSheet"> | number | null
   finalBillUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   settlementLetterUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   roomRentAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   pharmacyAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -896,9 +1000,17 @@ export type DischargeSheetWhereInput = {
   consumablesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantsAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   instrumentsAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
+  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   totalFinalBill?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalApprovedAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
+  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
+  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   deductionAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   discountAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   waivedOffAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -977,6 +1089,8 @@ export type DischargeSheetOrderByWithRelationInput = {
   otNotesUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   codesCount?: Prisma.SortOrderInput | Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -984,9 +1098,17 @@ export type DischargeSheetOrderByWithRelationInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -1069,6 +1191,8 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   otNotesUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   codesCount?: Prisma.IntNullableFilter<"DischargeSheet"> | number | null
   finalBillUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   settlementLetterUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   roomRentAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   pharmacyAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -1076,9 +1200,17 @@ export type DischargeSheetWhereUniqueInput = Prisma.AtLeast<{
   consumablesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantsAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   instrumentsAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
+  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   totalFinalBill?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalApprovedAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
+  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
+  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   deductionAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   discountAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   waivedOffAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -1156,6 +1288,8 @@ export type DischargeSheetOrderByWithAggregationInput = {
   otNotesUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   codesCount?: Prisma.SortOrderInput | Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -1163,9 +1297,17 @@ export type DischargeSheetOrderByWithAggregationInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -1246,6 +1388,8 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   otNotesUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   codesCount?: Prisma.IntNullableWithAggregatesFilter<"DischargeSheet"> | number | null
   finalBillUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  finalApprovedUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
+  deductionReceiptUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   settlementLetterUrl?: Prisma.StringNullableWithAggregatesFilter<"DischargeSheet"> | string | null
   roomRentAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   pharmacyAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
@@ -1253,9 +1397,17 @@ export type DischargeSheetScalarWhereWithAggregatesInput = {
   consumablesAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   implantsAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   instrumentsAmount?: Prisma.FloatNullableWithAggregatesFilter<"DischargeSheet"> | number | null
+  anesthesiaAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  otherChargesAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   totalFinalBill?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   finalApprovedAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   finalAmount?: Prisma.FloatNullableWithAggregatesFilter<"DischargeSheet"> | number | null
+  copayAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  collectedByHospital?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  collectedByMediend?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  axisTariffDeduction?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  axisTariffDeductionPaid?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
+  actualFinalAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   deductionAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   discountAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
   waivedOffAmount?: Prisma.FloatWithAggregatesFilter<"DischargeSheet"> | number
@@ -1326,6 +1478,8 @@ export type DischargeSheetCreateInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -1333,9 +1487,17 @@ export type DischargeSheetCreateInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -1410,6 +1572,8 @@ export type DischargeSheetUncheckedCreateInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -1417,9 +1581,17 @@ export type DischargeSheetUncheckedCreateInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -1490,6 +1662,8 @@ export type DischargeSheetUpdateInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1497,9 +1671,17 @@ export type DischargeSheetUpdateInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1574,6 +1756,8 @@ export type DischargeSheetUncheckedUpdateInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1581,9 +1765,17 @@ export type DischargeSheetUncheckedUpdateInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1656,6 +1848,8 @@ export type DischargeSheetCreateManyInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -1663,9 +1857,17 @@ export type DischargeSheetCreateManyInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -1736,6 +1938,8 @@ export type DischargeSheetUpdateManyMutationInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1743,9 +1947,17 @@ export type DischargeSheetUpdateManyMutationInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1814,6 +2026,8 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1821,9 +2035,17 @@ export type DischargeSheetUncheckedUpdateManyInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1911,6 +2133,8 @@ export type DischargeSheetCountOrderByAggregateInput = {
   otNotesUrl?: Prisma.SortOrder
   codesCount?: Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -1918,9 +2142,17 @@ export type DischargeSheetCountOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -1974,9 +2206,17 @@ export type DischargeSheetAvgOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2030,6 +2270,8 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   otNotesUrl?: Prisma.SortOrder
   codesCount?: Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -2037,9 +2279,17 @@ export type DischargeSheetMaxOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2112,6 +2362,8 @@ export type DischargeSheetMinOrderByAggregateInput = {
   otNotesUrl?: Prisma.SortOrder
   codesCount?: Prisma.SortOrder
   finalBillUrl?: Prisma.SortOrder
+  finalApprovedUrl?: Prisma.SortOrder
+  deductionReceiptUrl?: Prisma.SortOrder
   settlementLetterUrl?: Prisma.SortOrder
   roomRentAmount?: Prisma.SortOrder
   pharmacyAmount?: Prisma.SortOrder
@@ -2119,9 +2371,17 @@ export type DischargeSheetMinOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2175,9 +2435,17 @@ export type DischargeSheetSumOrderByAggregateInput = {
   consumablesAmount?: Prisma.SortOrder
   implantsAmount?: Prisma.SortOrder
   instrumentsAmount?: Prisma.SortOrder
+  anesthesiaAmount?: Prisma.SortOrder
+  otherChargesAmount?: Prisma.SortOrder
   totalFinalBill?: Prisma.SortOrder
   finalApprovedAmount?: Prisma.SortOrder
   finalAmount?: Prisma.SortOrder
+  copayAmount?: Prisma.SortOrder
+  collectedByHospital?: Prisma.SortOrder
+  collectedByMediend?: Prisma.SortOrder
+  axisTariffDeduction?: Prisma.SortOrder
+  axisTariffDeductionPaid?: Prisma.SortOrder
+  actualFinalAmount?: Prisma.SortOrder
   deductionAmount?: Prisma.SortOrder
   discountAmount?: Prisma.SortOrder
   waivedOffAmount?: Prisma.SortOrder
@@ -2451,6 +2719,8 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -2458,9 +2728,17 @@ export type DischargeSheetCreateWithoutCreatedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -2534,6 +2812,8 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -2541,9 +2821,17 @@ export type DischargeSheetUncheckedCreateWithoutCreatedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -2623,6 +2911,8 @@ export type DischargeSheetCreateWithoutMarkedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -2630,9 +2920,17 @@ export type DischargeSheetCreateWithoutMarkedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -2706,6 +3004,8 @@ export type DischargeSheetUncheckedCreateWithoutMarkedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -2713,9 +3013,17 @@ export type DischargeSheetUncheckedCreateWithoutMarkedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -2795,6 +3103,8 @@ export type DischargeSheetCreateWithoutFinalizedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -2802,9 +3112,17 @@ export type DischargeSheetCreateWithoutFinalizedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -2878,6 +3196,8 @@ export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -2885,9 +3205,17 @@ export type DischargeSheetUncheckedCreateWithoutFinalizedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -2988,6 +3316,8 @@ export type DischargeSheetScalarWhereInput = {
   otNotesUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   codesCount?: Prisma.IntNullableFilter<"DischargeSheet"> | number | null
   finalBillUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  finalApprovedUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
+  deductionReceiptUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   settlementLetterUrl?: Prisma.StringNullableFilter<"DischargeSheet"> | string | null
   roomRentAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   pharmacyAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -2995,9 +3325,17 @@ export type DischargeSheetScalarWhereInput = {
   consumablesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   implantsAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   instrumentsAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
+  anesthesiaAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  otherChargesAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   totalFinalBill?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalApprovedAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   finalAmount?: Prisma.FloatNullableFilter<"DischargeSheet"> | number | null
+  copayAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByHospital?: Prisma.FloatFilter<"DischargeSheet"> | number
+  collectedByMediend?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeduction?: Prisma.FloatFilter<"DischargeSheet"> | number
+  axisTariffDeductionPaid?: Prisma.FloatFilter<"DischargeSheet"> | number
+  actualFinalAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   deductionAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   discountAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
   waivedOffAmount?: Prisma.FloatFilter<"DischargeSheet"> | number
@@ -3100,6 +3438,8 @@ export type DischargeSheetCreateWithoutLeadInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3107,9 +3447,17 @@ export type DischargeSheetCreateWithoutLeadInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3182,6 +3530,8 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3189,9 +3539,17 @@ export type DischargeSheetUncheckedCreateWithoutLeadInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3278,6 +3636,8 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3285,9 +3645,17 @@ export type DischargeSheetUpdateWithoutLeadInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3360,6 +3728,8 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3367,9 +3737,17 @@ export type DischargeSheetUncheckedUpdateWithoutLeadInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3440,6 +3818,8 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3447,9 +3827,17 @@ export type DischargeSheetCreateWithoutPlRecordInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3523,6 +3911,8 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3530,9 +3920,17 @@ export type DischargeSheetUncheckedCreateWithoutPlRecordInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3618,6 +4016,8 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3625,9 +4025,17 @@ export type DischargeSheetUpdateWithoutPlRecordInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3701,6 +4109,8 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3708,9 +4118,17 @@ export type DischargeSheetUncheckedUpdateWithoutPlRecordInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3780,6 +4198,8 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3787,9 +4207,17 @@ export type DischargeSheetCreateWithoutKypSubmissionInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3862,6 +4290,8 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -3869,9 +4299,17 @@ export type DischargeSheetUncheckedCreateWithoutKypSubmissionInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -3958,6 +4396,8 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -3965,9 +4405,17 @@ export type DischargeSheetUpdateWithoutKypSubmissionInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4040,6 +4488,8 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4047,9 +4497,17 @@ export type DischargeSheetUncheckedUpdateWithoutKypSubmissionInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4122,6 +4580,8 @@ export type DischargeSheetCreateManyCreatedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -4129,9 +4589,17 @@ export type DischargeSheetCreateManyCreatedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -4203,6 +4671,8 @@ export type DischargeSheetCreateManyMarkedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -4210,9 +4680,17 @@ export type DischargeSheetCreateManyMarkedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -4284,6 +4762,8 @@ export type DischargeSheetCreateManyFinalizedByInput = {
   otNotesUrl?: string | null
   codesCount?: number | null
   finalBillUrl?: string | null
+  finalApprovedUrl?: string | null
+  deductionReceiptUrl?: string | null
   settlementLetterUrl?: string | null
   roomRentAmount?: number
   pharmacyAmount?: number
@@ -4291,9 +4771,17 @@ export type DischargeSheetCreateManyFinalizedByInput = {
   consumablesAmount?: number
   implantsAmount?: number
   instrumentsAmount?: number | null
+  anesthesiaAmount?: number
+  otherChargesAmount?: number
   totalFinalBill?: number
   finalApprovedAmount?: number
   finalAmount?: number | null
+  copayAmount?: number
+  collectedByHospital?: number
+  collectedByMediend?: number
+  axisTariffDeduction?: number
+  axisTariffDeductionPaid?: number
+  actualFinalAmount?: number
   deductionAmount?: number
   discountAmount?: number
   waivedOffAmount?: number
@@ -4363,6 +4851,8 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4370,9 +4860,17 @@ export type DischargeSheetUpdateWithoutCreatedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4446,6 +4944,8 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4453,9 +4953,17 @@ export type DischargeSheetUncheckedUpdateWithoutCreatedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4527,6 +5035,8 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4534,9 +5044,17 @@ export type DischargeSheetUncheckedUpdateManyWithoutCreatedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4606,6 +5124,8 @@ export type DischargeSheetUpdateWithoutMarkedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4613,9 +5133,17 @@ export type DischargeSheetUpdateWithoutMarkedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4689,6 +5217,8 @@ export type DischargeSheetUncheckedUpdateWithoutMarkedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4696,9 +5226,17 @@ export type DischargeSheetUncheckedUpdateWithoutMarkedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4770,6 +5308,8 @@ export type DischargeSheetUncheckedUpdateManyWithoutMarkedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4777,9 +5317,17 @@ export type DischargeSheetUncheckedUpdateManyWithoutMarkedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4849,6 +5397,8 @@ export type DischargeSheetUpdateWithoutFinalizedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4856,9 +5406,17 @@ export type DischargeSheetUpdateWithoutFinalizedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4932,6 +5490,8 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -4939,9 +5499,17 @@ export type DischargeSheetUncheckedUpdateWithoutFinalizedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5013,6 +5581,8 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   otNotesUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codesCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   finalBillUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  finalApprovedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deductionReceiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   settlementLetterUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roomRentAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   pharmacyAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5020,9 +5590,17 @@ export type DischargeSheetUncheckedUpdateManyWithoutFinalizedByInput = {
   consumablesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   implantsAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   instrumentsAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  anesthesiaAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  otherChargesAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   totalFinalBill?: Prisma.FloatFieldUpdateOperationsInput | number
   finalApprovedAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   finalAmount?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  copayAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByHospital?: Prisma.FloatFieldUpdateOperationsInput | number
+  collectedByMediend?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeduction?: Prisma.FloatFieldUpdateOperationsInput | number
+  axisTariffDeductionPaid?: Prisma.FloatFieldUpdateOperationsInput | number
+  actualFinalAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   deductionAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   waivedOffAmount?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -5096,6 +5674,8 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   otNotesUrl?: boolean
   codesCount?: boolean
   finalBillUrl?: boolean
+  finalApprovedUrl?: boolean
+  deductionReceiptUrl?: boolean
   settlementLetterUrl?: boolean
   roomRentAmount?: boolean
   pharmacyAmount?: boolean
@@ -5103,9 +5683,17 @@ export type DischargeSheetSelect<ExtArgs extends runtime.Types.Extensions.Intern
   consumablesAmount?: boolean
   implantsAmount?: boolean
   instrumentsAmount?: boolean
+  anesthesiaAmount?: boolean
+  otherChargesAmount?: boolean
   totalFinalBill?: boolean
   finalApprovedAmount?: boolean
   finalAmount?: boolean
+  copayAmount?: boolean
+  collectedByHospital?: boolean
+  collectedByMediend?: boolean
+  axisTariffDeduction?: boolean
+  axisTariffDeductionPaid?: boolean
+  actualFinalAmount?: boolean
   deductionAmount?: boolean
   discountAmount?: boolean
   waivedOffAmount?: boolean
@@ -5184,6 +5772,8 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   otNotesUrl?: boolean
   codesCount?: boolean
   finalBillUrl?: boolean
+  finalApprovedUrl?: boolean
+  deductionReceiptUrl?: boolean
   settlementLetterUrl?: boolean
   roomRentAmount?: boolean
   pharmacyAmount?: boolean
@@ -5191,9 +5781,17 @@ export type DischargeSheetSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   consumablesAmount?: boolean
   implantsAmount?: boolean
   instrumentsAmount?: boolean
+  anesthesiaAmount?: boolean
+  otherChargesAmount?: boolean
   totalFinalBill?: boolean
   finalApprovedAmount?: boolean
   finalAmount?: boolean
+  copayAmount?: boolean
+  collectedByHospital?: boolean
+  collectedByMediend?: boolean
+  axisTariffDeduction?: boolean
+  axisTariffDeductionPaid?: boolean
+  actualFinalAmount?: boolean
   deductionAmount?: boolean
   discountAmount?: boolean
   waivedOffAmount?: boolean
@@ -5272,6 +5870,8 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   otNotesUrl?: boolean
   codesCount?: boolean
   finalBillUrl?: boolean
+  finalApprovedUrl?: boolean
+  deductionReceiptUrl?: boolean
   settlementLetterUrl?: boolean
   roomRentAmount?: boolean
   pharmacyAmount?: boolean
@@ -5279,9 +5879,17 @@ export type DischargeSheetSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   consumablesAmount?: boolean
   implantsAmount?: boolean
   instrumentsAmount?: boolean
+  anesthesiaAmount?: boolean
+  otherChargesAmount?: boolean
   totalFinalBill?: boolean
   finalApprovedAmount?: boolean
   finalAmount?: boolean
+  copayAmount?: boolean
+  collectedByHospital?: boolean
+  collectedByMediend?: boolean
+  axisTariffDeduction?: boolean
+  axisTariffDeductionPaid?: boolean
+  actualFinalAmount?: boolean
   deductionAmount?: boolean
   discountAmount?: boolean
   waivedOffAmount?: boolean
@@ -5360,6 +5968,8 @@ export type DischargeSheetSelectScalar = {
   otNotesUrl?: boolean
   codesCount?: boolean
   finalBillUrl?: boolean
+  finalApprovedUrl?: boolean
+  deductionReceiptUrl?: boolean
   settlementLetterUrl?: boolean
   roomRentAmount?: boolean
   pharmacyAmount?: boolean
@@ -5367,9 +5977,17 @@ export type DischargeSheetSelectScalar = {
   consumablesAmount?: boolean
   implantsAmount?: boolean
   instrumentsAmount?: boolean
+  anesthesiaAmount?: boolean
+  otherChargesAmount?: boolean
   totalFinalBill?: boolean
   finalApprovedAmount?: boolean
   finalAmount?: boolean
+  copayAmount?: boolean
+  collectedByHospital?: boolean
+  collectedByMediend?: boolean
+  axisTariffDeduction?: boolean
+  axisTariffDeductionPaid?: boolean
+  actualFinalAmount?: boolean
   deductionAmount?: boolean
   discountAmount?: boolean
   waivedOffAmount?: boolean
@@ -5413,7 +6031,7 @@ export type DischargeSheetSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "packageText" | "othersText" | "otherCharges" | "packageAmount" | "staplerCharges" | "remarks" | "doctorRemarks" | "costBreakdownRemarks" | "isFinalized" | "markedById" | "markedAt" | "finalizedById" | "finalizedAt" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
+export type DischargeSheetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "kypSubmissionId" | "month" | "dischargeDate" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "tentativeAmount" | "copayPct" | "dischargeSummaryUrl" | "otNotesUrl" | "codesCount" | "finalBillUrl" | "finalApprovedUrl" | "deductionReceiptUrl" | "settlementLetterUrl" | "roomRentAmount" | "pharmacyAmount" | "investigationAmount" | "consumablesAmount" | "implantsAmount" | "instrumentsAmount" | "anesthesiaAmount" | "otherChargesAmount" | "totalFinalBill" | "finalApprovedAmount" | "finalAmount" | "copayAmount" | "collectedByHospital" | "collectedByMediend" | "axisTariffDeduction" | "axisTariffDeductionPaid" | "actualFinalAmount" | "deductionAmount" | "discountAmount" | "waivedOffAmount" | "settlementPart" | "tdsAmount" | "otherDeduction" | "netSettlementAmount" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "packageText" | "othersText" | "otherCharges" | "packageAmount" | "staplerCharges" | "remarks" | "doctorRemarks" | "costBreakdownRemarks" | "isFinalized" | "markedById" | "markedAt" | "finalizedById" | "finalizedAt" | "createdById" | "plRecordId" | "createdAt" | "updatedAt", ExtArgs["result"]["dischargeSheet"]>
 export type DischargeSheetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   kypSubmission?: boolean | Prisma.DischargeSheet$kypSubmissionArgs<ExtArgs>
@@ -5478,6 +6096,8 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     otNotesUrl: string | null
     codesCount: number | null
     finalBillUrl: string | null
+    finalApprovedUrl: string | null
+    deductionReceiptUrl: string | null
     settlementLetterUrl: string | null
     roomRentAmount: number
     pharmacyAmount: number
@@ -5485,9 +6105,17 @@ export type $DischargeSheetPayload<ExtArgs extends runtime.Types.Extensions.Inte
     consumablesAmount: number
     implantsAmount: number
     instrumentsAmount: number | null
+    anesthesiaAmount: number
+    otherChargesAmount: number
     totalFinalBill: number
     finalApprovedAmount: number
     finalAmount: number | null
+    copayAmount: number
+    collectedByHospital: number
+    collectedByMediend: number
+    axisTariffDeduction: number
+    axisTariffDeductionPaid: number
+    actualFinalAmount: number
     deductionAmount: number
     discountAmount: number
     waivedOffAmount: number
@@ -5986,6 +6614,8 @@ export interface DischargeSheetFieldRefs {
   readonly otNotesUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly codesCount: Prisma.FieldRef<"DischargeSheet", 'Int'>
   readonly finalBillUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly finalApprovedUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
+  readonly deductionReceiptUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly settlementLetterUrl: Prisma.FieldRef<"DischargeSheet", 'String'>
   readonly roomRentAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly pharmacyAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
@@ -5993,9 +6623,17 @@ export interface DischargeSheetFieldRefs {
   readonly consumablesAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly implantsAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly instrumentsAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly anesthesiaAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly otherChargesAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly totalFinalBill: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly finalApprovedAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly finalAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly copayAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly collectedByHospital: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly collectedByMediend: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly axisTariffDeduction: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly axisTariffDeductionPaid: Prisma.FieldRef<"DischargeSheet", 'Float'>
+  readonly actualFinalAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly deductionAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly discountAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>
   readonly waivedOffAmount: Prisma.FieldRef<"DischargeSheet", 'Float'>

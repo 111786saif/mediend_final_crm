@@ -22,7 +22,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { apiGet } from '@/lib/api-client'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
-import { formatLeadAgeSex } from '@/lib/lead-display'
+import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { getStatusColor } from '@/lib/lead-status-colors'
 import {
   getLeadReceiptDate,
@@ -304,7 +304,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const padTop = virtualItems.length > 0 ? virtualItems[0].start : 0
   const padBottom = virtualItems.length > 0 ? virtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end : 0
 
-  const colCount = variant === 'team-lead' ? 15 : 9
+  const colCount = variant === 'team-lead' ? 16 : 9
 
   return (
     <AuthenticatedLayout>
@@ -520,6 +520,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Treatment</th>
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">BDM</th>
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Hospital</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Doctor</th>
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stage</th>
@@ -604,6 +605,7 @@ const PipelineRow = memo(function PipelineRow({
   if (variant === 'team-lead') {
     const receipt = getLeadReceiptDate(lead)
     const dateStr = receipt ? format(receipt, 'MMM d, yyyy') : '—'
+    const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
     return (
       <tr
         className="cursor-pointer border-b border-border/60 transition-colors hover:bg-muted/50"
@@ -623,7 +625,8 @@ const PipelineRow = memo(function PipelineRow({
         <td className="max-w-[100px] truncate px-3 py-2 text-sm">{normalizedText(lead.circle, '—')}</td>
         <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{typeof lead.treatment === 'string' ? lead.treatment : '—'}</td>
         <td className="max-w-[100px] truncate px-3 py-2 text-sm">{(lead.plRecord?.bdmName ?? '').trim() || '—'}</td>
-        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{typeof lead.hospitalName === 'string' ? lead.hospitalName : '—'}</td>
+        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{hospital || '—'}</td>
+        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>
         <td className="px-3 py-2">{typeof lead.category === 'string' ? lead.category : '—'}</td>
         <td className="px-3 py-2">
           <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${statusClass}`}>{st}</span>

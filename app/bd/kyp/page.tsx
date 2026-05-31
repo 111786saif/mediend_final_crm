@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { getLatestActivityTime } from '@/lib/lead-activity'
-import { formatLeadAgeSex } from '@/lib/lead-display'
+import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useQueryClient } from '@tanstack/react-query'
@@ -341,6 +341,7 @@ export default function CaseTrackerPage() {
                         <TableHead>Treatment</TableHead>
                         <TableHead>BDM</TableHead>
                         <TableHead>Hospital</TableHead>
+                        <TableHead>Doctor</TableHead>
                         <TableHead>Stage</TableHead>
                         <TableHead className="w-[100px]" />
                       </TableRow>
@@ -348,7 +349,7 @@ export default function CaseTrackerPage() {
                     <TableBody>
                       {filteredRows.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={10} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={11} className="py-10 text-center text-muted-foreground">
                             No leads match
                           </TableCell>
                         </TableRow>
@@ -356,6 +357,7 @@ export default function CaseTrackerPage() {
                         filteredRows.map((lead) => {
                           const cfg = lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage)) : null
                           const d = lead.leadEntryDate || lead.createdDate
+                          const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
                           return (
                             <TableRow
                               key={lead.id}
@@ -378,7 +380,8 @@ export default function CaseTrackerPage() {
                               <TableCell className="max-w-[120px] truncate">
                                 {(lead.plRecord?.bdmName ?? lead.bd?.name ?? '').trim() || '—'}
                               </TableCell>
-                              <TableCell className="max-w-[160px] truncate">{lead.hospitalName}</TableCell>
+                              <TableCell className="max-w-[160px] truncate">{hospital || '—'}</TableCell>
+                              <TableCell className="max-w-[160px] truncate">{doctor || '—'}</TableCell>
                               <TableCell>
                                 {cfg ? (
                                   <Badge variant="secondary" className={cfg.className}>

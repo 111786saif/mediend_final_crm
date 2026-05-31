@@ -20,6 +20,7 @@ import { PreAuthStatus } from '@/generated/prisma/enums'
 import { useAuth } from '@/hooks/use-auth'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { getLatestActivityTime } from '@/lib/lead-activity'
+import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { canViewPhoneNumber } from '@/lib/case-permissions'
 import { getPhoneDisplay } from '@/lib/phone-utils'
 import { Input } from '@/components/ui/input'
@@ -182,6 +183,7 @@ export default function InsuranceDashboardPage() {
   const [activeTab, setActiveTab] = useState<TabKey>('kyp-review')
   const [searchQuery, setSearchQuery] = useState('')
   const [ipdMarkFilter, setIpdMarkFilter] = useState<IpdMarkFilterValue>('')
+  const [sheetFilter, setSheetFilter] = useState<'' | 'FILLED' | 'PENDING'>('')
   const [preAuthFilter, setPreAuthFilter] = useState<'all' | 'pending' | 'rejected'>('all')
 
   // ── Filter bar (persisted) ───────────────────────────────────────────────
@@ -418,6 +420,13 @@ export default function InsuranceDashboardPage() {
       result = result.filter(l => l.admissionRecord?.ipdStatus === ipdMarkFilter)
     }
 
+    // Discharge-sheet status filter (within the active month window).
+    if (sheetFilter === 'FILLED') {
+      result = result.filter(l => l.dischargeSheet?.isFinalized === true)
+    } else if (sheetFilter === 'PENDING') {
+      result = result.filter(l => !!l.dischargeSheet && l.dischargeSheet.isFinalized === false)
+    }
+
     // Priority sort: tier 3 > tier 1 > tier 2 > rest, then by latest activity
     return result.sort((a, b) => {
       const tierA = getPriorityTier(a)
@@ -425,7 +434,7 @@ export default function InsuranceDashboardPage() {
       if (tierA !== tierB) return tierB - tierA // higher tier first
       return getLatestActivityTime(b) - getLatestActivityTime(a)
     })
-  }, [scopedLeads, activeTab, searchQuery, ipdMarkFilter, preAuthFilter])
+  }, [scopedLeads, activeTab, searchQuery, ipdMarkFilter, sheetFilter, preAuthFilter])
 
   // ── Pending Hospital Suggestions ───────────────────────────────────────────
   const pendingSuggestions = useMemo(() => {
@@ -781,6 +790,19 @@ export default function InsuranceDashboardPage() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <Select
+                    value={sheetFilter === '' ? 'all' : sheetFilter}
+                    onValueChange={(v) => setSheetFilter((v === 'all' ? '' : v) as '' | 'FILLED' | 'PENDING')}
+                  >
+                    <SelectTrigger className="w-[140px] bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800">
+                      <SelectValue placeholder="Sheet" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All sheets</SelectItem>
+                      <SelectItem value="FILLED">Sheet filled</SelectItem>
+                      <SelectItem value="PENDING">Sheet pending</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <div className="relative w-full md:w-64">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
                     <Input
@@ -825,6 +847,7 @@ export default function InsuranceDashboardPage() {
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Lead Ref</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Patient</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Hospital</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Doctor</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Treatment</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Stage</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">IPD Mark</TableHead>
@@ -841,6 +864,7 @@ export default function InsuranceDashboardPage() {
                         const isDischargeUrgent = isMarkUrgent || isFillUrgent
                         const isInitialFormUrgent = tier === 2
                         const isRejected = lead.kypSubmission?.preAuthData?.approvalStatus === PreAuthStatus.REJECTED
+                        const { hospital: resolvedHospital, doctor: resolvedDoctor } = resolveLeadHospitalDoctor(lead)
 
                         const rowBg = isRejected
                           ? 'bg-red-50/60 dark:bg-red-950/20'
@@ -908,7 +932,8 @@ export default function InsuranceDashboardPage() {
                                 {canViewPhoneNumber(user) && <div className="text-sm text-gray-600 dark:text-gray-400">{lead.phoneNumber}</div>}
                               </div>
                             </TableCell>
-                            <TableCell className="text-gray-700 dark:text-gray-300">{lead.hospitalName}</TableCell>
+                            <TableCell className="text-gray-700 dark:text-gray-300">{resolvedHospital || <span className="text-gray-400">-</span>}</TableCell>
+                            <TableCell className="text-gray-700 dark:text-gray-300">{resolvedDoctor || <span className="text-gray-400">-</span>}</TableCell>
                             <TableCell className="text-gray-700 dark:text-gray-300">{lead.treatment || <span className="text-gray-400">-</span>}</TableCell>
                             <TableCell>{getStageBadge(lead.caseStage)}</TableCell>
                             <TableCell>
@@ -981,6 +1006,17 @@ export default function InsuranceDashboardPage() {
                                   >
                                     <Receipt className="w-4 h-4 mr-1" />
                                     Fill Sheet
+                                  </Button>
+                                )}
+                                {lead.dischargeSheet?.isFinalized === true && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => { e.stopPropagation(); router.push(`/patient/${lead.id}/discharge`) }}
+                                    className="border-teal-300 dark:border-teal-800 text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950"
+                                  >
+                                    <Receipt className="w-4 h-4 mr-1" />
+                                    View Sheet
                                   </Button>
                                 )}
                               </div>

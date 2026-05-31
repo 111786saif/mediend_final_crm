@@ -24,6 +24,8 @@ interface DischargeSheetViewProps {
     otNotesUrl?: string | null
     codesCount?: number | null
     finalBillUrl?: string | null
+    finalApprovedUrl?: string | null
+    deductionReceiptUrl?: string | null
     settlementLetterUrl?: string | null
     roomRentAmount?: number
     pharmacyAmount?: number
@@ -31,11 +33,19 @@ interface DischargeSheetViewProps {
     consumablesAmount?: number
     implantsAmount?: number
     instrumentsAmount?: number | null
+    anesthesiaAmount?: number
+    otherChargesAmount?: number
     otherCharges?: string | null
     packageAmount?: string | null
     staplerCharges?: string | null
     totalFinalBill?: number
     finalApprovedAmount?: number
+    copayAmount?: number
+    collectedByHospital?: number
+    collectedByMediend?: number
+    axisTariffDeduction?: number
+    axisTariffDeductionPaid?: number
+    actualFinalAmount?: number
     deductionAmount?: number
     discountAmount?: number
     waivedOffAmount?: number
@@ -72,6 +82,17 @@ function DocCell({ label, url }: { label: string; url?: string | null }) {
   )
 }
 
+const rupee = (n: number) => `₹${Number(n).toLocaleString('en-IN')}`
+
+function AmountRow({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
+  return (
+    <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
+      <span className="text-sm">{label}</span>
+      <span className={`text-sm font-medium ${highlight ? 'text-green-600' : ''}`}>{rupee(value)}</span>
+    </div>
+  )
+}
+
 export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) {
   const [creatingPNL, setCreatingPNL] = useState(false)
 
@@ -97,12 +118,19 @@ export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) 
     ...(dischargeSheet.instrumentsAmount != null && dischargeSheet.instrumentsAmount > 0
       ? [{ label: 'Instruments', value: dischargeSheet.instrumentsAmount }]
       : []),
-    { label: 'Total Final Bill', value: dischargeSheet.totalFinalBill ?? 0 },
+    ...(dischargeSheet.anesthesiaAmount != null && dischargeSheet.anesthesiaAmount > 0
+      ? [{ label: 'Anesthesia', value: dischargeSheet.anesthesiaAmount }]
+      : []),
   ]
+
+  // Other Charges: prefer the computed numeric, fall back to legacy free-text.
+  const otherChargesDisplay =
+    dischargeSheet.otherChargesAmount != null
+      ? rupee(dischargeSheet.otherChargesAmount)
+      : dischargeSheet.otherCharges ?? null
 
   const preAuth = dischargeSheet.lead?.kypSubmission?.preAuthData
   const sumInsured = preAuth?.sumInsured ?? null
-  const roomRentCap = preAuth?.roomRent ?? null
   const leadRef = dischargeSheet.lead as { surgeonName?: string | null; ipdDrName?: string | null; copay?: number | null } | undefined
   const doctorDisplay =
     dischargeSheet.doctorName ||
@@ -118,14 +146,22 @@ export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) 
     (leadCopay != null && leadCopay !== 0 ? leadCopay : null) ??
     (preAuthCopayNum != null && !Number.isNaN(preAuthCopayNum) ? preAuthCopayNum : null)
 
-  const approvalItems = [
-    { label: 'Final Approved Amount', value: dischargeSheet.finalApprovedAmount ?? 0 },
-    { label: 'Deduction Amount', value: dischargeSheet.deductionAmount ?? 0 },
-    { label: 'Discount', value: dischargeSheet.discountAmount ?? 0 },
-    { label: 'Waived Off Amount', value: dischargeSheet.waivedOffAmount ?? 0 },
-    { label: 'Other Deduction', value: dischargeSheet.otherDeduction ?? 0 },
-    { label: 'Net Amount', value: dischargeSheet.netSettlementAmount ?? 0 },
-  ]
+  // Deduction roll-ups (recompute for robustness; old rows have 0 defaults).
+  const copay = dischargeSheet.copayAmount ?? 0
+  const otherDed = dischargeSheet.otherDeduction ?? 0
+  const deductionTotal = copay + otherDed
+  const collectedHospital = dischargeSheet.collectedByHospital ?? 0
+  const collectedMediend = dischargeSheet.collectedByMediend ?? 0
+  const deductionPaidTotal = collectedHospital + collectedMediend
+  const axisDed = dischargeSheet.axisTariffDeduction ?? 0
+  const axisDedPaid = dischargeSheet.axisTariffDeductionPaid ?? 0
+  const finalApproved = dischargeSheet.finalApprovedAmount ?? 0
+  const actualFinal =
+    dischargeSheet.actualFinalAmount && dischargeSheet.actualFinalAmount > 0
+      ? dischargeSheet.actualFinalAmount
+      : dischargeSheet.netSettlementAmount && dischargeSheet.netSettlementAmount > 0
+      ? dischargeSheet.netSettlementAmount
+      : finalApproved + deductionPaidTotal + axisDedPaid
 
   return (
     <div className="space-y-6">
@@ -152,9 +188,9 @@ export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) 
             <p className="text-sm font-medium mt-1">{doctorDisplay}</p>
           </div>
           <div>
-            <Label className="text-muted-foreground">Final Amount</Label>
+            <Label className="text-muted-foreground">Final Bill Amount</Label>
             <p className="text-sm font-medium mt-1">
-              {dischargeSheet.finalAmount != null ? `₹${Number(dischargeSheet.finalAmount).toLocaleString()}` : dischargeSheet.tentativeAmount != null ? `₹${Number(dischargeSheet.tentativeAmount).toLocaleString()}` : '—'}
+              {dischargeSheet.finalAmount != null ? rupee(dischargeSheet.finalAmount) : dischargeSheet.tentativeAmount != null ? rupee(dischargeSheet.tentativeAmount) : '—'}
             </p>
           </div>
           {dischargeSheet.dischargeDate && (
@@ -176,17 +212,15 @@ export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) 
       <Card>
         <CardHeader>
           <CardTitle>B. Documents Section</CardTitle>
-          <CardDescription>Discharge Summary, OT Notes, Codes Count, Final Bill, Settlement Letter</CardDescription>
+          <CardDescription>Discharge Summary, OT Notes, Codes Count</CardDescription>
         </CardHeader>
         <CardContent className="space-y-0">
           <DocCell label="Discharge Summary" url={dischargeSheet.dischargeSummaryUrl} />
           <DocCell label="OT Notes" url={dischargeSheet.otNotesUrl} />
-          <div className="flex items-center justify-between py-2 border-b border-border">
+          <div className="flex items-center justify-between py-2 border-b border-border last:border-0">
             <span className="text-sm">Codes Count</span>
             <span className="text-sm font-medium">{dischargeSheet.codesCount ?? '—'}</span>
           </div>
-          <DocCell label="Final Bill" url={dischargeSheet.finalBillUrl} />
-          <DocCell label="Settlement Letter" url={dischargeSheet.settlementLetterUrl} />
         </CardContent>
       </Card>
 
@@ -202,20 +236,17 @@ export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) 
             <span>Amount</span>
           </div>
           {billHeads.map(({ label, value }) => (
-            <div key={label} className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
-              <span className="text-sm">{label}</span>
-              <span className="text-sm font-medium">₹{Number(value).toLocaleString()}</span>
-            </div>
+            <AmountRow key={label} label={label} value={value} />
           ))}
-          {dischargeSheet.otherCharges && (
+          {otherChargesDisplay && (
             <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
               <span className="text-sm">Other Charges</span>
-              <span className="text-sm font-medium">{dischargeSheet.otherCharges}</span>
+              <span className="text-sm font-medium">{otherChargesDisplay}</span>
             </div>
           )}
           {dischargeSheet.packageAmount && (
             <div className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
-              <span className="text-sm">Package Amount</span>
+              <span className="text-sm">Package Amount <span className="text-muted-foreground">(excluded from total)</span></span>
               <span className="text-sm font-medium">{dischargeSheet.packageAmount}</span>
             </div>
           )}
@@ -227,28 +258,67 @@ export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) 
               </span>
             </div>
           )}
+          <div className="grid grid-cols-2 gap-2 p-3 border-t bg-muted/30">
+            <span className="text-sm font-semibold">Total Final Bill</span>
+            <span className="text-sm font-semibold">{rupee(dischargeSheet.totalFinalBill ?? 0)}</span>
+          </div>
         </CardContent>
       </Card>
 
-      {/* D. Approval & Deductions Table */}
+      {/* D. Approval & Deductions */}
       <Card>
         <CardHeader>
-          <CardTitle>D. Approval & Deductions Table</CardTitle>
+          <CardTitle>D. Approval & Deductions</CardTitle>
           <CardDescription>Item | Amount</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-b">
-            <span>Item</span>
-            <span>Amount</span>
+          {/* Final Approved */}
+          <AmountRow label="Final Approved Amount" value={finalApproved} />
+          <DocCell label="Approval Letter" url={dischargeSheet.finalApprovedUrl} />
+
+          {/* Deductions */}
+          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
+            <span>Deductions</span>
+            <span />
           </div>
-          {approvalItems.map(({ label, value }) => (
-            <div key={label} className="grid grid-cols-2 gap-2 p-3 border-b border-border last:border-0">
-              <span className="text-sm">{label}</span>
-              <span className={`text-sm font-medium ${label === 'Net Amount' ? 'text-green-600' : ''}`}>
-                ₹{Number(value).toLocaleString()}
-              </span>
-            </div>
-          ))}
+          <AmountRow label="Copay" value={copay} />
+          <AmountRow label="Other Deductions" value={otherDed} />
+          <AmountRow label="Total Deductions" value={deductionTotal} />
+
+          {/* Deductions Paid */}
+          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
+            <span>Deductions Paid</span>
+            <span />
+          </div>
+          <AmountRow label="Collected by Hospital" value={collectedHospital} />
+          <AmountRow label="Collected by Mediend" value={collectedMediend} />
+          <AmountRow label="Total Paid" value={deductionPaidTotal} />
+          <DocCell label="Receipt" url={dischargeSheet.deductionReceiptUrl} />
+
+          {/* Hospital Discount & Waive Off */}
+          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
+            <span>Hospital Discount &amp; Waive Off</span>
+            <span />
+          </div>
+          <AmountRow label="Hospital Discount" value={dischargeSheet.discountAmount ?? 0} />
+          <AmountRow label="Waive Off" value={dischargeSheet.waivedOffAmount ?? 0} />
+
+          {/* Axis Tariff */}
+          <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
+            <span>Axis Tariff</span>
+            <span />
+          </div>
+          <AmountRow label="Deduction" value={axisDed} />
+          <AmountRow label="Deduction Paid" value={axisDedPaid} />
+
+          {/* Actual Final Amount */}
+          <div className="grid grid-cols-2 gap-2 p-3 border-t bg-green-50 dark:bg-green-950">
+            <span className="text-sm font-semibold">Actual Final Amount</span>
+            <span className="text-sm font-semibold text-green-700 dark:text-green-400">{rupee(actualFinal)}</span>
+          </div>
+
+          {/* Final Bill */}
+          <DocCell label="Final Bill" url={dischargeSheet.finalBillUrl} />
         </CardContent>
       </Card>
 
