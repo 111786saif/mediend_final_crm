@@ -7,7 +7,7 @@ import { apiPost } from '@/lib/api-client'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import { format } from 'date-fns'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Pencil } from 'lucide-react'
 
 interface DischargeSheetViewProps {
   dischargeSheet: {
@@ -65,6 +65,7 @@ interface DischargeSheetViewProps {
     } | null
     [key: string]: unknown
   }
+  onEdit?: () => void
 }
 
 function DocCell({ label, url }: { label: string; url?: string | null }) {
@@ -93,7 +94,7 @@ function AmountRow({ label, value, highlight }: { label: string; value: number; 
   )
 }
 
-export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) {
+export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetViewProps) {
   const [creatingPNL, setCreatingPNL] = useState(false)
 
   const handleCreatePNL = async () => {
@@ -333,16 +334,23 @@ export function DischargeSheetView({ dischargeSheet }: DischargeSheetViewProps) 
         </Card>
       )}
 
-      {!dischargeSheet.plRecord && (
+      {(onEdit || !dischargeSheet.plRecord) && (
         <Card>
           <CardHeader>
             <CardTitle>Actions</CardTitle>
-            <CardDescription>Create PNL record from this discharge sheet</CardDescription>
+            <CardDescription>Manage this discharge sheet</CardDescription>
           </CardHeader>
-          <CardContent>
-            <Button onClick={handleCreatePNL} disabled={creatingPNL}>
-              {creatingPNL ? 'Creating...' : 'Create PNL Record'}
-            </Button>
+          <CardContent className="flex gap-2 flex-wrap">
+            {onEdit && (
+              <Button variant="outline" onClick={onEdit}>
+                <Pencil className="mr-2 h-4 w-4" /> Edit Sheet
+              </Button>
+            )}
+            {!dischargeSheet.plRecord && (
+              <Button onClick={handleCreatePNL} disabled={creatingPNL}>
+                {creatingPNL ? 'Creating...' : 'Create PNL Record'}
+              </Button>
+            )}
           </CardContent>
         </Card>
       )}

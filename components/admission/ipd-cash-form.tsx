@@ -298,15 +298,6 @@ export function IPDCashForm({
       } else {
         toast.success('IPD Cash Form submitted successfully')
       }
-
-      let response;
-      if (isEditMode) {
-        response = await apiPatch<{ id: string }>(`/api/leads/${leadId}/initiate-cash`, payload)
-        toast.success('IPD Cash details updated successfully')
-      } else {
-        response = await apiPost<{ id: string }>(`/api/leads/${leadId}/initiate-cash`, payload)
-        toast.success('IPD Cash details saved successfully')
-      }
       
       onSuccess?.(response?.id)
     } catch (error) {

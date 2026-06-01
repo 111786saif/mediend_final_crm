@@ -126,14 +126,6 @@ export default function MasterDataPage() {
     setDialogOpen(true)
   }
 
-  const openEdit = (row: MasterItem) => {
-    setEditing(row)
-    setFormName(row.name)
-    setFormAddress((row as MasterItem & { address?: string }).address ?? '')
-    setFormMap((row as MasterItem & { googleMapLink?: string }).googleMapLink ?? '')
-    setDialogOpen(true)
-  }
-
   const saveMutation = useMutation({
     mutationFn: async () => {
       const type = TAB_TO_TYPE[tab]

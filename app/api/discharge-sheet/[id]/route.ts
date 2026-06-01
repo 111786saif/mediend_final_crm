@@ -158,7 +158,7 @@ export async function PATCH(
     }
 
     // Insurance and PL teams can update discharge sheets
-    if (!['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)) {
+    if (!['INSURANCE', 'INSURANCE_HEAD', 'EXECUTIVE_ASSISTANT', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)) {
       return errorResponse('Forbidden: Only Insurance / PL team can update discharge sheets', 403)
     }
 

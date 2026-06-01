@@ -255,7 +255,17 @@ export default function CaseTrackerPage() {
     let rows = decorated
     if (stageFilter !== 'all') rows = rows.filter((d) => d.bucket === stageFilter)
     if (monthFilter !== 'all') {
-      rows = rows.filter((d) => monthKeyOf(d.lead.leadEntryDate || d.lead.createdDate) === monthFilter)
+      rows = rows.filter((d) => {
+        const surgeryTs = (() => {
+          const v = d.lead.surgeryDate
+          if (!v) return Infinity
+          const t = new Date(v as string).getTime()
+          return Number.isFinite(t) ? t : Infinity
+        })()
+        const activityTs = getLatestActivityTime(d.lead)
+        const effectiveTs = Math.min(surgeryTs, activityTs) || activityTs
+        return monthKeyOf(new Date(effectiveTs).toISOString()) === monthFilter
+      })
     }
     if (bdFilter !== 'all') {
       rows = rows.filter((d) => (d.lead.bd as { id?: string } | undefined)?.id === bdFilter)

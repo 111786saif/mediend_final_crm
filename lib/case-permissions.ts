@@ -133,7 +133,7 @@ export function canMarkDischarged(user: User, lead: Lead): boolean {
 export function canEditDischargeSheet(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
-  const isInsuranceOrPL = ['INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)
+  const isInsuranceOrPL = ['INSURANCE', 'INSURANCE_HEAD', 'EXECUTIVE_ASSISTANT', 'PL_HEAD', 'PL_ENTRY', 'ADMIN'].includes(user.role)
   const stageOk = lead.caseStage === CaseStage.DISCHARGED || lead.caseStage === CaseStage.IPD_DONE
   const hasInitiateForm = !!lead.insuranceInitiateForm?.id
 
