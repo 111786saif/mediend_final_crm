@@ -18,7 +18,6 @@ import { apiGet } from '@/lib/api-client'
 import { Lead } from '@/hooks/use-leads'
 import { useState, useEffect, useMemo } from 'react'
 import { Building2, CheckCircle, CreditCard, FileText } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { cn } from '@/lib/utils'
 import {
@@ -28,6 +27,7 @@ import {
   formatPlRupee,
 } from '@/lib/pl/resolve-pl-row'
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
+import { PlOutstandingSheet } from '@/components/pl/pl-outstanding-sheet'
 
 type Preset = 'today' | 'week' | 'mtd' | 'lastMonth' | 'custom'
 
@@ -68,7 +68,6 @@ function isPendingPayout(r: Lead) {
 }
 
 export default function PLOutstandingPage() {
-  const router = useRouter()
   const [preset, setPreset] = useState<Preset>('mtd')
   const [customStart, setCustomStart] = useState('')
   const [customEnd, setCustomEnd] = useState('')
@@ -101,6 +100,9 @@ export default function PLOutstandingPage() {
   const [bdFilter, setBdFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
   const [doctorFilter, setDoctorFilter] = useState('all')
+
+  const [sheetLeadId, setSheetLeadId] = useState<string | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   const filterOptions = useMemo(() => {
     const bds = new Set<string>()
@@ -422,7 +424,7 @@ export default function PLOutstandingPage() {
                             'hover:bg-amber-50/60 dark:hover:bg-amber-950/20',
                             isPendingPayout(record) && 'bg-amber-50/25 dark:bg-amber-950/10'
                           )}
-                          onClick={() => router.push(`/pl/outstanding/${record.id}`)}
+                          onClick={() => { setSheetLeadId(record.id); setSheetOpen(true) }}
                         >
                           <TableCell className="whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                             <div className="flex items-center gap-1">
@@ -542,6 +544,12 @@ export default function PLOutstandingPage() {
               )}
             </CardContent>
           </Card>
+
+          <PlOutstandingSheet
+            open={sheetOpen}
+            onOpenChange={setSheetOpen}
+            leadId={sheetLeadId ?? ''}
+          />
         </div>
       </div>
     </ProtectedRoute>

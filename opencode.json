@@ -4,9 +4,9 @@
     "model": "commandcode/Qwen/Qwen3.7-Max",
   
     "provider": {
-      "commandcode": {
+      "commandcode2": {
         "npm": "@ai-sdk/openai-compatible",
-        "name": "Command Code",
+        "name": "Command Code 2",
         "options": {
           "baseURL": "https://api.commandcode.ai/provider/v1"
         },

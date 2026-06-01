@@ -38,7 +38,6 @@ import {
   LayoutDashboard,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { cn } from '@/lib/utils'
 import {
@@ -48,6 +47,7 @@ import {
   formatPlRupee,
 } from '@/lib/pl/resolve-pl-row'
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
+import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
@@ -148,7 +148,6 @@ function loadColVisibility(): Record<string, boolean> {
 }
 
 export default function PLLedgerPage() {
-  const router = useRouter()
   const [preset, setPreset] = useState<Preset>('mtd')
   const [customStart, setCustomStart] = useState('')
   const [customEnd, setCustomEnd] = useState('')
@@ -228,6 +227,9 @@ export default function PLLedgerPage() {
       (r: Lead) =>
         r.plRecord?.hospitalPayoutStatus === 'PENDING' || r.plRecord?.doctorPayoutStatus === 'PENDING'
     ).length || 0
+
+  const [sheetLeadId, setSheetLeadId] = useState<string | null>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   const [bdFilter, setBdFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
@@ -687,7 +689,7 @@ export default function PLLedgerPage() {
                         <TableRow
                           key={record.id}
                           className="cursor-pointer border-b border-slate-100/80 transition-colors hover:bg-teal-50/50 dark:border-slate-800/50 dark:hover:bg-teal-950/20"
-                          onClick={() => router.push(`/pl/record/${record.id}`)}
+                          onClick={() => { setSheetLeadId(record.id); setSheetOpen(true) }}
                         >
                           <TableCell className="whitespace-nowrap">
                             <div className="flex items-center gap-0.5">
@@ -912,6 +914,12 @@ export default function PLLedgerPage() {
               )}
             </CardContent>
           </Card>
+
+          <PlRecordSheet
+            open={sheetOpen}
+            onOpenChange={setSheetOpen}
+            leadId={sheetLeadId ?? ''}
+          />
         </div>
       </div>
     </ProtectedRoute>
