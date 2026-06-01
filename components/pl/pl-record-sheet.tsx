@@ -13,7 +13,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { Loader2 } from 'lucide-react'
@@ -300,7 +299,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-[65vw] sm:max-w-[65vw] p-0 gap-0 overflow-hidden">
+      <SheetContent side="right" className="w-[65vw] sm:max-w-[65vw] p-0 gap-0 flex flex-col">
         {loadingLead || !record ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
@@ -313,8 +312,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
               </SheetTitle>
               <SheetDescription>Profit &amp; loss entry details</SheetDescription>
             </SheetHeader>
-            <ScrollArea className="flex-1">
-              <div className="px-6 py-4 space-y-6">
+            <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-6">
                 <Card className="overflow-hidden border-teal-200/50 shadow-md dark:border-teal-800/40">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-gradient-to-r from-teal-500/10 to-indigo-500/10">
                     <div>
@@ -623,7 +621,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                   </div>
                 </form>
               </div>
-            </ScrollArea>
           </>
         )}
       </SheetContent>
