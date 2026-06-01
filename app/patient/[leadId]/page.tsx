@@ -219,6 +219,13 @@ interface Lead {
     } | null
   dischargeSheet?: {
     id: string
+    billAmount?: number | null
+    cashOrDedPaid?: number | null
+    collectedByHospital?: number | null
+    collectedByMediend?: number | null
+    deductionAmount?: number | null
+    discountAmount?: number | null
+    settlementPart?: number | null
   } | null
   insuranceInitiateForm?: {
     id: string
@@ -242,14 +249,19 @@ interface Lead {
     instrument?: string | null
     implantConsumables?: string | null
     notes?: string | null
-    billAmount?: number | null
-    cashOrDedPaid?: number | null
-    collectedByHospital?: number | null
-    collectedByMediend?: number | null
-    deductionAmount?: number | null
-    discountAmount?: number | null
-    settlementPart?: number | null
   } | null
+}
+
+function extractLatestAmountFromRemarks(
+  remarks: string | null | undefined,
+  key: string,
+): number | undefined {
+  if (!remarks) return undefined
+  const regex = new RegExp(`${key}:\\s*([\\d.]+)`, 'gi')
+  const matches = [...remarks.matchAll(regex)]
+  if (matches.length === 0) return undefined
+  const value = Number(matches[matches.length - 1][1])
+  return Number.isFinite(value) ? value : undefined
 }
 
 interface KYPSubmission {
@@ -603,11 +615,8 @@ export default function PatientDetailsPage() {
       return match?.suggestedDoctor ?? null
     })()
     const extractFromRemarks = (key: string): string | null => {
-      if (!lead.remarks) return null
-      const regex = new RegExp(`${key}:\\s*([\\d.]+)`, 'gi')
-      const matches = [...lead.remarks.matchAll(regex)]
-      if (matches.length === 0) return null
-      return matches[matches.length - 1][1]
+      const value = extractLatestAmountFromRemarks(lead.remarks, key)
+      return value == null ? null : String(value)
     }
       const emiItems = lead.modeOfPayment === 'EMI' ? [
         `EMI Amount: ${extractFromRemarks('EMI Amount') ?? '—'}`,
@@ -616,12 +625,14 @@ export default function PatientDetailsPage() {
         `Subvention Fee: ${extractFromRemarks('Subvention Fee') ?? '—'}`,
         `Final EMI Amount: ${extractFromRemarks('Final EMI Amount') ?? '—'}`,
       ] : []
-      const approvedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : rec?.settlementPart
-      const finalBillAmount = (lead.billAmount ?? 0) > 0 ? lead.billAmount : rec?.billAmount
-      const discountAmount = (lead.discount ?? 0) > 0 ? lead.discount : rec?.discountAmount
-      const deductionAmount = (lead.deduction ?? 0) > 0 ? lead.deduction : rec?.deductionAmount
-      const collectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : rec?.collectedByMediend
-      const collectedByHospital = (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : rec?.collectedByHospital
+      const totalCollectedAmount = extractFromRemarks('Collected')
+      const discharge = lead.dischargeSheet
+      const approvedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : discharge?.settlementPart
+      const finalBillAmount = (lead.billAmount ?? 0) > 0 ? lead.billAmount : discharge?.billAmount
+      const discountAmount = (lead.discount ?? 0) > 0 ? lead.discount : discharge?.discountAmount
+      const deductionAmount = (lead.deduction ?? 0) > 0 ? lead.deduction : discharge?.deductionAmount
+      const collectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : discharge?.collectedByMediend
+      const collectedByHospital = (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : discharge?.collectedByHospital
       const lines = [
       `*IPD Details — ${lead.patientName}*`,
       `Ref: ${lead.leadRef}`,
@@ -657,6 +668,7 @@ export default function PatientDetailsPage() {
           `Mode: ${lead.modeOfPayment ?? '—'}`,
           `Approved / Cash Package: ${fmtMoney(approvedAmount)}`,
           `Final Bill Amount: ${fmtMoney(finalBillAmount)}`,
+          totalCollectedAmount ? `Cash / Deduction Collected: ${fmtMoney(totalCollectedAmount)}` : null,
           discountAmount ? `Discount: ${fmtMoney(discountAmount)}` : null,
           lead.copay ? `Copay: ${fmtMoney(lead.copay)}` : null,
           deductionAmount ? `Deduction: ${fmtMoney(deductionAmount)}` : null,
@@ -2040,14 +2052,14 @@ export default function PatientDetailsPage() {
                   initialData={lead.admissionRecord ? {
                     ...lead.admissionRecord,
                     modeOfPayment: lead.modeOfPayment,
-                    approvedAmount: lead.settledTotal ?? lead.admissionRecord.settlementPart,
-                    finalBillAmount: lead.billAmount ?? lead.admissionRecord.billAmount,
-                    collectedAmount: lead.admissionRecord.cashOrDedPaid,
-                    collectedByMediend: lead.collectedByMediend ?? lead.admissionRecord.collectedByMediend,
-                    collectedByHospital: lead.collectedByHospital ?? lead.admissionRecord.collectedByHospital,
-                    discount: lead.discount ?? lead.admissionRecord.discountAmount,
+                    approvedAmount: (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : lead.dischargeSheet?.settlementPart,
+                    finalBillAmount: (lead.billAmount ?? 0) > 0 ? lead.billAmount : lead.dischargeSheet?.billAmount,
+                    collectedAmount: extractLatestAmountFromRemarks(lead.remarks, 'Collected'),
+                    collectedByMediend: (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : lead.dischargeSheet?.collectedByMediend,
+                    collectedByHospital: (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : lead.dischargeSheet?.collectedByHospital,
+                    discount: (lead.discount ?? 0) > 0 ? lead.discount : lead.dischargeSheet?.discountAmount,
                     copay: lead.copay,
-                    deduction: lead.deduction ?? lead.admissionRecord.deductionAmount,
+                    deduction: (lead.deduction ?? 0) > 0 ? lead.deduction : lead.dischargeSheet?.deductionAmount,
                   } : undefined}
                 isEditMode={!!lead.admissionRecord}
                 onSuccess={() => {

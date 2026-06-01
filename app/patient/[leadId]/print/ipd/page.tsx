@@ -51,6 +51,15 @@ interface Lead {
   collectedByMediend?: number | null
   collectedByHospital?: number | null
   remarks?: string | null
+  dischargeSheet?: {
+    billAmount?: number | null
+    cashOrDedPaid?: number | null
+    collectedByHospital?: number | null
+    collectedByMediend?: number | null
+    deductionAmount?: number | null
+    discountAmount?: number | null
+    settlementPart?: number | null
+  } | null
   admissionRecord?: {
     id: string
     admissionDate?: string
@@ -64,13 +73,6 @@ interface Lead {
     instrument?: string
     implantConsumables?: string
     notes?: string
-    billAmount?: number | null
-    cashOrDedPaid?: number | null
-    collectedByHospital?: number | null
-    collectedByMediend?: number | null
-    deductionAmount?: number | null
-    discountAmount?: number | null
-    settlementPart?: number | null
     ipdStatus?: string
     ipdStatusReason?: string
     ipdStatusNotes?: string
@@ -382,12 +384,14 @@ export default function IPDPrintPage() {
   })()
 
   const isCash = lead.flowType === 'CASH'
-  const cashApprovedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : rec?.settlementPart
-  const cashFinalBillAmount = (lead.billAmount && Number(lead.billAmount) > 0) ? lead.billAmount : rec?.billAmount
-  const cashDiscount = (lead.discount ?? 0) > 0 ? lead.discount : rec?.discountAmount
-  const cashDeduction = (lead.deduction ?? 0) > 0 ? lead.deduction : rec?.deductionAmount
-  const cashCollectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : rec?.collectedByMediend
-  const cashCollectedByHospital = (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : rec?.collectedByHospital
+  const cashCollectedAmount = extractFromRemarks(lead.remarks, 'Collected')
+  const discharge = lead.dischargeSheet
+  const cashApprovedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : discharge?.settlementPart
+  const cashFinalBillAmount = (lead.billAmount && Number(lead.billAmount) > 0) ? lead.billAmount : discharge?.billAmount
+  const cashDiscount = (lead.discount ?? 0) > 0 ? lead.discount : discharge?.discountAmount
+  const cashDeduction = (lead.deduction ?? 0) > 0 ? lead.deduction : discharge?.deductionAmount
+  const cashCollectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : discharge?.collectedByMediend
+  const cashCollectedByHospital = (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : discharge?.collectedByHospital
 
   /* surgery date: show newSurgeryDate if it exists (rescheduled), else surgeryDate */
   const isRescheduled =
@@ -656,6 +660,7 @@ export default function IPDPrintPage() {
                 <Field label="Mode of Payment" value={display(lead.modeOfPayment)} className="col-span-2" />
                 <Field label="Approved / Cash Package" value={formatMoneyLike(cashApprovedAmount)} />
                 <Field label="Final Bill Amount" value={formatMoneyLike(cashFinalBillAmount)} />
+                <Field label="Cash / Deduction Collected" value={formatMoneyLike(cashCollectedAmount)} />
                 <Field label="Discount" value={formatMoneyLike(cashDiscount)} />
                 <Field label="Copay" value={formatMoneyLike(lead.copay)} />
                 <Field label="Deduction" value={formatMoneyLike(cashDeduction)} />

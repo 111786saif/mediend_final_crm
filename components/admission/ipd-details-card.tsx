@@ -32,6 +32,16 @@ interface LeadForCard {
   billAmount?: number | null
   collectedByMediend?: number | null
   collectedByHospital?: number | null
+  remarks?: string | null
+  dischargeSheet?: {
+    billAmount?: number | null
+    cashOrDedPaid?: number | null
+    collectedByHospital?: number | null
+    collectedByMediend?: number | null
+    deductionAmount?: number | null
+    discountAmount?: number | null
+    settlementPart?: number | null
+  } | null
   bd?: { name?: string | null; manager?: { name?: string | null } | null } | null
   kypSubmission?: {
     insuranceType?: string | null
@@ -58,6 +68,18 @@ function fmtCurr(v: number | string | null | undefined) {
   return `₹${n.toLocaleString('en-IN')}`
 }
 
+function extractLatestAmountFromRemarks(
+  remarks: string | null | undefined,
+  key: string,
+) {
+  if (!remarks) return undefined
+  const regex = new RegExp(`${key}:\\s*([\\d.]+)`, 'gi')
+  const matches = [...remarks.matchAll(regex)]
+  if (matches.length === 0) return undefined
+  const value = Number(matches[matches.length - 1][1])
+  return Number.isFinite(value) ? value : undefined
+}
+
 export function IPDDetailsCard({ admissionRecord, lead }: IPDDetailsCardProps) {
   if (!admissionRecord) return null
 
@@ -73,12 +95,14 @@ export function IPDDetailsCard({ admissionRecord, lead }: IPDDetailsCardProps) {
   const tpa = admissionRecord.tpa ?? lead?.kypSubmission?.preAuthData?.tpa ?? '-'
   const isCash = lead?.flowType === 'CASH'
   const preAuth = lead?.kypSubmission?.preAuthData
-  const approvedAmount = (lead?.settledTotal ?? 0) > 0 ? lead?.settledTotal : admissionRecord.settlementPart
-  const finalBillAmount = (lead?.billAmount ?? 0) > 0 ? lead?.billAmount : admissionRecord.billAmount
-  const collectedByMediend = (lead?.collectedByMediend ?? 0) > 0 ? lead?.collectedByMediend : admissionRecord.collectedByMediend
-  const collectedByHospital = (lead?.collectedByHospital ?? 0) > 0 ? lead?.collectedByHospital : admissionRecord.collectedByHospital
-  const discountAmount = (lead?.discount ?? 0) > 0 ? lead?.discount : admissionRecord.discountAmount
-  const deductionAmount = (lead?.deduction ?? 0) > 0 ? lead?.deduction : admissionRecord.deductionAmount
+  const discharge = lead?.dischargeSheet
+  const approvedAmount = (lead?.settledTotal ?? 0) > 0 ? lead?.settledTotal : discharge?.settlementPart
+  const finalBillAmount = (lead?.billAmount ?? 0) > 0 ? lead?.billAmount : discharge?.billAmount
+  const collectedAmount = extractLatestAmountFromRemarks(lead?.remarks, 'Collected')
+  const collectedByMediend = (lead?.collectedByMediend ?? 0) > 0 ? lead?.collectedByMediend : discharge?.collectedByMediend
+  const collectedByHospital = (lead?.collectedByHospital ?? 0) > 0 ? lead?.collectedByHospital : discharge?.collectedByHospital
+  const discountAmount = (lead?.discount ?? 0) > 0 ? lead?.discount : discharge?.discountAmount
+  const deductionAmount = (lead?.deduction ?? 0) > 0 ? lead?.deduction : discharge?.deductionAmount
 
   return (
     <Card className="border-2 shadow-sm">
@@ -366,6 +390,12 @@ export function IPDDetailsCard({ admissionRecord, lead }: IPDDetailsCardProps) {
                       </div>
                     )}
                   </div>
+                  {(collectedAmount != null && collectedAmount > 0) && (
+                    <div>
+                      <Label className="text-[10px] uppercase text-gray-500 font-bold">Cash / Deduction Collected</Label>
+                      <p className="text-sm font-semibold">{fmtCurr(collectedAmount)}</p>
+                    </div>
+                  )}
                   <div className="grid grid-cols-2 gap-3">
                     {(collectedByMediend != null && collectedByMediend > 0) && (
                       <div>

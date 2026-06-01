@@ -88,18 +88,6 @@ function buildCashRemarks(
   return `${previous ? previous + '\n' : ''}${prefix}\nCollected: ${data.collectedAmount}\n${emiBlock}`
 }
 
-function buildAdmissionFinancials(data: z.infer<typeof initiateCashSchema>) {
-  return {
-    billAmount: data.finalBillAmount,
-    cashOrDedPaid: data.collectedAmount ?? 0,
-    collectedByHospital: data.collectedByHospital ?? 0,
-    collectedByMediend: data.collectedByMediend ?? 0,
-    deductionAmount: data.deduction ?? 0,
-    discountAmount: data.discount ?? 0,
-    settlementPart: data.approvedAmount,
-  }
-}
-
 async function notifyInsuranceHeads(leadId: string, patientName: string, leadRef: string) {
   try {
     const insuranceHeads = await prisma.user.findMany({
@@ -173,7 +161,6 @@ export async function POST(
           implantConsumables: validatedData.implantConsumables,
           notes: validatedData.notes,
           initiatedById: user.id,
-          ...buildAdmissionFinancials(validatedData),
         },
         update: {
           admissionDate: new Date(validatedData.admissionDate),
@@ -186,7 +173,6 @@ export async function POST(
           instrument: validatedData.instrument,
           implantConsumables: validatedData.implantConsumables,
           notes: validatedData.notes,
-          ...buildAdmissionFinancials(validatedData),
         },
       })
 
@@ -297,6 +283,7 @@ export async function PATCH(
     }
 
     if (
+      lead.caseStage !== CaseStage.CASH_IPD_PENDING &&
       lead.caseStage !== CaseStage.CASH_ON_HOLD &&
       lead.caseStage !== CaseStage.CASH_IPD_SUBMITTED &&
       lead.caseStage !== CaseStage.CASH_APPROVED
@@ -323,7 +310,6 @@ export async function PATCH(
           instrument: validatedData.instrument,
           implantConsumables: validatedData.implantConsumables,
           notes: validatedData.notes,
-          ...buildAdmissionFinancials(validatedData),
         },
       })
 
