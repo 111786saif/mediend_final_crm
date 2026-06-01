@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { stripDrPrefix } from '@/lib/lead-display'
 
 const PAGE_SIZE = 20
 
@@ -88,8 +89,28 @@ export async function GET(request: NextRequest) {
         ],
       })
     }
-    if (hospitalName) leadFilters.hospitalName = { contains: hospitalName, mode: 'insensitive' }
-    if (surgeonName) leadFilters.surgeonName = { contains: surgeonName, mode: 'insensitive' }
+    // Hospital/doctor dropdowns are built from the *resolved* hospital/doctor
+    // (lib/lead-display.resolveLeadHospitalDoctor) shown on each row, which may
+    // live on the lead, the discharge sheet, or ipdDrName. Match across the same
+    // fields so a dropdown selection filters consistently with what's displayed.
+    if (hospitalName) {
+      leadAnd.push({
+        OR: [
+          { hospitalName: { contains: hospitalName, mode: 'insensitive' } },
+          { dischargeSheet: { hospitalName: { contains: hospitalName, mode: 'insensitive' } } },
+        ],
+      })
+    }
+    if (surgeonName) {
+      const core = stripDrPrefix(surgeonName)
+      leadAnd.push({
+        OR: [
+          { surgeonName: { contains: core, mode: 'insensitive' } },
+          { ipdDrName: { contains: core, mode: 'insensitive' } },
+          { dischargeSheet: { doctorName: { contains: core, mode: 'insensitive' } } },
+        ],
+      })
+    }
     if (bdId) leadFilters.bdId = bdId
     if (q) {
       leadAnd.push({
@@ -118,8 +139,18 @@ export async function GET(request: NextRequest) {
         orderBy = [{ status: 'asc' }, { createdAt: 'desc' }]
         break
       case 'recent':
-      default:
         orderBy = [{ completedAt: 'desc' }, { createdAt: 'desc' }]
+        break
+      case 'discharge':
+      default:
+        // Default worklist order: most recent discharge first. Records without a
+        // discharge sheet (e.g. IPD_DONE) sink to the bottom. The id tiebreaker
+        // keeps cursor pagination deterministic.
+        orderBy = [
+          { lead: { dischargeSheet: { dischargeDate: { sort: 'desc', nulls: 'last' } } } },
+          { completedAt: 'desc' },
+          { id: 'desc' },
+        ]
         break
     }
 

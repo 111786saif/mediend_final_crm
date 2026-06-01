@@ -4,7 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
-import { CaseStage, FlowType, NotificationType } from '@/generated/prisma/client'
+import { CaseStage, FlowType, NotificationType, ATSStatus } from '@/generated/prisma/client'
 
 const initiateCashSchema = z.object({
   admissionDate: z.string(),
@@ -19,9 +19,15 @@ const initiateCashSchema = z.object({
   notes: z.string().optional(),
   quantityGrade: z.string().optional(),
   anesthesia: z.string().optional(),
+  surgeonName: z.string().optional(),
   surgeonType: z.string().optional(),
   alternateContactName: z.string().optional(),
   alternateContactNumber: z.string().optional(),
+  
+  // Treatment & ATS
+  treatmentId: z.string().optional(),
+  treatmentName: z.string().optional(),
+  atsAmount: z.number().nullable().optional(),
   
   // Cash specific fields
   modeOfPayment: z.string(),
@@ -47,12 +53,11 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = getSessionFromRequest(request)
+    const user = await getSessionFromRequest(request)
     if (!user) {
       return unauthorizedResponse()
     }
 
-    // Only BD, TEAM_LEAD, or ADMIN can initiate cash flow
     if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
       return errorResponse('Forbidden', 403)
     }
@@ -82,6 +87,15 @@ export async function POST(
       return errorResponse('Admission record already exists', 400)
     }
 
+    // ATS auto-approval logic
+    let caseStage: CaseStage = CaseStage.CASH_IPD_SUBMITTED
+    let atsStatus = ATSStatus.PENDING_REVIEW
+
+    if (validatedData.atsAmount && validatedData.atsAmount > 0 && validatedData.approvedAmount >= validatedData.atsAmount) {
+      caseStage = CaseStage.CASH_APPROVED
+      atsStatus = ATSStatus.AUTO_APPROVED
+    }
+
     // Create admission record
     const admissionRecord = await prisma.admissionRecord.create({
       data: {
@@ -104,7 +118,11 @@ export async function POST(
     await prisma.lead.update({
       where: { id },
       data: {
-        caseStage: CaseStage.CASH_IPD_SUBMITTED,
+        treatmentMasterId: validatedData.treatmentId || null,
+        treatment: validatedData.treatmentName || null,
+        atsAmount: validatedData.atsAmount || null,
+        atsStatus,
+        caseStage,
         flowType: FlowType.CASH,
         hospitalName: validatedData.admittingHospital,
         ipdAdmissionDate: new Date(validatedData.admissionDate),
@@ -119,18 +137,11 @@ export async function POST(
         discount: validatedData.discount,
         copay: validatedData.copay,
         deduction: validatedData.deduction,
-        // Mapping "Approved / Cash Package" to billAmount or settledTotal?
-        // Let's use billAmount for "Final Bill Amount" and settledTotal for "Approved Amount" as per schema comments?
-        // Schema: billAmount (Hospital bill), settledTotal (Settled total)
         billAmount: validatedData.finalBillAmount,
-        settledTotal: validatedData.approvedAmount, // "Settled (Sum of Package/Approved)"
+        settledTotal: validatedData.approvedAmount,
         collectedByMediend: validatedData.collectedByMediend ?? 0,
         collectedByHospital: validatedData.collectedByHospital ?? 0,
         
-        // We don't have dedicated fields for collectedAmount, emiAmount etc in Lead schema yet.
-        // We might need to store them in remarks or add new fields.
-        // For now, let's store extra details in remarks or assume schema update covered them (it didn't).
-        // I'll append to remarks for now to avoid data loss if fields missing.
         remarks: (lead.remarks ? lead.remarks + '\n' : '') + 
           `[CASH FLOW DETAILS]\n` +
           `Collected: ${validatedData.collectedAmount}\n` +
@@ -148,40 +159,52 @@ export async function POST(
       data: {
         leadId: id,
         fromStage: lead.caseStage,
-        toStage: CaseStage.CASH_IPD_SUBMITTED,
+        toStage: caseStage,
         changedById: user.id,
-        note: 'IPD Cash Form Submitted',
+        note: atsStatus === ATSStatus.AUTO_APPROVED 
+          ? 'IPD Cash Form Submitted - Auto-approved (above ATS)' 
+          : 'IPD Cash Form Submitted',
       },
     })
 
     // Post system message
+    const autoApproved = atsStatus === ATSStatus.AUTO_APPROVED
     await prisma.caseChatMessage.create({
       data: {
         leadId: id,
         type: 'SYSTEM',
-        content: `IPD Cash Form submitted by ${user.name}. Case is now pending Insurance review.`,
+        content: autoApproved
+          ? `IPD Cash Form submitted by ${user.name}. Auto-approved (approved amount ₹${validatedData.approvedAmount.toLocaleString('en-IN')} ≥ ATS ₹${validatedData.atsAmount?.toLocaleString('en-IN')}).`
+          : `IPD Cash Form submitted by ${user.name}. Case is now pending Insurance review.`,
       },
     })
 
-    // Notify Insurance Head(s)
-    const insuranceHeads = await prisma.user.findMany({
-      where: { role: 'INSURANCE_HEAD' },
-    })
-
-    for (const head of insuranceHeads) {
-      await prisma.notification.create({
-        data: {
-          userId: head.id,
-          type: NotificationType.INITIATED, // Reusing INITIATED type
-          title: 'Cash Case Submitted',
-          message: `New Cash IPD form submitted for ${lead.patientName} (${lead.leadRef})`,
-          relatedId: id,
-          link: `/insurance/cash-cases`, // Link to new cash cases page
-        },
+    // Notify Insurance head(s) only if NOT auto-approved
+    if (!autoApproved) {
+      const insuranceHeads = await prisma.user.findMany({
+        where: { role: 'INSURANCE_HEAD' },
       })
+
+      for (const head of insuranceHeads) {
+        await prisma.notification.create({
+          data: {
+            userId: head.id,
+            type: NotificationType.INITIATED,
+            title: 'Cash Case Submitted',
+            message: `New Cash IPD form submitted for ${lead.patientName} (${lead.leadRef})`,
+            relatedId: id,
+            link: `/insurance/cash-cases`,
+          },
+        })
+      }
     }
 
-    return successResponse(admissionRecord, 'IPD Cash details saved successfully')
+    return successResponse(
+      admissionRecord,
+      autoApproved
+        ? 'IPD Cash details saved successfully - Auto-approved (above ATS limit)'
+        : 'IPD Cash details saved successfully - Pending manual approval'
+    )
   } catch (error) {
     console.error('Error initiating cash flow:', error)
     if (error instanceof z.ZodError) {
@@ -196,12 +219,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = getSessionFromRequest(request)
+    const user = await getSessionFromRequest(request)
     if (!user) {
       return unauthorizedResponse()
     }
 
-    // Only BD, TEAM_LEAD, or ADMIN can update cash flow
     if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
       return errorResponse('Forbidden', 403)
     }
@@ -222,14 +244,18 @@ export async function PATCH(
       return errorResponse('Forbidden', 403)
     }
 
-    // Can only update if ON_HOLD
-    if (lead.caseStage !== CaseStage.CASH_ON_HOLD) {
-       // Allow update if just submitted (correction) before review? 
-       // Requirement said: "if hold --> BD can edit IPD form again and resubmit"
-       // Let's restrict to ON_HOLD for re-submission logic, or SUBMITTED for corrections.
-       if (lead.caseStage !== CaseStage.CASH_IPD_SUBMITTED) {
-           return errorResponse('Can only edit IPD Cash details when case is Submitted or On Hold', 400)
-       }
+    // Can only update if ON_HOLD or CASH_IPD_SUBMITTED
+    if (lead.caseStage !== CaseStage.CASH_ON_HOLD && lead.caseStage !== CaseStage.CASH_IPD_SUBMITTED) {
+      return errorResponse('Can only edit IPD Cash details when case is Submitted or On Hold', 400)
+    }
+
+    // ATS auto-approval logic on resubmission
+    let caseStage: CaseStage = CaseStage.CASH_IPD_SUBMITTED
+    let atsStatus = ATSStatus.PENDING_REVIEW
+
+    if (validatedData.atsAmount && validatedData.atsAmount > 0 && validatedData.approvedAmount >= validatedData.atsAmount) {
+      caseStage = CaseStage.CASH_APPROVED
+      atsStatus = ATSStatus.AUTO_APPROVED
     }
 
     // Update admission record
@@ -253,8 +279,11 @@ export async function PATCH(
     await prisma.lead.update({
       where: { id },
       data: {
-        // Set back to SUBMITTED if it was ON_HOLD
-        caseStage: CaseStage.CASH_IPD_SUBMITTED,
+        treatmentMasterId: validatedData.treatmentId || null,
+        treatment: validatedData.treatmentName || null,
+        atsAmount: validatedData.atsAmount || null,
+        atsStatus,
+        caseStage,
         hospitalName: validatedData.admittingHospital,
         ipdAdmissionDate: new Date(validatedData.admissionDate),
         quantityGrade: validatedData.quantityGrade,
@@ -273,8 +302,6 @@ export async function PATCH(
         collectedByMediend: validatedData.collectedByMediend ?? 0,
         collectedByHospital: validatedData.collectedByHospital ?? 0,
         
-        // Append remarks again? Better to replace the cash section if possible, but regex is risky.
-        // Just appending updated info.
         remarks: (lead.remarks || '') + '\n' + 
           `[UPDATED CASH FLOW DETAILS]\n` +
           `Collected: ${validatedData.collectedAmount}\n` +
@@ -287,29 +314,39 @@ export async function PATCH(
       },
     })
 
-    // Create stage history if changing from HOLD to SUBMITTED
+    // Create stage history if changing from HOLD to SUBMITTED or APPROVED
     if (lead.caseStage === CaseStage.CASH_ON_HOLD) {
-        await prisma.caseStageHistory.create({
+      await prisma.caseStageHistory.create({
         data: {
-            leadId: id,
-            fromStage: CaseStage.CASH_ON_HOLD,
-            toStage: CaseStage.CASH_IPD_SUBMITTED,
-            changedById: user.id,
-            note: 'IPD Cash Form Re-submitted',
+          leadId: id,
+          fromStage: CaseStage.CASH_ON_HOLD,
+          toStage: caseStage,
+          changedById: user.id,
+          note: atsStatus === ATSStatus.AUTO_APPROVED
+            ? 'IPD Cash Form Re-submitted - Auto-approved (above ATS)'
+            : 'IPD Cash Form Re-submitted',
         },
-        })
+      })
     }
 
     // Post system message
+    const autoApproved = atsStatus === ATSStatus.AUTO_APPROVED
     await prisma.caseChatMessage.create({
       data: {
         leadId: id,
         type: 'SYSTEM',
-        content: `IPD Cash Form updated/re-submitted by ${user.name}.`,
+        content: autoApproved
+          ? `IPD Cash Form updated by ${user.name}. Auto-approved (approved amount ₹${validatedData.approvedAmount.toLocaleString('en-IN')} ≥ ATS ₹${validatedData.atsAmount?.toLocaleString('en-IN')}).`
+          : `IPD Cash Form updated/re-submitted by ${user.name}.`,
       },
     })
 
-    return successResponse({ id }, 'IPD Cash details updated successfully')
+    return successResponse(
+      { id },
+      autoApproved
+        ? 'IPD Cash details updated successfully - Auto-approved (above ATS limit)'
+        : 'IPD Cash details updated successfully'
+    )
   } catch (error) {
     console.error('Error updating cash flow:', error)
     if (error instanceof z.ZodError) {

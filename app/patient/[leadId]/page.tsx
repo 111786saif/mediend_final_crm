@@ -2,6 +2,7 @@
 
 import { IPDCashForm } from '@/components/admission/ipd-cash-form'
 import { IPDDetailsCard } from '@/components/admission/ipd-details-card'
+import { PatientDischargeInfo } from '@/components/discharge/patient-discharge-info'
 import { IPDDetailsForm } from '@/components/admission/ipd-details-form'
 import { IPDMarkComponent } from '@/components/admission/ipd-mark-component'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
@@ -1875,18 +1876,19 @@ export default function PatientDetailsPage() {
           <IPDDetailsCard admissionRecord={lead.admissionRecord} lead={lead} />
         )}
 
-        {/* Discharge Sheet Link — hidden from BD and TL */}
+        {/* Discharge & patient info — inline read-only panel, hidden from BD and TL */}
         {lead.dischargeSheet && user?.role !== 'BD' && user?.role !== 'TEAM_LEAD' && (
           <Card>
             <CardHeader>
-              <CardTitle>Discharge Sheet</CardTitle>
+              <CardTitle>Discharge</CardTitle>
               <CardDescription>Patient discharge information</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <PatientDischargeInfo leadId={leadId} lead={lead} />
               <Button asChild variant="outline">
                 <Link href={lead.flowType === FlowType.CASH ? `/patient/${leadId}/discharge-cash` : `/patient/${leadId}/discharge`}>
                   <Receipt className="h-4 w-4 mr-2" />
-                  View Discharge Sheet
+                  {canFillDischargeForm ? 'Open Discharge Form' : 'View Discharge Sheet'}
                 </Link>
               </Button>
             </CardContent>

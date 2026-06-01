@@ -32,7 +32,7 @@ import { Pencil, Plus, Database, ExternalLink } from 'lucide-react'
 import type { MasterItem, MasterType } from '@/components/ui/master-combobox'
 import Link from 'next/link'
 
-type TabKey = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia' | 'insurance'
+type TabKey = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia' | 'insurance' | 'treatments'
 
 const TAB_TO_TYPE: Record<TabKey, MasterType> = {
   hospitals: 'hospitals',
@@ -40,6 +40,7 @@ const TAB_TO_TYPE: Record<TabKey, MasterType> = {
   tpas: 'tpas',
   anesthesia: 'anesthesia',
   insurance: 'insurance',
+  treatments: 'treatments',
 }
 
 const API_BASE: Record<MasterType, string> = {
@@ -48,6 +49,7 @@ const API_BASE: Record<MasterType, string> = {
   tpas: '/api/masters/tpas',
   anesthesia: '/api/masters/anesthesia',
   insurance: '/api/masters/insurance',
+  treatments: '/api/masters/treatments',
 }
 
 function useMasterList(tab: TabKey, search: string, enabled: boolean) {
@@ -75,6 +77,12 @@ export default function MasterDataPage() {
   const [formName, setFormName] = useState('')
   const [formAddress, setFormAddress] = useState('')
   const [formMap, setFormMap] = useState('')
+  const [formCategory, setFormCategory] = useState('')
+  const [formAtsNewDelhi, setFormAtsNewDelhi] = useState('')
+  const [formAtsMumbai, setFormAtsMumbai] = useState('')
+  const [formAtsPune, setFormAtsPune] = useState('')
+  const [formAtsHyderabad, setFormAtsHyderabad] = useState('')
+  const [formAtsBangalore, setFormAtsBangalore] = useState('')
 
   const canAccess = !!(user && hasPermission(user, 'masters:read'))
   const canWrite = !!(user && hasPermission(user, 'masters:write'))
@@ -88,6 +96,33 @@ export default function MasterDataPage() {
     setFormName('')
     setFormAddress('')
     setFormMap('')
+    setFormCategory('')
+    setFormAtsNewDelhi('')
+    setFormAtsMumbai('')
+    setFormAtsPune('')
+    setFormAtsHyderabad('')
+    setFormAtsBangalore('')
+    setDialogOpen(true)
+  }
+
+  const openEdit = (row: MasterItem & {
+    category?: string
+    atsNewDelhi?: number
+    atsMumbai?: number
+    atsPune?: number
+    atsHyderabad?: number
+    atsBangalore?: number
+  }) => {
+    setEditing(row)
+    setFormName(row.name)
+    setFormAddress(row.address || '')
+    setFormMap(row.googleMapLink || '')
+    setFormCategory(row.category || '')
+    setFormAtsNewDelhi(row.atsNewDelhi?.toString() || '')
+    setFormAtsMumbai(row.atsMumbai?.toString() || '')
+    setFormAtsPune(row.atsPune?.toString() || '')
+    setFormAtsHyderabad(row.atsHyderabad?.toString() || '')
+    setFormAtsBangalore(row.atsBangalore?.toString() || '')
     setDialogOpen(true)
   }
 
@@ -103,26 +138,38 @@ export default function MasterDataPage() {
     mutationFn: async () => {
       const type = TAB_TO_TYPE[tab]
       const base = API_BASE[type]
-      if (editing) {
+      const buildPayload = () => {
         if (type === 'hospitals') {
-          return apiPatch<{ item: MasterItem }>(`${base}/${editing.id}`, {
+          return {
             name: formName.trim(),
             address: formAddress.trim() || null,
             googleMapLink: formMap.trim() || null,
-          })
+          }
         }
-        return apiPatch<{ item: MasterItem }>(`${base}/${editing.id}`, {
-          name: formName.trim(),
-        })
+        if (type === 'treatments') {
+          return {
+            name: formName.trim(),
+            category: formCategory.trim(),
+            atsNewDelhi: formAtsNewDelhi ? Number(formAtsNewDelhi) : null,
+            atsMumbai: formAtsMumbai ? Number(formAtsMumbai) : null,
+            atsPune: formAtsPune ? Number(formAtsPune) : null,
+            atsHyderabad: formAtsHyderabad ? Number(formAtsHyderabad) : null,
+            atsBangalore: formAtsBangalore ? Number(formAtsBangalore) : null,
+          }
+        }
+        return { name: formName.trim() }
       }
-      if (type === 'hospitals') {
-        return apiPost<{ item: MasterItem }>(base, {
-          name: formName.trim(),
-          address: formAddress.trim() || null,
-          googleMapLink: formMap.trim() || null,
-        })
+      const payload = buildPayload()
+      if (editing) {
+        if (type === 'treatments') {
+          return apiPatch<{ item: MasterItem }>(`${base}/${editing.id}`, payload)
+        }
+        return apiPatch<{ item: MasterItem }>(`${base}/${editing.id}`, payload)
       }
-      return apiPost<{ item: MasterItem }>(base, { name: formName.trim() })
+      if (type === 'treatments') {
+        return apiPost<{ item: MasterItem }>(base, payload)
+      }
+      return apiPost<{ item: MasterItem }>(base, payload)
     },
     onSuccess: () => {
       toast.success(editing ? 'Updated' : 'Created')
@@ -200,15 +247,16 @@ export default function MasterDataPage() {
         </div>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
             <TabsTrigger value="hospitals">Hospitals</TabsTrigger>
             <TabsTrigger value="doctors">Doctors</TabsTrigger>
             <TabsTrigger value="tpas">TPAs</TabsTrigger>
             <TabsTrigger value="insurance">Insurance</TabsTrigger>
             <TabsTrigger value="anesthesia">Anesthesia</TabsTrigger>
+            <TabsTrigger value="treatments">Treatments</TabsTrigger>
           </TabsList>
 
-        <div className="mt-4 rounded-md border">
+        <div className="mt-4 rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -219,6 +267,16 @@ export default function MasterDataPage() {
                     <TableHead className="w-[100px]">Map</TableHead>
                   </>
                 )}
+                {tab === 'treatments' && (
+                  <>
+                    <TableHead>Category</TableHead>
+                    <TableHead className="text-right">Delhi</TableHead>
+                    <TableHead className="text-right">Mumbai</TableHead>
+                    <TableHead className="text-right">Pune</TableHead>
+                    <TableHead className="text-right">Hyderabad</TableHead>
+                    <TableHead className="text-right">Bangalore</TableHead>
+                  </>
+                )}
                 <TableHead className="w-[100px]">Status</TableHead>
                 {canWrite && <TableHead className="w-[140px]">Actions</TableHead>}
               </TableRow>
@@ -226,12 +284,12 @@ export default function MasterDataPage() {
             <TableBody>
               {isLoading && (
                 <TableRow>
-                  <TableCell colSpan={tab === 'hospitals' ? 5 : 3}>Loading…</TableCell>
+                  <TableCell colSpan={10}>Loading…</TableCell>
                 </TableRow>
               )}
               {!isLoading && items.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={tab === 'hospitals' ? 5 : 3} className="text-muted-foreground">
+                  <TableCell colSpan={10} className="text-muted-foreground">
                     No rows. {canWrite ? 'Add one or adjust search.' : ''}
                   </TableCell>
                 </TableRow>
@@ -262,6 +320,16 @@ export default function MasterDataPage() {
                         </TableCell>
                       </>
                     )}
+                    {tab === 'treatments' && (
+                      <>
+                        <TableCell className="text-muted-foreground text-sm">{row.category || '—'}</TableCell>
+                        <TableCell className="text-right font-mono text-sm">{row.atsNewDelhi != null ? `₹${row.atsNewDelhi.toLocaleString('en-IN')}` : '—'}</TableCell>
+                        <TableCell className="text-right font-mono text-sm">{row.atsMumbai != null ? `₹${row.atsMumbai.toLocaleString('en-IN')}` : '—'}</TableCell>
+                        <TableCell className="text-right font-mono text-sm">{row.atsPune != null ? `₹${row.atsPune.toLocaleString('en-IN')}` : '—'}</TableCell>
+                        <TableCell className="text-right font-mono text-sm">{row.atsHyderabad != null ? `₹${row.atsHyderabad.toLocaleString('en-IN')}` : '—'}</TableCell>
+                        <TableCell className="text-right font-mono text-sm">{row.atsBangalore != null ? `₹${row.atsBangalore.toLocaleString('en-IN')}` : '—'}</TableCell>
+                      </>
+                    )}
                     <TableCell>
                       <Badge variant={row.isActive ? 'default' : 'secondary'}>
                         {row.isActive ? 'Active' : 'Inactive'}
@@ -273,7 +341,7 @@ export default function MasterDataPage() {
                           type="button"
                           variant="outline"
                           size="sm"
-                          onClick={() => openEdit(row)}
+                          onClick={() => openEdit(row as any)}
                         >
                           <Pencil className="size-3" />
                           Edit
@@ -285,7 +353,7 @@ export default function MasterDataPage() {
                             size="sm"
                             className="text-destructive"
                             onClick={() => {
-                              if (confirm(`Deactivate “${row.name}”?`)) {
+                              if (confirm(`Deactivate "${row.name}"?`)) {
                                 deactivateMutation.mutate(row.id)
                               }
                             }}
@@ -303,7 +371,7 @@ export default function MasterDataPage() {
         </Tabs>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogContent className="max-w-lg">
+          <DialogContent className="max-w-3xl">
             <DialogHeader>
               <DialogTitle>{editing ? 'Edit' : 'Add'} entry</DialogTitle>
             </DialogHeader>
@@ -337,6 +405,79 @@ export default function MasterDataPage() {
                       onChange={(e) => setFormMap(e.target.value)}
                       placeholder="https://maps.google.com/..."
                     />
+                  </div>
+                </>
+              )}
+              {tab === 'treatments' && (
+                <>
+                  <div>
+                    <Label htmlFor="md-category">Category *</Label>
+                    <Input
+                      id="md-category"
+                      value={formCategory}
+                      onChange={(e) => setFormCategory(e.target.value)}
+                      placeholder="e.g. Cosmetic, Proctology, Vascular"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">ATS (Average Ticket Size) by City</Label>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                      <div>
+                        <Label htmlFor="ats-delhi" className="text-xs text-muted-foreground">New Delhi (₹)</Label>
+                        <Input
+                          id="ats-delhi"
+                          type="number"
+                          min={0}
+                          value={formAtsNewDelhi}
+                          onChange={(e) => setFormAtsNewDelhi(e.target.value)}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="ats-mumbai" className="text-xs text-muted-foreground">Mumbai (₹)</Label>
+                        <Input
+                          id="ats-mumbai"
+                          type="number"
+                          min={0}
+                          value={formAtsMumbai}
+                          onChange={(e) => setFormAtsMumbai(e.target.value)}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="ats-pune" className="text-xs text-muted-foreground">Pune (₹)</Label>
+                        <Input
+                          id="ats-pune"
+                          type="number"
+                          min={0}
+                          value={formAtsPune}
+                          onChange={(e) => setFormAtsPune(e.target.value)}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="ats-hyd" className="text-xs text-muted-foreground">Hyderabad (₹)</Label>
+                        <Input
+                          id="ats-hyd"
+                          type="number"
+                          min={0}
+                          value={formAtsHyderabad}
+                          onChange={(e) => setFormAtsHyderabad(e.target.value)}
+                          placeholder="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="ats-blr" className="text-xs text-muted-foreground">Bangalore (₹)</Label>
+                        <Input
+                          id="ats-blr"
+                          type="number"
+                          min={0}
+                          value={formAtsBangalore}
+                          onChange={(e) => setFormAtsBangalore(e.target.value)}
+                          placeholder="0"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </>
               )}

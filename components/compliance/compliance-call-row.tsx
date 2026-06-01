@@ -37,6 +37,15 @@ const STATUS_ACCENT: Record<ComplianceCallStatus, string> = {
   CALLBACK_SCHEDULED: "border-l-sky-400",
 }
 
+// Full-row tint so processed (completed) records stand out at a glance.
+const STATUS_BG: Record<ComplianceCallStatus, string> = {
+  PENDING: "",
+  COMPLETED: "bg-emerald-50/70 dark:bg-emerald-900/10",
+  DID_NOT_PICK: "",
+  WRONG_NUMBER: "",
+  CALLBACK_SCHEDULED: "bg-sky-50/60 dark:bg-sky-900/10",
+}
+
 interface Props {
   call: ComplianceCall
   onEdit: (call: ComplianceCall) => void
@@ -76,6 +85,7 @@ export function ComplianceCallRow({ call, onEdit }: Props) {
       className={cn(
         "border-l-4 px-4 py-3 hover:bg-muted/40 transition cursor-pointer",
         STATUS_ACCENT[call.status],
+        STATUS_BG[call.status],
       )}
     >
       <div className="flex items-start gap-3">

@@ -474,6 +474,7 @@ export const ModelName = {
   TPAMaster: 'TPAMaster',
   AnesthesiaMaster: 'AnesthesiaMaster',
   InsuranceMaster: 'InsuranceMaster',
+  TreatmentMaster: 'TreatmentMaster',
   AppSetting: 'AppSetting',
   ITProject: 'ITProject',
   ITFreelancer: 'ITFreelancer',
@@ -501,7 +502,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -7165,6 +7166,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TreatmentMaster: {
+      payload: Prisma.$TreatmentMasterPayload<ExtArgs>
+      fields: Prisma.TreatmentMasterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TreatmentMasterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TreatmentMasterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>
+        }
+        findFirst: {
+          args: Prisma.TreatmentMasterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TreatmentMasterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>
+        }
+        findMany: {
+          args: Prisma.TreatmentMasterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>[]
+        }
+        create: {
+          args: Prisma.TreatmentMasterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>
+        }
+        createMany: {
+          args: Prisma.TreatmentMasterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TreatmentMasterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>[]
+        }
+        delete: {
+          args: Prisma.TreatmentMasterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>
+        }
+        update: {
+          args: Prisma.TreatmentMasterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>
+        }
+        deleteMany: {
+          args: Prisma.TreatmentMasterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TreatmentMasterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TreatmentMasterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>[]
+        }
+        upsert: {
+          args: Prisma.TreatmentMasterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TreatmentMasterPayload>
+        }
+        aggregate: {
+          args: Prisma.TreatmentMasterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTreatmentMaster>
+        }
+        groupBy: {
+          args: Prisma.TreatmentMasterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TreatmentMasterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TreatmentMasterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TreatmentMasterCountAggregateOutputType> | number
+        }
+      }
+    }
     AppSetting: {
       payload: Prisma.$AppSettingPayload<ExtArgs>
       fields: Prisma.AppSettingFieldRefs
@@ -8138,6 +8213,9 @@ export const LeadScalarFieldEnum = {
   circle: 'circle',
   category: 'category',
   treatment: 'treatment',
+  treatmentMasterId: 'treatmentMasterId',
+  atsAmount: 'atsAmount',
+  atsStatus: 'atsStatus',
   anesthesia: 'anesthesia',
   quantityGrade: 'quantityGrade',
   surgeonName: 'surgeonName',
@@ -9846,6 +9924,23 @@ export const InsuranceMasterScalarFieldEnum = {
 export type InsuranceMasterScalarFieldEnum = (typeof InsuranceMasterScalarFieldEnum)[keyof typeof InsuranceMasterScalarFieldEnum]
 
 
+export const TreatmentMasterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  atsNewDelhi: 'atsNewDelhi',
+  atsMumbai: 'atsMumbai',
+  atsPune: 'atsPune',
+  atsHyderabad: 'atsHyderabad',
+  atsBangalore: 'atsBangalore',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TreatmentMasterScalarFieldEnum = (typeof TreatmentMasterScalarFieldEnum)[keyof typeof TreatmentMasterScalarFieldEnum]
+
+
 export const AppSettingScalarFieldEnum = {
   key: 'key',
   value: 'value',
@@ -10183,20 +10278,6 @@ export type ListEnumCaseStageFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 
 
 /**
- * Reference to a field of type 'FlowType'
- */
-export type EnumFlowTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlowType'>
-    
-
-
-/**
- * Reference to a field of type 'FlowType[]'
- */
-export type ListEnumFlowTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlowType[]'>
-    
-
-
-/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -10207,6 +10288,34 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ATSStatus'
+ */
+export type EnumATSStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ATSStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ATSStatus[]'
+ */
+export type ListEnumATSStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ATSStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FlowType'
+ */
+export type EnumFlowTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlowType'>
+    
+
+
+/**
+ * Reference to a field of type 'FlowType[]'
+ */
+export type ListEnumFlowTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlowType[]'>
     
 
 
@@ -11185,6 +11294,7 @@ export type GlobalOmitConfig = {
   tPAMaster?: Prisma.TPAMasterOmit
   anesthesiaMaster?: Prisma.AnesthesiaMasterOmit
   insuranceMaster?: Prisma.InsuranceMasterOmit
+  treatmentMaster?: Prisma.TreatmentMasterOmit
   appSetting?: Prisma.AppSettingOmit
   iTProject?: Prisma.ITProjectOmit
   iTFreelancer?: Prisma.ITFreelancerOmit

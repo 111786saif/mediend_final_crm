@@ -40,6 +40,9 @@ interface LeadWithStage {
   circle?: string | null
   hospitalName: string
   treatment?: string
+  atsAmount?: number | null
+  atsStatus?: string | null
+  settledTotal?: number | null
   caseStage: CaseStage
   flowType: FlowType
   createdDate: string
@@ -273,20 +276,27 @@ export default function InsuranceCashCasesPage() {
                   </div>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                  <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Lead Ref</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Patient</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Hospital</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">Treatment</TableHead>
+                        <TableHead className="font-bold text-gray-700 dark:text-gray-300">ATS Status</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Stage</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Last Modified</TableHead>
                         <TableHead className="font-bold text-gray-700 dark:text-gray-300">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredLeads.map((lead) => (
+                      {filteredLeads.map((lead) => {
+                        const atsPercentDiff = lead.atsAmount && lead.settledTotal 
+                          ? ((lead.settledTotal - lead.atsAmount) / lead.atsAmount * 100)
+                          : null
+                        
+                        return (
                         <TableRow
                           key={lead.id}
                           className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900"
@@ -304,6 +314,41 @@ export default function InsuranceCashCasesPage() {
                             </div>
                           </TableCell>
                           <TableCell className="text-gray-700 dark:text-gray-300">{lead.hospitalName}</TableCell>
+                          <TableCell className="text-gray-700 dark:text-gray-300">
+                            {lead.treatment ? (
+                              <span className="text-sm">{lead.treatment}</span>
+                            ) : (
+                              <span className="text-gray-400 text-sm">-</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {lead.atsAmount && lead.settledTotal ? (
+                              <div className="flex flex-col gap-1">
+                                {atsPercentDiff !== null && atsPercentDiff >= 0 ? (
+                                  <Badge className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800 text-xs">
+                                    <CheckCircle2 className="w-3 h-3 mr-1" />
+                                    Auto-Approved
+                                  </Badge>
+                                ) : (
+                                  <Badge className="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 text-xs">
+                                    <AlertTriangle className="w-3 h-3 mr-1" />
+                                    Needs Approval
+                                  </Badge>
+                                )}
+                                <div className="text-xs text-gray-600 dark:text-gray-400">
+                                  <div>Approved: ₹{lead.settledTotal?.toLocaleString()}</div>
+                                  <div>ATS: ₹{lead.atsAmount?.toLocaleString()}</div>
+                                  {atsPercentDiff !== null && (
+                                    <div className={atsPercentDiff >= 0 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}>
+                                      {atsPercentDiff >= 0 ? '+' : ''}{atsPercentDiff.toFixed(1)}%
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ) : (
+                              <span className="text-gray-400 text-sm">-</span>
+                            )}
+                          </TableCell>
                           <TableCell>{getStageBadge(lead.caseStage)}</TableCell>
                           <TableCell className="text-gray-600 dark:text-gray-400">
                             {(() => {
@@ -346,7 +391,8 @@ export default function InsuranceCashCasesPage() {
                             </div>
                           </TableCell>
                         </TableRow>
-                      ))}
+                        )
+                      })}
                     </TableBody>
                   </Table>
                 </div>

@@ -9,8 +9,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { apiPost, apiPatch } from '@/lib/api-client'
 import { toast } from 'sonner'
-import { User, MapPin, Stethoscope, Building2, Wallet, Calendar, Package, ChevronDown, ChevronUp } from 'lucide-react'
+import { User, MapPin, Stethoscope, Building2, Wallet, Calendar, Package, ChevronDown, ChevronUp, CheckCircle, AlertTriangle } from 'lucide-react'
 import { MasterCombobox } from '@/components/ui/master-combobox'
+import type { MasterItem } from '@/components/ui/master-combobox'
 
 const DOCTOR_TYPES = [
   'Plastic',
@@ -118,55 +119,45 @@ export function IPDCashForm({
   onCancel,
 }: IPDCashFormProps) {
   const [formData, setFormData] = useState({
-    // Patient info (prefilled, editable)
     patientName: patientName || '',
-    age: age != null ? String(age) : '',
+    age: age || '',
     sex: sex || '',
     circle: circle || '',
-    // Treatment (prefilled, editable)
+    alternateContact: alternateContact || '',
     category: category || '',
     treatment: treatment || '',
-    quantityGrade: quantityGrade,
-    anesthesia: anesthesia,
-    // Surgeon (prefilled, editable)
+    quantityGrade: quantityGrade || '',
+    anesthesia: anesthesia || '',
     surgeonName: surgeonName || '',
-    surgeonType: surgeonType,
-    // Hospital (prefilled, editable)
+    surgeonType: surgeonType || '',
     hospitalName: hospitalName || '',
-    // Alternate contact (editable)
-    alternateContactName: attendantName,
-    alternateContactNumber: alternateNumber,
-    admissionDate: '',
-    admissionTime: '',
-    surgeryDate: '',
-    surgeryTime: '',
-    hospitalAddress: '',
-    googleMapLocation: '',
-    // Implants & Consumables
-    implantText: '',
-    implantAmount: '',
-    instrumentText: '',
-    instrumentAmount: '',
-    consumablesText: '',
-    consumablesAmount: '',
-    notes: '',
-    // Cash Flow Financials
-    modeOfPayment: 'Cash', // Cash or EMI
-    discount: '',
-    copay: '',
-    deduction: '',
-    approvedAmount: '', // Approved / Cash Package
-    collectedAmount: '', // Cash / Deduction Collected
-    collectedByMediend: '',
-    collectedByHospital: '',
-    finalBillAmount: '',
-    // EMI specific
-    emiAmount: '',
-    processingFee: '',
-    gst: '',
-    subventionFee: '', // Auto-calculated
-    finalEmiAmount: '',
+    admissionDate: admissionDate || '',
+    admissionTime: admissionTime || '',
+    surgeryDate: surgeryDate || '',
+    surgeryTime: surgeryTime || '',
+    modeOfPayment: modeOfPayment || 'Cash',
+    packageAmount: packageAmount || '',
+    finalBillAmount: finalBillAmount || '',
+    collectedAmount: collectedAmount || '',
+    collectedByMediend: collectedByMediend || '',
+    collectedByHospital: collectedByHospital || '',
+    discount: discount || '',
+    copay: copay || '',
+    deduction: deduction || '',
+    emiAmount: emiAmount || '',
+    processingFee: processingFee || '',
+    gst: gst || '',
+    implantText: implantText || '',
+    implantAmount: implantAmount || '',
+    instrumentText: instrumentText || '',
+    instrumentAmount: instrumentAmount || '',
+    consumablesText: consumablesText || '',
+    consumablesAmount: consumablesAmount || '',
+    notes: notes || '',
   })
+
+  const [selectedTreatment, setSelectedTreatment] = useState<MasterItem | null>(null)
+  const [atsAmount, setAtsAmount] = useState<number>(0)
 
   // Pre-fill data if in edit mode
   useEffect(() => {
@@ -252,40 +243,60 @@ export function IPDCashForm({
         formData.instrumentText && `Instruments: ${formData.instrumentText}${formData.instrumentAmount ? ` (₹${formData.instrumentAmount})` : ''}`,
       ].filter(Boolean).join('\n') || undefined
 
+      let response;
       const payload = {
-        admissionDate: formData.admissionDate,
-        admissionTime: formData.admissionTime.trim(),
-        admittingHospital: formData.hospitalName.trim() || 'N/A',
-        hospitalAddress: formData.hospitalAddress.trim() || 'N/A',
-        googleMapLocation: formData.googleMapLocation.trim() || undefined,
-        surgeryDate: formData.surgeryDate,
-        surgeryTime: formData.surgeryTime.trim(),
-        instrument,
-        implantConsumables,
-        notes: formData.notes.trim() || undefined,
-        quantityGrade: formData.quantityGrade?.trim() || undefined,
-        anesthesia: formData.anesthesia?.trim() || undefined,
-        surgeonType: formData.surgeonType?.trim() || undefined,
-        alternateContactName: formData.alternateContactName?.trim() || undefined,
-        alternateContactNumber: formData.alternateContactNumber?.trim() || undefined,
-        
-        // Cash specific fields
+        patientName: formData.patientName,
+        age: formData.age ? parseInt(formData.age) : null,
+        sex: formData.sex || null,
+        circle: formData.circle || null,
+        alternateContact: formData.alternateContact || null,
+        category: formData.category || null,
+        treatment: formData.treatment || null,
+        treatmentId: selectedTreatment?.id || null,
+        atsAmount: atsAmount > 0 ? atsAmount : null,
+        quantityGrade: formData.quantityGrade || null,
+        anesthesia: formData.anesthesia || null,
+        surgeonName: formData.surgeonName || null,
+        surgeonType: formData.surgeonType || null,
+        hospitalName: formData.hospitalName || null,
+        admissionDate: formData.admissionDate ? new Date(formData.admissionDate).toISOString() : null,
+        admissionTime: formData.admissionTime || null,
+        surgeryDate: formData.surgeryDate ? new Date(formData.surgeryDate).toISOString() : null,
+        surgeryTime: formData.surgeryTime || null,
         modeOfPayment: formData.modeOfPayment,
-        discount: parseFloat(formData.discount) || 0,
-        copay: parseFloat(formData.copay) || 0,
-        deduction: parseFloat(formData.deduction) || 0,
-        approvedAmount: parseFloat(formData.approvedAmount) || 0,
-        collectedAmount: parseFloat(formData.collectedAmount) || 0,
-        collectedByMediend: parseFloat(formData.collectedByMediend) || 0,
-        collectedByHospital: parseFloat(formData.collectedByHospital) || 0,
-        finalBillAmount: parseFloat(formData.finalBillAmount) || 0,
-        
-        // EMI specific
-        emiAmount: parseFloat(formData.emiAmount) || 0,
-        processingFee: parseFloat(formData.processingFee) || 0,
-        gst: parseFloat(formData.gst) || 0,
-        subventionFee: parseFloat(formData.subventionFee) || 0,
-        finalEmiAmount: parseFloat(formData.finalEmiAmount) || 0,
+        packageAmount: formData.packageAmount ? parseFloat(formData.packageAmount) : null,
+        finalBillAmount: formData.finalBillAmount ? parseFloat(formData.finalBillAmount) : null,
+        collectedAmount: formData.collectedAmount ? parseFloat(formData.collectedAmount) : null,
+        collectedByMediend: formData.collectedByMediend ? parseFloat(formData.collectedByMediend) : null,
+        collectedByHospital: formData.collectedByHospital ? parseFloat(formData.collectedByHospital) : null,
+        discount: formData.discount ? parseFloat(formData.discount) : null,
+        copay: formData.copay ? parseFloat(formData.copay) : null,
+        deduction: formData.deduction ? parseFloat(formData.deduction) : null,
+        emiAmount: formData.emiAmount ? parseFloat(formData.emiAmount) : null,
+        processingFee: formData.processingFee ? parseFloat(formData.processingFee) : null,
+        gst: formData.gst ? parseFloat(formData.gst) : null,
+        implantText: formData.implantText || null,
+        implantAmount: formData.implantAmount ? parseFloat(formData.implantAmount) : null,
+        instrumentText: formData.instrumentText || null,
+        instrumentAmount: formData.instrumentAmount ? parseFloat(formData.instrumentAmount) : null,
+        consumablesText: formData.consumablesText || null,
+        consumablesAmount: formData.consumablesAmount ? parseFloat(formData.consumablesAmount) : null,
+        notes: formData.notes || null,
+      }
+
+      if (isEditMode) {
+        response = await apiPatch<{ id: string }>(`/api/leads/${leadId}/initiate-cash`, payload)
+      } else {
+        response = await apiPost<{ id: string }>(`/api/leads/${leadId}/initiate-cash`, payload)
+      }
+
+      const approvedAmount = parseFloat(formData.approvedAmount) || 0
+      if (atsAmount > 0 && approvedAmount >= atsAmount) {
+        toast.success('IPD Cash Form submitted - Auto-approved (above ATS limit)')
+      } else if (atsAmount > 0) {
+        toast.success(`IPD Cash Form submitted - Pending approval (below ATS by ₹${(atsAmount - approvedAmount).toLocaleString('en-IN')})`)
+      } else {
+        toast.success('IPD Cash Form submitted successfully')
       }
 
       let response;
@@ -414,14 +425,25 @@ export function IPDCashForm({
                 className="mt-1"
               />
             </div>
-            <div>
-              <Label htmlFor="treatment">Treatment Name</Label>
-              <Input
+            <div className="col-span-2">
+              <MasterCombobox
                 id="treatment"
+                label="Treatment"
+                masterType="treatments"
                 value={formData.treatment}
-                onChange={(e) => set('treatment', e.target.value)}
-                placeholder="Treatment name"
-                className="mt-1"
+                onChange={(v) => set('treatment', v)}
+                onItemSelect={(item: MasterItem) => {
+                  setSelectedTreatment(item)
+                  const circleLower = formData.circle.toLowerCase()
+                  let ats = 0
+                  if (circleLower.includes('delhi')) ats = item.atsNewDelhi || 0
+                  else if (circleLower.includes('mumbai')) ats = item.atsMumbai || 0
+                  else if (circleLower.includes('pune')) ats = item.atsPune || 0
+                  else if (circleLower.includes('hyderabad')) ats = item.atsHyderabad || 0
+                  else if (circleLower.includes('bangalore')) ats = item.atsBangalore || 0
+                  setAtsAmount(ats)
+                }}
+                placeholder="Select treatment"
               />
             </div>
           </div>
@@ -550,8 +572,32 @@ export function IPDCashForm({
             </Select>
           </div>
 
+          {atsAmount > 0 && (
+            <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">ATS Limit ({formData.circle || 'selected location'})</span>
+                <span className="text-base font-bold text-blue-600">₹ {atsAmount.toLocaleString('en-IN')}</span>
+              </div>
+              {formData.approvedAmount && (
+                <div className="mt-2 pt-2 border-t border-blue-200 dark:border-blue-800">
+                  {parseFloat(formData.approvedAmount) >= atsAmount ? (
+                    <p className="text-green-600 text-sm flex items-center gap-1">
+                      <CheckCircle className="h-4 w-4" />
+                      Above ATS - Will auto-approve
+                    </p>
+                  ) : (
+                    <p className="text-orange-600 text-sm flex items-center gap-1">
+                      <AlertTriangle className="h-4 w-4" />
+                      Below ATS by ₹{(atsAmount - parseFloat(formData.approvedAmount)).toLocaleString('en-IN')} - Requires approval
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Common Financial Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             <div>
               <Label htmlFor="approvedAmount">Approved / Cash Package <span className="text-destructive">*</span></Label>
               <Input

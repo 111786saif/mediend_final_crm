@@ -492,6 +492,23 @@ services:
     volumes:
       - ./scripts:/scripts:ro
 
+  # One-off: seed TreatmentMaster with ATS data from prisma/seed-treatments.ts
+  # Requires migrations applied so TreatmentMaster table exists.
+  # Usage: docker compose --profile tools run --rm seed-treatments
+  seed-treatments:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "prisma/seed-treatments.ts"]
+
 volumes:
   pgdata:
   uptime-kuma-data:

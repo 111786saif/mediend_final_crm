@@ -141,6 +141,7 @@ export const ModelName = {
   TPAMaster: 'TPAMaster',
   AnesthesiaMaster: 'AnesthesiaMaster',
   InsuranceMaster: 'InsuranceMaster',
+  TreatmentMaster: 'TreatmentMaster',
   AppSetting: 'AppSetting',
   ITProject: 'ITProject',
   ITFreelancer: 'ITFreelancer',
@@ -217,6 +218,9 @@ export const LeadScalarFieldEnum = {
   circle: 'circle',
   category: 'category',
   treatment: 'treatment',
+  treatmentMasterId: 'treatmentMasterId',
+  atsAmount: 'atsAmount',
+  atsStatus: 'atsStatus',
   anesthesia: 'anesthesia',
   quantityGrade: 'quantityGrade',
   surgeonName: 'surgeonName',
@@ -1923,6 +1927,23 @@ export const InsuranceMasterScalarFieldEnum = {
 } as const
 
 export type InsuranceMasterScalarFieldEnum = (typeof InsuranceMasterScalarFieldEnum)[keyof typeof InsuranceMasterScalarFieldEnum]
+
+
+export const TreatmentMasterScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  atsNewDelhi: 'atsNewDelhi',
+  atsMumbai: 'atsMumbai',
+  atsPune: 'atsPune',
+  atsHyderabad: 'atsHyderabad',
+  atsBangalore: 'atsBangalore',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TreatmentMasterScalarFieldEnum = (typeof TreatmentMasterScalarFieldEnum)[keyof typeof TreatmentMasterScalarFieldEnum]
 
 
 export const AppSettingScalarFieldEnum = {

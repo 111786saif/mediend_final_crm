@@ -458,6 +458,15 @@ export const PreAuthStatus = {
 export type PreAuthStatus = (typeof PreAuthStatus)[keyof typeof PreAuthStatus]
 
 
+export const ATSStatus = {
+  ABOVE_ATS: 'ABOVE_ATS',
+  BELOW_ATS: 'BELOW_ATS',
+  NO_ATS: 'NO_ATS'
+} as const
+
+export type ATSStatus = (typeof ATSStatus)[keyof typeof ATSStatus]
+
+
 export const EmployeeStatus = {
   ACTIVE: 'ACTIVE',
   ON_PIP: 'ON_PIP',

@@ -344,6 +344,12 @@ enum PreAuthStatus {
   ON_HOLD
 }
 
+enum ATSStatus {
+  ABOVE_ATS
+  BELOW_ATS
+  NO_ATS
+}
+
 enum EmployeeStatus {
   ACTIVE
   ON_PIP
@@ -564,6 +570,10 @@ model Lead {
   circle              String // From MySQL (e.g. "PUNE", "Mumbai")
   category            String?
   treatment           String?
+  treatmentMasterId   String?
+  treatmentMaster     TreatmentMaster? @relation(fields: [treatmentMasterId], references: [id])
+  atsAmount           Float? // Snapshot of ATS at case creation
+  atsStatus           ATSStatus? @default(NO_ATS)
   anesthesia          String?
   quantityGrade       String?
   surgeonName         String?
@@ -3005,6 +3015,26 @@ model InsuranceMaster {
   updatedAt DateTime @updatedAt
 
   @@index([name])
+  @@index([isActive])
+}
+
+model TreatmentMaster {
+  id           String   @id @default(cuid())
+  name         String   @unique
+  category     String
+  atsNewDelhi  Float?
+  atsMumbai    Float?
+  atsPune      Float?
+  atsHyderabad Float?
+  atsBangalore Float?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  leads Lead[]
+
+  @@index([name])
+  @@index([category])
   @@index([isActive])
 }
 

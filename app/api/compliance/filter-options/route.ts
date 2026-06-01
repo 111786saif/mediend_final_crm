@@ -3,11 +3,39 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import {
+  resolveLeadHospitalDoctor,
+  normalizeDoctorKey,
+  normalizeHospitalKey,
+} from '@/lib/lead-display'
 
 /**
- * Returns distinct hospital names, surgeon names, and BD users that appear on
- * leads with at least one ComplianceCall. Drives the search/filter dropdowns
- * on the compliance officer dashboard.
+ * Collapses raw name variants into one canonical label per normalized key.
+ * Picks the longest variant as the representative (so "Dr. Singla" wins over
+ * "singla"), keeping the dropdown consistent and free of case/whitespace/"Dr."
+ * duplicates.
+ */
+function dedupeByKey(values: (string | null)[], keyFn: (v: string) => string): string[] {
+  const byKey = new Map<string, string>()
+  for (const raw of values) {
+    if (!raw) continue
+    const label = raw.trim()
+    if (!label) continue
+    const key = keyFn(label)
+    if (!key) continue
+    const existing = byKey.get(key)
+    if (!existing || label.length > existing.length) byKey.set(key, label)
+  }
+  const collator = new Intl.Collator(undefined, { sensitivity: 'base' })
+  return [...byKey.values()].sort((a, b) => collator.compare(a, b))
+}
+
+/**
+ * Returns distinct hospital names, doctor names, and BD users that appear on
+ * leads with at least one ComplianceCall. Drives the filter dropdowns on the
+ * compliance officer dashboard. Hospital/doctor are built from the *resolved*
+ * values (resolveLeadHospitalDoctor) so the dropdown matches what each row
+ * shows, then de-duplicated/standardized via normalization keys.
  */
 export async function GET(request: NextRequest) {
   try {
@@ -20,24 +48,27 @@ export async function GET(request: NextRequest) {
       select: {
         hospitalName: true,
         surgeonName: true,
+        ipdDrName: true,
         bdId: true,
         bd: { select: { id: true, name: true } },
+        dischargeSheet: { select: { doctorName: true, hospitalName: true } },
       },
     })
 
-    const hospitalSet = new Set<string>()
-    const surgeonSet = new Set<string>()
+    const hospitalValues: (string | null)[] = []
+    const doctorValues: (string | null)[] = []
     const bdMap = new Map<string, string>()
 
     for (const l of leads) {
-      if (l.hospitalName) hospitalSet.add(l.hospitalName.trim())
-      if (l.surgeonName) surgeonSet.add(l.surgeonName.trim())
+      const { hospital, doctor } = resolveLeadHospitalDoctor(l)
+      hospitalValues.push(hospital)
+      doctorValues.push(doctor)
       if (l.bd?.id && l.bd.name) bdMap.set(l.bd.id, l.bd.name)
     }
 
     const collator = new Intl.Collator(undefined, { sensitivity: 'base' })
-    const hospitals = [...hospitalSet].filter(Boolean).sort((a, b) => collator.compare(a, b))
-    const surgeons = [...surgeonSet].filter(Boolean).sort((a, b) => collator.compare(a, b))
+    const hospitals = dedupeByKey(hospitalValues, normalizeHospitalKey)
+    const surgeons = dedupeByKey(doctorValues, normalizeDoctorKey)
     const bds = [...bdMap.entries()]
       .map(([id, name]) => ({ id, name }))
       .sort((a, b) => collator.compare(a.name, b.name))

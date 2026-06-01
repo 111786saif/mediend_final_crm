@@ -1,3 +1,34 @@
+/**
+ * Removes a leading "Dr"/"Dr." honorific (and surrounding whitespace) from a
+ * doctor name so variants like "Dr. Singla", "dr singla", "Singla" share a core.
+ */
+export function stripDrPrefix(raw: string): string {
+  return raw.replace(/^\s*dr\.?\s+/i, '').trim()
+}
+
+/**
+ * Dedupe key for a doctor name: lowercase, no "Dr." honorific, punctuation
+ * collapsed to single spaces. So "Dr Singla", "dr. singla", "Dr.  Singla" all
+ * map to the same key. Genuinely different names ("Sahil Singla" vs "Singla")
+ * stay distinct — we do not guess aliases.
+ */
+export function normalizeDoctorKey(raw: string): string {
+  return stripDrPrefix(raw)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+/**
+ * Dedupe key for a hospital name: lowercase, punctuation/whitespace collapsed.
+ */
+export function normalizeHospitalKey(raw: string): string {
+  return raw
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
 export function formatLeadAgeSex(lead: { age?: number | null; sex?: string | null }): string {
   const age = lead.age
   const sex = typeof lead.sex === 'string' ? lead.sex.trim() : ''

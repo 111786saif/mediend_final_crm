@@ -10,7 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 
-export type MasterType = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia' | 'insurance'
+export type MasterType = 'hospitals' | 'doctors' | 'tpas' | 'anesthesia' | 'insurance' | 'treatments'
 
 const MASTER_PATH: Record<MasterType, string> = {
   hospitals: '/api/masters/hospitals',
@@ -18,13 +18,20 @@ const MASTER_PATH: Record<MasterType, string> = {
   tpas: '/api/masters/tpas',
   anesthesia: '/api/masters/anesthesia',
   insurance: '/api/masters/insurance',
+  treatments: '/api/masters/treatments',
 }
 
 export interface MasterItem {
   id: string
   name: string
+  category?: string | null
   address?: string | null
   googleMapLink?: string | null
+  atsNewDelhi?: number | null
+  atsMumbai?: number | null
+  atsPune?: number | null
+  atsHyderabad?: number | null
+  atsBangalore?: number | null
   isActive: boolean
 }
 

@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
+import { PatientDischargeInfo } from "@/components/discharge/patient-discharge-info"
 import {
   CONCERN_CATEGORIES,
   CONCERN_CATEGORY_LABEL,
@@ -250,6 +251,15 @@ export function ComplianceFeedbackDrawer({ call, open, onOpenChange }: Props) {
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+          <details className="rounded-lg border bg-card/40" open>
+            <summary className="cursor-pointer px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Patient &amp; discharge info
+            </summary>
+            <div className="border-t px-3 py-3">
+              <PatientDischargeInfo leadId={call.leadId} />
+            </div>
+          </details>
+
           <Section title="Status & rating">
             <div className="grid sm:grid-cols-2 gap-3">
               <div>

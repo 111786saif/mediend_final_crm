@@ -14,7 +14,7 @@ export type ComplianceCallStatus =
   | "WRONG_NUMBER"
   | "CALLBACK_SCHEDULED"
 
-export type ComplianceCallSort = "recent" | "highest" | "lowest" | "pending"
+export type ComplianceCallSort = "recent" | "highest" | "lowest" | "pending" | "discharge"
 
 export type SatisfactionLevel = "SATISFIED" | "NEUTRAL" | "NOT_SATISFIED"
 
@@ -133,6 +133,8 @@ export interface ComplianceStats {
   pending: number
   totalCompleted: number
   averageRating: number | null
+  dischargesThisMonth: number
+  dischargesToday: number
 }
 
 interface ComplianceCallsPage {

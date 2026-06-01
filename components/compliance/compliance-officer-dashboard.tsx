@@ -101,7 +101,7 @@ export function ComplianceOfficerDashboard() {
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useComplianceCalls({
       status: statusFilter === "ALL" ? null : statusFilter,
-      sort: statusFilter === "ALL" ? "pending" : "recent",
+      sort: "discharge",
       caseStart: caseRange?.start ?? null,
       caseEnd: caseRange?.end ?? null,
       q: debouncedSearch || null,
@@ -161,6 +161,13 @@ export function ComplianceOfficerDashboard() {
           </SelectContent>
         </Select>
       </header>
+
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <StatCard label="Discharges this month" value={stats?.dischargesThisMonth ?? 0} />
+        <StatCard label="Today's discharges" value={stats?.dischargesToday ?? 0} />
+        <StatCard label="Pending calls" value={stats?.pending ?? 0} />
+        <StatCard label="Completed calls" value={stats?.totalCompleted ?? 0} />
+      </div>
 
       <div className="space-y-2">
         <div className="relative">
@@ -312,6 +319,15 @@ export function ComplianceOfficerDashboard() {
         open={!!editing}
         onOpenChange={(o) => !o && setEditing(null)}
       />
+    </div>
+  )
+}
+
+function StatCard({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-xl border bg-card px-3 py-2.5">
+      <p className="text-2xl font-semibold tabular-nums">{value}</p>
+      <p className="text-xs text-muted-foreground leading-tight">{label}</p>
     </div>
   )
 }
