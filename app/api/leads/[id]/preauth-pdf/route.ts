@@ -405,7 +405,7 @@ export async function GET(
           (h) => h.hospitalName?.trim() === preAuth.requestedHospitalName?.trim()
         )
       : null
-    const doctorName = matchedHospital?.suggestedDoctor ?? lead.ipdDrName ?? null
+    const doctorName = lead.ipdDrName ?? matchedHospital?.suggestedDoctor ?? null
     const selectedRoomRent = getSelectedHospitalRoomRent(
       suggestedHospitals,
       preAuth.requestedHospitalName,

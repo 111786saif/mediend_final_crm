@@ -44,6 +44,13 @@ interface Lead {
   attendantContactNo?: string | null
   instrument?: string | null
   consumables?: string | null
+  settledTotal?: number | null
+  discount?: number | null
+  copay?: number | null
+  deduction?: number | null
+  collectedByMediend?: number | null
+  collectedByHospital?: number | null
+  remarks?: string | null
   admissionRecord?: {
     id: string
     admissionDate?: string
@@ -156,6 +163,14 @@ function formatCopay(v: string | number | null | undefined): string {
 function humanizeEnum(v: string | null | undefined): string {
   if (!v?.trim()) return EM_DASH
   return v.replace(/_/g, ' ')
+}
+
+function extractFromRemarks(remarks: string | null | undefined, key: string): string | null {
+  if (!remarks) return null
+  const regex = new RegExp(`${key}:\\s*([\\d.]+)`, 'gi')
+  const matches = [...remarks.matchAll(regex)]
+  if (matches.length === 0) return null
+  return matches[matches.length - 1][1]
 }
 
 
@@ -333,7 +348,7 @@ export default function IPDPrintPage() {
     const match = hospitals.find(h => h.hospitalName?.trim() === requested)
     return match?.suggestedDoctor ?? null
   })()
-  const surgeonDisplay = display(preAuthDoctorName || lead.ipdDrName || lead.surgeonName)
+  const surgeonDisplay = display(lead.ipdDrName || preAuthDoctorName || lead.surgeonName)
   const initForm = lead.insuranceInitiateForm
   const tentativeBillFromHospital = (() => {
     const hospitals = pre?.suggestedHospitals
@@ -350,6 +365,8 @@ export default function IPDPrintPage() {
     if (lead.billAmount && Number(lead.billAmount) > 0) return formatMoneyLike(lead.billAmount)
     return EM_DASH
   })()
+
+  const isCash = lead.flowType === 'CASH'
 
   /* surgery date: show newSurgeryDate if it exists (rescheduled), else surgeryDate */
   const isRescheduled =
@@ -560,26 +577,28 @@ export default function IPDPrintPage() {
             </InfoSection>
           </div>
 
-          {/* Insurance */}
-          <InfoSection title="Insurance">
-            <div className="grid grid-cols-2 sm:grid-cols-3 print:grid-cols-4 gap-x-6 gap-y-4">
-              <Field
-                label="Insurance company"
-                value={insuranceNameDisplay}
-                className="col-span-2"
-              />
-              <Field label="Type" value={insuranceTypeDisplay} />
-              <Field label="TPA" value={tpaDisplay} />
-              <Field label="Sum insured" value={sumInsuredDisplay} />
-              <Field label="Balance insured" value={balanceInsuredDisplay} />
-              <Field label="Copay" value={copayDisplay} />
-              <Field label="Capping" value={cappingDisplay} />
-              <Field label="Room rent" value={roomRentDisplay} />
-            </div>
-          </InfoSection>
+          {/* Insurance (Insurance cases only) */}
+          {!isCash && (
+            <InfoSection title="Insurance">
+              <div className="grid grid-cols-2 sm:grid-cols-3 print:grid-cols-4 gap-x-6 gap-y-4">
+                <Field
+                  label="Insurance company"
+                  value={insuranceNameDisplay}
+                  className="col-span-2"
+                />
+                <Field label="Type" value={insuranceTypeDisplay} />
+                <Field label="TPA" value={tpaDisplay} />
+                <Field label="Sum insured" value={sumInsuredDisplay} />
+                <Field label="Balance insured" value={balanceInsuredDisplay} />
+                <Field label="Copay" value={copayDisplay} />
+                <Field label="Capping" value={cappingDisplay} />
+                <Field label="Room rent" value={roomRentDisplay} />
+              </div>
+            </InfoSection>
+          )}
 
-          {/* Pre-authorization */}
-          {pre && (
+          {/* Pre-authorization (Insurance cases only) */}
+          {!isCash && pre && (
             <InfoSection title="Pre-authorization">
               <div className="grid grid-cols-2 sm:grid-cols-3 print:grid-cols-4 gap-x-6 gap-y-4">
                 <Field
@@ -604,6 +623,32 @@ export default function IPDPrintPage() {
                     value={<span className="whitespace-pre-wrap">{pre.diseaseDescription}</span>}
                     className="col-span-2 sm:col-span-3 print:col-span-4"
                   />
+                )}
+              </div>
+            </InfoSection>
+          )}
+
+          {/* Payment (Cash cases only) */}
+          {isCash && (
+            <InfoSection title="Payment">
+              <div className="grid grid-cols-2 sm:grid-cols-3 print:grid-cols-4 gap-x-6 gap-y-4">
+                <Field label="Mode of Payment" value={display(lead.modeOfPayment)} className="col-span-2" />
+                <Field label="Approved / Cash Package" value={formatMoneyLike(lead.settledTotal)} />
+                <Field label="Final Bill Amount" value={formatMoneyLike(lead.billAmount)} />
+                <Field label="Discount" value={formatMoneyLike(lead.discount)} />
+                <Field label="Copay" value={formatMoneyLike(lead.copay)} />
+                <Field label="Deduction" value={formatMoneyLike(lead.deduction)} />
+                <Field label="Collected by Mediend" value={formatMoneyLike(lead.collectedByMediend)} />
+                <Field label="Collected by Hospital" value={formatMoneyLike(lead.collectedByHospital)} />
+                {lead.modeOfPayment === 'EMI' && (
+                  <>
+                    <div className="col-span-full border-t border-dashed border-slate-200 pt-3 mt-1" />
+                    <Field label="EMI Amount" value={display(extractFromRemarks(lead.remarks, 'EMI Amount'))} />
+                    <Field label="Processing Fee" value={display(extractFromRemarks(lead.remarks, 'Processing Fee'))} />
+                    <Field label="GST" value={display(extractFromRemarks(lead.remarks, 'GST'))} />
+                    <Field label="Subvention Fee" value={display(extractFromRemarks(lead.remarks, 'Subvention Fee'))} />
+                    <Field label="Final EMI Amount" value={display(extractFromRemarks(lead.remarks, 'Final EMI Amount'))} />
+                  </>
                 )}
               </div>
             </InfoSection>

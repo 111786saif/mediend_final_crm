@@ -130,6 +130,13 @@ interface Lead {
   flowType?: FlowType | null
   collectedByMediend?: number | null
   collectedByHospital?: number | null
+  modeOfPayment?: string | null
+  billAmount?: number | null
+  settledTotal?: number | null
+  discount?: number | null
+  copay?: number | null
+  deduction?: number | null
+  remarks?: string | null
   bd?: { name?: string; manager?: { name?: string } | null } | null
   leadEntryDate?: string | null
   assignedDate?: string | null
@@ -571,6 +578,7 @@ export default function PatientDetailsPage() {
     if (!lead) return
     const rec = lead.admissionRecord
     const pre = lead.kypSubmission?.preAuthData
+    const isCash = lead.flowType === 'CASH'
     const fmtDate = (d?: string | null) => {
       if (!d) return '—'
       try { return format(new Date(d), 'dd MMM yyyy') } catch { return d }
@@ -580,6 +588,27 @@ export default function PatientDetailsPage() {
       const n = typeof v === 'number' ? v : Number(String(v).replace(/[₹,\s]/g, ''))
       return isNaN(n) ? String(v) : `₹${n.toLocaleString('en-IN')}`
     }
+    const preAuthDoctorName = (() => {
+      const hospitals = pre?.suggestedHospitals
+      const requested = pre?.requestedHospitalName?.trim()
+      if (!hospitals?.length || !requested) return null
+      const match = hospitals.find(h => h.hospitalName?.trim() === requested)
+      return match?.suggestedDoctor ?? null
+    })()
+    const extractFromRemarks = (key: string): string | null => {
+      if (!lead.remarks) return null
+      const regex = new RegExp(`${key}:\\s*([\\d.]+)`, 'gi')
+      const matches = [...lead.remarks.matchAll(regex)]
+      if (matches.length === 0) return null
+      return matches[matches.length - 1][1]
+    }
+    const emiItems = lead.modeOfPayment === 'EMI' ? [
+      `EMI Amount: ${extractFromRemarks('EMI Amount') ?? '—'}`,
+      `Processing Fee: ${extractFromRemarks('Processing Fee') ?? '—'}`,
+      `GST: ${extractFromRemarks('GST') ?? '—'}`,
+      `Subvention Fee: ${extractFromRemarks('Subvention Fee') ?? '—'}`,
+      `Final EMI Amount: ${extractFromRemarks('Final EMI Amount') ?? '—'}`,
+    ] : []
     const lines = [
       `*IPD Details — ${lead.patientName}*`,
       `Ref: ${lead.leadRef}`,
@@ -602,7 +631,7 @@ export default function PatientDetailsPage() {
       lead.anesthesia ? `Anaesthesia: ${lead.anesthesia}` : null,
       '',
       `*Surgeon*`,
-      `Name: ${lead.ipdDrName || lead.surgeonName || '—'}`,
+      `Name: ${lead.ipdDrName || preAuthDoctorName || lead.surgeonName || '—'}`,
       lead.surgeonType ? `Type: ${lead.surgeonType}` : null,
       '',
       `*Hospital*`,
@@ -610,14 +639,27 @@ export default function PatientDetailsPage() {
       rec?.hospitalAddress ? `Address: ${rec.hospitalAddress}` : null,
       rec?.googleMapLocation ? `Maps: ${rec.googleMapLocation}` : null,
       '',
-      `*Insurance*`,
-      `Company: ${lead.insuranceName ?? '—'}`,
-      `Type: ${lead.kypSubmission?.insuranceType ?? lead.insuranceType ?? '—'}`,
-      `TPA: ${pre?.tpa || rec?.tpa || '—'}`,
-      `Sum Insured: ${fmtMoney(pre?.sumInsured)}`,
-      `Copay: ${pre?.copay != null ? `${pre.copay}%` : '—'}`,
-      `Capping: ${fmtMoney(pre?.capping)}`,
-      `Room Type: ${pre?.requestedRoomType ?? '—'}`,
+      ...(isCash ? [
+        `*Payment*`,
+        `Mode: ${lead.modeOfPayment ?? '—'}`,
+        `Approved / Cash Package: ${fmtMoney(lead.settledTotal)}`,
+        `Final Bill Amount: ${fmtMoney(lead.billAmount)}`,
+        lead.discount ? `Discount: ${fmtMoney(lead.discount)}` : null,
+        lead.copay ? `Copay: ${fmtMoney(lead.copay)}` : null,
+        lead.deduction ? `Deduction: ${fmtMoney(lead.deduction)}` : null,
+        `Collected by Mediend: ${fmtMoney(lead.collectedByMediend)}`,
+        `Collected by Hospital: ${fmtMoney(lead.collectedByHospital)}`,
+        ...emiItems,
+      ] : [
+        `*Insurance*`,
+        `Company: ${lead.insuranceName ?? '—'}`,
+        `Type: ${lead.kypSubmission?.insuranceType ?? lead.insuranceType ?? '—'}`,
+        `TPA: ${pre?.tpa || rec?.tpa || '—'}`,
+        `Sum Insured: ${fmtMoney(pre?.sumInsured)}`,
+        `Copay: ${pre?.copay != null ? `${pre.copay}%` : '—'}`,
+        `Capping: ${fmtMoney(pre?.capping)}`,
+        `Room Type: ${pre?.requestedRoomType ?? '—'}`,
+      ]),
       '',
       rec?.instrument ? `*Instruments:* ${rec.instrument}` : null,
       rec?.implantConsumables ? `*Implants/Consumables:* ${rec.implantConsumables}` : null,
