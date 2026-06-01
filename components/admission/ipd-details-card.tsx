@@ -73,6 +73,12 @@ export function IPDDetailsCard({ admissionRecord, lead }: IPDDetailsCardProps) {
   const tpa = admissionRecord.tpa ?? lead?.kypSubmission?.preAuthData?.tpa ?? '-'
   const isCash = lead?.flowType === 'CASH'
   const preAuth = lead?.kypSubmission?.preAuthData
+  const approvedAmount = (lead?.settledTotal ?? 0) > 0 ? lead?.settledTotal : admissionRecord.settlementPart
+  const finalBillAmount = (lead?.billAmount ?? 0) > 0 ? lead?.billAmount : admissionRecord.billAmount
+  const collectedByMediend = (lead?.collectedByMediend ?? 0) > 0 ? lead?.collectedByMediend : admissionRecord.collectedByMediend
+  const collectedByHospital = (lead?.collectedByHospital ?? 0) > 0 ? lead?.collectedByHospital : admissionRecord.collectedByHospital
+  const discountAmount = (lead?.discount ?? 0) > 0 ? lead?.discount : admissionRecord.discountAmount
+  const deductionAmount = (lead?.deduction ?? 0) > 0 ? lead?.deduction : admissionRecord.deductionAmount
 
   return (
     <Card className="border-2 shadow-sm">
@@ -347,37 +353,37 @@ export function IPDDetailsCard({ admissionRecord, lead }: IPDDetailsCardProps) {
                   </div>
                 )}
                 <div className="grid grid-cols-2 gap-3">
-                  {(lead.settledTotal != null && lead.settledTotal > 0) && (
-                    <div>
-                      <Label className="text-[10px] uppercase text-gray-500 font-bold">Approved / Package</Label>
-                      <p className="text-sm font-semibold">{fmtCurr(lead.settledTotal)}</p>
-                    </div>
-                  )}
-                  {(lead.billAmount != null && lead.billAmount > 0) && (
-                    <div>
-                      <Label className="text-[10px] uppercase text-gray-500 font-bold">Final Bill Amount</Label>
-                      <p className="text-sm font-semibold">{fmtCurr(lead.billAmount)}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {(lead.collectedByMediend != null && lead.collectedByMediend > 0) && (
-                    <div>
-                      <Label className="text-[10px] uppercase text-gray-500 font-bold">Collected by Mediend</Label>
-                      <p className="text-sm font-semibold">{fmtCurr(lead.collectedByMediend)}</p>
-                    </div>
-                  )}
-                  {(lead.collectedByHospital != null && lead.collectedByHospital > 0) && (
-                    <div>
-                      <Label className="text-[10px] uppercase text-gray-500 font-bold">Collected by Hospital</Label>
-                      <p className="text-sm font-semibold">{fmtCurr(lead.collectedByHospital)}</p>
-                    </div>
-                  )}
-                </div>
-                {(lead.discount != null && lead.discount > 0) && (
+                    {(approvedAmount != null && approvedAmount > 0) && (
+                      <div>
+                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Approved / Package</Label>
+                        <p className="text-sm font-semibold">{fmtCurr(approvedAmount)}</p>
+                      </div>
+                    )}
+                    {(finalBillAmount != null && finalBillAmount > 0) && (
+                      <div>
+                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Final Bill Amount</Label>
+                        <p className="text-sm font-semibold">{fmtCurr(finalBillAmount)}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {(collectedByMediend != null && collectedByMediend > 0) && (
+                      <div>
+                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Collected by Mediend</Label>
+                        <p className="text-sm font-semibold">{fmtCurr(collectedByMediend)}</p>
+                      </div>
+                    )}
+                    {(collectedByHospital != null && collectedByHospital > 0) && (
+                      <div>
+                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Collected by Hospital</Label>
+                        <p className="text-sm font-semibold">{fmtCurr(collectedByHospital)}</p>
+                      </div>
+                    )}
+                  </div>
+                {(discountAmount != null && discountAmount > 0) && (
                   <div>
                     <Label className="text-[10px] uppercase text-gray-500 font-bold">Discount</Label>
-                    <p className="text-sm font-semibold">{fmtCurr(lead.discount)}</p>
+                    <p className="text-sm font-semibold">{fmtCurr(discountAmount)}</p>
                   </div>
                 )}
                 {(lead.copay != null && lead.copay > 0) && (
@@ -386,10 +392,10 @@ export function IPDDetailsCard({ admissionRecord, lead }: IPDDetailsCardProps) {
                     <p className="text-sm font-semibold">{fmtCurr(lead.copay)}</p>
                   </div>
                 )}
-                {(lead.deduction != null && lead.deduction > 0) && (
+                {(deductionAmount != null && deductionAmount > 0) && (
                   <div>
                     <Label className="text-[10px] uppercase text-gray-500 font-bold">Deduction</Label>
-                    <p className="text-sm font-semibold">{fmtCurr(lead.deduction)}</p>
+                    <p className="text-sm font-semibold">{fmtCurr(deductionAmount)}</p>
                   </div>
                 )}
               </div>

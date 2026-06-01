@@ -64,6 +64,13 @@ interface Lead {
     instrument?: string
     implantConsumables?: string
     notes?: string
+    billAmount?: number | null
+    cashOrDedPaid?: number | null
+    collectedByHospital?: number | null
+    collectedByMediend?: number | null
+    deductionAmount?: number | null
+    discountAmount?: number | null
+    settlementPart?: number | null
     ipdStatus?: string
     ipdStatusReason?: string
     ipdStatusNotes?: string
@@ -266,7 +273,7 @@ function NotFound({ message, onBack }: { message: string; onBack: () => void }) 
 /* ─── Page ──────────────────────────────────────────────────────────────── */
 
 export default function IPDPrintPage() {
-  const { user } = useAuth()
+  const { user, isLoading: isAuthLoading } = useAuth()
   const router = useRouter()
   const params = useParams()
   const leadId = params.leadId as string
@@ -278,7 +285,7 @@ export default function IPDPrintPage() {
   const { data: lead, isLoading } = useQuery<Lead | null>({
     queryKey: ['lead', leadId],
     queryFn: () => apiGet<Lead>(`/api/leads/${leadId}`),
-    enabled: !!leadId && !!isAuthorized,
+    enabled: !!leadId && !isAuthLoading && !!isAuthorized,
   })
 
   // Set document title for the PDF filename. Declared before any early return
@@ -289,6 +296,14 @@ export default function IPDPrintPage() {
     document.title = `${lead.patientName} - ${format(new Date(), 'dd MMM yyyy')}`
     return () => { document.title = prev }
   }, [lead?.patientName])
+
+  if (isAuthLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <p className="text-sm text-slate-400 animate-pulse">Checking access...</p>
+      </div>
+    )
+  }
 
   if (!isAuthorized) return <AccessDenied onBack={() => router.back()} />
 
@@ -367,6 +382,12 @@ export default function IPDPrintPage() {
   })()
 
   const isCash = lead.flowType === 'CASH'
+  const cashApprovedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : rec?.settlementPart
+  const cashFinalBillAmount = (lead.billAmount && Number(lead.billAmount) > 0) ? lead.billAmount : rec?.billAmount
+  const cashDiscount = (lead.discount ?? 0) > 0 ? lead.discount : rec?.discountAmount
+  const cashDeduction = (lead.deduction ?? 0) > 0 ? lead.deduction : rec?.deductionAmount
+  const cashCollectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : rec?.collectedByMediend
+  const cashCollectedByHospital = (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : rec?.collectedByHospital
 
   /* surgery date: show newSurgeryDate if it exists (rescheduled), else surgeryDate */
   const isRescheduled =
@@ -633,13 +654,13 @@ export default function IPDPrintPage() {
             <InfoSection title="Payment">
               <div className="grid grid-cols-2 sm:grid-cols-3 print:grid-cols-4 gap-x-6 gap-y-4">
                 <Field label="Mode of Payment" value={display(lead.modeOfPayment)} className="col-span-2" />
-                <Field label="Approved / Cash Package" value={formatMoneyLike(lead.settledTotal)} />
-                <Field label="Final Bill Amount" value={formatMoneyLike(lead.billAmount)} />
-                <Field label="Discount" value={formatMoneyLike(lead.discount)} />
+                <Field label="Approved / Cash Package" value={formatMoneyLike(cashApprovedAmount)} />
+                <Field label="Final Bill Amount" value={formatMoneyLike(cashFinalBillAmount)} />
+                <Field label="Discount" value={formatMoneyLike(cashDiscount)} />
                 <Field label="Copay" value={formatMoneyLike(lead.copay)} />
-                <Field label="Deduction" value={formatMoneyLike(lead.deduction)} />
-                <Field label="Collected by Mediend" value={formatMoneyLike(lead.collectedByMediend)} />
-                <Field label="Collected by Hospital" value={formatMoneyLike(lead.collectedByHospital)} />
+                <Field label="Deduction" value={formatMoneyLike(cashDeduction)} />
+                <Field label="Collected by Mediend" value={formatMoneyLike(cashCollectedByMediend)} />
+                <Field label="Collected by Hospital" value={formatMoneyLike(cashCollectedByHospital)} />
                 {lead.modeOfPayment === 'EMI' && (
                   <>
                     <div className="col-span-full border-t border-dashed border-slate-200 pt-3 mt-1" />

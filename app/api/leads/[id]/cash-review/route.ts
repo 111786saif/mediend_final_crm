@@ -10,6 +10,12 @@ const reviewSchema = z.object({
   reason: z.string().optional(),
 })
 
+function resolveLeadAtsStatus(atsAmount: number | null | undefined, approvedAmount: number | null | undefined) {
+  if (atsAmount == null || atsAmount <= 0) return ATSStatus.NO_ATS
+  if ((approvedAmount ?? 0) >= atsAmount) return ATSStatus.ABOVE_ATS
+  return ATSStatus.BELOW_ATS
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -60,74 +66,75 @@ export async function POST(
     }
 
     const newStage = action === 'APPROVE' ? CaseStage.CASH_APPROVED : CaseStage.CASH_ON_HOLD
-    const newAtsStatus = action === 'APPROVE' ? ATSStatus.APPROVED : ATSStatus.ON_HOLD
+    const newAtsStatus = resolveLeadAtsStatus(lead.atsAmount, lead.settledTotal)
     const note = reason || (action === 'APPROVE' ? 'Cash case approved' : 'Cash case put on hold')
 
-    // Update lead stage and ATS status
-    await prisma.lead.update({
-      where: { id },
-      data: {
-        caseStage: newStage,
-        atsStatus: newAtsStatus,
-      },
-    })
-
-    // Create stage history
-    await prisma.caseStageHistory.create({
-      data: {
-        leadId: id,
-        fromStage: lead.caseStage,
-        toStage: newStage,
-        changedById: user.id,
-        note,
-      },
-    })
-
-    // Create audit log with ATS context
-    await prisma.leadAudit.create({
-      data: {
-        leadId: id,
-        action: 'cash_review',
-        userId: user.id,
-        details: {
-          action,
-          reason: reason || null,
-          treatmentName: lead.treatment,
-          treatmentId: lead.treatmentMasterId,
-          atsAmount: lead.atsAmount,
-          approvedAmount: lead.settledTotal,
-          atsStatus: newAtsStatus,
+    await prisma.$transaction(async (tx) => {
+      await tx.lead.update({
+        where: { id },
+        data: {
           caseStage: newStage,
+          atsStatus: newAtsStatus,
         },
-      },
+      })
+
+      await tx.caseStageHistory.create({
+        data: {
+          leadId: id,
+          fromStage: lead.caseStage,
+          toStage: newStage,
+          changedById: user.id,
+          note,
+        },
+      })
+
+      await tx.leadAudit.create({
+        data: {
+          leadId: id,
+          action: 'cash_review',
+          userId: user.id,
+          details: {
+            action,
+            reason: reason || null,
+            treatmentName: lead.treatment,
+            treatmentId: lead.treatmentMasterId,
+            atsAmount: lead.atsAmount,
+            approvedAmount: lead.settledTotal,
+            atsStatus: newAtsStatus,
+            caseStage: newStage,
+          },
+        },
+      })
+
+      await tx.caseChatMessage.create({
+        data: {
+          leadId: id,
+          type: 'SYSTEM',
+          content: `Cash Review: ${action} by ${user.name}. ${reason ? `Reason: ${reason}` : ''}`,
+        },
+      })
     })
 
-    // Post system message
-    await prisma.caseChatMessage.create({
-      data: {
-        leadId: id,
-        type: 'SYSTEM',
-        content: `Cash Review: ${action} by ${user.name}. ${reason ? `Reason: ${reason}` : ''}`,
-      },
-    })
-
-    // Notify BD
-    await prisma.notification.create({
-      data: {
-        userId: lead.bdId,
-        type: NotificationType.CASE_CHAT_MESSAGE,
-        title: `Cash Case ${action === 'APPROVE' ? 'Approved' : 'On Hold'}`,
-        message: `Your cash case for ${lead.patientName} has been ${action === 'APPROVE' ? 'approved' : 'put on hold'}.`,
-        relatedId: id,
-        link: `/patient/${id}`,
-      },
-    })
+    try {
+      await prisma.notification.create({
+        data: {
+          userId: lead.bdId,
+          type: NotificationType.CASE_CHAT_MESSAGE,
+          title: `Cash Case ${action === 'APPROVE' ? 'Approved' : 'On Hold'}`,
+          message: `Your cash case for ${lead.patientName} has been ${action === 'APPROVE' ? 'approved' : 'put on hold'}.`,
+          relatedId: id,
+          link: `/patient/${id}`,
+        },
+      })
+    } catch (notificationError) {
+      console.error('Cash review succeeded but BD notification failed:', notificationError)
+    }
 
     // Return ATS context in response
     return successResponse({
       stage: newStage,
       atsStatus: newAtsStatus,
-      requiresApproval: lead.atsStatus === 'BELOW_ATS' || (lead.atsAmount && lead.settledTotal < lead.atsAmount),
+      requiresApproval: newAtsStatus === ATSStatus.BELOW_ATS,
     }, 'Review submitted successfully')
   } catch (error) {
     console.error('Error reviewing cash case:', error)

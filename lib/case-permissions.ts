@@ -325,8 +325,14 @@ export function canFillIPDCashForm(user: User, lead: Lead): boolean {
   
   const isBD = user.role === 'BD' || user.role === 'TEAM_LEAD' || user.role === 'ADMIN'
   const isCash = lead.flowType === FlowType.CASH
-  // If pending or on hold, they can fill/edit
-  const allowedStages: CaseStage[] = [CaseStage.CASH_IPD_PENDING, CaseStage.CASH_ON_HOLD]
+  // Allow first fill while pending, and edits after submission/approval until
+  // the case moves into the post-IPD/discharge stages.
+  const allowedStages: CaseStage[] = [
+    CaseStage.CASH_IPD_PENDING,
+    CaseStage.CASH_IPD_SUBMITTED,
+    CaseStage.CASH_ON_HOLD,
+    CaseStage.CASH_APPROVED,
+  ]
   
   return isBD && isCash && allowedStages.includes(lead.caseStage)
 }

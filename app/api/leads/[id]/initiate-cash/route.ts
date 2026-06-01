@@ -23,12 +23,12 @@ const initiateCashSchema = z.object({
   surgeonType: z.string().nullish(),
   alternateContactName: z.string().nullish(),
   alternateContactNumber: z.string().nullish(),
-  
+
   // Treatment & ATS
   treatmentId: z.string().nullish(),
   treatmentName: z.string().nullish(),
   atsAmount: z.number().nullish(),
-  
+
   // Cash specific fields
   modeOfPayment: z.string(),
   discount: z.number().nullish(),
@@ -39,7 +39,7 @@ const initiateCashSchema = z.object({
   collectedByMediend: z.number().nullish(),
   collectedByHospital: z.number().nullish(),
   finalBillAmount: z.number(),
-  
+
   // EMI specific
   emiAmount: z.number().nullish(),
   processingFee: z.number().nullish(),
@@ -48,15 +48,89 @@ const initiateCashSchema = z.object({
   finalEmiAmount: z.number().nullish(),
 })
 
+function resolveCashDecision(atsAmount: number | null | undefined, approvedAmount: number) {
+  if (atsAmount == null || atsAmount <= 0) {
+    return {
+      atsStatus: ATSStatus.NO_ATS,
+      caseStage: CaseStage.CASH_IPD_SUBMITTED,
+      autoApproved: false,
+    }
+  }
+
+  if (approvedAmount >= atsAmount) {
+    return {
+      atsStatus: ATSStatus.ABOVE_ATS,
+      caseStage: CaseStage.CASH_APPROVED,
+      autoApproved: true,
+    }
+  }
+
+  return {
+    atsStatus: ATSStatus.BELOW_ATS,
+    caseStage: CaseStage.CASH_IPD_SUBMITTED,
+    autoApproved: false,
+  }
+}
+
+function buildCashRemarks(
+  prefix: string,
+  data: z.infer<typeof initiateCashSchema>,
+  previous: string | null | undefined,
+) {
+  const emiBlock = data.modeOfPayment === 'EMI'
+    ? `EMI Amount: ${data.emiAmount}\n` +
+      `Processing Fee: ${data.processingFee}\n` +
+      `GST: ${data.gst}\n` +
+      `Subvention Fee: ${data.subventionFee}\n` +
+      `Final EMI Amount: ${data.finalEmiAmount}`
+    : ''
+
+  return `${previous ? previous + '\n' : ''}${prefix}\nCollected: ${data.collectedAmount}\n${emiBlock}`
+}
+
+function buildAdmissionFinancials(data: z.infer<typeof initiateCashSchema>) {
+  return {
+    billAmount: data.finalBillAmount,
+    cashOrDedPaid: data.collectedAmount ?? 0,
+    collectedByHospital: data.collectedByHospital ?? 0,
+    collectedByMediend: data.collectedByMediend ?? 0,
+    deductionAmount: data.deduction ?? 0,
+    discountAmount: data.discount ?? 0,
+    settlementPart: data.approvedAmount,
+  }
+}
+
+async function notifyInsuranceHeads(leadId: string, patientName: string, leadRef: string) {
+  try {
+    const insuranceHeads = await prisma.user.findMany({
+      where: { role: 'INSURANCE_HEAD' },
+      select: { id: true },
+    })
+
+    for (const head of insuranceHeads) {
+      await prisma.notification.create({
+        data: {
+          userId: head.id,
+          type: NotificationType.INITIATED,
+          title: 'Cash Case Submitted',
+          message: `New Cash IPD form submitted for ${patientName} (${leadRef})`,
+          relatedId: leadId,
+          link: '/insurance/cash-cases',
+        },
+      })
+    }
+  } catch (error) {
+    console.error('Cash IPD saved but insurance notifications failed:', error)
+  }
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getSessionFromRequest(request)
-    if (!user) {
-      return unauthorizedResponse()
-    }
+    if (!user) return unauthorizedResponse()
 
     if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
       return errorResponse('Forbidden', 403)
@@ -66,144 +140,129 @@ export async function POST(
     const body = await request.json()
     const validatedData = initiateCashSchema.parse(body)
 
-    const lead = await prisma.lead.findUnique({
-      where: { id },
-    })
-
-    if (!lead) {
-      return errorResponse('Lead not found', 404)
-    }
+    const lead = await prisma.lead.findUnique({ where: { id } })
+    if (!lead) return errorResponse('Lead not found', 404)
 
     if (!(await canMutateLead(user, lead.bdId))) {
       return errorResponse('Forbidden', 403)
     }
 
-    // Check if admission record already exists
     const existingAdmission = await prisma.admissionRecord.findUnique({
       where: { leadId: id },
+      select: { id: true },
     })
 
-    if (existingAdmission) {
-      return errorResponse('Admission record already exists', 400)
-    }
+    const { atsStatus, caseStage, autoApproved } = resolveCashDecision(
+      validatedData.atsAmount,
+      validatedData.approvedAmount,
+    )
 
-    // ATS auto-approval logic
-    let caseStage: CaseStage = CaseStage.CASH_IPD_SUBMITTED
-    let atsStatus = ATSStatus.PENDING_REVIEW
-
-    if (validatedData.atsAmount && validatedData.atsAmount > 0 && validatedData.approvedAmount >= validatedData.atsAmount) {
-      caseStage = CaseStage.CASH_APPROVED
-      atsStatus = ATSStatus.AUTO_APPROVED
-    }
-
-    // Create admission record
-    const admissionRecord = await prisma.admissionRecord.create({
-      data: {
-        leadId: id,
-        admissionDate: new Date(validatedData.admissionDate),
-        admissionTime: validatedData.admissionTime,
-        admittingHospital: validatedData.admittingHospital,
-        hospitalAddress: validatedData.hospitalAddress,
-        googleMapLocation: validatedData.googleMapLocation,
-        surgeryDate: new Date(validatedData.surgeryDate),
-        surgeryTime: validatedData.surgeryTime,
-        instrument: validatedData.instrument,
-        implantConsumables: validatedData.implantConsumables,
-        notes: validatedData.notes,
-        initiatedById: user.id,
-      },
-    })
-
-    // Update lead with cash details and stage
-    await prisma.lead.update({
-      where: { id },
-      data: {
-        treatmentMasterId: validatedData.treatmentId || null,
-        treatment: validatedData.treatmentName || null,
-        atsAmount: validatedData.atsAmount || null,
-        atsStatus,
-        caseStage,
-        flowType: FlowType.CASH,
-        hospitalName: validatedData.admittingHospital,
-        ipdAdmissionDate: new Date(validatedData.admissionDate),
-        quantityGrade: validatedData.quantityGrade,
-        anesthesia: validatedData.anesthesia,
-        surgeonType: validatedData.surgeonType,
-        attendantName: validatedData.alternateContactName,
-        alternateNumber: validatedData.alternateContactNumber,
-        
-        // Cash Financials
-        modeOfPayment: validatedData.modeOfPayment,
-        discount: validatedData.discount,
-        copay: validatedData.copay,
-        deduction: validatedData.deduction,
-        billAmount: validatedData.finalBillAmount,
-        settledTotal: validatedData.approvedAmount,
-        collectedByMediend: validatedData.collectedByMediend ?? 0,
-        collectedByHospital: validatedData.collectedByHospital ?? 0,
-        
-        remarks: (lead.remarks ? lead.remarks + '\n' : '') + 
-          `[CASH FLOW DETAILS]\n` +
-          `Collected: ${validatedData.collectedAmount}\n` +
-          (validatedData.modeOfPayment === 'EMI' ? 
-            `EMI Amount: ${validatedData.emiAmount}\n` +
-            `Processing Fee: ${validatedData.processingFee}\n` +
-            `GST: ${validatedData.gst}\n` +
-            `Subvention Fee: ${validatedData.subventionFee}\n` +
-            `Final EMI Amount: ${validatedData.finalEmiAmount}` : '')
-      },
-    })
-
-    // Create stage history
-    await prisma.caseStageHistory.create({
-      data: {
-        leadId: id,
-        fromStage: lead.caseStage,
-        toStage: caseStage,
-        changedById: user.id,
-        note: atsStatus === ATSStatus.AUTO_APPROVED 
-          ? 'IPD Cash Form Submitted - Auto-approved (above ATS)' 
-          : 'IPD Cash Form Submitted',
-      },
-    })
-
-    // Post system message
-    const autoApproved = atsStatus === ATSStatus.AUTO_APPROVED
-    await prisma.caseChatMessage.create({
-      data: {
-        leadId: id,
-        type: 'SYSTEM',
-        content: autoApproved
-          ? `IPD Cash Form submitted by ${user.name}. Auto-approved (approved amount ₹${validatedData.approvedAmount.toLocaleString('en-IN')} ≥ ATS ₹${validatedData.atsAmount?.toLocaleString('en-IN')}).`
-          : `IPD Cash Form submitted by ${user.name}. Case is now pending Insurance review.`,
-      },
-    })
-
-    // Notify Insurance head(s) only if NOT auto-approved
-    if (!autoApproved) {
-      const insuranceHeads = await prisma.user.findMany({
-        where: { role: 'INSURANCE_HEAD' },
+    const admissionRecord = await prisma.$transaction(async (tx) => {
+      const admission = await tx.admissionRecord.upsert({
+        where: { leadId: id },
+        create: {
+          leadId: id,
+          admissionDate: new Date(validatedData.admissionDate),
+          admissionTime: validatedData.admissionTime,
+          admittingHospital: validatedData.admittingHospital,
+          hospitalAddress: validatedData.hospitalAddress,
+          googleMapLocation: validatedData.googleMapLocation,
+          surgeryDate: new Date(validatedData.surgeryDate),
+          surgeryTime: validatedData.surgeryTime,
+          instrument: validatedData.instrument,
+          implantConsumables: validatedData.implantConsumables,
+          notes: validatedData.notes,
+          initiatedById: user.id,
+          ...buildAdmissionFinancials(validatedData),
+        },
+        update: {
+          admissionDate: new Date(validatedData.admissionDate),
+          admissionTime: validatedData.admissionTime,
+          admittingHospital: validatedData.admittingHospital,
+          hospitalAddress: validatedData.hospitalAddress,
+          googleMapLocation: validatedData.googleMapLocation,
+          surgeryDate: new Date(validatedData.surgeryDate),
+          surgeryTime: validatedData.surgeryTime,
+          instrument: validatedData.instrument,
+          implantConsumables: validatedData.implantConsumables,
+          notes: validatedData.notes,
+          ...buildAdmissionFinancials(validatedData),
+        },
       })
 
-      for (const head of insuranceHeads) {
-        await prisma.notification.create({
+      await tx.lead.update({
+        where: { id },
+        data: {
+          treatmentMasterId: validatedData.treatmentId || null,
+          treatment: validatedData.treatmentName || null,
+          atsAmount: validatedData.atsAmount || null,
+          atsStatus,
+          caseStage,
+          flowType: FlowType.CASH,
+          hospitalName: validatedData.admittingHospital,
+          ipdAdmissionDate: new Date(validatedData.admissionDate),
+          quantityGrade: validatedData.quantityGrade,
+          anesthesia: validatedData.anesthesia,
+          surgeonName: validatedData.surgeonName,
+          surgeonType: validatedData.surgeonType,
+          attendantName: validatedData.alternateContactName,
+          alternateNumber: validatedData.alternateContactNumber,
+          modeOfPayment: validatedData.modeOfPayment,
+          discount: validatedData.discount ?? 0,
+          copay: validatedData.copay ?? 0,
+          deduction: validatedData.deduction ?? 0,
+          billAmount: validatedData.finalBillAmount,
+          settledTotal: validatedData.approvedAmount,
+          collectedByMediend: validatedData.collectedByMediend ?? 0,
+          collectedByHospital: validatedData.collectedByHospital ?? 0,
+          remarks: buildCashRemarks('[CASH FLOW DETAILS]', validatedData, lead.remarks),
+        },
+      })
+
+      if (!existingAdmission || lead.caseStage !== caseStage) {
+        await tx.caseStageHistory.create({
           data: {
-            userId: head.id,
-            type: NotificationType.INITIATED,
-            title: 'Cash Case Submitted',
-            message: `New Cash IPD form submitted for ${lead.patientName} (${lead.leadRef})`,
-            relatedId: id,
-            link: `/insurance/cash-cases`,
+            leadId: id,
+            fromStage: lead.caseStage,
+            toStage: caseStage,
+            changedById: user.id,
+            note: autoApproved
+              ? existingAdmission
+                ? 'IPD Cash Form Re-submitted - Auto-approved (above ATS)'
+                : 'IPD Cash Form Submitted - Auto-approved (above ATS)'
+              : existingAdmission
+                ? 'IPD Cash Form Re-submitted'
+                : 'IPD Cash Form Submitted',
           },
         })
       }
+
+      await tx.caseChatMessage.create({
+        data: {
+          leadId: id,
+          type: 'SYSTEM',
+          content: autoApproved
+            ? `IPD Cash Form submitted by ${user.name}. Auto-approved (approved amount ₹${validatedData.approvedAmount.toLocaleString('en-IN')} ≥ ATS ₹${validatedData.atsAmount?.toLocaleString('en-IN')}).`
+            : existingAdmission
+              ? `IPD Cash Form re-submitted by ${user.name}. Case is now pending Insurance review.`
+              : `IPD Cash Form submitted by ${user.name}. Case is now pending Insurance review.`,
+        },
+      })
+
+      return admission
+    })
+
+    if (!autoApproved) {
+      await notifyInsuranceHeads(id, lead.patientName, lead.leadRef)
     }
 
     return successResponse(
       admissionRecord,
       autoApproved
         ? 'IPD Cash details saved successfully - Auto-approved (above ATS limit)'
-        : 'IPD Cash details saved successfully - Pending manual approval'
+        : existingAdmission
+          ? 'IPD Cash details re-saved successfully - Pending manual approval'
+          : 'IPD Cash details saved successfully - Pending manual approval'
     )
   } catch (error) {
     console.error('Error initiating cash flow:', error)
@@ -220,9 +279,7 @@ export async function PATCH(
 ) {
   try {
     const user = await getSessionFromRequest(request)
-    if (!user) {
-      return unauthorizedResponse()
-    }
+    if (!user) return unauthorizedResponse()
 
     if (!['BD', 'TEAM_LEAD', 'ADMIN'].includes(user.role)) {
       return errorResponse('Forbidden', 403)
@@ -232,113 +289,95 @@ export async function PATCH(
     const body = await request.json()
     const validatedData = initiateCashSchema.parse(body)
 
-    const lead = await prisma.lead.findUnique({
-      where: { id },
-    })
-
-    if (!lead) {
-      return errorResponse('Lead not found', 404)
-    }
+    const lead = await prisma.lead.findUnique({ where: { id } })
+    if (!lead) return errorResponse('Lead not found', 404)
 
     if (!(await canMutateLead(user, lead.bdId))) {
       return errorResponse('Forbidden', 403)
     }
 
-    // Can only update if ON_HOLD or CASH_IPD_SUBMITTED
-    if (lead.caseStage !== CaseStage.CASH_ON_HOLD && lead.caseStage !== CaseStage.CASH_IPD_SUBMITTED) {
-      return errorResponse('Can only edit IPD Cash details when case is Submitted or On Hold', 400)
+    if (
+      lead.caseStage !== CaseStage.CASH_ON_HOLD &&
+      lead.caseStage !== CaseStage.CASH_IPD_SUBMITTED &&
+      lead.caseStage !== CaseStage.CASH_APPROVED
+    ) {
+      return errorResponse('Can only edit IPD Cash details before the case moves past approval', 400)
     }
 
-    // ATS auto-approval logic on resubmission
-    let caseStage: CaseStage = CaseStage.CASH_IPD_SUBMITTED
-    let atsStatus = ATSStatus.PENDING_REVIEW
+    const { atsStatus, caseStage, autoApproved } = resolveCashDecision(
+      validatedData.atsAmount,
+      validatedData.approvedAmount,
+    )
 
-    if (validatedData.atsAmount && validatedData.atsAmount > 0 && validatedData.approvedAmount >= validatedData.atsAmount) {
-      caseStage = CaseStage.CASH_APPROVED
-      atsStatus = ATSStatus.AUTO_APPROVED
-    }
-
-    // Update admission record
-    await prisma.admissionRecord.update({
-      where: { leadId: id },
-      data: {
-        admissionDate: new Date(validatedData.admissionDate),
-        admissionTime: validatedData.admissionTime,
-        admittingHospital: validatedData.admittingHospital,
-        hospitalAddress: validatedData.hospitalAddress,
-        googleMapLocation: validatedData.googleMapLocation,
-        surgeryDate: new Date(validatedData.surgeryDate),
-        surgeryTime: validatedData.surgeryTime,
-        instrument: validatedData.instrument,
-        implantConsumables: validatedData.implantConsumables,
-        notes: validatedData.notes,
-      },
-    })
-
-    // Update lead
-    await prisma.lead.update({
-      where: { id },
-      data: {
-        treatmentMasterId: validatedData.treatmentId || null,
-        treatment: validatedData.treatmentName || null,
-        atsAmount: validatedData.atsAmount || null,
-        atsStatus,
-        caseStage,
-        hospitalName: validatedData.admittingHospital,
-        ipdAdmissionDate: new Date(validatedData.admissionDate),
-        quantityGrade: validatedData.quantityGrade,
-        anesthesia: validatedData.anesthesia,
-        surgeonType: validatedData.surgeonType,
-        attendantName: validatedData.alternateContactName,
-        alternateNumber: validatedData.alternateContactNumber,
-        
-        // Cash Financials
-        modeOfPayment: validatedData.modeOfPayment,
-        discount: validatedData.discount,
-        copay: validatedData.copay,
-        deduction: validatedData.deduction,
-        billAmount: validatedData.finalBillAmount,
-        settledTotal: validatedData.approvedAmount,
-        collectedByMediend: validatedData.collectedByMediend ?? 0,
-        collectedByHospital: validatedData.collectedByHospital ?? 0,
-        
-        remarks: (lead.remarks || '') + '\n' + 
-          `[UPDATED CASH FLOW DETAILS]\n` +
-          `Collected: ${validatedData.collectedAmount}\n` +
-          (validatedData.modeOfPayment === 'EMI' ? 
-            `EMI Amount: ${validatedData.emiAmount}\n` +
-            `Processing Fee: ${validatedData.processingFee}\n` +
-            `GST: ${validatedData.gst}\n` +
-            `Subvention Fee: ${validatedData.subventionFee}\n` +
-            `Final EMI Amount: ${validatedData.finalEmiAmount}` : '')
-      },
-    })
-
-    // Create stage history if changing from HOLD to SUBMITTED or APPROVED
-    if (lead.caseStage === CaseStage.CASH_ON_HOLD) {
-      await prisma.caseStageHistory.create({
+    await prisma.$transaction(async (tx) => {
+      await tx.admissionRecord.update({
+        where: { leadId: id },
         data: {
-          leadId: id,
-          fromStage: CaseStage.CASH_ON_HOLD,
-          toStage: caseStage,
-          changedById: user.id,
-          note: atsStatus === ATSStatus.AUTO_APPROVED
-            ? 'IPD Cash Form Re-submitted - Auto-approved (above ATS)'
-            : 'IPD Cash Form Re-submitted',
+          admissionDate: new Date(validatedData.admissionDate),
+          admissionTime: validatedData.admissionTime,
+          admittingHospital: validatedData.admittingHospital,
+          hospitalAddress: validatedData.hospitalAddress,
+          googleMapLocation: validatedData.googleMapLocation,
+          surgeryDate: new Date(validatedData.surgeryDate),
+          surgeryTime: validatedData.surgeryTime,
+          instrument: validatedData.instrument,
+          implantConsumables: validatedData.implantConsumables,
+          notes: validatedData.notes,
+          ...buildAdmissionFinancials(validatedData),
         },
       })
-    }
 
-    // Post system message
-    const autoApproved = atsStatus === ATSStatus.AUTO_APPROVED
-    await prisma.caseChatMessage.create({
-      data: {
-        leadId: id,
-        type: 'SYSTEM',
-        content: autoApproved
-          ? `IPD Cash Form updated by ${user.name}. Auto-approved (approved amount ₹${validatedData.approvedAmount.toLocaleString('en-IN')} ≥ ATS ₹${validatedData.atsAmount?.toLocaleString('en-IN')}).`
-          : `IPD Cash Form updated/re-submitted by ${user.name}.`,
-      },
+      await tx.lead.update({
+        where: { id },
+        data: {
+          treatmentMasterId: validatedData.treatmentId || null,
+          treatment: validatedData.treatmentName || null,
+          atsAmount: validatedData.atsAmount || null,
+          atsStatus,
+          caseStage,
+          hospitalName: validatedData.admittingHospital,
+          ipdAdmissionDate: new Date(validatedData.admissionDate),
+          quantityGrade: validatedData.quantityGrade,
+          anesthesia: validatedData.anesthesia,
+          surgeonName: validatedData.surgeonName,
+          surgeonType: validatedData.surgeonType,
+          attendantName: validatedData.alternateContactName,
+          alternateNumber: validatedData.alternateContactNumber,
+          modeOfPayment: validatedData.modeOfPayment,
+          discount: validatedData.discount ?? 0,
+          copay: validatedData.copay ?? 0,
+          deduction: validatedData.deduction ?? 0,
+          billAmount: validatedData.finalBillAmount,
+          settledTotal: validatedData.approvedAmount,
+          collectedByMediend: validatedData.collectedByMediend ?? 0,
+          collectedByHospital: validatedData.collectedByHospital ?? 0,
+          remarks: buildCashRemarks('[UPDATED CASH FLOW DETAILS]', validatedData, lead.remarks),
+        },
+      })
+
+      if (lead.caseStage === CaseStage.CASH_ON_HOLD && lead.caseStage !== caseStage) {
+        await tx.caseStageHistory.create({
+          data: {
+            leadId: id,
+            fromStage: CaseStage.CASH_ON_HOLD,
+            toStage: caseStage,
+            changedById: user.id,
+            note: autoApproved
+              ? 'IPD Cash Form Re-submitted - Auto-approved (above ATS)'
+              : 'IPD Cash Form Re-submitted',
+          },
+        })
+      }
+
+      await tx.caseChatMessage.create({
+        data: {
+          leadId: id,
+          type: 'SYSTEM',
+          content: autoApproved
+            ? `IPD Cash Form updated by ${user.name}. Auto-approved (approved amount ₹${validatedData.approvedAmount.toLocaleString('en-IN')} ≥ ATS ₹${validatedData.atsAmount?.toLocaleString('en-IN')}).`
+            : `IPD Cash Form updated/re-submitted by ${user.name}.`,
+        },
+      })
     })
 
     return successResponse(

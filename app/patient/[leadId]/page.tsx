@@ -242,6 +242,13 @@ interface Lead {
     instrument?: string | null
     implantConsumables?: string | null
     notes?: string | null
+    billAmount?: number | null
+    cashOrDedPaid?: number | null
+    collectedByHospital?: number | null
+    collectedByMediend?: number | null
+    deductionAmount?: number | null
+    discountAmount?: number | null
+    settlementPart?: number | null
   } | null
 }
 
@@ -602,14 +609,20 @@ export default function PatientDetailsPage() {
       if (matches.length === 0) return null
       return matches[matches.length - 1][1]
     }
-    const emiItems = lead.modeOfPayment === 'EMI' ? [
-      `EMI Amount: ${extractFromRemarks('EMI Amount') ?? '—'}`,
-      `Processing Fee: ${extractFromRemarks('Processing Fee') ?? '—'}`,
-      `GST: ${extractFromRemarks('GST') ?? '—'}`,
-      `Subvention Fee: ${extractFromRemarks('Subvention Fee') ?? '—'}`,
-      `Final EMI Amount: ${extractFromRemarks('Final EMI Amount') ?? '—'}`,
-    ] : []
-    const lines = [
+      const emiItems = lead.modeOfPayment === 'EMI' ? [
+        `EMI Amount: ${extractFromRemarks('EMI Amount') ?? '—'}`,
+        `Processing Fee: ${extractFromRemarks('Processing Fee') ?? '—'}`,
+        `GST: ${extractFromRemarks('GST') ?? '—'}`,
+        `Subvention Fee: ${extractFromRemarks('Subvention Fee') ?? '—'}`,
+        `Final EMI Amount: ${extractFromRemarks('Final EMI Amount') ?? '—'}`,
+      ] : []
+      const approvedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : rec?.settlementPart
+      const finalBillAmount = (lead.billAmount ?? 0) > 0 ? lead.billAmount : rec?.billAmount
+      const discountAmount = (lead.discount ?? 0) > 0 ? lead.discount : rec?.discountAmount
+      const deductionAmount = (lead.deduction ?? 0) > 0 ? lead.deduction : rec?.deductionAmount
+      const collectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : rec?.collectedByMediend
+      const collectedByHospital = (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : rec?.collectedByHospital
+      const lines = [
       `*IPD Details — ${lead.patientName}*`,
       `Ref: ${lead.leadRef}`,
       '',
@@ -639,18 +652,18 @@ export default function PatientDetailsPage() {
       rec?.hospitalAddress ? `Address: ${rec.hospitalAddress}` : null,
       rec?.googleMapLocation ? `Maps: ${rec.googleMapLocation}` : null,
       '',
-      ...(isCash ? [
-        `*Payment*`,
-        `Mode: ${lead.modeOfPayment ?? '—'}`,
-        `Approved / Cash Package: ${fmtMoney(lead.settledTotal)}`,
-        `Final Bill Amount: ${fmtMoney(lead.billAmount)}`,
-        lead.discount ? `Discount: ${fmtMoney(lead.discount)}` : null,
-        lead.copay ? `Copay: ${fmtMoney(lead.copay)}` : null,
-        lead.deduction ? `Deduction: ${fmtMoney(lead.deduction)}` : null,
-        `Collected by Mediend: ${fmtMoney(lead.collectedByMediend)}`,
-        `Collected by Hospital: ${fmtMoney(lead.collectedByHospital)}`,
-        ...emiItems,
-      ] : [
+        ...(isCash ? [
+          `*Payment*`,
+          `Mode: ${lead.modeOfPayment ?? '—'}`,
+          `Approved / Cash Package: ${fmtMoney(approvedAmount)}`,
+          `Final Bill Amount: ${fmtMoney(finalBillAmount)}`,
+          discountAmount ? `Discount: ${fmtMoney(discountAmount)}` : null,
+          lead.copay ? `Copay: ${fmtMoney(lead.copay)}` : null,
+          deductionAmount ? `Deduction: ${fmtMoney(deductionAmount)}` : null,
+          `Collected by Mediend: ${fmtMoney(collectedByMediend)}`,
+          `Collected by Hospital: ${fmtMoney(collectedByHospital)}`,
+          ...emiItems,
+        ] : [
         `*Insurance*`,
         `Company: ${lead.insuranceName ?? '—'}`,
         `Type: ${lead.kypSubmission?.insuranceType ?? lead.insuranceType ?? '—'}`,
@@ -1288,7 +1301,7 @@ export default function PatientDetailsPage() {
                     onClick={() => setShowIPDCashModal(true)}
                   >
                     <FileText className="h-4 w-4" />
-                    {lead.caseStage === CaseStage.CASH_ON_HOLD ? 'Edit IPD Cash Form' : 'Fill IPD Cash Form'}
+                    {lead.admissionRecord ? 'Edit IPD Cash Form' : 'Fill IPD Cash Form'}
                   </Button>
                 )}
 
@@ -2027,15 +2040,16 @@ export default function PatientDetailsPage() {
                   initialData={lead.admissionRecord ? {
                     ...lead.admissionRecord,
                     modeOfPayment: lead.modeOfPayment,
-                    approvedAmount: lead.settledTotal,
-                    finalBillAmount: lead.billAmount,
-                    collectedByMediend: lead.collectedByMediend,
-                    collectedByHospital: lead.collectedByHospital,
-                    discount: lead.discount,
+                    approvedAmount: lead.settledTotal ?? lead.admissionRecord.settlementPart,
+                    finalBillAmount: lead.billAmount ?? lead.admissionRecord.billAmount,
+                    collectedAmount: lead.admissionRecord.cashOrDedPaid,
+                    collectedByMediend: lead.collectedByMediend ?? lead.admissionRecord.collectedByMediend,
+                    collectedByHospital: lead.collectedByHospital ?? lead.admissionRecord.collectedByHospital,
+                    discount: lead.discount ?? lead.admissionRecord.discountAmount,
                     copay: lead.copay,
-                    deduction: lead.deduction,
+                    deduction: lead.deduction ?? lead.admissionRecord.deductionAmount,
                   } : undefined}
-                isEditMode={lead.caseStage === CaseStage.CASH_ON_HOLD}
+                isEditMode={!!lead.admissionRecord}
                 onSuccess={() => {
                   setShowIPDCashModal(false)
                   queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
