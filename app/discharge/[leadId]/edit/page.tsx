@@ -246,8 +246,8 @@ export default function EditDischargeSheetPage({ params }: { params: { leadId: s
             <InputField label="Total Deductions" value={sheet.deductionAmount} onChange={(v) => updateField('deductionAmount', parseFloat(v) || null)} type="number" />
             <InputField label="Collected by Hospital" value={sheet.collectedByHospital} onChange={(v) => updateField('collectedByHospital', parseFloat(v) || null)} type="number" />
             <InputField label="Collected by Mediend" value={sheet.collectedByMediend} onChange={(v) => updateField('collectedByMediend', parseFloat(v) || null)} type="number" />
-            <InputField label="Axis Tariff Deduction" value={sheet.axisTariffDeduction} onChange={(v) => updateField('axisTariffDeduction', parseFloat(v) || null)} type="number" />
-            <InputField label="Axis Tariff Paid" value={sheet.axisTariffDeductionPaid} onChange={(v) => updateField('axisTariffDeductionPaid', parseFloat(v) || null)} type="number" />
+            <InputField label="Exxis Tarrif Deduction" value={sheet.axisTariffDeduction} onChange={(v) => updateField('axisTariffDeduction', parseFloat(v) || null)} type="number" />
+            <InputField label="Exxis Tarrif Paid" value={sheet.axisTariffDeductionPaid} onChange={(v) => updateField('axisTariffDeductionPaid', parseFloat(v) || null)} type="number" />
             <InputField label="Discount" value={sheet.discountAmount} onChange={(v) => updateField('discountAmount', parseFloat(v) || null)} type="number" />
             <InputField label="Waived Off" value={sheet.waivedOffAmount} onChange={(v) => updateField('waivedOffAmount', parseFloat(v) || null)} type="number" />
             <InputField label="TDS" value={sheet.tdsAmount} onChange={(v) => updateField('tdsAmount', parseFloat(v) || null)} type="number" />

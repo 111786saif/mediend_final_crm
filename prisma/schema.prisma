@@ -2486,8 +2486,8 @@ model DischargeSheet {
   copayAmount             Float  @default(0) // Copay deduction amount (₹, not %)
   collectedByHospital     Float  @default(0) // Deduction paid — collected by hospital
   collectedByMediend      Float  @default(0) // Deduction paid — collected by Mediend
-  axisTariffDeduction     Float  @default(0) // Axis tariff — deduction
-  axisTariffDeductionPaid Float  @default(0) // Axis tariff — deduction paid
+  axisTariffDeduction     Float  @default(0) // Exxis Tarrif — deduction
+  axisTariffDeductionPaid Float  @default(0) // Exxis Tarrif — deduction paid
   actualFinalAmount       Float  @default(0) // = finalApproved + deductionPaid + axisTariffPaid
   deductionAmount         Float  @default(0) // = deduction total (copay + other)
   discountAmount          Float  @default(0) // Hospital discount

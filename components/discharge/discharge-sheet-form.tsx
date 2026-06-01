@@ -513,9 +513,9 @@ export function DischargeSheetForm({
               </div>
             </div>
 
-            {/* 5. Axis Tariff */}
+            {/* 5. Exxis Tarrif */}
             <div className="border rounded-md p-3 space-y-3">
-              <Label className="font-semibold">Axis Tariff</Label>
+              <Label className="font-semibold">Exxis Tarrif</Label>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Deduction (₹)</Label>
@@ -536,7 +536,7 @@ export function DischargeSheetForm({
               <span className="text-sm font-semibold text-green-700 dark:text-green-400">{inr(ded.actualFinalAmount)}</span>
             </div>
             <p className="text-[11px] text-muted-foreground -mt-2">
-              = Final Approved + Deductions Paid + Axis Tariff Deduction Paid
+              = Final Approved + Deductions Paid + Exxis Tarrif Deduction Paid
             </p>
 
             {/* 7. Final Bill upload */}

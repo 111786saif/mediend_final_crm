@@ -1,6 +1,6 @@
 -- AlterTable: discharge sheet restructure — anesthesia charge, computed
 -- "other charges", the deduction split (copay / other, collected by hospital /
--- mediend), axis tariff deduction + paid, the computed actual final amount, and
+-- mediend), Exxis Tarrif deduction + paid, the computed actual final amount, and
 -- the approval-letter / deduction-receipt upload URLs.
 --
 -- NOTE: this DB is `prisma db push`-managed and its migration history is desynced

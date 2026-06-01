@@ -304,9 +304,9 @@ export function DischargeSheetView({ dischargeSheet, onEdit }: DischargeSheetVie
           <AmountRow label="Hospital Discount" value={dischargeSheet.discountAmount ?? 0} />
           <AmountRow label="Waive Off" value={dischargeSheet.waivedOffAmount ?? 0} />
 
-          {/* Axis Tariff */}
+          {/* Exxis Tarrif */}
           <div className="grid grid-cols-2 gap-2 p-3 bg-muted/50 font-medium text-sm border-y">
-            <span>Axis Tariff</span>
+            <span>Exxis Tarrif</span>
             <span />
           </div>
           <AmountRow label="Deduction" value={axisDed} />

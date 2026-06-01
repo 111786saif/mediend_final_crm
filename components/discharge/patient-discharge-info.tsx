@@ -206,8 +206,8 @@ export function PatientDischargeInfo({ leadId, lead, showPatient = true }: Props
               <Field label="Final approved" value={formatPlRupee(ds.finalApprovedAmount ?? null)} />
               <Field label="Final amount" value={formatPlRupee(ds.finalAmount ?? null)} />
               <Field label="Co-pay" value={formatPlRupee(ds.copayAmount ?? null)} />
-              <Field label="Axis tariff" value={formatPlRupee(ds.axisTariffDeduction ?? null)} />
-              <Field label="Axis tariff paid" value={formatPlRupee(ds.axisTariffDeductionPaid ?? null)} />
+              <Field label="Exxis Tarrif" value={formatPlRupee(ds.axisTariffDeduction ?? null)} />
+              <Field label="Exxis Tarrif paid" value={formatPlRupee(ds.axisTariffDeductionPaid ?? null)} />
               <Field label="Discount" value={formatPlRupee(ds.discountAmount ?? null)} />
               <Field label="Waived off" value={formatPlRupee(ds.waivedOffAmount ?? null)} />
               <Field label="TDS" value={formatPlRupee(ds.tdsAmount ?? null)} />
