@@ -2024,7 +2024,17 @@ export default function PatientDetailsPage() {
                 bdName={lead.bd?.name}
                 bdManagerName={lead.bd?.manager?.name ?? undefined}
                 // Pass existing data if editing (admissionRecord + lead financials for collected amounts)
-                initialData={lead.admissionRecord ? { ...lead.admissionRecord, collectedByMediend: lead.collectedByMediend, collectedByHospital: lead.collectedByHospital } : undefined}
+                  initialData={lead.admissionRecord ? {
+                    ...lead.admissionRecord,
+                    modeOfPayment: lead.modeOfPayment,
+                    approvedAmount: lead.settledTotal,
+                    finalBillAmount: lead.billAmount,
+                    collectedByMediend: lead.collectedByMediend,
+                    collectedByHospital: lead.collectedByHospital,
+                    discount: lead.discount,
+                    copay: lead.copay,
+                    deduction: lead.deduction,
+                  } : undefined}
                 isEditMode={lead.caseStage === CaseStage.CASH_ON_HOLD}
                 onSuccess={() => {
                   setShowIPDCashModal(false)

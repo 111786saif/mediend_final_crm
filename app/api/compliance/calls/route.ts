@@ -46,9 +46,16 @@ export async function GET(request: NextRequest) {
     const ratingParam = searchParams.get('rating')
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
-    // Accepts both new (caseStart/caseEnd) and legacy (surgeryStart/surgeryEnd) param names.
-    const caseStart = searchParams.get('caseStart') ?? searchParams.get('surgeryStart')
-    const caseEnd = searchParams.get('caseEnd') ?? searchParams.get('surgeryEnd')
+    // Accepts the current dischargeStart/dischargeEnd params plus older names
+    // from the earlier admission/surgery-based filter.
+    const dischargeStart =
+      searchParams.get('dischargeStart') ??
+      searchParams.get('caseStart') ??
+      searchParams.get('surgeryStart')
+    const dischargeEnd =
+      searchParams.get('dischargeEnd') ??
+      searchParams.get('caseEnd') ??
+      searchParams.get('surgeryEnd')
     const q = searchParams.get('q')?.trim() ?? ''
     const hospitalName = searchParams.get('hospitalName')?.trim() ?? ''
     const surgeonName = searchParams.get('surgeonName')?.trim() ?? ''
@@ -76,17 +83,14 @@ export async function GET(request: NextRequest) {
     const leadFilters: Prisma.LeadWhereInput = {}
     const leadAnd: Prisma.LeadWhereInput[] = []
 
-    // Match if EITHER admission date OR surgery date falls in the selected window.
-    if (caseStart || caseEnd) {
+    // Compliance is a post-discharge workflow, so month filtering should follow
+    // the canonical discharge date on the discharge sheet.
+    if (dischargeStart || dischargeEnd) {
       const dateFilter: Prisma.DateTimeFilter = {}
-      if (caseStart) dateFilter.gte = new Date(caseStart)
-      if (caseEnd) dateFilter.lt = new Date(caseEnd)
+      if (dischargeStart) dateFilter.gte = new Date(dischargeStart)
+      if (dischargeEnd) dateFilter.lt = new Date(dischargeEnd)
       leadAnd.push({
-        OR: [
-          { ipdAdmissionDate: dateFilter },
-          { admissionRecord: { admissionDate: dateFilter } },
-          { surgeryDate: dateFilter },
-        ],
+        dischargeSheet: { dischargeDate: dateFilter },
       })
     }
     // Hospital/doctor dropdowns are built from the *resolved* hospital/doctor

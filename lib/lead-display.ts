@@ -3,7 +3,7 @@
  * doctor name so variants like "Dr. Singla", "dr singla", "Singla" share a core.
  */
 export function stripDrPrefix(raw: string): string {
-  return raw.replace(/^\s*dr\.?\s+/i, '').trim()
+  return raw.replace(/^\s*dr\b[\s.-]*/i, '').trim()
 }
 
 /**
