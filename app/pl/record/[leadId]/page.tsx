@@ -63,22 +63,16 @@ function getMonthFromDate(date: string | Date | null | undefined): string {
 type PaidBy = '' | 'MEDIEND' | 'HOSPITAL'
 
 const DC_FIELD_KEYS = [
-  'roomRent',
   'pharmacy',
   'investigation',
   'consumables',
-  'implants',
-  'instruments',
   'anesthesia',
 ] as const
 
 const DC_LABELS: Record<string, string> = {
-  roomRent: 'Room Rent',
   pharmacy: 'Pharmacy',
   investigation: 'Investigation',
   consumables: 'Consumables',
-  implants: 'Implants',
-  instruments: 'Instruments',
   anesthesia: 'Anesthesia',
 }
 
@@ -145,22 +139,16 @@ export default function PLRecordEditPage() {
   })
 
   const [dcChecked, setDcChecked] = useState<Record<string, boolean>>({
-    roomRent: false,
     pharmacy: false,
     investigation: false,
     consumables: false,
-    implants: false,
-    instruments: false,
     anesthesia: false,
   })
 
   const [dsBillAmounts, setDsBillAmounts] = useState<Record<string, number>>({
-    roomRent: 0,
     pharmacy: 0,
     investigation: 0,
     consumables: 0,
-    implants: 0,
-    instruments: 0,
     anesthesia: 0,
   })
 
@@ -200,12 +188,9 @@ export default function PLRecordEditPage() {
     const numVal = (v: unknown) => (v != null ? Number(v) : 0)
 
     const billAmts: Record<string, number> = {
-      roomRent: numVal(ds?.roomRentAmount),
       pharmacy: numVal(ds?.pharmacyAmount),
       investigation: numVal(ds?.investigationAmount),
       consumables: numVal(ds?.consumablesAmount),
-      implants: numVal(ds?.implantsAmount),
-      instruments: numVal(ds?.instrumentsAmount),
       anesthesia: numVal(ds?.anesthesiaAmount),
     }
     setDsBillAmounts(billAmts)

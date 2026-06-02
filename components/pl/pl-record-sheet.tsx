@@ -79,8 +79,6 @@ const DC_FIELD_KEYS = [
   'pharmacy',
   'investigation',
   'consumables',
-  'implants',
-  'instruments',
   'anesthesia',
 ] as const
 
@@ -88,8 +86,6 @@ const DC_LABELS: Record<string, string> = {
   pharmacy: 'Pharmacy',
   investigation: 'Investigation',
   consumables: 'Consumables',
-  implants: 'Implants',
-  instruments: 'Instruments',
   anesthesia: 'Anesthesia',
 }
 
@@ -158,8 +154,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     pharmacy: false,
     investigation: false,
     consumables: false,
-    implants: false,
-    instruments: false,
     anesthesia: false,
   })
 
@@ -167,8 +161,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     pharmacy: 0,
     investigation: 0,
     consumables: 0,
-    implants: 0,
-    instruments: 0,
     anesthesia: 0,
   })
 
@@ -211,8 +203,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       pharmacy: numVal(ds?.pharmacyAmount),
       investigation: numVal(ds?.investigationAmount),
       consumables: numVal(ds?.consumablesAmount),
-      implants: numVal(ds?.implantsAmount),
-      instruments: numVal(ds?.instrumentsAmount ?? ds?.instrumentsAmount),
       anesthesia: numVal(ds?.anesthesiaAmount),
     }
     setDsBillAmounts(billAmts)
