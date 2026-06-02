@@ -134,12 +134,14 @@ async function main() {
   let markedReverted = 0
 
   // ── Revert finalized sheets ─────────────────────────────────────────────
-  // Get a valid user ID for the caseStageHistory audit trail
-  const adminUser = await prisma.user.findFirst({
-    where: { role: 'ADMIN' },
+  // Get any valid user ID for the caseStageHistory audit trail
+  const anyUser = await prisma.user.findFirst({
     select: { id: true },
   })
-  const changedById = adminUser?.id ?? 'reset-script'
+  if (!anyUser && !DRY_RUN) {
+    throw new Error('No users found in the database — cannot record stage history')
+  }
+  const changedById = anyUser?.id ?? '00000000-0000-0000-0000-000000000001'
 
   for (const sheet of finalizedSheets) {
     const ref = sheet.lead?.leadRef ?? sheet.leadId
@@ -236,13 +238,29 @@ async function main() {
   console.log(`  Marked-only reverted:  ${markedReverted}`)
   console.log(`  Total reverted:        ${finalizedReverted + markedReverted}`)
 
-  const ipdCount = await prisma.lead.count({
+  const totalIpdDone = await prisma.lead.count({
     where: {
       caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
       dischargeSheet: null,
     },
   })
-  console.log(`  Leads now at IPD_DONE (no sheet): ${ipdCount}`)
+
+  // Count IPD_DONE leads whose IPD was marked in May 2026
+  const mayIpdDone = await prisma.lead.count({
+    where: {
+      caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
+      dischargeSheet: null,
+      caseStageHistory: {
+        some: {
+          toStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
+          changedAt: { gte: MAY_START, lt: MAY_END },
+        },
+      },
+    },
+  })
+
+  console.log(`  Total IPD_DONE (no sheet):    ${totalIpdDone}`)
+  console.log(`  May 2026 IPD_DONE (no sheet): ${mayIpdDone}`)
   console.log('═══════════════════════════════════════════')
   console.log('')
 }
