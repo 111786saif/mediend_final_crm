@@ -28,16 +28,20 @@ export function ipdDoneDateFilter(
 }
 
 /**
- * Convenience wrapper: filters leads currently at IPD_DONE / CASH_IPD_DONE
- * using the date fallback chain. Once marked IPD done, a lead is counted as
- * "IPD done" regardless of whether it later moves to DISCHARGED / PL.
+ * Counts leads that transitioned to IPD_DONE / CASH_IPD_DONE within the
+ * given date range, using the caseStageHistory.changedAt timestamp.
  */
 export function ipdDoneWhere(
   dateFilter: Prisma.DateTimeFilter,
 ): Prisma.LeadWhereInput {
   return {
     caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
-    ...ipdDoneDateFilter(dateFilter),
+    caseStageHistory: {
+      some: {
+        toStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
+        changedAt: dateFilter,
+      },
+    },
   }
 }
 
