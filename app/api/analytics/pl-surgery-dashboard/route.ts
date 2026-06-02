@@ -69,6 +69,7 @@ export async function GET(request: NextRequest) {
           select: { userId: true },
         })
         const teamUserIds = [managerEmp.userId, ...subEmps.map((e) => e.userId)]
+        const teamUserIds = [managerEmp.userId, ...subEmps.map((e) => e.userId)]
         leadWhere.bdId = { in: teamUserIds }
       }
     }
@@ -153,20 +154,22 @@ export async function GET(request: NextRequest) {
     const bdBreakdown = Array.from(bdMap.values()).map((b) => ({
       bdId: b.bdId,
       bdName: b.bdName,
-      managerName: b.managerName,
+      teamName: b.tlName ?? b.managerName,
       surgeries: b.count,
       revenue: b.mediendShare,
       expenses: b.expenses,
       netProfit: b.mediendShare - b.expenses,
     }))
 
-    // Manager groups replace old teams dropdown
+    // Only Sales teams: managers with role TEAM_LEAD who have BD subordinates
     const managerGroups = await getManagerGroups()
-    const groups = managerGroups.map((g) => ({
-      id: g.managerId,
-      name: `${g.managerName}'s Team`,
-      managerName: g.managerName,
-    }))
+    const salesGroups = managerGroups
+      .filter((g) => g.managerRole === 'TEAM_LEAD')
+      .map((g) => ({
+        id: g.managerId,
+        name: `${g.managerName}'s Team`,
+        managerName: g.managerName,
+      }))
 
     return successResponse({
       surgeryCount,
@@ -177,7 +180,7 @@ export async function GET(request: NextRequest) {
       diseaseDistribution,
       hospitalDistribution,
       bdBreakdown,
-      teams: groups,
+      teams: salesGroups,
     })
   } catch (error) {
     console.error('pl-surgery-dashboard error:', error)

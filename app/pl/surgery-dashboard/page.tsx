@@ -4,8 +4,15 @@ import { ProtectedRoute } from '@/components/protected-route'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useState, useEffect } from 'react'
@@ -17,6 +24,8 @@ import {
   TrendingUp,
   Wallet,
   Table2,
+  Calendar,
+  X,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -33,34 +42,23 @@ import {
 } from 'recharts'
 import { cn } from '@/lib/utils'
 
-type Preset = 'today' | 'week' | 'mtd' | 'lastMonth' | 'custom'
-
-function fmtYmd(d: Date): string {
-  return d.toISOString().split('T')[0]
+function generateMonthOptions() {
+  const months: { key: string; label: string }[] = []
+  const now = new Date()
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    const label = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    months.push({ key, label })
+  }
+  return months
 }
 
-function getRangeForPreset(preset: Preset, customStart: string, customEnd: string): { start: string; end: string } {
-  const now = new Date()
-  if (preset === 'custom') {
-    return { start: customStart || fmtYmd(now), end: customEnd || fmtYmd(now) }
-  }
-  if (preset === 'today') {
-    return { start: fmtYmd(now), end: fmtYmd(now) }
-  }
-  if (preset === 'week') {
-    const d = new Date(now)
-    const day = d.getDay()
-    const diff = day === 0 ? -6 : 1 - day
-    d.setDate(d.getDate() + diff)
-    return { start: fmtYmd(d), end: fmtYmd(now) }
-  }
-  if (preset === 'mtd') {
-    const start = new Date(now.getFullYear(), now.getMonth(), 1)
-    return { start: fmtYmd(start), end: fmtYmd(now) }
-  }
-  const start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-  const end = new Date(now.getFullYear(), now.getMonth(), 0)
-  return { start: fmtYmd(start), end: fmtYmd(end) }
+const MONTH_OPTIONS = generateMonthOptions()
+
+function currentMonthKey() {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
 const PIE_COLORS = ['#6366f1', '#22c55e', '#f97316', '#ec4899', '#06b6d4', '#eab308', '#a855f7', '#64748b']
@@ -82,26 +80,26 @@ export interface SurgeryDashboardData {
     expenses: number
     netProfit: number
   }[]
-  teams: { id: string; name: string; teamLead: { name: string } | null }[]
+  teams: { id: string; name: string; managerName: string }[]
 }
 
 export default function PLSurgeryDashboardPage() {
-  const [preset, setPreset] = useState<Preset>('mtd')
-  const [customStart, setCustomStart] = useState('')
-  const [customEnd, setCustomEnd] = useState('')
+  const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
   const [teamTab, setTeamTab] = useState('all')
 
   useEffect(() => {
-    const now = new Date()
-    setCustomEnd(fmtYmd(now))
-    setCustomStart(fmtYmd(new Date(now.getFullYear(), now.getMonth(), 1)))
-  }, [])
-
-  useEffect(() => {
-    const { start, end } = getRangeForPreset(preset, customStart, customEnd)
+    if (selectedMonths.length === 0) {
+      setDateRange({ startDate: '', endDate: '' })
+      return
+    }
+    const sorted = selectedMonths.slice().sort()
+    const start = `${sorted[0]}-01`
+    const [y, m] = sorted[sorted.length - 1].split('-').map(Number)
+    const endTemp = new Date(y, m, 0)
+    const end = endTemp.toISOString().split('T')[0]
     setDateRange({ startDate: start, endDate: end })
-  }, [preset, customStart, customEnd])
+  }, [selectedMonths])
 
   const { data, isLoading } = useQuery<SurgeryDashboardData>({
     queryKey: ['pl', 'surgery-dashboard', dateRange, teamTab],
@@ -151,51 +149,47 @@ export default function PLSurgeryDashboardPage() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                asChild
-                className="border-teal-200 bg-teal-50/80 text-teal-900 hover:bg-teal-100 dark:border-teal-800 dark:bg-teal-950/40 dark:text-teal-100 dark:hover:bg-teal-950/60"
-              >
+              <Button variant="outline" size="sm" asChild>
                 <Link href="/pl/dashboard">P/L Ledger</Link>
               </Button>
-              <div className="flex flex-wrap gap-1 rounded-lg border border-indigo-200/60 bg-indigo-50/70 p-1 shadow-sm dark:border-indigo-800/40 dark:bg-indigo-950/30">
-                {(
-                  [
-                    ['today', 'Today'],
-                    ['week', 'This week'],
-                    ['mtd', 'MTD'],
-                    ['lastMonth', 'Last month'],
-                    ['custom', 'Custom'],
-                  ] as const
-                ).map(([key, label]) => (
-                  <Button
-                    key={key}
-                    type="button"
-                    variant={preset === key ? 'secondary' : 'ghost'}
-                    size="sm"
-                    className="h-8"
-                    onClick={() => setPreset(key)}
-                  >
-                    {label}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2 border-slate-300 bg-background/90">
+                    <Calendar className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                    Months {selectedMonths.length > 0 && `(${selectedMonths.length})`}
                   </Button>
-                ))}
-              </div>
-              {preset === 'custom' && (
-                <div className="flex gap-2">
-                  <Input
-                    type="date"
-                    value={customStart}
-                    onChange={(e) => setCustomStart(e.target.value)}
-                    className="w-[140px]"
-                  />
-                  <Input
-                    type="date"
-                    value={customEnd}
-                    onChange={(e) => setCustomEnd(e.target.value)}
-                    className="w-[140px]"
-                  />
-                </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 max-h-[min(70vh,420px)] overflow-y-auto">
+                  <DropdownMenuLabel>Select months</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={selectedMonths.length === MONTH_OPTIONS.length}
+                    onCheckedChange={(checked) => {
+                      if (checked) setSelectedMonths(MONTH_OPTIONS.map((m) => m.key))
+                      else setSelectedMonths([])
+                    }}
+                  >
+                    All
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuSeparator />
+                  {MONTH_OPTIONS.map((m) => (
+                    <DropdownMenuCheckboxItem
+                      key={m.key}
+                      checked={selectedMonths.includes(m.key)}
+                      onCheckedChange={(checked) => {
+                        if (checked) setSelectedMonths((prev) => [...prev, m.key])
+                        else setSelectedMonths((prev) => prev.filter((k) => k !== m.key))
+                      }}
+                    >
+                      {m.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {selectedMonths.length > 0 && selectedMonths.length < MONTH_OPTIONS.length && (
+                <Button type="button" variant="ghost" size="sm" className="h-8 gap-1" onClick={() => setSelectedMonths([currentMonthKey()])}>
+                  <X className="h-3 w-3" />Reset
+                </Button>
               )}
             </div>
           </div>
@@ -203,18 +197,11 @@ export default function PLSurgeryDashboardPage() {
           <Tabs value={teamTab} onValueChange={setTeamTab} className="space-y-4">
             <div className="overflow-x-auto pb-1">
               <TabsList className="inline-flex h-auto min-h-10 w-max flex-wrap justify-start gap-1 border border-indigo-200/50 bg-indigo-50/60 p-1 dark:border-indigo-800/40 dark:bg-indigo-950/40">
-                <TabsTrigger
-                  value="all"
-                  className="text-xs sm:text-sm data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md"
-                >
+                <TabsTrigger value="all" className="text-xs sm:text-sm data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md">
                   All teams
                 </TabsTrigger>
                 {data?.teams?.map((t) => (
-                  <TabsTrigger
-                    key={t.id}
-                    value={t.id}
-                    className="max-w-[200px] truncate text-xs sm:text-sm data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-md"
-                  >
+                  <TabsTrigger key={t.id} value={t.id} className="max-w-[200px] truncate text-xs sm:text-sm data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-md">
                     {t.name}
                   </TabsTrigger>
                 ))}
@@ -227,90 +214,44 @@ export default function PLSurgeryDashboardPage() {
               ) : (
                 <>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <Card
-                      className={cn(
-                        'overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500',
-                        'bg-gradient-to-br from-violet-50/90 to-card dark:from-violet-950/35 dark:to-card'
-                      )}
-                    >
+                    <Card className={cn('overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500', 'bg-gradient-to-br from-violet-50/90 to-card dark:from-violet-950/35 dark:to-card')}>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-violet-900/90 dark:text-violet-100/90">Surgeries</CardTitle>
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-700 dark:text-violet-300">
-                          <Stethoscope className="h-4 w-4" />
-                        </div>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-700 dark:text-violet-300"><Stethoscope className="h-4 w-4" /></div>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold tabular-nums text-violet-950 dark:text-violet-50">
-                          {data?.surgeryCount ?? 0}
-                        </div>
+                        <div className="text-2xl font-bold tabular-nums text-violet-950 dark:text-violet-50">{data?.surgeryCount ?? 0}</div>
                         <p className="text-xs text-violet-800/70 dark:text-violet-200/70 mt-1">With P/L record in range</p>
                       </CardContent>
                     </Card>
-                    <Card
-                      className={cn(
-                        'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500',
-                        'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card'
-                      )}
-                    >
+                    <Card className={cn('overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500', 'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card')}>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">
-                          Mediend share
-                        </CardTitle>
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                          <DollarSign className="h-4 w-4" />
-                        </div>
+                        <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">Mediend share</CardTitle>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"><DollarSign className="h-4 w-4" /></div>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
-                          ₹{(data?.totalRevenue ?? 0).toLocaleString('en-IN')}
-                        </div>
+                        <div className="text-2xl font-bold tabular-nums text-emerald-950 dark:text-emerald-50">₹{(data?.totalRevenue ?? 0).toLocaleString('en-IN')}</div>
                         <p className="text-xs text-emerald-800/70 dark:text-emerald-200/70 mt-1">Gross share amount</p>
                       </CardContent>
                     </Card>
-                    <Card
-                      className={cn(
-                        'overflow-hidden border-0 shadow-md border-l-4 border-l-orange-500',
-                        'bg-gradient-to-br from-orange-50/90 to-card dark:from-orange-950/35 dark:to-card'
-                      )}
-                    >
+                    <Card className={cn('overflow-hidden border-0 shadow-md border-l-4 border-l-orange-500', 'bg-gradient-to-br from-orange-50/90 to-card dark:from-orange-950/35 dark:to-card')}>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-orange-900/90 dark:text-orange-100/90">
-                          Mediend expenses
-                        </CardTitle>
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/15 text-orange-700 dark:text-orange-300">
-                          <Wallet className="h-4 w-4" />
-                        </div>
+                        <CardTitle className="text-sm font-medium text-orange-900/90 dark:text-orange-100/90">Mediend expenses</CardTitle>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/15 text-orange-700 dark:text-orange-300"><Wallet className="h-4 w-4" /></div>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold tabular-nums text-orange-950 dark:text-orange-50">
-                          ₹{(data?.totalExpenses ?? 0).toLocaleString('en-IN')}
-                        </div>
-                        <p className="text-xs text-orange-800/70 dark:text-orange-200/70 mt-1">Cab, D&amp;C, referral, etc.</p>
+                        <div className="text-2xl font-bold tabular-nums text-orange-950 dark:text-orange-50">₹{(data?.totalExpenses ?? 0).toLocaleString('en-IN')}</div>
+                        <p className="text-xs text-orange-800/70 dark:text-orange-200/70 mt-1">Cab, D&C, referral, etc.</p>
                       </CardContent>
                     </Card>
-                    <Card
-                      className={cn(
-                        'overflow-hidden border-0 shadow-md border-l-4 border-l-indigo-600',
-                        'bg-gradient-to-br from-indigo-50/90 to-card dark:from-indigo-950/40 dark:to-card'
-                      )}
-                    >
+                    <Card className={cn('overflow-hidden border-0 shadow-md border-l-4 border-l-indigo-600', 'bg-gradient-to-br from-indigo-50/90 to-card dark:from-indigo-950/40 dark:to-card')}>
                       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium text-indigo-900/90 dark:text-indigo-100/90">
-                          Net (avg / case)
-                        </CardTitle>
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600/15 text-indigo-700 dark:text-indigo-300">
-                          <TrendingUp className="h-4 w-4" />
-                        </div>
+                        <CardTitle className="text-sm font-medium text-indigo-900/90 dark:text-indigo-100/90">Net profit</CardTitle>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600/15 text-indigo-700 dark:text-indigo-300"><TrendingUp className="h-4 w-4" /></div>
                       </CardHeader>
                       <CardContent>
-                        <div className="text-2xl font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
-                          ₹{(data?.netProfit ?? 0).toLocaleString('en-IN')}
-                        </div>
-                        <p className="text-xs text-indigo-800/70 dark:text-indigo-200/70 mt-1">
-                          Avg ₹
-                          {(data?.avgRevenuePerSurgery ?? 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}{' '}
-                          / surgery
-                        </p>
+                        <div className="text-2xl font-bold tabular-nums text-indigo-950 dark:text-indigo-50">₹{(data?.netProfit ?? 0).toLocaleString('en-IN')}</div>
+                        <p className="text-xs text-indigo-800/70 dark:text-indigo-200/70 mt-1">Avg ₹{(data?.avgRevenuePerSurgery ?? 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })} / surgery</p>
                       </CardContent>
                     </Card>
                   </div>
@@ -318,10 +259,7 @@ export default function PLSurgeryDashboardPage() {
                   <div className="grid gap-6 lg:grid-cols-2">
                     <Card className="overflow-hidden border-fuchsia-200/50 shadow-md dark:border-fuchsia-800/35">
                       <CardHeader className="border-b bg-gradient-to-r from-fuchsia-500/12 via-pink-500/8 to-transparent">
-                        <CardTitle className="flex items-center gap-2 text-lg text-fuchsia-950 dark:text-fuchsia-100">
-                          <PieChartIcon className="h-5 w-5 text-fuchsia-600 dark:text-fuchsia-400" />
-                          Disease distribution
-                        </CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-lg text-fuchsia-950 dark:text-fuchsia-100"><PieChartIcon className="h-5 w-5 text-fuchsia-600 dark:text-fuchsia-400" />Disease distribution</CardTitle>
                         <CardDescription>By case count</CardDescription>
                       </CardHeader>
                       <CardContent className="h-[320px]">
@@ -330,18 +268,8 @@ export default function PLSurgeryDashboardPage() {
                         ) : (
                           <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
-                              <Pie
-                                data={pieData}
-                                dataKey="value"
-                                nameKey="name"
-                                cx="50%"
-                                cy="50%"
-                                outerRadius={100}
-                                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                              >
-                                {pieData.map((_, i) => (
-                                  <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                                ))}
+                              <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                                {pieData.map((_, i) => (<Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />))}
                               </Pie>
                               <Tooltip />
                               <Legend />
@@ -353,10 +281,7 @@ export default function PLSurgeryDashboardPage() {
 
                     <Card className="overflow-hidden border-indigo-200/50 shadow-md dark:border-indigo-800/35">
                       <CardHeader className="border-b bg-gradient-to-r from-indigo-500/12 via-blue-500/8 to-transparent">
-                        <CardTitle className="flex items-center gap-2 text-lg text-indigo-950 dark:text-indigo-100">
-                          <BarChart3 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                          Hospital distribution
-                        </CardTitle>
+                        <CardTitle className="flex items-center gap-2 text-lg text-indigo-950 dark:text-indigo-100"><BarChart3 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />Hospital distribution</CardTitle>
                         <CardDescription>Surgeries per hospital</CardDescription>
                       </CardHeader>
                       <CardContent className="h-[320px]">
@@ -378,10 +303,7 @@ export default function PLSurgeryDashboardPage() {
 
                   <Card className="overflow-hidden border-violet-200/50 shadow-lg dark:border-violet-800/40">
                     <CardHeader className="border-b bg-gradient-to-r from-violet-500/12 via-indigo-500/8 to-transparent">
-                      <CardTitle className="flex items-center gap-2 text-lg text-violet-950 dark:text-violet-100">
-                        <Table2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
-                        BD breakdown
-                      </CardTitle>
+                      <CardTitle className="flex items-center gap-2 text-lg text-violet-950 dark:text-violet-100"><Table2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />BD Breakdown</CardTitle>
                       <CardDescription>Revenue = Mediend share; net = share − Mediend expenses</CardDescription>
                     </CardHeader>
                     <CardContent className="overflow-x-auto">
@@ -389,11 +311,11 @@ export default function PLSurgeryDashboardPage() {
                         <TableHeader>
                           <TableRow>
                             <TableHead>BD</TableHead>
-                            <TableHead>Team</TableHead>
+                            <TableHead>Team Leader</TableHead>
                             <TableHead className="text-right">Surgeries</TableHead>
                             <TableHead className="text-right">Revenue</TableHead>
                             <TableHead className="text-right">Expenses</TableHead>
-                            <TableHead className="text-right">Net profit</TableHead>
+                            <TableHead className="text-right">Net Profit</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -402,22 +324,14 @@ export default function PLSurgeryDashboardPage() {
                               <TableCell className="font-medium">{row.bdName}</TableCell>
                               <TableCell className="text-muted-foreground">{row.teamName ?? '—'}</TableCell>
                               <TableCell className="text-right">{row.surgeries}</TableCell>
-                              <TableCell className="text-right">
-                                ₹{row.revenue.toLocaleString('en-IN')}
-                              </TableCell>
-                              <TableCell className="text-right">
-                                ₹{row.expenses.toLocaleString('en-IN')}
-                              </TableCell>
-                              <TableCell className="text-right font-medium">
-                                ₹{row.netProfit.toLocaleString('en-IN')}
-                              </TableCell>
+                              <TableCell className="text-right">₹{row.revenue.toLocaleString('en-IN')}</TableCell>
+                              <TableCell className="text-right">₹{row.expenses.toLocaleString('en-IN')}</TableCell>
+                              <TableCell className="text-right font-medium tabular-nums">₹{row.netProfit.toLocaleString('en-IN')}</TableCell>
                             </TableRow>
                           ))}
                           {(!data?.bdBreakdown || data.bdBreakdown.length === 0) && (
                             <TableRow>
-                              <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                                No surgeries in this period
-                              </TableCell>
+                              <TableCell colSpan={6} className="text-center text-muted-foreground py-8">No surgeries in this period</TableCell>
                             </TableRow>
                           )}
                         </TableBody>

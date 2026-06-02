@@ -36,6 +36,7 @@ import {
   CheckCircle2,
   Settings2,
   LayoutDashboard,
+  X,
 } from 'lucide-react'
 import Link from 'next/link'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
@@ -52,34 +53,23 @@ import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
-type Preset = 'today' | 'week' | 'mtd' | 'lastMonth' | 'custom'
-
-function fmtYmd(d: Date): string {
-  return d.toISOString().split('T')[0]
+function generateMonthOptions() {
+  const months: { key: string; label: string }[] = []
+  const now = new Date()
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    const label = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    months.push({ key, label })
+  }
+  return months
 }
 
-function getRangeForPreset(preset: Preset, customStart: string, customEnd: string): { start: string; end: string } {
-  const now = new Date()
-  if (preset === 'custom') {
-    return { start: customStart || fmtYmd(now), end: customEnd || fmtYmd(now) }
-  }
-  if (preset === 'today') {
-    return { start: fmtYmd(now), end: fmtYmd(now) }
-  }
-  if (preset === 'week') {
-    const d = new Date(now)
-    const day = d.getDay()
-    const diff = day === 0 ? -6 : 1 - day
-    d.setDate(d.getDate() + diff)
-    return { start: fmtYmd(d), end: fmtYmd(now) }
-  }
-  if (preset === 'mtd') {
-    const start = new Date(now.getFullYear(), now.getMonth(), 1)
-    return { start: fmtYmd(start), end: fmtYmd(now) }
-  }
-  const start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-  const end = new Date(now.getFullYear(), now.getMonth(), 0)
-  return { start: fmtYmd(start), end: fmtYmd(end) }
+const MONTH_OPTIONS = generateMonthOptions()
+
+function currentMonthKey() {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
 type PipelineStats = {
@@ -150,9 +140,7 @@ function loadColVisibility(): Record<string, boolean> {
 }
 
 export default function PLLedgerPage() {
-  const [preset, setPreset] = useState<Preset>('mtd')
-  const [customStart, setCustomStart] = useState('')
-  const [customEnd, setCustomEnd] = useState('')
+  const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
   const [visibleCols, setVisibleCols] = useState<Record<string, boolean>>(DEFAULT_COLS)
 
@@ -161,16 +149,17 @@ export default function PLLedgerPage() {
   }, [])
 
   useEffect(() => {
-    const now = new Date()
-    setCustomEnd(fmtYmd(now))
-    const start = new Date(now.getFullYear(), now.getMonth(), 1)
-    setCustomStart(fmtYmd(start))
-  }, [])
-
-  useEffect(() => {
-    const { start, end } = getRangeForPreset(preset, customStart, customEnd)
+    if (selectedMonths.length === 0) {
+      setDateRange({ startDate: '', endDate: '' })
+      return
+    }
+    const sorted = selectedMonths.slice().sort()
+    const start = `${sorted[0]}-01`
+    const [y, m] = sorted[sorted.length - 1].split('-').map(Number)
+    const endTemp = new Date(y, m, 0)
+    const end = endTemp.toISOString().split('T')[0]
     setDateRange({ startDate: start, endDate: end })
-  }, [preset, customStart, customEnd])
+  }, [selectedMonths])
 
   const persistCols = useCallback((next: Record<string, boolean>) => {
     setVisibleCols(next)
@@ -235,8 +224,7 @@ export default function PLLedgerPage() {
 
   const [patientDrawerOpen, setPatientDrawerOpen] = useState(false)
   const [patientDrawerTitle, setPatientDrawerTitle] = useState('')
-  const [patientDrawerData, setPatientDrawerData] = useState<any[]>([])
-  const [patientDrawerDateField, setPatientDrawerDateField] = useState<'surgery' | 'admission' | 'discharge'>('surgery')
+  const [patientDrawerStage, setPatientDrawerStage] = useState('')
 
   const [bdFilter, setBdFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
@@ -327,43 +315,58 @@ export default function PLLedgerPage() {
                   Surgery dashboard
                 </Link>
               </Button>
-              <div className="flex flex-wrap gap-1 rounded-lg border border-teal-200/60 bg-teal-50/70 p-1 shadow-sm dark:border-teal-800/40 dark:bg-teal-950/30">
-                {(
-                  [
-                    ['today', 'Today'],
-                    ['week', 'This week'],
-                    ['mtd', 'MTD'],
-                    ['lastMonth', 'Last month'],
-                    ['custom', 'Custom'],
-                  ] as const
-                ).map(([key, label]) => (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button
-                    key={key}
-                    type="button"
-                    variant={preset === key ? 'secondary' : 'ghost'}
+                    variant="outline"
                     size="sm"
-                    className="h-8"
-                    onClick={() => setPreset(key)}
+                    className="gap-2 border-slate-300 bg-background/90 dark:border-slate-600"
                   >
-                    {label}
+                    <Calendar className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+                    Months {selectedMonths.length > 0 && `(${selectedMonths.length})`}
                   </Button>
-                ))}
-              </div>
-              {preset === 'custom' && (
-                <div className="flex gap-2">
-                  <Input
-                    type="date"
-                    value={customStart}
-                    onChange={(e) => setCustomStart(e.target.value)}
-                    className="w-[140px]"
-                  />
-                  <Input
-                    type="date"
-                    value={customEnd}
-                    onChange={(e) => setCustomEnd(e.target.value)}
-                    className="w-[140px]"
-                  />
-                </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 max-h-[min(70vh,420px)] overflow-y-auto">
+                  <DropdownMenuLabel>Select months</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={selectedMonths.length === MONTH_OPTIONS.length}
+                    onCheckedChange={(checked) => {
+                      if (checked) setSelectedMonths(MONTH_OPTIONS.map((m) => m.key))
+                      else setSelectedMonths([])
+                    }}
+                  >
+                    All
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuSeparator />
+                  {MONTH_OPTIONS.map((m) => (
+                    <DropdownMenuCheckboxItem
+                      key={m.key}
+                      checked={selectedMonths.includes(m.key)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedMonths((prev) => [...prev, m.key])
+                        } else {
+                          setSelectedMonths((prev) => prev.filter((k) => k !== m.key))
+                        }
+                      }}
+                    >
+                      {m.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {selectedMonths.length > 0 && selectedMonths.length < MONTH_OPTIONS.length && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 gap-1"
+                  onClick={() => setSelectedMonths([currentMonthKey()])}
+                >
+                  <X className="h-3 w-3" />
+                  Reset
+                </Button>
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -504,10 +507,8 @@ export default function PLLedgerPage() {
                 'bg-gradient-to-br from-indigo-50/90 to-card dark:from-indigo-950/35 dark:to-card'
               )}
               onClick={() => {
-                const admitted = (records ?? []).filter((r: Lead) => r.admissionRecord)
                 setPatientDrawerTitle('Admitted Patients')
-                setPatientDrawerData(admitted)
-                setPatientDrawerDateField('admission')
+                setPatientDrawerStage('ADMITTED,INITIATED')
                 setPatientDrawerOpen(true)
               }}
             >
@@ -530,10 +531,8 @@ export default function PLLedgerPage() {
                 'bg-gradient-to-br from-violet-50/90 to-card dark:from-violet-950/35 dark:to-card'
               )}
               onClick={() => {
-                const scheduled = (records ?? []).filter((r: Lead) => r.surgeryDate)
                 setPatientDrawerTitle('Scheduled Surgeries')
-                setPatientDrawerData(scheduled)
-                setPatientDrawerDateField('surgery')
+                setPatientDrawerStage('PREAUTH_COMPLETE,INITIATED')
                 setPatientDrawerOpen(true)
               }}
             >
@@ -556,10 +555,8 @@ export default function PLLedgerPage() {
                 'bg-gradient-to-br from-cyan-50/90 to-card dark:from-cyan-950/35 dark:to-card'
               )}
               onClick={() => {
-                const ipdDone = (records ?? []).filter((r: Lead) => r.caseStage === 'IPD_DONE')
                 setPatientDrawerTitle('IPD Done')
-                setPatientDrawerData(ipdDone)
-                setPatientDrawerDateField('surgery')
+                setPatientDrawerStage('IPD_DONE')
                 setPatientDrawerOpen(true)
               }}
             >
@@ -582,10 +579,8 @@ export default function PLLedgerPage() {
                 'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card'
               )}
               onClick={() => {
-                const discharged = (records ?? []).filter((r: Lead) => r.dischargeSheet)
                 setPatientDrawerTitle('Discharged Patients')
-                setPatientDrawerData(discharged)
-                setPatientDrawerDateField('discharge')
+                setPatientDrawerStage('DISCHARGED,CASH_DISCHARGED')
                 setPatientDrawerOpen(true)
               }}
             >
@@ -995,8 +990,7 @@ export default function PLLedgerPage() {
             open={patientDrawerOpen}
             onOpenChange={setPatientDrawerOpen}
             title={patientDrawerTitle}
-            patients={patientDrawerData}
-            dateField={patientDrawerDateField}
+            stageFilter={patientDrawerStage}
           />
         </div>
       </div>
