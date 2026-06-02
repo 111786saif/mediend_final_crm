@@ -410,6 +410,15 @@ export const PaidByParty = {
 export type PaidByParty = (typeof PaidByParty)[keyof typeof PaidByParty]
 
 
+export const PLOutstandingStatus = {
+  NEW: 'NEW',
+  DRAFT: 'DRAFT',
+  OUTSTANDING: 'OUTSTANDING'
+} as const
+
+export type PLOutstandingStatus = (typeof PLOutstandingStatus)[keyof typeof PLOutstandingStatus]
+
+
 export const CaseStage = {
   NEW_LEAD: 'NEW_LEAD',
   KYP_BASIC_COMPLETE: 'KYP_BASIC_COMPLETE',

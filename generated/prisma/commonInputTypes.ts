@@ -494,11 +494,28 @@ export type EnumInsuranceCaseStatusWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumInsuranceCaseStatusFilter<$PrismaModel>
 }
 
+export type EnumPLOutstandingStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PLOutstandingStatus | Prisma.EnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PLOutstandingStatus[] | Prisma.ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PLOutstandingStatus[] | Prisma.ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPLOutstandingStatusFilter<$PrismaModel> | $Enums.PLOutstandingStatus
+}
+
 export type EnumPaidByPartyNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.PaidByParty | Prisma.EnumPaidByPartyFieldRefInput<$PrismaModel> | null
   in?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
   notIn?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
   not?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel> | $Enums.PaidByParty | null
+}
+
+export type EnumPLOutstandingStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PLOutstandingStatus | Prisma.EnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PLOutstandingStatus[] | Prisma.ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PLOutstandingStatus[] | Prisma.ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPLOutstandingStatusWithAggregatesFilter<$PrismaModel> | $Enums.PLOutstandingStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPLOutstandingStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPLOutstandingStatusFilter<$PrismaModel>
 }
 
 export type EnumPaidByPartyNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -1869,11 +1886,28 @@ export type NestedEnumInsuranceCaseStatusWithAggregatesFilter<$PrismaModel = nev
   _max?: Prisma.NestedEnumInsuranceCaseStatusFilter<$PrismaModel>
 }
 
+export type NestedEnumPLOutstandingStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.PLOutstandingStatus | Prisma.EnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PLOutstandingStatus[] | Prisma.ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PLOutstandingStatus[] | Prisma.ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPLOutstandingStatusFilter<$PrismaModel> | $Enums.PLOutstandingStatus
+}
+
 export type NestedEnumPaidByPartyNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.PaidByParty | Prisma.EnumPaidByPartyFieldRefInput<$PrismaModel> | null
   in?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
   notIn?: $Enums.PaidByParty[] | Prisma.ListEnumPaidByPartyFieldRefInput<$PrismaModel> | null
   not?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel> | $Enums.PaidByParty | null
+}
+
+export type NestedEnumPLOutstandingStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PLOutstandingStatus | Prisma.EnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.PLOutstandingStatus[] | Prisma.ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PLOutstandingStatus[] | Prisma.ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPLOutstandingStatusWithAggregatesFilter<$PrismaModel> | $Enums.PLOutstandingStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPLOutstandingStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPLOutstandingStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumPaidByPartyNullableWithAggregatesFilter<$PrismaModel = never> = {

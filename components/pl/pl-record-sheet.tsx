@@ -13,11 +13,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
+import { Badge } from '@/components/ui/badge'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import Link from 'next/link'
 
@@ -36,16 +38,23 @@ interface Lead {
   surgeryDate?: string | Date
   surgeonName?: string
   bd?: { name?: string }
-  admissionRecord?: { admissionDate?: string }
+  admissionRecord?: {
+    admissionDate?: string
+    surgeryDate?: string
+    notes?: string
+  }
   plRecord?: Record<string, unknown> & {
     finalProfit?: number
+    outstandingStatus?: string
     hospitalPayoutStatus?: string
     doctorPayoutStatus?: string
     mediendInvoiceStatus?: string
     doctorRemarks?: string
     costBreakdownRemarks?: string
   }
-  dischargeSheet?: ({ id: string } & Record<string, unknown>) | null
+  dischargeSheet?: ({
+    id: string
+  } & Record<string, unknown>) | null
   [key: string]: unknown
 }
 
@@ -66,6 +75,30 @@ interface PlRecordSheetProps {
   leadId: string
 }
 
+const DC_FIELD_KEYS = [
+  'roomRent',
+  'pharmacy',
+  'investigation',
+  'consumables',
+  'implants',
+  'instruments',
+  'anesthesia',
+] as const
+
+const DC_LABELS: Record<string, string> = {
+  roomRent: 'Room Rent',
+  pharmacy: 'Pharmacy',
+  investigation: 'Investigation',
+  consumables: 'Consumables',
+  implants: 'Implants',
+  instruments: 'Instruments',
+  anesthesia: 'Anesthesia',
+}
+
+function inr(v: number) {
+  return `₹${v.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`
+}
+
 export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps) {
   const queryClient = useQueryClient()
 
@@ -79,17 +112,16 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     month: '',
     admissionDate: '',
     surgeryDate: '',
-    managerRole: '',
     managerName: '',
     bdmName: '',
     paymentType: '',
     status: '',
-    approvedOrCash: '',
     paymentCollectedAt: '',
     totalAmount: '',
     billAmount: '',
     deductionAmount: '',
     cashOrDedPaid: '',
+    waivedOffAmount: '',
     referralAmount: '',
     cabCharges: '',
     dcCharges: '',
@@ -111,18 +143,56 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     mediendInvoiceStatus: 'PENDING',
     hospitalAmountPending: '',
     doctorAmountPending: '',
+    // Deductions & Settlement from discharge sheet
+    copayAmount: '',
+    otherDeduction: '',
+    collectedByHospital: '',
+    collectedByMediend: '',
+    discountAmount: '',
+    axisTariffDeduction: '',
+    axisTariffDeductionPaid: '',
+    finalApprovedAmount: '',
+    actualFinalAmount: '',
+    netSettlementAmount: '',
+  })
+
+  const [dcChecked, setDcChecked] = useState<Record<string, boolean>>({
+    roomRent: false,
+    pharmacy: false,
+    investigation: false,
+    consumables: false,
+    implants: false,
+    instruments: false,
+    anesthesia: false,
+  })
+
+  const [dsBillAmounts, setDsBillAmounts] = useState<Record<string, number>>({
+    roomRent: 0,
+    pharmacy: 0,
+    investigation: 0,
+    consumables: 0,
+    implants: 0,
+    instruments: 0,
+    anesthesia: 0,
   })
 
   const initialized = useRef(false)
   useEffect(() => {
     if (!record || !open || initialized.current) return
     const pl = record.plRecord as Record<string, unknown> | undefined
-    const surgeryDate = record.surgeryDate || (pl?.surgeryDate as string | Date | null | undefined)
+    const admission = record.admissionRecord
+    const ds = record.dischargeSheet as Record<string, unknown> | undefined
+
+    const surgeryDate =
+      record.surgeryDate ||
+      (pl?.surgeryDate as string | Date | null | undefined) ||
+      admission?.surgeryDate ||
+      (ds?.surgeryDate as string | Date | null | undefined)
     const monthFromSurgery = getMonthFromDate(surgeryDate)
     const monthValue = (pl?.month ? new Date(pl.month as string).toISOString().slice(0, 10) : null) || monthFromSurgery
 
     const admissionFromPl = pl?.admissionDate as string | undefined
-    const admissionFromLead = record.admissionRecord?.admissionDate
+    const admissionFromLead = admission?.admissionDate
     const admissionRaw = admissionFromPl || admissionFromLead
 
     const dedPatient =
@@ -132,13 +202,25 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           ? String(pl.cashPaidByPatient)
           : ''
 
-    const ds = record.dischargeSheet as Record<string, unknown> | undefined
     const dedTotal =
       ds?.deductionAmount != null && Number(ds.deductionAmount) !== 0
         ? String(ds.deductionAmount)
         : record.deduction != null && Number(record.deduction) !== 0
           ? String(record.deduction)
           : ''
+
+    const numVal = (v: unknown) => (v != null ? Number(v) : 0)
+
+    const billAmts: Record<string, number> = {
+      roomRent: numVal(ds?.roomRentAmount),
+      pharmacy: numVal(ds?.pharmacyAmount),
+      investigation: numVal(ds?.investigationAmount),
+      consumables: numVal(ds?.consumablesAmount),
+      implants: numVal(ds?.implantsAmount),
+      instruments: numVal(ds?.instrumentsAmount ?? ds?.instrumentsAmount),
+      anesthesia: numVal(ds?.anesthesiaAmount),
+    }
+    setDsBillAmounts(billAmts)
 
     const timer = setTimeout(() => {
       setFormData((prev) => {
@@ -147,25 +229,24 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           month: monthValue ? monthValue.slice(0, 7) : '',
           admissionDate: admissionRaw ? new Date(admissionRaw as string).toISOString().slice(0, 10) : '',
           surgeryDate: surgeryDate ? new Date(surgeryDate as string).toISOString().slice(0, 10) : '',
-          managerRole: (pl?.managerRole as string) || '',
           managerName: (pl?.managerName as string) || '',
           bdmName: (pl?.bdmName as string) || record.bd?.name || '',
           paymentType: (pl?.paymentType as string) || '',
           status: (pl?.status as string) || '',
-          approvedOrCash: (pl?.approvedOrCash as string) ?? '',
           paymentCollectedAt: (pl?.paymentCollectedAt as string) || '',
           totalAmount: pl?.totalAmount != null ? String(pl.totalAmount) : '',
           billAmount: pl?.billAmount != null ? String(pl.billAmount) : (record.billAmount != null ? String(record.billAmount) : ''),
           deductionAmount: dedTotal,
           cashOrDedPaid: dedPatient,
+          waivedOffAmount: Math.max(numVal(pl?.waivedOffAmount ?? ds?.waivedOffAmount), 0).toString(),
           referralAmount: pl?.referralAmount != null ? String(pl.referralAmount) : '',
           cabCharges: pl?.cabCharges != null ? String(pl.cabCharges) : '',
           dcCharges: pl?.dcCharges != null ? String(pl.dcCharges) : '',
           doctorCharges: pl?.doctorCharges != null ? String(pl.doctorCharges) : '',
-          implantCost: pl?.implantCost != null ? String(pl.implantCost) : '',
-          instrumentsCost: pl?.instrumentsCost != null ? String(pl.instrumentsCost) : '',
-          implantPaidBy: ((pl?.implantPaidBy as string) || '') as PaidBy,
-          instrumentsPaidBy: ((pl?.instrumentsPaidBy as string) || '') as PaidBy,
+          implantCost: pl?.implantCost != null ? String(pl.implantCost) : (ds?.implantCost != null ? String(ds.implantCost) : ''),
+          instrumentsCost: pl?.instrumentsCost != null ? String(pl.instrumentsCost) : (ds?.instrumentsCost != null ? String(ds.instrumentsCost) : ''),
+          implantPaidBy: ((pl?.implantPaidBy as string) || (ds?.implantPaidBy as string) || '') as PaidBy,
+          instrumentsPaidBy: ((pl?.instrumentsPaidBy as string) || (ds?.instrumentsPaidBy as string) || '') as PaidBy,
           hospitalSharePct: pl?.hospitalSharePct != null ? String(pl.hospitalSharePct) : '',
           hospitalShareAmount: pl?.hospitalShareAmount != null ? String(pl.hospitalShareAmount) : '',
           mediendSharePct: pl?.mediendSharePct != null ? String(pl.mediendSharePct) : '',
@@ -191,6 +272,17 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           hospitalAmountPending:
             pl?.hospitalAmountPending != null ? String(pl.hospitalAmountPending) : '',
           doctorAmountPending: pl?.doctorAmountPending != null ? String(pl.doctorAmountPending) : '',
+          // Deductions & Settlement
+          copayAmount: ds?.copayAmount != null ? String(ds.copayAmount) : '',
+          otherDeduction: ds?.otherDeduction != null ? String(ds.otherDeduction) : '',
+          collectedByHospital: ds?.collectedByHospital != null ? String(ds.collectedByHospital) : '',
+          collectedByMediend: ds?.collectedByMediend != null ? String(ds.collectedByMediend) : '',
+          discountAmount: ds?.discountAmount != null ? String(ds.discountAmount) : '',
+          axisTariffDeduction: ds?.axisTariffDeduction != null ? String(ds.axisTariffDeduction) : '',
+          axisTariffDeductionPaid: ds?.axisTariffDeductionPaid != null ? String(ds.axisTariffDeductionPaid) : '',
+          finalApprovedAmount: ds?.finalApprovedAmount != null ? String(ds.finalApprovedAmount) : '',
+          actualFinalAmount: ds?.actualFinalAmount != null ? String(ds.actualFinalAmount) : '',
+          netSettlementAmount: ds?.netSettlementAmount != null ? String(ds.netSettlementAmount) : '',
         }
         if (JSON.stringify(prev) === JSON.stringify(next)) return prev
         return next
@@ -206,6 +298,23 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     }
   }, [open])
 
+  const computedDcTotal = useMemo(() => {
+    return DC_FIELD_KEYS.reduce((sum, key) => {
+      if (dcChecked[key]) return sum + (dsBillAmounts[key] || 0)
+      return sum
+    }, 0)
+  }, [dcChecked, dsBillAmounts])
+
+  const computedWaivedOff = useMemo(() => {
+    const dedTotal = parseFloat(formData.deductionAmount) || 0
+    const paid = parseFloat(formData.cashOrDedPaid) || 0
+    return Math.max(dedTotal - paid, 0)
+  }, [formData.deductionAmount, formData.cashOrDedPaid])
+
+  const computedDedPaidTotal = useMemo(() => {
+    return (parseFloat(formData.collectedByHospital) || 0) + (parseFloat(formData.collectedByMediend) || 0)
+  }, [formData.collectedByHospital, formData.collectedByMediend])
+
   const updateMutation = useMutation({
     mutationFn: async (payload: Record<string, unknown>) => {
       return apiPatch<Lead>(`/api/leads/${leadId}`, { plRecord: payload })
@@ -213,7 +322,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
       queryClient.invalidateQueries({ queryKey: ['pl'] })
-      toast.success('P/L record saved')
       onOpenChange(false)
     },
     onError: (e: Error) => {
@@ -225,7 +333,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     setFormData((prev) => ({ ...prev, [key]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent, status: 'DRAFT' | 'OUTSTANDING') => {
     e.preventDefault()
     const bill = parseFloat(formData.billAmount) || 0
     const hospPct = parseFloat(formData.hospitalSharePct) || 0
@@ -235,7 +343,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
 
     const referral = parseFloat(formData.referralAmount) || 0
     const cab = parseFloat(formData.cabCharges) || 0
-    const dc = parseFloat(formData.dcCharges) || 0
+    const dc = computedDcTotal || parseFloat(formData.dcCharges) || 0
     const doctor = parseFloat(formData.doctorCharges) || 0
     const implant = parseFloat(formData.implantCost) || 0
     const instruments = parseFloat(formData.instrumentsCost) || 0
@@ -251,22 +359,17 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       month: formData.month ? new Date(`${formData.month}-01`).toISOString() : undefined,
       admissionDate: formData.admissionDate ? new Date(formData.admissionDate).toISOString() : undefined,
       surgeryDate: formData.surgeryDate ? new Date(formData.surgeryDate).toISOString() : undefined,
-      managerRole: formData.managerRole || undefined,
       managerName: formData.managerName || undefined,
       bdmName: formData.bdmName || undefined,
       paymentType: formData.paymentType || undefined,
       status: formData.status || undefined,
-      approvedOrCash: formData.approvedOrCash || undefined,
       paymentCollectedAt: formData.paymentCollectedAt || undefined,
       totalAmount: parseFloat(formData.totalAmount) || 0,
       billAmount: parseFloat(formData.billAmount) || 0,
       cashPaidByPatient: 0,
       cashOrDedPaid: parseFloat(formData.cashOrDedPaid) || 0,
       deductionAmount: parseFloat(formData.deductionAmount) || 0,
-      waivedOffAmount: Math.max(
-        (parseFloat(formData.deductionAmount) || 0) - (parseFloat(formData.cashOrDedPaid) || 0),
-        0
-      ),
+      waivedOffAmount: computedWaivedOff,
       referralAmount: referral,
       cabCharges: cab,
       dcCharges: dc,
@@ -293,9 +396,13 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
         formData.hospitalPayoutStatus === 'PAID' && formData.doctorPayoutStatus === 'PAID'
           ? new Date().toISOString()
           : undefined,
+      outstandingStatus: status,
+      dcChecked: Object.fromEntries(Object.entries(dcChecked).filter(([, v]) => v)),
     }
     updateMutation.mutate(payload)
   }
+
+  const bdNotes = record?.admissionRecord?.notes || ''
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -307,12 +414,39 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
         ) : (
           <>
             <SheetHeader className="px-6 pt-6 pb-4 border-b">
-              <SheetTitle className="text-xl font-bold bg-gradient-to-r from-teal-800 to-indigo-800 bg-clip-text text-transparent dark:from-teal-200 dark:to-indigo-200">
-                Edit P/L Record — {record.leadRef ?? record.id}
-              </SheetTitle>
-              <SheetDescription>Profit &amp; loss entry details</SheetDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <SheetTitle className="text-xl font-bold bg-gradient-to-r from-teal-800 to-indigo-800 bg-clip-text text-transparent dark:from-teal-200 dark:to-indigo-200">
+                    Edit P/L Record — {record.leadRef ?? record.id}
+                  </SheetTitle>
+                  <SheetDescription>Profit &amp; loss entry details</SheetDescription>
+                </div>
+                <Badge
+                  variant={
+                    (record.plRecord?.outstandingStatus as string) === 'OUTSTANDING'
+                      ? 'default'
+                      : (record.plRecord?.outstandingStatus as string) === 'DRAFT'
+                        ? 'secondary'
+                        : 'outline'
+                  }
+                  className="text-xs capitalize"
+                >
+                  {(record.plRecord?.outstandingStatus as string) || 'NEW'}
+                </Badge>
+              </div>
             </SheetHeader>
             <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-6">
+                {bdNotes && (
+                  <Card className="overflow-hidden border-amber-200/50 shadow-md dark:border-amber-800/40">
+                    <CardHeader className="border-b bg-gradient-to-r from-amber-500/10 to-yellow-500/10 pb-2">
+                      <CardTitle className="text-sm text-amber-950 dark:text-amber-100">BD Notes for PL Head</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-3 text-sm whitespace-pre-wrap">
+                      {bdNotes}
+                    </CardContent>
+                  </Card>
+                )}
+
                 <Card className="overflow-hidden border-teal-200/50 shadow-md dark:border-teal-800/40">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-gradient-to-r from-teal-500/10 to-indigo-500/10">
                     <div>
@@ -344,7 +478,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                       <p className="font-medium">{record.treatment ?? '—'}</p>
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Admission (lead)</Label>
+                      <Label className="text-xs text-muted-foreground">Admission</Label>
                       <p className="font-medium">
                         {record.admissionRecord?.admissionDate
                           ? new Date(record.admissionRecord.admissionDate).toLocaleDateString()
@@ -352,9 +486,17 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                       </p>
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Surgery date (lead)</Label>
+                      <Label className="text-xs text-muted-foreground">Surgery date</Label>
                       <p className="font-medium">
-                        {record.surgeryDate ? new Date(record.surgeryDate as string).toLocaleDateString() : '—'}
+                        {(function () {
+                          const sDate =
+                            record.surgeryDate ||
+                            record.admissionRecord?.surgeryDate ||
+                            (record.dischargeSheet as Record<string, unknown> | null)?.surgeryDate
+                          return sDate
+                            ? new Date(sDate as string).toLocaleDateString()
+                            : '—'
+                        })()}
                       </p>
                     </div>
                   </CardContent>
@@ -380,10 +522,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                         <Input type="date" value={formData.surgeryDate} onChange={(e) => update('surgeryDate', e.target.value)} className="mt-1" />
                       </div>
                       <div>
-                        <Label>Manager role</Label>
-                        <Input value={formData.managerRole} onChange={(e) => update('managerRole', e.target.value)} placeholder="ATL / TL / ACM / CM / SCM" className="mt-1" />
-                      </div>
-                      <div>
                         <Label>Manager name</Label>
                         <Input value={formData.managerName} onChange={(e) => update('managerName', e.target.value)} className="mt-1" />
                       </div>
@@ -400,12 +538,17 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                         <Input value={formData.status} onChange={(e) => update('status', e.target.value)} placeholder="e.g. IPD Done" className="mt-1" />
                       </div>
                       <div>
-                        <Label>Approved / Cash</Label>
-                        <Input value={formData.approvedOrCash} onChange={(e) => update('approvedOrCash', e.target.value)} className="mt-1" />
-                      </div>
-                      <div className="sm:col-span-2">
                         <Label>Payment collected at</Label>
-                        <Input value={formData.paymentCollectedAt} onChange={(e) => update('paymentCollectedAt', e.target.value)} placeholder="e.g. Collected By Hospital" className="mt-1" />
+                        <Select value={formData.paymentCollectedAt || 'unset'} onValueChange={(v) => update('paymentCollectedAt', v === 'unset' ? '' : v)}>
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select…" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="unset">—</SelectItem>
+                            <SelectItem value="Mediend">Mediend</SelectItem>
+                            <SelectItem value="Hospital">Hospital</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </CardContent>
                   </Card>
@@ -438,12 +581,99 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                           type="number"
                           step="0.01"
                           readOnly
-                          value={Math.max(
-                            (parseFloat(formData.deductionAmount) || 0) - (parseFloat(formData.cashOrDedPaid) || 0),
-                            0
-                          ).toFixed(2)}
+                          value={computedWaivedOff.toFixed(2)}
                           className="mt-1 bg-muted/40"
                         />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Bill Breakup (from discharge sheet)</CardTitle>
+                      <CardDescription>Tick fields to sum them into D&amp;C charges</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      {DC_FIELD_KEYS.map((key) => (
+                        <div key={key} className="flex items-center gap-3 py-1">
+                          <Checkbox
+                            id={`dc-${key}`}
+                            checked={dcChecked[key]}
+                            onCheckedChange={(checked) =>
+                              setDcChecked((prev) => ({ ...prev, [key]: checked === true }))
+                            }
+                          />
+                          <Label htmlFor={`dc-${key}`} className="flex-1 cursor-pointer">
+                            {DC_LABELS[key]}
+                          </Label>
+                          <span className="text-sm font-medium w-32 text-right">
+                            {dsBillAmounts[key] > 0 ? inr(dsBillAmounts[key]) : '—'}
+                          </span>
+                        </div>
+                      ))}
+                      <div className="flex items-center justify-between border-t pt-3 mt-2">
+                        <span className="text-sm font-semibold">D&amp;C Total (sum of ticked fields)</span>
+                        <span className="text-base font-bold">{inr(computedDcTotal)}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Deductions &amp; Settlement</CardTitle>
+                      <CardDescription>Autofilled from discharge sheet</CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      <div>
+                        <Label>Copay Amount</Label>
+                        <Input type="number" step="0.01" value={formData.copayAmount} onChange={(e) => update('copayAmount', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Other Deductions</Label>
+                        <Input type="number" step="0.01" value={formData.otherDeduction} onChange={(e) => update('otherDeduction', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Total Deductions</Label>
+                        <Input type="number" step="0.01" value={formData.deductionAmount} onChange={(e) => update('deductionAmount', e.target.value)} className="mt-1 bg-muted/40" />
+                      </div>
+                      <div>
+                        <Label>Collected by Hospital</Label>
+                        <Input type="number" step="0.01" value={formData.collectedByHospital} onChange={(e) => update('collectedByHospital', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Collected by Mediend</Label>
+                        <Input type="number" step="0.01" value={formData.collectedByMediend} onChange={(e) => update('collectedByMediend', e.target.value)} className="mt-1" />
+                      </div>
+                      <div className="flex items-center pt-4">
+                        <span className="text-sm font-medium">Deductions Paid Total: {inr(computedDedPaidTotal)}</span>
+                      </div>
+                      <div>
+                        <Label>Waived Off</Label>
+                        <Input type="number" step="0.01" value={computedWaivedOff.toFixed(2)} readOnly className="mt-1 bg-muted/40" />
+                      </div>
+                      <div>
+                        <Label>Hospital Discount</Label>
+                        <Input type="number" step="0.01" value={formData.discountAmount} onChange={(e) => update('discountAmount', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Exxis Tariff Deduction</Label>
+                        <Input type="number" step="0.01" value={formData.axisTariffDeduction} onChange={(e) => update('axisTariffDeduction', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Exxis Tariff Paid</Label>
+                        <Input type="number" step="0.01" value={formData.axisTariffDeductionPaid} onChange={(e) => update('axisTariffDeductionPaid', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Final Approved Amount</Label>
+                        <Input type="number" step="0.01" value={formData.finalApprovedAmount} onChange={(e) => update('finalApprovedAmount', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Actual Final Amount</Label>
+                        <Input type="number" step="0.01" value={formData.actualFinalAmount} onChange={(e) => update('actualFinalAmount', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Net Settlement</Label>
+                        <Input type="number" step="0.01" value={formData.netSettlementAmount} onChange={(e) => update('netSettlementAmount', e.target.value)} className="mt-1" />
                       </div>
                     </CardContent>
                   </Card>
@@ -457,14 +687,21 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                       {[
                         { key: 'referralAmount', label: 'Referral amount' },
                         { key: 'cabCharges', label: 'Cab charges' },
-                        { key: 'dcCharges', label: 'D&C charges' },
-                        { key: 'doctorCharges', label: 'Doctor charges' },
                       ].map(({ key, label }) => (
                         <div key={key}>
                           <Label>{label}</Label>
                           <Input type="number" step="0.01" value={formData[key as keyof typeof formData]} onChange={(e) => update(key, e.target.value)} className="mt-1" />
                         </div>
                       ))}
+                      <div>
+                        <Label>D&amp;C charges</Label>
+                        <Input type="number" step="0.01" value={computedDcTotal.toFixed(2)} readOnly className="mt-1 bg-muted/40" />
+                        <p className="text-[11px] text-muted-foreground mt-1">Auto: sum of ticked bill breakup fields</p>
+                      </div>
+                      <div>
+                        <Label>Doctor charges</Label>
+                        <Input type="number" step="0.01" value={formData.doctorCharges} onChange={(e) => update('doctorCharges', e.target.value)} className="mt-1" />
+                      </div>
                       <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <Label>Implant cost</Label>
@@ -517,23 +754,23 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                   <Card>
                     <CardHeader>
                       <CardTitle>Revenue split</CardTitle>
-                      <CardDescription>MediEND share (collected from hospital as partner) and final net profit</CardDescription>
+                      <CardDescription>Hospital share and Mediend share</CardDescription>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div>
-                        <Label>MediEND share %</Label>
+                        <Label>Hospital %</Label>
                         <Input type="number" step="0.01" value={formData.hospitalSharePct} onChange={(e) => update('hospitalSharePct', e.target.value)} className="mt-1" />
                       </div>
                       <div>
-                        <Label>MediEND share amount</Label>
+                        <Label>Hospital Amount</Label>
                         <Input type="number" step="0.01" value={formData.hospitalShareAmount} onChange={(e) => update('hospitalShareAmount', e.target.value)} className="mt-1" />
                       </div>
                       <div>
-                        <Label>MediEND net %</Label>
+                        <Label>Mediend %</Label>
                         <Input type="number" step="0.01" value={formData.mediendSharePct} onChange={(e) => update('mediendSharePct', e.target.value)} className="mt-1" />
                       </div>
                       <div>
-                        <Label>MediEND net amount</Label>
+                        <Label>Mediend Amount</Label>
                         <Input type="number" step="0.01" value={formData.mediendShareAmount} onChange={(e) => update('mediendShareAmount', e.target.value)} className="mt-1" />
                       </div>
                       <div className="sm:col-span-2">
@@ -611,9 +848,19 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                   </Card>
 
                   <div className="flex gap-3 pb-4">
-                    <Button type="submit" disabled={updateMutation.isPending}>
+                    <Button type="button" disabled={updateMutation.isPending} onClick={(e) => handleSubmit(e as unknown as React.FormEvent, 'DRAFT')}>
                       {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                      Save P/L record
+                      Save Draft
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="default"
+                      disabled={updateMutation.isPending}
+                      onClick={(e) => handleSubmit(e as unknown as React.FormEvent, 'OUTSTANDING')}
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                    >
+                      {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                      Save & Move to Outstanding
                     </Button>
                     <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                       Cancel

@@ -303,6 +303,12 @@ enum PaidByParty {
   HOSPITAL
 }
 
+enum PLOutstandingStatus {
+  NEW
+  DRAFT
+  OUTSTANDING
+}
+
 enum CaseStage {
   NEW_LEAD
   KYP_BASIC_COMPLETE
@@ -790,6 +796,9 @@ model PLRecord {
   id     String @id @default(cuid())
   leadId String @unique
   lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  // Workflow
+  outstandingStatus PLOutstandingStatus @default(NEW)
 
   // Core Identification
   month              DateTime? // Reporting month

@@ -18,13 +18,13 @@ const dischargeCashSchema = z.object({
   
   // Documents
   finalBillUrl: z.string(),
-  settlementLetterUrl: z.string(),
+  settlementLetterUrl: z.string().optional().default(''),
   
-  // Bill Breakup
-  roomRentAmount: z.number(),
-  pharmacyAmount: z.number(),
-  investigationAmount: z.number(),
-  consumablesAmount: z.number(),
+  // Bill Breakup (optional for cash flow)
+  roomRentAmount: z.number().optional().default(0),
+  pharmacyAmount: z.number().optional().default(0),
+  investigationAmount: z.number().optional().default(0),
+  consumablesAmount: z.number().optional().default(0),
   implantsAmount: z.number().optional().default(0),
   instrumentsAmount: z.number().optional().default(0),
   totalFinalBill: z.number(),

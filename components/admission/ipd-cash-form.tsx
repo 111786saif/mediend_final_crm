@@ -144,9 +144,6 @@ export function IPDCashForm({
     collectedAmount: '',
     collectedByMediend: '',
     collectedByHospital: '',
-    discount: '',
-    copay: '',
-    deduction: '',
     emiAmount: '',
     processingFee: '',
     gst: '',
@@ -179,9 +176,6 @@ export function IPDCashForm({
         approvedAmount: initialData.approvedAmount != null ? String(initialData.approvedAmount) : prev.approvedAmount,
         finalBillAmount: initialData.finalBillAmount != null ? String(initialData.finalBillAmount) : prev.finalBillAmount,
         collectedAmount: initialData.collectedAmount != null ? String(initialData.collectedAmount) : prev.collectedAmount,
-        discount: initialData.discount != null ? String(initialData.discount) : prev.discount,
-        copay: initialData.copay != null ? String(initialData.copay) : prev.copay,
-        deduction: initialData.deduction != null ? String(initialData.deduction) : prev.deduction,
         emiAmount: initialData.emiAmount != null ? String(initialData.emiAmount) : prev.emiAmount,
         processingFee: initialData.processingFee != null ? String(initialData.processingFee) : prev.processingFee,
         gst: initialData.gst != null ? String(initialData.gst) : prev.gst,
@@ -289,9 +283,6 @@ export function IPDCashForm({
         collectedAmount: formData.collectedAmount ? parseFloat(formData.collectedAmount) : null,
         collectedByMediend: formData.collectedByMediend ? parseFloat(formData.collectedByMediend) : null,
         collectedByHospital: formData.collectedByHospital ? parseFloat(formData.collectedByHospital) : null,
-        discount: formData.discount ? parseFloat(formData.discount) : null,
-        copay: formData.copay ? parseFloat(formData.copay) : null,
-        deduction: formData.deduction ? parseFloat(formData.deduction) : null,
         emiAmount: formData.emiAmount ? parseFloat(formData.emiAmount) : null,
         processingFee: formData.processingFee ? parseFloat(formData.processingFee) : null,
         gst: formData.gst ? parseFloat(formData.gst) : null,
@@ -668,45 +659,6 @@ export function IPDCashForm({
                 min="0"
                 value={formData.collectedByHospital}
                 onChange={(e) => set('collectedByHospital', e.target.value)}
-                placeholder="₹ Amount"
-                className="mt-1"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <Label htmlFor="discount">Discount</Label>
-              <Input
-                id="discount"
-                type="number"
-                min="0"
-                value={formData.discount}
-                onChange={(e) => set('discount', e.target.value)}
-                placeholder="₹ Amount"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="copay">Copay</Label>
-              <Input
-                id="copay"
-                type="number"
-                min="0"
-                value={formData.copay}
-                onChange={(e) => set('copay', e.target.value)}
-                placeholder="₹ Amount"
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <Label htmlFor="deduction">Deduction</Label>
-              <Input
-                id="deduction"
-                type="number"
-                min="0"
-                value={formData.deduction}
-                onChange={(e) => set('deduction', e.target.value)}
                 placeholder="₹ Amount"
                 className="mt-1"
               />

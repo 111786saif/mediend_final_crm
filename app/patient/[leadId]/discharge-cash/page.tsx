@@ -86,6 +86,9 @@ export default function DischargeCashPage() {
                 leadId={leadId}
                 patientName={lead.patientName}
                 hospitalName={lead.hospitalName}
+                approvedAmount={lead.settledTotal}
+                finalBillAmount={lead.billAmount}
+                modeOfPayment={lead.modeOfPayment}
                 onSuccess={() => {
                   queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
                   router.refresh()

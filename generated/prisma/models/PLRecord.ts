@@ -71,6 +71,7 @@ export type PLRecordSumAggregateOutputType = {
 export type PLRecordMinAggregateOutputType = {
   id: string | null
   leadId: string | null
+  outstandingStatus: $Enums.PLOutstandingStatus | null
   month: Date | null
   admissionDate: Date | null
   surgeryDate: Date | null
@@ -124,6 +125,7 @@ export type PLRecordMinAggregateOutputType = {
 export type PLRecordMaxAggregateOutputType = {
   id: string | null
   leadId: string | null
+  outstandingStatus: $Enums.PLOutstandingStatus | null
   month: Date | null
   admissionDate: Date | null
   surgeryDate: Date | null
@@ -177,6 +179,7 @@ export type PLRecordMaxAggregateOutputType = {
 export type PLRecordCountAggregateOutputType = {
   id: number
   leadId: number
+  outstandingStatus: number
   month: number
   admissionDate: number
   surgeryDate: number
@@ -274,6 +277,7 @@ export type PLRecordSumAggregateInputType = {
 export type PLRecordMinAggregateInputType = {
   id?: true
   leadId?: true
+  outstandingStatus?: true
   month?: true
   admissionDate?: true
   surgeryDate?: true
@@ -327,6 +331,7 @@ export type PLRecordMinAggregateInputType = {
 export type PLRecordMaxAggregateInputType = {
   id?: true
   leadId?: true
+  outstandingStatus?: true
   month?: true
   admissionDate?: true
   surgeryDate?: true
@@ -380,6 +385,7 @@ export type PLRecordMaxAggregateInputType = {
 export type PLRecordCountAggregateInputType = {
   id?: true
   leadId?: true
+  outstandingStatus?: true
   month?: true
   admissionDate?: true
   surgeryDate?: true
@@ -520,6 +526,7 @@ export type PLRecordGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type PLRecordGroupByOutputType = {
   id: string
   leadId: string
+  outstandingStatus: $Enums.PLOutstandingStatus
   month: Date | null
   admissionDate: Date | null
   surgeryDate: Date | null
@@ -596,6 +603,7 @@ export type PLRecordWhereInput = {
   NOT?: Prisma.PLRecordWhereInput | Prisma.PLRecordWhereInput[]
   id?: Prisma.StringFilter<"PLRecord"> | string
   leadId?: Prisma.StringFilter<"PLRecord"> | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
   month?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
@@ -652,6 +660,7 @@ export type PLRecordWhereInput = {
 export type PLRecordOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
   admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   surgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -711,6 +720,7 @@ export type PLRecordWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PLRecordWhereInput | Prisma.PLRecordWhereInput[]
   OR?: Prisma.PLRecordWhereInput[]
   NOT?: Prisma.PLRecordWhereInput | Prisma.PLRecordWhereInput[]
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
   month?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
@@ -767,6 +777,7 @@ export type PLRecordWhereUniqueInput = Prisma.AtLeast<{
 export type PLRecordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrderInput | Prisma.SortOrder
   admissionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   surgeryDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -828,6 +839,7 @@ export type PLRecordScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PLRecordScalarWhereWithAggregatesInput | Prisma.PLRecordScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PLRecord"> | string
   leadId?: Prisma.StringWithAggregatesFilter<"PLRecord"> | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusWithAggregatesFilter<"PLRecord"> | $Enums.PLOutstandingStatus
   month?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
   admissionDate?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"PLRecord"> | Date | string | null
@@ -880,6 +892,7 @@ export type PLRecordScalarWhereWithAggregatesInput = {
 
 export type PLRecordCreateInput = {
   id?: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -935,6 +948,7 @@ export type PLRecordCreateInput = {
 export type PLRecordUncheckedCreateInput = {
   id?: string
   leadId: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -988,6 +1002,7 @@ export type PLRecordUncheckedCreateInput = {
 
 export type PLRecordUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1043,6 +1058,7 @@ export type PLRecordUpdateInput = {
 export type PLRecordUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1097,6 +1113,7 @@ export type PLRecordUncheckedUpdateInput = {
 export type PLRecordCreateManyInput = {
   id?: string
   leadId: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -1149,6 +1166,7 @@ export type PLRecordCreateManyInput = {
 
 export type PLRecordUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1201,6 +1219,7 @@ export type PLRecordUpdateManyMutationInput = {
 export type PLRecordUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1269,6 +1288,7 @@ export type PLRecordNullableScalarRelationFilter = {
 export type PLRecordCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrder
   admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
@@ -1343,6 +1363,7 @@ export type PLRecordAvgOrderByAggregateInput = {
 export type PLRecordMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrder
   admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
@@ -1396,6 +1417,7 @@ export type PLRecordMaxOrderByAggregateInput = {
 export type PLRecordMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   leadId?: Prisma.SortOrder
+  outstandingStatus?: Prisma.SortOrder
   month?: Prisma.SortOrder
   admissionDate?: Prisma.SortOrder
   surgeryDate?: Prisma.SortOrder
@@ -1541,6 +1563,10 @@ export type PLRecordUncheckedUpdateOneWithoutLeadNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PLRecordUpdateToOneWithWhereWithoutLeadInput, Prisma.PLRecordUpdateWithoutLeadInput>, Prisma.PLRecordUncheckedUpdateWithoutLeadInput>
 }
 
+export type EnumPLOutstandingStatusFieldUpdateOperationsInput = {
+  set?: $Enums.PLOutstandingStatus
+}
+
 export type NullableEnumPaidByPartyFieldUpdateOperationsInput = {
   set?: $Enums.PaidByParty | null
 }
@@ -1563,6 +1589,7 @@ export type PLRecordUpdateOneWithoutDischargeSheetNestedInput = {
 
 export type PLRecordCreateWithoutHandledByInput = {
   id?: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -1617,6 +1644,7 @@ export type PLRecordCreateWithoutHandledByInput = {
 export type PLRecordUncheckedCreateWithoutHandledByInput = {
   id?: string
   leadId: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -1699,6 +1727,7 @@ export type PLRecordScalarWhereInput = {
   NOT?: Prisma.PLRecordScalarWhereInput | Prisma.PLRecordScalarWhereInput[]
   id?: Prisma.StringFilter<"PLRecord"> | string
   leadId?: Prisma.StringFilter<"PLRecord"> | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFilter<"PLRecord"> | $Enums.PLOutstandingStatus
   month?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   admissionDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
   surgeryDate?: Prisma.DateTimeNullableFilter<"PLRecord"> | Date | string | null
@@ -1751,6 +1780,7 @@ export type PLRecordScalarWhereInput = {
 
 export type PLRecordCreateWithoutLeadInput = {
   id?: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -1804,6 +1834,7 @@ export type PLRecordCreateWithoutLeadInput = {
 
 export type PLRecordUncheckedCreateWithoutLeadInput = {
   id?: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -1873,6 +1904,7 @@ export type PLRecordUpdateToOneWithWhereWithoutLeadInput = {
 
 export type PLRecordUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1926,6 +1958,7 @@ export type PLRecordUpdateWithoutLeadInput = {
 
 export type PLRecordUncheckedUpdateWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1979,6 +2012,7 @@ export type PLRecordUncheckedUpdateWithoutLeadInput = {
 
 export type PLRecordCreateWithoutDischargeSheetInput = {
   id?: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -2033,6 +2067,7 @@ export type PLRecordCreateWithoutDischargeSheetInput = {
 export type PLRecordUncheckedCreateWithoutDischargeSheetInput = {
   id?: string
   leadId: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -2101,6 +2136,7 @@ export type PLRecordUpdateToOneWithWhereWithoutDischargeSheetInput = {
 
 export type PLRecordUpdateWithoutDischargeSheetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2155,6 +2191,7 @@ export type PLRecordUpdateWithoutDischargeSheetInput = {
 export type PLRecordUncheckedUpdateWithoutDischargeSheetInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2208,6 +2245,7 @@ export type PLRecordUncheckedUpdateWithoutDischargeSheetInput = {
 export type PLRecordCreateManyHandledByInput = {
   id?: string
   leadId: string
+  outstandingStatus?: $Enums.PLOutstandingStatus
   month?: Date | string | null
   admissionDate?: Date | string | null
   surgeryDate?: Date | string | null
@@ -2259,6 +2297,7 @@ export type PLRecordCreateManyHandledByInput = {
 
 export type PLRecordUpdateWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2313,6 +2352,7 @@ export type PLRecordUpdateWithoutHandledByInput = {
 export type PLRecordUncheckedUpdateWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2366,6 +2406,7 @@ export type PLRecordUncheckedUpdateWithoutHandledByInput = {
 export type PLRecordUncheckedUpdateManyWithoutHandledByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   leadId?: Prisma.StringFieldUpdateOperationsInput | string
+  outstandingStatus?: Prisma.EnumPLOutstandingStatusFieldUpdateOperationsInput | $Enums.PLOutstandingStatus
   month?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   admissionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   surgeryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2420,6 +2461,7 @@ export type PLRecordUncheckedUpdateManyWithoutHandledByInput = {
 export type PLRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
+  outstandingStatus?: boolean
   month?: boolean
   admissionDate?: boolean
   surgeryDate?: boolean
@@ -2476,6 +2518,7 @@ export type PLRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type PLRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
+  outstandingStatus?: boolean
   month?: boolean
   admissionDate?: boolean
   surgeryDate?: boolean
@@ -2531,6 +2574,7 @@ export type PLRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type PLRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   leadId?: boolean
+  outstandingStatus?: boolean
   month?: boolean
   admissionDate?: boolean
   surgeryDate?: boolean
@@ -2586,6 +2630,7 @@ export type PLRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type PLRecordSelectScalar = {
   id?: boolean
   leadId?: boolean
+  outstandingStatus?: boolean
   month?: boolean
   admissionDate?: boolean
   surgeryDate?: boolean
@@ -2636,7 +2681,7 @@ export type PLRecordSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PLRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "month" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "finalProfit" | "hospitalPayoutStatus" | "doctorPayoutStatus" | "mediendInvoiceStatus" | "hospitalAmountPending" | "doctorAmountPending" | "doctorRemarks" | "costBreakdownRemarks" | "remarks" | "closedAt" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["pLRecord"]>
+export type PLRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "outstandingStatus" | "month" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "finalProfit" | "hospitalPayoutStatus" | "doctorPayoutStatus" | "mediendInvoiceStatus" | "hospitalAmountPending" | "doctorAmountPending" | "doctorRemarks" | "costBreakdownRemarks" | "remarks" | "closedAt" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["pLRecord"]>
 export type PLRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
@@ -2661,6 +2706,7 @@ export type $PLRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     leadId: string
+    outstandingStatus: $Enums.PLOutstandingStatus
     month: Date | null
     admissionDate: Date | null
     surgeryDate: Date | null
@@ -3137,6 +3183,7 @@ export interface Prisma__PLRecordClient<T, Null = never, ExtArgs extends runtime
 export interface PLRecordFieldRefs {
   readonly id: Prisma.FieldRef<"PLRecord", 'String'>
   readonly leadId: Prisma.FieldRef<"PLRecord", 'String'>
+  readonly outstandingStatus: Prisma.FieldRef<"PLRecord", 'PLOutstandingStatus'>
   readonly month: Prisma.FieldRef<"PLRecord", 'DateTime'>
   readonly admissionDate: Prisma.FieldRef<"PLRecord", 'DateTime'>
   readonly surgeryDate: Prisma.FieldRef<"PLRecord", 'DateTime'>

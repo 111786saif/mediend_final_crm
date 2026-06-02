@@ -8386,6 +8386,7 @@ export type InsuranceCaseScalarFieldEnum = (typeof InsuranceCaseScalarFieldEnum)
 export const PLRecordScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
+  outstandingStatus: 'outstandingStatus',
   month: 'month',
   admissionDate: 'admissionDate',
   surgeryDate: 'surgeryDate',
@@ -10407,6 +10408,20 @@ export type EnumInsuranceCaseStatusFieldRefInput<$PrismaModel> = FieldRefInputTy
  * Reference to a field of type 'InsuranceCaseStatus[]'
  */
 export type ListEnumInsuranceCaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsuranceCaseStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PLOutstandingStatus'
+ */
+export type EnumPLOutstandingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PLOutstandingStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PLOutstandingStatus[]'
+ */
+export type ListEnumPLOutstandingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PLOutstandingStatus[]'>
     
 
 

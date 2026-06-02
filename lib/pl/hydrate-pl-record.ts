@@ -317,6 +317,7 @@ export function buildPlRecordPayload(
     ),
 
     // Status defaults
+    outstandingStatus: 'NEW',
     hospitalPayoutStatus: (ov.hospitalPayoutStatus as string | undefined) ?? 'PENDING',
     doctorPayoutStatus: (ov.doctorPayoutStatus as string | undefined) ?? 'PENDING',
     mediendInvoiceStatus: (ov.mediendInvoiceStatus as string | undefined) ?? 'PENDING',

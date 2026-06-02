@@ -48,6 +48,7 @@ import {
 } from '@/lib/pl/resolve-pl-row'
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
+import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
@@ -103,6 +104,7 @@ const DEFAULT_COLS: Record<string, boolean> = {
   admissionDate: true,
   surgeryDate: true,
   paymentType: true,
+  outstandingStatus: true,
   status: true,
   totalBill: true,
   approvedAmount: true,
@@ -231,9 +233,15 @@ export default function PLLedgerPage() {
   const [sheetLeadId, setSheetLeadId] = useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
 
+  const [patientDrawerOpen, setPatientDrawerOpen] = useState(false)
+  const [patientDrawerTitle, setPatientDrawerTitle] = useState('')
+  const [patientDrawerData, setPatientDrawerData] = useState<any[]>([])
+  const [patientDrawerDateField, setPatientDrawerDateField] = useState<'surgery' | 'admission' | 'discharge'>('surgery')
+
   const [bdFilter, setBdFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
   const [doctorFilter, setDoctorFilter] = useState('all')
+  const [outstandingFilter, setOutstandingFilter] = useState('all')
 
   const filterOptions = useMemo(() => {
     const bds = new Set<string>()
@@ -255,12 +263,14 @@ export default function PLLedgerPage() {
   const activeFilterCount =
     (bdFilter !== 'all' ? 1 : 0) +
     (hospitalFilter !== 'all' ? 1 : 0) +
-    (doctorFilter !== 'all' ? 1 : 0)
+    (doctorFilter !== 'all' ? 1 : 0) +
+    (outstandingFilter !== 'all' ? 1 : 0)
 
   const clearFilters = () => {
     setBdFilter('all')
     setHospitalFilter('all')
     setDoctorFilter('all')
+    setOutstandingFilter('all')
   }
 
   // Table only shows leads whose discharge sheet has been filled (insurance or cash),
@@ -275,9 +285,12 @@ export default function PLLedgerPage() {
         if (bdFilter !== 'all' && resolved.bdm !== bdFilter) return false
         if (hospitalFilter !== 'all' && resolved.hospital !== hospitalFilter) return false
         if (doctorFilter !== 'all' && resolved.doctor !== doctorFilter) return false
+        const pl = (r as Lead).plRecord as Record<string, unknown> | undefined
+        const ostStatus = (pl?.outstandingStatus as string) || 'NEW'
+        if (outstandingFilter !== 'all' && ostStatus !== outstandingFilter) return false
         return true
       }),
-    [records, bdFilter, hospitalFilter, doctorFilter, activeFilterCount]
+    [records, bdFilter, hospitalFilter, doctorFilter, outstandingFilter, activeFilterCount]
   )
 
   const visibleCount = useMemo(() => 1 + Object.values(visibleCols).filter(Boolean).length, [visibleCols])
@@ -384,6 +397,7 @@ export default function PLLedgerPage() {
                     ['admissionDate', 'Admission date'],
                     ['surgeryDate', 'Surgery date'],
                     ['paymentType', 'Payment type'],
+                    ['outstandingStatus', 'PL Status'],
                     ['status', 'Status'],
                     ['totalBill', 'Total bill'],
                     ['approvedAmount', 'Approved amount'],
@@ -462,6 +476,17 @@ export default function PLLedgerPage() {
                 ))}
               </SelectContent>
             </Select>
+            <Select value={outstandingFilter} onValueChange={setOutstandingFilter}>
+              <SelectTrigger className="h-9 w-[180px] bg-background">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="NEW">New</SelectItem>
+                <SelectItem value="DRAFT">Draft</SelectItem>
+                <SelectItem value="OUTSTANDING">Outstanding</SelectItem>
+              </SelectContent>
+            </Select>
             {activeFilterCount > 0 && (
               <Button type="button" variant="ghost" size="sm" className="h-9" onClick={clearFilters}>
                 Clear filters ({activeFilterCount})
@@ -475,9 +500,16 @@ export default function PLLedgerPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-indigo-500',
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-indigo-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
                 'bg-gradient-to-br from-indigo-50/90 to-card dark:from-indigo-950/35 dark:to-card'
               )}
+              onClick={() => {
+                const admitted = (records ?? []).filter((r: Lead) => r.admissionRecord)
+                setPatientDrawerTitle('Admitted Patients')
+                setPatientDrawerData(admitted)
+                setPatientDrawerDateField('admission')
+                setPatientDrawerOpen(true)
+              }}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-indigo-900/90 dark:text-indigo-100/90">Admitted</CardTitle>
@@ -494,9 +526,16 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500',
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
                 'bg-gradient-to-br from-violet-50/90 to-card dark:from-violet-950/35 dark:to-card'
               )}
+              onClick={() => {
+                const scheduled = (records ?? []).filter((r: Lead) => r.surgeryDate)
+                setPatientDrawerTitle('Scheduled Surgeries')
+                setPatientDrawerData(scheduled)
+                setPatientDrawerDateField('surgery')
+                setPatientDrawerOpen(true)
+              }}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-violet-900/90 dark:text-violet-100/90">Surgeries scheduled</CardTitle>
@@ -513,9 +552,16 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-cyan-500',
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-cyan-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
                 'bg-gradient-to-br from-cyan-50/90 to-card dark:from-cyan-950/35 dark:to-card'
               )}
+              onClick={() => {
+                const ipdDone = (records ?? []).filter((r: Lead) => r.caseStage === 'IPD_DONE')
+                setPatientDrawerTitle('IPD Done')
+                setPatientDrawerData(ipdDone)
+                setPatientDrawerDateField('surgery')
+                setPatientDrawerOpen(true)
+              }}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-cyan-900/90 dark:text-cyan-100/90">IPD done</CardTitle>
@@ -532,9 +578,16 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500',
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
                 'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card'
               )}
+              onClick={() => {
+                const discharged = (records ?? []).filter((r: Lead) => r.dischargeSheet)
+                setPatientDrawerTitle('Discharged Patients')
+                setPatientDrawerData(discharged)
+                setPatientDrawerDateField('discharge')
+                setPatientDrawerOpen(true)
+              }}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">Discharged</CardTitle>
@@ -653,6 +706,7 @@ export default function PLLedgerPage() {
                       {visibleCols.admissionDate && <TableHead>Admission</TableHead>}
                       {visibleCols.surgeryDate && <TableHead>Surgery</TableHead>}
                       {visibleCols.paymentType && <TableHead>Payment</TableHead>}
+                      {visibleCols.outstandingStatus && <TableHead>PL Status</TableHead>}
                       {visibleCols.status && <TableHead>Status</TableHead>}
                       {visibleCols.totalBill && <TableHead>Total bill</TableHead>}
                       {visibleCols.approvedAmount && <TableHead>Approved amount</TableHead>}
@@ -753,6 +807,22 @@ export default function PLLedgerPage() {
                           )}
                           {visibleCols.paymentType && (
                             <TableCell className="whitespace-nowrap">{resolved.paymentType ?? '—'}</TableCell>
+                          )}
+                          {visibleCols.outstandingStatus && (
+                            <TableCell className="whitespace-nowrap">
+                              <Badge
+                                variant={
+                                  (pl?.outstandingStatus as string) === 'OUTSTANDING'
+                                    ? 'default'
+                                    : (pl?.outstandingStatus as string) === 'DRAFT'
+                                      ? 'secondary'
+                                      : 'outline'
+                                }
+                                className="text-xs"
+                              >
+                                {(pl?.outstandingStatus as string) || 'NEW'}
+                              </Badge>
+                            </TableCell>
                           )}
                           {visibleCols.status && (
                             <TableCell className="whitespace-nowrap">{resolved.status ?? '—'}</TableCell>
@@ -919,6 +989,14 @@ export default function PLLedgerPage() {
             open={sheetOpen}
             onOpenChange={setSheetOpen}
             leadId={sheetLeadId ?? ''}
+          />
+
+          <PlPatientDrawer
+            open={patientDrawerOpen}
+            onOpenChange={setPatientDrawerOpen}
+            title={patientDrawerTitle}
+            patients={patientDrawerData}
+            dateField={patientDrawerDateField}
           />
         </div>
       </div>
