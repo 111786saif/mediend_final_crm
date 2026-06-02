@@ -133,15 +133,15 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
         : (badgeCounts?.unreadChatMessages ?? 0) || (badgeCounts?.unreadMessages ?? 0)
 
     const hasApprovals = u.role === 'MD' || u.role === 'ADMIN' || hasPermission(u, 'finance:approve')
-    const hasDashboard = ['SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'ADMIN'].includes(u.role)
-    const hasCoreHr = ['USER', 'BD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN'].includes(u.role)
+    const hasDashboard = ['SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'DIGITAL_MARKETING_HEAD', 'ADMIN'].includes(u.role)
+    const hasCoreHr = ['USER', 'BD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
     const hasPipeline = u.role === 'BD' || u.role === 'TEAM_LEAD'
     const hasMessages =
       u.role === 'MD' ||
       u.role === 'ADMIN' ||
-      ['BD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN'].includes(u.role)
-    const hasSupport = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN'].includes(u.role)
-    const hasFinancial = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN'].includes(u.role)
+      ['BD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
+    const hasSupport = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
+    const hasFinancial = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
 
     const leftCandidates: (BottomNavItem & { show: boolean })[] = [
       {

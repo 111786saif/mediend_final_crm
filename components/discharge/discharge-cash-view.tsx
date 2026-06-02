@@ -2,11 +2,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { FileText, ExternalLink, User, Building2, Calendar, Receipt } from 'lucide-react'
+import { FileText, ExternalLink, User, Building2, Calendar, Receipt, Pencil } from 'lucide-react'
 import Link from 'next/link'
 
 interface DischargeCashViewProps {
   data: any
+  onEdit?: () => void
 }
 
 function Section({ title, icon, color, children }: { title: string; icon: React.ReactNode; color: string; children: React.ReactNode }) {
@@ -48,15 +49,22 @@ function DocLink({ url, name }: { url?: string; name: string }) {
   )
 }
 
-export function DischargeCashView({ data }: DischargeCashViewProps) {
+export function DischargeCashView({ data, onEdit }: DischargeCashViewProps) {
   if (!data) return null
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">Discharge Sheet (Cash Flow)</h2>
-        <div className="text-sm text-muted-foreground">
-          Created on {new Date(data.createdAt).toLocaleDateString()}
+        <div className="flex items-center gap-3">
+          {onEdit && (
+            <Button variant="outline" size="sm" onClick={onEdit}>
+              <Pencil className="mr-2 h-4 w-4" /> Edit Sheet
+            </Button>
+          )}
+          <div className="text-sm text-muted-foreground">
+            Created on {new Date(data.createdAt).toLocaleDateString()}
+          </div>
         </div>
       </div>
 

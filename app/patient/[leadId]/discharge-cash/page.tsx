@@ -78,7 +78,10 @@ export default function DischargeCashPage() {
         </div>
 
         {sheetData ? (
-          <DischargeCashView data={sheetData} />
+          <DischargeCashView
+            data={sheetData}
+            onEdit={() => router.push(`/discharge/${leadId}/edit`)}
+          />
         ) : canFill ? (
           <Card>
             <CardContent className="pt-6">

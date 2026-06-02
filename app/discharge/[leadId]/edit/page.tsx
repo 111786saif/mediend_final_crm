@@ -126,11 +126,11 @@ export default function EditDischargeSheetPage({ params }: { params: { leadId: s
           setSheet(data)
         } else {
           toast.error('Discharge sheet not found')
-          router.push(`/discharge/${leadId}`)
+          router.push(`/patient/${leadId}`)
         }
       } catch {
         toast.error('Failed to load discharge sheet')
-        router.push(`/discharge/${leadId}`)
+        router.push(`/patient/${leadId}`)
       } finally {
         setLoading(false)
       }
@@ -149,7 +149,8 @@ export default function EditDischargeSheetPage({ params }: { params: { leadId: s
     try {
       await apiPatch(`/api/discharge-sheet/${sheet.id}`, sheet)
       toast.success('Discharge sheet updated')
-      router.push(`/discharge/${leadId}`)
+      const isCash = sheet.paymentType === 'CASH' || sheet.approvedOrCash === 'CASH'
+      router.push(`/patient/${leadId}/${isCash ? 'discharge-cash' : 'discharge'}`)
     } catch {
       toast.error('Failed to save changes')
     } finally {
@@ -180,7 +181,10 @@ export default function EditDischargeSheetPage({ params }: { params: { leadId: s
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => router.push(`/discharge/${leadId}`)}
+            onClick={() => {
+              const isCash = sheet.paymentType === 'CASH' || sheet.approvedOrCash === 'CASH'
+              router.push(`/patient/${leadId}/${isCash ? 'discharge-cash' : 'discharge'}`)
+            }}
             className="gap-1"
           >
             <ArrowLeft className="h-4 w-4" />

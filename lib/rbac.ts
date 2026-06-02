@@ -255,6 +255,10 @@ const rolePermissions: Record<UserRole, Permission[]> = {
   ],
   DIGITAL_MARKETING_HEAD: [
     'analytics:read',
+    'leads:read',
+    'pl:read',
+    'sales:read',
+    'sales:pnl:read',
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',

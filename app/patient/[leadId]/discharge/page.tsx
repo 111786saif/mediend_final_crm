@@ -122,7 +122,10 @@ export default function DischargeSheetPage() {
         </div>
 
         {isFinalized && dischargeSheet ? (
-          <DischargeSheetView dischargeSheet={dischargeSheet as never} />
+          <DischargeSheetView
+            dischargeSheet={dischargeSheet as never}
+            onEdit={() => router.push(`/discharge/${leadId}/edit`)}
+          />
         ) : sheetUnfinalized && isInsurance ? (
           <DischargeSheetForm
             leadId={leadId}

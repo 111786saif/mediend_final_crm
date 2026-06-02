@@ -78,13 +78,13 @@ export const navItems: NavItem[] = [
     title: 'Dashboard',
     url: '/dashboard',
     icon: LayoutDashboard,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'ADMIN'],
+    roles: ['SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'DIGITAL_MARKETING_HEAD', 'ADMIN'],
   },
   {
     title: 'Sales Dashboard',
     url: '/md/sales',
     icon: TrendingUp,
-    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Finance Dashboard',
@@ -185,7 +185,7 @@ export const navItems: NavItem[] = [
     title: 'Chat',
     url: '/chat',
     icon: MessageSquare,
-    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD'],
+    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
   },
   {
     title: 'P/L Ledger',
@@ -221,13 +221,13 @@ export const navItems: NavItem[] = [
     title: 'My Core HR',
     url: '/employee/dashboard/core-hr',
     icon: UserCircle,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD'],
+    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
   },
   {
     title: 'My Financial',
     url: '/employee/dashboard/financial',
     icon: Wallet,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD'],
+    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
   },
   {
     title: 'My Support & Services',
@@ -424,6 +424,7 @@ export function getDashboardUrl(role: string): string {
   if (role === 'SALES_HEAD') return '/sales/dashboard'
   if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
   if (role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
+  if (role === 'DIGITAL_MARKETING_HEAD') return '/pl/dashboard'
   return '/md/tasks'
 }
 
