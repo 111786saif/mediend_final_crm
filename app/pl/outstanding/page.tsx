@@ -5,7 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   Select,
   SelectContent,
@@ -17,7 +24,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { Lead } from '@/hooks/use-leads'
 import { useState, useEffect, useMemo } from 'react'
-import { Building2, CheckCircle, CreditCard, FileText } from 'lucide-react'
+import { Building2, Calendar, CheckCircle, CreditCard, FileText, X } from 'lucide-react'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { cn } from '@/lib/utils'
 import {
@@ -29,34 +36,29 @@ import {
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PlOutstandingSheet } from '@/components/pl/pl-outstanding-sheet'
 
-type Preset = 'today' | 'week' | 'mtd' | 'lastMonth' | 'custom'
-
-function fmtYmd(d: Date): string {
-  return d.toISOString().split('T')[0]
+function generateMonthOptions() {
+  const months: { key: string; label: string }[] = []
+  const now = new Date()
+  const startYear = 2022
+  const startMonth = 0
+  let y = now.getFullYear()
+  let m = now.getMonth()
+  while (y > startYear || (y === startYear && m >= startMonth)) {
+    const key = `${y}-${String(m + 1).padStart(2, '0')}`
+    const d = new Date(y, m, 1)
+    const label = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    months.push({ key, label })
+    m--
+    if (m < 0) { m = 11; y-- }
+  }
+  return months
 }
 
-function getRangeForPreset(preset: Preset, customStart: string, customEnd: string): { start: string; end: string } {
-  const now = new Date()
-  if (preset === 'custom') {
-    return { start: customStart || fmtYmd(now), end: customEnd || fmtYmd(now) }
-  }
-  if (preset === 'today') {
-    return { start: fmtYmd(now), end: fmtYmd(now) }
-  }
-  if (preset === 'week') {
-    const d = new Date(now)
-    const day = d.getDay()
-    const diff = day === 0 ? -6 : 1 - day
-    d.setDate(d.getDate() + diff)
-    return { start: fmtYmd(d), end: fmtYmd(now) }
-  }
-  if (preset === 'mtd') {
-    const start = new Date(now.getFullYear(), now.getMonth(), 1)
-    return { start: fmtYmd(start), end: fmtYmd(now) }
-  }
-  const start = new Date(now.getFullYear(), now.getMonth() - 1, 1)
-  const end = new Date(now.getFullYear(), now.getMonth(), 0)
-  return { start: fmtYmd(start), end: fmtYmd(end) }
+const MONTH_OPTIONS = generateMonthOptions()
+
+function currentMonthKey() {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
 function isPendingPayout(r: Lead) {
@@ -68,22 +70,21 @@ function isPendingPayout(r: Lead) {
 }
 
 export default function PLOutstandingPage() {
-  const [preset, setPreset] = useState<Preset>('mtd')
-  const [customStart, setCustomStart] = useState('')
-  const [customEnd, setCustomEnd] = useState('')
+  const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
 
   useEffect(() => {
-    const now = new Date()
-    setCustomEnd(fmtYmd(now))
-    const start = new Date(now.getFullYear(), now.getMonth(), 1)
-    setCustomStart(fmtYmd(start))
-  }, [])
-
-  useEffect(() => {
-    const { start, end } = getRangeForPreset(preset, customStart, customEnd)
+    if (selectedMonths.length === 0) {
+      setDateRange({ startDate: '', endDate: '' })
+      return
+    }
+    const sorted = selectedMonths.slice().sort()
+    const start = `${sorted[0]}-01`
+    const [y, m] = sorted[sorted.length - 1].split('-').map(Number)
+    const endTemp = new Date(y, m, 0)
+    const end = endTemp.toISOString().split('T')[0]
     setDateRange({ startDate: start, endDate: end })
-  }, [preset, customStart, customEnd])
+  }, [selectedMonths])
 
   const { data: records, isLoading } = useQuery<Lead[]>({
     queryKey: ['outstanding', 'records', dateRange],
@@ -197,34 +198,44 @@ export default function PLOutstandingPage() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <div className="flex flex-wrap gap-1 rounded-lg border border-amber-200/60 bg-amber-50/80 p-1 shadow-sm dark:border-amber-800/40 dark:bg-amber-950/30">
-                {(
-                  [
-                    ['today', 'Today'],
-                    ['week', 'This week'],
-                    ['mtd', 'MTD'],
-                    ['lastMonth', 'Last month'],
-                    ['custom', 'Custom'],
-                  ] as const
-                ).map(([key, label]) => (
-                  <Button
-                    key={key}
-                    type="button"
-                    variant={preset === key ? 'default' : 'ghost'}
-                    size="sm"
-                    className="h-8"
-                    onClick={() => setPreset(key)}
-                  >
-                    {label}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2 border-slate-300 bg-background/90">
+                    <Calendar className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                    Months {selectedMonths.length > 0 && `(${selectedMonths.length})`}
                   </Button>
-                ))}
-              </div>
-              {preset === 'custom' && (
-                <div className="flex flex-wrap items-center gap-2">
-                  <Input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)} className="w-[140px]" />
-                  <span className="text-muted-foreground text-sm">to</span>
-                  <Input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className="w-[140px]" />
-                </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 max-h-[min(70vh,420px)] overflow-y-auto">
+                  <DropdownMenuLabel>Select months</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={selectedMonths.length === MONTH_OPTIONS.length}
+                    onCheckedChange={(checked) => {
+                      if (checked) setSelectedMonths(MONTH_OPTIONS.map((m) => m.key))
+                      else setSelectedMonths([])
+                    }}
+                  >
+                    All
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuSeparator />
+                  {MONTH_OPTIONS.map((m) => (
+                    <DropdownMenuCheckboxItem
+                      key={m.key}
+                      checked={selectedMonths.includes(m.key)}
+                      onCheckedChange={(checked) => {
+                        if (checked) setSelectedMonths((prev) => [...prev, m.key])
+                        else setSelectedMonths((prev) => prev.filter((k) => k !== m.key))
+                      }}
+                    >
+                      {m.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {selectedMonths.length > 0 && selectedMonths.length < MONTH_OPTIONS.length && (
+                <Button type="button" variant="ghost" size="sm" className="h-8 gap-1" onClick={() => setSelectedMonths([currentMonthKey()])}>
+                  <X className="h-3 w-3" />Reset
+                </Button>
               )}
             </div>
           </div>

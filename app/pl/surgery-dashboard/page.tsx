@@ -45,11 +45,17 @@ import { cn } from '@/lib/utils'
 function generateMonthOptions() {
   const months: { key: string; label: string }[] = []
   const now = new Date()
-  for (let i = 0; i < 12; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+  const startYear = 2022
+  const startMonth = 0
+  let y = now.getFullYear()
+  let m = now.getMonth()
+  while (y > startYear || (y === startYear && m >= startMonth)) {
+    const key = `${y}-${String(m + 1).padStart(2, '0')}`
+    const d = new Date(y, m, 1)
     const label = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
     months.push({ key, label })
+    m--
+    if (m < 0) { m = 11; y-- }
   }
   return months
 }

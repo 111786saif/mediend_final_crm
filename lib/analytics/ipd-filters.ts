@@ -28,14 +28,15 @@ export function ipdDoneDateFilter(
 }
 
 /**
- * Convenience wrapper: `pipelineStage IN (PL, COMPLETED)` + date fallback filter.
- * PL-stage leads have had their IPD done — they are awaiting financial closure.
+ * Convenience wrapper: filters leads currently at IPD_DONE / CASH_IPD_DONE
+ * using the date fallback chain. Once marked IPD done, a lead is counted as
+ * "IPD done" regardless of whether it later moves to DISCHARGED / PL.
  */
 export function ipdDoneWhere(
   dateFilter: Prisma.DateTimeFilter,
 ): Prisma.LeadWhereInput {
   return {
-    pipelineStage: { in: ['PL', 'COMPLETED'] },
+    caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
     ...ipdDoneDateFilter(dateFilter),
   }
 }

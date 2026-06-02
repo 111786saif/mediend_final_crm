@@ -33,6 +33,8 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
     const dateField = searchParams.get('dateField')
+    const caseStage = searchParams.get('caseStage')
+    const limit = searchParams.get('limit')
 
     const where: Prisma.LeadWhereInput = {}
     let subordinateUserIds: string[] | undefined
@@ -68,6 +70,14 @@ export async function GET(request: NextRequest) {
       }
     }
     if (status) where.status = status
+    if (caseStage) {
+      const stages = caseStage.split(',').map((s) => s.trim()).filter(Boolean)
+      if (stages.length === 1) {
+        where.caseStage = stages[0]
+      } else if (stages.length > 1) {
+        where.caseStage = { in: stages }
+      }
+    }
     if (bdId) where.bdId = bdId
     if (circle) where.circle = circle
     if (hospitalName) where.hospitalName = { contains: hospitalName, mode: 'insensitive' }
@@ -369,6 +379,8 @@ export async function GET(request: NextRequest) {
       plRecord: true,
     } satisfies Prisma.LeadInclude
 
+    const maxLimit = limit ? Math.min(parseInt(limit, 10), 500) : undefined
+
     const leads = isPipelineView
       ? await prisma.lead.findMany({
           where: finalWhere,
@@ -376,6 +388,7 @@ export async function GET(request: NextRequest) {
           orderBy: {
             createdDate: 'desc',
           },
+          ...(maxLimit ? { take: maxLimit } : {}),
         })
       : await prisma.lead.findMany({
           where: finalWhere,
@@ -383,6 +396,7 @@ export async function GET(request: NextRequest) {
           orderBy: {
             createdDate: 'desc',
           },
+          ...(maxLimit ? { take: maxLimit } : {}),
         })
 
     // Filter leads based on access control

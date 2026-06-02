@@ -76,7 +76,6 @@ interface PlRecordSheetProps {
 }
 
 const DC_FIELD_KEYS = [
-  'roomRent',
   'pharmacy',
   'investigation',
   'consumables',
@@ -86,7 +85,6 @@ const DC_FIELD_KEYS = [
 ] as const
 
 const DC_LABELS: Record<string, string> = {
-  roomRent: 'Room Rent',
   pharmacy: 'Pharmacy',
   investigation: 'Investigation',
   consumables: 'Consumables',
@@ -157,7 +155,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
   })
 
   const [dcChecked, setDcChecked] = useState<Record<string, boolean>>({
-    roomRent: false,
     pharmacy: false,
     investigation: false,
     consumables: false,
@@ -167,7 +164,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
   })
 
   const [dsBillAmounts, setDsBillAmounts] = useState<Record<string, number>>({
-    roomRent: 0,
     pharmacy: 0,
     investigation: 0,
     consumables: 0,
@@ -212,7 +208,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     const numVal = (v: unknown) => (v != null ? Number(v) : 0)
 
     const billAmts: Record<string, number> = {
-      roomRent: numVal(ds?.roomRentAmount),
       pharmacy: numVal(ds?.pharmacyAmount),
       investigation: numVal(ds?.investigationAmount),
       consumables: numVal(ds?.consumablesAmount),
@@ -555,41 +550,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
 
                   <Card>
                     <CardHeader>
-                      <CardTitle>Amounts</CardTitle>
-                      <CardDescription>Total bill = hospital bill; approved amount = negotiated / case total</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      <div>
-                        <Label>Total bill</Label>
-                        <Input type="number" step="0.01" value={formData.billAmount} onChange={(e) => update('billAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Approved amount</Label>
-                        <Input type="number" step="0.01" value={formData.totalAmount} onChange={(e) => update('totalAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Total deduction</Label>
-                        <Input type="number" step="0.01" value={formData.deductionAmount} onChange={(e) => update('deductionAmount', e.target.value)} placeholder="0.00" className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Deduction paid by patient</Label>
-                        <Input type="number" step="0.01" value={formData.cashOrDedPaid} onChange={(e) => update('cashOrDedPaid', e.target.value)} placeholder="0.00" className="mt-1" />
-                      </div>
-                      <div className="sm:col-span-2">
-                        <Label>Waived off (auto = total − paid by patient)</Label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          readOnly
-                          value={computedWaivedOff.toFixed(2)}
-                          className="mt-1 bg-muted/40"
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
                       <CardTitle>Bill Breakup (from discharge sheet)</CardTitle>
                       <CardDescription>Tick fields to sum them into D&amp;C charges</CardDescription>
                     </CardHeader>
@@ -680,73 +640,35 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
 
                   <Card>
                     <CardHeader>
-                      <CardTitle>Cost breakdown</CardTitle>
-                      <CardDescription>Who pays implant / instruments affects Mediend net (hospital = excluded from Mediend costs)</CardDescription>
+                      <CardTitle>Amounts</CardTitle>
+                      <CardDescription>Total bill = hospital bill; approved amount = negotiated / case total</CardDescription>
                     </CardHeader>
-                    <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {[
-                        { key: 'referralAmount', label: 'Referral amount' },
-                        { key: 'cabCharges', label: 'Cab charges' },
-                      ].map(({ key, label }) => (
-                        <div key={key}>
-                          <Label>{label}</Label>
-                          <Input type="number" step="0.01" value={formData[key as keyof typeof formData]} onChange={(e) => update(key, e.target.value)} className="mt-1" />
-                        </div>
-                      ))}
+                    <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div>
-                        <Label>D&amp;C charges</Label>
-                        <Input type="number" step="0.01" value={computedDcTotal.toFixed(2)} readOnly className="mt-1 bg-muted/40" />
-                        <p className="text-[11px] text-muted-foreground mt-1">Auto: sum of ticked bill breakup fields</p>
+                        <Label>Total bill</Label>
+                        <Input type="number" step="0.01" value={formData.billAmount} onChange={(e) => update('billAmount', e.target.value)} className="mt-1" />
                       </div>
                       <div>
-                        <Label>Doctor charges</Label>
-                        <Input type="number" step="0.01" value={formData.doctorCharges} onChange={(e) => update('doctorCharges', e.target.value)} className="mt-1" />
+                        <Label>Approved amount</Label>
+                        <Input type="number" step="0.01" value={formData.totalAmount} onChange={(e) => update('totalAmount', e.target.value)} className="mt-1" />
                       </div>
-                      <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <Label>Implant cost</Label>
-                          <Input type="number" step="0.01" value={formData.implantCost} onChange={(e) => update('implantCost', e.target.value)} className="mt-1" />
-                        </div>
-                        <div>
-                          <Label>Paid by</Label>
-                          <Select value={formData.implantPaidBy || 'unset'} onValueChange={(v) => update('implantPaidBy', v === 'unset' ? '' : v)}>
-                            <SelectTrigger className="mt-1">
-                              <SelectValue placeholder="Default: Mediend" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="unset">Not set (Mediend)</SelectItem>
-                              <SelectItem value="MEDIEND">Mediend</SelectItem>
-                              <SelectItem value="HOSPITAL">Hospital</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                      <div>
+                        <Label>Total deduction</Label>
+                        <Input type="number" step="0.01" value={formData.deductionAmount} onChange={(e) => update('deductionAmount', e.target.value)} placeholder="0.00" className="mt-1" />
                       </div>
-                      <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <Label>Instrument cost</Label>
-                          <Input type="number" step="0.01" value={formData.instrumentsCost} onChange={(e) => update('instrumentsCost', e.target.value)} className="mt-1" />
-                        </div>
-                        <div>
-                          <Label>Paid by</Label>
-                          <Select value={formData.instrumentsPaidBy || 'unset'} onValueChange={(v) => update('instrumentsPaidBy', v === 'unset' ? '' : v)}>
-                            <SelectTrigger className="mt-1">
-                              <SelectValue placeholder="Default: Mediend" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="unset">Not set (Mediend)</SelectItem>
-                              <SelectItem value="MEDIEND">Mediend</SelectItem>
-                              <SelectItem value="HOSPITAL">Hospital</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                      <div>
+                        <Label>Deduction paid by patient</Label>
+                        <Input type="number" step="0.01" value={formData.cashOrDedPaid} onChange={(e) => update('cashOrDedPaid', e.target.value)} placeholder="0.00" className="mt-1" />
                       </div>
                       <div className="sm:col-span-2">
-                        <Label>Doctor remarks</Label>
-                        <Textarea value={formData.doctorRemarks} onChange={(e) => update('doctorRemarks', e.target.value)} placeholder="Notes about the doctor / doctor charges for this case" className="mt-1 resize-none" rows={2} />
-                      </div>
-                      <div className="sm:col-span-2">
-                        <Label>Cost breakdown remarks</Label>
-                        <Textarea value={formData.costBreakdownRemarks} onChange={(e) => update('costBreakdownRemarks', e.target.value)} placeholder="Notes about implants / instruments / D&C / referral / cab costs" className="mt-1 resize-none" rows={2} />
+                        <Label>Waived off (auto = total − paid by patient)</Label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          readOnly
+                          value={computedWaivedOff.toFixed(2)}
+                          className="mt-1 bg-muted/40"
+                        />
                       </div>
                     </CardContent>
                   </Card>
@@ -754,7 +676,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                   <Card>
                     <CardHeader>
                       <CardTitle>Revenue split</CardTitle>
-                      <CardDescription>Hospital share and Mediend share</CardDescription>
+                      <CardDescription>Hospital share, Mediend share, costs &amp; net profit</CardDescription>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div>
@@ -773,9 +695,73 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                         <Label>Mediend Amount</Label>
                         <Input type="number" step="0.01" value={formData.mediendShareAmount} onChange={(e) => update('mediendShareAmount', e.target.value)} className="mt-1" />
                       </div>
+                    </CardContent>
+                    <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-0 border-t mt-2 mx-6 px-0">
+                      <div className="sm:col-span-2 text-sm font-semibold text-muted-foreground pt-3">Costs</div>
+                      <div>
+                        <Label>D&amp;C charges</Label>
+                        <Input type="number" step="0.01" value={computedDcTotal.toFixed(2)} readOnly className="mt-1 bg-muted/40" />
+                        <p className="text-[11px] text-muted-foreground mt-1">Auto: sum of ticked breakup fields</p>
+                      </div>
+                      <div>
+                        <Label>Doctor charges</Label>
+                        <Input type="number" step="0.01" value={formData.doctorCharges} onChange={(e) => update('doctorCharges', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Referral amount</Label>
+                        <Input type="number" step="0.01" value={formData.referralAmount} onChange={(e) => update('referralAmount', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Cab charges</Label>
+                        <Input type="number" step="0.01" value={formData.cabCharges} onChange={(e) => update('cabCharges', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Implant cost</Label>
+                        <Input type="number" step="0.01" value={formData.implantCost} onChange={(e) => update('implantCost', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Implant paid by</Label>
+                        <Select value={formData.implantPaidBy || 'unset'} onValueChange={(v) => update('implantPaidBy', v === 'unset' ? '' : v)}>
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Default: Mediend" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="unset">Not set (Mediend)</SelectItem>
+                            <SelectItem value="MEDIEND">Mediend</SelectItem>
+                            <SelectItem value="HOSPITAL">Hospital</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Instrument cost</Label>
+                        <Input type="number" step="0.01" value={formData.instrumentsCost} onChange={(e) => update('instrumentsCost', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Instrument paid by</Label>
+                        <Select value={formData.instrumentsPaidBy || 'unset'} onValueChange={(v) => update('instrumentsPaidBy', v === 'unset' ? '' : v)}>
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Default: Mediend" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="unset">Not set (Mediend)</SelectItem>
+                            <SelectItem value="MEDIEND">Mediend</SelectItem>
+                            <SelectItem value="HOSPITAL">Hospital</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                       <div className="sm:col-span-2">
                         <Label>Mediend net profit</Label>
                         <Input type="number" step="0.01" value={formData.mediendNetProfit} onChange={(e) => update('mediendNetProfit', e.target.value)} className="mt-1 font-medium" />
+                      </div>
+                    </CardContent>
+                    <CardContent className="pt-0 mx-6 px-0 border-0">
+                      <div className="sm:col-span-2">
+                        <Label>Doctor remarks</Label>
+                        <Textarea value={formData.doctorRemarks} onChange={(e) => update('doctorRemarks', e.target.value)} placeholder="Notes about the doctor / doctor charges for this case" className="mt-1 resize-none" rows={2} />
+                      </div>
+                      <div className="sm:col-span-2 mt-3">
+                        <Label>Cost breakdown remarks</Label>
+                        <Textarea value={formData.costBreakdownRemarks} onChange={(e) => update('costBreakdownRemarks', e.target.value)} placeholder="Notes about implants / instruments / D&C / referral / cab costs" className="mt-1 resize-none" rows={2} />
                       </div>
                     </CardContent>
                   </Card>
