@@ -134,15 +134,6 @@ async function main() {
   let markedReverted = 0
 
   // ── Revert finalized sheets ─────────────────────────────────────────────
-  // Get any valid user ID for the caseStageHistory audit trail
-  const anyUser = await prisma.user.findFirst({
-    select: { id: true },
-  })
-  if (!anyUser && !DRY_RUN) {
-    throw new Error('No users found in the database — cannot record stage history')
-  }
-  const changedById = anyUser?.id ?? '00000000-0000-0000-0000-000000000001'
-
   for (const sheet of finalizedSheets) {
     const ref = sheet.lead?.leadRef ?? sheet.leadId
     // Skip if already reverted (no sheet or already at IPD_DONE)
@@ -170,7 +161,7 @@ async function main() {
           },
         })
 
-        // Revert the lead
+        // Revert the lead — skip caseStageHistory (one-time reset, no audit needed)
         await tx.lead.update({
           where: { id: sheet.leadId },
           data: {
@@ -178,23 +169,12 @@ async function main() {
             pipelineStage: 'INSURANCE',
           },
         })
-
-        // Record the reversion in case stage history
-        await tx.caseStageHistory.create({
-          data: {
-            leadId: sheet.leadId,
-            fromStage: 'DISCHARGED',
-            toStage: 'IPD_DONE',
-            changedById,
-            note: 'May 2026 discharge reset — Insurance will redo',
-          },
-        })
       })
     }
     finalizedReverted++
   }
 
-  // ── Revert marked-only sheets ───────────────────────────────────────────
+  // ── Revert marked-only sheets ──────────────────────────────────────────
   for (const sheet of markedSheets) {
     const ref = sheet.lead?.leadRef ?? sheet.leadId
     if (sheet.lead?.caseStage !== 'DISCHARGED') continue
@@ -202,6 +182,14 @@ async function main() {
     console.log(`${DRY_RUN ? '[DRY]' : '✅'} ${ref} (marked) — delete sheet for ${sheet.leadId.slice(0, 8)}…`)
 
     if (!DRY_RUN) {
+      await prisma.$transaction(async (tx) => {
+        await tx.dischargeSheet.delete({ where: { id: sheet.id } })
+        // Revert the lead — skip caseStageHistory
+        await tx.lead.update({
+          where: { id: sheet.leadId },
+          data: { caseStage: 'IPD_DONE' },
+        })
+      })
       await prisma.$transaction(async (tx) => {
         // Delete the minimal sheet
         await tx.dischargeSheet.delete({
