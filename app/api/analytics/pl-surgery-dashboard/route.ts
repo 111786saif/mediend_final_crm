@@ -69,7 +69,6 @@ export async function GET(request: NextRequest) {
           select: { userId: true },
         })
         const teamUserIds = [managerEmp.userId, ...subEmps.map((e) => e.userId)]
-        const teamUserIds = [managerEmp.userId, ...subEmps.map((e) => e.userId)]
         leadWhere.bdId = { in: teamUserIds }
       }
     }
