@@ -509,6 +509,27 @@ services:
       - tools
     entrypoint: ["bun", "run", "prisma/seed-treatments.ts"]
 
+  # One-off: profile or reset May 2026 discharges back to IPD_DONE
+  # Profile (see affected leads, no changes):
+  #   docker compose --profile tools run --rm reset-discharges -- --profile
+  # Dry run (simulate, no changes):
+  #   docker compose --profile tools run --rm reset-discharges -- --dry-run
+  # Live run (actually revert):
+  #   docker compose --profile tools run --rm reset-discharges
+  reset-discharges:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/reset-may-2026-discharges.ts"]
+
 volumes:
   pgdata:
   uptime-kuma-data:
