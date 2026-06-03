@@ -97,6 +97,9 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'targets:read',
     'targets:write',
     'users:read',
+    'users:write',
+    'users:create_tl',
+    'users:create_user',
     'insurance:read',
     'insurance:write',
     'pl:read',
@@ -117,6 +120,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'masters:read',
     'masters:write',
     'sales:pnl:read',
+    'compliance:read',
+    'compliance:write',
   ],
   SALES_HEAD: [
     'leads:read',
@@ -470,6 +475,11 @@ export function canCreateRole(user: SessionUser | null, targetRole: UserRole): b
     return true
   }
 
+  // Executive Assistant can create TL, USER, and BD (same as department heads)
+  if (user.role === 'EXECUTIVE_ASSISTANT') {
+    return targetRole === 'TEAM_LEAD' || targetRole === 'USER' || targetRole === 'BD'
+  }
+
   // HR_HEAD can create department head roles when creating departments
   if (user.role === 'HR_HEAD') {
     return isDepartmentHead(targetRole) || targetRole === 'EXECUTIVE_ASSISTANT' || targetRole === 'CATEGORY_MANAGER' || targetRole === 'ASSISTANT_CATEGORY_MANAGER' || targetRole === 'TEAM_LEAD' || targetRole === 'USER' || targetRole === 'BD'
@@ -515,6 +525,11 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
 
   if (user.role === 'MD' || user.role === 'ADMIN' || user.role === 'TESTER') {
     return allRolesExceptMD
+  }
+
+  // Executive Assistant can create TL, USER, and BD
+  if (user.role === 'EXECUTIVE_ASSISTANT') {
+    return ['TEAM_LEAD', 'USER', 'BD']
   }
 
   // HR_HEAD can create department head roles

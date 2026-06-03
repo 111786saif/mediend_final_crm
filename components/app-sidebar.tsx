@@ -38,6 +38,7 @@ import {
   LogOut,
   MessageSquare,
   Package,
+  Shield,
   ShieldCheck,
   Sparkles,
   Target,
@@ -143,6 +144,8 @@ export function AppSidebar() {
     finance: false,
     hr: false,
     myHrms: false,
+    sales: false,
+    insurancePl: false,
   })
 
   const toggleSection = (section: string) => {
@@ -159,6 +162,10 @@ export function AppSidebar() {
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
 
   const HRM_TITLES = ['Attendance & Normalizations', 'People & Org', 'Compensation & Docs', 'Engagement']
+  const SALES_TITLES = ['Sales Dashboard', 'DM Dashboard', 'Case Tracker', 'Pending Surgery', 'Targets', 'Sales P&L']
+  const INSURANCE_PL_TITLES = ['Insurance', 'Cash Cases', 'P/L Ledger', 'P/L Surgery', 'P/L Outstanding', 'Doctor List', 'Hospital List']
+  const EA_HRM_TITLES = ['MD HR Dashboard', 'HR Dashboard', 'Recruitment', ...HRM_TITLES]
+  const EA_MYHRMS_EXTRA = ['Ask MD Approval']
 
   const navigationItems =
     user.role === 'MD'
@@ -197,16 +204,14 @@ export function AppSidebar() {
                 item.title === 'Tasks' ||
                 item.title === 'Meets' ||
                 item.title === 'Calendar' ||
-                item.title === 'Sales Dashboard' ||
-                item.title === 'MD HR Dashboard' ||
+                item.title === 'Chat' ||
+                item.title === 'Master Data' ||
+                item.title === 'Compliance' ||
+                SALES_TITLES.includes(item.title) ||
+                INSURANCE_PL_TITLES.includes(item.title) ||
+                EA_HRM_TITLES.includes(item.title) ||
                 item.title.startsWith('My ') ||
-                item.title === 'Attendance & Normalizations' ||
-                item.title === 'People & Org' ||
-                item.title === 'Compensation & Docs' ||
-                item.title === 'Engagement' ||
-                (!item.title.startsWith('Svc ') &&
-                  !item.title.startsWith('MD ') &&
-                  !item.title.startsWith('Fin '))
+                EA_MYHRMS_EXTRA.includes(item.title)
             )
           : user.role === 'USER'
           ? itemsWithUrls.filter(
@@ -250,25 +255,48 @@ export function AppSidebar() {
       ? [...navigationItems, getCampaignCplNavItem()]
       : navigationItems
 
+  const isEa = user.role === 'EXECUTIVE_ASSISTANT'
+
   const mainItems = navigationItemsWithCpl.filter((item) => {
     if (item.title.startsWith('My ')) return false
     if (HRM_TITLES.includes(item.title)) return user.role !== 'HR_HEAD'
+    if (isEa) {
+      if (SALES_TITLES.includes(item.title)) return false
+      if (INSURANCE_PL_TITLES.includes(item.title)) return false
+      if (EA_HRM_TITLES.includes(item.title)) return false
+      if (EA_MYHRMS_EXTRA.includes(item.title)) return false
+    }
     return true
   })
-  const hrItems = navigationItemsWithCpl.filter((item) => HRM_TITLES.includes(item.title))
-  const myHrmsItems = navigationItemsWithCpl.filter((item) => item.title.startsWith('My '))
 
-  const showHrSection = user.role === 'HR_HEAD' && hrItems.length > 0
+  const salesItems = isEa ? navigationItemsWithCpl.filter((item) => SALES_TITLES.includes(item.title)) : []
+  const insurancePlItems = isEa ? navigationItemsWithCpl.filter((item) => INSURANCE_PL_TITLES.includes(item.title)) : []
+  const hrItems = navigationItemsWithCpl.filter((item) =>
+    isEa ? EA_HRM_TITLES.includes(item.title) : HRM_TITLES.includes(item.title)
+  )
+  const myHrmsItems = navigationItemsWithCpl.filter((item) =>
+    isEa ? (item.title.startsWith('My ') || EA_MYHRMS_EXTRA.includes(item.title)) : item.title.startsWith('My ')
+  )
+
+  const showHrSection = (user.role === 'HR_HEAD' || isEa) && hrItems.length > 0
   const showMyHrmsSection = myHrmsItems.length > 0
+  const showSalesSection = isEa && salesItems.length > 0
+  const showInsurancePlSection = isEa && insurancePlItems.length > 0
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
-        (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
+        (sum, item) => {
+          if (isEa && !HRM_TITLES.includes(item.title)) return sum
+          return sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
+        },
         0
       )
     : 0
   const myHrmsSectionBadge = myHrmsItems.reduce(
-    (sum, item) => sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin),
+    (sum, item) => {
+      if (isEa && EA_MYHRMS_EXTRA.includes(item.title)) return sum
+      return sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
+    },
     0
   )
 
@@ -418,6 +446,100 @@ export function AppSidebar() {
                                   {badgeCount > 99 ? '99+' : badgeCount}
                                 </SidebarMenuBadge>
                               )}
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      )
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              )}
+            </div>
+          </SidebarGroup>
+        )}
+        {showSalesSection && (
+          <SidebarGroup className="pb-1">
+            <button
+              onClick={() => toggleSection('sales')}
+              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4" />
+                <span>Sales</span>
+              </div>
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-200 ${
+                  openSections.sales ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+            <div
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${
+                openSections.sales ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            >
+              {openSections.sales && (
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {salesItems.map((item) => {
+                      const Icon = item.icon
+                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
+                      const badgeCount = getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
+                      return (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
+                            <Link href={item.url} onClick={closeSidebarOnMobile}>
+                              <Icon />
+                              <span>{item.title}</span>
+                              {badgeCount > 0 && (
+                                <SidebarMenuBadge className="bg-destructive text-white">
+                                  {badgeCount > 99 ? '99+' : badgeCount}
+                                </SidebarMenuBadge>
+                              )}
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      )
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              )}
+            </div>
+          </SidebarGroup>
+        )}
+        {showInsurancePlSection && (
+          <SidebarGroup className="pb-1">
+            <button
+              onClick={() => toggleSection('insurancePl')}
+              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                <span>Insurance & P/L</span>
+              </div>
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-200 ${
+                  openSections.insurancePl ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+            <div
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${
+                openSections.insurancePl ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            >
+              {openSections.insurancePl && (
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {insurancePlItems.map((item) => {
+                      const Icon = item.icon
+                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
+                      return (
+                        <SidebarMenuItem key={item.title}>
+                          <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
+                            <Link href={item.url} onClick={closeSidebarOnMobile}>
+                              <Icon />
+                              <span>{item.title}</span>
                             </Link>
                           </SidebarMenuButton>
                         </SidebarMenuItem>

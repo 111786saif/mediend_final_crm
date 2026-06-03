@@ -221,19 +221,19 @@ export const navItems: NavItem[] = [
     title: 'My Core HR',
     url: '/employee/dashboard/core-hr',
     icon: UserCircle,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'My Financial',
     url: '/employee/dashboard/financial',
     icon: Wallet,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'My Support & Services',
     url: '/employee/dashboard/support-services',
     icon: MessageSquare,
-    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD'],
+    roles: ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'ADMIN', 'USER', 'COMPLIANCE_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'My Team',
@@ -401,7 +401,7 @@ export const navItems: NavItem[] = [
     title: 'Compliance',
     url: '/compliance/dashboard',
     icon: Stethoscope,
-    roles: ['COMPLIANCE_HEAD', 'ADMIN'],
+    roles: ['COMPLIANCE_HEAD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'MD Compliance',
