@@ -10,6 +10,7 @@ import {
   generateRelievingLetterHTML,
   generateInternshipOfferLetterHTML,
   generateInternshipCompletionLetterHTML,
+  generateExitInterviewHTML,
 } from '@/lib/hrms/document-templates'
 
 export async function GET(
@@ -99,8 +100,10 @@ export async function GET(
       case 'INTERNSHIP_COMPLETION_LETTER':
         htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
         break
+      case 'EXIT_INTERVIEW_FORM':
+        htmlContent = generateExitInterviewHTML(employeeData, metadata || undefined)
+        break
       case 'CUSTOM':
-        // CUSTOM documents are uploaded files; view page will show link/embed
         htmlContent = document.documentUrl
           ? `<div style="padding:2rem;text-align:center;"><p>Uploaded document.</p><p><a href="${document.documentUrl}" target="_blank" rel="noopener noreferrer">Open document</a></p></div>`
           : '<div style="padding:2rem;text-align:center;"><p>No file linked to this document.</p></div>'
@@ -109,7 +112,6 @@ export async function GET(
         return errorResponse('Invalid document type', 400)
     }
 
-    // Check if HTML download is requested
     const { searchParams } = new URL(request.url)
     const format = searchParams.get('format')
 
@@ -132,3 +134,61 @@ export async function GET(
   }
 }
 
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) {
+      return unauthorizedResponse()
+    }
+
+    if (!hasPermission(user, 'hrms:employees:write')) {
+      return errorResponse('Forbidden', 403)
+    }
+
+    const { id } = await params
+
+    const document = await prisma.employeeDocument.findUnique({
+      where: { id },
+    })
+
+    if (!document) {
+      return errorResponse('Document not found', 404)
+    }
+
+    if (document.acknowledgedAt) {
+      return errorResponse('Cannot edit a document that has already been acknowledged by the employee', 400)
+    }
+
+    const body = await request.json()
+    const { metadata } = body
+
+    if (!metadata || typeof metadata !== 'object') {
+      return errorResponse('metadata is required', 400)
+    }
+
+    const updated = await prisma.employeeDocument.update({
+      where: { id },
+      data: { metadata },
+      include: {
+        employee: {
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    return successResponse({ document: updated }, 'Document updated successfully')
+  } catch (error) {
+    console.error('Error updating document:', error)
+    return errorResponse('Failed to update document', 500)
+  }
+}

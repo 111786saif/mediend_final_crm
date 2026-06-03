@@ -24,6 +24,15 @@ export async function GET(request: NextRequest) {
       orderBy: {
         generatedAt: 'desc',
       },
+      select: {
+        id: true,
+        documentType: true,
+        documentUrl: true,
+        title: true,
+        generatedAt: true,
+        ackToken: true,
+        acknowledgedAt: true,
+      },
     })
 
     return successResponse(documents)

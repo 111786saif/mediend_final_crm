@@ -9,6 +9,7 @@ import {
   generateRelievingLetterHTML,
   generateInternshipOfferLetterHTML,
   generateInternshipCompletionLetterHTML,
+  generateExitInterviewHTML,
 } from '@/lib/hrms/document-templates'
 
 export async function GET(
@@ -23,7 +24,6 @@ export async function GET(
 
     const { id } = await params
 
-    // Get employee record for user
     const employee = await prisma.employee.findUnique({
       where: { userId: user.id },
     })
@@ -32,7 +32,6 @@ export async function GET(
       return errorResponse('Employee record not found', 404)
     }
 
-    // Fetch the document and verify it belongs to the employee
     const document = await prisma.employeeDocument.findUnique({
       where: { id },
       include: {
@@ -58,7 +57,6 @@ export async function GET(
       return errorResponse('Document not found', 404)
     }
 
-    // Verify the document belongs to the requesting user's employee record
     if (document.employeeId !== employee.id) {
       return errorResponse('Forbidden', 403)
     }
@@ -113,6 +111,9 @@ export async function GET(
       case 'INTERNSHIP_COMPLETION_LETTER':
         htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata || undefined)
         break
+      case 'EXIT_INTERVIEW_FORM':
+        htmlContent = generateExitInterviewHTML(employeeData, metadata || undefined)
+        break
       default:
         return errorResponse('Invalid document type', 400)
     }
@@ -127,3 +128,58 @@ export async function GET(
   }
 }
 
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const user = getSessionFromRequest(request)
+    if (!user) {
+      return unauthorizedResponse()
+    }
+
+    const { id } = await params
+
+    const employee = await prisma.employee.findUnique({
+      where: { userId: user.id },
+    })
+
+    if (!employee) {
+      return errorResponse('Employee record not found', 404)
+    }
+
+    const document = await prisma.employeeDocument.findUnique({
+      where: { id },
+    })
+
+    if (!document) {
+      return errorResponse('Document not found', 404)
+    }
+
+    if (document.employeeId !== employee.id) {
+      return errorResponse('Forbidden', 403)
+    }
+
+    if (document.acknowledgedAt) {
+      return errorResponse('Document already acknowledged', 400)
+    }
+
+    const forwardedFor = request.headers.get('x-forwarded-for')
+    const ip = forwardedFor?.split(',')[0]?.trim() || '0.0.0.0'
+
+    const updated = await prisma.employeeDocument.update({
+      where: { id },
+      data: {
+        acknowledgedAt: new Date(),
+        acknowledgedIp: ip,
+      },
+    })
+
+    return successResponse({
+      document: updated,
+    }, 'Document acknowledged successfully')
+  } catch (error) {
+    console.error('Error acknowledging document:', error)
+    return errorResponse('Failed to acknowledge document', 500)
+  }
+}

@@ -10,12 +10,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPost } from '@/lib/api-client'
+import { apiGet, apiPost, apiPatch } from '@/lib/api-client'
 import { useState, useMemo, useEffect } from 'react'
-import { FileText, Plus, ExternalLink, Mail, Upload, Search, ChevronRight, Check, Clock, Eye, ArrowLeft } from 'lucide-react'
+import { FileText, Plus, ExternalLink, Mail, Upload, Search, ChevronRight, Check, Clock, Eye, ArrowLeft, Pencil } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
+
 interface Employee {
   id: string
   employeeCode: string
@@ -28,12 +31,14 @@ interface Employee {
     id: string
     name: string
   } | null
+  joinDate?: string | null
+  designation?: string | null
 }
 
 interface EmployeeDocument {
   id: string
   employeeId: string | null
-  documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'INTERNSHIP_OFFER_LETTER' | 'INTERNSHIP_COMPLETION_LETTER' | 'CUSTOM'
+  documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'INTERNSHIP_OFFER_LETTER' | 'INTERNSHIP_COMPLETION_LETTER' | 'EXIT_INTERVIEW_FORM' | 'CUSTOM'
   documentUrl?: string | null
   title?: string | null
   applicantName?: string | null
@@ -58,6 +63,7 @@ const DOCUMENT_TYPES: Record<string, string> = {
   RELIEVING_LETTER: 'Relieving Letter',
   INTERNSHIP_OFFER_LETTER: 'Internship Offer',
   INTERNSHIP_COMPLETION_LETTER: 'Internship Completion',
+  EXIT_INTERVIEW_FORM: 'Exit Interview',
   CUSTOM: 'Custom',
 }
 
@@ -66,13 +72,13 @@ function getDocumentLabel(doc: EmployeeDocument): string {
   return DOCUMENT_TYPES[doc.documentType] ?? doc.documentType
 }
 
-const DOC_TYPES_FOR_TABLE = ['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'INTERNSHIP_OFFER_LETTER', 'INTERNSHIP_COMPLETION_LETTER', 'CUSTOM'] as const
+const DOC_TYPES_FOR_TABLE = ['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'INTERNSHIP_OFFER_LETTER', 'INTERNSHIP_COMPLETION_LETTER', 'EXIT_INTERVIEW_FORM', 'CUSTOM'] as const
 
 function DocStatusCell({ docs }: { docs: EmployeeDocument[] }) {
   if (docs.length === 0) return <span className="text-muted-foreground/50">—</span>
   const hasAck = docs.some((d) => d.acknowledgedAt)
-  const hasPending = docs.some((d) => d.ackToken && !d.acknowledgedAt)
-  if (hasAck) {
+  const hasPending = docs.some((d) => !d.acknowledgedAt)
+  if (hasAck && !hasPending) {
     return (
       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-400">
         <Check className="h-3 w-3" />
@@ -98,9 +104,13 @@ function DocStatusCell({ docs }: { docs: EmployeeDocument[] }) {
 
 export default function HRDocumentsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [dialogMode, setDialogMode] = useState<'generate' | 'edit'>('generate')
+  const [editingDocId, setEditingDocId] = useState<string | null>(null)
+  const [editingDocMeta, setEditingDocMeta] = useState<Record<string, unknown> | null>(null)
   const [sheetEmployee, setSheetEmployee] = useState<Employee | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const queryClient = useQueryClient()
+
   const { data: employees = [] } = useQuery<Employee[]>({
     queryKey: ['employees'],
     queryFn: () => apiGet<Employee[]>('/api/employees'),
@@ -153,6 +163,9 @@ export default function HRDocumentsPage() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['hr-documents'] })
       setIsDialogOpen(false)
+      setEditingDocId(null)
+      setEditingDocMeta(null)
+      setDialogMode('generate')
       toast.success('Document generated successfully')
       window.open(`/hr/documents/${data.document.id}/view`, '_blank', 'noopener,noreferrer')
     },
@@ -161,12 +174,41 @@ export default function HRDocumentsPage() {
     },
   })
 
+  const editMutation = useMutation({
+    mutationFn: async ({ id, metadata }: { id: string; metadata: Record<string, unknown> }) => {
+      const response = await apiPatch<{ document: EmployeeDocument }>(`/api/hr/documents/${id}`, { metadata })
+      return response
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hr-documents'] })
+      setIsDialogOpen(false)
+      setEditingDocId(null)
+      setEditingDocMeta(null)
+      setDialogMode('generate')
+      toast.success('Document updated successfully')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update document')
+    },
+  })
+
   const handleViewDocument = (docId: string) => {
     window.open(`/hr/documents/${docId}/view`, '_blank', 'noopener,noreferrer')
   }
 
+  const handleEditDocument = (doc: EmployeeDocument) => {
+    setEditingDocId(doc.id)
+    setEditingDocMeta(doc.metadata)
+    setDialogMode('edit')
+    setIsDialogOpen(true)
+  }
+
   const invalidateDocuments = () => {
     queryClient.invalidateQueries({ queryKey: ['hr-documents'] })
+  }
+
+  const canEditDoc = (doc: EmployeeDocument) => {
+    return doc.documentType === 'EXIT_INTERVIEW_FORM' && !doc.acknowledgedAt
   }
 
   return (
@@ -176,7 +218,14 @@ export default function HRDocumentsPage() {
           <h1 className="text-3xl font-bold">Document Generation</h1>
           <p className="text-muted-foreground mt-1">Generate and manage employee documents</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isDialogOpen} onOpenChange={(open) => {
+          if (!open) {
+            setEditingDocId(null)
+            setEditingDocMeta(null)
+            setDialogMode('generate')
+          }
+          setIsDialogOpen(open)
+        }}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
@@ -185,21 +234,35 @@ export default function HRDocumentsPage() {
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Generate Employee Document</DialogTitle>
-              <DialogDescription>Select an employee and document type to generate</DialogDescription>
+              <DialogTitle>
+                {dialogMode === 'edit' ? 'Edit Exit Interview Form' : 'Generate Employee Document'}
+              </DialogTitle>
+              <DialogDescription>
+                {dialogMode === 'edit' ? 'Update the exit interview form (editing is locked after employee acknowledgment)' : 'Select an employee and document type to generate'}
+              </DialogDescription>
             </DialogHeader>
-            <GenerateDocumentForm
-              employees={employees}
-              preselectedEmployeeId={sheetEmployee?.id}
-              onSubmit={(data) => generateMutation.mutate(data)}
-              isLoading={generateMutation.isPending}
-            />
+            {dialogMode === 'edit' && editingDocId && editingDocMeta ? (
+              <ExitInterviewForm
+                employees={employees}
+                preselectedEmployeeId={editingDocMeta.employeeId as string | undefined}
+                initialValues={editingDocMeta}
+                onSubmit={(metadata) => editMutation.mutate({ id: editingDocId, metadata })}
+                isLoading={editMutation.isPending}
+                isEdit
+              />
+            ) : (
+              <GenerateDocumentForm
+                employees={employees}
+                preselectedEmployeeId={sheetEmployee?.id}
+                onSubmit={(data) => generateMutation.mutate(data)}
+                isLoading={generateMutation.isPending}
+              />
+            )}
           </DialogContent>
         </Dialog>
       </div>
 
-      {/* Document Types Overview */}
-      <div className="grid gap-4 md:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-4">
         {DOC_TYPES_FOR_TABLE.map((key) => {
           const count = documents.filter((d) => d.documentType === key).length
           const ackCount = documents.filter((d) => d.documentType === key && d.acknowledgedAt).length
@@ -221,7 +284,6 @@ export default function HRDocumentsPage() {
         })}
       </div>
 
-      {/* Employee List */}
       <Card>
         <CardHeader>
           <CardTitle>Employees</CardTitle>
@@ -300,7 +362,6 @@ export default function HRDocumentsPage() {
         </CardContent>
       </Card>
 
-      {/* Employee Documents Sheet */}
       <Sheet open={!!sheetEmployee} onOpenChange={(open) => !open && setSheetEmployee(null)}>
         <SheetContent className="sm:max-w-xl overflow-y-auto p-6">
           {sheetEmployee && (
@@ -317,6 +378,9 @@ export default function HRDocumentsPage() {
                   <Button
                     size="sm"
                     onClick={() => {
+                      setDialogMode('generate')
+                      setEditingDocId(null)
+                      setEditingDocMeta(null)
                       setIsDialogOpen(true)
                     }}
                   >
@@ -350,10 +414,10 @@ export default function HRDocumentsPage() {
                                 <Badge variant="secondary">{getDocumentLabel(doc)}</Badge>
                                 {doc.acknowledgedAt && (
                                   <Badge variant="default" className="bg-green-600 hover:bg-green-600">
-                                    Acknowledged {format(new Date(doc.acknowledgedAt), 'PP')}
+                                    Acknowledged {format(new Date(doc.acknowledgedAt), 'PPp')}
                                   </Badge>
                                 )}
-                                {doc.ackToken && !doc.acknowledgedAt && (
+                                {!doc.acknowledgedAt && (
                                   <Badge variant="secondary" className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
                                     Pending
                                   </Badge>
@@ -365,6 +429,16 @@ export default function HRDocumentsPage() {
                             </TableCell>
                             <TableCell>
                               <div className="flex gap-1 flex-wrap">
+                                {canEditDoc(doc) && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleEditDocument(doc)}
+                                  >
+                                    <Pencil className="h-4 w-4 mr-1" />
+                                    Edit
+                                  </Button>
+                                )}
                                 {doc.documentType === 'CUSTOM' ? (
                                   <Button
                                     variant="outline"
@@ -618,9 +692,8 @@ function GenerateDocumentForm({
     }
   }, [preselectedEmployeeId])
 
-  const isOfferLetter = formData.documentType === 'OFFER_LETTER' || formData.documentType === 'INTERNSHIP_OFFER_LETTER'
   const selectedEmployee = employees.find((e) => e.id === formData.employeeId)
-  const canProceed = formData.documentType && formData.employeeId
+  const canProceed = formData.documentType && (formData.documentType === 'EXIT_INTERVIEW_FORM' ? (formData.employeeId !== '') : (formData.employeeId !== ''))
 
   const summaryLabel = selectedEmployee?.user?.name ?? selectedEmployee?.employeeCode
 
@@ -684,7 +757,18 @@ function GenerateDocumentForm({
     onSubmit(buildPayload())
   }
 
-  // ── Step 1: Pick doc type + employee/applicant ──
+  if (formData.documentType === 'EXIT_INTERVIEW_FORM' && formData.employeeId) {
+    const emp = employees.find((e) => e.id === formData.employeeId)
+    return (
+      <ExitInterviewForm
+        employees={employees}
+        preselectedEmployeeId={formData.employeeId}
+        onSubmit={(metadata) => onSubmit({ employeeId: formData.employeeId, documentType: 'EXIT_INTERVIEW_FORM', metadata })}
+        isLoading={isLoading}
+      />
+    )
+  }
+
   if (step === 1) {
     return (
       <div className="space-y-4">
@@ -699,7 +783,7 @@ function GenerateDocumentForm({
             </SelectTrigger>
             <SelectContent>
               {Object.entries(DOCUMENT_TYPES)
-                .filter(([k]) => k !== 'CUSTOM')
+                .filter(([k]) => k !== 'CUSTOM' && k !== 'EXIT_INTERVIEW_FORM')
                 .map(([key, label]) => (
                   <SelectItem key={key} value={key}>
                     {label}
@@ -744,7 +828,6 @@ function GenerateDocumentForm({
     )
   }
 
-  // ── Preview step ──
   if (step === 'preview' && previewHtml) {
     return (
       <div className="space-y-4">
@@ -770,10 +853,8 @@ function GenerateDocumentForm({
     )
   }
 
-  // ── Step 2: Document details ──
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Summary bar */}
       <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2 text-sm">
         <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
         <span className="font-medium">{summaryLabel}</span>
@@ -788,7 +869,6 @@ function GenerateDocumentForm({
         </button>
       </div>
 
-      {/* Salutation */}
       <div className="w-32">
         <Label>Title</Label>
         <Select
@@ -805,7 +885,6 @@ function GenerateDocumentForm({
         </Select>
       </div>
 
-      {/* Document-specific fields */}
       {formData.documentType === 'OFFER_LETTER' && (
         <>
           <div className="grid grid-cols-2 gap-3">
@@ -1207,5 +1286,461 @@ function GenerateDocumentForm({
         </div>
       </div>
     </form>
+  )
+}
+
+function ExitInterviewForm({
+  employees,
+  preselectedEmployeeId,
+  initialValues,
+  onSubmit,
+  isLoading,
+  isEdit = false,
+}: {
+  employees: Employee[]
+  preselectedEmployeeId?: string
+  initialValues?: Record<string, unknown>
+  onSubmit: (metadata: Record<string, unknown>) => void
+  isLoading: boolean
+  isEdit?: boolean
+}) {
+  const getVal = (key: string, fallback: string = '') => {
+    if (initialValues) return String(initialValues[key] || fallback)
+    return fallback
+  }
+  const getCheckVal = (key: string, trueVal: string = 'yes') => {
+    if (initialValues) return initialValues[key] === trueVal
+    return false
+  }
+
+  const [employeeId, setEmployeeId] = useState(getVal('employeeId', preselectedEmployeeId || ''))
+  const [employeeName, setEmployeeName] = useState(getVal('employeeName'))
+  const [employeeCode, setEmployeeCode] = useState(getVal('employeeCode'))
+  const [department, setDepartment] = useState(getVal('department'))
+  const [position, setPosition] = useState(getVal('position'))
+  const [dateOfJoining, setDateOfJoining] = useState(getVal('dateOfJoining'))
+  const [lastWorkingDay, setLastWorkingDay] = useState(getVal('lastWorkingDay'))
+
+  const [reasonForLeaving, setReasonForLeaving] = useState(getVal('reasonForLeaving'))
+  const [jobRoleMatch, setJobRoleMatch] = useState<'yes' | 'no' | ''>(getVal('jobRoleMatch') as 'yes' | 'no' | '' || '')
+  const [jobRoleComments, setJobRoleComments] = useState(getVal('jobRoleComments'))
+  const [workEnvironment, setWorkEnvironment] = useState<'excellent' | 'good' | 'fair' | 'poor' | ''>(getVal('workEnvironment') as 'excellent' | 'good' | 'fair' | 'poor' | '' || '')
+  const [workEnvironmentComments, setWorkEnvironmentComments] = useState(getVal('workEnvironmentComments'))
+  const [companyCulture, setCompanyCulture] = useState<'very_positive' | 'positive' | 'neutral' | 'negative' | 'very_negative' | ''>(getVal('companyCulture') as 'very_positive' | 'positive' | 'neutral' | 'negative' | 'very_negative' | '' || '')
+  const [companyCultureComments, setCompanyCultureComments] = useState(getVal('companyCultureComments'))
+  const [suggestions, setSuggestions] = useState(getVal('suggestions'))
+  const [noticePeriodServed, setNoticePeriodServed] = useState<'yes' | 'no' | ''>(getVal('noticePeriodServed') as 'yes' | 'no' | '' || '')
+  const [noticePeriodDays, setNoticePeriodDays] = useState(getVal('noticePeriodDays'))
+  const [noticePeriodReason, setNoticePeriodReason] = useState(getVal('noticePeriodReason'))
+
+  const [handoverCompleted, setHandoverCompleted] = useState<'yes' | 'no' | ''>(getVal('handoverCompleted') as 'yes' | 'no' | '' || '')
+  const [handoverReason, setHandoverReason] = useState(getVal('handoverReason'))
+
+  const [emailAccessRemoved, setEmailAccessRemoved] = useState<'yes' | 'no' | ''>(getVal('emailAccessRemoved') as 'yes' | 'no' | '' || '')
+  const [emailAccessComments, setEmailAccessComments] = useState(getVal('emailAccessComments'))
+  const [otherAccessRemoved, setOtherAccessRemoved] = useState<'yes' | 'no' | ''>(getVal('otherAccessRemoved') as 'yes' | 'no' | '' || '')
+  const [otherAccessComments, setOtherAccessComments] = useState(getVal('otherAccessComments'))
+
+  const [idCardsReturned, setIdCardsReturned] = useState<'yes' | 'no' | ''>(getVal('idCardsReturned') as 'yes' | 'no' | '' || '')
+  const [idCardsComments, setIdCardsComments] = useState(getVal('idCardsComments'))
+  const [simCardsReturned, setSimCardsReturned] = useState<'yes' | 'no' | ''>(getVal('simCardsReturned') as 'yes' | 'no' | '' || '')
+  const [simCardsComments, setSimCardsComments] = useState(getVal('simCardsComments'))
+  const [workAssetsReturned, setWorkAssetsReturned] = useState<'yes' | 'no' | ''>(getVal('workAssetsReturned') as 'yes' | 'no' | '' || '')
+  const [workAssetsComments, setWorkAssetsComments] = useState(getVal('workAssetsComments'))
+
+  const [backupReceived, setBackupReceived] = useState<'yes' | 'no' | ''>(getVal('backupReceived') as 'yes' | 'no' | '' || '')
+  const [backupRemarks, setBackupRemarks] = useState(getVal('backupRemarks'))
+
+  const [hrExitCompleted, setHrExitCompleted] = useState<'yes' | 'no' | ''>(getVal('hrExitCompleted') as 'yes' | 'no' | '' || '')
+  const [hrRemarks, setHrRemarks] = useState(getVal('hrRemarks'))
+
+  const [wouldConsiderFuture, setWouldConsiderFuture] = useState<'yes' | 'no' | ''>(getVal('wouldConsiderFuture') as 'yes' | 'no' | '' || '')
+  const [wouldConsiderComments, setWouldConsiderComments] = useState(getVal('wouldConsiderComments'))
+
+  const [laptopReturned, setLaptopReturned] = useState<'on' | ''>(getVal('laptopReturned', '') as 'on' | '')
+  const [laptopComments, setLaptopComments] = useState(getVal('laptopComments'))
+  const [idCardReturned, setIdCardReturned] = useState<'on' | ''>(getVal('idCardReturned', '') as 'on' | '')
+  const [idCardStatusComments, setIdCardStatusComments] = useState(getVal('idCardStatusComments'))
+  const [accessCardReturned, setAccessCardReturned] = useState<'on' | ''>(getVal('accessCardReturned', '') as 'on' | '')
+  const [accessCardComments, setAccessCardComments] = useState(getVal('accessCardComments'))
+  const [simCardReturned, setSimCardReturned] = useState<'on' | ''>(getVal('simCardReturned', '') as 'on' | '')
+  const [simCardStatusComments, setSimCardStatusComments] = useState(getVal('simCardStatusComments'))
+  const [whatsappBackupReturned, setWhatsappBackupReturned] = useState<'on' | ''>(getVal('whatsappBackupReturned', '') as 'on' | '')
+  const [whatsappBackupComments, setWhatsappBackupComments] = useState(getVal('whatsappBackupComments'))
+  const [mobilePhoneReturned, setMobilePhoneReturned] = useState<'on' | ''>(getVal('mobilePhoneReturned', '') as 'on' | '')
+  const [mobilePhoneComments, setMobilePhoneComments] = useState(getVal('mobilePhoneComments'))
+  const [workInfoReturned, setWorkInfoReturned] = useState<'on' | ''>(getVal('workInfoReturned', '') as 'on' | '')
+  const [workInfoComments, setWorkInfoComments] = useState(getVal('workInfoComments'))
+  const [emailBackupReturned, setEmailBackupReturned] = useState<'on' | ''>(getVal('emailBackupReturned', '') as 'on' | '')
+  const [emailBackupComments, setEmailBackupComments] = useState(getVal('emailBackupComments'))
+  const [passwordsReturned, setPasswordsReturned] = useState<'on' | ''>(getVal('passwordsReturned', '') as 'on' | '')
+  const [passwordsComments, setPasswordsComments] = useState(getVal('passwordsComments'))
+
+  const selectedEmployee = employees.find((e) => e.id === employeeId)
+
+  useEffect(() => {
+    if (selectedEmployee) {
+      if (!employeeName) setEmployeeName(selectedEmployee.user?.name || '')
+      if (!employeeCode) setEmployeeCode(selectedEmployee.employeeCode || '')
+      if (!department) setDepartment(selectedEmployee.department?.name || '')
+      if (!position) setPosition(selectedEmployee.designation || '')
+      if (!dateOfJoining && selectedEmployee.joinDate) setDateOfJoining(format(new Date(selectedEmployee.joinDate), 'yyyy-MM-dd'))
+    }
+  }, [selectedEmployee])
+
+  const buildMetadata = () => ({
+    employeeId,
+    employeeName,
+    employeeCode,
+    department,
+    position,
+    dateOfJoining,
+    lastWorkingDay,
+    reasonForLeaving,
+    jobRoleMatch,
+    jobRoleComments,
+    workEnvironment,
+    workEnvironmentComments,
+    companyCulture,
+    companyCultureComments,
+    suggestions,
+    noticePeriodServed,
+    noticePeriodDays,
+    noticePeriodReason,
+    handoverCompleted,
+    handoverReason,
+    emailAccessRemoved,
+    emailAccessComments,
+    otherAccessRemoved,
+    otherAccessComments,
+    idCardsReturned,
+    idCardsComments,
+    simCardsReturned,
+    simCardsComments,
+    workAssetsReturned,
+    workAssetsComments,
+    backupReceived,
+    backupRemarks,
+    hrExitCompleted,
+    hrRemarks,
+    wouldConsiderFuture,
+    wouldConsiderComments,
+    laptopReturned,
+    laptopComments,
+    idCardReturned,
+    idCardStatusComments,
+    accessCardReturned,
+    accessCardComments,
+    simCardReturned,
+    simCardStatusComments,
+    whatsappBackupReturned,
+    whatsappBackupComments,
+    mobilePhoneReturned,
+    mobilePhoneComments,
+    workInfoReturned,
+    workInfoComments,
+    emailBackupReturned,
+    emailBackupComments,
+    passwordsReturned,
+    passwordsComments,
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSubmit(buildMetadata())
+  }
+
+  const sectionStyle = "space-y-3 border rounded-lg p-4 bg-muted/30"
+  const sectionTitleStyle = "font-semibold text-sm"
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 max-h-[65vh] overflow-y-auto pr-2">
+      {!preselectedEmployeeId && !isEdit && (
+        <div>
+          <Label>Employee</Label>
+          <Select value={employeeId} onValueChange={setEmployeeId}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select employee" />
+            </SelectTrigger>
+            <SelectContent>
+              {employees.map((emp) => (
+                <SelectItem key={emp.id} value={emp.id}>
+                  {emp.user?.name ?? emp.employeeCode}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
+      {employeeId && (
+        <>
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>Employee Information</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Name</Label>
+                <Input value={employeeName} onChange={(e) => setEmployeeName(e.target.value)} disabled={!!preselectedEmployeeId} />
+              </div>
+              <div>
+                <Label>Employee ID</Label>
+                <Input value={employeeCode} onChange={(e) => setEmployeeCode(e.target.value)} disabled={!!preselectedEmployeeId} />
+              </div>
+              <div>
+                <Label>Department</Label>
+                <Input value={department} onChange={(e) => setDepartment(e.target.value)} />
+              </div>
+              <div>
+                <Label>Position</Label>
+                <Input value={position} onChange={(e) => setPosition(e.target.value)} />
+              </div>
+              <div>
+                <Label>Date of Joining</Label>
+                <Input type="date" value={dateOfJoining} onChange={(e) => setDateOfJoining(e.target.value)} />
+              </div>
+              <div>
+                <Label>Last Working Day</Label>
+                <Input type="date" value={lastWorkingDay} onChange={(e) => setLastWorkingDay(e.target.value)} />
+              </div>
+            </div>
+          </div>
+
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>Exit Interview Questions</h3>
+            <div>
+              <Label>1. Reason for Leaving</Label>
+              <Textarea value={reasonForLeaving} onChange={(e) => setReasonForLeaving(e.target.value)} placeholder="What prompted the decision to leave?" />
+            </div>
+            <div>
+              <Label>2. Did job role match expectations?</Label>
+              <RadioGroup value={jobRoleMatch} onValueChange={(v) => setJobRoleMatch(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="jrm-yes" /><Label htmlFor="jrm-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="jrm-no" /><Label htmlFor="jrm-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={jobRoleComments} onChange={(e) => setJobRoleComments(e.target.value)} placeholder="Comments" />
+            </div>
+            <div>
+              <Label>3. Work Environment</Label>
+              <RadioGroup value={workEnvironment} onValueChange={(v) => setWorkEnvironment(v as 'excellent' | 'good' | 'fair' | 'poor')}>
+                <div className="flex gap-3 flex-wrap">
+                  {(['excellent', 'good', 'fair', 'poor'] as const).map((v) => (
+                    <div key={v} className="flex items-center gap-1.5">
+                      <RadioGroupItem value={v} id={`we-${v}`} />
+                      <Label htmlFor={`we-${v}`}>{v.charAt(0).toUpperCase() + v.slice(1)}</Label>
+                    </div>
+                  ))}
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={workEnvironmentComments} onChange={(e) => setWorkEnvironmentComments(e.target.value)} placeholder="Comments" />
+            </div>
+            <div>
+              <Label>4. Company Culture</Label>
+              <RadioGroup value={companyCulture} onValueChange={(v) => setCompanyCulture(v as 'very_positive' | 'positive' | 'neutral' | 'negative' | 'very_negative')}>
+                <div className="flex gap-3 flex-wrap">
+                  {([
+                    { value: 'very_positive', label: 'Very Positive' },
+                    { value: 'positive', label: 'Positive' },
+                    { value: 'neutral', label: 'Neutral' },
+                    { value: 'negative', label: 'Negative' },
+                    { value: 'very_negative', label: 'Very Negative' },
+                  ] as const).map(({ value, label }) => (
+                    <div key={value} className="flex items-center gap-1.5">
+                      <RadioGroupItem value={value} id={`cc-${value}`} />
+                      <Label htmlFor={`cc-${value}`}>{label}</Label>
+                    </div>
+                  ))}
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={companyCultureComments} onChange={(e) => setCompanyCultureComments(e.target.value)} placeholder="Comments" />
+            </div>
+            <div>
+              <Label>5. Suggestions for Improvement</Label>
+              <Textarea value={suggestions} onChange={(e) => setSuggestions(e.target.value)} placeholder="What suggestions do you have?" />
+            </div>
+            <div>
+              <Label>6. Notice Period Served?</Label>
+              <RadioGroup value={noticePeriodServed} onValueChange={(v) => setNoticePeriodServed(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="nps-yes" /><Label htmlFor="nps-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="nps-no" /><Label htmlFor="nps-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              {noticePeriodServed === 'yes' && (
+                <Input className="mt-2" value={noticePeriodDays} onChange={(e) => setNoticePeriodDays(e.target.value)} placeholder="Number of days served" />
+              )}
+              {noticePeriodServed === 'no' && (
+                <Input className="mt-2" value={noticePeriodReason} onChange={(e) => setNoticePeriodReason(e.target.value)} placeholder="Reason" />
+              )}
+            </div>
+          </div>
+
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>Handover &amp; Exit Process</h3>
+            <div>
+              <Label>7. Handover completed to reporting manager?</Label>
+              <RadioGroup value={handoverCompleted} onValueChange={(v) => setHandoverCompleted(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="ho-yes" /><Label htmlFor="ho-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="ho-no" /><Label htmlFor="ho-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              {handoverCompleted === 'no' && (
+                <Input className="mt-2" value={handoverReason} onChange={(e) => setHandoverReason(e.target.value)} placeholder="Please explain" />
+              )}
+            </div>
+          </div>
+
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>Digital Department Clearance</h3>
+            <div>
+              <Label>Email Access Removed?</Label>
+              <RadioGroup value={emailAccessRemoved} onValueChange={(v) => setEmailAccessRemoved(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="ear-yes" /><Label htmlFor="ear-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="ear-no" /><Label htmlFor="ear-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={emailAccessComments} onChange={(e) => setEmailAccessComments(e.target.value)} placeholder="Comments" />
+            </div>
+            <div>
+              <Label>Other Access Removed?</Label>
+              <RadioGroup value={otherAccessRemoved} onValueChange={(v) => setOtherAccessRemoved(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="oar-yes" /><Label htmlFor="oar-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="oar-no" /><Label htmlFor="oar-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={otherAccessComments} onChange={(e) => setOtherAccessComments(e.target.value)} placeholder="Comments" />
+            </div>
+          </div>
+
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>Admin Department Clearance</h3>
+            <div>
+              <Label>ID Cards Returned?</Label>
+              <RadioGroup value={idCardsReturned} onValueChange={(v) => setIdCardsReturned(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="icr-yes" /><Label htmlFor="icr-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="icr-no" /><Label htmlFor="icr-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={idCardsComments} onChange={(e) => setIdCardsComments(e.target.value)} placeholder="Comments" />
+            </div>
+            <div>
+              <Label>SIM Cards Returned?</Label>
+              <RadioGroup value={simCardsReturned} onValueChange={(v) => setSimCardsReturned(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="scr-yes" /><Label htmlFor="scr-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="scr-no" /><Label htmlFor="scr-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={simCardsComments} onChange={(e) => setSimCardsComments(e.target.value)} placeholder="Comments" />
+            </div>
+            <div>
+              <Label>Other Work Assets Returned?</Label>
+              <RadioGroup value={workAssetsReturned} onValueChange={(v) => setWorkAssetsReturned(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="war-yes" /><Label htmlFor="war-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="war-no" /><Label htmlFor="war-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={workAssetsComments} onChange={(e) => setWorkAssetsComments(e.target.value)} placeholder="Comments" />
+            </div>
+          </div>
+
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>Sales Head Confirmation</h3>
+            <div>
+              <Label>All Backup Handover Received?</Label>
+              <RadioGroup value={backupReceived} onValueChange={(v) => setBackupReceived(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="br-yes" /><Label htmlFor="br-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="br-no" /><Label htmlFor="br-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              {backupReceived === 'no' && (
+                <Input className="mt-2" value={backupRemarks} onChange={(e) => setBackupRemarks(e.target.value)} placeholder="Add remarks" />
+              )}
+            </div>
+          </div>
+
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>HR Remarks</h3>
+            <div>
+              <Label>All exit processes completed?</Label>
+              <RadioGroup value={hrExitCompleted} onValueChange={(v) => setHrExitCompleted(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="hre-yes" /><Label htmlFor="hre-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="hre-no" /><Label htmlFor="hre-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={hrRemarks} onChange={(e) => setHrRemarks(e.target.value)} placeholder="Remarks (Can close for F&amp;F and settlement)" />
+            </div>
+          </div>
+
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>Return of Company Property</h3>
+            {assetCheckRow('Laptop/Desktop', laptopReturned, setLaptopReturned, laptopComments, setLaptopComments)}
+            {assetCheckRow('Employee ID Card', idCardReturned, setIdCardReturned, idCardStatusComments, setIdCardStatusComments)}
+            {assetCheckRow('Access Card', accessCardReturned, setAccessCardReturned, accessCardComments, setAccessCardComments)}
+            {assetCheckRow('SIM Card', simCardReturned, setSimCardReturned, simCardStatusComments, setSimCardStatusComments)}
+            {assetCheckRow('WhatsApp Backup', whatsappBackupReturned, setWhatsappBackupReturned, whatsappBackupComments, setWhatsappBackupComments)}
+            {assetCheckRow('Mobile Phone', mobilePhoneReturned, setMobilePhoneReturned, mobilePhoneComments, setMobilePhoneComments)}
+            {assetCheckRow('Work-Related Info/Assets', workInfoReturned, setWorkInfoReturned, workInfoComments, setWorkInfoComments)}
+            {assetCheckRow('Email ID Backup', emailBackupReturned, setEmailBackupReturned, emailBackupComments, setEmailBackupComments)}
+            {assetCheckRow('Passwords for all related accounts/systems', passwordsReturned, setPasswordsReturned, passwordsComments, setPasswordsComments)}
+          </div>
+
+          <div className={sectionStyle}>
+            <h3 className={sectionTitleStyle}>Additional Remarks</h3>
+            <div>
+              <Label>Would you consider us for future hiring?</Label>
+              <RadioGroup value={wouldConsiderFuture} onValueChange={(v) => setWouldConsiderFuture(v as 'yes' | 'no' | '')}>
+                <div className="flex gap-4 mt-1">
+                  <div className="flex items-center gap-2"><RadioGroupItem value="yes" id="wcf-yes" /><Label htmlFor="wcf-yes">Yes</Label></div>
+                  <div className="flex items-center gap-2"><RadioGroupItem value="no" id="wcf-no" /><Label htmlFor="wcf-no">No</Label></div>
+                </div>
+              </RadioGroup>
+              <Input className="mt-2" value={wouldConsiderComments} onChange={(e) => setWouldConsiderComments(e.target.value)} placeholder="Comments" />
+            </div>
+          </div>
+
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading ? (isEdit ? 'Saving...' : 'Generating...') : (isEdit ? 'Save Changes' : 'Generate Exit Interview Form')}
+          </Button>
+        </>
+      )}
+    </form>
+  )
+}
+
+function assetCheckRow(
+  label: string,
+  returned: 'on' | '',
+  setReturned: (v: 'on' | '') => void,
+  comments: string,
+  setComments: (v: string) => void,
+) {
+  return (
+    <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center gap-2 min-w-[200px]">
+        <Checkbox
+          id={`asset-${label.replace(/\s/g, '-')}`}
+          checked={returned === 'on'}
+          onCheckedChange={(c) => setReturned(c ? 'on' : '')}
+        />
+        <Label htmlFor={`asset-${label.replace(/\s/g, '-')}`} className="text-sm">
+          {label}
+        </Label>
+      </div>
+      <Input
+        className="flex-1"
+        value={comments}
+        onChange={(e) => setComments(e.target.value)}
+        placeholder="Comments on status"
+      />
+    </div>
   )
 }

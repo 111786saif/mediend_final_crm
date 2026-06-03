@@ -10,21 +10,18 @@ import {
   generateRelievingLetterHTML,
   generateInternshipOfferLetterHTML,
   generateInternshipCompletionLetterHTML,
+  generateExitInterviewHTML,
 } from '@/lib/hrms/document-templates'
 import { z } from 'zod'
 
 const previewSchema = z.object({
   employeeId: z.string().optional(),
-  documentType: z.enum(['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'INTERNSHIP_OFFER_LETTER', 'INTERNSHIP_COMPLETION_LETTER']),
+  documentType: z.enum(['OFFER_LETTER', 'INCREMENT_LETTER', 'EXPERIENCE_LETTER', 'RELIEVING_LETTER', 'INTERNSHIP_OFFER_LETTER', 'INTERNSHIP_COMPLETION_LETTER', 'EXIT_INTERVIEW_FORM']),
   applicantName: z.string().optional(),
   applicantEmail: z.string().optional(),
   metadata: z.record(z.any()).optional(),
 })
 
-/**
- * POST /api/hr/documents/preview
- * Renders the document template HTML without saving to the database.
- */
 export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -92,6 +89,9 @@ export async function POST(request: NextRequest) {
         break
       case 'INTERNSHIP_COMPLETION_LETTER':
         htmlContent = generateInternshipCompletionLetterHTML(employeeData, metadata)
+        break
+      case 'EXIT_INTERVIEW_FORM':
+        htmlContent = generateExitInterviewHTML(employeeData, metadata)
         break
       default:
         return errorResponse('Invalid document type', 400)

@@ -628,3 +628,221 @@ export function generateInternshipCompletionLetterHTML(
 </body>
 </html>`
 }
+
+interface ExitInterviewMetadata {
+  employeeName?: string
+  employeeCode?: string
+  department?: string
+  position?: string
+  dateOfJoining?: string
+  lastWorkingDay?: string
+  reasonForLeaving?: string
+  jobRoleMatch?: 'yes' | 'no' | ''
+  jobRoleComments?: string
+  workEnvironment?: 'excellent' | 'good' | 'fair' | 'poor' | ''
+  workEnvironmentComments?: string
+  companyCulture?: 'very_positive' | 'positive' | 'neutral' | 'negative' | 'very_negative' | ''
+  companyCultureComments?: string
+  suggestions?: string
+  noticePeriodServed?: 'yes' | 'no' | ''
+  noticePeriodDays?: string
+  noticePeriodReason?: string
+  handoverCompleted?: 'yes' | 'no' | ''
+  handoverReason?: string
+  emailAccessRemoved?: 'yes' | 'no' | ''
+  emailAccessComments?: string
+  otherAccessRemoved?: 'yes' | 'no' | ''
+  otherAccessComments?: string
+  idCardsReturned?: 'yes' | 'no' | ''
+  idCardsComments?: string
+  simCardsReturned?: 'yes' | 'no' | ''
+  simCardsComments?: string
+  workAssetsReturned?: 'yes' | 'no' | ''
+  workAssetsComments?: string
+  backupReceived?: 'yes' | 'no' | ''
+  backupRemarks?: string
+  hrExitCompleted?: 'yes' | 'no' | ''
+  hrRemarks?: string
+  wouldConsiderFuture?: 'yes' | 'no' | ''
+  wouldConsiderComments?: string
+  laptopReturned?: 'on' | '' | undefined
+  laptopComments?: string
+  idCardReturned?: 'on' | '' | undefined
+  idCardStatusComments?: string
+  accessCardReturned?: 'on' | '' | undefined
+  accessCardComments?: string
+  simCardReturned?: 'on' | '' | undefined
+  simCardStatusComments?: string
+  whatsappBackupReturned?: 'on' | '' | undefined
+  whatsappBackupComments?: string
+  mobilePhoneReturned?: 'on' | '' | undefined
+  mobilePhoneComments?: string
+  workInfoReturned?: 'on' | '' | undefined
+  workInfoComments?: string
+  emailBackupReturned?: 'on' | '' | undefined
+  emailBackupComments?: string
+  passwordsReturned?: 'on' | '' | undefined
+  passwordsComments?: string
+}
+
+function formatCheckValue(val: 'yes' | 'no' | '' | undefined): string {
+  if (val === 'yes') return 'Yes'
+  if (val === 'no') return 'No'
+  return '—'
+}
+
+function formatAssetStatus(val: 'on' | '' | undefined): string {
+  if (val === 'on') return 'Returned'
+  return '—'
+}
+
+function assetRow(label: string, status: 'on' | '' | undefined, comment: string | undefined): string {
+  const statusVal = formatAssetStatus(status)
+  const statusColor = statusVal === 'Returned' ? '#16a34a' : '#dc2626'
+  return `
+  <tr>
+    <td style="padding:8px;border:1px solid #e2e8f0;">${label}</td>
+    <td style="padding:8px;text-align:center;border:1px solid #e2e8f0;font-weight:600;color:${statusColor};">${statusVal}</td>
+    <td style="padding:8px;border:1px solid #e2e8f0;">${comment || '—'}</td>
+  </tr>`
+}
+
+export function generateExitInterviewHTML(
+  employee: EmployeeData,
+  metadata?: ExitInterviewMetadata
+): string {
+  const today = format(new Date(), 'do MMMM, yyyy')
+  const m = metadata || {}
+  const name = m.employeeName || employee.name
+  const code = m.employeeCode || employee.employeeCode
+  const dept = m.department || employee.department || '—'
+  const position = m.position || employee.designation || '—'
+  const doj = m.dateOfJoining || (employee.joinDate ? format(new Date(employee.joinDate), 'do MMMM, yyyy') : '—')
+  const lwd = m.lastWorkingDay || '—'
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>${BASE_STYLES}
+    .exit-section { margin: 24px 0; }
+    .exit-section h3 { font-size: 15px; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px; }
+    .exit-field { margin: 8px 0; }
+    .exit-field label { font-weight: bold; display: inline-block; min-width: 220px; }
+    .exit-field .val { display: inline; }
+    .exit-underline { border-bottom: 1px dashed #cbd5e1; padding-bottom: 2px; }
+    .compact-check-label { font-weight: 600; font-size: 13px; margin-right: 8px; }
+    body { margin: 40px; }
+  </style>
+</head>
+<body>
+  ${renderWatermark()}
+  ${renderLetterhead()}
+
+  <div class="subject">EXIT INTERVIEW FORM</div>
+  <p style="text-align:center;margin-bottom:16px;font-size:13px;color:#64748b;">Date: ${today}</p>
+
+  <div class="exit-section">
+    <h3>Employee Information</h3>
+    <p class="exit-field"><label>Name:</label> <span class="val exit-underline">${name}</span></p>
+    <p class="exit-field"><label>Employee ID:</label> <span class="val exit-underline">${code}</span></p>
+    <p class="exit-field"><label>Department:</label> <span class="val exit-underline">${dept}</span></p>
+    <p class="exit-field"><label>Position:</label> <span class="val exit-underline">${position}</span></p>
+    <p class="exit-field"><label>Date of Joining:</label> <span class="val exit-underline">${doj}</span></p>
+    <p class="exit-field"><label>Last Working Day:</label> <span class="val exit-underline">${lwd}</span></p>
+  </div>
+
+  <div class="exit-section">
+    <h3>Exit Interview Questions</h3>
+    <p class="exit-field"><label>1. Reason for Leaving:</label></p>
+    <p style="padding:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;min-height:32px;">${m.reasonForLeaving || '—'}</p>
+
+    <p class="exit-field" style="margin-top:16px;"><label>2. Job Role — Matched Expectations?</label> <span class="compact-check-label">${formatCheckValue(m.jobRoleMatch)}</span></p>
+    ${m.jobRoleComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.jobRoleComments}</span></p>` : ''}
+
+    <p class="exit-field" style="margin-top:16px;"><label>3. Work Environment:</label> <span class="compact-check-label">${m.workEnvironment ? m.workEnvironment.charAt(0).toUpperCase() + m.workEnvironment.slice(1) : '—'}</span></p>
+    ${m.workEnvironmentComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.workEnvironmentComments}</span></p>` : ''}
+
+    <p class="exit-field" style="margin-top:16px;"><label>4. Company Culture:</label> <span class="compact-check-label">${m.companyCulture ? m.companyCulture.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : '—'}</span></p>
+    ${m.companyCultureComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.companyCultureComments}</span></p>` : ''}
+
+    <p class="exit-field" style="margin-top:16px;"><label>5. Suggestions for Improvement:</label></p>
+    <p style="padding:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;min-height:32px;">${m.suggestions || '—'}</p>
+
+    <p class="exit-field" style="margin-top:16px;"><label>6. Notice Period Served:</label> <span class="compact-check-label">${formatCheckValue(m.noticePeriodServed)}</span></p>
+    ${m.noticePeriodServed === 'yes' && m.noticePeriodDays ? `<p class="exit-field"><label>Days Served:</label> <span class="val">${m.noticePeriodDays}</span></p>` : ''}
+    ${m.noticePeriodServed === 'no' && m.noticePeriodReason ? `<p class="exit-field"><label>Reason:</label> <span class="val">${m.noticePeriodReason}</span></p>` : ''}
+  </div>
+
+  <div class="exit-section">
+    <h3>Handover &amp; Exit Process</h3>
+    <p class="exit-field"><label>7. Handover Completed:</label> <span class="compact-check-label">${formatCheckValue(m.handoverCompleted)}</span></p>
+    ${m.handoverReason ? `<p class="exit-field"><label>Reason:</label> <span class="val">${m.handoverReason}</span></p>` : ''}
+  </div>
+
+  <div class="exit-section">
+    <h3>Digital Department Clearance</h3>
+    <p class="exit-field"><label>Email Access Removed:</label> <span class="compact-check-label">${formatCheckValue(m.emailAccessRemoved)}</span></p>
+    ${m.emailAccessComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.emailAccessComments}</span></p>` : ''}
+    <p class="exit-field" style="margin-top:8px;"><label>Other Access Removed:</label> <span class="compact-check-label">${formatCheckValue(m.otherAccessRemoved)}</span></p>
+    ${m.otherAccessComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.otherAccessComments}</span></p>` : ''}
+  </div>
+
+  <div class="exit-section">
+    <h3>Admin Department Clearance</h3>
+    <p class="exit-field"><label>ID Cards Returned:</label> <span class="compact-check-label">${formatCheckValue(m.idCardsReturned)}</span></p>
+    ${m.idCardsComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.idCardsComments}</span></p>` : ''}
+    <p class="exit-field" style="margin-top:8px;"><label>SIM Cards Returned:</label> <span class="compact-check-label">${formatCheckValue(m.simCardsReturned)}</span></p>
+    ${m.simCardsComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.simCardsComments}</span></p>` : ''}
+    <p class="exit-field" style="margin-top:8px;"><label>Other Assets Returned:</label> <span class="compact-check-label">${formatCheckValue(m.workAssetsReturned)}</span></p>
+    ${m.workAssetsComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.workAssetsComments}</span></p>` : ''}
+  </div>
+
+  <div class="exit-section">
+    <h3>Sales Head Confirmation</h3>
+    <p class="exit-field"><label>Backup Handover Received:</label> <span class="compact-check-label">${formatCheckValue(m.backupReceived)}</span></p>
+    ${m.backupRemarks ? `<p class="exit-field"><label>Remarks:</label> <span class="val">${m.backupRemarks}</span></p>` : ''}
+  </div>
+
+  <div class="exit-section">
+    <h3>HR Remarks</h3>
+    <p class="exit-field"><label>Exit Process Completed:</label> <span class="compact-check-label">${formatCheckValue(m.hrExitCompleted)}</span></p>
+    ${m.hrRemarks ? `<p class="exit-field"><label>Remarks:</label> <span class="val">${m.hrRemarks}</span></p>` : ''}
+  </div>
+
+  <div class="exit-section">
+    <h3>Return of Company Property</h3>
+    <table style="width:100%;border-collapse:collapse;">
+      <tr style="background:#f8fafc;">
+        <th style="padding:8px;text-align:left;border:1px solid #e2e8f0;">Item</th>
+        <th style="padding:8px;text-align:center;border:1px solid #e2e8f0;width:80px;">Status</th>
+        <th style="padding:8px;text-align:left;border:1px solid #e2e8f0;">Comments</th>
+      </tr>
+      ${assetRow('Laptop / Desktop', m.laptopReturned, m.laptopComments)}
+      ${assetRow('Employee ID Card', m.idCardReturned, m.idCardStatusComments)}
+      ${assetRow('Access Card', m.accessCardReturned, m.accessCardComments)}
+      ${assetRow('SIM Card', m.simCardReturned, m.simCardStatusComments)}
+      ${assetRow('WhatsApp Backup', m.whatsappBackupReturned, m.whatsappBackupComments)}
+      ${assetRow('Mobile Phone', m.mobilePhoneReturned, m.mobilePhoneComments)}
+      ${assetRow('Work-Related Info / Assets', m.workInfoReturned, m.workInfoComments)}
+      ${assetRow('Email ID Backup', m.emailBackupReturned, m.emailBackupComments)}
+      ${assetRow('Passwords (all accounts/systems)', m.passwordsReturned, m.passwordsComments)}
+    </table>
+  </div>
+
+  <div class="exit-section">
+    <h3>Additional Remarks</h3>
+    <p class="exit-field"><label>Would consider for future hiring?</label> <span class="compact-check-label">${formatCheckValue(m.wouldConsiderFuture)}</span></p>
+    ${m.wouldConsiderComments ? `<p class="exit-field"><label>Comments:</label> <span class="val">${m.wouldConsiderComments}</span></p>` : ''}
+  </div>
+
+  <div style="margin-top:40px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;text-align:center;color:#166534;">
+    <p style="margin:0;"><strong>Acknowledged by Employee</strong></p>
+    <p style="margin:4px 0 0;">Signature: _________________ &nbsp;&nbsp;&nbsp; Date: _________________</p>
+  </div>
+
+  ${renderFooter()}
+</body>
+</html>`
+}

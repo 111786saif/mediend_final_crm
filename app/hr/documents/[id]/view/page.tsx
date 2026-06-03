@@ -16,7 +16,7 @@ interface DocumentData {
   document: {
     id: string
     employeeId: string
-    documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'INTERNSHIP_OFFER_LETTER' | 'INTERNSHIP_COMPLETION_LETTER' | 'CUSTOM'
+    documentType: 'OFFER_LETTER' | 'INCREMENT_LETTER' | 'EXPERIENCE_LETTER' | 'RELIEVING_LETTER' | 'INTERNSHIP_OFFER_LETTER' | 'INTERNSHIP_COMPLETION_LETTER' | 'EXIT_INTERVIEW_FORM' | 'CUSTOM'
     documentUrl?: string | null
     title?: string | null
     generatedAt: string
@@ -40,6 +40,7 @@ const DOCUMENT_TITLES: Record<string, string> = {
   RELIEVING_LETTER: 'Relieving Letter',
   INTERNSHIP_OFFER_LETTER: 'Internship Offer Letter',
   INTERNSHIP_COMPLETION_LETTER: 'Internship Completion Certificate',
+  EXIT_INTERVIEW_FORM: 'Exit Interview Form',
   CUSTOM: 'Document',
 }
 
