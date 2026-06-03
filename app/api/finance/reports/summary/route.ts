@@ -344,6 +344,55 @@ export async function GET(request: NextRequest) {
         })
       }
 
+      case 'non-expense-report': {
+        // Non-Expense report - Only DEBIT entries with componentB > 0, no credits
+        const entries = await prisma.ledgerEntry.groupBy({
+          by: ['headId'],
+          where: {
+            status: LedgerStatus.APPROVED,
+            transactionType: TransactionType.DEBIT,
+            componentB: { gt: 0 },
+            ...(Object.keys(dateFilter).length > 0 && {
+              transactionDate: dateFilter,
+            }),
+          },
+          _sum: {
+            componentB: true,
+          },
+          _count: true,
+        })
+
+        const headIds = [...new Set(entries.map((e) => e.headId).filter((id): id is string => id !== null))]
+        const heads = await prisma.headMaster.findMany({
+          where: { id: { in: headIds } },
+          select: { id: true, name: true, department: true },
+        })
+        const headMap = new Map(heads.map((h) => [h.id, h]))
+
+        const summary = entries
+          .filter((entry) => entry.headId !== null)
+          .map((entry) => {
+            const head = headMap.get(entry.headId!)
+            return {
+              headId: entry.headId!,
+              headName: head?.name || 'Unknown',
+              department: head?.department || null,
+              totalExpenses: entry._sum.componentB || 0,
+              entriesCount: entry._count,
+            }
+          })
+          .sort((a, b) => b.totalExpenses - a.totalExpenses)
+
+        return successResponse({
+          type: 'non-expense-report',
+          data: summary,
+          totals: {
+            totalExpenses: summary.reduce((sum, s) => sum + s.totalExpenses, 0),
+            entriesCount: summary.reduce((sum, s) => sum + s.entriesCount, 0),
+          },
+        })
+      }
+
       case 'day-wise': {
         // Day-wise summary - Exclude SELF_TRANSFER and RECEIPT payment type
         const entries = await prisma.ledgerEntry.findMany({

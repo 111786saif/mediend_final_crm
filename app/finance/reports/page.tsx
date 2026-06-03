@@ -19,7 +19,8 @@ import {
   ArrowUpCircle,
   ArrowDownCircle,
   Download,
-  BarChart3
+  BarChart3,
+  ScrollText
 } from 'lucide-react'
 import { format, subDays, startOfMonth, endOfMonth, subMonths } from 'date-fns'
 import jsPDF from 'jspdf'
@@ -56,6 +57,14 @@ interface HeadWiseSummary {
 }
 
 interface ExpenseReportSummary {
+  headId: string
+  headName: string
+  department: string | null
+  totalExpenses: number
+  entriesCount: number
+}
+
+interface NonExpenseReportSummary {
   headId: string
   headName: string
   department: string | null
@@ -161,9 +170,9 @@ export default function ReportsPage() {
 
   const handleDownloadPDF = () => {
     const reportTitle =
-      { 'payment-mode': 'Payment Mode Balance Summary', 'party-wise': 'Party-wise Summary', 'head-wise': 'Head-wise Summary', 'expense-report': 'Expense Report', 'day-wise': 'Day-wise Summary', 'revenue': 'Revenue Report', 'profit-loss': 'Profit & Loss Report' }[
-        activeTab as 'payment-mode' | 'party-wise' | 'head-wise' | 'expense-report' | 'day-wise' | 'revenue' | 'profit-loss'
-      ] ?? 'Finance Report'
+        { 'payment-mode': 'Payment Mode Balance Summary', 'party-wise': 'Party-wise Summary', 'head-wise': 'Head-wise Summary', 'expense-report': 'Expense Report', 'non-expense-report': 'Non-Expense Report', 'day-wise': 'Day-wise Summary', 'revenue': 'Revenue Report', 'profit-loss': 'Profit & Loss Report' }[
+          activeTab as 'payment-mode' | 'party-wise' | 'head-wise' | 'expense-report' | 'non-expense-report' | 'day-wise' | 'revenue' | 'profit-loss'
+        ] ?? 'Finance Report'
 
     const doc = new jsPDF()
     doc.setFontSize(18)
@@ -216,6 +225,17 @@ export default function ReportsPage() {
       autoTable(doc, {
         head: [['Head', 'Department', 'Total Expenses', 'Entries']],
         body: expenseReportData.data.map((h) => [
+          h.headName,
+          h.department || '-',
+          formatCurrencyForPDF(h.totalExpenses),
+          String(h.entriesCount),
+        ]),
+        startY,
+      })
+    } else if (activeTab === 'non-expense-report' && nonExpenseReportData) {
+      autoTable(doc, {
+        head: [['Head', 'Department', 'Total Component B', 'Entries']],
+        body: nonExpenseReportData.data.map((h) => [
           h.headName,
           h.department || '-',
           formatCurrencyForPDF(h.totalExpenses),
@@ -330,6 +350,13 @@ export default function ReportsPage() {
     queryKey: ['report-expense-report', startDate, endDate],
     queryFn: () => apiGet<ReportResponse<ExpenseReportSummary>>(`/api/finance/reports/summary?type=expense-report&${dateParams.toString()}`),
     enabled: activeTab === 'expense-report',
+  })
+
+  // Fetch non-expense report summary
+  const { data: nonExpenseReportData, isLoading: loadingNonExpenseReport } = useQuery<ReportResponse<NonExpenseReportSummary>>({
+    queryKey: ['report-non-expense-report', startDate, endDate],
+    queryFn: () => apiGet<ReportResponse<NonExpenseReportSummary>>(`/api/finance/reports/summary?type=non-expense-report&${dateParams.toString()}`),
+    enabled: activeTab === 'non-expense-report',
   })
 
   // Fetch day-wise summary
@@ -460,7 +487,7 @@ export default function ReportsPage() {
 
       {/* Report Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="payment-mode" className="flex items-center gap-2">
             <Wallet className="h-4 w-4" />
             Payment Mode
@@ -476,6 +503,10 @@ export default function ReportsPage() {
           <TabsTrigger value="expense-report" className="flex items-center gap-2">
             <ArrowDownCircle className="h-4 w-4" />
             Expense Report
+          </TabsTrigger>
+          <TabsTrigger value="non-expense-report" className="flex items-center gap-2">
+            <ScrollText className="h-4 w-4" />
+            Non-Expense
           </TabsTrigger>
           <TabsTrigger value="day-wise" className="flex items-center gap-2">
             <CalendarIcon className="h-4 w-4" />
@@ -833,6 +864,89 @@ export default function ReportsPage() {
                       <TableRow>
                         <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                           No expense data available for selected period
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Non-Expense Report */}
+        <TabsContent value="non-expense-report">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Non-Expense Report</CardTitle>
+                  <CardDescription>Claimable amounts (Component B) by head/category - No main expenses</CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDownloadPDF}
+                  disabled={loadingNonExpenseReport || !nonExpenseReportData?.data?.length}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {nonExpenseReportData && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <Card className="bg-amber-50 dark:bg-amber-900/10">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-amber-600">Total Component B</p>
+                          <p className="text-2xl font-bold">{formatCurrency(nonExpenseReportData.totals.totalExpenses || 0)}</p>
+                        </div>
+                        <ScrollText className="h-8 w-8 text-amber-400" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-blue-50 dark:bg-blue-900/10">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-blue-600">Total Entries</p>
+                          <p className="text-2xl font-bold">{nonExpenseReportData.totals.entriesCount || 0}</p>
+                        </div>
+                        <FolderTree className="h-8 w-8 text-blue-400" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {loadingNonExpenseReport ? (
+                <div className="text-center py-8 text-muted-foreground">Loading...</div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Head</TableHead>
+                      <TableHead>Department</TableHead>
+                      <TableHead className="text-right">Total Component B</TableHead>
+                      <TableHead className="text-center">Entries</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {nonExpenseReportData?.data.map((head) => (
+                      <TableRow key={head.headId}>
+                        <TableCell className="font-medium">{head.headName}</TableCell>
+                        <TableCell>{head.department || '-'}</TableCell>
+                        <TableCell className="text-right font-mono text-amber-600">{formatCurrency(head.totalExpenses)}</TableCell>
+                        <TableCell className="text-center">{head.entriesCount}</TableCell>
+                      </TableRow>
+                    ))}
+                    {(!nonExpenseReportData?.data || nonExpenseReportData.data.length === 0) && (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                          No non-expense data available for selected period
                         </TableCell>
                       </TableRow>
                     )}
