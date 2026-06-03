@@ -9,6 +9,7 @@ interface LeadRow {
   month: string
   bdId: string
   bdName: string
+  bdEmployeeId: string | null
   managerId: string | null
   managerName: string | null
   leadCount: number
@@ -18,6 +19,7 @@ interface IpdRow {
   month: string
   bdId: string
   bdName: string
+  bdEmployeeId: string | null
   managerId: string | null
   managerName: string | null
   ipdCount: number
@@ -64,6 +66,7 @@ export async function GET(request: NextRequest) {
           TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')  AS month,
           u.id                                                           AS "bdId",
           u.name                                                         AS "bdName",
+          e.id                                                           AS "bdEmployeeId",
           me.id                                                          AS "managerId",
           mu.name                                                        AS "managerName",
           COUNT(*)::int                                                  AS "leadCount"
@@ -75,7 +78,7 @@ export async function GET(request: NextRequest) {
         WHERE COALESCE(l."leadEntryDate", l."createdDate") >= ${start}
           AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
           ${bdIdFilter}
-        GROUP BY u.id, u.name, me.id, mu.name,
+        GROUP BY u.id, u.name, e.id, me.id, mu.name,
                  TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
         ORDER BY u.name,
                  TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
@@ -87,6 +90,7 @@ export async function GET(request: NextRequest) {
           TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
           u.id                                                                                              AS "bdId",
           u.name                                                                                            AS "bdName",
+          e.id                                                                                              AS "bdEmployeeId",
           me.id                                                                                             AS "managerId",
           mu.name                                                                                           AS "managerName",
           COUNT(*)::int                                                                                     AS "ipdCount"
@@ -99,7 +103,7 @@ export async function GET(request: NextRequest) {
           AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") >= ${start}
           AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") <= ${end}
           ${bdIdFilter}
-        GROUP BY u.id, u.name, me.id, mu.name,
+        GROUP BY u.id, u.name, e.id, me.id, mu.name,
                  TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM')
         ORDER BY u.name,
                  TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM')
@@ -113,6 +117,7 @@ export async function GET(request: NextRequest) {
     type BdEntry = {
       bdId: string
       bdName: string
+      bdEmployeeId: string | null
       managerId: string | null
       managerName: string | null
       leads: Record<string, number>
@@ -120,19 +125,19 @@ export async function GET(request: NextRequest) {
     }
     const bdMap = new Map<string, BdEntry>()
 
-    const getOrCreate = (bdId: string, bdName: string, managerId: string | null, managerName: string | null): BdEntry => {
+    const getOrCreate = (bdId: string, bdName: string, bdEmployeeId: string | null, managerId: string | null, managerName: string | null): BdEntry => {
       if (!bdMap.has(bdId)) {
-        bdMap.set(bdId, { bdId, bdName, managerId, managerName, leads: {}, ipd: {} })
+        bdMap.set(bdId, { bdId, bdName, bdEmployeeId, managerId, managerName, leads: {}, ipd: {} })
       }
       return bdMap.get(bdId)!
     }
 
     for (const row of leadRows) {
-      const entry = getOrCreate(row.bdId, row.bdName, row.managerId, row.managerName)
+      const entry = getOrCreate(row.bdId, row.bdName, row.bdEmployeeId, row.managerId, row.managerName)
       entry.leads[row.month] = (entry.leads[row.month] ?? 0) + Number(row.leadCount)
     }
     for (const row of ipdRows) {
-      const entry = getOrCreate(row.bdId, row.bdName, row.managerId, row.managerName)
+      const entry = getOrCreate(row.bdId, row.bdName, row.bdEmployeeId, row.managerId, row.managerName)
       entry.ipd[row.month] = (entry.ipd[row.month] ?? 0) + Number(row.ipdCount)
     }
 

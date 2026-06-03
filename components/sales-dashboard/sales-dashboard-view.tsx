@@ -84,6 +84,7 @@ interface BdMonthly {
   bds: Array<{
     bdId: string
     bdName: string
+    bdEmployeeId: string | null
     managerId: string | null
     managerName: string | null
     leads: Record<string, number>
@@ -113,6 +114,7 @@ interface TeamDetail {
   team: { id: string; name: string; manager: { id: string; name: string; profilePicture: string | null } | null }
   kpis: { totalLeads: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
   members: Array<{ id: string; name: string; profilePicture: string | null; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
+  targets?: Array<{ metric: string; label: string; targetValue: number; achieved: number; percentage: number }>
   monthWise: { months: string[]; rows: Array<{ month: string; bdId: string; bdName: string; leadCount: number; ipdCount: number }> }
 }
 
@@ -405,6 +407,28 @@ function TeamDetailSheet({
                   <StatCard label="Net Profit" value={fmtK(data.kpis.totalProfit)} color="bg-amber-500/10 text-amber-900 dark:text-amber-100" />
                   <StatCard label="Bill Amount" value={fmtK(data.kpis.totalBill)} color="bg-slate-500/10" />
                 </div>
+
+                {/* Target vs Achieved */}
+                {data.targets && data.targets.length > 0 && (
+                  <div>
+                    <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Target className="h-4 w-4" />Targets vs Achieved (Current Month)</p>
+                    <div className="space-y-3">
+                      {data.targets.map((t) => (
+                        <div key={t.metric} className="rounded-lg border bg-card p-3">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-sm font-medium">{t.label}</span>
+                            <span className="text-sm tabular-nums">
+                              <span className="font-bold text-emerald-600">{t.metric === 'NET_PROFIT' || t.metric === 'BILL_AMOUNT' || t.metric === 'REVENUE' ? fmtK(t.achieved) : t.achieved}</span>
+                              <span className="text-muted-foreground"> / {t.metric === 'NET_PROFIT' || t.metric === 'BILL_AMOUNT' || t.metric === 'REVENUE' ? fmtK(t.targetValue) : t.targetValue}</span>
+                            </span>
+                          </div>
+                          <Progress value={Math.min(t.percentage, 100)} className="h-2" />
+                          <p className="text-xs text-muted-foreground mt-1 text-right">{t.percentage.toFixed(1)}% of target</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Members */}
                 <div>
@@ -706,6 +730,16 @@ function TeamPerformanceTab({
           totalIpd: bd.totalIpd,
           totalLeads: bd.totalLeads,
         })
+      }
+    }
+
+    // TL's own BD work should also count toward their own team card
+    for (const bd of bdMonthly.bds) {
+      if (!bd.bdEmployeeId) continue
+      const selfGroup = managerGroups.get(bd.bdEmployeeId)
+      if (selfGroup) {
+        selfGroup.totalIpd += bd.totalIpd
+        selfGroup.totalLeads += bd.totalLeads
       }
     }
   }

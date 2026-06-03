@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { UserRole } from '@/generated/prisma/client'
+import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
@@ -111,6 +111,22 @@ export async function GET(request: NextRequest) {
       }
     }).sort((a, b) => b.ipdDone - a.ipdDone)
 
+    // Include team lead's own stats as a member (if they have BD data)
+    const tlLeads = leadsMap.get(managerEmp.user.id)?._count.id ?? 0
+    const tlIpd = ipdMap.get(managerEmp.user.id)?._count.id ?? 0
+    if (tlLeads > 0 || tlIpd > 0) {
+      members.unshift({
+        id: managerEmp.user.id,
+        name: `${managerEmp.user.name} (Lead)`,
+        profilePicture: managerEmp.user.profilePicture ?? null,
+        leads: tlLeads,
+        ipdDone: tlIpd,
+        conversionRate: tlLeads > 0 ? (tlIpd / tlLeads) * 100 : 0,
+        netProfit: ipdMap.get(managerEmp.user.id)?._sum.netProfit ?? 0,
+        billAmount: ipdMap.get(managerEmp.user.id)?._sum.billAmount ?? 0,
+      })
+    }
+
     const totalLeads = members.reduce((s, m) => s + m.leads, 0)
     const totalIpd = members.reduce((s, m) => s + m.ipdDone, 0)
     const totalProfit = members.reduce((s, m) => s + m.netProfit, 0)
@@ -125,7 +141,9 @@ export async function GET(request: NextRequest) {
           COUNT(*)::int AS count
         FROM "Lead" l
         JOIN "User" u ON u.id = l."bdId"
-        WHERE l."bdId" = ANY(${bdIds})
+        WHERE l."bdId" = ANY(${allUserIds})
+          AND COALESCE(l."leadEntryDate", l."createdDate") >= ${start}
+          AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
         GROUP BY 1, u.id, u.name
         ORDER BY 1, u.name
       `,
@@ -137,7 +155,9 @@ export async function GET(request: NextRequest) {
           COUNT(*)::int AS count
         FROM "Lead" l
         JOIN "User" u ON u.id = l."bdId"
-        WHERE l."bdId" = ANY(${bdIds}) AND l."pipelineStage" IN ('PL', 'COMPLETED')
+        WHERE l."bdId" = ANY(${allUserIds}) AND l."pipelineStage" IN ('PL', 'COMPLETED')
+          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") >= ${start}
+          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") <= ${end}
         GROUP BY 1, u.id, u.name
         ORDER BY 1, u.name
       `,
@@ -160,6 +180,79 @@ export async function GET(request: NextRequest) {
     }
     const monthWise = [...monthWiseMap.values()].sort((a, b) => a.month.localeCompare(b.month) || a.bdName.localeCompare(b.bdName))
 
+    // Fetch targets for the manager's team (current month overlap)
+    const now = new Date()
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+    const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
+    const teamTargets = await prisma.target.findMany({
+      where: {
+        targetType: 'TEAM',
+        targetForId: managerId,
+        periodStartDate: { lte: monthEnd },
+        periodEndDate: { gte: monthStart },
+      },
+    })
+
+    const targetsBreakdown: Array<{
+      metric: string
+      label: string
+      targetValue: number
+      achieved: number
+      percentage: number
+    }> = []
+
+    for (const target of teamTargets) {
+      const overlapStart = new Date(Math.max(monthStart.getTime(), target.periodStartDate.getTime()))
+      const overlapEnd = new Date(Math.min(monthEnd.getTime(), target.periodEndDate.getTime()))
+      const where: Prisma.LeadWhereInput = {
+        bdId: { in: allUserIds },
+        pipelineStage: { in: ['PL', 'COMPLETED'] },
+        ...ipdDoneDateFilter({ gte: overlapStart, lte: overlapEnd }),
+      }
+      let achieved = 0
+      let label = target.metric
+      switch (target.metric) {
+        case 'IPD_DONE':
+        case 'SURGERIES_DONE':
+        case 'LEADS_CLOSED':
+          achieved = await prisma.lead.count({ where })
+          label = target.metric === 'SURGERIES_DONE' ? 'IPD Done' : target.metric === 'LEADS_CLOSED' ? 'Leads Closed' : 'IPD Done'
+          break
+        case 'NET_PROFIT': {
+          const agg = await prisma.lead.aggregate({ where, _sum: { netProfit: true } })
+          achieved = agg._sum.netProfit ?? 0
+          label = 'Net Profit'
+          break
+        }
+        case 'BILL_AMOUNT': {
+          const agg = await prisma.lead.aggregate({ where, _sum: { billAmount: true } })
+          achieved = agg._sum.billAmount ?? 0
+          label = 'Bill Amount'
+          break
+        }
+        case 'LEADS_GENERATED': {
+          achieved = await prisma.lead.count({ where: { bdId: { in: allUserIds }, leadEntryDate: { gte: overlapStart, lte: overlapEnd } } })
+          label = 'Leads Generated'
+          break
+        }
+        case 'REVENUE': {
+          const agg = await prisma.lead.aggregate({ where, _sum: { billAmount: true } })
+          achieved = agg._sum.billAmount ?? 0
+          label = 'Revenue'
+          break
+        }
+        default:
+          continue
+      }
+      targetsBreakdown.push({
+        metric: target.metric,
+        label,
+        targetValue: target.targetValue,
+        achieved,
+        percentage: target.targetValue > 0 ? (achieved / target.targetValue) * 100 : 0,
+      })
+    }
+
     return successResponse({
       team: {
         id: managerId,
@@ -174,6 +267,7 @@ export async function GET(request: NextRequest) {
         conversionRate: totalLeads > 0 ? (totalIpd / totalLeads) * 100 : 0,
       },
       members,
+      targets: targetsBreakdown,
       monthWise: {
         months: allMonths,
         rows: monthWise.map((r) => ({

@@ -783,7 +783,7 @@ function GenerateDocumentForm({
             </SelectTrigger>
             <SelectContent>
               {Object.entries(DOCUMENT_TYPES)
-                .filter(([k]) => k !== 'CUSTOM' && k !== 'EXIT_INTERVIEW_FORM')
+                .filter(([k]) => k !== 'CUSTOM')
                 .map(([key, label]) => (
                   <SelectItem key={key} value={key}>
                     {label}
