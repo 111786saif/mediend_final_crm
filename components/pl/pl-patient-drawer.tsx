@@ -15,6 +15,7 @@ import { apiGet } from '@/lib/api-client'
 import { resolveLeadHospitalDoctor, formatLeadAgeSex } from '@/lib/lead-display'
 import { Loader2, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useMemo, useState, useEffect } from 'react'
 
 interface Lead {
@@ -176,6 +177,7 @@ export function PlPatientDrawer({
                     {dateField === 'admission' ? 'Admission' : dateField === 'discharge' ? 'Discharge' : 'Surgery'} Date
                   </TableHead>
                   <TableHead>Stage</TableHead>
+                  <TableHead className="w-[80px]" />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -216,6 +218,11 @@ export function PlPatientDrawer({
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline">{p.caseStage || '—'}</Badge>
+                      </TableCell>
+                      <TableCell onClick={(e) => e.stopPropagation()}>
+                        <Button size="sm" variant="outline" asChild>
+                          <Link href={`/patient/${p.id}`}>Open</Link>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   )
