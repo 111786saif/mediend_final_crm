@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { ipdDoneWhere } from '@/lib/analytics/ipd-filters'
+import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -49,7 +49,10 @@ export async function GET(request: NextRequest) {
         },
       }),
       prisma.lead.count({
-        where: ipdDoneWhere(dateWhere),
+        where: {
+          caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
+          ...ipdDoneDateFilter(dateWhere),
+        },
       }),
       prisma.dischargeSheet.count({
         where: { dischargeDate: dateWhere },
