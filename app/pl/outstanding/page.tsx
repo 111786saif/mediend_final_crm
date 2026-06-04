@@ -381,7 +381,7 @@ export default function PLOutstandingPage() {
           <Card className="overflow-hidden border-violet-200/50 shadow-lg dark:border-violet-800/40">
             <CardHeader className="border-b bg-gradient-to-r from-violet-500/12 via-fuchsia-500/8 to-transparent pb-4">
               <CardTitle className="text-lg text-violet-950 dark:text-violet-100">Outstanding records</CardTitle>
-              <CardDescription>Click a row to edit. Lead date filter uses lead created date.</CardDescription>
+              <CardDescription>Click a row to edit. Filtered by discharge date.</CardDescription>
             </CardHeader>
             <CardContent className="overflow-x-auto">
               {isLoading ? (

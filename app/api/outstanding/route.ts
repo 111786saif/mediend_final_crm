@@ -21,16 +21,20 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get('endDate')
 
     const where: Prisma.LeadWhereInput = {
-      // Only show leads that have discharge sheets
-      dischargeSheet: { isNot: null },
-      // Only show PL or COMPLETED pipeline stages
       pipelineStage: { in: ['PL', 'COMPLETED'] },
     }
 
     if (startDate || endDate) {
-      where.createdDate = {}
-      if (startDate) where.createdDate.gte = new Date(startDate)
-      if (endDate) where.createdDate.lte = new Date(endDate)
+      const dischargeRange: Prisma.DateTimeFilter = {}
+      if (startDate) dischargeRange.gte = new Date(startDate)
+      if (endDate) {
+        const end = new Date(endDate)
+        end.setHours(23, 59, 59, 999)
+        dischargeRange.lte = end
+      }
+      where.dischargeSheet = { dischargeDate: dischargeRange }
+    } else {
+      where.dischargeSheet = { isNot: null }
     }
 
     const leads = await prisma.lead.findMany({

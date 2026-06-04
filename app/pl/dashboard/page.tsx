@@ -231,6 +231,7 @@ export default function PLLedgerPage() {
   const [patientDrawerOpen, setPatientDrawerOpen] = useState(false)
   const [patientDrawerTitle, setPatientDrawerTitle] = useState('')
   const [patientDrawerStage, setPatientDrawerStage] = useState('')
+  const [patientDrawerDateField, setPatientDrawerDateField] = useState<'surgery' | 'admission' | 'discharge'>('surgery')
 
   const [bdFilter, setBdFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
@@ -515,6 +516,7 @@ export default function PLLedgerPage() {
               onClick={() => {
                 setPatientDrawerTitle('Admitted Patients')
                 setPatientDrawerStage('ADMITTED,INITIATED')
+                setPatientDrawerDateField('admission')
                 setPatientDrawerOpen(true)
               }}
             >
@@ -539,6 +541,7 @@ export default function PLLedgerPage() {
               onClick={() => {
                 setPatientDrawerTitle('Scheduled Surgeries')
                 setPatientDrawerStage('PREAUTH_COMPLETE,INITIATED')
+                setPatientDrawerDateField('surgery')
                 setPatientDrawerOpen(true)
               }}
             >
@@ -563,6 +566,7 @@ export default function PLLedgerPage() {
               onClick={() => {
                 setPatientDrawerTitle('IPD Done')
                 setPatientDrawerStage('IPD_DONE,CASH_IPD_DONE')
+                setPatientDrawerDateField('surgery')
                 setPatientDrawerOpen(true)
               }}
             >
@@ -587,6 +591,7 @@ export default function PLLedgerPage() {
               onClick={() => {
                 setPatientDrawerTitle('Discharged Patients')
                 setPatientDrawerStage('DISCHARGED,CASH_DISCHARGED')
+                setPatientDrawerDateField('discharge')
                 setPatientDrawerOpen(true)
               }}
             >
@@ -997,6 +1002,9 @@ export default function PLLedgerPage() {
             onOpenChange={setPatientDrawerOpen}
             title={patientDrawerTitle}
             stageFilter={patientDrawerStage}
+            dateField={patientDrawerDateField}
+            startDate={dateRange.startDate || undefined}
+            endDate={dateRange.endDate || undefined}
           />
         </div>
       </div>
