@@ -2083,6 +2083,7 @@ export default function PatientDetailsPage() {
             </DialogHeader>
             <IPDMarkComponent
               leadId={leadId}
+              defaultSurgeryDate={lead.admissionRecord?.surgeryDate ?? lead.surgeryDate ?? null}
               onSuccess={() => {
                 setShowIPDMarkModal(false)
                 queryClient.invalidateQueries({ queryKey: ['lead', leadId] })

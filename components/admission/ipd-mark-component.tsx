@@ -20,6 +20,7 @@ interface IPDMarkComponentProps {
   leadId: string
   currentStatus?: string
   statusHistory?: IPDStatusHistory[]
+  defaultSurgeryDate?: string | null
   onSuccess?: () => void
   onCancel?: () => void
 }
@@ -30,6 +31,7 @@ export function IPDMarkComponent({
   leadId,
   currentStatus,
   statusHistory = [],
+  defaultSurgeryDate,
   onSuccess,
   onCancel,
 }: IPDMarkComponentProps) {
@@ -38,6 +40,7 @@ export function IPDMarkComponent({
   const [formData, setFormData] = useState({
     reason: '',
     newSurgeryDate: '',
+    surgeryDate: '',
     notes: '',
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -81,6 +84,10 @@ export function IPDMarkComponent({
       newErrors.status = 'Please select an IPD status'
     }
 
+    if (selectedStatus === 'IPD_DONE') {
+      if (!formData.surgeryDate) newErrors.surgeryDate = 'Surgery date is required when marking surgery done'
+    }
+
     if (selectedStatus === 'POSTPONED') {
       if (!formData.reason.trim()) newErrors.reason = 'Reason for postponement is required'
       if (!formData.newSurgeryDate) newErrors.newSurgeryDate = 'New surgery date is required'
@@ -106,13 +113,14 @@ export function IPDMarkComponent({
         status: selectedStatus,
         reason: formData.reason.trim() || undefined,
         newSurgeryDate: selectedStatus === 'POSTPONED' ? formData.newSurgeryDate : undefined,
+        surgeryDate: selectedStatus === 'IPD_DONE' ? formData.surgeryDate : undefined,
         notes: formData.notes.trim() || undefined,
       })
 
       toast.success(`IPD status marked as ${selectedStatus}`)
       setStep('select')
       setSelectedStatus(null)
-      setFormData({ reason: '', newSurgeryDate: '', notes: '' })
+                  setFormData({ reason: '', newSurgeryDate: '', surgeryDate: '', notes: '' })
       onSuccess?.()
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to mark IPD status')
@@ -152,8 +160,27 @@ export function IPDMarkComponent({
           {(selectedStatus === 'ADMITTED_DONE' || selectedStatus === 'IPD_DONE') && (
             <div className="space-y-4">
               {selectedStatus === 'IPD_DONE' && (
-                <div className="rounded-md border border-teal-300 bg-teal-50 dark:bg-teal-900/40 px-3 py-2 text-sm text-teal-900 dark:text-teal-100">
-                  Once you confirm, this case will move to the Insurance team for the discharge sheet. Your part is done — you do not need to know or enter the discharge date.
+                <>
+                  <div className="rounded-md border border-teal-300 bg-teal-50 dark:bg-teal-900/40 px-3 py-2 text-sm text-teal-900 dark:text-teal-100">
+                    Once you confirm, this case will move to the Insurance team for the discharge sheet. Your part is done — you do not need to know or enter the discharge date.
+                  </div>
+                  <div>
+                    <Label htmlFor="surgeryDate">Surgery Date *</Label>
+                    <Input
+                      id="surgeryDate"
+                      type="date"
+                      value={formData.surgeryDate}
+                      onChange={(e) => setFormData({ ...formData, surgeryDate: e.target.value })}
+                      required
+                      className="mt-1"
+                    />
+                    {errors.surgeryDate && <p className="text-xs text-destructive mt-1">{errors.surgeryDate}</p>}
+                  </div>
+                </>
+              )}
+              {selectedStatus === 'ADMITTED_DONE' && (
+                <div className="rounded-md border border-green-300 bg-green-50 dark:bg-green-900/40 px-3 py-2 text-sm text-green-900 dark:text-green-100">
+                  Marking this patient as admitted.
                 </div>
               )}
               <div>
@@ -275,7 +302,12 @@ export function IPDMarkComponent({
                 type="button"
                 onClick={() => {
                   setSelectedStatus(option.value)
-                  setFormData({ reason: '', newSurgeryDate: '', notes: '' })
+                  setFormData({
+                    reason: '',
+                    newSurgeryDate: '',
+                    surgeryDate: option.value === 'IPD_DONE' ? (defaultSurgeryDate ?? '') : '',
+                    notes: '',
+                  })
                   setErrors({})
                   setStep('details')
                 }}

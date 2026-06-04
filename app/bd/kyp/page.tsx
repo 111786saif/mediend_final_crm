@@ -266,12 +266,13 @@ export default function CaseTrackerPage() {
           d.lead.caseStage === CaseStage.IPD_DONE || d.lead.caseStage === CaseStage.CASH_IPD_DONE
         const activityTs = (() => {
           if (isIpdDone) {
+            if (Number.isFinite(surgeryTs) && surgeryTs > 0) return surgeryTs
             const t = new Date(d.lead.caseStageHistory?.[0]?.changedAt ?? '').getTime()
             if (Number.isFinite(t) && t > 0) return t
           }
           return getLatestActivityTime(d.lead)
         })()
-        const effectiveTs = Math.min(surgeryTs, activityTs) || activityTs
+        const effectiveTs = isIpdDone ? activityTs : (Math.min(surgeryTs, activityTs) || activityTs)
         return monthKeyOf(new Date(effectiveTs).toISOString()) === monthFilter
       })
     }

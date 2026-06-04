@@ -176,6 +176,7 @@ export async function GET(request: NextRequest) {
       surgeonName: true,
       source: true,
       netProfit: true,
+      surgeryDate: true,
       flowType: true,
       bd: {
         select: {

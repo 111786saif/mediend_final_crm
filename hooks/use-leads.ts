@@ -43,6 +43,7 @@ export interface Lead {
   tpa?: string
   sumInsured?: number
   netProfit?: number
+  surgeryDate?: string | Date | null
   source?: string
   bdId?: string
   createdDate?: string | Date

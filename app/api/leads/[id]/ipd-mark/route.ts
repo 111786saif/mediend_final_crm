@@ -11,6 +11,7 @@ const ipdMarkSchema = z.object({
   status: z.enum(['ADMITTED_DONE', 'IPD_DONE', 'POSTPONED', 'CANCELLED']),
   reason: z.string().optional(),
   newSurgeryDate: z.string().optional(),
+  surgeryDate: z.string().optional(),
   notes: z.string().optional(),
 })
 
@@ -62,6 +63,12 @@ export async function POST(
     }
 
     // Validate conditional fields based on status
+    if (data.status === 'IPD_DONE') {
+      if (!data.surgeryDate?.trim()) {
+        return errorResponse('Surgery date is required when marking surgery done', 400)
+      }
+    }
+
     if (data.status === 'POSTPONED') {
       if (!data.reason?.trim()) {
         return errorResponse('Reason is required for postponed status', 400)
@@ -110,6 +117,9 @@ export async function POST(
       if (data.status === 'IPD_DONE') {
         toStage = CaseStage.IPD_DONE
         leadUpdateData.caseStage = CaseStage.IPD_DONE
+        if (data.surgeryDate) {
+          leadUpdateData.surgeryDate = new Date(data.surgeryDate)
+        }
       }
     }
 
