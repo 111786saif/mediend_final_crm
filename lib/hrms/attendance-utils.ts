@@ -168,7 +168,13 @@ export function groupAttendanceByDate(
   const t = timing ?? DEFAULT_DEPARTMENT_TIMING
 
   for (const day of grouped.values()) {
-    if (day.logs.length < 2) {
+    const isSinglePunch =
+      day.logs.length < 2 ||
+      (day.inTime != null &&
+        day.outTime != null &&
+        day.inTime.getTime() === day.outTime.getTime())
+
+    if (isSinglePunch) {
       day.outTime = null
       day.workHours = null
     } else if (day.inTime && day.outTime) {
