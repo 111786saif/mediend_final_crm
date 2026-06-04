@@ -37,7 +37,7 @@ async function main() {
     where: isEmail
       ? { email: identifier.toLowerCase().trim() }
       : { employee: { employeeCode: identifier.trim() } },
-    include: { employee: { select: { employeeCode: true, name: true } } },
+    include: { employee: { select: { employeeCode: true } } },
   })
 
   if (!user) {
