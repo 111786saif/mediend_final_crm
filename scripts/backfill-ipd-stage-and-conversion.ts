@@ -1,10 +1,14 @@
 /**
  * Backfill pipelineStage → 'PL' and conversionDate → surgeryDate
- * for all leads where BD already marked IPD_DONE (surgeryDate is set)
- * but pipelineStage hasn't been advanced yet.
+ * for leads where BD marked IPD_DONE (caseStage is IPD_DONE/CASH_IPD_DONE)
+ * but pipelineStage was never advanced by the old code path.
+ *
+ * Only touches leads where the caseStage CONFIRMS BD's IPD_DONE mark —
+ * skips LOST, INSURANCE, SALES, and any other stage that doesn't
+ * represent a completed surgery.
  *
  * Usage: bun run scripts/backfill-ipd-stage-and-conversion.ts
- * Docker: docker compose --profile tools run --rm backfill-ipd-stage-and-conversion
+ * Docker: docker compose --profile tools run --rm backfill-ipd-stage
  *
  * DRY-RUN: set DRY_RUN=true to see what would change without writing.
  */
@@ -17,10 +21,11 @@ async function backfill() {
 
   const leads = await prisma.lead.findMany({
     where: {
+      caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
       surgeryDate: { not: null },
       pipelineStage: { notIn: ['PL', 'COMPLETED'] },
     },
-    select: { id: true, leadRef: true, pipelineStage: true, surgeryDate: true },
+    select: { id: true, leadRef: true, pipelineStage: true, caseStage: true, surgeryDate: true },
   })
 
   console.log(`Found ${leads.length} leads to backfill${dryRun ? ' (DRY RUN)' : ''}`)
