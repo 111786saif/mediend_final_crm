@@ -196,7 +196,6 @@ export async function GET(request: NextRequest) {
               requestedHospitalName: true,
               hospitalNameSuggestion: true,
               hospitalSuggestions: true,
-              suggestedHospitals: { select: { hospitalName: true, suggestedDoctor: true } },
               queries: {
                 select: { updatedAt: true },
                 orderBy: { updatedAt: 'desc' },
@@ -380,7 +379,7 @@ export async function GET(request: NextRequest) {
       plRecord: true,
     } satisfies Prisma.LeadInclude
 
-    const maxLimit = limit ? Math.min(parseInt(limit, 10), 500) : undefined
+    const maxLimit = limit ? Math.min(parseInt(limit, 10), 500) : 1000
 
     const leads = isPipelineView
       ? await prisma.lead.findMany({
