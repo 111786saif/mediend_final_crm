@@ -24,7 +24,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { Lead } from '@/hooks/use-leads'
 import { useState, useEffect, useMemo } from 'react'
-import { Building2, Calendar, CheckCircle, CreditCard, FileText, X } from 'lucide-react'
+import { Building2, Calendar, CheckCircle, CreditCard, FileText, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { cn } from '@/lib/utils'
 import {
@@ -35,6 +35,8 @@ import {
 } from '@/lib/pl/resolve-pl-row'
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PlOutstandingSheet } from '@/components/pl/pl-outstanding-sheet'
+
+const PAGE_SIZE = 100
 
 function generateMonthOptions() {
   const months: { key: string; label: string }[] = []
@@ -101,6 +103,7 @@ export default function PLOutstandingPage() {
   const [bdFilter, setBdFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
   const [doctorFilter, setDoctorFilter] = useState('all')
+  const [page, setPage] = useState(1)
 
   const [sheetLeadId, setSheetLeadId] = useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -143,7 +146,18 @@ export default function PLOutstandingPage() {
     setBdFilter('all')
     setHospitalFilter('all')
     setDoctorFilter('all')
+    setPage(1)
   }
+
+  const totalPages = Math.ceil(filteredRecords.length / PAGE_SIZE)
+  const paginatedRecords = useMemo(
+    () => filteredRecords.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [filteredRecords, page]
+  )
+
+  useEffect(() => {
+    if (page > totalPages) setPage(Math.max(1, totalPages))
+  }, [totalPages, page])
 
   const totalPending = useMemo(
     () =>
@@ -421,7 +435,7 @@ export default function PLOutstandingPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredRecords.map((record) => {
+                    {paginatedRecords.map((record) => {
                       const pl = record.plRecord as Record<string, unknown> | undefined
                       const oc = record.outstandingCase as { paymentReceived?: boolean; remark2?: string | null } | undefined
                       const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
@@ -552,6 +566,21 @@ export default function PLOutstandingPage() {
                     )}
                   </TableBody>
                 </Table>
+              )}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between px-4 py-3 border-t">
+                  <span className="text-sm text-muted-foreground">
+                    Page {page} of {totalPages} ({filteredRecords.length} rows)
+                  </span>
+                  <div className="flex gap-1">
+                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               )}
             </CardContent>
           </Card>

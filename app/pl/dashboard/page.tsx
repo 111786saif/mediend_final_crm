@@ -37,6 +37,8 @@ import {
   Settings2,
   LayoutDashboard,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import Link from 'next/link'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
@@ -50,6 +52,8 @@ import {
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
+
+const PAGE_SIZE = 100
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
@@ -237,6 +241,7 @@ export default function PLLedgerPage() {
   const [hospitalFilter, setHospitalFilter] = useState('all')
   const [doctorFilter, setDoctorFilter] = useState('all')
   const [outstandingFilter, setOutstandingFilter] = useState('all')
+  const [page, setPage] = useState(1)
 
   const filterOptions = useMemo(() => {
     const bds = new Set<string>()
@@ -266,6 +271,7 @@ export default function PLLedgerPage() {
     setHospitalFilter('all')
     setDoctorFilter('all')
     setOutstandingFilter('all')
+    setPage(1)
   }
 
   // Table only shows leads whose discharge sheet has been filled (insurance or cash),
@@ -289,6 +295,16 @@ export default function PLLedgerPage() {
   )
 
   const visibleCount = useMemo(() => 1 + Object.values(visibleCols).filter(Boolean).length, [visibleCols])
+
+  const totalPages = Math.ceil((tableRecords?.length ?? 0) / PAGE_SIZE)
+  const paginatedRecords = useMemo(
+    () => (tableRecords ?? []).slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [tableRecords, page]
+  )
+
+  useEffect(() => {
+    if (page > totalPages) setPage(Math.max(1, totalPages))
+  }, [totalPages, page])
 
   const rupee = (n: number | null | undefined) =>
     n != null && Number(n) !== 0 ? `₹${Number(n).toLocaleString('en-IN')}` : '—'
@@ -679,8 +695,8 @@ export default function PLLedgerPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-blue-950 dark:text-blue-50">{records?.length || 0}</div>
-                <p className="text-xs text-blue-800/70 dark:text-blue-200/70 mt-1">P/L rows in period</p>
+                <div className="text-2xl font-bold tabular-nums text-blue-950 dark:text-blue-50">{tableRecords?.length || 0}</div>
+                <p className="text-xs text-blue-800/70 dark:text-blue-200/70 mt-1">Rows in table</p>
               </CardContent>
             </Card>
           </div>
@@ -740,7 +756,7 @@ export default function PLLedgerPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {tableRecords?.map((record) => {
+                    {paginatedRecords.map((record) => {
                       const pl = record.plRecord as Record<string, unknown> | undefined
                       const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
                       const paidBy = (v: unknown) => (v === 'HOSPITAL' ? 'Hospital' : v === 'MEDIEND' ? 'Mediend' : '—')
@@ -987,6 +1003,21 @@ export default function PLLedgerPage() {
                     )}
                   </TableBody>
                 </Table>
+              )}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between px-4 py-3 border-t">
+                  <span className="text-sm text-muted-foreground">
+                    Page {page} of {totalPages} ({tableRecords?.length ?? 0} rows)
+                  </span>
+                  <div className="flex gap-1">
+                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               )}
             </CardContent>
           </Card>
