@@ -5,6 +5,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getManagerGroups } from '@/lib/hierarchy'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 function mediendExpenseForPl(pl: {
   cabCharges: number
@@ -46,19 +47,12 @@ export async function GET(request: NextRequest) {
     }
 
     const leadWhere: Prisma.LeadWhereInput = {
-      plRecord: { isNot: null },
       ...(Object.keys(surgeryRange).length > 0
-        ? {
-            OR: [
-              { plRecord: { surgeryDate: surgeryRange } },
-              { AND: [{ plRecord: { surgeryDate: null } }, { surgeryDate: surgeryRange }] },
-            ],
-          }
+        ? { surgeryDate: surgeryRange }
         : {}),
     }
 
     if (managerId && managerId !== 'all') {
-      // Resolve manager's user ID and subordinates
       const managerEmp = await prisma.employee.findUnique({
         where: { id: managerId },
         select: { userId: true },
@@ -73,8 +67,15 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    const surgeryCount = await prisma.lead.count({ where: leadWhere })
+
     const records = await prisma.pLRecord.findMany({
-      where: { lead: leadWhere },
+      where: {
+        lead: { ...leadWhere, plRecord: { isNot: null } },
+        ...(Object.keys(surgeryRange).length > 0
+          ? { surgeryDate: surgeryRange }
+          : {}),
+      },
       include: {
         lead: {
           select: {
@@ -139,7 +140,6 @@ export async function GET(request: NextRequest) {
       bdMap.set(bdId, b)
     }
 
-    const surgeryCount = records.length
     const netProfit = totalMediendShare - totalExpenses
 
     const diseaseDistribution = Array.from(categoryMap.entries())

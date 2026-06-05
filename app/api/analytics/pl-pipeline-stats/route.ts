@@ -68,25 +68,21 @@ export async function GET(request: NextRequest) {
     const [admitted, surgeryScheduled, ipdDone, discharged] = await Promise.all([
       prisma.lead.count({
         where: {
-          caseStage: { in: ['ADMITTED', 'INITIATED'] },
           ...buildLeadDateWhere('admission', dateWhere),
         },
       }),
       prisma.lead.count({
         where: {
-          caseStage: { in: ['PREAUTH_COMPLETE', 'INITIATED'] },
           ...buildLeadDateWhere('surgery', dateWhere),
         },
       }),
       prisma.lead.count({
         where: {
-          caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
-          ...buildLeadDateWhere('surgery', dateWhere),
+          surgeryDate: dateWhere,
         },
       }),
       prisma.lead.count({
         where: {
-          caseStage: { in: ['DISCHARGED', 'CASH_DISCHARGED'] },
           ...buildLeadDateWhere('discharge', dateWhere),
         },
       }),

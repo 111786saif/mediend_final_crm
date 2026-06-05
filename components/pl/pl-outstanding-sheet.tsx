@@ -22,6 +22,7 @@ import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PaymentInstallmentsCard } from '@/components/pl/payment-installments-card'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface Lead {
   id: string
@@ -59,6 +60,7 @@ interface PlOutstandingSheetProps {
 
 export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstandingSheetProps) {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   const { data: record, isLoading: loadingLead } = useQuery<Lead>({
     queryKey: ['lead', leadId],
@@ -178,8 +180,16 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
                         leadId={leadId}
                         preloaded={(record.dischargeSheet as never) ?? null}
                       />
-                      <Button variant="outline" size="sm" asChild className="border-violet-200 dark:border-violet-700">
-                        <Link href={`/patient/${leadId}`}>View patient</Link>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-violet-200 dark:border-violet-700"
+                        onClick={() => {
+                          onOpenChange(false)
+                          setTimeout(() => router.push(`/patient/${leadId}`), 100)
+                        }}
+                      >
+                        View patient
                       </Button>
                     </div>
                   </CardHeader>

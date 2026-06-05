@@ -46,8 +46,9 @@ export function PnlSurgeryTab({
   endYear: number
 }) {
   const range = useMemo(() => {
-    const start = new Date(startYear, startMonth - 1, 1).toISOString().slice(0, 10)
-    const end = new Date(endYear, endMonth, 0).toISOString().slice(0, 10)
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const start = `${startYear}-${pad(startMonth)}-01`
+    const end = `${endYear}-${pad(endMonth)}-${pad(new Date(endYear, endMonth, 0).getDate())}`
     return { start, end }
   }, [startMonth, startYear, endMonth, endYear])
 

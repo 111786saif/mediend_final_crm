@@ -220,8 +220,15 @@ export function PlPatientDrawer({
                         <Badge variant="outline">{p.caseStage || '—'}</Badge>
                       </TableCell>
                       <TableCell onClick={(e) => e.stopPropagation()}>
-                        <Button size="sm" variant="outline" asChild>
-                          <Link href={`/patient/${p.id}`}>Open</Link>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            onOpenChange(false)
+                            setTimeout(() => router.push(`/patient/${p.id}`), 100)
+                          }}
+                        >
+                          Open
                         </Button>
                       </TableCell>
                     </TableRow>

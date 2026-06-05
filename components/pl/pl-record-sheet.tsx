@@ -22,6 +22,7 @@ import { toast } from 'sonner'
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface Lead {
   id: string
@@ -95,6 +96,7 @@ function inr(v: number) {
 
 export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps) {
   const queryClient = useQueryClient()
+  const router = useRouter()
 
   const { data: record, isLoading: loadingLead } = useQuery<Lead>({
     queryKey: ['lead', leadId],
@@ -438,8 +440,16 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                       <CardTitle className="text-teal-950 dark:text-teal-100">Case context</CardTitle>
                       <CardDescription>Patient and case details (from lead)</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" asChild className="border-teal-200 dark:border-teal-700">
-                      <Link href={`/patient/${leadId}`}>View patient</Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-teal-200 dark:border-teal-700"
+                      onClick={() => {
+                        onOpenChange(false)
+                        setTimeout(() => router.push(`/patient/${leadId}`), 100)
+                      }}
+                    >
+                      View patient
                     </Button>
                   </CardHeader>
                   <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-teal-50/40 to-indigo-50/25 dark:from-teal-950/20 dark:to-indigo-950/15 rounded-b-lg">
