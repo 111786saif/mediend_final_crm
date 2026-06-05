@@ -13,7 +13,7 @@ import { CaseStage } from '@/generated/prisma/enums'
 import { useState, useMemo, useEffect } from 'react'
 import {
   FileText, AlertCircle, CheckCircle2, Clock, ArrowRight,
-  Receipt, Shield, Activity, Search, LayoutList, CalendarDays, BarChart3,
+  Receipt, Activity, Search, LayoutList, CalendarDays, BarChart3,
   AlertTriangle, CalendarCheck, X,
 } from 'lucide-react'
 import { PreAuthStatus } from '@/generated/prisma/enums'
@@ -115,7 +115,7 @@ type TabKey =
   | 'admitted'
   | 'to-mark-discharged'
   | 'to-fill-sheet'
-  | 'ipd-done'
+  | 'sheet-filled'
   | 'all-patients'
 
 const KYP_STAGES: CaseStage[] = [
@@ -311,7 +311,7 @@ export default function InsuranceDashboardPage() {
 
   // ── Stats ─────────────────────────────────────────────────────────────────
   const stats = useMemo(() => {
-    if (!scopedLeads.length && !leads) return { kypReview: 0, preAuthRaised: 0, preAuthPending: 0, preAuthRejected: 0, preAuthComplete: 0, admitted: 0, toMarkDischarged: 0, toFillSheet: 0, ipdDone: 0, allPatients: 0, ipdScheduled: 0 }
+    if (!scopedLeads.length && !leads) return { kypReview: 0, preAuthRaised: 0, preAuthPending: 0, preAuthRejected: 0, preAuthComplete: 0, admitted: 0, toMarkDischarged: 0, toFillSheet: 0, ipdDone: 0, allPatients: 0, ipdScheduled: 0, sheetFilled: 0 }
     const preAuthRaisedLeads = scopedLeads.filter(l => l.caseStage === CaseStage.PREAUTH_RAISED)
     return {
       kypReview: scopedLeads.filter(l => KYP_STAGES.includes(l.caseStage) || (l.kypSubmission && l.caseStage === CaseStage.NEW_LEAD)).length,
@@ -325,43 +325,37 @@ export default function InsuranceDashboardPage() {
       ipdDone: scopedLeads.filter(l => l.caseStage === CaseStage.IPD_DONE || l.caseStage === CaseStage.DISCHARGED || l.caseStage === CaseStage.PL_PENDING).length,
       ipdScheduled: scopedLeads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
       allPatients: scopedLeads.length,
+      sheetFilled: scopedLeads.filter(l => l.dischargeSheet?.isFinalized === true).length,
     }
   }, [leads, scopedLeads])
 
-  // ── IPD chart data ─────────────────────────────────────────────────────────
-  const ipdChartData = useMemo(() => {
+  // ── Sheets filled chart data ─────────────────────────────────────────────────────────
+  const sheetChartData = useMemo(() => {
     if (!scopedLeads.length) return { daily: [], monthly: [] }
-    const ipdLeads = scopedLeads.filter(l =>
-      l.caseStage === CaseStage.IPD_DONE ||
-      l.caseStage === CaseStage.INITIATED ||
-      l.caseStage === CaseStage.ADMITTED ||
-      l.caseStage === CaseStage.DISCHARGED
-    )
+    const filledLeads = scopedLeads.filter(l => l.dischargeSheet?.isFinalized === true)
 
-    // Day-wise: last 14 days
     const dayMap = new Map<string, number>()
     for (let i = 13; i >= 0; i--) {
       const d = new Date()
       d.setDate(d.getDate() - i)
       dayMap.set(format(startOfDay(d), 'MMM d'), 0)
     }
-    ipdLeads.forEach(l => {
-      const date = l.updatedDate || l.createdDate
+    filledLeads.forEach(l => {
+      const date = l.dischargeSheet?.updatedAt
       if (!date) return
       const key = format(startOfDay(new Date(date)), 'MMM d')
       if (dayMap.has(key)) dayMap.set(key, (dayMap.get(key) || 0) + 1)
     })
     const daily = Array.from(dayMap.entries()).map(([day, count]) => ({ day, count }))
 
-    // Month-wise: last 6 months
     const monthMap = new Map<string, number>()
     for (let i = 5; i >= 0; i--) {
       const d = new Date()
       d.setMonth(d.getMonth() - i)
       monthMap.set(format(startOfMonth(d), 'MMM yy'), 0)
     }
-    ipdLeads.forEach(l => {
-      const date = l.updatedDate || l.createdDate
+    filledLeads.forEach(l => {
+      const date = l.dischargeSheet?.updatedAt
       if (!date) return
       const key = format(startOfMonth(new Date(date)), 'MMM yy')
       if (monthMap.has(key)) monthMap.set(key, (monthMap.get(key) || 0) + 1)
@@ -369,7 +363,7 @@ export default function InsuranceDashboardPage() {
     const monthly = Array.from(monthMap.entries()).map(([month, count]) => ({ month, count }))
 
     return { daily, monthly }
-  }, [leads])
+  }, [scopedLeads])
 
   // ── Filtered leads per tab ─────────────────────────────────────────────────
   const filteredLeads = useMemo(() => {
@@ -393,10 +387,8 @@ export default function InsuranceDashboardPage() {
           return needsMarkDischarged(lead)
         case 'to-fill-sheet':
           return needsSheetFilled(lead)
-        case 'ipd-done':
-          return lead.caseStage === CaseStage.IPD_DONE
-            || lead.caseStage === CaseStage.DISCHARGED
-            || lead.caseStage === CaseStage.PL_PENDING
+        case 'sheet-filled':
+          return lead.dischargeSheet?.isFinalized === true
         case 'all-patients':
           return true
         default:
@@ -458,7 +450,7 @@ export default function InsuranceDashboardPage() {
     { id: 'admitted', label: 'IPD / Admitted', icon: Activity, value: stats.admitted, gradient: 'from-indigo-500 to-blue-500', bgGradient: 'from-indigo-50 to-blue-50 dark:from-indigo-950 dark:to-blue-950', iconColor: 'text-indigo-600 dark:text-indigo-400', borderColor: 'border-indigo-200 dark:border-indigo-800' },
     { id: 'to-mark-discharged', label: 'To Mark Discharged', icon: CalendarCheck, value: stats.toMarkDischarged, gradient: 'from-orange-500 to-amber-500', bgGradient: 'from-orange-50 to-amber-50 dark:from-orange-950 dark:to-amber-950', iconColor: 'text-orange-600 dark:text-orange-400', borderColor: 'border-orange-200 dark:border-orange-800' },
     { id: 'to-fill-sheet', label: 'To Fill Sheet', icon: Receipt, value: stats.toFillSheet, gradient: 'from-rose-500 to-orange-500', bgGradient: 'from-rose-50 to-orange-50 dark:from-rose-950 dark:to-orange-950', iconColor: 'text-rose-600 dark:text-rose-400', borderColor: 'border-rose-200 dark:border-rose-800' },
-    { id: 'ipd-done', label: 'IPD Done (all)', icon: Shield, value: stats.ipdDone, gradient: 'from-teal-500 to-cyan-500', bgGradient: 'from-teal-50 to-cyan-50 dark:from-teal-950 dark:to-cyan-950', iconColor: 'text-teal-600 dark:text-teal-400', borderColor: 'border-teal-200 dark:border-teal-800' },
+    { id: 'sheet-filled', label: 'Sheets Filled', icon: Receipt, value: stats.sheetFilled, gradient: 'from-teal-500 to-cyan-500', bgGradient: 'from-teal-50 to-cyan-50 dark:from-teal-950 dark:to-cyan-950', iconColor: 'text-teal-600 dark:text-teal-400', borderColor: 'border-teal-200 dark:border-teal-800' },
     { id: 'all-patients', label: 'All Patients', icon: LayoutList, value: stats.allPatients, gradient: 'from-slate-500 to-gray-500', bgGradient: 'from-slate-50 to-gray-50 dark:from-slate-950 dark:to-gray-950', iconColor: 'text-slate-600 dark:text-slate-400', borderColor: 'border-slate-200 dark:border-slate-800' },
   ]
 
@@ -469,12 +461,12 @@ export default function InsuranceDashboardPage() {
     'admitted': 'IPD / Admitted',
     'to-mark-discharged': 'To Mark Discharged — confirm discharge date',
     'to-fill-sheet': 'To Fill Sheet — discharged, sheet pending',
-    'ipd-done': 'IPD Done (incl. discharged & in PL)',
+    'sheet-filled': 'Discharge Sheets Filled — finalized & moved to PL',
     'all-patients': 'All Patients',
   }
 
   const chartConfig = {
-    count: { label: 'IPD Cases', color: 'rgb(var(--chart-1))' },
+    count: { label: 'Sheets Filled', color: 'rgb(var(--chart-1))' },
   }
 
   return (
@@ -531,15 +523,15 @@ export default function InsuranceDashboardPage() {
               <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950 dark:to-cyan-950 border-teal-200 dark:border-teal-800 border-2">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300">Total IPD Done</CardTitle>
+                    <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300">Sheets Filled</CardTitle>
                     <div className="p-2 rounded-lg bg-white/50 dark:bg-black/20 text-teal-600 dark:text-teal-400">
-                      <CheckCircle2 className="w-4 h-4" />
+                      <Receipt className="w-4 h-4" />
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">{stats.ipdDone}</div>
-                  <p className="text-xs text-gray-500 mt-1">All time</p>
+                  <div className="text-3xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">{stats.sheetFilled}</div>
+                  <p className="text-xs text-gray-500 mt-1">Finalized & sent to PL</p>
                 </CardContent>
               </Card>
               <Card className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950 dark:to-blue-950 border-indigo-200 dark:border-indigo-800 border-2">
@@ -563,12 +555,12 @@ export default function InsuranceDashboardPage() {
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
                   <BarChart3 className="w-4 h-4 text-blue-500" />
-                  <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300">IPD Activity – Last 14 Days</CardTitle>
+                  <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300">Sheets Filled – Last 14 Days</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="p-2">
                 <ChartContainer config={chartConfig} className="h-[110px] w-full">
-                  <BarChart data={ipdChartData.daily} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                  <BarChart data={sheetChartData.daily} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="day" tick={{ fontSize: 9 }} tickLine={false} axisLine={false} interval={2} />
                     <YAxis tick={{ fontSize: 9 }} tickLine={false} axisLine={false} allowDecimals={false} />
@@ -585,12 +577,12 @@ export default function InsuranceDashboardPage() {
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4 text-purple-500" />
-                <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300">IPD Activity – Last 6 Months</CardTitle>
+                <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300">Sheets Filled – Last 6 Months</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="p-2">
               <ChartContainer config={{ count: { label: 'IPD Cases', color: 'rgb(var(--chart-2))' } }} className="h-[110px] w-full">
-                <BarChart data={ipdChartData.monthly} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                  <BarChart data={sheetChartData.monthly} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="month" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
                   <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} allowDecimals={false} />

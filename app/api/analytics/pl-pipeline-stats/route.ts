@@ -81,7 +81,10 @@ export async function GET(request: NextRequest) {
       prisma.lead.count({
         where: {
           caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
-          surgeryDate: dateWhere,
+          OR: [
+            { surgeryDate: dateWhere },
+            { admissionRecord: { is: { surgeryDate: dateWhere } } },
+          ],
         },
       }),
       prisma.lead.count({
