@@ -1,8 +1,9 @@
 'use client'
 
-import { useRef, useState, useCallback, useMemo } from 'react'
+import { useRef, useState, useCallback, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
@@ -600,6 +601,7 @@ function NoticeActions() {
 // ─── Main page ─────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const router = useRouter()
   const { user } = useAuth()
   const showFnFCard = user?.role === 'HR_HEAD'
   const { data: workLogCheck } = useWorkLogCheck({
@@ -618,6 +620,12 @@ export default function HomePage() {
   const bannerUrl = userBanner?.bannerUrl || DEFAULT_BANNER
   const thought = useMemo(() => getThoughtOfTheDay(), [])
 
+  useEffect(() => {
+    if (user?.role === 'MD') {
+      router.replace('/md/home')
+    }
+  }, [user, router])
+
   const handleBannerChange = useCallback(
     async (file: File) => {
       const result = await uploadFile(file)
@@ -627,6 +635,10 @@ export default function HomePage() {
     },
     [uploadFile, updateUserBanner]
   )
+
+  if (user?.role === 'MD') {
+    return null
+  }
 
   return (
     <div className="flex flex-col gap-5 max-w-5xl mx-auto w-full">

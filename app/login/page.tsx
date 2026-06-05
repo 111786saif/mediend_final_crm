@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import Image from 'next/image'
 import logo from '@/public/logo-mediend.png'
 import { Eye, EyeOff, Download } from 'lucide-react'
+import { getFirstNavUrl } from '@/lib/sidebar-nav'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -21,7 +22,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      router.replace('/home')
+      router.replace(getFirstNavUrl(user))
     }
   }, [user, isLoading, router])
 
@@ -161,4 +162,3 @@ export default function LoginPage() {
     </div>
   )
 }
-

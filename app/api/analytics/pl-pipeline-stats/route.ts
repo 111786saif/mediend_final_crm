@@ -4,7 +4,49 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
+
+function buildLeadDateWhere(
+  dateField: 'admission' | 'surgery' | 'discharge',
+  range: Prisma.DateTimeFilter,
+): Prisma.LeadWhereInput {
+  if (dateField === 'admission') {
+    return {
+      admissionRecord: {
+        is: {
+          admissionDate: range,
+        },
+      },
+    }
+  }
+
+  if (dateField === 'discharge') {
+    return {
+      dischargeSheet: {
+        is: {
+          dischargeDate: range,
+        },
+      },
+    }
+  }
+
+  return {
+    OR: [
+      { surgeryDate: range },
+      {
+        AND: [
+          { surgeryDate: null },
+          {
+            admissionRecord: {
+              is: {
+                surgeryDate: range,
+              },
+            },
+          },
+        ],
+      },
+    ],
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,22 +82,29 @@ export async function GET(request: NextRequest) {
     }
 
     const [admitted, surgeryScheduled, ipdDone, discharged] = await Promise.all([
-      prisma.admissionRecord.count({
-        where: { admissionDate: dateWhere },
-      }),
-      prisma.admissionRecord.count({
+      prisma.lead.count({
         where: {
-          expectedSurgeryDate: dateWhere,
+          caseStage: { in: ['ADMITTED', 'INITIATED'] },
+          ...buildLeadDateWhere('admission', dateWhere),
+        },
+      }),
+      prisma.lead.count({
+        where: {
+          caseStage: { in: ['PREAUTH_COMPLETE', 'INITIATED'] },
+          ...buildLeadDateWhere('surgery', dateWhere),
         },
       }),
       prisma.lead.count({
         where: {
           caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
-          ...ipdDoneDateFilter(dateWhere),
+          ...buildLeadDateWhere('surgery', dateWhere),
         },
       }),
-      prisma.dischargeSheet.count({
-        where: { dischargeDate: dateWhere },
+      prisma.lead.count({
+        where: {
+          caseStage: { in: ['DISCHARGED', 'CASH_DISCHARGED'] },
+          ...buildLeadDateWhere('discharge', dateWhere),
+        },
       }),
     ])
 

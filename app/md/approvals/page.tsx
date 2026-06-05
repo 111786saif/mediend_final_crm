@@ -54,7 +54,7 @@ interface LedgerEntry {
     id: string
     name: string
     partyType: string
-  }
+  } | null
   head: {
     id: string
     name: string
@@ -118,6 +118,26 @@ function formatCompactINR(amount: number): string {
   return `${sign}₹${abs}`
 }
 
+function getPartyName(entry: LedgerEntry) {
+  return entry.party?.name ?? 'Unknown party'
+}
+
+function getPartyType(entry: LedgerEntry) {
+  return entry.party?.partyType ?? 'N/A'
+}
+
+function matchesLedgerEntrySearch(entry: LedgerEntry, query: string) {
+  const q = query.trim().toLowerCase()
+  if (!q) return true
+
+  return (
+    getPartyName(entry).toLowerCase().includes(q) ||
+    entry.description.toLowerCase().includes(q) ||
+    entry.serialNumber.toLowerCase().includes(q) ||
+    (entry.createdBy?.name ?? '').toLowerCase().includes(q)
+  )
+}
+
 /** For edit requests: show requested amount from editRequestData (e.g. paymentAmount when changing to DEBIT); otherwise current entry amount. */
 function getEditRequestDisplayAmount(entry: LedgerEntry): { amount: number; isDebit: boolean } {
   const data = entry.editRequestData as Record<string, unknown> | null | undefined
@@ -166,8 +186,8 @@ function EditRequestCard({ entry, onApprove, onReject }: EditRequestCardProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         <div>
-          <div className="font-semibold text-lg">{entry.party.name}</div>
-          <div className="text-xs text-muted-foreground">{entry.party.partyType}</div>
+          <div className="font-semibold text-lg">{getPartyName(entry)}</div>
+          <div className="text-xs text-muted-foreground">{getPartyType(entry)}</div>
         </div>
 
         {entry.attachments && entry.attachments.length > 0 && (
@@ -282,8 +302,8 @@ function DeleteRequestCard({ entry, onApprove, onReject }: EditRequestCardProps)
       </CardHeader>
       <CardContent className="space-y-3">
         <div>
-          <div className="font-semibold text-lg">{entry.party?.name ?? 'N/A'}</div>
-          <div className="text-xs text-muted-foreground">{entry.party?.partyType}</div>
+          <div className="font-semibold text-lg">{getPartyName(entry)}</div>
+          <div className="text-xs text-muted-foreground">{getPartyType(entry)}</div>
         </div>
 
         <div>
@@ -396,8 +416,8 @@ function HistoryCard({ entry, onUndo }: HistoryCardProps) {
       </CardHeader>
       <CardContent className="space-y-3">
         <div>
-          <div className="font-semibold text-lg">{entry.party.name}</div>
-          <div className="text-xs text-muted-foreground">{entry.party.partyType}</div>
+          <div className="font-semibold text-lg">{getPartyName(entry)}</div>
+          <div className="text-xs text-muted-foreground">{getPartyType(entry)}</div>
         </div>
 
         {entry.attachments && entry.attachments.length > 0 && (
@@ -488,8 +508,8 @@ function DebitCardFace({
       </CardHeader>
       <CardContent className="space-y-3">
         <div>
-          <div className="font-semibold text-lg">{entry.party.name}</div>
-          <div className="text-xs text-muted-foreground">{entry.party.partyType}</div>
+          <div className="font-semibold text-lg">{getPartyName(entry)}</div>
+          <div className="text-xs text-muted-foreground">{getPartyType(entry)}</div>
         </div>
 
         {entry.attachments && entry.attachments.length > 0 && (
@@ -1002,10 +1022,7 @@ export default function ApprovalsPage() {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (e) =>
-          e.party?.name.toLowerCase().includes(query) ||
-          e.description.toLowerCase().includes(query) ||
-          e.serialNumber.toLowerCase().includes(query) ||
-          e.createdBy?.name.toLowerCase().includes(query)
+          matchesLedgerEntrySearch(e, query)
       )
     }
 
@@ -1247,8 +1264,8 @@ export default function ApprovalsPage() {
                     <TableCell>{format(new Date(entry.transactionDate), 'dd MMM yyyy')}</TableCell>
                     <TableCell>
                       <div>
-                        <div className="font-medium">{entry.party.name}</div>
-                        <div className="text-xs text-muted-foreground">{entry.party.partyType}</div>
+                        <div className="font-medium">{getPartyName(entry)}</div>
+                        <div className="text-xs text-muted-foreground">{getPartyType(entry)}</div>
                       </div>
                     </TableCell>
                     <TableCell className="max-w-xs truncate">{entry.description}</TableCell>
@@ -1513,7 +1530,7 @@ export default function ApprovalsPage() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Party</span>
-                  <span>{selectedEntry.party.name}</span>
+                  <span>{getPartyName(selectedEntry)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Description</span>
@@ -1614,4 +1631,3 @@ export default function ApprovalsPage() {
     </div>
   )
 }
-

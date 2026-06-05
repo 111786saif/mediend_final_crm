@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { SessionUser } from '@/lib/auth'
 import { UserRole } from '@/generated/prisma/enums'
 import { useState } from 'react'
+import { getFirstNavUrl } from '@/lib/sidebar-nav'
 
 const TESTER_ROLE_KEY = 'mediend_tester_active_role'
 
@@ -48,7 +49,7 @@ export function useAuth() {
       // Clear TESTER role on login
       localStorage.removeItem(TESTER_ROLE_KEY)
       setActiveRoleState(null)
-      router.push('/home')
+      router.push(getFirstNavUrl(data.user))
     },
   })
 
