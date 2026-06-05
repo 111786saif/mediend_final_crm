@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
 
     const canonicalSalesCount = Object.keys(surgeryRange).length > 0
       ? await prisma.lead.count({ where: canonicalSalesCompletedWhere(surgeryRange) })
-      : await prisma.lead.count({ where: { pipelineStage: { in: ['PL', 'COMPLETED'] } } })
+      : await prisma.lead.count({ where: { surgeryDate: { not: null } } })
 
     const canonicalPerGroup = new Map<string, number>()
     const salesLeads = await prisma.lead.findMany({

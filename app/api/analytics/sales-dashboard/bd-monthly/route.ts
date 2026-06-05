@@ -84,29 +84,28 @@ export async function GET(request: NextRequest) {
                  TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
       `,
 
-      // IPD (pipelineStage = COMPLETED) by month by BD
+      // IPD by month by BD
       prisma.$queryRaw<IpdRow[]>`
         SELECT
-          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
-          u.id                                                                                              AS "bdId",
-          u.name                                                                                            AS "bdName",
-          e.id                                                                                              AS "bdEmployeeId",
-          me.id                                                                                             AS "managerId",
-          mu.name                                                                                           AS "managerName",
-          COUNT(*)::int                                                                                     AS "ipdCount"
+          TO_CHAR(l."surgeryDate", 'YYYY-MM') AS month,
+          u.id                              AS "bdId",
+          u.name                            AS "bdName",
+          e.id                              AS "bdEmployeeId",
+          me.id                             AS "managerId",
+          mu.name                           AS "managerName",
+          COUNT(*)::int                     AS "ipdCount"
         FROM "Lead" l
         JOIN "User" u   ON u.id   = l."bdId"
         LEFT JOIN "Employee" e ON e."userId" = u.id
         LEFT JOIN "Employee" me ON me.id = e."managerId"
         LEFT JOIN "User" mu ON mu.id = me."userId"
-        WHERE l."pipelineStage" IN ('PL', 'COMPLETED')
-          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") >= ${start}
-          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") <= ${end}
+        WHERE l."surgeryDate" >= ${start}
+          AND l."surgeryDate" <= ${end}
           ${bdIdFilter}
         GROUP BY u.id, u.name, e.id, me.id, mu.name,
-                 TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM')
+                 TO_CHAR(l."surgeryDate", 'YYYY-MM')
         ORDER BY u.name,
-                 TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM')
+                 TO_CHAR(l."surgeryDate", 'YYYY-MM')
       `,
     ])
 

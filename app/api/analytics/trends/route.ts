@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
       const data = trendMap.get(key)
       if (data) {
         data.leadsCreated++
-        if (lead.pipelineStage === 'COMPLETED' || lead.pipelineStage === 'PL') {
+        if (lead.surgeryDate) {
           data.leadsCompleted++
         } else if (lead.pipelineStage === 'LOST') {
           data.leadsLost++

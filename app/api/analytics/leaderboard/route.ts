@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
     if (type === 'bd') {
       const closedWhere: Prisma.LeadWhereInput = { status: { in: CLOSED_STATUS_CODES }, ...leadEntryDateFilter, ...scopeFilter }
       const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter, ...scopeFilter }
-      const ipdDoneWhere: Prisma.LeadWhereInput = { pipelineStage: { in: ['PL', 'COMPLETED'] }, ...conversionDateFilter, ...scopeFilter }
+      const ipdDoneWhere: Prisma.LeadWhereInput = { ...conversionDateFilter, ...scopeFilter }
 
       const [bdStats, bdLeads, ipdDoneStats] = await Promise.all([
         prisma.lead.groupBy({
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
       // Team leaderboard = manager groups (each manager + their direct subordinates)
       const closedWhere: Prisma.LeadWhereInput = { status: { in: CLOSED_STATUS_CODES }, ...leadEntryDateFilter, ...scopeFilter }
       const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter, ...scopeFilter }
-      const ipdDoneWhere: Prisma.LeadWhereInput = { pipelineStage: { in: ['PL', 'COMPLETED'] }, ...conversionDateFilter, ...scopeFilter }
+      const ipdDoneWhere: Prisma.LeadWhereInput = { ...conversionDateFilter, ...scopeFilter }
 
       const [teamStats, teamLeads, ipdDoneStats] = await Promise.all([
         prisma.lead.groupBy({ by: ['bdId'], where: closedWhere, _count: { id: true }, _sum: { billAmount: true, netProfit: true } }),
@@ -189,7 +189,6 @@ export async function GET(request: NextRequest) {
             bdId: { in: teamUserIds },
           }
           const ipdDoneWhere: Prisma.LeadWhereInput = {
-            pipelineStage: { in: ['PL', 'COMPLETED'] },
             ...conversionDateFilter,
             bdId: { in: teamUserIds },
           }

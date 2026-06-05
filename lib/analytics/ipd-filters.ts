@@ -1,26 +1,27 @@
 import { Prisma } from '@/generated/prisma/client'
 
 /**
- * Org-wide truth for "IPD done / surgery" date filtering:
- *   surgeryDate ONLY.
+ * Org-wide truth for "IPD done / surgery":
+ *   surgeryDate ONLY. No pipelineStage gate.
  *
- * BD marks IPD_DONE → sets surgeryDate + pipelineStage = 'PL' atomically.
- * Every endpoint that counts IPD done / surgeries MUST filter by
- * `surgeryDate` and `pipelineStage IN ('PL', 'COMPLETED')`.
+ * BD marks IPD_DONE → sets surgeryDate. That is the single source of truth.
+ * pipelineStage is unreliable (set by different workflows at different times)
+ * and MUST NOT be used to filter IPD done counts.
+ *
+ * Every endpoint that counts IPD done / surgeries MUST use
+ * `canonicalSalesCompletedWhere(dateFilter)` or `ipdDoneDateFilter(dateFilter)`.
  */
 
 /**
- * Canonical sales-side where for a completed surgery / IPD done.
- * - pipelineStage IN ('PL', 'COMPLETED')
- * - date filter on surgeryDate only
+ * Canonical where for a completed surgery / IPD done.
+ * - surgeryDate within the given range
+ * - NO pipelineStage filter
  */
 export function canonicalSalesCompletedWhere(
   dateFilter: Prisma.DateTimeFilter,
   extra?: Prisma.LeadWhereInput,
 ): Prisma.LeadWhereInput {
-  const where: Prisma.LeadWhereInput = {
-    pipelineStage: { in: ['PL', 'COMPLETED'] },
-  }
+  const where: Prisma.LeadWhereInput = {}
   if (Object.keys(dateFilter).length > 0) {
     where.surgeryDate = dateFilter
   }

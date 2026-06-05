@@ -71,7 +71,6 @@ export async function GET(request: NextRequest) {
     const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter, ...teamScope }
 
     const completedWhere: Prisma.LeadWhereInput = {
-      pipelineStage: { in: ['PL', 'COMPLETED'] },
       ...teamScope,
       ...ipdDoneDateFilter(dateFilter),
     }
@@ -97,7 +96,7 @@ export async function GET(request: NextRequest) {
       prisma.lead.groupBy({ by: ['campaignName'], where: { ...completedWhere, campaignName: { not: null } }, _count: { id: true } }),
       prisma.lead.findMany({
         where: allLeadsWhere,
-        select: { id: true, bdId: true, pipelineStage: true, leadEntryDate: true, createdDate: true },
+        select: { id: true, bdId: true, pipelineStage: true, surgeryDate: true, leadEntryDate: true, createdDate: true },
       }),
     ])
 
@@ -140,7 +139,7 @@ export async function GET(request: NextRequest) {
       for (const lead of allLeadsForAge) {
         if (groupUserIds.has(lead.bdId)) {
           totalLeads++
-          if (lead.pipelineStage === 'COMPLETED' || lead.pipelineStage === 'PL') converted++
+          if (lead.surgeryDate) converted++
         }
       }
       if (totalLeads > 0) {
@@ -160,7 +159,7 @@ export async function GET(request: NextRequest) {
       const effectiveLeadDate = lead.leadEntryDate ?? lead.createdDate
       const bucket = getLeadAgeBucket(effectiveLeadDate, asOf)
       ageBuckets[bucket].total += 1
-      if (lead.pipelineStage === 'COMPLETED' || lead.pipelineStage === 'PL') ageBuckets[bucket].converted += 1
+      if (lead.surgeryDate) ageBuckets[bucket].converted += 1
     })
     const leadAgeBreakdown = (['new', 'oneMonth', 'twoMonths', 'old'] as const).map((key) => ({
       bucket: LEAD_AGE_BUCKETS[key].label,

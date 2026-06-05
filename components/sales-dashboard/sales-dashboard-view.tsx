@@ -733,9 +733,12 @@ function TeamPerformanceTab({
       }
     }
 
-    // TL's own BD work should also count toward their own team card
+    // TL's own BD work should also count toward their own team card.
+    // Skip if the BD already contributed to this group in pass 1
+    // (happens when managerId == bdEmployeeId — self-reporting).
     for (const bd of bdMonthly.bds) {
       if (!bd.bdEmployeeId) continue
+      if (bd.managerId === bd.bdEmployeeId) continue
       const selfGroup = managerGroups.get(bd.bdEmployeeId)
       if (selfGroup) {
         selfGroup.totalIpd += bd.totalIpd

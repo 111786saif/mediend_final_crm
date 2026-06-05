@@ -48,13 +48,12 @@ export async function GET(request: NextRequest) {
 
     // Completed leads filter (for IPD/conversions)
     const completedWhere: Prisma.LeadWhereInput = {
-      pipelineStage: { in: ['PL', 'COMPLETED'] },
       ...(hasDateFilter ? ipdDoneDateFilter(dateFilter) : {}),
     }
 
     // Prior period calculation for comparison
     let priorLeadDateFilter: Prisma.LeadWhereInput = {}
-    let priorCompletedWhere: Prisma.LeadWhereInput = { pipelineStage: { in: ['PL', 'COMPLETED'] } }
+    let priorCompletedWhere: Prisma.LeadWhereInput = {}
     if (startDate && endDate) {
       const s = new Date(startDate)
       const e = new Date(endDate)
@@ -71,7 +70,6 @@ export async function GET(request: NextRequest) {
         ],
       }
       priorCompletedWhere = {
-        pipelineStage: { in: ['PL', 'COMPLETED'] },
         ...ipdDoneDateFilter(priorDateFilter),
       }
     }

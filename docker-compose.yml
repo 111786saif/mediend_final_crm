@@ -334,11 +334,12 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/backfill-conversion-dates.ts"]
 
-  # One-off: backfill pipelineStage → PL and conversionDate → surgeryDate for
-  # leads where BD already marked IPD_DONE but pipelineStage wasn't advanced.
-  # Dry run: docker compose --profile tools run --rm -e DRY_RUN=true backfill-ipd-stage
-  # Live:    docker compose --profile tools run --rm backfill-ipd-stage
-  backfill-ipd-stage:
+  # One-off: revert bad backfill that promoted leads to PL where caseStage was
+  # NOT IPD_DONE/CASH_IPD_DONE. Dry run first:
+  #   docker compose --profile tools run --rm revert-ipd-stage -- --dry-run
+  # Live:
+  #   docker compose --profile tools run --rm revert-ipd-stage
+  revert-ipd-stage:
     build:
       context: .
       dockerfile: Dockerfile
@@ -350,7 +351,7 @@ services:
         condition: service_healthy
     profiles:
       - tools
-    entrypoint: ["bun", "run", "scripts/backfill-ipd-stage-and-conversion.ts"]
+    entrypoint: ["bun", "run", "scripts/revert-ipd-stage-backfill.ts"]
 
   # One-off: import historical IPD PNL data from CSV
   # Usage: docker compose --profile tools run --rm import-ipd-pnl

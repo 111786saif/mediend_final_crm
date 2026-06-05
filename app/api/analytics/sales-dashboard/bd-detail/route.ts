@@ -69,7 +69,6 @@ export async function GET(request: NextRequest) {
       prisma.lead.findMany({
         where: {
           bdId,
-          pipelineStage: { in: ['PL', 'COMPLETED'] },
           ...ipdDoneDateFilter({ gte: start, lte: end }),
         },
         select: {
@@ -125,10 +124,10 @@ export async function GET(request: NextRequest) {
       `,
       prisma.$queryRaw<{ month: string; count: number }[]>`
         SELECT
-          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
+          TO_CHAR(l."surgeryDate", 'YYYY-MM') AS month,
           COUNT(*)::int AS count
         FROM "Lead" l
-        WHERE l."bdId" = ${bdId} AND l."pipelineStage" IN ('PL', 'COMPLETED')
+        WHERE l."bdId" = ${bdId}
         GROUP BY 1
         ORDER BY 1
       `,

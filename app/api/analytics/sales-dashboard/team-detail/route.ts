@@ -83,7 +83,6 @@ export async function GET(request: NextRequest) {
         by: ['bdId'],
         where: {
           bdId: { in: allUserIds },
-          pipelineStage: { in: ['PL', 'COMPLETED'] },
           ...ipdDoneDateFilter({ gte: start, lte: end }),
         },
         _count: { id: true },
@@ -149,15 +148,15 @@ export async function GET(request: NextRequest) {
       `,
       prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
         SELECT
-          TO_CHAR(COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate"), 'YYYY-MM') AS month,
+          TO_CHAR(l."surgeryDate", 'YYYY-MM') AS month,
           u.id AS "bdId",
           u.name AS "bdName",
           COUNT(*)::int AS count
         FROM "Lead" l
         JOIN "User" u ON u.id = l."bdId"
-        WHERE l."bdId" = ANY(${allUserIds}) AND l."pipelineStage" IN ('PL', 'COMPLETED')
-          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") >= ${start}
-          AND COALESCE(l."surgeryDate", l."conversionDate", l."leadEntryDate", l."createdDate") <= ${end}
+        WHERE l."bdId" = ANY(${allUserIds})
+          AND l."surgeryDate" >= ${start}
+          AND l."surgeryDate" <= ${end}
         GROUP BY 1, u.id, u.name
         ORDER BY 1, u.name
       `,
@@ -206,11 +205,10 @@ export async function GET(request: NextRequest) {
       const overlapEnd = new Date(Math.min(monthEnd.getTime(), target.periodEndDate.getTime()))
       const where: Prisma.LeadWhereInput = {
         bdId: { in: allUserIds },
-        pipelineStage: { in: ['PL', 'COMPLETED'] },
         ...ipdDoneDateFilter({ gte: overlapStart, lte: overlapEnd }),
       }
       let achieved = 0
-      let label = target.metric
+      let label: string = target.metric
       switch (target.metric) {
         case 'IPD_DONE':
         case 'SURGERIES_DONE':

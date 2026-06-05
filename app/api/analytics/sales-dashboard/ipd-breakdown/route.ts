@@ -46,7 +46,6 @@ export async function GET(request: NextRequest) {
     }
 
     const completedWhere: Prisma.LeadWhereInput = {
-      pipelineStage: { in: ['PL', 'COMPLETED'] },
       ...teamScope,
       ...ipdDoneDateFilter(dateFilter),
     }

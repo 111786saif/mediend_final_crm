@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     }
 
     const currentYear = today.getFullYear()
-    const completedWhereBase: Prisma.LeadWhereInput = { pipelineStage: { in: ['PL', 'COMPLETED'] }, ...teamScope }
+    const completedWhereBase: Prisma.LeadWhereInput = { ...teamScope }
 
     const [ipdThisMonth, ipdByThisDayLastMonth, allCompletedThisYear] = await Promise.all([
       prisma.lead.count({
