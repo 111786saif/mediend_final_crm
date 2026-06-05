@@ -29,23 +29,7 @@ function buildLeadDateWhere(
     }
   }
 
-  return {
-    OR: [
-      { surgeryDate: range },
-      {
-        AND: [
-          { surgeryDate: null },
-          {
-            admissionRecord: {
-              is: {
-                surgeryDate: range,
-              },
-            },
-          },
-        ],
-      },
-    ],
-  }
+  return { surgeryDate: range }
 }
 
 export async function GET(request: NextRequest) {

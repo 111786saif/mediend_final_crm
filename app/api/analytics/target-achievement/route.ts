@@ -6,6 +6,8 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -28,7 +30,6 @@ export async function GET(request: NextRequest) {
     const periodStart = new Date(startDate)
     const periodEnd = new Date(endDate)
 
-    // Get all targets for the period (no team relation anymore)
     const targets = await prisma.target.findMany({
       where: {
         periodStartDate: { lte: periodEnd },
@@ -39,20 +40,17 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // Get BD users for target lookup
     const bdUsers = await prisma.user.findMany({
       where: { role: 'BD' },
       select: { id: true, name: true },
     })
 
-    // For TEAM targets: targetForId = manager's Employee.id; get manager name
     const managerEmployees = await prisma.employee.findMany({
       where: { id: { in: targets.filter((t) => t.targetType === 'TEAM').map((t) => t.targetForId) } },
       select: { id: true, user: { select: { name: true } } },
     })
     const managerMap = new Map(managerEmployees.map((e) => [e.id, e.user.name]))
 
-    // Role-based scoping
     let roleFilter: Prisma.LeadWhereInput = {}
     if (user.role === 'BD') {
       roleFilter = { bdId: user.id }
@@ -61,7 +59,6 @@ export async function GET(request: NextRequest) {
       roleFilter = { bdId: { in: [user.id, ...subIds] } }
     }
 
-    // Calculate achievements for each target
     const targetAchievements = await Promise.all(
       targets.map(async (target) => {
         const dateFilter: Prisma.DateTimeFilter = {
@@ -69,11 +66,7 @@ export async function GET(request: NextRequest) {
           lte: new Date(Math.min(periodEnd.getTime(), target.periodEndDate.getTime())),
         }
 
-        const where: Prisma.LeadWhereInput = {
-          pipelineStage: 'COMPLETED',
-          conversionDate: dateFilter,
-          ...roleFilter,
-        }
+        const where = canonicalSalesCompletedWhere(dateFilter, roleFilter)
 
         // Apply target-specific filtering (but don't override role filter)
         if (target.targetType === 'BD' && user.role !== 'BD') {

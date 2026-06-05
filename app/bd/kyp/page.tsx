@@ -124,8 +124,10 @@ export default function CaseTrackerPage() {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   }, [])
 
+  const isOrgViewer = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
+
   const [stageFilter, setStageFilter] = useState<Bucket | 'all'>('all')
-  const [monthFilter, setMonthFilter] = useState<string>(currentMonthKey)
+  const [monthFilter, setMonthFilter] = useState<string>(isOrgViewer ? 'all' : currentMonthKey)
   const [bdFilter, setBdFilter] = useState<string>('all')
   const [circleFilter, setCircleFilter] = useState<string>('all')
   const [hospitalFilter, setHospitalFilter] = useState<string>('all')
@@ -203,11 +205,16 @@ export default function CaseTrackerPage() {
       return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
     }
 
+    if (isOrgViewer) {
+      const t = prefer(list)
+      return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
+    }
+
     // BD (the progress API already scopes to the signed-in BD)
     const bdTargets = list.filter((t) => t.targetType === 'BD')
     const t = prefer(bdTargets.length ? bdTargets : list)
     return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
-  }, [targetProgress, user?.role, bdFilter])
+  }, [targetProgress, user?.role, bdFilter, isOrgViewer])
 
   const monthOptions = useMemo(() => {
     const months = new Set<string>([currentMonthKey])

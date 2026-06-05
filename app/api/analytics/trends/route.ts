@@ -7,6 +7,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } from 'date-fns'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -47,22 +48,21 @@ export async function GET(request: NextRequest) {
     }
 
     const completedWhere: Prisma.LeadWhereInput = {
-      ...baseWhere,
-      pipelineStage: 'COMPLETED',
-      conversionDate: {
-        gte: start,
-        lte: end,
-      },
+      ...canonicalSalesCompletedWhere({ gte: start, lte: end }),
+    }
+    if (user.role === 'BD') completedWhere.bdId = user.id
+    else if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      completedWhere.bdId = { in: [user.id, ...subIds] }
     }
 
-    // Fetch all leads for the period
     const allLeads = await prisma.lead.findMany({
       where: baseWhere,
       select: {
         id: true,
         createdDate: true,
         pipelineStage: true,
-        conversionDate: true,
+        surgeryDate: true,
         billAmount: true,
         netProfit: true,
       },
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
       select: {
         id: true,
         createdDate: true,
-        conversionDate: true,
+        surgeryDate: true,
         billAmount: true,
         netProfit: true,
       },
@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
       const data = trendMap.get(key)
       if (data) {
         data.leadsCreated++
-        if (lead.pipelineStage === 'COMPLETED') {
+        if (lead.pipelineStage === 'COMPLETED' || lead.pipelineStage === 'PL') {
           data.leadsCompleted++
         } else if (lead.pipelineStage === 'LOST') {
           data.leadsLost++
@@ -147,15 +147,16 @@ export async function GET(request: NextRequest) {
     // Process completed leads for revenue, profit, and time metrics
     const timeToCloseData: number[] = []
     completedLeads.forEach((lead) => {
-      const key = periodKey(lead.conversionDate || lead.createdDate)
+      const date = lead.surgeryDate || lead.createdDate
+      const key = periodKey(date)
       const data = trendMap.get(key)
       if (data) {
         data.revenue += lead.billAmount || 0
         data.profit += lead.netProfit || 0
 
-        if (lead.conversionDate && lead.createdDate) {
+        if (lead.surgeryDate && lead.createdDate) {
           const daysToClose = Math.floor(
-            (lead.conversionDate.getTime() - lead.createdDate.getTime()) / (1000 * 60 * 60 * 24)
+            (lead.surgeryDate.getTime() - lead.createdDate.getTime()) / (1000 * 60 * 60 * 24)
           )
           timeToCloseData.push(daysToClose)
         }

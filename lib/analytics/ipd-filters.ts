@@ -1,30 +1,41 @@
 import { Prisma } from '@/generated/prisma/client'
 
 /**
- * Canonical IPD date fallback chain:
- *   surgeryDate → conversionDate → leadEntryDate → createdDate
+ * Org-wide truth for "IPD done / surgery" date filtering:
+ *   surgeryDate ONLY.
  *
- * All endpoints that count "IPD done" must use this same chain
- * for both date-range filtering and in-memory month bucketing.
+ * BD marks IPD_DONE → sets surgeryDate + pipelineStage = 'PL' atomically.
+ * Every endpoint that counts IPD done / surgeries MUST filter by
+ * `surgeryDate` and `pipelineStage IN ('PL', 'COMPLETED')`.
  */
 
 /**
- * Returns a Prisma OR clause that filters leads using the 4-step
- * date fallback chain. If `dateFilter` is empty, returns `{}`.
+ * Canonical sales-side where for a completed surgery / IPD done.
+ * - pipelineStage IN ('PL', 'COMPLETED')
+ * - date filter on surgeryDate only
+ */
+export function canonicalSalesCompletedWhere(
+  dateFilter: Prisma.DateTimeFilter,
+  extra?: Prisma.LeadWhereInput,
+): Prisma.LeadWhereInput {
+  const where: Prisma.LeadWhereInput = {
+    pipelineStage: { in: ['PL', 'COMPLETED'] },
+  }
+  if (Object.keys(dateFilter).length > 0) {
+    where.surgeryDate = dateFilter
+  }
+  if (extra) Object.assign(where, extra)
+  return where
+}
+
+/**
+ * Date filter on surgeryDate only. Returns {} if empty.
  */
 export function ipdDoneDateFilter(
   dateFilter: Prisma.DateTimeFilter,
 ): Prisma.LeadWhereInput {
   if (Object.keys(dateFilter).length === 0) return {}
-
-  return {
-    OR: [
-      { surgeryDate: dateFilter },
-      { AND: [{ surgeryDate: null }, { conversionDate: dateFilter }] },
-      { AND: [{ surgeryDate: null }, { conversionDate: null }, { leadEntryDate: dateFilter }] },
-      { AND: [{ surgeryDate: null }, { conversionDate: null }, { leadEntryDate: null }, { createdDate: dateFilter }] },
-    ],
-  }
+  return { surgeryDate: dateFilter }
 }
 
 /**
@@ -46,8 +57,9 @@ export function ipdDoneWhere(
 }
 
 /**
- * In-memory date resolver for month bucketing.
- * Mirrors the SQL: COALESCE(surgeryDate, conversionDate, leadEntryDate, createdDate)
+ * In-memory date resolver for month bucketing in trend charts.
+ * Falls back to createdDate only for display purposes (legacy leads
+ * that may lack surgeryDate).
  */
 export function resolveIpdDate(lead: {
   conversionDate: Date | null
@@ -55,5 +67,5 @@ export function resolveIpdDate(lead: {
   leadEntryDate: Date | null
   createdDate: Date
 }): Date {
-  return lead.surgeryDate ?? lead.conversionDate ?? lead.leadEntryDate ?? lead.createdDate
+  return lead.surgeryDate ?? lead.createdDate
 }

@@ -13,6 +13,7 @@ export type TeamRow = {
   groupName: string
   managerName: string | null
   surgeries: number
+  canonicalSalesCount?: number
   revenue: number
   expenses: number
   netProfit: number

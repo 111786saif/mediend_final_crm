@@ -7,6 +7,8 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -40,7 +42,6 @@ export async function GET(request: NextRequest) {
       ...leadEntryDateFilter,
     }
 
-    // Role-based filtering
     if (user.role === 'BD') {
       baseWhere.bdId = user.id
     } else if (user.role === 'TEAM_LEAD') {
@@ -48,17 +49,12 @@ export async function GET(request: NextRequest) {
       baseWhere.bdId = { in: [user.id, ...subIds] }
     }
 
-    const completedWhere: Prisma.LeadWhereInput = {
-      ...baseWhere,
-      pipelineStage: 'COMPLETED',
-      ...(Object.keys(dateFilter).length > 0
-        ? {
-            OR: [
-              { conversionDate: dateFilter },
-              { AND: [{ conversionDate: { equals: null } }, { leadEntryDate: dateFilter }] },
-            ],
-          }
-        : {}),
+    const completedWhere = canonicalSalesCompletedWhere(dateFilter)
+
+    if (user.role === 'BD') completedWhere.bdId = user.id
+    else if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      completedWhere.bdId = { in: [user.id, ...subIds] }
     }
 
     // Treatment Performance

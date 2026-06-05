@@ -5,6 +5,7 @@ import { getSession } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { mapStatusCode } from '@/lib/mysql-code-mappings'
+import { canonicalSalesCompletedWhere, resolveIpdDate } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -38,28 +39,9 @@ export async function GET(request: NextRequest) {
       dateFilter.lte = end
     }
 
-    // Base where clause for completed leads
-    // Use conversionDate if available, otherwise use createdDate for date filtering
-    // If no date filter, include all completed leads regardless of conversionDate
-    const completedWhere: Prisma.LeadWhereInput = {
-      pipelineStage: 'COMPLETED',
-      ...(Object.keys(dateFilter).length > 0
-        ? {
-            OR: [
-              { conversionDate: dateFilter },
-              { 
-                AND: [
-                  { conversionDate: { equals: null } },
-                  { leadEntryDate: dateFilter }
-                ]
-              },
-            ],
-          }
-        : {}),
-    }
+    const completedWhere = canonicalSalesCompletedWhere(dateFilter)
 
-    // Base where clause for all leads (for conversion rate)
-    const leadEntryDateFilter: Prisma.LeadWhereInput =
+    const allLeadsWhere: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
         ? {
             OR: [
@@ -68,9 +50,6 @@ export async function GET(request: NextRequest) {
             ],
           }
         : {}
-    const allLeadsWhere: Prisma.LeadWhereInput = {
-      ...leadEntryDateFilter,
-    }
 
     // Overall KPIs
     const [
@@ -330,22 +309,21 @@ export async function GET(request: NextRequest) {
     }))
 
     // Revenue/Profit Trends (Daily)
-    // Get all completed leads and group by date (use conversionDate or createdDate)
     const completedLeadsForTrends = await prisma.lead.findMany({
       where: completedWhere,
       select: {
         conversionDate: true,
         leadEntryDate: true,
         createdDate: true,
+        surgeryDate: true,
         billAmount: true,
         netProfit: true,
       },
     })
 
-    // Group by date
     const trendsMap = new Map<string, { revenue: number; profit: number; surgeries: number }>()
     completedLeadsForTrends.forEach((lead) => {
-      const dateKey = (lead.conversionDate || lead.leadEntryDate || lead.createdDate).toISOString().split('T')[0]
+      const dateKey = resolveIpdDate(lead).toISOString().split('T')[0]
       const existing = trendsMap.get(dateKey) || { revenue: 0, profit: 0, surgeries: 0 }
       existing.revenue += lead.billAmount || 0
       existing.profit += lead.netProfit || 0
@@ -458,9 +436,7 @@ export async function GET(request: NextRequest) {
                  statusLower.includes('follow-up')
         })
         .reduce((sum, s) => sum + s.count, 0),
-      ipdDone: mappedStatusDistribution
-        .filter((s) => s.status.toLowerCase().includes('ipd done'))
-        .reduce((sum, s) => sum + s.count, 0),
+      ipdDone: totalSurgeries,
       completed: totalSurgeries,
     }
 

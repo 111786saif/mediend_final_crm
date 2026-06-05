@@ -6,6 +6,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSeatCostPerEmployee } from '@/lib/pnl/pnl-config'
 import { getManagerGroups } from '@/lib/hierarchy'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 import {
   allocateCplMarketingByBdAndGroup,
   loadCampaignCplMap,
@@ -130,6 +131,22 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    const canonicalSalesCount = Object.keys(surgeryRange).length > 0
+      ? await prisma.lead.count({ where: canonicalSalesCompletedWhere(surgeryRange) })
+      : await prisma.lead.count({ where: { pipelineStage: { in: ['PL', 'COMPLETED'] } } })
+
+    const canonicalPerGroup = new Map<string, number>()
+    const salesLeads = await prisma.lead.findMany({
+      where: canonicalSalesCompletedWhere(
+        Object.keys(surgeryRange).length > 0 ? surgeryRange : {},
+      ),
+      select: { bdId: true },
+    })
+    for (const l of salesLeads) {
+      const gid = bdToManagerId.get(l.bdId) ?? 'unassigned'
+      canonicalPerGroup.set(gid, (canonicalPerGroup.get(gid) ?? 0) + 1)
+    }
+
     const diseaseByGroup = new Map<string, Map<string, Bucket>>()
     const circleByGroup = new Map<string, Map<string, number>>()
     const hospitalByGroup = new Map<string, Map<string, number>>()
@@ -245,7 +262,12 @@ export async function GET(request: NextRequest) {
       Object.keys(leadDateWhere).length > 0
         ? await prisma.lead.groupBy({
             by: ['bdId'],
-            where: { leadEntryDate: leadDateWhere },
+            where: {
+              OR: [
+                { leadEntryDate: leadDateWhere },
+                { AND: [{ leadEntryDate: null }, { createdDate: leadDateWhere }] },
+              ],
+            },
             _count: { _all: true },
           })
         : []
@@ -256,16 +278,18 @@ export async function GET(request: NextRequest) {
       leadCountByGroup.set(gid, (leadCountByGroup.get(gid) ?? 0) + row._count._all)
     }
 
-    /** Marketing = sum over leads (CPL for campaign + month from Campaign CPL page). */
     let totalMarketingCostCpl = 0
     if (monthsInRange.length > 0 && Object.keys(leadDateWhere).length > 0) {
       const cplMap = await loadCampaignCplMap(prisma, monthsInRange)
       const leadsForCpl = await prisma.lead.findMany({
         where: {
-          leadEntryDate: leadDateWhere,
+          OR: [
+            { leadEntryDate: leadDateWhere },
+            { AND: [{ leadEntryDate: null }, { createdDate: leadDateWhere }] },
+          ],
           campaignName: { not: null },
         },
-        select: { bdId: true, campaignName: true, leadEntryDate: true },
+        select: { bdId: true, campaignName: true, leadEntryDate: true, createdDate: true },
       })
       const { total, perBd, perGroup } = allocateCplMarketingByBdAndGroup(
         leadsForCpl,
@@ -294,6 +318,7 @@ export async function GET(request: NextRequest) {
         seatCost: memberCount * seatRate,
         leadCount: leadCountByGroup.get(t.groupId) ?? 0,
         marketingCost: marketingCostPerGroup[t.groupId] ?? 0,
+        canonicalSalesCount: canonicalPerGroup.get(t.groupId) ?? 0,
         diseaseDistribution: distToDiseaseArr(diseaseByGroup.get(t.groupId)),
         circleDistribution: distToCountArr(circleByGroup.get(t.groupId)),
         hospitalDistribution: distToCountArr(hospitalByGroup.get(t.groupId)),
@@ -309,6 +334,7 @@ export async function GET(request: NextRequest) {
     return successResponse({
       view,
       surgeryCount,
+      salesSurgeryCount: canonicalSalesCount,
       totalRevenue,
       totalExpenses,
       netProfit: totalRevenue - totalExpenses,

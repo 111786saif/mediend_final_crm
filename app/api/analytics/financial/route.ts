@@ -7,6 +7,8 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+
 export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -26,10 +28,7 @@ export async function GET(request: NextRequest) {
     if (startDate) dateFilter.gte = new Date(startDate)
     if (endDate) dateFilter.lte = new Date(endDate)
 
-    const where: Prisma.LeadWhereInput = {
-      pipelineStage: 'COMPLETED',
-      conversionDate: dateFilter,
-    }
+    const where = canonicalSalesCompletedWhere(dateFilter)
 
     // Role-based filtering
     if (user.role === 'BD') {

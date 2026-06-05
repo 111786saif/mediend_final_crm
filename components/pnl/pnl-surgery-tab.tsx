@@ -27,8 +27,8 @@ type PnlSurgery = {
   totalExpenses: number
   netProfit: number
   surgeryCount: number
+  salesSurgeryCount?: number
   seatCostPerEmployee: number
-  /** Sum of CPL × attributed leads (Campaign CPL page) for the selected range */
   totalMarketingCostCpl?: number
   marketingCostPerBd?: Record<string, number>
   marketingCostPerGroup?: Record<string, number>
@@ -80,7 +80,12 @@ export function PnlSurgeryTab({
           <CardHeader className="pb-2">
             <CardDescription>Surgeries</CardDescription>
           </CardHeader>
-          <CardContent className="text-2xl font-bold">{pnl.surgeryCount}</CardContent>
+          <CardContent>
+            <div className="text-2xl font-bold">{pnl.salesSurgeryCount ?? pnl.surgeryCount}</div>
+            {pnl.salesSurgeryCount != null && pnl.salesSurgeryCount !== pnl.surgeryCount && (
+              <p className="text-xs text-muted-foreground">{pnl.surgeryCount} with PL records</p>
+            )}
+          </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">

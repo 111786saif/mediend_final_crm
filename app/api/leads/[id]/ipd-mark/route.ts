@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { PipelineStage } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { canMutateLead } from '@/lib/lead-access-api'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -112,14 +113,21 @@ export async function POST(
       if (data.status === 'IPD_DONE' || data.status === 'ADMITTED_DONE') {
         toStage = CaseStage.CASH_IPD_DONE
         leadUpdateData.caseStage = CaseStage.CASH_IPD_DONE
+        if (data.status === 'IPD_DONE') {
+          const surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : new Date()
+          leadUpdateData.surgeryDate = surgeryDate
+          leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
+          leadUpdateData.conversionDate = surgeryDate
+        }
       }
     } else {
       if (data.status === 'IPD_DONE') {
         toStage = CaseStage.IPD_DONE
         leadUpdateData.caseStage = CaseStage.IPD_DONE
-        if (data.surgeryDate) {
-          leadUpdateData.surgeryDate = new Date(data.surgeryDate)
-        }
+        const surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : new Date()
+        leadUpdateData.surgeryDate = surgeryDate
+        leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
+        leadUpdateData.conversionDate = surgeryDate
       }
     }
 
