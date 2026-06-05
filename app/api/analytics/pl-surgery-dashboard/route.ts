@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
     }
 
     const leadWhere: Prisma.LeadWhereInput = {
+      caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED'] },
       ...(Object.keys(surgeryRange).length > 0
         ? { surgeryDate: surgeryRange }
         : {}),

@@ -127,7 +127,7 @@ export async function GET(request: NextRequest) {
           TO_CHAR(l."surgeryDate", 'YYYY-MM') AS month,
           COUNT(*)::int AS count
         FROM "Lead" l
-        WHERE l."bdId" = ${bdId}
+        WHERE l."bdId" = ${bdId} AND l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
         GROUP BY 1
         ORDER BY 1
       `,
