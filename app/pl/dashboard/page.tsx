@@ -52,6 +52,7 @@ import {
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
+import { PendingPayoutsDrawer } from '@/components/pl/pending-payouts-drawer'
 
 const PAGE_SIZE = 100
 
@@ -231,6 +232,7 @@ export default function PLLedgerPage() {
 
   const [sheetLeadId, setSheetLeadId] = useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [payoutsDrawerOpen, setPayoutsDrawerOpen] = useState(false)
 
   const [patientDrawerOpen, setPatientDrawerOpen] = useState(false)
   const [patientDrawerTitle, setPatientDrawerTitle] = useState('')
@@ -292,6 +294,16 @@ export default function PLLedgerPage() {
         return true
       }),
     [records, bdFilter, hospitalFilter, doctorFilter, outstandingFilter, activeFilterCount]
+  )
+
+  const pendingPayoutRecords = useMemo(
+    () =>
+      tableRecords?.filter(
+        (r) =>
+          r.plRecord?.hospitalPayoutStatus === 'PENDING' ||
+          r.plRecord?.doctorPayoutStatus === 'PENDING'
+      ) ?? [],
+    [tableRecords]
   )
 
   const visibleCount = useMemo(() => 1 + Object.values(visibleCols).filter(Boolean).length, [visibleCols])
@@ -667,9 +679,10 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-amber-500',
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-amber-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
                 'bg-gradient-to-br from-amber-50/90 to-card dark:from-amber-950/35 dark:to-card'
               )}
+              onClick={() => setPayoutsDrawerOpen(true)}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-amber-900/90 dark:text-amber-100/90">Pending payouts</CardTitle>
@@ -1036,6 +1049,12 @@ export default function PLLedgerPage() {
             dateField={patientDrawerDateField}
             startDate={dateRange.startDate || undefined}
             endDate={dateRange.endDate || undefined}
+          />
+
+          <PendingPayoutsDrawer
+            open={payoutsDrawerOpen}
+            onOpenChange={setPayoutsDrawerOpen}
+            records={pendingPayoutRecords}
           />
         </div>
       </div>
