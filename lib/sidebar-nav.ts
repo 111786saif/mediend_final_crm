@@ -409,6 +409,12 @@ export const navItems: NavItem[] = [
     icon: Star,
     roles: ['MD', 'ADMIN'],
   },
+  {
+    title: 'MD Outstanding',
+    url: '/md/outstanding',
+    icon: CreditCard,
+    roles: ['MD', 'ADMIN'],
+  },
 ]
 
 /** Merged in app-sidebar when user has `cpl_access` (IT Permissions). Not in `navItems`. */
