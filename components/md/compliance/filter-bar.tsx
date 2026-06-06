@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar as CalendarIcon, ArrowUpDown, Check } from "lucide-react"
+import { Calendar as CalendarIcon, ArrowUpDown, Check, ListFilter } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import type { ComplianceCallSort } from "@/hooks/use-compliance-calls"
@@ -18,9 +18,18 @@ interface Props {
   onDateRangeChange: (r: DateRange) => void
   sort: ComplianceCallSort
   onSortChange: (s: ComplianceCallSort) => void
+  filterCount: number
+  onOpenFilters: () => void
 }
 
-export function FilterBar({ dateRange, onDateRangeChange, sort, onSortChange }: Props) {
+export function FilterBar({
+  dateRange,
+  onDateRangeChange,
+  sort,
+  onSortChange,
+  filterCount,
+  onOpenFilters,
+}: Props) {
   const [dateOpen, setDateOpen] = useState(false)
   const sortLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Recent"
 
@@ -62,6 +71,25 @@ export function FilterBar({ dateRange, onDateRangeChange, sort, onSortChange }: 
           ))}
         </PopoverContent>
       </Popover>
+
+      <button
+        type="button"
+        onClick={onOpenFilters}
+        className={cn(
+          "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium hover:bg-muted active:scale-[0.98] transition",
+          filterCount > 0
+            ? "border-primary bg-primary/10 text-primary"
+            : "bg-card",
+        )}
+      >
+        <ListFilter className="h-3.5 w-3.5" />
+        Filters
+        {filterCount > 0 && (
+          <span className="rounded-full bg-primary px-1.5 py-0 text-[10px] font-semibold text-primary-foreground">
+            {filterCount}
+          </span>
+        )}
+      </button>
 
       <DateRangeSheet
         open={dateOpen}

@@ -119,6 +119,8 @@ export interface ComplianceCallsFilters {
   hospitalName?: string | null
   surgeonName?: string | null
   bdId?: string | null
+  circle?: string | null
+  treatment?: string | null
   sort?: ComplianceCallSort
 }
 
@@ -126,6 +128,8 @@ export interface ComplianceFilterOptions {
   hospitals: string[]
   surgeons: string[]
   bds: { id: string; name: string }[]
+  circles: string[]
+  treatments: string[]
 }
 
 export interface ComplianceStats {
@@ -154,6 +158,8 @@ function buildQueryString(filters: ComplianceCallsFilters, cursor?: string) {
   if (filters.hospitalName) params.set("hospitalName", filters.hospitalName)
   if (filters.surgeonName) params.set("surgeonName", filters.surgeonName)
   if (filters.bdId) params.set("bdId", filters.bdId)
+  if (filters.circle) params.set("circle", filters.circle)
+  if (filters.treatment) params.set("treatment", filters.treatment)
   if (filters.sort) params.set("sort", filters.sort)
   if (cursor) params.set("cursor", cursor)
   const qs = params.toString()

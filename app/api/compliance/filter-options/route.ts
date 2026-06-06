@@ -51,6 +51,8 @@ export async function GET(request: NextRequest) {
         ipdDrName: true,
         bdId: true,
         bd: { select: { id: true, name: true } },
+        circle: true,
+        treatment: true,
         dischargeSheet: { select: { doctorName: true, hospitalName: true } },
       },
     })
@@ -58,12 +60,16 @@ export async function GET(request: NextRequest) {
     const hospitalValues: (string | null)[] = []
     const doctorValues: (string | null)[] = []
     const bdMap = new Map<string, string>()
+    const circleSet = new Set<string>()
+    const treatmentSet = new Set<string>()
 
     for (const l of leads) {
       const { hospital, doctor } = resolveLeadHospitalDoctor(l)
       hospitalValues.push(hospital)
       doctorValues.push(doctor)
       if (l.bd?.id && l.bd.name) bdMap.set(l.bd.id, l.bd.name)
+      if (l.circle?.trim()) circleSet.add(l.circle.trim())
+      if (l.treatment?.trim()) treatmentSet.add(l.treatment.trim())
     }
 
     const collator = new Intl.Collator(undefined, { sensitivity: 'base' })
@@ -72,8 +78,10 @@ export async function GET(request: NextRequest) {
     const bds = [...bdMap.entries()]
       .map(([id, name]) => ({ id, name }))
       .sort((a, b) => collator.compare(a.name, b.name))
+    const circles = [...circleSet].sort((a, b) => collator.compare(a, b))
+    const treatments = [...treatmentSet].sort((a, b) => collator.compare(a, b))
 
-    return successResponse({ hospitals, surgeons, bds })
+    return successResponse({ hospitals, surgeons, bds, circles, treatments })
   } catch (error) {
     console.error('Error fetching compliance filter options:', error)
     return errorResponse('Failed to fetch filter options', 500)

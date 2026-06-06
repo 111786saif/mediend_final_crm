@@ -46,12 +46,7 @@ export async function GET(request: NextRequest) {
       surgeryRange.lte = end
     }
 
-    const leadWhere: Prisma.LeadWhereInput = {
-      caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED'] },
-      ...(Object.keys(surgeryRange).length > 0
-        ? { surgeryDate: surgeryRange }
-        : {}),
-    }
+    const extraWhere: Prisma.LeadWhereInput = {}
 
     if (managerId && managerId !== 'all') {
       const managerEmp = await prisma.employee.findUnique({
@@ -64,9 +59,11 @@ export async function GET(request: NextRequest) {
           select: { userId: true },
         })
         const teamUserIds = [managerEmp.userId, ...subEmps.map((e) => e.userId)]
-        leadWhere.bdId = { in: teamUserIds }
+        extraWhere.bdId = { in: teamUserIds }
       }
     }
+
+    const leadWhere = canonicalSalesCompletedWhere(surgeryRange, extraWhere)
 
     const surgeryCount = await prisma.lead.count({ where: leadWhere })
 

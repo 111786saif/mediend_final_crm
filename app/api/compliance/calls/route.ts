@@ -60,6 +60,8 @@ export async function GET(request: NextRequest) {
     const hospitalName = searchParams.get('hospitalName')?.trim() ?? ''
     const surgeonName = searchParams.get('surgeonName')?.trim() ?? ''
     const bdId = searchParams.get('bdId')?.trim() ?? ''
+    const circle = searchParams.get('circle')?.trim() ?? ''
+    const treatment = searchParams.get('treatment')?.trim() ?? ''
     const sort = searchParams.get('sort') ?? 'recent'
     const cursor = searchParams.get('cursor')
     const limitParam = searchParams.get('limit')
@@ -116,6 +118,12 @@ export async function GET(request: NextRequest) {
       })
     }
     if (bdId) leadFilters.bdId = bdId
+    if (circle) {
+      leadAnd.push({ circle: { equals: circle, mode: 'insensitive' } })
+    }
+    if (treatment) {
+      leadAnd.push({ treatment: { contains: treatment, mode: 'insensitive' } })
+    }
     if (q) {
       leadAnd.push({
         OR: [

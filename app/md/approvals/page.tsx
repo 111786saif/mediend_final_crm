@@ -151,6 +151,7 @@ interface SwipeCardProps {
   entry: LedgerEntry
   onApprove: () => void
   onReject: () => void
+  onSkip?: () => void
 }
 
 interface HistoryCardProps {
@@ -575,14 +576,21 @@ function DebitStackPreviewCard({ entry, depth }: { entry: LedgerEntry; depth: nu
   )
 }
 
-function MotionSwipeCard({ entry, onApprove, onReject }: SwipeCardProps) {
+function MotionSwipeCard({ entry, onApprove, onReject, onSkip }: SwipeCardProps) {
   const x = useMotionValue(0)
+  const y = useMotionValue(0)
   const rotate = useTransform(x, [-280, 280], [-16, 16])
   const approveTint = useTransform(x, [0, 120], [0, 1])
   const rejectTint = useTransform(x, [-120, 0], [1, 0])
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     const { offset, velocity } = info
+    if (offset.y < -SWIPE_THRESHOLD || velocity.y < -SWIPE_VELOCITY) {
+      onSkip?.()
+      void animate(x, 0, { type: 'spring', stiffness: 380, damping: 28 })
+      void animate(y, 0, { type: 'spring', stiffness: 380, damping: 28 })
+      return
+    }
     if (offset.x > SWIPE_THRESHOLD || velocity.x > SWIPE_VELOCITY) {
       void animate(x, SWIPE_EXIT_X, { duration: 0.32, ease: [0.22, 1, 0.36, 1] }).then(() => {
         onApprove()
@@ -596,6 +604,7 @@ function MotionSwipeCard({ entry, onApprove, onReject }: SwipeCardProps) {
       return
     }
     void animate(x, 0, { type: 'spring', stiffness: 380, damping: 28 })
+    void animate(y, 0, { type: 'spring', stiffness: 380, damping: 28 })
   }
 
   return (
@@ -616,8 +625,8 @@ function MotionSwipeCard({ entry, onApprove, onReject }: SwipeCardProps) {
       </div>
 
       <motion.div
-        style={{ x, rotate }}
-        drag="x"
+        style={{ x, y, rotate }}
+        drag
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.92}
         dragMomentum={false}
@@ -628,7 +637,19 @@ function MotionSwipeCard({ entry, onApprove, onReject }: SwipeCardProps) {
           entry={entry}
           footer={
             <>
-              <div className="flex gap-2 mt-4">
+              <div className="flex gap-2 mt-1">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onSkip?.()
+                  }}
+                >
+                  Skip
+                </Button>
                 <Button
                   size="sm"
                   variant="destructive"
@@ -659,7 +680,7 @@ function MotionSwipeCard({ entry, onApprove, onReject }: SwipeCardProps) {
                 </Button>
               </div>
               <p className="text-center text-xs text-muted-foreground mt-2">
-                Swipe right to approve · Swipe left to reject
+                Swipe right to approve · Swipe left to reject · Swipe up to skip
               </p>
             </>
           }
@@ -673,10 +694,12 @@ function DebitSwipeStack({
   entries,
   onApprove,
   onReject,
+  onSkip,
 }: {
   entries: LedgerEntry[]
   onApprove: (e: LedgerEntry) => void
   onReject: (e: LedgerEntry) => void
+  onSkip?: (e: LedgerEntry) => void
 }) {
   const top = entries[0]
   const under = entries.slice(1, 3)
@@ -696,6 +719,7 @@ function DebitSwipeStack({
         entry={top}
         onApprove={() => onApprove(top)}
         onReject={() => onReject(top)}
+        onSkip={onSkip ? () => onSkip(top) : undefined}
       />
     </div>
   )
@@ -712,6 +736,7 @@ export default function ApprovalsPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [headFilter, setHeadFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [skipOrder, setSkipOrder] = useState<Map<string, number>>(new Map())
   const previousPendingCountRef = useRef(0)
 
   const queryClient = useQueryClient()
@@ -1029,6 +1054,25 @@ export default function ApprovalsPage() {
     return filtered
   }, [pendingData, headFilter, searchQuery])
 
+  const filteredPendingDataWithSkips = useMemo(() => {
+    const skippedIds = new Set(skipOrder.keys())
+    const unskipped = filteredPendingData.filter((e) => !skippedIds.has(e.id))
+    const skipped = filteredPendingData
+      .filter((e) => skippedIds.has(e.id))
+      .sort((a, b) => (skipOrder.get(a.id) || 0) - (skipOrder.get(b.id) || 0))
+    return [...unskipped, ...skipped]
+  }, [filteredPendingData, skipOrder])
+
+  const handleSkip = (entry: LedgerEntry) => {
+    setSkipOrder((prev) => {
+      const next = new Map(prev)
+      if (!next.has(entry.id)) {
+        next.set(entry.id, Date.now())
+      }
+      return next
+    })
+  }
+
   const pendingCount = filteredPendingData.length
   const totalPendingAmount = filteredPendingData.reduce((sum, e) => sum + (e.paymentAmount || 0), 0)
   const editRequestsCount = editRequestsData?.pagination.total || 0
@@ -1228,9 +1272,10 @@ export default function ApprovalsPage() {
             </div>
           ) : viewMode === 'cards' ? (
             <DebitSwipeStack
-              entries={filteredPendingData}
+              entries={filteredPendingDataWithSkips}
               onApprove={(entry) => handleApprove(entry, 'debit')}
               onReject={(entry) => handleReject(entry, 'debit')}
+              onSkip={handleSkip}
             />
           ) : (
             <Table>

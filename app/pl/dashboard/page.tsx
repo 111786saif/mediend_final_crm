@@ -593,7 +593,7 @@ export default function PLLedgerPage() {
               )}
               onClick={() => {
                 setPatientDrawerTitle('IPD Done')
-                setPatientDrawerStage('IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED')
+                setPatientDrawerStage('IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED,PL_PENDING,OUTSTANDING')
                 setPatientDrawerDateField('surgery')
                 setPatientDrawerOpen(true)
               }}

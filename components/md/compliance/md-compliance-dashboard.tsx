@@ -5,6 +5,7 @@ import { Star } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   useComplianceStats,
+  useComplianceFilterOptions,
   type ComplianceCall,
   type ComplianceCallSort,
   type ComplianceCallStatus,
@@ -15,13 +16,28 @@ import { RatingChips } from "./rating-chips"
 import { ReviewFeed } from "./review-feed"
 import { MonthlyReportSection } from "./monthly-report-section"
 import { FeedbackDetailDialog } from "./feedback-detail-dialog"
+import {
+  FilterDrawer,
+  countActiveFilters,
+  type FilterDrawerValues,
+} from "./filter-drawer"
 import type { DateRange } from "./date-range-sheet"
+
+const EMPTY_FILTERS: FilterDrawerValues = {
+  hospitalName: null,
+  surgeonName: null,
+  circle: null,
+  bdId: null,
+  treatment: null,
+}
 
 export function MDComplianceDashboard() {
   const [dateRange, setDateRange] = useState<DateRange>({})
   const [rating, setRating] = useState<number | null>(null)
   const [sort, setSort] = useState<ComplianceCallSort>("recent")
   const [activeCall, setActiveCall] = useState<ComplianceCall | null>(null)
+  const [filterValues, setFilterValues] = useState<FilterDrawerValues>(EMPTY_FILTERS)
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
 
   const dateParams = useMemo(
     () => ({
@@ -32,6 +48,8 @@ export function MDComplianceDashboard() {
   )
 
   const { data: stats } = useComplianceStats(dateParams)
+  const { data: filterOptions, isLoading: filterOptionsLoading } =
+    useComplianceFilterOptions()
 
   const status: ComplianceCallStatus | null = "COMPLETED"
   const feedFilters = useMemo(
@@ -41,14 +59,22 @@ export function MDComplianceDashboard() {
       startDate: dateParams.startDate ?? null,
       endDate: dateParams.endDate ?? null,
       sort,
+      hospitalName: filterValues.hospitalName,
+      surgeonName: filterValues.surgeonName,
+      circle: filterValues.circle,
+      bdId: filterValues.bdId,
+      treatment: filterValues.treatment,
     }),
-    [status, rating, dateParams, sort],
+    [status, rating, dateParams, sort, filterValues],
   )
+
+  const activeFilterCount = countActiveFilters(filterValues)
 
   const clearFilters = () => {
     setDateRange({})
     setRating(null)
     setSort("recent")
+    setFilterValues(EMPTY_FILTERS)
   }
 
   return (
@@ -83,6 +109,8 @@ export function MDComplianceDashboard() {
             onDateRangeChange={setDateRange}
             sort={sort}
             onSortChange={setSort}
+            filterCount={activeFilterCount}
+            onOpenFilters={() => setFilterDrawerOpen(true)}
           />
 
           <RatingChips stats={stats} activeRating={rating} onChange={setRating} />
@@ -98,6 +126,15 @@ export function MDComplianceDashboard() {
           <MonthlyReportSection />
         </TabsContent>
       </Tabs>
+
+      <FilterDrawer
+        open={filterDrawerOpen}
+        onOpenChange={setFilterDrawerOpen}
+        value={filterValues}
+        onChange={setFilterValues}
+        options={filterOptions}
+        loading={filterOptionsLoading}
+      />
 
       <FeedbackDetailDialog
         callId={activeCall?.id ?? null}

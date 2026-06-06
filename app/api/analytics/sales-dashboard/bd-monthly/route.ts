@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
         LEFT JOIN "Employee" e ON e."userId" = u.id
         LEFT JOIN "Employee" me ON me.id = e."managerId"
         LEFT JOIN "User" mu ON mu.id = me."userId"
-        WHERE l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
+        WHERE (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED') OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND l."surgeryDate" IS NOT NULL))
           AND l."surgeryDate" >= ${start}
           AND l."surgeryDate" <= ${end}
           ${bdIdFilter}

@@ -1,13 +1,20 @@
 import { Prisma } from '@/generated/prisma/client'
 
+const CANONICAL_STAGES = ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED'] as const
+const PL_FALLBACK_STAGES = ['PL_PENDING', 'OUTSTANDING'] as const
+
 /**
  * Org-wide truth for "IPD done / surgery":
  *   caseStage IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
- *   AND surgeryDate within the date range.
+ *   OR (caseStage IN ('PL_PENDING','OUTSTANDING') AND surgeryDate IS NOT NULL)
+ *   AND surgeryDate within the date range (when provided).
  *
  * BD marks IPD_DONE → sets caseStage + surgeryDate. That is the single
  * source of truth. DISCHARGED leads are included because BD did the
  * surgery — insurance just processed it further.
+ *
+ * PL_PENDING / OUTSTANDING leads that still have a surgeryDate also count —
+ * these are leads that completed surgery and moved to PL/outstanding.
  *
  * Every endpoint that counts IPD done / surgeries MUST use
  * `canonicalSalesCompletedWhere(dateFilter)`.
@@ -17,28 +24,41 @@ export function canonicalSalesCompletedWhere(
   dateFilter: Prisma.DateTimeFilter,
   extra?: Prisma.LeadWhereInput,
 ): Prisma.LeadWhereInput {
+  const hasDate = Object.keys(dateFilter).length > 0
   const where: Prisma.LeadWhereInput = {
-    caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED'] },
-  }
-  if (Object.keys(dateFilter).length > 0) {
-    where.surgeryDate = dateFilter
+    OR: [
+      {
+        caseStage: { in: [...CANONICAL_STAGES] },
+        ...(hasDate ? { surgeryDate: dateFilter } : {}),
+      },
+      {
+        caseStage: { in: [...PL_FALLBACK_STAGES] },
+        surgeryDate: hasDate ? dateFilter : { not: null },
+      },
+    ],
   }
   if (extra) Object.assign(where, extra)
   return where
 }
 
 /**
- * Date filter on surgeryDate only. Returns {} if empty.
+ * Date filter on surgeryDate only. Returns stage-only filter if empty.
  */
 export function ipdDoneDateFilter(
   dateFilter: Prisma.DateTimeFilter,
 ): Prisma.LeadWhereInput {
-  if (Object.keys(dateFilter).length === 0) {
-    return { caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED'] } }
-  }
+  const hasDate = Object.keys(dateFilter).length > 0
   return {
-    caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE', 'DISCHARGED', 'CASH_DISCHARGED'] },
-    surgeryDate: dateFilter,
+    OR: [
+      {
+        caseStage: { in: [...CANONICAL_STAGES] },
+        ...(hasDate ? { surgeryDate: dateFilter } : {}),
+      },
+      {
+        caseStage: { in: [...PL_FALLBACK_STAGES] },
+        surgeryDate: hasDate ? dateFilter : { not: null },
+      },
+    ],
   }
 }
 

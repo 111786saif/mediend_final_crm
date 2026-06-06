@@ -47,6 +47,7 @@ interface LeadWithStage {
   hospitalName: string
   treatment?: string
   caseStage: CaseStage
+  surgeryDate?: string | null
   bdId?: string | null
   bd?: { id: string; name: string } | null
   createdDate: string
@@ -90,6 +91,7 @@ interface LeadWithStage {
     ipdStatus?: string | null
     ipdStatusUpdatedAt?: string | null
     initiatedAt?: string
+    surgeryDate?: string | null
   } | null
   dischargeSheet?: { id: string; isFinalized?: boolean; dischargeDate?: string | null; markedAt?: string | null; updatedAt?: string } | null
   insuranceInitiateForm?: { id: string; updatedAt?: string } | null
@@ -322,7 +324,7 @@ export default function InsuranceDashboardPage() {
       admitted: scopedLeads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
       toMarkDischarged: scopedLeads.filter(needsMarkDischarged).length,
       toFillSheet: scopedLeads.filter(needsSheetFilled).length,
-      ipdDone: scopedLeads.filter(l => l.caseStage === CaseStage.IPD_DONE || l.caseStage === CaseStage.DISCHARGED || l.caseStage === CaseStage.PL_PENDING).length,
+      ipdDone: scopedLeads.filter(l => l.caseStage === CaseStage.IPD_DONE || l.caseStage === CaseStage.CASH_IPD_DONE || l.caseStage === CaseStage.DISCHARGED || l.caseStage === CaseStage.CASH_DISCHARGED || ((l.caseStage === CaseStage.PL_PENDING || l.caseStage === CaseStage.OUTSTANDING) && (l.surgeryDate != null || l.admissionRecord?.surgeryDate != null))).length,
       ipdScheduled: scopedLeads.filter(l => l.caseStage === CaseStage.INITIATED || l.caseStage === CaseStage.ADMITTED).length,
       allPatients: scopedLeads.length,
       sheetFilled: scopedLeads.filter(l => l.dischargeSheet?.isFinalized === true).length,
