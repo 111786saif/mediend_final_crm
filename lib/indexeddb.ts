@@ -74,8 +74,8 @@ export async function getCachedLeads<T>(key: string): Promise<T | null> {
   const cached = await db.get('leads', key)
   if (!cached) return null
 
-  // Cache expires after 5 minutes
-  const CACHE_TTL = 5 * 60 * 1000
+  // Cache expires after 15 minutes
+  const CACHE_TTL = 15 * 60 * 1000
   if (Date.now() - cached.timestamp > CACHE_TTL) {
     await db.delete('leads', key)
     return null

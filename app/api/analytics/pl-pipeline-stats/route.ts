@@ -4,6 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 function buildLeadDateWhere(
   dateField: 'admission' | 'surgery' | 'discharge',
@@ -79,13 +80,7 @@ export async function GET(request: NextRequest) {
         },
       }),
       prisma.lead.count({
-        where: {
-          caseStage: { in: ['IPD_DONE', 'CASH_IPD_DONE'] },
-          OR: [
-            { surgeryDate: dateWhere },
-            { admissionRecord: { is: { surgeryDate: dateWhere } } },
-          ],
-        },
+        where: canonicalSalesCompletedWhere(dateWhere),
       }),
       prisma.lead.count({
         where: {

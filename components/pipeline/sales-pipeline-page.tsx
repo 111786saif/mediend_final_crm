@@ -39,7 +39,8 @@ import { format } from 'date-fns'
 import { CalendarIcon, ExternalLink, Search } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, memo, useDeferredValue } from 'react'
+import { cn } from '@/lib/utils'
 
 interface Target {
   id: string
@@ -197,15 +198,32 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     return [...m.entries()].sort((a, b) => a[1].localeCompare(b[1]))
   }, [campaignFiltered])
 
+  const tableFilters = useMemo(
+    () => ({
+      statusBucket,
+      bdFilter,
+      categoryBar,
+      circleBar,
+      leadAgeFilter,
+      startDate: startDate?.getTime() ?? null,
+      endDate: endDate?.getTime() ?? null,
+    }),
+    [statusBucket, bdFilter, categoryBar, circleBar, leadAgeFilter, startDate, endDate]
+  )
+
+  const deferredFilters = useDeferredValue(tableFilters)
+
+  const isFiltering = deferredFilters !== tableFilters
+
   const tableRows = useMemo(() => {
     let result = campaignFiltered
 
-    if (statusBucket !== 'all') {
-      result = result.filter((l) => getLeadPipelineBucket(l.status) === statusBucket)
+    if (deferredFilters.statusBucket !== 'all') {
+      result = result.filter((l) => getLeadPipelineBucket(l.status) === deferredFilters.statusBucket)
     }
 
-    if (bdFilter !== 'all') {
-      result = result.filter((l) => (l.bdId || l.bd?.id) === bdFilter)
+    if (deferredFilters.bdFilter !== 'all') {
+      result = result.filter((l) => (l.bdId || l.bd?.id) === deferredFilters.bdFilter)
     }
 
     if (debouncedSearch.trim() && !phoneParsed) {
@@ -222,28 +240,28 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
       )
     }
 
-    if (categoryBar !== 'all') {
-      result = result.filter((l) => (l.category ?? '') === categoryBar)
+    if (deferredFilters.categoryBar !== 'all') {
+      result = result.filter((l) => (l.category ?? '') === deferredFilters.categoryBar)
     }
 
-    if (circleBar !== 'all') {
-      result = result.filter((l) => normalizedText(l.circle, 'Unknown') === circleBar)
+    if (deferredFilters.circleBar !== 'all') {
+      result = result.filter((l) => normalizedText(l.circle, 'Unknown') === deferredFilters.circleBar)
     }
 
-    if (leadAgeFilter !== 'all') {
-      result = result.filter((l) => matchesLeadAgeFilter(l, leadAgeFilter))
+    if (deferredFilters.leadAgeFilter !== 'all') {
+      result = result.filter((l) => matchesLeadAgeFilter(l, deferredFilters.leadAgeFilter))
     }
 
-    if (startDate || endDate) {
+    if (deferredFilters.startDate || deferredFilters.endDate) {
       result = result.filter((lead) => {
         const receiptDate = getLeadReceiptDate(lead)
         if (!receiptDate) return false
         const leadOnly = new Date(receiptDate.getFullYear(), receiptDate.getMonth(), receiptDate.getDate())
-        const startOnly = startDate ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()) : null
-        const endOnly = endDate ? new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()) : null
-        if (startOnly && endOnly) return leadOnly >= startOnly && leadOnly <= endOnly
-        if (startOnly) return leadOnly >= startOnly
-        if (endOnly) return leadOnly <= endOnly
+        const startOnly = deferredFilters.startDate
+        const endOnly = deferredFilters.endDate
+        if (startOnly && endOnly) return leadOnly >= new Date(startOnly) && leadOnly <= new Date(endOnly)
+        if (startOnly) return leadOnly >= new Date(startOnly)
+        if (endOnly) return leadOnly <= new Date(endOnly)
         return true
       })
     }
@@ -255,15 +273,9 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     })
   }, [
     campaignFiltered,
-    statusBucket,
-    bdFilter,
+    deferredFilters,
     debouncedSearch,
     phoneParsed,
-    categoryBar,
-    circleBar,
-    leadAgeFilter,
-    startDate,
-    endDate,
   ])
 
   const virtualizer = useVirtualizer({
@@ -498,7 +510,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                   </div>
                 </div>
 
-                <div ref={scrollRef} className="max-h-[min(70vh,900px)] overflow-auto">
+                <div ref={scrollRef} className={cn('max-h-[min(70vh,900px)] overflow-auto transition-opacity duration-200', isFiltering && 'opacity-50 pointer-events-none')}>
                   {isLoading ? (
                     <p className="p-8 text-center text-sm text-muted-foreground">Loading leadsâ€¦</p>
                   ) : tableRows.length === 0 ? (

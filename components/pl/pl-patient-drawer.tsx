@@ -95,11 +95,11 @@ export function PlPatientDrawer({
       result = result.filter((p) => {
         let raw: string | undefined
         if (dateField === 'admission') {
-          raw = p.admissionRecord?.admissionDate ?? p.admissionDate
+          raw = p.admissionRecord?.admissionDate
         } else if (dateField === 'discharge') {
-          raw = p.dischargeSheet?.dischargeDate ?? p.dischargeDate
+          raw = p.dischargeSheet?.dischargeDate
         } else {
-          raw = p.surgeryDate ?? p.admissionRecord?.surgeryDate
+          raw = p.surgeryDate
         }
         if (!raw) return false
         const d = new Date(raw)
@@ -198,17 +198,17 @@ export function PlPatientDrawer({
                       <TableCell className="whitespace-nowrap">{typeof p.circle === 'string' ? p.circle : '—'}</TableCell>
                       <TableCell className="whitespace-nowrap">
                         {(dateField === 'admission'
-                          ? p.admissionRecord?.admissionDate ?? p.admissionDate
+                          ? p.admissionRecord?.admissionDate
                           : dateField === 'discharge'
-                            ? p.dischargeSheet?.dischargeDate ?? p.dischargeDate
-                            : p.surgeryDate ?? p.admissionRecord?.surgeryDate
+                            ? p.dischargeSheet?.dischargeDate
+                            : p.surgeryDate
                         )
                           ? new Date(
                               (dateField === 'admission'
-                                ? p.admissionRecord?.admissionDate ?? p.admissionDate
+                                ? p.admissionRecord?.admissionDate
                                 : dateField === 'discharge'
-                                  ? p.dischargeSheet?.dischargeDate ?? p.dischargeDate
-                                  : p.surgeryDate ?? p.admissionRecord?.surgeryDate) as string
+                                  ? p.dischargeSheet?.dischargeDate
+                                  : p.surgeryDate) as string
                             ).toLocaleDateString('en-IN', {
                               day: '2-digit',
                               month: 'short',
