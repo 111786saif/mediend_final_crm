@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSession } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneWhere } from '@/lib/analytics/ipd-filters'
+import { ipdDoneWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,9 +23,9 @@ export async function GET(request: NextRequest) {
       return errorResponse('startDate and endDate are required', 400)
     }
 
-    const periodStart = new Date(startDate)
-    const periodEnd = new Date(endDate)
-    const dateFilter: Prisma.DateTimeFilter = { gte: periodStart, lte: periodEnd }
+    const dateFilter = buildDateRange(startDate, endDate)
+    const periodStart = dateFilter.gte as Date
+    const periodEnd = dateFilter.lte as Date
 
     const [targets, bdsWithEmployee] = await Promise.all([
       prisma.target.findMany({

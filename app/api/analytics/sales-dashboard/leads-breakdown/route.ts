@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess, getManagerGroups } from '@/lib/hierarchy'
-import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
+import { ipdDoneDateFilter, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 const LEAD_AGE_BUCKETS = {
   new: { label: 'New', maxDays: 7 },
@@ -47,17 +47,7 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    const dateFilter: Prisma.DateTimeFilter = {}
-    if (startDate) {
-      const start = new Date(startDate)
-      start.setHours(0, 0, 0, 0)
-      dateFilter.gte = start
-    }
-    if (endDate) {
-      const end = new Date(endDate)
-      end.setHours(23, 59, 59, 999)
-      dateFilter.lte = end
-    }
+    const dateFilter: Prisma.DateTimeFilter = buildDateRange(startDate, endDate)
 
     const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0

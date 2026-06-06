@@ -8,7 +8,7 @@ import { resolveSourceForDisplay } from '@/lib/mysql-code-mappings'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
-import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -25,9 +25,7 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    const dateFilter: Prisma.DateTimeFilter = {}
-    if (startDate) dateFilter.gte = new Date(startDate)
-    if (endDate) dateFilter.lte = new Date(endDate)
+    const dateFilter = buildDateRange(startDate, endDate)
 
     const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0

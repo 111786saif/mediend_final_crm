@@ -4,7 +4,7 @@ import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
+import { ipdDoneDateFilter, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,8 +27,9 @@ export async function GET(request: NextRequest) {
 
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
-    const start = startDate ? new Date(startDate + 'T00:00:00.000Z') : new Date(new Date().getFullYear(), 0, 1)
-    const end = endDate ? new Date(endDate + 'T23:59:59.999Z') : new Date()
+    const dateFilter = buildDateRange(startDate, endDate)
+    const start = dateFilter.gte ?? new Date(new Date().getFullYear(), 0, 1)
+    const end = dateFilter.lte ?? new Date()
 
     // Resolve the manager's employee record
     const managerEmp = await prisma.employee.findUnique({

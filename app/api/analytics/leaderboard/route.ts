@@ -5,7 +5,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess, getManagerGroups } from '@/lib/hierarchy'
-import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
+import { ipdDoneDateFilter, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 const CLOSED_STATUS_CODES = [
   '13', // IPD Done
@@ -29,9 +29,7 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    const dateFilter: Prisma.DateTimeFilter = {}
-    if (startDate) dateFilter.gte = new Date(startDate)
-    if (endDate) dateFilter.lte = new Date(endDate)
+    const dateFilter: Prisma.DateTimeFilter = buildDateRange(startDate, endDate)
 
     const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0

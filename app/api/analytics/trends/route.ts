@@ -7,7 +7,7 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } from 'date-fns'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -29,8 +29,9 @@ export async function GET(request: NextRequest) {
       return errorResponse('startDate and endDate are required', 400)
     }
 
-    const start = new Date(startDate)
-    const end = new Date(endDate)
+    const dateFilter = buildDateRange(startDate, endDate)
+    const start = dateFilter.gte as Date
+    const end = dateFilter.lte as Date
 
     const baseWhere: Prisma.LeadWhereInput = {
       createdDate: {

@@ -6,7 +6,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneDateFilter } from '@/lib/analytics/ipd-filters'
+import { ipdDoneDateFilter, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,9 +24,7 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get('endDate')
     const circle = searchParams.get('circle')
 
-    const dateFilter: Prisma.DateTimeFilter = {}
-    if (startDate) dateFilter.gte = new Date(startDate)
-    if (endDate) dateFilter.lte = new Date(endDate)
+    const dateFilter = buildDateRange(startDate, endDate)
 
     const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0

@@ -6,7 +6,7 @@ import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
 
-import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,8 +27,9 @@ export async function GET(request: NextRequest) {
       return errorResponse('startDate and endDate are required', 400)
     }
 
-    const periodStart = new Date(startDate)
-    const periodEnd = new Date(endDate)
+    const dateFilter = buildDateRange(startDate, endDate)
+    const periodStart = dateFilter.gte as Date
+    const periodEnd = dateFilter.lte as Date
 
     const targets = await prisma.target.findMany({
       where: {

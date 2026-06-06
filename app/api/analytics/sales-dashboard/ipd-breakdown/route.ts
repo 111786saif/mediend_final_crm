@@ -5,7 +5,7 @@ import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneDateFilter, resolveIpdDate } from '@/lib/analytics/ipd-filters'
+import { ipdDoneDateFilter, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,17 +27,7 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    const dateFilter: Prisma.DateTimeFilter = {}
-    if (startDate) {
-      const start = new Date(startDate)
-      start.setHours(0, 0, 0, 0)
-      dateFilter.gte = start
-    }
-    if (endDate) {
-      const end = new Date(endDate)
-      end.setHours(23, 59, 59, 999)
-      dateFilter.lte = end
-    }
+    const dateFilter = buildDateRange(startDate, endDate)
 
     let teamScope: Prisma.LeadWhereInput = {}
     if (user.role === 'TEAM_LEAD') {

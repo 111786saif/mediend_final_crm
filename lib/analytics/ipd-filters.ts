@@ -87,6 +87,33 @@ export function ipdDoneWhere(
 }
 
 /**
+ * Canonical UTC date range builder for IPD done queries.
+ * All endpoints MUST use this to avoid timezone drift between
+ * startOfDay/endOfDay (date-fns), raw new Date(), and .setHours().
+ *
+ * Produces the same result regardless of server timezone.
+ *
+ * Overload 1: from YYYY-MM-DD strings (most API routes).
+ * Overload 2: from Date objects (target-achievement overlap, etc.).
+ */
+export function buildDateRange(
+  startDate: string | null | Date,
+  endDate: string | null | Date,
+): Prisma.DateTimeFilter {
+  const filter: Prisma.DateTimeFilter = {}
+  if (startDate) {
+    filter.gte = typeof startDate === 'string'
+      ? new Date(startDate + 'T00:00:00.000Z')
+      : startDate
+  }
+  if (endDate) {
+    filter.lte = typeof endDate === 'string'
+      ? new Date(endDate + 'T23:59:59.999Z')
+      : endDate
+  }
+  return filter
+}
+/**
  * In-memory date resolver for month bucketing in trend charts.
  * Falls back to createdDate only for display purposes (legacy leads
  * that may lack surgeryDate).

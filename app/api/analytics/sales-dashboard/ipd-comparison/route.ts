@@ -3,10 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { startOfMonth, startOfDay, endOfDay, subMonths, setDate, getDaysInMonth } from 'date-fns'
-
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneDateFilter, resolveIpdDate } from '@/lib/analytics/ipd-filters'
+import { ipdDoneDateFilter, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+
+function daysInMonthUTC(year: number, month: number) {
+  return new Date(Date.UTC(year, month + 1, 0)).getUTCDate()
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -40,31 +42,36 @@ export async function GET(request: NextRequest) {
     let lastMonthStart: Date
     let lastMonthEndThisDay: Date
     let dayOfMonth: number
+    let dateFilter: Prisma.DateTimeFilter
 
     if (startParam && endParam) {
-      thisMonthStart = startOfDay(new Date(startParam))
-      thisMonthEnd = endOfDay(new Date(endParam))
-      lastMonthStart = startOfDay(subMonths(thisMonthStart, 1))
-      lastMonthEndThisDay = endOfDay(subMonths(thisMonthEnd, 1))
-      dayOfMonth = thisMonthEnd.getDate()
+      dateFilter = buildDateRange(startParam, endParam)
+      thisMonthStart = dateFilter.gte as Date
+      thisMonthEnd = dateFilter.lte as Date
+      dayOfMonth = thisMonthEnd.getUTCDate()
+      const prevMonth = (d: Date) => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - 1, d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()))
+      lastMonthStart = prevMonth(thisMonthStart)
+      lastMonthEndThisDay = new Date(Date.UTC(thisMonthEnd.getUTCFullYear(), thisMonthEnd.getUTCMonth() - 1, Math.min(dayOfMonth, new Date(Date.UTC(thisMonthEnd.getUTCFullYear(), thisMonthEnd.getUTCMonth(), 0)).getUTCDate()), 23, 59, 59, 999))
     } else {
-      dayOfMonth = today.getDate()
-      thisMonthStart = startOfMonth(today)
-      thisMonthEnd = endOfDay(today)
-      lastMonthStart = startOfMonth(subMonths(today, 1))
-      lastMonthEndThisDay = endOfDay(
-        setDate(subMonths(today, 1), Math.min(dayOfMonth, getDaysInMonth(subMonths(today, 1))))
-      )
+      const now = new Date()
+      dayOfMonth = now.getUTCDate()
+      const y = now.getUTCFullYear()
+      const m = now.getUTCMonth()
+      thisMonthStart = new Date(Date.UTC(y, m, 1, 0, 0, 0, 0))
+      thisMonthEnd = new Date(Date.UTC(y, m, now.getUTCDate(), 23, 59, 59, 999))
+      dateFilter = { gte: thisMonthStart, lte: thisMonthEnd }
+      lastMonthStart = new Date(Date.UTC(y, m - 1, 1, 0, 0, 0, 0))
+      lastMonthEndThisDay = new Date(Date.UTC(y, m - 1, Math.min(dayOfMonth, new Date(Date.UTC(y, m, 0)).getUTCDate()), 23, 59, 59, 999))
     }
 
-    const currentYear = today.getFullYear()
+    const currentYear = today.getUTCFullYear()
     const completedWhereBase: Prisma.LeadWhereInput = { ...teamScope }
 
     const [ipdThisMonth, ipdByThisDayLastMonth, allCompletedThisYear] = await Promise.all([
       prisma.lead.count({
         where: {
           ...completedWhereBase,
-          ...ipdDoneDateFilter({ gte: thisMonthStart, lte: thisMonthEnd }),
+          ...ipdDoneDateFilter(dateFilter),
         },
       }),
       prisma.lead.count({
@@ -76,7 +83,7 @@ export async function GET(request: NextRequest) {
       prisma.lead.findMany({
         where: {
           ...completedWhereBase,
-          ...ipdDoneDateFilter({ gte: new Date(currentYear, 0, 1), lte: today }),
+          ...ipdDoneDateFilter({ gte: new Date(Date.UTC(currentYear, 0, 1, 0, 0, 0)), lte: new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 23, 59, 59, 999)) }),
         },
         select: { conversionDate: true, surgeryDate: true, leadEntryDate: true, createdDate: true },
       }),
@@ -85,20 +92,18 @@ export async function GET(request: NextRequest) {
     const monthCounts = new Map<string, number>()
     const monthCountsUpToThisDay = new Map<string, number>()
     for (let m = 1; m <= 12; m++) {
-      const monthStart = new Date(currentYear, m - 1, 1)
-      const monthEnd = new Date(currentYear, m, 0, 23, 59, 59, 999)
-      const thisDayInMonth = endOfDay(new Date(currentYear, m - 1, Math.min(dayOfMonth, getDaysInMonth(monthStart))))
+      const monthEnd = new Date(Date.UTC(currentYear, m, 0, 23, 59, 59, 999))
       if (monthEnd > today) break
       monthCounts.set(String(m), 0)
       monthCountsUpToThisDay.set(String(m), 0)
     }
     allCompletedThisYear.forEach((lead) => {
       const d = resolveIpdDate(lead)
-      if (d.getFullYear() !== currentYear) return
-      const m = d.getMonth() + 1
+      if (d.getUTCFullYear() !== currentYear) return
+      const m = d.getUTCMonth() + 1
       const key = String(m)
       monthCounts.set(key, (monthCounts.get(key) ?? 0) + 1)
-      const day = d.getDate()
+      const day = d.getUTCDate()
       if (day <= dayOfMonth) {
         monthCountsUpToThisDay.set(key, (monthCountsUpToThisDay.get(key) ?? 0) + 1)
       }
