@@ -62,9 +62,11 @@ const BUCKET_OF_STAGE: Partial<Record<CaseStage, Bucket>> = {
   [CaseStage.CASH_IPD_SUBMITTED]: 'IPD_SCHEDULED',
   [CaseStage.CASH_APPROVED]: 'IPD_SCHEDULED',
   [CaseStage.CASH_ON_HOLD]: 'IPD_SCHEDULED',
-  // IPD done (insurance + cash)
+  // IPD done (canonical: insurance + cash, including discharged)
   [CaseStage.IPD_DONE]: 'IPD_DONE',
   [CaseStage.CASH_IPD_DONE]: 'IPD_DONE',
+  [CaseStage.DISCHARGED]: 'IPD_DONE',
+  [CaseStage.CASH_DISCHARGED]: 'IPD_DONE',
 }
 
 const BUCKET_DEFS: { key: Bucket; label: string; tone: string }[] = [
@@ -165,9 +167,16 @@ export default function CaseTrackerPage() {
         lead.patientName.trim() === ''
       ) continue
       const bucket = lead.caseStage ? BUCKET_OF_STAGE[lead.caseStage as CaseStage] : undefined
-      if (!bucket) continue
+      // Leads that passed IPD done but moved to PL / completed still count as IPD done.
+      // Only fires for unmapped stages (PL_PENDING, etc.) — IPD_SCHEDULED stages
+      // (INITIATED, ADMITTED, etc.) are explicitly in BUCKET_OF_STAGE so never hit this.
+      const resolvedBucket = bucket === undefined && (
+        (lead as { surgeryDate?: unknown }).surgeryDate != null ||
+        (lead as { admissionRecord?: { surgeryDate?: unknown } }).admissionRecord?.surgeryDate != null
+      ) ? 'IPD_DONE' : bucket
+      if (!resolvedBucket) continue
       const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
-      out.push({ lead, bucket, hospital: hospital ?? '', doctor: doctor ?? '' })
+      out.push({ lead, bucket: resolvedBucket, hospital: hospital ?? '', doctor: doctor ?? '' })
     }
     return out
   }, [leads])
@@ -264,8 +273,7 @@ export default function CaseTrackerPage() {
         const t = new Date(v as string).getTime()
         return Number.isFinite(t) ? t : Infinity
       })()
-      const isIpdDone =
-        d.lead.caseStage === CaseStage.IPD_DONE || d.lead.caseStage === CaseStage.CASH_IPD_DONE
+      const isIpdDone = d.bucket === 'IPD_DONE'
       const activityTs = (() => {
         if (isIpdDone) {
           if (Number.isFinite(surgeryTs) && surgeryTs > 0) return surgeryTs
