@@ -505,6 +505,7 @@ export default function CaseTrackerPage() {
                         {showBdFilter && <TableHead>BDM</TableHead>}
                         <TableHead>Hospital</TableHead>
                         <TableHead>Doctor</TableHead>
+                        <TableHead>Surgery Date</TableHead>
                         <TableHead>Stage</TableHead>
                         <TableHead className="w-[90px]" />
                       </TableRow>
@@ -512,7 +513,7 @@ export default function CaseTrackerPage() {
                     <TableBody>
                       {filteredRows.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={showBdFilter ? 11 : 10} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={showBdFilter ? 12 : 11} className="py-10 text-center text-muted-foreground">
                             No leads match
                           </TableCell>
                         </TableRow>
@@ -546,6 +547,9 @@ export default function CaseTrackerPage() {
                               )}
                               <TableCell className="max-w-[160px] truncate">{hospital || '—'}</TableCell>
                               <TableCell className="max-w-[160px] truncate">{doctor || '—'}</TableCell>
+                              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                                {lead.surgeryDate ? format(new Date(lead.surgeryDate as string), 'MMM d, yyyy') : '—'}
+                              </TableCell>
                               <TableCell>
                                 <Badge variant="secondary" className={badge.className}>
                                   {badge.label}

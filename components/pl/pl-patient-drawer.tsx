@@ -79,8 +79,11 @@ export function PlPatientDrawer({
   const debouncedSearch = useDebouncedValue(search, 250)
 
   const { data: patients, isLoading } = useQuery<Lead[]>({
-    queryKey: ['pl', 'patients', stageFilter],
-    queryFn: () => apiGet<Lead[]>(`/api/leads?caseStage=${stageFilter}&limit=500`),
+    queryKey: ['pl', 'patients', stageFilter, startDate, endDate],
+    queryFn: () => {
+      const params = new URLSearchParams({ caseStage: stageFilter })
+      return apiGet<Lead[]>(`/api/leads?${params.toString()}`)
+    },
     enabled: open && !!stageFilter,
   })
 

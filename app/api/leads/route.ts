@@ -379,7 +379,7 @@ export async function GET(request: NextRequest) {
       plRecord: true,
     } satisfies Prisma.LeadInclude
 
-    const maxLimit = limit ? Math.min(parseInt(limit, 10), 500) : 0
+    const maxLimit = limit ? Math.min(parseInt(limit, 10), 500) : 5000
 
     const leads = isPipelineView
       ? await prisma.lead.findMany({
