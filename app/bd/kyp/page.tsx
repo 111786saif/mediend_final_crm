@@ -245,6 +245,31 @@ export default function CaseTrackerPage() {
   const doctorOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.doctor)), [decorated])
   const treatmentOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.lead.treatment)), [decorated])
 
+  const monthFiltered = useMemo<DecoratedLead[]>(() => {
+    if (monthFilter === 'all') return decorated
+
+    return decorated.filter((d) => {
+      const surgeryTs = (() => {
+        const v = d.lead.surgeryDate
+        if (!v) return Infinity
+        const t = new Date(v as string).getTime()
+        return Number.isFinite(t) ? t : Infinity
+      })()
+      const isIpdDone =
+        d.lead.caseStage === CaseStage.IPD_DONE || d.lead.caseStage === CaseStage.CASH_IPD_DONE
+      const activityTs = (() => {
+        if (isIpdDone) {
+          if (Number.isFinite(surgeryTs) && surgeryTs > 0) return surgeryTs
+          const t = new Date(d.lead.caseStageHistory?.[0]?.changedAt ?? '').getTime()
+          if (Number.isFinite(t) && t > 0) return t
+        }
+        return getLatestActivityTime(d.lead)
+      })()
+      const effectiveTs = isIpdDone ? activityTs : (Math.min(surgeryTs, activityTs) || activityTs)
+      return monthKeyOf(new Date(effectiveTs).toISOString()) === monthFilter
+    })
+  }, [decorated, monthFilter])
+
   const counts = useMemo(() => {
     const base: Record<Bucket, number> = {
       KYP: 0,
@@ -254,35 +279,13 @@ export default function CaseTrackerPage() {
       IPD_SCHEDULED: 0,
       IPD_DONE: 0,
     }
-    for (const { bucket } of decorated) base[bucket]++
+    for (const { bucket } of monthFiltered) base[bucket]++
     return base
-  }, [decorated])
+  }, [monthFiltered])
 
   const filteredRows = useMemo(() => {
-    let rows = decorated
+    let rows = monthFiltered
     if (stageFilter !== 'all') rows = rows.filter((d) => d.bucket === stageFilter)
-    if (monthFilter !== 'all') {
-      rows = rows.filter((d) => {
-        const surgeryTs = (() => {
-          const v = d.lead.surgeryDate
-          if (!v) return Infinity
-          const t = new Date(v as string).getTime()
-          return Number.isFinite(t) ? t : Infinity
-        })()
-        const isIpdDone =
-          d.lead.caseStage === CaseStage.IPD_DONE || d.lead.caseStage === CaseStage.CASH_IPD_DONE
-        const activityTs = (() => {
-          if (isIpdDone) {
-            if (Number.isFinite(surgeryTs) && surgeryTs > 0) return surgeryTs
-            const t = new Date(d.lead.caseStageHistory?.[0]?.changedAt ?? '').getTime()
-            if (Number.isFinite(t) && t > 0) return t
-          }
-          return getLatestActivityTime(d.lead)
-        })()
-        const effectiveTs = isIpdDone ? activityTs : (Math.min(surgeryTs, activityTs) || activityTs)
-        return monthKeyOf(new Date(effectiveTs).toISOString()) === monthFilter
-      })
-    }
     if (bdFilter !== 'all') {
       rows = rows.filter((d) => (d.lead.bd as { id?: string } | undefined)?.id === bdFilter)
     }
@@ -295,13 +298,12 @@ export default function CaseTrackerPage() {
       rows = rows.filter(
         (d) =>
           String(d.lead.patientName ?? '').toLowerCase().includes(q) ||
-          String(d.lead.leadRef ?? '').toLowerCase().includes(q) ||
           d.hospital.toLowerCase().includes(q) ||
           String(d.lead.treatment ?? '').toLowerCase().includes(q)
       )
     }
     return [...rows].sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
-  }, [decorated, stageFilter, monthFilter, bdFilter, circleFilter, hospitalFilter, doctorFilter, treatmentFilter, search, phoneParsed])
+  }, [monthFiltered, stageFilter, bdFilter, circleFilter, hospitalFilter, doctorFilter, treatmentFilter, search, phoneParsed])
 
   const pipelinePath = user?.role === 'TEAM_LEAD' ? '/team-lead/pipeline' : '/bd/pipeline'
 
@@ -357,7 +359,7 @@ export default function CaseTrackerPage() {
               }`}
             >
               <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">All active</p>
-              <p className="mt-1 text-2xl font-bold tabular-nums">{decorated.length}</p>
+              <p className="mt-1 text-2xl font-bold tabular-nums">{monthFiltered.length}</p>
             </button>
             {BUCKET_DEFS.map(({ key, label, tone }) => (
               <button
@@ -381,7 +383,7 @@ export default function CaseTrackerPage() {
                 <div>
                   <CardTitle>Leads</CardTitle>
                   <CardDescription>
-                    {filteredRows.length} shown · {decorated.length} active
+                    {filteredRows.length} shown · {monthFiltered.length} active
                   </CardDescription>
                 </div>
                 <div className="relative w-full sm:w-72">
