@@ -501,6 +501,7 @@ export default function CaseTrackerPage() {
                       <TableRow className="bg-muted/50">
                         <TableHead>Lead ref</TableHead>
                         <TableHead>Date</TableHead>
+                        <TableHead>Surgery Date</TableHead>
                         <TableHead>Patient</TableHead>
                         <TableHead>Age/Sex</TableHead>
                         <TableHead>Circle</TableHead>
@@ -508,7 +509,6 @@ export default function CaseTrackerPage() {
                         {showBdFilter && <TableHead>BDM</TableHead>}
                         <TableHead>Hospital</TableHead>
                         <TableHead>Doctor</TableHead>
-                        <TableHead>Surgery Date</TableHead>
                         <TableHead>Stage</TableHead>
                         <TableHead className="w-[90px]" />
                       </TableRow>
@@ -539,6 +539,12 @@ export default function CaseTrackerPage() {
                               <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                                 {d ? format(new Date(d as string), 'MMM d, yyyy') : '—'}
                               </TableCell>
+                              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
+                                {(() => {
+                                  const sd = lead.surgeryDate ?? (lead as { admissionRecord?: { surgeryDate?: string } }).admissionRecord?.surgeryDate
+                                  return sd ? format(new Date(sd as string), 'MMM d, yyyy') : '—'
+                                })()}
+                              </TableCell>
                               <TableCell>{lead.patientName}</TableCell>
                               <TableCell className="whitespace-nowrap text-sm">{formatLeadAgeSex(lead)}</TableCell>
                               <TableCell>{typeof lead.circle === 'string' ? lead.circle : '—'}</TableCell>
@@ -550,9 +556,6 @@ export default function CaseTrackerPage() {
                               )}
                               <TableCell className="max-w-[160px] truncate">{hospital || '—'}</TableCell>
                               <TableCell className="max-w-[160px] truncate">{doctor || '—'}</TableCell>
-                              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                {lead.surgeryDate ? format(new Date(lead.surgeryDate as string), 'MMM d, yyyy') : '—'}
-                              </TableCell>
                               <TableCell>
                                 <Badge variant="secondary" className={badge.className}>
                                   {badge.label}

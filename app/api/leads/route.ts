@@ -196,17 +196,12 @@ export async function GET(request: NextRequest) {
               requestedHospitalName: true,
               hospitalNameSuggestion: true,
               hospitalSuggestions: true,
-              queries: {
-                select: { updatedAt: true },
-                orderBy: { updatedAt: 'desc' },
-                take: 1,
-              },
             },
           },
         },
       },
       insuranceInitiateForm: { select: { updatedAt: true } },
-      admissionRecord: { select: { ipdStatusUpdatedAt: true, initiatedAt: true } },
+      admissionRecord: { select: { ipdStatusUpdatedAt: true, initiatedAt: true, surgeryDate: true } },
       dischargeSheet: { select: { updatedAt: true } },
       plRecord: { select: { bdmName: true, updatedAt: true } },
       caseStageHistory: {
@@ -379,7 +374,7 @@ export async function GET(request: NextRequest) {
       plRecord: true,
     } satisfies Prisma.LeadInclude
 
-    const maxLimit = limit ? Math.min(parseInt(limit, 10), 500) : 5000
+    const maxLimit = limit ? Math.min(parseInt(limit, 10), 500) : 8000
 
     const leads = isPipelineView
       ? await prisma.lead.findMany({
