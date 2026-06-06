@@ -99,9 +99,9 @@ export async function GET(request: NextRequest) {
         LEFT JOIN "Employee" e ON e."userId" = u.id
         LEFT JOIN "Employee" me ON me.id = e."managerId"
         LEFT JOIN "User" mu ON mu.id = me."userId"
-        WHERE (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED') OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND l."surgeryDate" IS NOT NULL))
-          AND l."surgeryDate" >= ${start}
-          AND l."surgeryDate" <= ${end}
+        WHERE (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED') OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND (l."surgeryDate" IS NOT NULL OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" IS NOT NULL))))
+          AND (l."surgeryDate" >= ${start} AND l."surgeryDate" <= ${end}
+               OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" >= ${start} AND ar."surgeryDate" <= ${end}))
           ${bdIdFilter}
         GROUP BY u.id, u.name, e.id, me.id, mu.name,
                  TO_CHAR(l."surgeryDate", 'YYYY-MM')

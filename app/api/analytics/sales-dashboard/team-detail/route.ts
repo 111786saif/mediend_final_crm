@@ -154,9 +154,9 @@ export async function GET(request: NextRequest) {
           COUNT(*)::int AS count
         FROM "Lead" l
         JOIN "User" u ON u.id = l."bdId"
-        WHERE l."bdId" = ANY(${allUserIds}) AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED') OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND l."surgeryDate" IS NOT NULL))
-          AND l."surgeryDate" >= ${start}
-          AND l."surgeryDate" <= ${end}
+        WHERE l."bdId" = ANY(${allUserIds}) AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED') OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND (l."surgeryDate" IS NOT NULL OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" IS NOT NULL))))
+          AND (l."surgeryDate" >= ${start} AND l."surgeryDate" <= ${end}
+               OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" >= ${start} AND ar."surgeryDate" <= ${end}))
         GROUP BY 1, u.id, u.name
         ORDER BY 1, u.name
       `,

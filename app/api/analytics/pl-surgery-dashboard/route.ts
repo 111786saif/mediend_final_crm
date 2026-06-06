@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
     const bdBreakdown = Array.from(bdMap.values()).map((b) => ({
       bdId: b.bdId,
       bdName: b.bdName,
-      teamName: b.tlName ?? b.managerName,
+      teamName: b.managerName,
       surgeries: b.count,
       revenue: b.mediendShare,
       expenses: b.expenses,

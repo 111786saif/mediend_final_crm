@@ -33,7 +33,10 @@ export function canonicalSalesCompletedWhere(
       },
       {
         caseStage: { in: [...PL_FALLBACK_STAGES] },
-        surgeryDate: hasDate ? dateFilter : { not: null },
+        OR: [
+          { surgeryDate: hasDate ? dateFilter : { not: null } },
+          { admissionRecord: { is: { surgeryDate: hasDate ? dateFilter : { not: null } } } },
+        ],
       },
     ],
   }
@@ -56,7 +59,10 @@ export function ipdDoneDateFilter(
       },
       {
         caseStage: { in: [...PL_FALLBACK_STAGES] },
-        surgeryDate: hasDate ? dateFilter : { not: null },
+        OR: [
+          { surgeryDate: hasDate ? dateFilter : { not: null } },
+          { admissionRecord: { is: { surgeryDate: hasDate ? dateFilter : { not: null } } } },
+        ],
       },
     ],
   }
