@@ -127,7 +127,7 @@ export default function CaseTrackerPage() {
   const isOrgViewer = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
 
   const [stageFilter, setStageFilter] = useState<Bucket | 'all'>('all')
-  const [monthFilter, setMonthFilter] = useState<string>(isOrgViewer ? 'all' : currentMonthKey)
+  const [monthFilter, setMonthFilter] = useState<string>(currentMonthKey)
   const [bdFilter, setBdFilter] = useState<string>('all')
   const [circleFilter, setCircleFilter] = useState<string>('all')
   const [hospitalFilter, setHospitalFilter] = useState<string>('all')
@@ -217,14 +217,17 @@ export default function CaseTrackerPage() {
   }, [targetProgress, user?.role, bdFilter, isOrgViewer])
 
   const monthOptions = useMemo(() => {
-    const months = new Set<string>([currentMonthKey])
-    if (monthFilter !== 'all') months.add(monthFilter)
-    for (const { lead } of decorated) {
-      const key = monthKeyOf(lead.leadEntryDate || lead.createdDate)
-      if (key) months.add(key)
+    const months: string[] = []
+    const now = new Date()
+    let y = now.getFullYear()
+    let m = now.getMonth()
+    while (y > 2022 || (y === 2022 && m >= 0)) {
+      months.push(`${y}-${String(m + 1).padStart(2, '0')}`)
+      m--
+      if (m < 0) { m = 11; y-- }
     }
-    return Array.from(months).sort((a, b) => b.localeCompare(a))
-  }, [decorated, currentMonthKey, monthFilter])
+    return months
+  }, [])
 
   const showBdFilter = user?.role === 'TEAM_LEAD'
   const bdOptions = useMemo(() => {
