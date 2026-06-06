@@ -159,6 +159,11 @@ export default function CaseTrackerPage() {
   const decorated = useMemo<DecoratedLead[]>(() => {
     const out: DecoratedLead[] = []
     for (const lead of leads) {
+      if (
+        typeof lead.patientName !== 'string' ||
+        lead.patientName.trim() === 'Unknown' ||
+        lead.patientName.trim() === ''
+      ) continue
       const bucket = lead.caseStage ? BUCKET_OF_STAGE[lead.caseStage as CaseStage] : undefined
       if (!bucket) continue
       const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
@@ -253,7 +258,8 @@ export default function CaseTrackerPage() {
 
     return decorated.filter((d) => {
       const surgeryTs = (() => {
-        const v = d.lead.surgeryDate
+        const adSurg = (d.lead as { admissionRecord?: { surgeryDate?: string | Date } }).admissionRecord?.surgeryDate
+        const v = d.lead.surgeryDate ?? adSurg
         if (!v) return Infinity
         const t = new Date(v as string).getTime()
         return Number.isFinite(t) ? t : Infinity
@@ -263,8 +269,11 @@ export default function CaseTrackerPage() {
       const activityTs = (() => {
         if (isIpdDone) {
           if (Number.isFinite(surgeryTs) && surgeryTs > 0) return surgeryTs
-          const t = new Date(d.lead.caseStageHistory?.[0]?.changedAt ?? '').getTime()
-          if (Number.isFinite(t) && t > 0) return t
+          const stageCh = d.lead.caseStageHistory?.[0]?.changedAt
+          if (stageCh) {
+            const t = new Date(stageCh as string).getTime()
+            if (Number.isFinite(t) && t > 0) return t
+          }
         }
         return getLatestActivityTime(d.lead)
       })()
