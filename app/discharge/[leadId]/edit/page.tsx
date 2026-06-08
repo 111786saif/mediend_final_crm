@@ -109,9 +109,10 @@ function DateField({ label, value, onChange }: { label: string; value: string | 
   )
 }
 
-export default function EditDischargeSheetPage({ params }: { params: { leadId: string } }) {
+export default function EditDischargeSheetPage() {
   const router = useRouter()
-  const { leadId } = params
+  const params = useParams()
+  const leadId = params.leadId as string
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
