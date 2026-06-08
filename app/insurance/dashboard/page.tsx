@@ -14,7 +14,7 @@ import { useState, useMemo, useEffect } from 'react'
 import {
   FileText, AlertCircle, CheckCircle2, Clock, ArrowRight,
   Receipt, Activity, Search, LayoutList, CalendarDays, BarChart3,
-  AlertTriangle, CalendarCheck, X,
+  AlertTriangle, CalendarCheck, X, Stethoscope,
 } from 'lucide-react'
 import { PreAuthStatus } from '@/generated/prisma/enums'
 import { useAuth } from '@/hooks/use-auth'
@@ -187,6 +187,7 @@ export default function InsuranceDashboardPage() {
   const [ipdMarkFilter, setIpdMarkFilter] = useState<IpdMarkFilterValue>('')
   const [sheetFilter, setSheetFilter] = useState<'' | 'FILLED' | 'PENDING'>('')
   const [preAuthFilter, setPreAuthFilter] = useState<'all' | 'pending' | 'rejected'>('all')
+  const [dateMode, setDateMode] = useState<'activity' | 'surgery'>('activity')
 
   // ── Filter bar (persisted) ───────────────────────────────────────────────
   const now = new Date()
@@ -203,7 +204,7 @@ export default function InsuranceDashboardPage() {
       const raw = typeof window !== 'undefined' && window.localStorage.getItem(FILTER_STORAGE_KEY)
       if (raw) {
         const saved = JSON.parse(raw) as Partial<{
-          activityMonth: number; activityYear: number;
+          activityMonth: number; activityYear: number; dateMode: 'activity' | 'surgery';
           bdFilter: string; circleFilter: string; treatmentFilter: string;
         }>
         if (typeof saved.activityMonth === 'number') setActivityMonth(saved.activityMonth)
@@ -211,6 +212,7 @@ export default function InsuranceDashboardPage() {
         if (typeof saved.bdFilter === 'string') setBdFilter(saved.bdFilter)
         if (typeof saved.circleFilter === 'string') setCircleFilter(saved.circleFilter)
         if (typeof saved.treatmentFilter === 'string') setTreatmentFilter(saved.treatmentFilter)
+        if (saved.dateMode === 'activity' || saved.dateMode === 'surgery') setDateMode(saved.dateMode)
       }
     } catch { /* ignore */ }
     setHydrated(true)
@@ -221,23 +223,33 @@ export default function InsuranceDashboardPage() {
     if (!hydrated) return
     try {
       window.localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify({
-        activityMonth, activityYear, bdFilter, circleFilter, treatmentFilter,
+        activityMonth, activityYear, dateMode, bdFilter, circleFilter, treatmentFilter,
       }))
     } catch { /* ignore */ }
-  }, [hydrated, activityMonth, activityYear, bdFilter, circleFilter, treatmentFilter])
+  }, [hydrated, activityMonth, activityYear, dateMode, bdFilter, circleFilter, treatmentFilter])
 
-  // Build server query: only send activity window + bd to server. Circle and
-  // treatment are filtered client-side so they don't shrink the dropdown lists.
+  // Build server query: activity mode sends activityMonth/activityYear;
+  // surgery mode computes startDate/endDate from the same month/year pickers.
   const leadsQueryString = useMemo(() => {
     const params = new URLSearchParams()
-    params.set('activityMonth', String(activityMonth))
-    params.set('activityYear', String(activityYear))
+    const m = activityMonth
+    const y = activityYear
+    if (dateMode === 'surgery') {
+      const startDate = `${y}-${String(m).padStart(2, '0')}-01`
+      const endDate = new Date(y, m, 0).toISOString().split('T')[0]
+      params.set('startDate', startDate)
+      params.set('endDate', endDate)
+      params.set('dateField', 'surgery')
+    } else {
+      params.set('activityMonth', String(activityMonth))
+      params.set('activityYear', String(activityYear))
+    }
     if (bdFilter) params.set('bdId', bdFilter)
     return params.toString()
-  }, [activityMonth, activityYear, bdFilter])
+  }, [activityMonth, activityYear, bdFilter, dateMode])
 
   const { data: leads, isLoading, error } = useQuery<LeadWithStage[]>({
-    queryKey: ['leads', 'insurance', leadsQueryString],
+    queryKey: ['leads', 'insurance', leadsQueryString, dateMode],
     queryFn: async () => {
       try {
         const data = await apiGet<LeadWithStage[]>(`/api/leads?${leadsQueryString}`)
@@ -295,10 +307,12 @@ export default function InsuranceDashboardPage() {
     setBdFilter('')
     setCircleFilter('')
     setTreatmentFilter('')
+    setDateMode('activity')
   }
   const filtersActive =
     activityMonth !== now.getMonth() + 1 ||
     activityYear !== now.getFullYear() ||
+    dateMode !== 'activity' ||
     !!bdFilter || !!circleFilter || !!treatmentFilter
 
   // Apply client-side circle + treatment filters so dropdown universe stays full
@@ -600,7 +614,9 @@ export default function InsuranceDashboardPage() {
             <CardContent className="py-3 px-4">
               <div className="flex flex-wrap items-end gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-semibold uppercase text-gray-500">Active in</label>
+                  <label className="text-[10px] font-semibold uppercase text-gray-500">
+                    {dateMode === 'surgery' ? 'Surgery in' : 'Active in'}
+                  </label>
                   <div className="flex gap-1">
                     <Select value={String(activityMonth)} onValueChange={(v) => setActivityMonth(parseInt(v, 10))}>
                       <SelectTrigger className="w-[110px] h-9">
@@ -622,6 +638,34 @@ export default function InsuranceDashboardPage() {
                         ))}
                       </SelectContent>
                     </Select>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] font-semibold uppercase text-gray-500">View by</label>
+                  <div className="flex rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden h-9">
+                    <button
+                      type="button"
+                      onClick={() => setDateMode('activity')}
+                      className={`px-3 text-xs font-semibold transition-all ${
+                        dateMode === 'activity'
+                          ? 'bg-blue-600 text-white shadow-inner'
+                          : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      Activity
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDateMode('surgery')}
+                      className={`px-3 text-xs font-semibold transition-all ${
+                        dateMode === 'surgery'
+                          ? 'bg-amber-600 text-white shadow-inner'
+                          : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      Surgery
+                    </button>
                   </div>
                 </div>
 
@@ -678,11 +722,34 @@ export default function InsuranceDashboardPage() {
                 )}
 
                 <div className="ml-auto text-xs text-gray-500">
-                  Showing cases that moved in <span className="font-semibold">{MONTH_NAMES[activityMonth - 1]} {activityYear}</span>
+                  {dateMode === 'surgery' ? (
+                    <>Showing cases with surgery in <span className="font-semibold">{MONTH_NAMES[activityMonth - 1]} {activityYear}</span></>
+                  ) : (
+                    <>Showing cases that moved in <span className="font-semibold">{MONTH_NAMES[activityMonth - 1]} {activityYear}</span></>
+                  )}
                 </div>
               </div>
             </CardContent>
           </Card>
+
+          {/* ── Surgery-mode info banner ─────────────────────────────── */}
+          {dateMode === 'surgery' && (
+            <div className="flex items-center justify-between px-4 py-2.5 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 text-sm text-amber-800 dark:text-amber-200">
+              <div className="flex items-center gap-2">
+                <Stethoscope className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                <span>Viewing by <strong>surgery date</strong> — all tabs, stats and charts below are filtered to cases whose surgery falls in the selected month.</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setDateMode('activity')}
+                className="h-8 text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900 shrink-0"
+              >
+                <X className="h-3.5 w-3.5 mr-1" />
+                Switch to activity
+              </Button>
+            </div>
+          )}
 
           {/* ── Stage Stat Cards (tab switchers) ────────────────────────── */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
