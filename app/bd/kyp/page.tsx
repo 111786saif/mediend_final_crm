@@ -268,7 +268,8 @@ export default function CaseTrackerPage() {
     return decorated.filter((d) => {
       const isIpdDone = d.bucket === 'IPD_DONE'
       if (isIpdDone) {
-        const sd = d.lead.surgeryDate
+        const adSurg = (d.lead as { admissionRecord?: { surgeryDate?: string | Date } }).admissionRecord?.surgeryDate
+        const sd = d.lead.surgeryDate ?? adSurg
         if (sd) {
           const t = new Date(sd as string).getTime()
           if (Number.isFinite(t) && t > 0) {
