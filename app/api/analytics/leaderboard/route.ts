@@ -71,7 +71,8 @@ export async function GET(request: NextRequest) {
 
       const bdMap = new Map(bdLeads.map((b) => [b.bdId, b._count.id]))
       const completedStatsMap = new Map(completedStats.map((b) => [b.bdId, b._count.id]))
-      const bdIds = [...new Set([...bdStats.map((b) => b.bdId), ...bdLeads.map((b) => b.bdId)])].filter(
+      const bdStatsMap = new Map(bdStats.map((b) => [b.bdId, { closed: b._count.id, netProfit: b._sum.netProfit ?? 0, avgBill: b._avg.billAmount ?? 0 }]))
+      const bdIds = [...new Set([...bdStats.map((b) => b.bdId), ...bdLeads.map((b) => b.bdId), ...completedStats.map((b) => b.bdId)])].filter(
         (id): id is string => id !== null
       )
       const bds = await prisma.user.findMany({
@@ -86,14 +87,15 @@ export async function GET(request: NextRequest) {
         },
       })
 
-      const leaderboard = bdStats.map((stat) => {
-        const bd = bds.find((b) => b.id === stat.bdId)
-        const totalLeads = bdMap.get(stat.bdId) || 0
-        const closedLeads = stat._count.id
-        const ipdDone = completedStatsMap.get(stat.bdId) || 0
+      const leaderboard = bdIds.map((bdId) => {
+        const bd = bds.find((b) => b.id === bdId)
+        const stat = bdStatsMap.get(bdId)
+        const totalLeads = bdMap.get(bdId) || 0
+        const closedLeads = stat?.closed ?? 0
+        const ipdDone = completedStatsMap.get(bdId) || 0
 
         return {
-          bdId: stat.bdId,
+          bdId,
           bdName: bd?.name || 'Unknown',
           managerName: bd?.employee?.manager?.user?.name ?? 'No Manager',
           teamName: bd?.employee?.team?.name ?? null,
@@ -101,12 +103,12 @@ export async function GET(request: NextRequest) {
           closedLeads,
           ipdDone,
           conversionRate: Math.round(totalLeads > 0 ? (closedLeads / totalLeads) * 100 * 100 : 0) / 100,
-          netProfit: stat._sum.netProfit || 0,
-          avgTicketSize: Math.round((stat._avg.billAmount || 0) * 100) / 100,
+          netProfit: stat?.netProfit ?? 0,
+          avgTicketSize: Math.round((stat?.avgBill ?? 0) * 100) / 100,
         }
       })
 
-      leaderboard.sort((a, b) => b.closedLeads - a.closedLeads)
+      leaderboard.sort((a, b) => b.ipdDone - a.ipdDone || b.closedLeads - a.closedLeads)
       return successResponse(leaderboard)
 
     } else if (type === 'team') {
@@ -159,7 +161,7 @@ export async function GET(request: NextRequest) {
         netProfit: data.netProfit,
       }))
 
-      leaderboard.sort((a, b) => b.closedLeads - a.closedLeads)
+      leaderboard.sort((a, b) => b.ipdDone - a.ipdDone || b.closedLeads - a.closedLeads)
       return successResponse(leaderboard)
 
     } else if (type === 'teamlead') {
@@ -207,7 +209,7 @@ export async function GET(request: NextRequest) {
         })
       )
 
-      leaderboard.sort((a, b) => b.closedLeads - a.closedLeads)
+      leaderboard.sort((a, b) => b.ipdDone - a.ipdDone || b.closedLeads - a.closedLeads)
       return successResponse(leaderboard)
     }
 
