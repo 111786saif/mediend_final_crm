@@ -784,7 +784,10 @@ export function DigitalMarketingDashboard() {
     const t = new Date()
     return new Date(t.getFullYear(), t.getMonth(), 1)
   })
-  const [endDate, setEndDate] = useState<Date | undefined>(() => new Date())
+  const [endDate, setEndDate] = useState<Date | undefined>(() => {
+    const t = new Date()
+    return new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59, 999)
+  })
 
   const dateParams = [
     startDate ? `startDate=${format(startDate, 'yyyy-MM-dd')}` : '',

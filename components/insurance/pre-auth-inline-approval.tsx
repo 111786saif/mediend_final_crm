@@ -98,10 +98,13 @@ export function PreAuthInlineApproval({
   const showMarkNewHospitalFirst = isNewHospital && !newHospitalMarked
 
   const isFullyProcessed =
-    preAuthData?.approvalStatus === PreAuthStatus.APPROVED ||
-    preAuthData?.approvalStatus === PreAuthStatus.REJECTED
+    (preAuthData?.approvalStatus === PreAuthStatus.APPROVED ||
+     preAuthData?.approvalStatus === PreAuthStatus.REJECTED) &&
+    isPreAuthRaised
 
-  const isTempApproved = preAuthData?.approvalStatus === PreAuthStatus.TEMP_APPROVED
+  const isTempApproved =
+    preAuthData?.approvalStatus === PreAuthStatus.TEMP_APPROVED &&
+    isPreAuthRaised
   const isOnHold = preAuthData?.approvalStatus === PreAuthStatus.ON_HOLD
 
   const initiateForm = initiateFormData?.initiateForm

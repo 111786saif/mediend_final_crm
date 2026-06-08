@@ -195,7 +195,7 @@ export default function PLLedgerPage() {
       const params = new URLSearchParams({
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
-        pipelineStage: 'PL,COMPLETED',
+        caseStage: 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED,PL_PENDING,OUTSTANDING',
         dateField: 'surgery',
       })
       const leads = await apiGet<Lead[]>(`/api/leads?${params.toString()}`)
@@ -276,13 +276,9 @@ export default function PLLedgerPage() {
     setPage(1)
   }
 
-  // Table only shows leads whose discharge sheet has been filled (insurance or cash),
-  // then narrows further by the BD / hospital / doctor selects.
-  // Info cards above still reflect the full PL/COMPLETED dataset.
   const tableRecords = useMemo(
     () =>
       records?.filter((r) => {
-        if (!(r as Lead).dischargeSheet) return false
         if (activeFilterCount === 0) return true
         const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
         if (bdFilter !== 'all' && resolved.bdm !== bdFilter) return false

@@ -748,22 +748,22 @@ export default function MDHomePage() {
 
   const now = new Date()
   const monthStart = format(startOfMonth(now), 'yyyy-MM-dd')
-  const today = format(now, 'yyyy-MM-dd')
+  const monthEnd = format(new Date(now.getFullYear(), now.getMonth() + 1, 0), 'yyyy-MM-dd')
 
   // 6-month range for trend chart
   const trendStart = format(startOfMonth(subMonths(now, 5)), 'yyyy-MM-dd')
 
   // Sales data — current month for KPIs
   const { data: salesData, isLoading: salesLoading } = useQuery<SalesData>({
-    queryKey: ['md-home-sales', monthStart, today],
-    queryFn: () => apiGet<SalesData>(`/api/analytics/md/sales?startDate=${monthStart}&endDate=${today}`),
+    queryKey: ['md-home-sales', monthStart, monthEnd],
+    queryFn: () => apiGet<SalesData>(`/api/analytics/md/sales?startDate=${monthStart}&endDate=${monthEnd}`),
     staleTime: 5 * 60 * 1000,
   })
 
   // Sales data — 6 months for trend chart
   const { data: trendData } = useQuery<SalesData>({
-    queryKey: ['md-home-sales-trend', trendStart, today],
-    queryFn: () => apiGet<SalesData>(`/api/analytics/md/sales?startDate=${trendStart}&endDate=${today}`),
+    queryKey: ['md-home-sales-trend', trendStart, monthEnd],
+    queryFn: () => apiGet<SalesData>(`/api/analytics/md/sales?startDate=${trendStart}&endDate=${monthEnd}`),
     staleTime: 5 * 60 * 1000,
   })
 

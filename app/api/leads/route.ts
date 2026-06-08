@@ -116,6 +116,7 @@ export async function GET(request: NextRequest) {
         const surgeryOr: Prisma.LeadWhereInput[] = [
           { surgeryDate: range },
           { plRecord: { surgeryDate: range } },
+          { admissionRecord: { is: { surgeryDate: range } } },
         ]
         if (where.OR) {
           const insuranceOr = where.OR
