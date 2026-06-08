@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSession } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
       const teamUserIds = [managerEmp.userId, ...subIds]
 
       const where: Prisma.LeadWhereInput = {
-        ...ipdDoneWhere({ gte: overlapStart, lte: overlapEnd }),
+        ...canonicalSalesCompletedWhere({ gte: overlapStart, lte: overlapEnd }),
         bdId: { in: teamUserIds },
       }
 
@@ -137,7 +137,7 @@ export async function GET(request: NextRequest) {
         const overlapStart = new Date(Math.max(periodStart.getTime(), target.periodStartDate.getTime()))
         const overlapEnd = new Date(Math.min(periodEnd.getTime(), target.periodEndDate.getTime()))
         const where: Prisma.LeadWhereInput = {
-          ...ipdDoneWhere({ gte: overlapStart, lte: overlapEnd }),
+          ...canonicalSalesCompletedWhere({ gte: overlapStart, lte: overlapEnd }),
           bdId: bd.id,
         }
         switch (target.metric) {

@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess, getManagerGroups } from '@/lib/hierarchy'
-import { ipdDoneDateFilter, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 const LEAD_AGE_BUCKETS = {
   new: { label: 'New', maxDays: 7 },
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
 
     const completedWhere: Prisma.LeadWhereInput = {
       ...teamScope,
-      ...ipdDoneDateFilter(dateFilter),
+      ...canonicalSalesCompletedWhere(dateFilter),
     }
 
     const [

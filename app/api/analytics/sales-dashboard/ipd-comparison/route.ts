@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneDateFilter, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 function daysInMonthUTC(year: number, month: number) {
   return new Date(Date.UTC(year, month + 1, 0)).getUTCDate()
@@ -49,8 +49,8 @@ export async function GET(request: NextRequest) {
       thisMonthStart = dateFilter.gte as Date
       thisMonthEnd = dateFilter.lte as Date
       dayOfMonth = thisMonthEnd.getUTCDate()
-      const prevMonth = (d: Date) => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - 1, d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()))
-      lastMonthStart = prevMonth(thisMonthStart)
+      const prev = (d: Date) => new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - 1, d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()))
+      lastMonthStart = prev(thisMonthStart)
       lastMonthEndThisDay = new Date(Date.UTC(thisMonthEnd.getUTCFullYear(), thisMonthEnd.getUTCMonth() - 1, Math.min(dayOfMonth, new Date(Date.UTC(thisMonthEnd.getUTCFullYear(), thisMonthEnd.getUTCMonth(), 0)).getUTCDate()), 23, 59, 59, 999))
     } else {
       const now = new Date()
@@ -71,19 +71,19 @@ export async function GET(request: NextRequest) {
       prisma.lead.count({
         where: {
           ...completedWhereBase,
-          ...ipdDoneDateFilter(dateFilter),
+          ...canonicalSalesCompletedWhere(dateFilter),
         },
       }),
       prisma.lead.count({
         where: {
           ...completedWhereBase,
-          ...ipdDoneDateFilter({ gte: lastMonthStart, lte: lastMonthEndThisDay }),
+          ...canonicalSalesCompletedWhere({ gte: lastMonthStart, lte: lastMonthEndThisDay }),
         },
       }),
       prisma.lead.findMany({
         where: {
           ...completedWhereBase,
-          ...ipdDoneDateFilter({ gte: new Date(Date.UTC(currentYear, 0, 1, 0, 0, 0)), lte: new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 23, 59, 59, 999)) }),
+          ...canonicalSalesCompletedWhere({ gte: new Date(Date.UTC(currentYear, 0, 1, 0, 0, 0)), lte: new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 23, 59, 59, 999)) }),
         },
         select: { conversionDate: true, surgeryDate: true, leadEntryDate: true, createdDate: true },
       }),

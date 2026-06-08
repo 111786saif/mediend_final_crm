@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Prisma } from '@/generated/prisma/client'
+import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 interface LeadRow {
   month: string
@@ -13,16 +14,6 @@ interface LeadRow {
   managerId: string | null
   managerName: string | null
   leadCount: number
-}
-
-interface IpdRow {
-  month: string
-  bdId: string
-  bdName: string
-  bdEmployeeId: string | null
-  managerId: string | null
-  managerName: string | null
-  ipdCount: number
 }
 
 export async function GET(request: NextRequest) {
@@ -40,14 +31,6 @@ export async function GET(request: NextRequest) {
       return errorResponse('Forbidden', 403)
     }
 
-    // For TEAM_LEAD: restrict to their subordinates
-    let bdIdFilter: Prisma.Sql = Prisma.sql``
-    if (user.role === 'TEAM_LEAD') {
-      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
-      const allowedIds = [user.id, ...subIds]
-      bdIdFilter = Prisma.sql`AND u.id = ANY(${allowedIds})`
-    }
-
     const { searchParams } = new URL(request.url)
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
@@ -59,7 +42,17 @@ export async function GET(request: NextRequest) {
       ? new Date(endDate + 'T23:59:59.999Z')
       : new Date()
 
-    const [leadRows, ipdRows] = await Promise.all([
+    let bdIdFilter: string[] | undefined
+    if (user.role === 'TEAM_LEAD') {
+      const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
+      bdIdFilter = [user.id, ...subIds]
+    }
+
+    const leadDateWhere: Prisma.LeadWhereInput = bdIdFilter
+      ? { bdId: { in: bdIdFilter } }
+      : {}
+
+    const [leadRows, completedLeads] = await Promise.all([
       // Leads by month by BD with manager info
       prisma.$queryRaw<LeadRow[]>`
         SELECT
@@ -77,41 +70,64 @@ export async function GET(request: NextRequest) {
         LEFT JOIN "User" mu ON mu.id = me."userId"
         WHERE COALESCE(l."leadEntryDate", l."createdDate") >= ${start}
           AND COALESCE(l."leadEntryDate", l."createdDate") <= ${end}
-          ${bdIdFilter}
+          ${bdIdFilter ? Prisma.sql`AND u.id = ANY(${bdIdFilter})` : Prisma.sql``}
         GROUP BY u.id, u.name, e.id, me.id, mu.name,
                  TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
         ORDER BY u.name,
                  TO_CHAR(COALESCE(l."leadEntryDate", l."createdDate"), 'YYYY-MM')
       `,
 
-      // IPD by month by BD
-      prisma.$queryRaw<IpdRow[]>`
-        SELECT
-          TO_CHAR(l."surgeryDate", 'YYYY-MM') AS month,
-          u.id                              AS "bdId",
-          u.name                            AS "bdName",
-          e.id                              AS "bdEmployeeId",
-          me.id                             AS "managerId",
-          mu.name                           AS "managerName",
-          COUNT(*)::int                     AS "ipdCount"
-        FROM "Lead" l
-        JOIN "User" u   ON u.id   = l."bdId"
-        LEFT JOIN "Employee" e ON e."userId" = u.id
-        LEFT JOIN "Employee" me ON me.id = e."managerId"
-        LEFT JOIN "User" mu ON mu.id = me."userId"
-        WHERE (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED') OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND (l."surgeryDate" IS NOT NULL OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" IS NOT NULL))))
-          AND (l."surgeryDate" >= ${start} AND l."surgeryDate" <= ${end}
-               OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" >= ${start} AND ar."surgeryDate" <= ${end}))
-          ${bdIdFilter}
-        GROUP BY u.id, u.name, e.id, me.id, mu.name,
-                 TO_CHAR(l."surgeryDate", 'YYYY-MM')
-        ORDER BY u.name,
-                 TO_CHAR(l."surgeryDate", 'YYYY-MM')
-      `,
+      // IPD leads by BD using canonical date filter (surgeryDate)
+      prisma.lead.findMany({
+        where: {
+          ...(bdIdFilter ? { bdId: { in: bdIdFilter } } : {}),
+          ...canonicalSalesCompletedWhere({ gte: start, lte: end }),
+        },
+        select: {
+          id: true,
+          bdId: true,
+          billAmount: true,
+          netProfit: true,
+          surgeryDate: true,
+        },
+      }),
     ])
 
+    // Bucket completed leads by month using surgeryDate
+    const ipdByMonth: { month: string; bdId: string; ipdCount: number }[] = []
+    const monthCounts = new Map<string, Map<string, number>>()
+
+    for (const lead of completedLeads) {
+      const surgeryDate = lead.surgeryDate
+      if (!surgeryDate) continue
+      const d = new Date(surgeryDate as string)
+      const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+      const bdId = lead.bdId ?? 'unknown'
+
+      if (!monthCounts.has(month)) monthCounts.set(month, new Map())
+      const bdMap = monthCounts.get(month)!
+      bdMap.set(bdId, (bdMap.get(bdId) ?? 0) + 1)
+    }
+
+    for (const [month, bdMap] of monthCounts.entries()) {
+      for (const [bdId, count] of bdMap.entries()) {
+        ipdByMonth.push({ month, bdId, ipdCount: count })
+      }
+    }
+
+    // Resolve BD/manager names from the lead rows
+    const bdNameMap = new Map<string, { bdName: string; bdEmployeeId: string | null; managerId: string | null; managerName: string | null }>()
+    for (const row of leadRows) {
+      bdNameMap.set(row.bdId, {
+        bdName: row.bdName,
+        bdEmployeeId: row.bdEmployeeId,
+        managerId: row.managerId,
+        managerName: row.managerName,
+      })
+    }
+
     const allMonths = [
-      ...new Set([...leadRows.map((r) => r.month), ...ipdRows.map((r) => r.month)]),
+      ...new Set([...leadRows.map((r) => r.month), ...ipdByMonth.map((r) => r.month)]),
     ].sort()
 
     type BdEntry = {
@@ -136,8 +152,9 @@ export async function GET(request: NextRequest) {
       const entry = getOrCreate(row.bdId, row.bdName, row.bdEmployeeId, row.managerId, row.managerName)
       entry.leads[row.month] = (entry.leads[row.month] ?? 0) + Number(row.leadCount)
     }
-    for (const row of ipdRows) {
-      const entry = getOrCreate(row.bdId, row.bdName, row.bdEmployeeId, row.managerId, row.managerName)
+    for (const row of ipdByMonth) {
+      const names = bdNameMap.get(row.bdId) ?? { bdName: row.bdId, bdEmployeeId: null, managerId: null, managerName: null }
+      const entry = getOrCreate(row.bdId, names.bdName || row.bdId, names.bdEmployeeId, names.managerId, names.managerName)
       entry.ipd[row.month] = (entry.ipd[row.month] ?? 0) + Number(row.ipdCount)
     }
 

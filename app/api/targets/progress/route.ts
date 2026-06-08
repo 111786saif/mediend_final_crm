@@ -4,6 +4,7 @@ import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
 
 /**
  * GET /api/targets/progress
@@ -209,27 +210,14 @@ async function calculateActual(
   start: Date,
   end: Date
 ): Promise<number> {
-  // IPD_DONE: count AdmissionRecords where ipdStatus is IPD_DONE or DISCHARGED
-  // PLUS count cash flow leads that reached CASH_IPD_DONE or CASH_DISCHARGED
+  // IPD_DONE / SURGERIES_DONE: count leads by surgeryDate using the canonical filter
   if (metric === 'IPD_DONE' || metric === 'SURGERIES_DONE') {
-    const [insuranceCount, cashCount] = await Promise.all([
-      prisma.admissionRecord.count({
-        where: {
-          lead: { bdId },
-          ipdStatus: { in: ['IPD_DONE', 'DISCHARGED'] },
-          ipdStatusUpdatedAt: { gte: start, lte: end },
-        },
-      }),
-      prisma.lead.count({
-        where: {
-          bdId,
-          flowType: 'CASH',
-          caseStage: { in: ['CASH_IPD_DONE', 'CASH_DISCHARGED'] },
-          updatedDate: { gte: start, lte: end },
-        },
-      }),
-    ])
-    return insuranceCount + cashCount
+    const dateFilter: Prisma.DateTimeFilter = { gte: start, lte: end }
+    const completedWhere: Prisma.LeadWhereInput = {
+      bdId,
+      ...canonicalSalesCompletedWhere(dateFilter),
+    }
+    return prisma.lead.count({ where: completedWhere })
   }
 
   const baseWhere: Prisma.LeadWhereInput = {

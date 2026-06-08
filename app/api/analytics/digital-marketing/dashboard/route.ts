@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { loadCampaignCplMap, cplLookupKey } from '@/lib/pnl/surgery-marketing-cpl'
-import { ipdDoneDateFilter, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
 
     // Completed leads filter (for IPD/conversions)
     const completedWhere: Prisma.LeadWhereInput = {
-      ...(hasDateFilter ? ipdDoneDateFilter(dateFilter) : {}),
+      ...(hasDateFilter ? canonicalSalesCompletedWhere(dateFilter) : {}),
     }
 
     // Prior period calculation for comparison
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
         ],
       }
       priorCompletedWhere = {
-        ...ipdDoneDateFilter(priorDateFilter),
+        ...canonicalSalesCompletedWhere(priorDateFilter),
       }
     }
 

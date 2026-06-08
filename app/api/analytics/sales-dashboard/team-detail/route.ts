@@ -4,7 +4,7 @@ import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneDateFilter, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
         by: ['bdId'],
         where: {
           bdId: { in: allUserIds },
-          ...ipdDoneDateFilter({ gte: start, lte: end }),
+          ...canonicalSalesCompletedWhere({ gte: start, lte: end }),
         },
         _count: { id: true },
         _sum: { netProfit: true, billAmount: true },
@@ -149,15 +149,18 @@ export async function GET(request: NextRequest) {
       `,
       prisma.$queryRaw<{ month: string; bdId: string; bdName: string; count: number }[]>`
         SELECT
-          TO_CHAR(l."surgeryDate", 'YYYY-MM') AS month,
+          TO_CHAR(COALESCE(l."surgeryDate", ar."surgeryDate"), 'YYYY-MM') AS month,
           u.id AS "bdId",
           u.name AS "bdName",
           COUNT(*)::int AS count
         FROM "Lead" l
         JOIN "User" u ON u.id = l."bdId"
-        WHERE l."bdId" = ANY(${allUserIds}) AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED') OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND (l."surgeryDate" IS NOT NULL OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" IS NOT NULL))))
-          AND (l."surgeryDate" >= ${start} AND l."surgeryDate" <= ${end}
-               OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" >= ${start} AND ar."surgeryDate" <= ${end}))
+        LEFT JOIN "AdmissionRecord" ar ON ar."leadId" = l.id
+        WHERE l."bdId" = ANY(${allUserIds})
+          AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
+               OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND COALESCE(l."surgeryDate", ar."surgeryDate") IS NOT NULL))
+          AND COALESCE(l."surgeryDate", ar."surgeryDate") >= ${start}
+          AND COALESCE(l."surgeryDate", ar."surgeryDate") <= ${end}
         GROUP BY 1, u.id, u.name
         ORDER BY 1, u.name
       `,
@@ -206,7 +209,7 @@ export async function GET(request: NextRequest) {
       const overlapEnd = new Date(Math.min(monthEnd.getTime(), target.periodEndDate.getTime()))
       const where: Prisma.LeadWhereInput = {
         bdId: { in: allUserIds },
-        ...ipdDoneDateFilter({ gte: overlapStart, lte: overlapEnd }),
+        ...canonicalSalesCompletedWhere({ gte: overlapStart, lte: overlapEnd }),
       }
       let achieved = 0
       let label: string = target.metric

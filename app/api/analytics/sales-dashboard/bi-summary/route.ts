@@ -53,7 +53,7 @@ interface BiSummary {
 }
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneWhere, ipdDoneDateFilter, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
       prisma.lead.count({
         where: {
           ...teamScope,
-          ...ipdDoneWhere(dateFilter),
+          ...canonicalSalesCompletedWhere(dateFilter),
         },
       }),
 

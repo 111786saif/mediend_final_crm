@@ -5,7 +5,7 @@ import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneDateFilter, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       prisma.lead.findMany({
         where: {
           bdId,
-          ...ipdDoneDateFilter({ gte: start, lte: end }),
+          ...canonicalSalesCompletedWhere({ gte: start, lte: end }),
         },
         select: {
           id: true,
@@ -125,10 +125,13 @@ export async function GET(request: NextRequest) {
       `,
       prisma.$queryRaw<{ month: string; count: number }[]>`
         SELECT
-          TO_CHAR(l."surgeryDate", 'YYYY-MM') AS month,
+          TO_CHAR(COALESCE(l."surgeryDate", ar."surgeryDate"), 'YYYY-MM') AS month,
           COUNT(*)::int AS count
         FROM "Lead" l
-        WHERE l."bdId" = ${bdId} AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED') OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND (l."surgeryDate" IS NOT NULL OR EXISTS (SELECT 1 FROM "AdmissionRecord" ar WHERE ar."leadId" = l.id AND ar."surgeryDate" IS NOT NULL))))
+        LEFT JOIN "AdmissionRecord" ar ON ar."leadId" = l.id
+        WHERE l."bdId" = ${bdId}
+          AND (l."caseStage" IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
+               OR (l."caseStage" IN ('PL_PENDING','OUTSTANDING') AND COALESCE(l."surgeryDate", ar."surgeryDate") IS NOT NULL))
         GROUP BY 1
         ORDER BY 1
       `,

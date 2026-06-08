@@ -45,32 +45,11 @@ export function canonicalSalesCompletedWhere(
 }
 
 /**
- * Date filter on surgeryDate only. Returns stage-only filter if empty.
- */
-export function ipdDoneDateFilter(
-  dateFilter: Prisma.DateTimeFilter,
-): Prisma.LeadWhereInput {
-  const hasDate = Object.keys(dateFilter).length > 0
-  return {
-    OR: [
-      {
-        caseStage: { in: [...CANONICAL_STAGES] },
-        ...(hasDate ? { surgeryDate: dateFilter } : {}),
-      },
-      {
-        caseStage: { in: [...PL_FALLBACK_STAGES] },
-        OR: [
-          { surgeryDate: hasDate ? dateFilter : { not: null } },
-          { admissionRecord: { is: { surgeryDate: hasDate ? dateFilter : { not: null } } } },
-        ],
-      },
-    ],
-  }
-}
-
-/**
  * Counts leads that transitioned to IPD_DONE / CASH_IPD_DONE within the
  * given date range, using the caseStageHistory.changedAt timestamp.
+ * 
+ * @deprecated Use canonicalSalesCompletedWhere. This function filters by
+ * status change date (changedAt), not by surgery date.
  */
 export function ipdDoneWhere(
   dateFilter: Prisma.DateTimeFilter,
@@ -84,6 +63,19 @@ export function ipdDoneWhere(
       },
     },
   }
+}
+
+/**
+ * Alias for canonicalSalesCompletedWhere. Kept as a named export
+ * so older callers can swap in gradually.
+ *
+ * @deprecated Import canonicalSalesCompletedWhere directly instead.
+ */
+export function ipdDoneDateFilter(
+  dateFilter: Prisma.DateTimeFilter,
+  extra?: Prisma.LeadWhereInput,
+): Prisma.LeadWhereInput {
+  return canonicalSalesCompletedWhere(dateFilter, extra)
 }
 
 /**
@@ -113,6 +105,7 @@ export function buildDateRange(
   }
   return filter
 }
+
 /**
  * In-memory date resolver for month bucketing in trend charts.
  * Falls back to createdDate only for display purposes (legacy leads

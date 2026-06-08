@@ -5,7 +5,7 @@ import { getSessionWithFreshUser } from '@/lib/session'
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
-import { ipdDoneDateFilter, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, resolveIpdDate, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     const completedWhere: Prisma.LeadWhereInput = {
       ...teamScope,
-      ...ipdDoneDateFilter(dateFilter),
+      ...canonicalSalesCompletedWhere(dateFilter),
     }
 
     const [
