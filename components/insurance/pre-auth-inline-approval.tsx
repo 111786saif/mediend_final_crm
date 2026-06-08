@@ -97,6 +97,13 @@ export function PreAuthInlineApproval({
   const newHospitalMarked = preAuthData?.newHospitalPreAuthRaised === true
   const showMarkNewHospitalFirst = isNewHospital && !newHospitalMarked
 
+  const isPreAuthRaised = 
+    lead?.caseStage === 'PREAUTH_RAISED' || 
+    lead?.caseStage === 'PREAUTH_COMPLETE' ||
+    lead?.caseStage === 'INITIATED' ||
+    lead?.caseStage === 'ADMITTED' ||
+    lead?.caseStage === 'DISCHARGED'
+
   const isFullyProcessed =
     (preAuthData?.approvalStatus === PreAuthStatus.APPROVED ||
      preAuthData?.approvalStatus === PreAuthStatus.REJECTED) &&
@@ -124,12 +131,6 @@ export function PreAuthInlineApproval({
     preAuthData?.hospitalNameSuggestion
 
   const hasAnyHospitalData = hasHospitalSuggestions || !!hasLegacyHospitals
-  const isPreAuthRaised = 
-    lead?.caseStage === 'PREAUTH_RAISED' || 
-    lead?.caseStage === 'PREAUTH_COMPLETE' ||
-    lead?.caseStage === 'INITIATED' ||
-    lead?.caseStage === 'ADMITTED' ||
-    lead?.caseStage === 'DISCHARGED'
   const isLocked = 
     lead?.caseStage === 'PREAUTH_COMPLETE' ||
     lead?.caseStage === 'INITIATED' ||
