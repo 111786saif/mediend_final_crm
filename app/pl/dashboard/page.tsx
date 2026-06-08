@@ -606,7 +606,7 @@ export default function PLLedgerPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
-                  {pipelineStats?.ipdDone ?? '—'}
+                  {records?.length ?? '—'}
                 </div>
                 <p className="text-xs text-cyan-800/70 dark:text-cyan-200/70 mt-1">Status update in range</p>
               </CardContent>

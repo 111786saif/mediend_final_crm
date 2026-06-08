@@ -89,16 +89,18 @@ export async function GET(request: NextRequest) {
           billAmount: true,
           netProfit: true,
           surgeryDate: true,
+          admissionRecord: { select: { surgeryDate: true } },
         },
       }),
     ])
 
-    // Bucket completed leads by month using surgeryDate
+    // Bucket completed leads by month using surgeryDate (with AdmissionRecord fallback)
     const ipdByMonth: { month: string; bdId: string; ipdCount: number }[] = []
     const monthCounts = new Map<string, Map<string, number>>()
 
     for (const lead of completedLeads) {
-      const surgeryDate = lead.surgeryDate
+      const surgeryDate = (lead as { surgeryDate?: Date | null }).surgeryDate
+        ?? (lead as { admissionRecord?: { surgeryDate?: Date | null } | null }).admissionRecord?.surgeryDate
       if (!surgeryDate) continue
       const d = new Date(surgeryDate as string)
       const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`

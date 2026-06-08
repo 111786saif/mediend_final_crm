@@ -150,6 +150,7 @@ export default function CaseTrackerPage() {
     }
     return {
       view: 'pipeline' as const,
+      caseStage: 'KYP_BASIC_PENDING,KYP_BASIC_COMPLETE,KYP_DETAILED_PENDING,KYP_DETAILED_COMPLETE,KYP_PENDING,KYP_COMPLETE,HOSPITALS_SUGGESTED,PREAUTH_RAISED,PREAUTH_COMPLETE,INITIATED,ADMITTED,CASH_IPD_PENDING,CASH_IPD_SUBMITTED,CASH_APPROVED,CASH_ON_HOLD,IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED,PL_PENDING,OUTSTANDING',
       ...(phoneParsed ? { phoneSearch: phoneParsed.last10 } : {}),
     }
   }, [user?.role, user?.id, phoneParsed])

@@ -1088,7 +1088,10 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
     const t = new Date()
     return new Date(t.getFullYear(), t.getMonth(), 1)
   })
-  const [endDate, setEndDate] = useState<Date | undefined>(() => new Date())
+  const [endDate, setEndDate] = useState<Date | undefined>(() => {
+    const t = new Date()
+    return new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59, 999)
+  })
 
   const [selectedBdId, setSelectedBdId] = useState<string | null>(null)
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)

@@ -17,6 +17,7 @@ export interface LeadFilters {
   source?: string
   startDate?: string
   endDate?: string
+  caseStage?: string
   view?: string
   /** Last 10 digits — server-only filter; omit from list responses */
   phoneSearch?: string
