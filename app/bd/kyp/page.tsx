@@ -266,26 +266,25 @@ export default function CaseTrackerPage() {
     if (monthFilter === 'all') return decorated
 
     return decorated.filter((d) => {
+      const isIpdDone = d.bucket === 'IPD_DONE'
+      if (isIpdDone) {
+        const sd = d.lead.surgeryDate
+        if (sd) {
+          const t = new Date(sd as string).getTime()
+          if (Number.isFinite(t) && t > 0) {
+            return monthKeyOf(new Date(t).toISOString()) === monthFilter
+          }
+        }
+        return false
+      }
       const surgeryTs = (() => {
-        const adSurg = (d.lead as { admissionRecord?: { surgeryDate?: string | Date } }).admissionRecord?.surgeryDate
-        const v = d.lead.surgeryDate ?? adSurg
+        const v = d.lead.surgeryDate
         if (!v) return Infinity
         const t = new Date(v as string).getTime()
         return Number.isFinite(t) ? t : Infinity
       })()
-      const isIpdDone = d.bucket === 'IPD_DONE'
-      const activityTs = (() => {
-        if (isIpdDone) {
-          if (Number.isFinite(surgeryTs) && surgeryTs > 0) return surgeryTs
-          const stageCh = d.lead.caseStageHistory?.[0]?.changedAt
-          if (stageCh) {
-            const t = new Date(stageCh as string).getTime()
-            if (Number.isFinite(t) && t > 0) return t
-          }
-        }
-        return getLatestActivityTime(d.lead)
-      })()
-      const effectiveTs = isIpdDone ? activityTs : (Math.min(surgeryTs, activityTs) || activityTs)
+      const activityTs = getLatestActivityTime(d.lead)
+      const effectiveTs = Math.min(surgeryTs, activityTs) || activityTs
       return monthKeyOf(new Date(effectiveTs).toISOString()) === monthFilter
     })
   }, [decorated, monthFilter])

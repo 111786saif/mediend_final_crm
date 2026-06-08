@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+import { canonicalSalesCompletedWhere, buildDateRange } from '@/lib/analytics/ipd-filters'
 
 function buildLeadDateWhere(
   dateField: 'admission' | 'surgery' | 'discharge',
@@ -48,14 +48,7 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    const range: Prisma.DateTimeFilter = {}
-    if (startDate) range.gte = new Date(startDate)
-    if (endDate) {
-      const end = new Date(endDate)
-      end.setHours(23, 59, 59, 999)
-      range.lte = end
-    }
-
+    const range = buildDateRange(startDate, endDate)
     const dateWhere = Object.keys(range).length > 0 ? range : undefined
     if (!dateWhere) {
       return successResponse({
