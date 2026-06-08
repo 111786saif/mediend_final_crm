@@ -167,10 +167,9 @@ export default function CaseTrackerPage() {
         lead.patientName.trim() === ''
       ) continue
       const bucket = lead.caseStage ? BUCKET_OF_STAGE[lead.caseStage as CaseStage] : undefined
-      // Leads that passed IPD done but moved to PL / completed still count as IPD done.
-      // Only fires for unmapped stages (PL_PENDING, etc.) — IPD_SCHEDULED stages
-      // (INITIATED, ADMITTED, etc.) are explicitly in BUCKET_OF_STAGE so never hit this.
       const resolvedBucket = bucket === undefined && (
+        lead.caseStage === CaseStage.PL_PENDING || lead.caseStage === CaseStage.OUTSTANDING
+      ) && (
         (lead as { surgeryDate?: unknown }).surgeryDate != null ||
         (lead as { admissionRecord?: { surgeryDate?: unknown } }).admissionRecord?.surgeryDate != null
       ) ? 'IPD_DONE' : bucket
