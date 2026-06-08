@@ -279,6 +279,7 @@ export default function PLLedgerPage() {
   const tableRecords = useMemo(
     () =>
       records?.filter((r) => {
+        if (!(r as Lead).dischargeSheet) return false
         if (activeFilterCount === 0) return true
         const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
         if (bdFilter !== 'all' && resolved.bdm !== bdFilter) return false

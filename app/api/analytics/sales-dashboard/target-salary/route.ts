@@ -117,11 +117,26 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    // Pre-compute actual netProfit per BD for the period
+    const netProfitAgg = await prisma.lead.groupBy({
+      by: ['bdId'],
+      where: {
+        ...canonicalSalesCompletedWhere({ gte: periodStart, lte: periodEnd }),
+      },
+      _sum: { netProfit: true },
+    })
+    const netProfitByBd = new Map<string, number>()
+    for (const row of netProfitAgg) {
+      netProfitByBd.set(row.bdId, row._sum.netProfit ?? 0)
+    }
+
     const bdSalaryTarget: Array<{
       bdId: string
       bdName: string
       managerName: string | null
       salary: number | null
+      netProfit: number
+      revenueSalaryRatio: number | null
       targetValue: number
       achieved: number
       ratio: number | null
@@ -130,6 +145,7 @@ export async function GET(request: NextRequest) {
     const bdTargets = targets.filter((t) => t.targetType === 'BD')
     for (const bd of bdsWithEmployee) {
       const salary = bd.employee?.salary ?? bd.employee?.salaryStructures?.[0]?.monthlyGross ?? null
+      const np = netProfitByBd.get(bd.id) ?? 0
       const bdTargetsForUser = bdTargets.filter((t) => t.targetForId === bd.id)
       let targetValue = 0
       let achieved = 0
@@ -163,15 +179,65 @@ export async function GET(request: NextRequest) {
         bdName: bd.name,
         managerName: bd.employee?.manager?.user?.name ?? null,
         salary: salary ?? null,
+        netProfit: np,
+        revenueSalaryRatio: salary != null && salary > 0 ? np / salary : null,
         targetValue,
         achieved,
         ratio: salary != null && salary > 0 ? achieved / salary : null,
       })
     }
 
+    // Team-level salary aggregation: group BDs by manager, include manager's own salary
+    const managerEmpIds = new Set(bdsWithEmployee.map((b) => b.employee?.managerId).filter(Boolean) as string[])
+    const managersWithSalary = await prisma.employee.findMany({
+      where: { id: { in: [...managerEmpIds] } },
+      select: { id: true, salary: true, salaryStructures: { orderBy: { effectiveFrom: 'desc' }, take: 1, select: { monthlyGross: true } }, user: { select: { name: true } } },
+    })
+    const managerSalaryMap = new Map<string, { salary: number; name: string }>()
+    for (const m of managersWithSalary) {
+      managerSalaryMap.set(m.id, { salary: m.salary ?? m.salaryStructures?.[0]?.monthlyGross ?? 0, name: m.user?.name ?? m.id })
+    }
+
+    const teamSalaryBreakdown: Array<{
+      managerId: string
+      teamName: string
+      totalSalary: number
+      totalNetProfit: number
+      revenueSalaryRatio: number | null
+      memberCount: number
+    }> = []
+    const teamMap = new Map<string, { totalSalary: number; totalNetProfit: number; memberCount: number }>()
+    // Build a quick lookup from bdId -> salary + netProfit
+    const bdLookup = new Map(bdSalaryTarget.map((b) => [b.bdId, b]))
+    for (const bd of bdsWithEmployee) {
+      const mgrId = bd.employee?.managerId
+      if (!mgrId) continue
+      if (!teamMap.has(mgrId)) teamMap.set(mgrId, { totalSalary: 0, totalNetProfit: 0, memberCount: 0 })
+      const t = teamMap.get(mgrId)!
+      const bdEntry = bdLookup.get(bd.id)
+      t.totalSalary += bdEntry?.salary ?? 0
+      t.totalNetProfit += bdEntry?.netProfit ?? 0
+      t.memberCount += 1
+    }
+    for (const [mgrId, data] of teamMap) {
+      const mgrInfo = managerSalaryMap.get(mgrId)
+      const leadSalary = mgrInfo?.salary ?? 0
+      data.totalSalary += leadSalary
+      teamSalaryBreakdown.push({
+        managerId: mgrId,
+        teamName: mgrInfo?.name ?? mgrId,
+        totalSalary: data.totalSalary,
+        totalNetProfit: data.totalNetProfit,
+        revenueSalaryRatio: data.totalSalary > 0 ? data.totalNetProfit / data.totalSalary : null,
+        memberCount: data.memberCount,
+      })
+    }
+    teamSalaryBreakdown.sort((a, b) => b.totalNetProfit - a.totalNetProfit)
+
     return successResponse({
       teamTargetBreakdown,
       bdSalaryTarget: bdSalaryTarget.sort((a, b) => (b.achieved ?? 0) - (a.achieved ?? 0)),
+      teamSalaryBreakdown,
     })
   } catch (error) {
     console.error('Target salary error:', error)

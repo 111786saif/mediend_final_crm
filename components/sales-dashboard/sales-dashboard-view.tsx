@@ -42,6 +42,7 @@ import {
   Zap,
 } from 'lucide-react'
 import Link from 'next/link'
+import { useAuth } from '@/hooks/use-auth'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -132,6 +133,25 @@ interface LeadsBreakdown {
   byCircle: Array<{ circle: string; totalLeads: number; converted: number; conversionRate: number }>
   bySource: Array<{ source: string; totalLeads: number; converted: number; conversionRate: number }>
   byCampaign: Array<{ campaign: string; totalLeads: number; converted: number; conversionRate: number }>
+}
+
+interface TargetSalaryData {
+  bdSalaryTarget: Array<{
+    bdId: string
+    bdName: string
+    managerName: string | null
+    salary: number | null
+    netProfit: number
+    revenueSalaryRatio: number | null
+  }>
+  teamSalaryBreakdown: Array<{
+    managerId: string
+    teamName: string
+    totalSalary: number
+    totalNetProfit: number
+    revenueSalaryRatio: number | null
+    memberCount: number
+  }>
 }
 
 type DashboardVariant = 'org' | 'team-lead'
@@ -614,7 +634,7 @@ function OverviewTab({
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y">
-              {(bdLeaderboard ?? []).slice(0, 10).map((bd, i) => {
+              {[...(bdLeaderboard ?? [])].sort((a, b) => b.ipdDone - a.ipdDone).slice(0, 5).map((bd, i) => {
                 const displayName = bd.bdName ?? bd.name ?? 'Unknown'
                 return (
                   <button
@@ -648,7 +668,7 @@ function OverviewTab({
           </CardHeader>
           <CardContent className="p-0">
             <div className="divide-y">
-              {(teamLeaderboard ?? []).slice(0, 8).map((team, i) => {
+              {[...(teamLeaderboard ?? [])].sort((a, b) => b.ipdDone - a.ipdDone).slice(0, 5).map((team, i) => {
                 const displayName = team.teamName ?? team.managerName ?? team.name ?? 'Unknown'
                 return (
                   <div key={team.managerId ?? displayName} className="flex items-center gap-3 px-4 py-3">
@@ -709,10 +729,21 @@ function TeamPerformanceTab({
   onSelectTeam: (managerId: string) => void
   variant: DashboardVariant
 }) {
+  const { user } = useAuth()
+  const isMdOrAdmin = user?.role === 'MD' || user?.role === 'ADMIN'
+
   const { data: bdMonthly } = useQuery<BdMonthly>({
     queryKey: ['sales-dashboard', variant, 'bd-monthly', dateParams],
     queryFn: () => apiGet<BdMonthly>(`/api/analytics/sales-dashboard/bd-monthly${dateParams ? '?' + dateParams : ''}`),
   })
+
+  const { data: targetSalary } = useQuery<TargetSalaryData>({
+    queryKey: ['sales-dashboard', variant, 'target-salary', dateParams],
+    queryFn: () => apiGet<TargetSalaryData>(`/api/analytics/sales-dashboard/target-salary${dateParams ? '?' + dateParams : ''}`),
+    enabled: isMdOrAdmin,
+  })
+
+  const teamSalaryMap = new Map((targetSalary?.teamSalaryBreakdown ?? []).map((t) => [t.managerId, t]))
 
   // Build manager groups from bd-monthly data
   const managerGroups = new Map<string, ManagerGroup>()
@@ -753,6 +784,7 @@ function TeamPerformanceTab({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {groups.map((group) => {
           const conv = group.totalLeads > 0 ? ((group.totalIpd / group.totalLeads) * 100).toFixed(1) : '0.0'
+          const teamSal = teamSalaryMap.get(group.managerId)
           return (
             <button
               key={group.managerId}
@@ -780,6 +812,17 @@ function TeamPerformanceTab({
                   <p className="text-[10px] text-muted-foreground uppercase">Conv.</p>
                 </div>
               </div>
+              {isMdOrAdmin && teamSal && teamSal.totalSalary > 0 && (
+                <div className="mt-2 pt-2 border-t border-border/50">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Team Salary: ₹{fmtK(teamSal.totalSalary)}</span>
+                    <span>
+                      Rev/Sal: <span className={teamSal.revenueSalaryRatio != null && teamSal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{teamSal.revenueSalaryRatio != null ? `${teamSal.revenueSalaryRatio.toFixed(1)}x` : '–'}</span>
+                    </span>
+                  </div>
+                  <Progress value={Math.min(teamSal.revenueSalaryRatio != null ? (teamSal.revenueSalaryRatio > 2 ? 100 : teamSal.revenueSalaryRatio * 50) : 0, 100)} className="mt-1.5 h-1" />
+                </div>
+              )}
               <Progress value={Math.min(Number(conv), 100)} className="mt-2 h-1.5" />
             </button>
           )
@@ -802,11 +845,21 @@ function BdPerformanceTab({
   variant: DashboardVariant
 }) {
   const [sortBy, setSortBy] = useState<'ipdDone' | 'totalLeads' | 'conversionRate'>('ipdDone')
+  const { user } = useAuth()
+  const isMdOrAdmin = user?.role === 'MD' || user?.role === 'ADMIN'
 
   const { data: bdMonthly } = useQuery<BdMonthly>({
     queryKey: ['sales-dashboard', variant, 'bd-monthly', dateParams],
     queryFn: () => apiGet<BdMonthly>(`/api/analytics/sales-dashboard/bd-monthly${dateParams ? '?' + dateParams : ''}`),
   })
+
+  const { data: targetSalary } = useQuery<TargetSalaryData>({
+    queryKey: ['sales-dashboard', variant, 'target-salary', dateParams],
+    queryFn: () => apiGet<TargetSalaryData>(`/api/analytics/sales-dashboard/target-salary${dateParams ? '?' + dateParams : ''}`),
+    enabled: isMdOrAdmin,
+  })
+
+  const salaryByBd = new Map((targetSalary?.bdSalaryTarget ?? []).map((b) => [b.bdId, b]))
 
   const bds = (bdMonthly?.bds ?? []).map((bd) => ({
     ...bd,
@@ -833,7 +886,9 @@ function BdPerformanceTab({
 
       {/* BD cards */}
       <div className="space-y-2">
-        {bds.map((bd, i) => (
+        {bds.map((bd, i) => {
+          const sal = salaryByBd.get(bd.bdId)
+          return (
           <button
             key={bd.bdId}
             onClick={() => onSelectBd(bd.bdId)}
@@ -851,6 +906,11 @@ function BdPerformanceTab({
                   <span className="text-xs text-muted-foreground">{bd.totalLeads} leads</span>
                   <span className="text-xs text-violet-600">{bd.conversionRate.toFixed(1)}%</span>
                   <Progress value={Math.min(bd.conversionRate, 100)} className="h-1 w-16" />
+                  {isMdOrAdmin && sal && sal.salary != null && sal.salary > 0 && (
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      ₹{fmtK(sal.salary)} · <span className={sal.revenueSalaryRatio != null && sal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{sal.revenueSalaryRatio != null ? `${(sal.revenueSalaryRatio).toFixed(1)}x` : '–'}</span>
+                    </span>
+                  )}
                 </div>
               </div>
               {/* Last 4 months mini bars */}
@@ -873,8 +933,17 @@ function BdPerformanceTab({
               </div>
               <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
             </div>
+            {/* Mobile: revenue/salary row */}
+            {isMdOrAdmin && sal && sal.salary != null && sal.salary > 0 && (
+              <div className="flex sm:hidden items-center justify-between mt-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
+                <span>Salary: ₹{fmtK(sal.salary)}</span>
+                <span>
+                  Rev/Sal: <span className={sal.revenueSalaryRatio != null && sal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{sal.revenueSalaryRatio != null ? `${sal.revenueSalaryRatio.toFixed(1)}x` : '–'}</span>
+                </span>
+              </div>
+            )}
           </button>
-        ))}
+        )})}
         {bds.length === 0 && <p className="text-center text-muted-foreground py-12 text-sm">No data for selected period</p>}
       </div>
     </div>

@@ -102,7 +102,7 @@ export function PlPatientDrawer({
         } else if (dateField === 'discharge') {
           raw = p.dischargeSheet?.dischargeDate
         } else {
-          raw = p.surgeryDate
+          raw = p.surgeryDate ?? p.admissionRecord?.surgeryDate
         }
         if (!raw) return false
         const d = new Date(raw)
