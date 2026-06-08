@@ -6,15 +6,13 @@ const PL_FALLBACK_STAGES = ['PL_PENDING', 'OUTSTANDING'] as const
 /**
  * Org-wide truth for "IPD done / surgery":
  *   caseStage IN ('IPD_DONE','CASH_IPD_DONE','DISCHARGED','CASH_DISCHARGED')
- *   OR (caseStage IN ('PL_PENDING','OUTSTANDING') AND surgeryDate IS NOT NULL)
- *   AND surgeryDate within the date range (when provided).
+ *     AND (Lead.surgeryDate OR AdmissionRecord.surgeryDate) within range
+ *   OR (caseStage IN ('PL_PENDING','OUTSTANDING')
+ *     AND (Lead.surgeryDate OR AdmissionRecord.surgeryDate) within range)
  *
- * BD marks IPD_DONE → sets caseStage + surgeryDate. That is the single
- * source of truth. DISCHARGED leads are included because BD did the
- * surgery — insurance just processed it further.
- *
- * PL_PENDING / OUTSTANDING leads that still have a surgeryDate also count —
- * these are leads that completed surgery and moved to PL/outstanding.
+ * BD marks IPD_DONE → sets caseStage + (Lead.surgeryDate or AdmissionRecord.surgeryDate).
+ * DISCHARGED leads are included because BD did the surgery — insurance just
+ * processed it further. Some legacy leads have surgeryDate only on AdmissionRecord.
  *
  * Every endpoint that counts IPD done / surgeries MUST use
  * `canonicalSalesCompletedWhere(dateFilter)`.
@@ -25,18 +23,24 @@ export function canonicalSalesCompletedWhere(
   extra?: Prisma.LeadWhereInput,
 ): Prisma.LeadWhereInput {
   const hasDate = Object.keys(dateFilter).length > 0
+  const surgeryOr = hasDate
+    ? [
+        { surgeryDate: dateFilter },
+        { admissionRecord: { is: { surgeryDate: dateFilter } } },
+      ]
+    : [
+        { surgeryDate: { not: null } },
+        { admissionRecord: { is: { surgeryDate: { not: null } } } },
+      ]
   const where: Prisma.LeadWhereInput = {
     OR: [
       {
         caseStage: { in: [...CANONICAL_STAGES] },
-        ...(hasDate ? { surgeryDate: dateFilter } : {}),
+        OR: surgeryOr,
       },
       {
         caseStage: { in: [...PL_FALLBACK_STAGES] },
-        OR: [
-          { surgeryDate: hasDate ? dateFilter : { not: null } },
-          { admissionRecord: { is: { surgeryDate: hasDate ? dateFilter : { not: null } } } },
-        ],
+        OR: surgeryOr,
       },
     ],
   }
