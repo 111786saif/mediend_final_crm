@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
       // Month series uses the same completed + date filter as the rest of the breakdown
       prisma.lead.findMany({
         where: completedWhere,
-        select: { conversionDate: true, surgeryDate: true, leadEntryDate: true, createdDate: true, billAmount: true, netProfit: true },
+        select: { surgeryDate: true, billAmount: true, netProfit: true, admissionRecord: { select: { surgeryDate: true } } },
       }),
     ])
 
@@ -133,7 +133,8 @@ export async function GET(request: NextRequest) {
 
     const monthMap = new Map<string, { count: number; revenue: number; profit: number }>()
     completedForMonth.forEach((lead) => {
-      const d = resolveIpdDate(lead)
+      const d = resolveIpdDate({ surgeryDate: lead.surgeryDate, admissionSurgeryDate: lead.admissionRecord?.surgeryDate })
+      if (!d) return
       const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
       const cur = monthMap.get(monthKey) ?? { count: 0, revenue: 0, profit: 0 }
       cur.count += 1

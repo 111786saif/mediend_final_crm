@@ -16,6 +16,11 @@ export const LEAD_HYDRATE_INCLUDE = {
               department: { include: { head: { select: { name: true } } } },
             },
           },
+          manager: {
+            select: {
+              user: { select: { id: true, name: true } },
+            },
+          },
         },
       },
     },
@@ -75,9 +80,12 @@ function resolveManagerName(lead: LeadWithHydrate | null | undefined): string | 
   const teamLeadUser = teamLead?.user as AnyRecord | null | undefined
   const department = team?.department as AnyRecord | null | undefined
   const departmentHead = department?.head as AnyRecord | null | undefined
+  const manager = employee?.manager as AnyRecord | null | undefined
+  const managerUser = manager?.user as AnyRecord | null | undefined
   return (
     (teamLeadUser?.name as string | undefined) ??
     (departmentHead?.name as string | undefined) ??
+    (managerUser?.name as string | undefined) ??
     null
   )
 }

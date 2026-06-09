@@ -302,18 +302,18 @@ export async function GET(request: NextRequest) {
     const completedLeadsForTrends = await prisma.lead.findMany({
       where: completedWhere,
       select: {
-        conversionDate: true,
-        leadEntryDate: true,
-        createdDate: true,
         surgeryDate: true,
         billAmount: true,
         netProfit: true,
+        admissionRecord: { select: { surgeryDate: true } },
       },
     })
 
     const trendsMap = new Map<string, { revenue: number; profit: number; surgeries: number }>()
     completedLeadsForTrends.forEach((lead) => {
-      const dateKey = resolveIpdDate(lead).toISOString().split('T')[0]
+      const d = resolveIpdDate({ surgeryDate: lead.surgeryDate, admissionSurgeryDate: lead.admissionRecord?.surgeryDate })
+      if (!d) return
+      const dateKey = d.toISOString().split('T')[0]
       const existing = trendsMap.get(dateKey) || { revenue: 0, profit: 0, surgeries: 0 }
       existing.revenue += lead.billAmount || 0
       existing.profit += lead.netProfit || 0

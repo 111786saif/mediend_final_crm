@@ -234,6 +234,11 @@ export async function GET(request: NextRequest) {
                   department: { select: { head: { select: { name: true } } } },
                 },
               },
+              manager: {
+                select: {
+                  user: { select: { id: true, name: true } },
+                },
+              },
             },
           },
         },

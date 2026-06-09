@@ -112,14 +112,12 @@ export function buildDateRange(
 
 /**
  * In-memory date resolver for month bucketing in trend charts.
- * Falls back to createdDate only for display purposes (legacy leads
- * that may lack surgeryDate).
+ * Uses Lead.surgeryDate first, then AdmissionRecord.surgeryDate.
+ * No createdDate fallback — leads without a surgery date are excluded.
  */
 export function resolveIpdDate(lead: {
-  conversionDate: Date | null
   surgeryDate: Date | null
-  leadEntryDate: Date | null
-  createdDate: Date
-}): Date {
-  return lead.surgeryDate ?? lead.createdDate
+  admissionSurgeryDate?: Date | null
+}): Date | null {
+  return lead.surgeryDate ?? lead.admissionSurgeryDate ?? null
 }

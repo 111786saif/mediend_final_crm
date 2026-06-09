@@ -87,6 +87,8 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
   const teamLeadUser = teamLead?.user as AnyRecord | undefined
   const department = team?.department as AnyRecord | undefined
   const departmentHead = department?.head as AnyRecord | undefined
+  const bdManager = bdEmployee?.manager as AnyRecord | undefined
+  const bdManagerUser = bdManager?.user as AnyRecord | undefined
 
   // Pre-auth is the canonical source for hospital + doctor: the hospital
   // selected during pre-authorization is THE hospital for the case, and the
@@ -126,6 +128,7 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
       // Raw Prisma shape used by /api/leads list
       teamLeadUser?.name,
       departmentHead?.name,
+      bdManagerUser?.name,
       // Legacy shape used by /api/leads/[id] (toLegacyBdShape flattens employee.team)
       (bd?.team as AnyRecord | undefined)?.salesHead?.name,
       (bd?.manager as AnyRecord | undefined)?.name,

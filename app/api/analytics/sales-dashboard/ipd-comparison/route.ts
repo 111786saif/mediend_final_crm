@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
           ...completedWhereBase,
           ...canonicalSalesCompletedWhere({ gte: new Date(Date.UTC(currentYear, 0, 1, 0, 0, 0)), lte: new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 23, 59, 59, 999)) }),
         },
-        select: { conversionDate: true, surgeryDate: true, leadEntryDate: true, createdDate: true },
+        select: { surgeryDate: true, admissionRecord: { select: { surgeryDate: true } } },
       }),
     ])
 
@@ -98,7 +98,8 @@ export async function GET(request: NextRequest) {
       monthCountsUpToThisDay.set(String(m), 0)
     }
     allCompletedThisYear.forEach((lead) => {
-      const d = resolveIpdDate(lead)
+      const d = resolveIpdDate({ surgeryDate: lead.surgeryDate, admissionSurgeryDate: lead.admissionRecord?.surgeryDate })
+      if (!d) return
       if (d.getUTCFullYear() !== currentYear) return
       const m = d.getUTCMonth() + 1
       const key = String(m)
