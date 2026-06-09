@@ -44,9 +44,13 @@ export type LeadWithHydrate = Prisma.LeadGetPayload<{
 
 type AnyRecord = Record<string, unknown>
 
+const PLACEHOLDER_VALUES = new Set(['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd'])
+
 function pickFirst<T>(...values: Array<T | null | undefined>): T | null {
   for (const v of values) {
-    if (v !== null && v !== undefined && v !== '') return v
+    if (v === null || v === undefined || v === '') continue
+    if (typeof v === 'string' && PLACEHOLDER_VALUES.has(v.toLowerCase())) continue
+    return v
   }
   return null
 }
@@ -85,14 +89,21 @@ function resolvePreAuth(lead: LeadWithHydrate | null | undefined): {
   const kyp = (lead as AnyRecord | undefined)?.kypSubmission as AnyRecord | undefined
   const preAuth = kyp?.preAuthData as AnyRecord | undefined
   if (!preAuth) return { hospital: null, doctor: null }
-  const hospital = (preAuth.requestedHospitalName as string | undefined) ?? null
+  const hospital =
+    (preAuth.requestedHospitalName as string | undefined) ??
+    (preAuth.hospitalNameSuggestion as string | undefined) ??
+    null
   const suggestions =
     (preAuth.suggestedHospitals as Array<AnyRecord> | undefined) ?? []
   const matched = hospital
     ? suggestions.find((s) => (s.hospitalName as string | undefined) === hospital)
     : undefined
   const doctor = (matched?.suggestedDoctor as string | undefined) ?? null
-  return { hospital, doctor }
+  const firstSuggested = suggestions[0]
+  return {
+    hospital: hospital ?? (firstSuggested?.hospitalName as string | undefined) ?? null,
+    doctor: doctor ?? (firstSuggested?.suggestedDoctor as string | undefined) ?? null,
+  }
 }
 
 function firstOfMonth(d: Date | null | undefined): Date | null {

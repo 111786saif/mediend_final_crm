@@ -7,11 +7,15 @@
 
 type AnyRecord = Record<string, unknown>
 
+const PLACEHOLDER_VALUES = new Set(['not specified', 'n/a', 'na', 'none', 'null', '-', '--', 'tbd'])
+
 function pickString(...values: Array<unknown>): string | null {
   for (const v of values) {
     if (v == null) continue
     const s = String(v).trim()
-    if (s) return s
+    if (!s) continue
+    if (PLACEHOLDER_VALUES.has(s.toLowerCase())) continue
+    return s
   }
   return null
 }
@@ -98,6 +102,7 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
       )
     : undefined
   const preAuthDoctor = matchedSuggestion?.suggestedDoctor as string | undefined
+  const firstSuggested = suggestedHospitals[0]
 
   const surgery = pickDate(
     pl?.surgeryDate,
@@ -130,13 +135,16 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
       ds?.doctorName,
       preAuthDoctor,
       record.ipdDrName,
-      record.surgeonName
+      record.surgeonName,
+      firstSuggested?.suggestedDoctor
     ),
     hospital: pickString(
       pl?.hospitalName,
       ds?.hospitalName,
       preAuthHospital,
       admission?.admittingHospital,
+      preAuth?.hospitalNameSuggestion,
+      firstSuggested?.hospitalName,
       record.hospitalName
     ),
     admission: admissionDate,
