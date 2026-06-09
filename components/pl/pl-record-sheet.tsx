@@ -23,6 +23,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
 
 interface Lead {
   id: string
@@ -190,7 +191,9 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
         ? String(pl.cashOrDedPaid)
         : pl?.cashPaidByPatient != null && Number(pl.cashPaidByPatient) !== 0
           ? String(pl.cashPaidByPatient)
-          : ''
+          : (ds?.collectedByHospital != null || ds?.collectedByMediend != null)
+            ? String(Number(ds?.collectedByHospital ?? 0) + Number(ds?.collectedByMediend ?? 0))
+            : ''
 
     const dedTotal =
       ds?.deductionAmount != null && Number(ds.deductionAmount) !== 0
@@ -216,7 +219,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           month: monthValue ? monthValue.slice(0, 7) : '',
           admissionDate: admissionRaw ? new Date(admissionRaw as string).toISOString().slice(0, 10) : '',
           surgeryDate: surgeryDate ? new Date(surgeryDate as string).toISOString().slice(0, 10) : '',
-          managerName: (pl?.managerName as string) || '',
+          managerName: (pl?.managerName as string) || (ds?.managerName as string) || (record.bd as any)?.employee?.team?.teamLead?.user?.name || (record.bd as any)?.employee?.team?.department?.head?.name || '',
           bdmName: (pl?.bdmName as string) || record.bd?.name || '',
           paymentType: (pl?.paymentType as string) || '',
           status: (pl?.status as string) || '',
@@ -466,7 +469,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Hospital</Label>
-                      <p className="font-medium">{record.hospitalName ?? '—'}</p>
+                      <p className="font-medium">{resolveLeadHospitalDoctor(record as unknown as Record<string, unknown>).hospital ?? '—'}</p>
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Treatment</Label>

@@ -123,8 +123,12 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
     manager: pickString(
       pl?.managerName,
       ds?.managerName,
+      // Raw Prisma shape used by /api/leads list
       teamLeadUser?.name,
-      departmentHead?.name
+      departmentHead?.name,
+      // Legacy shape used by /api/leads/[id] (toLegacyBdShape flattens employee.team)
+      (bd?.team as AnyRecord | undefined)?.salesHead?.name,
+      (bd?.manager as AnyRecord | undefined)?.name,
     ),
     bdm: pickString(pl?.bdmName, ds?.bdmName, bd?.name),
     patient: pickString(record.patientName, pl?.patientName, ds?.patientName),
