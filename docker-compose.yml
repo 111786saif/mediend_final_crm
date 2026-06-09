@@ -296,6 +296,26 @@ services:
       - tools
     entrypoint: ["bun", "run", "scripts/backfill-pl-records.ts"]
 
+  # One-off: backfill Lead.hospitalName / ipdDrName / surgeonName from every
+  # available source (discharge sheet, PL record, pre-auth) for leads where
+  # hospitalName is still "Not Specified". Broader than backfill-hospital-doctor
+  # (which only handles insurance-flow PREAUTH_COMPLETE+ leads).
+  # Dry run: docker compose --profile tools run --rm backfill-all-hospitals -- --dry-run
+  # Live:    docker compose --profile tools run --rm backfill-all-hospitals
+  backfill-all-hospitals:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /opt/mediend-crm/mediend-crm2/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/backfill-all-hospitals.ts"]
+
   # One-off: backfill Lead.hospitalName / ipdDrName from the pre-auth-approved
   # hospital for historical approved leads, so every dashboard (insurance, case
   # tracker, TL pipeline, compliance, PL) shows the post-approval hospital +
