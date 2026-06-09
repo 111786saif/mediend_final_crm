@@ -143,12 +143,22 @@ export default function EditDischargeSheetPage() {
     setSheet((prev) => (prev ? { ...prev, [key]: value } : prev))
   }
 
+  const stripNulls = (obj: Record<string, unknown>): Record<string, unknown> => {
+    const result: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== null) {
+        result[key] = value
+      }
+    }
+    return result
+  }
+
   const handleSave = async () => {
     if (!sheet?.id) return
 
     setSaving(true)
     try {
-      await apiPatch(`/api/discharge-sheet/${sheet.id}`, sheet)
+      await apiPatch(`/api/discharge-sheet/${sheet.id}`, stripNulls(sheet as unknown as Record<string, unknown>))
       toast.success('Discharge sheet updated')
       const isCash = sheet.paymentType === 'CASH' || sheet.approvedOrCash === 'CASH'
       router.push(`/patient/${leadId}/${isCash ? 'discharge-cash' : 'discharge'}`)

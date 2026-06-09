@@ -136,6 +136,7 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
       pl?.hospitalName,
       ds?.hospitalName,
       preAuthHospital,
+      admission?.admittingHospital,
       record.hospitalName
     ),
     admission: admissionDate,
