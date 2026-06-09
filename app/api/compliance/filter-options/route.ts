@@ -54,6 +54,14 @@ export async function GET(request: NextRequest) {
         circle: true,
         treatment: true,
         dischargeSheet: { select: { doctorName: true, hospitalName: true } },
+        kypSubmission: {
+          select: {
+            preAuthData: {
+              select: { requestedHospitalName: true, suggestedHospitals: true },
+            },
+          },
+        },
+        plRecord: { select: { hospitalName: true, doctorName: true } },
       },
     })
 

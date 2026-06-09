@@ -4,6 +4,7 @@ import { useState } from "react"
 import { format } from "date-fns"
 import { Star } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { resolveLeadHospitalDoctor } from "@/lib/lead-display"
 import type { ComplianceCall } from "@/hooks/use-compliance-calls"
 
 interface Props {
@@ -27,6 +28,7 @@ export function ReviewCard({ call, onOpen }: Props) {
     ? format(new Date(call.completedAt), "d MMM yyyy")
     : format(new Date(call.createdAt), "d MMM yyyy")
   const bdmName = call.lead.dischargeSheet?.bdmName
+  const resolved = resolveLeadHospitalDoctor(call.lead)
   const handleOpen = () => onOpen?.(call)
 
   return (
@@ -64,7 +66,7 @@ export function ReviewCard({ call, onOpen }: Props) {
             </div>
           )}
           <p className="mt-1 truncate text-xs text-muted-foreground">
-            {call.lead.treatment ?? "—"} · {call.lead.hospitalName}
+            {call.lead.treatment ?? "—"} · {resolved.hospital ?? "—"}
           </p>
           <p className="truncate text-xs text-muted-foreground/80">
             BD {call.lead.bd?.name ?? "—"}

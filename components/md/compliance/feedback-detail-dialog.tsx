@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
+import { resolveLeadHospitalDoctor } from "@/lib/lead-display"
 import {
   CONCERN_CATEGORY_LABEL,
   useComplianceCall,
@@ -67,6 +68,7 @@ export function FeedbackDetailDialog({ callId, open, onOpenChange }: Props) {
 
 function FeedbackBody({ call }: { call: ComplianceCall }) {
   const dischargeDate = call.lead.dischargeSheet?.dischargeDate
+  const resolved = resolveLeadHospitalDoctor(call.lead)
   return (
     <div className="space-y-5 text-sm">
       <div className="flex flex-wrap items-center gap-2">
@@ -107,8 +109,8 @@ function FeedbackBody({ call }: { call: ComplianceCall }) {
 
       <Group title="Patient & case">
         <Pair label="Treatment" value={call.lead.treatment} />
-        <Pair label="Hospital" value={call.lead.hospitalName} />
-        <Pair label="Surgeon" value={call.lead.surgeonName} />
+        <Pair label="Hospital" value={resolved.hospital} />
+        <Pair label="Surgeon" value={resolved.doctor} />
         <Pair
           label="Date of surgery"
           value={

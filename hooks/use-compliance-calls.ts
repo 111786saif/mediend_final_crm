@@ -71,6 +71,13 @@ export interface ComplianceCallLead {
     doctorName: string | null
     hospitalName: string | null
   } | null
+  kypSubmission: {
+    preAuthData: {
+      requestedHospitalName: string | null
+      suggestedHospitals: Array<{ hospitalName: string; suggestedDoctor?: string | null }> | null
+    } | null
+  } | null
+  plRecord: { hospitalName: string | null; doctorName: string | null } | null
 }
 
 export interface ComplianceCall {

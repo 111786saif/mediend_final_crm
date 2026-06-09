@@ -158,7 +158,7 @@ export async function GET(request: NextRequest) {
       treatment: l.treatment ?? 'Unknown',
       hospitalName: l.hospitalName,
       surgeonName: l.surgeonName ?? null,
-      date: resolveIpdDate(l).toISOString(),
+      date: l.surgeryDate?.toISOString() ?? null,
       billAmount: l.billAmount ?? 0,
       netProfit: l.netProfit ?? 0,
       circle: l.circle,

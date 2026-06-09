@@ -99,7 +99,7 @@ interface BdMonthly {
 interface BdDetail {
   bd: { id: string; name: string; profilePicture: string | null; managerName: string | null }
   kpis: { totalLeads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number; avgTicketSize: number }
-  surgeries: Array<{ id: string; patientName: string; treatment: string; hospitalName: string; surgeonName: string | null; date: string; billAmount: number; netProfit: number; circle: string }>
+  surgeries: Array<{ id: string; patientName: string; treatment: string; hospitalName: string; surgeonName: string | null; date: string | null; billAmount: number; netProfit: number; circle: string }>
   monthWise: Array<{ month: string; leadCount: number; ipdCount: number }>
   treatmentBreakdown: Array<{ treatment: string; count: number }>
 }
@@ -364,7 +364,7 @@ function BdDetailSheet({
                           </div>
                           <div className="text-right shrink-0">
                             <p className="font-semibold text-emerald-600">{fmtK(s.billAmount)}</p>
-                            <p className="text-xs text-muted-foreground">{format(new Date(s.date), 'dd MMM yy')}</p>
+                            <p className="text-xs text-muted-foreground">{s.date ? format(new Date(s.date), 'dd MMM yy') : '–'}</p>
                           </div>
                         </div>
                       </div>
@@ -777,7 +777,9 @@ function TeamPerformanceTab({
       }
     }
   }
-  const groups = [...managerGroups.values()].sort((a, b) => b.totalIpd - a.totalIpd)
+  const groups = [...managerGroups.values()]
+    .filter((g) => g.managerName !== 'Hardeep Bhargav')
+    .sort((a, b) => b.totalIpd - a.totalIpd)
 
   return (
     <div className="space-y-6">

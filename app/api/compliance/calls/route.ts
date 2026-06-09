@@ -196,6 +196,17 @@ export async function GET(request: NextRequest) {
                 hospitalName: true,
               },
             },
+            kypSubmission: {
+              select: {
+                preAuthData: {
+                  select: {
+                    requestedHospitalName: true,
+                    suggestedHospitals: true,
+                  },
+                },
+              },
+            },
+            plRecord: { select: { hospitalName: true, doctorName: true } },
           },
         },
         calledBy: { select: { id: true, name: true } },

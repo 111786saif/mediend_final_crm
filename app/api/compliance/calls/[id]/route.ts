@@ -58,13 +58,25 @@ export async function GET(
             treatment: true,
             hospitalName: true,
             surgeonName: true,
+            ipdDrName: true,
             surgeryDate: true,
             caseStage: true,
             flowType: true,
             bd: { select: { id: true, name: true } },
             dischargeSheet: {
-              select: { id: true, dischargeDate: true, bdmName: true, managerName: true },
+              select: { id: true, dischargeDate: true, bdmName: true, managerName: true, doctorName: true, hospitalName: true },
             },
+            kypSubmission: {
+              select: {
+                preAuthData: {
+                  select: {
+                    requestedHospitalName: true,
+                    suggestedHospitals: true,
+                  },
+                },
+              },
+            },
+            plRecord: { select: { hospitalName: true, doctorName: true } },
           },
         },
         calledBy: { select: { id: true, name: true } },
@@ -170,11 +182,25 @@ export async function PATCH(
             treatment: true,
             hospitalName: true,
             surgeonName: true,
+            ipdDrName: true,
             surgeryDate: true,
+            caseStage: true,
+            flowType: true,
             bd: { select: { id: true, name: true } },
             dischargeSheet: {
-              select: { id: true, dischargeDate: true, bdmName: true, managerName: true },
+              select: { id: true, dischargeDate: true, bdmName: true, managerName: true, doctorName: true, hospitalName: true },
             },
+            kypSubmission: {
+              select: {
+                preAuthData: {
+                  select: {
+                    requestedHospitalName: true,
+                    suggestedHospitals: true,
+                  },
+                },
+              },
+            },
+            plRecord: { select: { hospitalName: true, doctorName: true } },
           },
         },
         calledBy: { select: { id: true, name: true } },
