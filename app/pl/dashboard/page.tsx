@@ -37,6 +37,7 @@ import {
   Settings2,
   LayoutDashboard,
   X,
+  ReceiptText,
 } from 'lucide-react'
 import Link from 'next/link'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
@@ -575,27 +576,23 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
+                'overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500',
                 'bg-gradient-to-br from-violet-50/90 to-card dark:from-violet-950/35 dark:to-card'
               )}
-              onClick={() => {
-                setPatientDrawerTitle('Scheduled Surgeries')
-                setPatientDrawerStage('PREAUTH_COMPLETE,INITIATED')
-                setPatientDrawerDateField('surgery')
-                setPatientDrawerOpen(true)
-              }}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-violet-900/90 dark:text-violet-100/90">Surgeries scheduled</CardTitle>
+                <CardTitle className="text-sm font-medium text-violet-900/90 dark:text-violet-100/90">ATS</CardTitle>
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-700 dark:text-violet-300">
-                  <Calendar className="h-4 w-4" />
+                  <ReceiptText className="h-4 w-4" />
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold tabular-nums text-violet-950 dark:text-violet-50">
-                  {pipelineStats?.surgeryScheduled ?? '—'}
+                  {tableRecords && tableRecords.length > 0
+                    ? `₹${Math.round(columnTotals.amountPaid / tableRecords.length).toLocaleString('en-IN')}`
+                    : '—'}
                 </div>
-                <p className="text-xs text-violet-800/70 dark:text-violet-200/70 mt-1">Expected surgery date</p>
+                <p className="text-xs text-violet-800/70 dark:text-violet-200/70 mt-1">Amount paid per case</p>
               </CardContent>
             </Card>
             <Card

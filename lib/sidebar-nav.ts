@@ -114,7 +114,7 @@ export const navItems: NavItem[] = [
     title: 'Master Data',
     url: '/master-data',
     icon: Database,
-    roles: ['EXECUTIVE_ASSISTANT', 'MD', 'ADMIN', 'TESTER'],
+    roles: ['EXECUTIVE_ASSISTANT', 'MD', 'ADMIN', 'TESTER', 'PL_HEAD'],
   },
   {
     title: 'DM Dashboard',
@@ -150,7 +150,7 @@ export const navItems: NavItem[] = [
     title: 'Case Tracker',
     url: '/bd/kyp',
     icon: FileText,
-    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
+    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT', 'PL_HEAD'],
   },
   {
     title: 'Pending Surgery',

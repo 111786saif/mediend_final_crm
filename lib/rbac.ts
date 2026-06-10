@@ -199,6 +199,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'leads:write',
     'pl:read',
     'pl:write',
+    'masters:read',
+    'masters:write',
     'analytics:read',
     'departments:create',
     'users:create_tl',

@@ -126,20 +126,16 @@ export default function CaseTrackerPage() {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   }, [])
 
-  const isOrgViewer = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
-
-  const [stageFilter, setStageFilter] = useState<Bucket | 'all'>('all')
-  const [monthFilter, setMonthFilter] = useState<string>(currentMonthKey)
-  const [bdFilter, setBdFilter] = useState<string>('all')
-  const [circleFilter, setCircleFilter] = useState<string>('all')
-  const [hospitalFilter, setHospitalFilter] = useState<string>('all')
-  const [doctorFilter, setDoctorFilter] = useState<string>('all')
-  const [treatmentFilter, setTreatmentFilter] = useState<string>('all')
-  const [search, setSearch] = useState('')
-  const debouncedSearch = useDebouncedValue(search, 250)
-  const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
+  const isOrgViewer = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT' || user?.role === 'PL_HEAD'
 
   const leadFilters = useMemo(() => {
+    if (user?.role === 'PL_HEAD') {
+      return {
+        view: 'pipeline' as const,
+        caseStage: 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED',
+        ...(phoneParsed ? { phoneSearch: phoneParsed.last10 } : {}),
+      }
+    }
     // view=pipeline uses a slim Lead select on /api/leads (avoids heavy KYP/preAuth joins that caused 60s+ loads)
     if (user?.role === 'BD' && user.id) {
       return {
@@ -343,11 +339,11 @@ export default function CaseTrackerPage() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Case tracker</h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                Active cash &amp; insurance cases after KYP — tap a card to filter
+                {user?.role === 'PL_HEAD' ? 'IPD done cases across all teams' : 'Active cash &amp; insurance cases after KYP — tap a card to filter'}
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              {targetCard && (
+              {!user?.role === 'PL_HEAD' && targetCard && (
                 <div className="min-w-[240px] rounded-xl border bg-card p-3 shadow-sm">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
@@ -362,26 +358,30 @@ export default function CaseTrackerPage() {
                   <Progress value={Math.min(100, targetCard.pct)} className="mt-2 h-1.5" />
                 </div>
               )}
-              <Button onClick={() => router.push(pipelinePath)} className="shrink-0">
-                <Plus className="mr-2 h-4 w-4" />
-                New case submission
-              </Button>
+              {!user?.role === 'PL_HEAD' && (
+                <Button onClick={() => router.push(pipelinePath)} className="shrink-0">
+                  <Plus className="mr-2 h-4 w-4" />
+                  New case submission
+                </Button>
+              )}
             </div>
           </div>
 
           {/* ── Stage cards ── */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
-            <button
-              type="button"
-              onClick={() => setStageFilter('all')}
-              className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
-                stageFilter === 'all' ? 'ring-2 ring-primary' : ''
-              }`}
-            >
-              <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">All active</p>
-              <p className="mt-1 text-2xl font-bold tabular-nums">{monthFiltered.length}</p>
-            </button>
-            {BUCKET_DEFS.map(({ key, label, tone }) => (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {!user?.role === 'PL_HEAD' && (
+              <button
+                type="button"
+                onClick={() => setStageFilter('all')}
+                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
+                  stageFilter === 'all' ? 'ring-2 ring-primary' : ''
+                }`}
+              >
+                <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">All active</p>
+                <p className="mt-1 text-2xl font-bold tabular-nums">{monthFiltered.length}</p>
+              </button>
+            )}
+            {BUCKET_DEFS.filter(({ key }) => !user?.role === 'PL_HEAD' || key === 'IPD_DONE').map(({ key, label, tone }) => (
               <button
                 key={key}
                 type="button"
