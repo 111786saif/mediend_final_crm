@@ -68,6 +68,10 @@ export type ResolvedPlRow = {
   deductionWaived: number | null
   /** MediEND's share amount (collected from hospital). */
   mediendShareAmount: number | null
+  /** MediEND's net profit (after costs, before 10% deduction). */
+  mediendNetProfit: number | null
+  /** MediEND's profit after 10% deduction = mediendNetProfit - (10% × mediendShareAmount). */
+  mediendProfit: number | null
   /** When insurance team marked the patient discharged (start of PL handoff). */
   leadReceivedFromInsuranceAt: Date | null
 }
@@ -164,7 +168,7 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
       ds?.finalApprovedAmount,
       pl?.approvedOrCash
     ),
-    deductionPatient: pickNumber(pl?.cashOrDedPaid, ds?.deductionAmount, record.deduction),
+    deductionPatient: pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid),
     deductionTotal: pickNumber(ds?.deductionAmount, record.deduction),
     deductionPaidByPatient: pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid),
     deductionWaived: (() => {
@@ -176,6 +180,8 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
       return (total ?? 0) - (paid ?? 0)
     })(),
     mediendShareAmount: pickNumber(pl?.mediendShareAmount, ds?.mediendShareAmount),
+    mediendNetProfit: pickNumber(pl?.mediendNetProfit),
+    mediendProfit: pickNumber(pl?.mediendProfit),
     leadReceivedFromInsuranceAt: pickDate(ds?.markedAt),
   }
 }

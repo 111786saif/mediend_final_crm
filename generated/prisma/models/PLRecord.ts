@@ -43,6 +43,7 @@ export type PLRecordAvgAggregateOutputType = {
   mediendShareAmount: number | null
   mediendNetProfit: number | null
   finalProfit: number | null
+  mediendProfit: number | null
   hospitalAmountPending: number | null
   doctorAmountPending: number | null
 }
@@ -64,6 +65,7 @@ export type PLRecordSumAggregateOutputType = {
   mediendShareAmount: number | null
   mediendNetProfit: number | null
   finalProfit: number | null
+  mediendProfit: number | null
   hospitalAmountPending: number | null
   doctorAmountPending: number | null
 }
@@ -108,6 +110,7 @@ export type PLRecordMinAggregateOutputType = {
   mediendShareAmount: number | null
   mediendNetProfit: number | null
   finalProfit: number | null
+  mediendProfit: number | null
   hospitalPayoutStatus: string | null
   doctorPayoutStatus: string | null
   mediendInvoiceStatus: string | null
@@ -162,6 +165,7 @@ export type PLRecordMaxAggregateOutputType = {
   mediendShareAmount: number | null
   mediendNetProfit: number | null
   finalProfit: number | null
+  mediendProfit: number | null
   hospitalPayoutStatus: string | null
   doctorPayoutStatus: string | null
   mediendInvoiceStatus: string | null
@@ -216,6 +220,7 @@ export type PLRecordCountAggregateOutputType = {
   mediendShareAmount: number
   mediendNetProfit: number
   finalProfit: number
+  mediendProfit: number
   hospitalPayoutStatus: number
   doctorPayoutStatus: number
   mediendInvoiceStatus: number
@@ -249,6 +254,7 @@ export type PLRecordAvgAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
+  mediendProfit?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
 }
@@ -270,6 +276,7 @@ export type PLRecordSumAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
+  mediendProfit?: true
   hospitalAmountPending?: true
   doctorAmountPending?: true
 }
@@ -314,6 +321,7 @@ export type PLRecordMinAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
+  mediendProfit?: true
   hospitalPayoutStatus?: true
   doctorPayoutStatus?: true
   mediendInvoiceStatus?: true
@@ -368,6 +376,7 @@ export type PLRecordMaxAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
+  mediendProfit?: true
   hospitalPayoutStatus?: true
   doctorPayoutStatus?: true
   mediendInvoiceStatus?: true
@@ -422,6 +431,7 @@ export type PLRecordCountAggregateInputType = {
   mediendShareAmount?: true
   mediendNetProfit?: true
   finalProfit?: true
+  mediendProfit?: true
   hospitalPayoutStatus?: true
   doctorPayoutStatus?: true
   mediendInvoiceStatus?: true
@@ -563,6 +573,7 @@ export type PLRecordGroupByOutputType = {
   mediendShareAmount: number
   mediendNetProfit: number
   finalProfit: number
+  mediendProfit: number
   hospitalPayoutStatus: string | null
   doctorPayoutStatus: string | null
   mediendInvoiceStatus: string | null
@@ -640,6 +651,7 @@ export type PLRecordWhereInput = {
   mediendShareAmount?: Prisma.FloatFilter<"PLRecord"> | number
   mediendNetProfit?: Prisma.FloatFilter<"PLRecord"> | number
   finalProfit?: Prisma.FloatFilter<"PLRecord"> | number
+  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   doctorPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -697,6 +709,7 @@ export type PLRecordOrderByWithRelationInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -757,6 +770,7 @@ export type PLRecordWhereUniqueInput = Prisma.AtLeast<{
   mediendShareAmount?: Prisma.FloatFilter<"PLRecord"> | number
   mediendNetProfit?: Prisma.FloatFilter<"PLRecord"> | number
   finalProfit?: Prisma.FloatFilter<"PLRecord"> | number
+  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   doctorPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -814,6 +828,7 @@ export type PLRecordOrderByWithAggregationInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -876,6 +891,7 @@ export type PLRecordScalarWhereWithAggregatesInput = {
   mediendShareAmount?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   mediendNetProfit?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   finalProfit?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
+  mediendProfit?: Prisma.FloatWithAggregatesFilter<"PLRecord"> | number
   hospitalPayoutStatus?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   doctorPayoutStatus?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
   mediendInvoiceStatus?: Prisma.StringNullableWithAggregatesFilter<"PLRecord"> | string | null
@@ -929,6 +945,7 @@ export type PLRecordCreateInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -985,6 +1002,7 @@ export type PLRecordUncheckedCreateInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -1039,6 +1057,7 @@ export type PLRecordUpdateInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1095,6 +1114,7 @@ export type PLRecordUncheckedUpdateInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1150,6 +1170,7 @@ export type PLRecordCreateManyInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -1203,6 +1224,7 @@ export type PLRecordUpdateManyMutationInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1256,6 +1278,7 @@ export type PLRecordUncheckedUpdateManyInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1325,6 +1348,7 @@ export type PLRecordCountOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrder
@@ -1356,6 +1380,7 @@ export type PLRecordAvgOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
 }
@@ -1400,6 +1425,7 @@ export type PLRecordMaxOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrder
@@ -1454,6 +1480,7 @@ export type PLRecordMinOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   hospitalPayoutStatus?: Prisma.SortOrder
   doctorPayoutStatus?: Prisma.SortOrder
   mediendInvoiceStatus?: Prisma.SortOrder
@@ -1485,6 +1512,7 @@ export type PLRecordSumOrderByAggregateInput = {
   mediendShareAmount?: Prisma.SortOrder
   mediendNetProfit?: Prisma.SortOrder
   finalProfit?: Prisma.SortOrder
+  mediendProfit?: Prisma.SortOrder
   hospitalAmountPending?: Prisma.SortOrder
   doctorAmountPending?: Prisma.SortOrder
 }
@@ -1626,6 +1654,7 @@ export type PLRecordCreateWithoutHandledByInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -1681,6 +1710,7 @@ export type PLRecordUncheckedCreateWithoutHandledByInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -1764,6 +1794,7 @@ export type PLRecordScalarWhereInput = {
   mediendShareAmount?: Prisma.FloatFilter<"PLRecord"> | number
   mediendNetProfit?: Prisma.FloatFilter<"PLRecord"> | number
   finalProfit?: Prisma.FloatFilter<"PLRecord"> | number
+  mediendProfit?: Prisma.FloatFilter<"PLRecord"> | number
   hospitalPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   doctorPayoutStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
   mediendInvoiceStatus?: Prisma.StringNullableFilter<"PLRecord"> | string | null
@@ -1817,6 +1848,7 @@ export type PLRecordCreateWithoutLeadInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -1871,6 +1903,7 @@ export type PLRecordUncheckedCreateWithoutLeadInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -1941,6 +1974,7 @@ export type PLRecordUpdateWithoutLeadInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1995,6 +2029,7 @@ export type PLRecordUncheckedUpdateWithoutLeadInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2049,6 +2084,7 @@ export type PLRecordCreateWithoutDischargeSheetInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -2104,6 +2140,7 @@ export type PLRecordUncheckedCreateWithoutDischargeSheetInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -2173,6 +2210,7 @@ export type PLRecordUpdateWithoutDischargeSheetInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2228,6 +2266,7 @@ export type PLRecordUncheckedUpdateWithoutDischargeSheetInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2282,6 +2321,7 @@ export type PLRecordCreateManyHandledByInput = {
   mediendShareAmount?: number
   mediendNetProfit?: number
   finalProfit?: number
+  mediendProfit?: number
   hospitalPayoutStatus?: string | null
   doctorPayoutStatus?: string | null
   mediendInvoiceStatus?: string | null
@@ -2334,6 +2374,7 @@ export type PLRecordUpdateWithoutHandledByInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2389,6 +2430,7 @@ export type PLRecordUncheckedUpdateWithoutHandledByInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2443,6 +2485,7 @@ export type PLRecordUncheckedUpdateManyWithoutHandledByInput = {
   mediendShareAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   mediendNetProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   finalProfit?: Prisma.FloatFieldUpdateOperationsInput | number
+  mediendProfit?: Prisma.FloatFieldUpdateOperationsInput | number
   hospitalPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   doctorPayoutStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mediendInvoiceStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2498,6 +2541,7 @@ export type PLRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
   finalProfit?: boolean
+  mediendProfit?: boolean
   hospitalPayoutStatus?: boolean
   doctorPayoutStatus?: boolean
   mediendInvoiceStatus?: boolean
@@ -2555,6 +2599,7 @@ export type PLRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
   finalProfit?: boolean
+  mediendProfit?: boolean
   hospitalPayoutStatus?: boolean
   doctorPayoutStatus?: boolean
   mediendInvoiceStatus?: boolean
@@ -2611,6 +2656,7 @@ export type PLRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
   finalProfit?: boolean
+  mediendProfit?: boolean
   hospitalPayoutStatus?: boolean
   doctorPayoutStatus?: boolean
   mediendInvoiceStatus?: boolean
@@ -2667,6 +2713,7 @@ export type PLRecordSelectScalar = {
   mediendShareAmount?: boolean
   mediendNetProfit?: boolean
   finalProfit?: boolean
+  mediendProfit?: boolean
   hospitalPayoutStatus?: boolean
   doctorPayoutStatus?: boolean
   mediendInvoiceStatus?: boolean
@@ -2681,7 +2728,7 @@ export type PLRecordSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PLRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "outstandingStatus" | "month" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "finalProfit" | "hospitalPayoutStatus" | "doctorPayoutStatus" | "mediendInvoiceStatus" | "hospitalAmountPending" | "doctorAmountPending" | "doctorRemarks" | "costBreakdownRemarks" | "remarks" | "closedAt" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["pLRecord"]>
+export type PLRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "outstandingStatus" | "month" | "admissionDate" | "surgeryDate" | "status" | "paymentType" | "approvedOrCash" | "paymentCollectedAt" | "managerRole" | "managerName" | "bdmName" | "patientName" | "patientPhone" | "doctorName" | "hospitalName" | "category" | "treatment" | "circle" | "leadSource" | "totalAmount" | "billAmount" | "cashPaidByPatient" | "cashOrDedPaid" | "referralAmount" | "cabCharges" | "implantCost" | "instrumentsCost" | "implantPaidBy" | "instrumentsPaidBy" | "dcCharges" | "doctorCharges" | "hospitalSharePct" | "hospitalShareAmount" | "mediendSharePct" | "mediendShareAmount" | "mediendNetProfit" | "finalProfit" | "mediendProfit" | "hospitalPayoutStatus" | "doctorPayoutStatus" | "mediendInvoiceStatus" | "hospitalAmountPending" | "doctorAmountPending" | "doctorRemarks" | "costBreakdownRemarks" | "remarks" | "closedAt" | "handledById" | "createdAt" | "updatedAt", ExtArgs["result"]["pLRecord"]>
 export type PLRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   handledBy?: boolean | Prisma.PLRecord$handledByArgs<ExtArgs>
@@ -2743,6 +2790,7 @@ export type $PLRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     mediendShareAmount: number
     mediendNetProfit: number
     finalProfit: number
+    mediendProfit: number
     hospitalPayoutStatus: string | null
     doctorPayoutStatus: string | null
     mediendInvoiceStatus: string | null
@@ -3220,6 +3268,7 @@ export interface PLRecordFieldRefs {
   readonly mediendShareAmount: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly mediendNetProfit: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly finalProfit: Prisma.FieldRef<"PLRecord", 'Float'>
+  readonly mediendProfit: Prisma.FieldRef<"PLRecord", 'Float'>
   readonly hospitalPayoutStatus: Prisma.FieldRef<"PLRecord", 'String'>
   readonly doctorPayoutStatus: Prisma.FieldRef<"PLRecord", 'String'>
   readonly mediendInvoiceStatus: Prisma.FieldRef<"PLRecord", 'String'>

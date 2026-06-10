@@ -256,7 +256,7 @@ export function canFillInitiateForm(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
   
   const isInsurance = ['INSURANCE', 'INSURANCE_HEAD', 'ADMIN', 'TESTER'].includes(user.role)
-  const isValidStage = lead.caseStage === CaseStage.PREAUTH_RAISED || lead.caseStage === CaseStage.PREAUTH_COMPLETE
+  const isValidStage = [CaseStage.PREAUTH_RAISED, CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED, CaseStage.DISCHARGED, CaseStage.IPD_DONE].includes(lead.caseStage)
   
   return isInsurance && isValidStage
 }

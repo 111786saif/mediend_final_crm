@@ -334,6 +334,7 @@ export function buildPlRecordPayload(
       ds.mediendNetProfit,
       lead.netProfit
     ),
+    mediendProfit: pickFirstNumber(ov.mediendProfit),
 
     // Status defaults
     outstandingStatus: 'NEW',

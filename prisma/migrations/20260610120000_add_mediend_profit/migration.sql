@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "PLRecord" ADD COLUMN "mediendProfit" DOUBLE PRECISION NOT NULL DEFAULT 0;

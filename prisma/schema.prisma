@@ -848,6 +848,7 @@ model PLRecord {
 
   // Legacy fields (keeping for backward compatibility)
   finalProfit          Float   @default(0) // Alias for mediendNetProfit
+  mediendProfit        Float   @default(0) // = MediendNetProfit - (10% × MediendShare)
   hospitalPayoutStatus String? // e.g., "PENDING", "PAID", "PARTIAL"
   doctorPayoutStatus   String? // e.g., "PENDING", "PAID", "PARTIAL"
   mediendInvoiceStatus String? // e.g., "PENDING", "SENT", "PAID"

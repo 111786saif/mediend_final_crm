@@ -8423,6 +8423,7 @@ export const PLRecordScalarFieldEnum = {
   mediendShareAmount: 'mediendShareAmount',
   mediendNetProfit: 'mediendNetProfit',
   finalProfit: 'finalProfit',
+  mediendProfit: 'mediendProfit',
   hospitalPayoutStatus: 'hospitalPayoutStatus',
   doctorPayoutStatus: 'doctorPayoutStatus',
   mediendInvoiceStatus: 'mediendInvoiceStatus',

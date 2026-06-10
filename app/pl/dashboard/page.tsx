@@ -2,7 +2,7 @@
 
 import { ProtectedRoute } from '@/components/protected-route'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -37,8 +37,6 @@ import {
   Settings2,
   LayoutDashboard,
   X,
-  ChevronLeft,
-  ChevronRight,
 } from 'lucide-react'
 import Link from 'next/link'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
@@ -53,8 +51,6 @@ import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog
 import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
 import { PendingPayoutsDrawer } from '@/components/pl/pending-payouts-drawer'
-
-const PAGE_SIZE = 100
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
@@ -126,6 +122,7 @@ const DEFAULT_COLS: Record<string, boolean> = {
   mediendSharePct: true,
   mediendShareAmt: true,
   netProfit: true,
+  mediendProfit: false,
   remarks: true,
   hospPayout: true,
   docPayout: true,
@@ -243,7 +240,6 @@ export default function PLLedgerPage() {
   const [hospitalFilter, setHospitalFilter] = useState('all')
   const [doctorFilter, setDoctorFilter] = useState('all')
   const [outstandingFilter, setOutstandingFilter] = useState('all')
-  const [page, setPage] = useState(1)
 
   const filterOptions = useMemo(() => {
     const bds = new Set<string>()
@@ -273,7 +269,6 @@ export default function PLLedgerPage() {
     setHospitalFilter('all')
     setDoctorFilter('all')
     setOutstandingFilter('all')
-    setPage(1)
   }
 
   const tableRecords = useMemo(
@@ -305,15 +300,34 @@ export default function PLLedgerPage() {
 
   const visibleCount = useMemo(() => 1 + Object.values(visibleCols).filter(Boolean).length, [visibleCols])
 
-  const totalPages = Math.ceil((tableRecords?.length ?? 0) / PAGE_SIZE)
-  const paginatedRecords = useMemo(
-    () => (tableRecords ?? []).slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-    [tableRecords, page]
-  )
-
-  useEffect(() => {
-    if (page > totalPages) setPage(Math.max(1, totalPages))
-  }, [totalPages, page])
+  const columnTotals = useMemo(() => {
+    const records = tableRecords ?? []
+    const sum = (fn: (r: Lead) => number) => records.reduce((acc, r) => acc + (fn(r) || 0), 0)
+    const plFn = (key: string) => (r: Lead) => {
+      const pl = r.plRecord as Record<string, unknown> | undefined
+      return pl?.[key] != null ? Number(pl[key]) : 0
+    }
+    const resolvedFn = (fn: (resolved: ReturnType<typeof resolvePlRow>) => number | null) => (r: Lead) =>
+      fn(resolvePlRow(r as unknown as Record<string, unknown>)) ?? 0
+    return {
+      totalBill: sum(plFn('billAmount')),
+      approvedAmount: sum(plFn('totalAmount')),
+      deductionTotal: sum(resolvedFn((x) => x.deductionTotal)),
+      deductionPatient: sum(resolvedFn((x) => x.deductionPaidByPatient)),
+      deductionWaived: sum(resolvedFn((x) => x.deductionWaived)),
+      amountPaid: sum(resolvedFn((x) => (x.approvedAmount ?? 0) + (x.deductionPaidByPatient ?? 0))),
+      hospitalShareAmt: sum(plFn('hospitalShareAmount')),
+      doctorCharges: sum(plFn('doctorCharges')),
+      implant: sum(plFn('implantCost')),
+      instruments: sum(plFn('instrumentsCost')),
+      dc: sum(plFn('dcCharges')),
+      cab: sum(plFn('cabCharges')),
+      referral: sum(plFn('referralAmount')),
+      mediendShareAmt: sum(plFn('mediendShareAmount')),
+      netProfit: sum((r) => r.plRecord?.finalProfit ?? r.plRecord?.mediendNetProfit ?? 0),
+      mediendProfit: sum(plFn('mediendProfit')),
+    }
+  }, [tableRecords])
 
   const rupee = (n: number | null | undefined) =>
     n != null && Number(n) !== 0 ? `₹${Number(n).toLocaleString('en-IN')}` : '—'
@@ -453,6 +467,7 @@ export default function PLLedgerPage() {
                     ['mediendSharePct', 'MediEND Net %'],
                     ['mediendShareAmt', 'MediEND Net'],
                     ['netProfit', 'Net profit'],
+                    ['mediendProfit', 'Mediend Profit'],
                     ['remarks', 'Remarks'],
                     ['hospPayout', 'MediEND payout'],
                     ['docPayout', 'Doctor payout'],
@@ -759,6 +774,7 @@ export default function PLLedgerPage() {
                       {visibleCols.mediendSharePct && <TableHead>MediEND Net %</TableHead>}
                       {visibleCols.mediendShareAmt && <TableHead>MediEND Net</TableHead>}
                       {visibleCols.netProfit && <TableHead>Net profit</TableHead>}
+                      {visibleCols.mediendProfit && <TableHead>Mediend Profit</TableHead>}
                       {visibleCols.remarks && <TableHead>Remarks</TableHead>}
                       {visibleCols.hospPayout && <TableHead>MediEND payout</TableHead>}
                       {visibleCols.docPayout && <TableHead>Dr payout</TableHead>}
@@ -766,7 +782,7 @@ export default function PLLedgerPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {paginatedRecords.map((record) => {
+                    {tableRecords?.map((record) => {
                       const pl = record.plRecord as Record<string, unknown> | undefined
                       const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
                       const paidBy = (v: unknown) => (v === 'HOSPITAL' ? 'Hospital' : v === 'MEDIEND' ? 'Mediend' : '—')
@@ -948,6 +964,13 @@ export default function PLLedgerPage() {
                               ).toLocaleString('en-IN')}
                             </TableCell>
                           )}
+                          {visibleCols.mediendProfit && (
+                            <TableCell className="whitespace-nowrap font-medium">
+                              {record.plRecord?.mediendProfit != null
+                                ? `₹${Number(record.plRecord.mediendProfit).toLocaleString('en-IN')}`
+                                : '—'}
+                            </TableCell>
+                          )}
                           {visibleCols.remarks && (
                             <TableCell
                               className="whitespace-nowrap max-w-[120px] truncate"
@@ -1012,22 +1035,54 @@ export default function PLLedgerPage() {
                       </TableRow>
                     )}
                   </TableBody>
+                  {tableRecords && tableRecords.length > 0 && (
+                    <TableFooter>
+                      <TableRow className="border-t-2 border-teal-200/70 bg-teal-50/70 font-semibold dark:border-teal-800/50 dark:bg-teal-950/40">
+                        <TableCell className="whitespace-nowrap">Total ({tableRecords.length})</TableCell>
+                        {visibleCols.actions && <TableCell>—</TableCell>}
+                        {visibleCols.month && <TableCell>—</TableCell>}
+                        {visibleCols.leadReceived && <TableCell>—</TableCell>}
+                        {visibleCols.manager && <TableCell>—</TableCell>}
+                        {visibleCols.bdm && <TableCell>—</TableCell>}
+                        {visibleCols.patient && <TableCell>—</TableCell>}
+                        {visibleCols.category && <TableCell>—</TableCell>}
+                        {visibleCols.treatment && <TableCell>—</TableCell>}
+                        {visibleCols.circle && <TableCell>—</TableCell>}
+                        {visibleCols.doctor && <TableCell>—</TableCell>}
+                        {visibleCols.hospital && <TableCell>—</TableCell>}
+                        {visibleCols.admissionDate && <TableCell>—</TableCell>}
+                        {visibleCols.surgeryDate && <TableCell>—</TableCell>}
+                        {visibleCols.paymentType && <TableCell>—</TableCell>}
+                        {visibleCols.outstandingStatus && <TableCell>—</TableCell>}
+                        {visibleCols.status && <TableCell>—</TableCell>}
+                        {visibleCols.totalBill && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.totalBill)}</TableCell>}
+                        {visibleCols.approvedAmount && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.approvedAmount)}</TableCell>}
+                        {visibleCols.deductionTotal && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.deductionTotal)}</TableCell>}
+                        {visibleCols.deductionPatient && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.deductionPatient)}</TableCell>}
+                        {visibleCols.deductionWaived && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.deductionWaived)}</TableCell>}
+                        {visibleCols.amountPaid && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.amountPaid)}</TableCell>}
+                        {visibleCols.hospitalSharePct && <TableCell>—</TableCell>}
+                        {visibleCols.hospitalShareAmt && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.hospitalShareAmt)}</TableCell>}
+                        {visibleCols.doctorCharges && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.doctorCharges)}</TableCell>}
+                        {visibleCols.implant && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.implant)}</TableCell>}
+                        {visibleCols.implantPaidBy && <TableCell>—</TableCell>}
+                        {visibleCols.instruments && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.instruments)}</TableCell>}
+                        {visibleCols.instrumentsPaidBy && <TableCell>—</TableCell>}
+                        {visibleCols.dc && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.dc)}</TableCell>}
+                        {visibleCols.cab && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.cab)}</TableCell>}
+                        {visibleCols.referral && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.referral)}</TableCell>}
+                        {visibleCols.mediendSharePct && <TableCell>—</TableCell>}
+                        {visibleCols.mediendShareAmt && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.mediendShareAmt)}</TableCell>}
+                        {visibleCols.netProfit && <TableCell className="whitespace-nowrap font-medium">{formatPlRupee(columnTotals.netProfit)}</TableCell>}
+                        {visibleCols.mediendProfit && <TableCell className="whitespace-nowrap font-medium">{formatPlRupee(columnTotals.mediendProfit)}</TableCell>}
+                        {visibleCols.remarks && <TableCell>—</TableCell>}
+                        {visibleCols.hospPayout && <TableCell>—</TableCell>}
+                        {visibleCols.docPayout && <TableCell>—</TableCell>}
+                        {visibleCols.invoice && <TableCell>—</TableCell>}
+                      </TableRow>
+                    </TableFooter>
+                  )}
                 </Table>
-              )}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between px-4 py-3 border-t">
-                  <span className="text-sm text-muted-foreground">
-                    Page {page} of {totalPages} ({tableRecords?.length ?? 0} rows)
-                  </span>
-                  <div className="flex gap-1">
-                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
               )}
             </CardContent>
           </Card>

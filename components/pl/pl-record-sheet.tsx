@@ -132,6 +132,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     mediendSharePct: '',
     mediendShareAmount: '',
     mediendNetProfit: '',
+    mediendProfit: '',
     remarks: '',
     doctorRemarks: '',
     costBreakdownRemarks: '',
@@ -223,7 +224,14 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           bdmName: (pl?.bdmName as string) || record.bd?.name || '',
           paymentType: (pl?.paymentType as string) || '',
           status: (pl?.status as string) || '',
-          paymentCollectedAt: (pl?.paymentCollectedAt as string) || '',
+          paymentCollectedAt: (pl?.paymentCollectedAt as string) || 
+            (() => {
+              const hosp = numVal(ds?.collectedByHospital)
+              const med = numVal(ds?.collectedByMediend)
+              if (hosp > med) return 'Hospital'
+              if (med > hosp) return 'Mediend'
+              return ''
+            })(),
           totalAmount: pl?.totalAmount != null ? String(pl.totalAmount) : '',
           billAmount: pl?.billAmount != null ? String(pl.billAmount) : (record.billAmount != null ? String(record.billAmount) : ''),
           deductionAmount: dedTotal,
@@ -249,6 +257,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                 : record.netProfit != null
                   ? String(record.netProfit)
                   : '',
+          mediendProfit: pl?.mediendProfit != null ? String(pl.mediendProfit) : '',
           remarks: (pl?.remarks as string) || '',
           doctorRemarks:
             (pl?.doctorRemarks as string) || (ds?.doctorRemarks as string) || '',
@@ -325,25 +334,36 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
 
   const handleSubmit = (e: React.FormEvent, status: 'DRAFT' | 'OUTSTANDING') => {
     e.preventDefault()
-    const bill = parseFloat(formData.billAmount) || 0
+    const actualFinal = parseFloat(formData.actualFinalAmount) || 0
     const hospPct = parseFloat(formData.hospitalSharePct) || 0
     const medPct = parseFloat(formData.mediendSharePct) || 0
-    const hospAmount = bill > 0 && hospPct > 0 ? (bill * hospPct) / 100 : parseFloat(formData.hospitalShareAmount) || 0
-    const medAmount = bill > 0 && medPct > 0 ? (bill * medPct) / 100 : parseFloat(formData.mediendShareAmount) || 0
-
-    const referral = parseFloat(formData.referralAmount) || 0
-    const cab = parseFloat(formData.cabCharges) || 0
     const dc = computedDcTotal || parseFloat(formData.dcCharges) || 0
     const doctor = parseFloat(formData.doctorCharges) || 0
     const implant = parseFloat(formData.implantCost) || 0
     const instruments = parseFloat(formData.instrumentsCost) || 0
+    const referral = parseFloat(formData.referralAmount) || 0
+    const cab = parseFloat(formData.cabCharges) || 0
 
-    let costs = referral + cab + dc + doctor
+    const base = actualFinal - dc - implant - instruments
+
+    const hospAmount =
+      (hospPct > 0 ? (base * hospPct) / 100 : parseFloat(formData.hospitalShareAmount) || 0) +
+      (formData.implantPaidBy === 'HOSPITAL' ? implant : 0) +
+      (formData.instrumentsPaidBy === 'HOSPITAL' ? instruments : 0)
+
+    const medAmount =
+      (medPct > 0 ? (base * medPct) / 100 : parseFloat(formData.mediendShareAmount) || 0) +
+      (formData.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
+      (formData.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
+
+    let costs = dc + doctor + referral + cab
     if (formData.implantPaidBy !== 'HOSPITAL') costs += implant
     if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += instruments
 
-    const netProfit = medAmount - costs
-    const mediendNet = parseFloat(formData.mediendNetProfit) || netProfit
+    const computedNetProfit = medAmount - costs
+    const mediendNet = parseFloat(formData.mediendNetProfit) || computedNetProfit
+    const computedMediendProfit = mediendNet - (0.1 * medAmount)
+    const mediendProfit = parseFloat(formData.mediendProfit) || computedMediendProfit
 
     const payload: Record<string, unknown> = {
       month: formData.month ? new Date(`${formData.month}-01`).toISOString() : undefined,
@@ -374,6 +394,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       mediendShareAmount: medAmount,
       mediendNetProfit: mediendNet,
       finalProfit: mediendNet,
+      mediendProfit,
       remarks: formData.remarks || undefined,
       doctorRemarks: formData.doctorRemarks || null,
       costBreakdownRemarks: formData.costBreakdownRemarks || null,
@@ -472,6 +493,10 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                       <p className="font-medium">{resolveLeadHospitalDoctor(record as unknown as Record<string, unknown>).hospital ?? '—'}</p>
                     </div>
                     <div>
+                      <Label className="text-xs text-muted-foreground">Doctor</Label>
+                      <p className="font-medium">{resolveLeadHospitalDoctor(record as unknown as Record<string, unknown>).doctor ?? '—'}</p>
+                    </div>
+                    <div>
                       <Label className="text-xs text-muted-foreground">Treatment</Label>
                       <p className="font-medium">{record.treatment ?? '—'}</p>
                     </div>
@@ -495,6 +520,14 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                             ? new Date(sDate as string).toLocaleDateString()
                             : '—'
                         })()}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Discharge date</Label>
+                      <p className="font-medium">
+                        {(record.dischargeSheet as Record<string, unknown> | null)?.dischargeDate
+                          ? new Date((record.dischargeSheet as Record<string, unknown>).dischargeDate as string).toLocaleDateString()
+                          : '—'}
                       </p>
                     </div>
                   </CardContent>
@@ -652,6 +685,10 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                         <Input type="number" step="0.01" value={formData.billAmount} onChange={(e) => update('billAmount', e.target.value)} className="mt-1" />
                       </div>
                       <div>
+                        <Label>Actual final amount</Label>
+                        <Input type="number" step="0.01" value={formData.actualFinalAmount} onChange={(e) => update('actualFinalAmount', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
                         <Label>Approved amount</Label>
                         <Input type="number" step="0.01" value={formData.totalAmount} onChange={(e) => update('totalAmount', e.target.value)} className="mt-1" />
                       </div>
@@ -755,6 +792,12 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                       <div className="sm:col-span-2">
                         <Label>Mediend net profit</Label>
                         <Input type="number" step="0.01" value={formData.mediendNetProfit} onChange={(e) => update('mediendNetProfit', e.target.value)} className="mt-1 font-medium" />
+                        <p className="text-[11px] text-muted-foreground mt-1">= Mediend Share − (Doctor + Cab + Referral + D&amp;C + Implant/Instruments if Mediend-paid)</p>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <Label>Mediend profit</Label>
+                        <Input type="number" step="0.01" value={formData.mediendProfit} onChange={(e) => update('mediendProfit', e.target.value)} className="mt-1 font-medium" />
+                        <p className="text-[11px] text-muted-foreground mt-1">= Mediend Net Profit − (10% × Mediend Share)</p>
                       </div>
                     </CardContent>
                     <CardContent className="pt-0 mx-6 px-0 border-0">
