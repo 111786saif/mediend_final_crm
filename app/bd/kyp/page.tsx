@@ -128,6 +128,17 @@ export default function CaseTrackerPage() {
 
   const isOrgViewer = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT' || user?.role === 'PL_HEAD'
 
+  const [search, setSearch] = useState('')
+  const phoneParsed = useMemo(() => parsePhoneSearchQuery(search), [search])
+
+  const [monthFilter, setMonthFilter] = useState(currentMonthKey)
+  const [stageFilter, setStageFilter] = useState<Bucket | 'all'>('all')
+  const [bdFilter, setBdFilter] = useState('all')
+  const [circleFilter, setCircleFilter] = useState('all')
+  const [hospitalFilter, setHospitalFilter] = useState('all')
+  const [doctorFilter, setDoctorFilter] = useState('all')
+  const [treatmentFilter, setTreatmentFilter] = useState('all')
+
   const leadFilters = useMemo(() => {
     if (user?.role === 'PL_HEAD') {
       return {
