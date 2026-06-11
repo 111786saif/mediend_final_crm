@@ -133,6 +133,7 @@ export default function CaseTrackerPage() {
 
   const [monthFilter, setMonthFilter] = useState(currentMonthKey)
   const [stageFilter, setStageFilter] = useState<Bucket | 'all'>('all')
+  const [teamFilter, setTeamFilter] = useState('all')
   const [bdFilter, setBdFilter] = useState('all')
   const [circleFilter, setCircleFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
@@ -227,6 +228,19 @@ export default function CaseTrackerPage() {
     }
 
     if (isOrgViewer) {
+      if (bdFilter !== 'all') {
+        const bdTarget = list.find((t) => t.targetType === 'BD' && t.targetForId === bdFilter)
+        if (bdTarget) return toCard(bdTarget.entityName, bdTarget.metric, bdTarget.actual, bdTarget.targetValue, bdTarget.percentage)
+        for (const t of list) {
+          const b = t.bdBreakdown?.find((x) => x.id === bdFilter)
+          if (b) return toCard(b.name, t.metric, b.actual, t.targetValue, b.percentage)
+        }
+        return null
+      }
+      if (teamFilter !== 'all') {
+        const teamTarget = list.find((t) => t.targetType === 'TEAM' && t.targetForId === teamFilter)
+        if (teamTarget) return toCard(teamTarget.entityName, teamTarget.metric, teamTarget.actual, teamTarget.targetValue, teamTarget.percentage)
+      }
       const t = prefer(list)
       return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
     }
@@ -235,7 +249,7 @@ export default function CaseTrackerPage() {
     const bdTargets = list.filter((t) => t.targetType === 'BD')
     const t = prefer(bdTargets.length ? bdTargets : list)
     return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
-  }, [targetProgress, user?.role, bdFilter, isOrgViewer])
+  }, [targetProgress, user?.role, bdFilter, teamFilter, isOrgViewer])
 
   const monthOptions = useMemo(() => {
     const months: string[] = []
@@ -250,16 +264,43 @@ export default function CaseTrackerPage() {
     return months
   }, [])
 
-  const showBdFilter = user?.role === 'TEAM_LEAD'
+  const showBdFilter = user?.role === 'TEAM_LEAD' || user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
+  const showTeamFilter = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
+
+  interface TeamData {
+    id: string
+    userId: string
+    name: string
+    profilePicture: string | null
+    employeeCode: string | null
+    memberCount: number
+    members: { id: string; employeeId: string; name: string; profilePicture: string | null }[]
+  }
+
+  const { data: teamsData } = useQuery<TeamData[]>({
+    queryKey: ['targets', 'teams'],
+    queryFn: () => apiGet<TeamData[]>('/api/targets/teams'),
+    enabled: showTeamFilter && !!user,
+  })
+
   const bdOptions = useMemo(() => {
     if (!showBdFilter) return []
     const map = new Map<string, string>()
-    for (const { lead } of decorated) {
-      const bd = lead.bd as { id?: string; name?: string } | undefined
-      if (bd?.id && bd.name) map.set(bd.id, bd.name)
+    if (showTeamFilter) {
+      const teams = teamsData ?? []
+      for (const team of teams) {
+        for (const member of team.members) {
+          if (member.id && member.name) map.set(member.id, member.name)
+        }
+      }
+    } else {
+      for (const { lead } of decorated) {
+        const bd = lead.bd as { id?: string; name?: string } | undefined
+        if (bd?.id && bd.name) map.set(bd.id, bd.name)
+      }
     }
     return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]))
-  }, [decorated, showBdFilter])
+  }, [decorated, showBdFilter, showTeamFilter, teamsData])
 
   const circleOptions = useMemo(
     () => uniqueSorted(decorated.map((d) => (typeof d.lead.circle === 'string' ? d.lead.circle : ''))),
@@ -313,6 +354,10 @@ export default function CaseTrackerPage() {
   const filteredRows = useMemo(() => {
     let rows = monthFiltered
     if (stageFilter !== 'all') rows = rows.filter((d) => d.bucket === stageFilter)
+    if (teamFilter !== 'all') {
+      const teamBdIds = new Set(teamsData?.find((t) => t.id === teamFilter)?.members.map((m) => m.id) ?? [])
+      rows = rows.filter((d) => teamBdIds.has((d.lead.bd as { id?: string } | undefined)?.id ?? ''))
+    }
     if (bdFilter !== 'all') {
       rows = rows.filter((d) => (d.lead.bd as { id?: string } | undefined)?.id === bdFilter)
     }
@@ -330,7 +375,7 @@ export default function CaseTrackerPage() {
       )
     }
     return [...rows].sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
-  }, [monthFiltered, stageFilter, bdFilter, circleFilter, hospitalFilter, doctorFilter, treatmentFilter, search, phoneParsed])
+  }, [monthFiltered, stageFilter, teamFilter, bdFilter, circleFilter, hospitalFilter, doctorFilter, treatmentFilter, search, phoneParsed, teamsData])
 
   const pipelinePath = user?.role === 'TEAM_LEAD' ? '/team-lead/pipeline' : '/bd/pipeline'
 
@@ -445,6 +490,22 @@ export default function CaseTrackerPage() {
                     })}
                   </SelectContent>
                 </Select>
+
+                {showTeamFilter && (
+                  <Select value={teamFilter} onValueChange={(v) => { setTeamFilter(v); setBdFilter('all') }}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="Team" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All teams</SelectItem>
+                      {(teamsData ?? []).map((t) => (
+                        <SelectItem key={t.id} value={t.id}>
+                          {t.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
 
                 {showBdFilter && (
                   <Select value={bdFilter} onValueChange={setBdFilter}>
