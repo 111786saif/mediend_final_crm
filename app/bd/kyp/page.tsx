@@ -354,7 +354,7 @@ export default function CaseTrackerPage() {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              {!user?.role === 'PL_HEAD' && targetCard && (
+              {user?.role !== 'PL_HEAD' && targetCard && (
                 <div className="min-w-[240px] rounded-xl border bg-card p-3 shadow-sm">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
@@ -369,7 +369,7 @@ export default function CaseTrackerPage() {
                   <Progress value={Math.min(100, targetCard.pct)} className="mt-2 h-1.5" />
                 </div>
               )}
-              {!user?.role === 'PL_HEAD' && (
+              {user?.role !== 'PL_HEAD' && (
                 <Button onClick={() => router.push(pipelinePath)} className="shrink-0">
                   <Plus className="mr-2 h-4 w-4" />
                   New case submission
@@ -380,7 +380,7 @@ export default function CaseTrackerPage() {
 
           {/* ── Stage cards ── */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {!user?.role === 'PL_HEAD' && (
+            {user?.role !== 'PL_HEAD' && (
               <button
                 type="button"
                 onClick={() => setStageFilter('all')}
@@ -392,7 +392,7 @@ export default function CaseTrackerPage() {
                 <p className="mt-1 text-2xl font-bold tabular-nums">{monthFiltered.length}</p>
               </button>
             )}
-            {BUCKET_DEFS.filter(({ key }) => !user?.role === 'PL_HEAD' || key === 'IPD_DONE').map(({ key, label, tone }) => (
+            {BUCKET_DEFS.filter(({ key }) => user?.role !== 'PL_HEAD' || key === 'IPD_DONE').map(({ key, label, tone }) => (
               <button
                 key={key}
                 type="button"
