@@ -304,6 +304,103 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     }, 0)
   }, [dcChecked, dsBillAmounts])
 
+  const [hasManualOverrides, setHasManualOverrides] = useState({
+    hospitalAmount: false,
+    mediendAmount: false,
+    mediendNetProfit: false,
+    mediendProfit: false,
+  })
+
+  useEffect(() => {
+    setHasManualOverrides({
+      hospitalAmount: false,
+      mediendAmount: false,
+      mediendNetProfit: false,
+      mediendProfit: false,
+    })
+  }, [leadId, open])
+
+  const computedHospitalShare = useMemo(() => {
+    const actualFinal = parseFloat(formData.actualFinalAmount) || 0
+    const dc = computedDcTotal
+    const implant = parseFloat(formData.implantCost) || 0
+    const instruments = parseFloat(formData.instrumentsCost) || 0
+    const hospPct = parseFloat(formData.hospitalSharePct) || 0
+    const medPct = parseFloat(formData.mediendSharePct) || 0
+
+    if (hospPct === 0 && medPct === 0) return null
+
+    const base = actualFinal - dc - implant - instruments
+
+    const hospitalShare = (base * hospPct) / 100 +
+      (formData.implantPaidBy === 'HOSPITAL' ? implant : 0) +
+      (formData.instrumentsPaidBy === 'HOSPITAL' ? instruments : 0)
+
+    const mediendShare = (base * medPct) / 100 +
+      (formData.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
+      (formData.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
+
+    return { base, hospitalShare, mediendShare, hospPct, medPct }
+  }, [
+    formData.actualFinalAmount,
+    formData.hospitalSharePct,
+    formData.mediendSharePct,
+    formData.implantCost,
+    formData.instrumentsCost,
+    formData.implantPaidBy,
+    formData.instrumentsPaidBy,
+    computedDcTotal,
+  ])
+
+  const computedMediendNetProfit = useMemo(() => {
+    if (!computedHospitalShare) return null
+    const { mediendShare } = computedHospitalShare
+    const dc = computedDcTotal
+    const doctor = parseFloat(formData.doctorCharges) || 0
+    const implant = parseFloat(formData.implantCost) || 0
+    const instruments = parseFloat(formData.instrumentsCost) || 0
+    const referral = parseFloat(formData.referralAmount) || 0
+    const cab = parseFloat(formData.cabCharges) || 0
+
+    let costs = dc + doctor + referral + cab
+    if (formData.implantPaidBy !== 'HOSPITAL') costs += implant
+    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += instruments
+
+    return mediendShare - costs
+  }, [computedHospitalShare, formData, computedDcTotal])
+
+  const computedMediendProfit = useMemo(() => {
+    if (!computedHospitalShare || computedMediendNetProfit === null) return null
+    const netProfit = hasManualOverrides.mediendNetProfit
+      ? parseFloat(formData.mediendNetProfit) || computedMediendNetProfit
+      : computedMediendNetProfit
+    return netProfit - (0.1 * computedHospitalShare.mediendShare)
+  }, [computedHospitalShare, computedMediendNetProfit, hasManualOverrides, formData.mediendNetProfit])
+
+  const hospShareAmtDisplay = useMemo(() => {
+    if (hasManualOverrides.hospitalAmount) return formData.hospitalShareAmount
+    if (computedHospitalShare) return computedHospitalShare.hospitalShare.toFixed(2)
+    return formData.hospitalShareAmount
+  }, [computedHospitalShare, hasManualOverrides.hospitalAmount, formData.hospitalShareAmount])
+
+  const medShareAmtDisplay = useMemo(() => {
+    if (hasManualOverrides.mediendAmount) return formData.mediendShareAmount
+    if (computedHospitalShare) return computedHospitalShare.mediendShare.toFixed(2)
+    return formData.mediendShareAmount
+  }, [computedHospitalShare, hasManualOverrides.mediendAmount, formData.mediendShareAmount])
+
+  const netProfitDisplay = useMemo(() => {
+    if (hasManualOverrides.mediendNetProfit) return formData.mediendNetProfit
+    if (computedMediendNetProfit !== null) return computedMediendNetProfit.toFixed(2)
+    return formData.mediendNetProfit
+  }, [computedMediendNetProfit, hasManualOverrides.mediendNetProfit, formData.mediendNetProfit])
+
+  const medProfitDisplay = useMemo(() => {
+    if (hasManualOverrides.mediendProfit) return formData.mediendProfit
+    if (computedMediendProfit !== null) return computedMediendProfit.toFixed(2)
+    return formData.mediendProfit
+  }, [computedMediendProfit, hasManualOverrides.mediendProfit, formData.mediendProfit])
+
   const computedWaivedOff = useMemo(() => {
     const dedTotal = parseFloat(formData.deductionAmount) || 0
     const paid = parseFloat(formData.cashOrDedPaid) || 0
@@ -723,17 +820,17 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                         <Label>Hospital %</Label>
                         <Input type="number" step="0.01" value={formData.hospitalSharePct} onChange={(e) => update('hospitalSharePct', e.target.value)} className="mt-1" />
                       </div>
-                      <div>
-                        <Label>Hospital Amount</Label>
-                        <Input type="number" step="0.01" value={formData.hospitalShareAmount} onChange={(e) => update('hospitalShareAmount', e.target.value)} className="mt-1" />
+                       <div>
+                        <Label>Hospital Amount {computedHospitalShare && !hasManualOverrides.hospitalAmount && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
+                        <Input type="number" step="0.01" value={hospShareAmtDisplay} onChange={(e) => { setFormData(prev => ({ ...prev, hospitalShareAmount: e.target.value })); setHasManualOverrides(p => ({ ...p, hospitalAmount: true })) }} className="mt-1" />
                       </div>
                       <div>
                         <Label>Mediend %</Label>
                         <Input type="number" step="0.01" value={formData.mediendSharePct} onChange={(e) => update('mediendSharePct', e.target.value)} className="mt-1" />
                       </div>
                       <div>
-                        <Label>Mediend Amount</Label>
-                        <Input type="number" step="0.01" value={formData.mediendShareAmount} onChange={(e) => update('mediendShareAmount', e.target.value)} className="mt-1" />
+                        <Label>Mediend Amount {computedHospitalShare && !hasManualOverrides.mediendAmount && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
+                        <Input type="number" step="0.01" value={medShareAmtDisplay} onChange={(e) => { setFormData(prev => ({ ...prev, mediendShareAmount: e.target.value })); setHasManualOverrides(p => ({ ...p, mediendAmount: true })) }} className="mt-1" />
                       </div>
                     </CardContent>
                     <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-0 border-t mt-2 mx-6 px-0">
@@ -790,13 +887,31 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                         </Select>
                       </div>
                       <div className="sm:col-span-2">
-                        <Label>Mediend net profit</Label>
-                        <Input type="number" step="0.01" value={formData.mediendNetProfit} onChange={(e) => update('mediendNetProfit', e.target.value)} className="mt-1 font-medium" />
+                        <Label>Mediend net profit {computedMediendNetProfit !== null && !hasManualOverrides.mediendNetProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={netProfitDisplay}
+                          onChange={(e) => {
+                            setFormData(prev => ({ ...prev, mediendNetProfit: e.target.value }))
+                            setHasManualOverrides((p) => ({ ...p, mediendNetProfit: true }))
+                          }}
+                          className="mt-1 font-medium"
+                        />
                         <p className="text-[11px] text-muted-foreground mt-1">= Mediend Share − (Doctor + Cab + Referral + D&amp;C + Implant/Instruments if Mediend-paid)</p>
                       </div>
                       <div className="sm:col-span-2">
-                        <Label>Mediend profit</Label>
-                        <Input type="number" step="0.01" value={formData.mediendProfit} onChange={(e) => update('mediendProfit', e.target.value)} className="mt-1 font-medium" />
+                        <Label>Mediend profit {computedMediendProfit !== null && !hasManualOverrides.mediendProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={medProfitDisplay}
+                          onChange={(e) => {
+                            setFormData(prev => ({ ...prev, mediendProfit: e.target.value }))
+                            setHasManualOverrides((p) => ({ ...p, mediendProfit: true }))
+                          }}
+                          className="mt-1 font-medium"
+                        />
                         <p className="text-[11px] text-muted-foreground mt-1">= Mediend Net Profit − (10% × Mediend Share)</p>
                       </div>
                     </CardContent>
