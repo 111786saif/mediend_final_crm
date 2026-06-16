@@ -355,19 +355,18 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
   const computedMediendNetProfit = useMemo(() => {
     if (!computedHospitalShare) return null
     const { mediendShare } = computedHospitalShare
-    const dc = computedDcTotal
     const doctor = parseFloat(formData.doctorCharges) || 0
     const implant = parseFloat(formData.implantCost) || 0
     const instruments = parseFloat(formData.instrumentsCost) || 0
     const referral = parseFloat(formData.referralAmount) || 0
     const cab = parseFloat(formData.cabCharges) || 0
 
-    let costs = dc + doctor + referral + cab
+    let costs = doctor + referral + cab
     if (formData.implantPaidBy !== 'HOSPITAL') costs += implant
     if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += instruments
 
     return mediendShare - costs
-  }, [computedHospitalShare, formData, computedDcTotal])
+  }, [computedHospitalShare, formData])
 
   const computedMediendProfit = useMemo(() => {
     if (!computedHospitalShare || computedMediendNetProfit === null) return null
@@ -453,7 +452,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       (formData.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
       (formData.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
 
-    let costs = dc + doctor + referral + cab
+    let costs = doctor + referral + cab
     if (formData.implantPaidBy !== 'HOSPITAL') costs += implant
     if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += instruments
 
@@ -898,7 +897,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                           }}
                           className="mt-1 font-medium"
                         />
-                        <p className="text-[11px] text-muted-foreground mt-1">= Mediend Share − (Doctor + Cab + Referral + D&amp;C + Implant/Instruments if Mediend-paid)</p>
+                        <p className="text-[11px] text-muted-foreground mt-1">= Mediend Share − (Doctor + Cab + Referral + Implant/Instruments if Mediend-paid)</p>
                       </div>
                       <div className="sm:col-span-2">
                         <Label>Mediend profit {computedMediendProfit !== null && !hasManualOverrides.mediendProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>

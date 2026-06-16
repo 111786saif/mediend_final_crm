@@ -275,7 +275,11 @@ export default function PLLedgerPage() {
   const tableRecords = useMemo(
     () =>
       records?.filter((r) => {
-        if (!(r as Lead).dischargeSheet) return false
+        // Show rows that have either: insurance discharge sheet OR cash case P/L record
+        const hasInsuranceDs = !!(r as Lead).dischargeSheet;
+        const isCashCase = r.caseStage?.toString().startsWith('CASH_');
+        const hasPlData = !!(r as Lead).plRecord;
+        if (!hasInsuranceDs && !(isCashCase && hasPlData)) return false
         if (activeFilterCount === 0) return true
         const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
         if (bdFilter !== 'all' && resolved.bdm !== bdFilter) return false
