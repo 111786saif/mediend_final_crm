@@ -450,17 +450,13 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     const referral = parseFloat(formData.referralAmount) || 0
     const cab = parseFloat(formData.cabCharges) || 0
 
-    const base = actualFinal - dc - implant - instruments
+    const base = actualFinal - dc
 
     const hospAmount =
-      (hospPct > 0 ? (base * hospPct) / 100 : parseFloat(formData.hospitalShareAmount) || 0) +
-      (formData.implantPaidBy === 'HOSPITAL' ? actualImplant : 0) +
-      (formData.instrumentsPaidBy === 'HOSPITAL' ? actualInstruments : 0)
+      (hospPct > 0 ? (base * hospPct) / 100 : parseFloat(formData.hospitalShareAmount) || 0)
 
     const medAmount =
-      (medPct > 0 ? (base * medPct) / 100 : parseFloat(formData.mediendShareAmount) || 0) +
-      (formData.implantPaidBy !== 'HOSPITAL' ? actualImplant : 0) +
-      (formData.instrumentsPaidBy !== 'HOSPITAL' ? actualInstruments : 0)
+      (medPct > 0 ? (base * medPct) / 100 : parseFloat(formData.mediendShareAmount) || 0)
 
     let costs = doctor + referral + cab
     if (formData.implantPaidBy !== 'HOSPITAL') costs += actualImplant
@@ -922,7 +918,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                           }}
                           className="mt-1 font-medium"
                         />
-                        <p className="text-[11px] text-muted-foreground mt-1">= Mediend Share − (Doctor + Cab + Referral + Implant/Instruments if Mediend-paid)</p>
+                        <p className="text-[11px] text-muted-foreground mt-1">= Mediend Share − (Doctor + Cab + Referral + Actual Implant/Instruments). If actual is 0, then 0 is subtracted.</p>
                       </div>
                       <div className="sm:col-span-2">
                         <Label>Mediend profit {computedMediendProfit !== null && !hasManualOverrides.mediendProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>

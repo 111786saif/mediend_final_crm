@@ -45,6 +45,8 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { DischargeSummaryDialog } from '@/components/discharge/discharge-summary-dialog'
+import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 
 interface LeadWithStage {
   id: string
@@ -200,13 +202,9 @@ export default function InsuranceCashCasesPage() {
   // Build server query
   const leadsQueryString = useMemo(() => {
     const params = new URLSearchParams()
-    const m = activityMonth
-    const y = activityYear
-    params.set('activityMonth', String(m))
-    params.set('activityYear', String(y))
     if (bdFilter) params.set('bdId', bdFilter)
     return params.toString()
-  }, [activityMonth, activityYear, bdFilter])
+  }, [bdFilter])
 
   const { data: leads, isLoading, error } = useQuery<LeadWithStage[]>({
     queryKey: ['leads', 'insurance', 'cash', leadsQueryString],
@@ -273,15 +271,23 @@ export default function InsuranceCashCasesPage() {
     activityYear !== now.getFullYear() ||
     !!bdFilter || !!circleFilter || !!treatmentFilter
 
-  // Apply client-side circle + treatment filters
+  // Apply client-side circle + treatment + surgery-month filters
   const scopedLeads = useMemo(() => {
     if (!leads) return []
+    const monthStart = new Date(activityYear, activityMonth - 1, 1)
+    const monthEnd = new Date(activityYear, activityMonth, 1)
     return leads.filter(l => {
       if (circleFilter && l.circle !== circleFilter) return false
       if (treatmentFilter && l.treatment !== treatmentFilter) return false
-      return true
+
+      // Filter by surgery date falling in the selected month
+      const surgeryDate = l.admissionRecord?.surgeryDate
+        ? new Date(l.admissionRecord.surgeryDate).getTime()
+        : null
+      if (surgeryDate == null) return false
+      return surgeryDate >= monthStart.getTime() && surgeryDate < monthEnd.getTime()
     })
-  }, [leads, circleFilter, treatmentFilter])
+  }, [leads, circleFilter, treatmentFilter, activityMonth, activityYear])
 
   // Stats
   const stats = useMemo(() => {

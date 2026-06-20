@@ -111,6 +111,8 @@ export default function PLRecordEditPage() {
     doctorCharges: '',
     implantCost: '',
     instrumentsCost: '',
+    actualImplantCost: '',
+    actualInstrumentCost: '',
     implantPaidBy: '' as PaidBy,
     instrumentsPaidBy: '' as PaidBy,
     hospitalSharePct: '',
@@ -118,6 +120,7 @@ export default function PLRecordEditPage() {
     mediendSharePct: '',
     mediendShareAmount: '',
     mediendNetProfit: '',
+    mediendProfit: '',
     remarks: '',
     doctorRemarks: '',
     costBreakdownRemarks: '',
@@ -217,6 +220,8 @@ export default function PLRecordEditPage() {
           doctorCharges: pl?.doctorCharges != null ? String(pl.doctorCharges) : '',
           implantCost: pl?.implantCost != null ? String(pl.implantCost) : (ds?.implantCost != null ? String(ds.implantCost) : ''),
           instrumentsCost: pl?.instrumentsCost != null ? String(pl.instrumentsCost) : (ds?.instrumentsCost != null ? String(ds.instrumentsCost) : ''),
+          actualImplantCost: pl?.actualImplantCost != null ? String(pl.actualImplantCost) : (pl?.implantCost != null ? String(pl.implantCost) : (ds?.implantCost != null ? String(ds.implantCost) : '')),
+          actualInstrumentCost: pl?.actualInstrumentCost != null ? String(pl.actualInstrumentCost) : (pl?.instrumentsCost != null ? String(pl.instrumentsCost) : (ds?.instrumentsCost != null ? String(ds.instrumentsCost) : '')),
           implantPaidBy: ((pl?.implantPaidBy as string) || (ds?.implantPaidBy as string) || '') as PaidBy,
           instrumentsPaidBy: ((pl?.instrumentsPaidBy as string) || (ds?.instrumentsPaidBy as string) || '') as PaidBy,
           hospitalSharePct: pl?.hospitalSharePct != null ? String(pl.hospitalSharePct) : '',
@@ -312,13 +317,16 @@ export default function PLRecordEditPage() {
     const doctor = parseFloat(formData.doctorCharges) || 0
     const implant = parseFloat(formData.implantCost) || 0
     const instruments = parseFloat(formData.instrumentsCost) || 0
+    const actualImplant = parseFloat(formData.actualImplantCost) || 0
+    const actualInstruments = parseFloat(formData.actualInstrumentCost) || 0
 
     let costs = referral + cab + dc + doctor
-    if (formData.implantPaidBy !== 'HOSPITAL') costs += implant
-    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += instruments
+    if (formData.implantPaidBy !== 'HOSPITAL') costs += actualImplant
+    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += actualInstruments
 
     const netProfit = medAmount - costs
     const mediendNet = parseFloat(formData.mediendNetProfit) || netProfit
+    const mediendProfit = mediendNet - (0.1 * medAmount)
 
     const payload: Record<string, unknown> = {
       month: formData.month ? new Date(`${formData.month}-01`).toISOString() : undefined,
@@ -341,6 +349,8 @@ export default function PLRecordEditPage() {
       doctorCharges: doctor,
       implantCost: implant,
       instrumentsCost: instruments,
+      actualImplantCost: actualImplant,
+      actualInstrumentCost: actualInstruments,
       implantPaidBy: formData.implantPaidBy ? formData.implantPaidBy : null,
       instrumentsPaidBy: formData.instrumentsPaidBy ? formData.instrumentsPaidBy : null,
       hospitalSharePct: parseFloat(formData.hospitalSharePct) || undefined,
@@ -349,6 +359,7 @@ export default function PLRecordEditPage() {
       mediendShareAmount: medAmount,
       mediendNetProfit: mediendNet,
       finalProfit: mediendNet,
+      mediendProfit,
       remarks: formData.remarks || undefined,
       doctorRemarks: formData.doctorRemarks || null,
       costBreakdownRemarks: formData.costBreakdownRemarks || null,
@@ -682,7 +693,7 @@ export default function PLRecordEditPage() {
                 </div>
                 <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label>Implant cost</Label>
+                    <Label>Implant cost (estimated)</Label>
                     <Input type="number" step="0.01" value={formData.implantCost} onChange={(e) => update('implantCost', e.target.value)} className="mt-1" />
                   </div>
                   <div>
@@ -701,7 +712,7 @@ export default function PLRecordEditPage() {
                 </div>
                 <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <Label>Instrument cost</Label>
+                    <Label>Instrument cost (estimated)</Label>
                     <Input type="number" step="0.01" value={formData.instrumentsCost} onChange={(e) => update('instrumentsCost', e.target.value)} className="mt-1" />
                   </div>
                   <div>
@@ -716,6 +727,18 @@ export default function PLRecordEditPage() {
                         <SelectItem value="HOSPITAL">Hospital</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+                </div>
+                <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Actual implant cost</Label>
+                    <Input type="number" step="0.01" value={formData.actualImplantCost} onChange={(e) => update('actualImplantCost', e.target.value)} className="mt-1" />
+                    <p className="text-[11px] text-muted-foreground mt-1">Used in profit calculation (overrides estimated implant cost)</p>
+                  </div>
+                  <div>
+                    <Label>Actual instrument cost</Label>
+                    <Input type="number" step="0.01" value={formData.actualInstrumentCost} onChange={(e) => update('actualInstrumentCost', e.target.value)} className="mt-1" />
+                    <p className="text-[11px] text-muted-foreground mt-1">Used in profit calculation (overrides estimated instrument cost)</p>
                   </div>
                 </div>
                 <div className="sm:col-span-2">
@@ -754,6 +777,16 @@ export default function PLRecordEditPage() {
                 <div className="sm:col-span-2">
                   <Label>Mediend net profit</Label>
                   <Input type="number" step="0.01" value={formData.mediendNetProfit} onChange={(e) => update('mediendNetProfit', e.target.value)} className="mt-1 font-medium" />
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    = Mediend Share − (Referral + Cab + D&amp;C + Doctor Charges + Actual Implant* + Actual Instruments*). If actual is 0, then 0 is subtracted.
+                  </p>
+                </div>
+                <div className="sm:col-span-2">
+                  <Label>Mediend profit (after 10% deduction)</Label>
+                  <Input type="number" step="0.01" value={formData.mediendProfit} onChange={(e) => update('mediendProfit', e.target.value)} className="mt-1 font-medium" />
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    = Mediend Net Profit − (10% × Mediend Share Amount)
+                  </p>
                 </div>
               </CardContent>
             </Card>
