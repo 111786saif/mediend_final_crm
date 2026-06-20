@@ -111,7 +111,10 @@ const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Se
 const ANY_VALUE = '__any__'
 
 function needsDischargeFill(lead: LeadWithStage): boolean {
-  return lead.caseStage === CaseStage.CASH_APPROVED && !lead.dischargeSheet
+  return (
+    (lead.caseStage === CaseStage.CASH_APPROVED || lead.caseStage === CaseStage.CASH_IPD_DONE) &&
+    !lead.dischargeSheet
+  )
 }
 
 function needsReview(lead: LeadWithStage): boolean {
@@ -295,7 +298,7 @@ export default function InsuranceCashCasesPage() {
     return {
       pendingReview: scopedLeads.filter(l => l.caseStage === CaseStage.CASH_IPD_SUBMITTED).length,
       onHold: scopedLeads.filter(l => l.caseStage === CaseStage.CASH_ON_HOLD).length,
-      approved: scopedLeads.filter(l => l.caseStage === CaseStage.CASH_APPROVED).length,
+      approved: scopedLeads.filter(l => l.caseStage === CaseStage.CASH_APPROVED || l.caseStage === CaseStage.CASH_IPD_DONE).length,
       dischargeDone: scopedLeads.filter(l => l.caseStage === CaseStage.CASH_DISCHARGED).length,
       allCash: scopedLeads.length,
     }
@@ -348,7 +351,7 @@ export default function InsuranceCashCasesPage() {
         case 'on-hold':
           return lead.caseStage === CaseStage.CASH_ON_HOLD
         case 'approved':
-          return lead.caseStage === CaseStage.CASH_APPROVED
+          return lead.caseStage === CaseStage.CASH_APPROVED || lead.caseStage === CaseStage.CASH_IPD_DONE
         case 'discharge-done':
           return lead.caseStage === CaseStage.CASH_DISCHARGED
         case 'all-cash':
