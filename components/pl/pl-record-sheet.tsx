@@ -329,32 +329,21 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
   const computedHospitalShare = useMemo(() => {
     const actualFinal = parseFloat(formData.actualFinalAmount) || 0
     const dc = computedDcTotal
-    const implant = parseFloat(formData.implantCost) || 0
-    const instruments = parseFloat(formData.instrumentsCost) || 0
     const hospPct = parseFloat(formData.hospitalSharePct) || 0
     const medPct = parseFloat(formData.mediendSharePct) || 0
 
     if (hospPct === 0 && medPct === 0) return null
 
-    const base = actualFinal - dc - implant - instruments
+    const base = actualFinal - dc
 
-    const hospitalShare = (base * hospPct) / 100 +
-      (formData.implantPaidBy === 'HOSPITAL' ? implant : 0) +
-      (formData.instrumentsPaidBy === 'HOSPITAL' ? instruments : 0)
-
-    const mediendShare = (base * medPct) / 100 +
-      (formData.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
-      (formData.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
+    const hospitalShare = (base * hospPct) / 100
+    const mediendShare = (base * medPct) / 100
 
     return { base, hospitalShare, mediendShare, hospPct, medPct }
   }, [
     formData.actualFinalAmount,
     formData.hospitalSharePct,
     formData.mediendSharePct,
-    formData.implantCost,
-    formData.instrumentsCost,
-    formData.implantPaidBy,
-    formData.instrumentsPaidBy,
     computedDcTotal,
   ])
 
@@ -442,8 +431,6 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     const medPct = parseFloat(formData.mediendSharePct) || 0
     const dc = computedDcTotal || parseFloat(formData.dcCharges) || 0
     const doctor = parseFloat(formData.doctorCharges) || 0
-    const implant = parseFloat(formData.implantCost) || 0
-    const instruments = parseFloat(formData.instrumentsCost) || 0
     const actualImplant = parseFloat(formData.actualImplantCost) || 0
     const actualInstruments = parseFloat(formData.actualInstrumentCost) || 0
     const hospitalRecover = parseFloat(formData.hospitalRecoverAmount) || 0
