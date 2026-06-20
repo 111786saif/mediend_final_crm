@@ -117,6 +117,9 @@ const DEFAULT_COLS: Record<string, boolean> = {
   implantPaidBy: true,
   instruments: true,
   instrumentsPaidBy: true,
+  actualImplantCost: true,
+  actualInstrumentCost: true,
+  hospitalRecoverAmount: true,
   dc: true,
   cab: true,
   referral: true,
@@ -325,6 +328,9 @@ export default function PLLedgerPage() {
       doctorCharges: sum(plFn('doctorCharges')),
       implant: sum(plFn('implantCost')),
       instruments: sum(plFn('instrumentsCost')),
+      actualImplantCost: sum(plFn('actualImplantCost')),
+      actualInstrumentCost: sum(plFn('actualInstrumentCost')),
+      hospitalRecoverAmount: sum(plFn('hospitalRecoverAmount')),
       dc: sum(plFn('dcCharges')),
       cab: sum(plFn('cabCharges')),
       referral: sum(plFn('referralAmount')),
@@ -466,6 +472,9 @@ export default function PLLedgerPage() {
                     ['implantPaidBy', 'Implant by'],
                     ['instruments', 'Instrument'],
                     ['instrumentsPaidBy', 'Instrument by'],
+                    ['actualImplantCost', 'Actual Implant'],
+                    ['actualInstrumentCost', 'Actual Instrument'],
+                    ['hospitalRecoverAmount', 'Hospital Recover'],
                     ['dc', 'D&C'],
                     ['cab', 'Cab'],
                     ['referral', 'Referral'],
@@ -769,6 +778,9 @@ export default function PLLedgerPage() {
                       {visibleCols.implantPaidBy && <TableHead>Implant by</TableHead>}
                       {visibleCols.instruments && <TableHead>Instrument</TableHead>}
                       {visibleCols.instrumentsPaidBy && <TableHead>Instr. by</TableHead>}
+                      {visibleCols.actualImplantCost && <TableHead>Actual Implant</TableHead>}
+                      {visibleCols.actualInstrumentCost && <TableHead>Actual Instrument</TableHead>}
+                      {visibleCols.hospitalRecoverAmount && <TableHead>Hospital Recover</TableHead>}
                       {visibleCols.dc && <TableHead>D&amp;C</TableHead>}
                       {visibleCols.cab && <TableHead>Cab</TableHead>}
                       {visibleCols.referral && <TableHead>Referral</TableHead>}
@@ -929,6 +941,21 @@ export default function PLLedgerPage() {
                           {visibleCols.instrumentsPaidBy && (
                             <TableCell className="whitespace-nowrap">{paidBy(pl?.instrumentsPaidBy)}</TableCell>
                           )}
+                          {visibleCols.actualImplantCost && (
+                            <TableCell className="whitespace-nowrap">
+                              {rupee(pl?.actualImplantCost != null ? Number(pl.actualImplantCost) : null)}
+                            </TableCell>
+                          )}
+                          {visibleCols.actualInstrumentCost && (
+                            <TableCell className="whitespace-nowrap">
+                              {rupee(pl?.actualInstrumentCost != null ? Number(pl.actualInstrumentCost) : null)}
+                            </TableCell>
+                          )}
+                          {visibleCols.hospitalRecoverAmount && (
+                            <TableCell className="whitespace-nowrap">
+                              {rupee(pl?.hospitalRecoverAmount != null ? Number(pl.hospitalRecoverAmount) : null)}
+                            </TableCell>
+                          )}
                           {visibleCols.dc && (
                             <TableCell className="whitespace-nowrap">
                               {rupee(pl?.dcCharges != null ? Number(pl.dcCharges) : null)}
@@ -1069,6 +1096,9 @@ export default function PLLedgerPage() {
                         {visibleCols.implantPaidBy && <TableCell>—</TableCell>}
                         {visibleCols.instruments && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.instruments)}</TableCell>}
                         {visibleCols.instrumentsPaidBy && <TableCell>—</TableCell>}
+                        {visibleCols.actualImplantCost && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.actualImplantCost)}</TableCell>}
+                        {visibleCols.actualInstrumentCost && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.actualInstrumentCost)}</TableCell>}
+                        {visibleCols.hospitalRecoverAmount && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.hospitalRecoverAmount)}</TableCell>}
                         {visibleCols.dc && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.dc)}</TableCell>}
                         {visibleCols.cab && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.cab)}</TableCell>}
                         {visibleCols.referral && <TableCell className="whitespace-nowrap">{formatPlRupee(columnTotals.referral)}</TableCell>}

@@ -836,6 +836,9 @@ model PLRecord {
   instrumentsCost   Float        @default(0) // Instruments (separate from implant)
   implantPaidBy     PaidByParty? // Who paid for implants (affects Mediend expense)
   instrumentsPaidBy PaidByParty? // Who paid for instruments (affects Mediend expense)
+  actualImplantCost    Float     @default(0) // Actual implant cost for profit calculation
+  actualInstrumentCost Float     @default(0) // Actual instrument cost for profit calculation
+  hospitalRecoverAmount Float    @default(0) // Hospital recover amount (deducted from Mediend profit)
   dcCharges         Float        @default(0) // D&C
   doctorCharges     Float        @default(0) // Doctor fee
 

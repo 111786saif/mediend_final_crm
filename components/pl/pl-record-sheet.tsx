@@ -127,6 +127,9 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     instrumentsCost: '',
     implantPaidBy: '' as PaidBy,
     instrumentsPaidBy: '' as PaidBy,
+    actualImplantCost: '',
+    actualInstrumentCost: '',
+    hospitalRecoverAmount: '',
     hospitalSharePct: '',
     hospitalShareAmount: '',
     mediendSharePct: '',
@@ -243,6 +246,9 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           doctorCharges: pl?.doctorCharges != null ? String(pl.doctorCharges) : '',
           implantCost: pl?.implantCost != null ? String(pl.implantCost) : (ds?.implantCost != null ? String(ds.implantCost) : (ds?.implantsAmount != null ? String(ds.implantsAmount) : '')),
           instrumentsCost: pl?.instrumentsCost != null ? String(pl.instrumentsCost) : (ds?.instrumentsCost != null ? String(ds.instrumentsCost) : (ds?.instrumentsAmount != null ? String(ds.instrumentsAmount) : '')),
+          actualImplantCost: pl?.actualImplantCost != null ? String(pl.actualImplantCost) : (pl?.implantCost != null ? String(pl.implantCost) : (ds?.implantCost != null ? String(ds.implantCost) : (ds?.implantsAmount != null ? String(ds.implantsAmount) : ''))),
+          actualInstrumentCost: pl?.actualInstrumentCost != null ? String(pl.actualInstrumentCost) : (pl?.instrumentsCost != null ? String(pl.instrumentsCost) : (ds?.instrumentsCost != null ? String(ds.instrumentsCost) : (ds?.instrumentsAmount != null ? String(ds.instrumentsAmount) : ''))),
+          hospitalRecoverAmount: pl?.hospitalRecoverAmount != null ? String(pl.hospitalRecoverAmount) : '',
           implantPaidBy: ((pl?.implantPaidBy as string) || (ds?.implantPaidBy as string) || '') as PaidBy,
           instrumentsPaidBy: ((pl?.instrumentsPaidBy as string) || (ds?.instrumentsPaidBy as string) || '') as PaidBy,
           hospitalSharePct: pl?.hospitalSharePct != null ? String(pl.hospitalSharePct) : '',
@@ -356,16 +362,17 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     if (!computedHospitalShare) return null
     const { mediendShare } = computedHospitalShare
     const doctor = parseFloat(formData.doctorCharges) || 0
-    const implant = parseFloat(formData.implantCost) || 0
-    const instruments = parseFloat(formData.instrumentsCost) || 0
+    const actualImplant = parseFloat(formData.actualImplantCost) || 0
+    const actualInstruments = parseFloat(formData.actualInstrumentCost) || 0
     const referral = parseFloat(formData.referralAmount) || 0
     const cab = parseFloat(formData.cabCharges) || 0
+    const hospitalRecover = parseFloat(formData.hospitalRecoverAmount) || 0
 
     let costs = doctor + referral + cab
-    if (formData.implantPaidBy !== 'HOSPITAL') costs += implant
-    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += instruments
+    if (formData.implantPaidBy !== 'HOSPITAL') costs += actualImplant
+    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += actualInstruments
 
-    return mediendShare - costs
+    return mediendShare - costs - hospitalRecover
   }, [computedHospitalShare, formData])
 
   const computedMediendProfit = useMemo(() => {
@@ -437,6 +444,9 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     const doctor = parseFloat(formData.doctorCharges) || 0
     const implant = parseFloat(formData.implantCost) || 0
     const instruments = parseFloat(formData.instrumentsCost) || 0
+    const actualImplant = parseFloat(formData.actualImplantCost) || 0
+    const actualInstruments = parseFloat(formData.actualInstrumentCost) || 0
+    const hospitalRecover = parseFloat(formData.hospitalRecoverAmount) || 0
     const referral = parseFloat(formData.referralAmount) || 0
     const cab = parseFloat(formData.cabCharges) || 0
 
@@ -444,19 +454,19 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
 
     const hospAmount =
       (hospPct > 0 ? (base * hospPct) / 100 : parseFloat(formData.hospitalShareAmount) || 0) +
-      (formData.implantPaidBy === 'HOSPITAL' ? implant : 0) +
-      (formData.instrumentsPaidBy === 'HOSPITAL' ? instruments : 0)
+      (formData.implantPaidBy === 'HOSPITAL' ? actualImplant : 0) +
+      (formData.instrumentsPaidBy === 'HOSPITAL' ? actualInstruments : 0)
 
     const medAmount =
       (medPct > 0 ? (base * medPct) / 100 : parseFloat(formData.mediendShareAmount) || 0) +
-      (formData.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
-      (formData.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
+      (formData.implantPaidBy !== 'HOSPITAL' ? actualImplant : 0) +
+      (formData.instrumentsPaidBy !== 'HOSPITAL' ? actualInstruments : 0)
 
     let costs = doctor + referral + cab
-    if (formData.implantPaidBy !== 'HOSPITAL') costs += implant
-    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += instruments
+    if (formData.implantPaidBy !== 'HOSPITAL') costs += actualImplant
+    if (formData.instrumentsPaidBy !== 'HOSPITAL') costs += actualInstruments
 
-    const computedNetProfit = medAmount - costs
+    const computedNetProfit = medAmount - costs - hospitalRecover
     const mediendNet = parseFloat(formData.mediendNetProfit) || computedNetProfit
     const computedMediendProfit = mediendNet - (0.1 * medAmount)
     const mediendProfit = parseFloat(formData.mediendProfit) || computedMediendProfit
@@ -484,6 +494,9 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       instrumentsCost: instruments,
       implantPaidBy: formData.implantPaidBy ? formData.implantPaidBy : null,
       instrumentsPaidBy: formData.instrumentsPaidBy ? formData.instrumentsPaidBy : null,
+      actualImplantCost: actualImplant,
+      actualInstrumentCost: actualInstruments,
+      hospitalRecoverAmount: hospitalRecover,
       hospitalSharePct: parseFloat(formData.hospitalSharePct) || undefined,
       hospitalShareAmount: hospAmount,
       mediendSharePct: parseFloat(formData.mediendSharePct) || undefined,
@@ -884,6 +897,18 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                             <SelectItem value="HOSPITAL">Hospital</SelectItem>
                           </SelectContent>
                         </Select>
+                      </div>
+                      <div>
+                        <Label>Actual implant cost</Label>
+                        <Input type="number" step="0.01" value={formData.actualImplantCost} onChange={(e) => update('actualImplantCost', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Actual instrument cost</Label>
+                        <Input type="number" step="0.01" value={formData.actualInstrumentCost} onChange={(e) => update('actualInstrumentCost', e.target.value)} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label>Hospital recover amount</Label>
+                        <Input type="number" step="0.01" value={formData.hospitalRecoverAmount} onChange={(e) => update('hospitalRecoverAmount', e.target.value)} className="mt-1" />
                       </div>
                       <div className="sm:col-span-2">
                         <Label>Mediend net profit {computedMediendNetProfit !== null && !hasManualOverrides.mediendNetProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>

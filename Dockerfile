@@ -62,3 +62,8 @@ CMD ["node", "server.js"]
 FROM builder AS migrate
 WORKDIR /app
 CMD ["bun", "run", "migrate:case-stages-v2"]
+
+# Stage for running the one-off actual-costs backfill (copies existing implant/instrument costs to new actual fields).
+FROM builder AS backfill-actual-costs
+WORKDIR /app
+CMD ["bun", "run", "backfill-actual-costs"]
