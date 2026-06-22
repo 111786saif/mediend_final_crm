@@ -989,7 +989,7 @@ const EMPLOYEES = [
       "SL_FINAL": 1,
       "EL_FINAL": 3.5,
       "MOBILE NUMBER": 9311585999,
-      "EMAIL ID": "shubham.tyagi@collegele.com",
+      "EMAIL ID": "shubham.tyagi@mediend.com",
       "TEAM": "MD",
       "Employee": "Active"
     },

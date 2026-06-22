@@ -1,0 +1,6 @@
+@media (max-width: 768px) {
+  .doc-content-wrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
