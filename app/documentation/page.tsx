@@ -11,7 +11,7 @@ export default function DocumentationPage() {
   const [pinError, setPinError] = useState(false)
   const [activeSection, setActiveSection] = useState('getting-started')
   const [searchQuery, setSearchQuery] = useState('')
-  const PIN = 'documentation@mediend2026'
+  const PIN = 'mediend@2026'
 
   useEffect(() => {
     if (unlocked && !searchQuery.trim()) {
@@ -21,37 +21,6 @@ export default function DocumentationPage() {
   }, [unlocked, activeSection, searchQuery])
 
   const searchTerm = searchQuery.toLowerCase().trim()
-
-  if (!unlocked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
-        <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 w-full max-w-sm">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Mediend CRM</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Enter the documentation PIN to continue</p>
-          <input
-            type="password"
-            placeholder="Enter PIN"
-            value={pin}
-            onChange={(e) => { setPin(e.target.value); setPinError(false) }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                if (pin === PIN) setUnlocked(true)
-                else setPinError(true)
-              }
-            }}
-            className="w-full px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-          />
-          {pinError && <p className="text-sm text-red-500 mb-4">Incorrect PIN. Try again.</p>}
-          <button
-            onClick={() => { if (pin === PIN) setUnlocked(true); else setPinError(true) }}
-            className="w-full px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors font-medium"
-          >
-            Unlock
-          </button>
-        </div>
-      </div>
-    )
-  }
 
   const sections = useMemo(() => ({
     'hrms-employees': {
@@ -818,6 +787,37 @@ closedAt = auto when both payoutStatus = PAID`}
       return k.toLowerCase().includes(searchTerm) || s.title.toLowerCase().includes(searchTerm)
     })
   }, [sections, searchTerm])
+
+  if (!unlocked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+        <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 w-full max-w-sm">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Mediend CRM</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Enter the documentation PIN to continue</p>
+          <input
+            type="password"
+            placeholder="Enter PIN"
+            value={pin}
+            onChange={(e) => { setPin(e.target.value); setPinError(false) }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                if (pin === PIN) setUnlocked(true)
+                else setPinError(true)
+              }
+            }}
+            className="w-full px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+          />
+          {pinError && <p className="text-sm text-red-500 mb-4">Incorrect PIN. Try again.</p>}
+          <button
+            onClick={() => { if (pin === PIN) setUnlocked(true); else setPinError(true) }}
+            className="w-full px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            Unlock
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='min-h-screen bg-gray-50 dark:bg-gray-950'>
