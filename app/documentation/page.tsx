@@ -9,7 +9,18 @@ export default function DocumentationPage() {
   const [pin, setPin] = useState('')
   const [unlocked, setUnlocked] = useState(false)
   const [pinError, setPinError] = useState(false)
+  const [activeSection, setActiveSection] = useState('getting-started')
+  const [searchQuery, setSearchQuery] = useState('')
   const PIN = 'documentation@mediend2026'
+
+  useEffect(() => {
+    if (unlocked && !searchQuery.trim()) {
+      const el = document.getElementById(activeSection)
+      el?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [unlocked, activeSection, searchQuery])
+
+  const searchTerm = searchQuery.toLowerCase().trim()
 
   if (!unlocked) {
     return (
@@ -41,18 +52,6 @@ export default function DocumentationPage() {
       </div>
     )
   }
-
-  const [activeSection, setActiveSection] = useState('getting-started')
-  const [searchQuery, setSearchQuery] = useState('')
-
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      const el = document.getElementById(activeSection)
-      el?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [activeSection])
-
-  const searchTerm = searchQuery.toLowerCase().trim()
 
   const sections = useMemo(() => ({
     'hrms-employees': {
