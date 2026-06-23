@@ -355,7 +355,7 @@ export function canFillCashDischarge(user: User, lead: Lead): boolean {
   
   const isInsurance = ['INSURANCE', 'INSURANCE_HEAD', 'ADMIN', 'TESTER'].includes(user.role)
   const isCash = lead.flowType === FlowType.CASH
-  const isApproved = lead.caseStage === CaseStage.CASH_APPROVED
-  
-  return isInsurance && isCash && isApproved
+  const isApprovedOrDone = lead.caseStage === CaseStage.CASH_APPROVED || lead.caseStage === CaseStage.CASH_IPD_DONE
+
+  return isInsurance && isCash && isApprovedOrDone
 }

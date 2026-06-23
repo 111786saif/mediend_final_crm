@@ -67,6 +67,10 @@ export async function POST(request: NextRequest) {
       return errorResponse('Not a cash flow case', 400)
     }
 
+    if (lead.caseStage !== CaseStage.CASH_APPROVED && lead.caseStage !== CaseStage.CASH_IPD_DONE) {
+      return errorResponse('Case is not in the correct stage for discharge', 400)
+    }
+
     // Create discharge sheet — hydrate all people/case/date fields from the
     // lead so the DischargeSheet row is a complete audit record and the
     // downstream PLRecord can copy straight from it.

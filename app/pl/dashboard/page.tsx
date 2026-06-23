@@ -5,14 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -240,10 +232,10 @@ export default function PLLedgerPage() {
   const [patientDrawerStage, setPatientDrawerStage] = useState('')
   const [patientDrawerDateField, setPatientDrawerDateField] = useState<'surgery' | 'admission' | 'discharge'>('surgery')
 
-  const [bdFilter, setBdFilter] = useState('all')
-  const [hospitalFilter, setHospitalFilter] = useState('all')
-  const [doctorFilter, setDoctorFilter] = useState('all')
-  const [outstandingFilter, setOutstandingFilter] = useState('all')
+  const [bdFilter, setBdFilter] = useState<string[]>([])
+  const [hospitalFilter, setHospitalFilter] = useState<string[]>([])
+  const [doctorFilter, setDoctorFilter] = useState<string[]>([])
+  const [outstandingFilter, setOutstandingFilter] = useState<string[]>([])
 
   const filterOptions = useMemo(() => {
     const bds = new Set<string>()
@@ -262,17 +254,13 @@ export default function PLLedgerPage() {
     }
   }, [records])
 
-  const activeFilterCount =
-    (bdFilter !== 'all' ? 1 : 0) +
-    (hospitalFilter !== 'all' ? 1 : 0) +
-    (doctorFilter !== 'all' ? 1 : 0) +
-    (outstandingFilter !== 'all' ? 1 : 0)
+  const activeFilterCount = bdFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length
 
   const clearFilters = () => {
-    setBdFilter('all')
-    setHospitalFilter('all')
-    setDoctorFilter('all')
-    setOutstandingFilter('all')
+    setBdFilter([])
+    setHospitalFilter([])
+    setDoctorFilter([])
+    setOutstandingFilter([])
   }
 
   const tableRecords = useMemo(
@@ -285,12 +273,12 @@ export default function PLLedgerPage() {
         if (!hasInsuranceDs && !(isCashCase && hasPlData)) return false
         if (activeFilterCount === 0) return true
         const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
-        if (bdFilter !== 'all' && resolved.bdm !== bdFilter) return false
-        if (hospitalFilter !== 'all' && resolved.hospital !== hospitalFilter) return false
-        if (doctorFilter !== 'all' && resolved.doctor !== doctorFilter) return false
+        if (bdFilter.length > 0 && !bdFilter.includes(resolved.bdm)) return false
+        if (hospitalFilter.length > 0 && !hospitalFilter.includes(resolved.hospital)) return false
+        if (doctorFilter.length > 0 && !doctorFilter.includes(resolved.doctor)) return false
         const pl = (r as Lead).plRecord as Record<string, unknown> | undefined
         const ostStatus = (pl?.outstandingStatus as string) || 'NEW'
-        if (outstandingFilter !== 'all' && ostStatus !== outstandingFilter) return false
+        if (outstandingFilter.length > 0 && !outstandingFilter.includes(ostStatus)) return false
         return true
       }),
     [records, bdFilter, hospitalFilter, doctorFilter, outstandingFilter, activeFilterCount]
@@ -501,56 +489,138 @@ export default function PLLedgerPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <Select value={bdFilter} onValueChange={setBdFilter}>
-              <SelectTrigger className="h-9 w-[180px] bg-background">
-                <SelectValue placeholder="BD" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All BDs</SelectItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-9 w-[180px] justify-start gap-2 border-slate-300 bg-background/90 dark:border-slate-600">
+                  BD {bdFilter.length > 0 && `(${bdFilter.length})`}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48 max-h-[min(70vh,300px)] overflow-y-auto">
+                <DropdownMenuLabel>Select BDs</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem
+                  checked={bdFilter.length === filterOptions.bds.length}
+                  onCheckedChange={(checked) => {
+                    if (checked) setBdFilter(filterOptions.bds)
+                    else setBdFilter([])
+                  }}
+                >
+                  All
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuSeparator />
                 {filterOptions.bds.map((b) => (
-                  <SelectItem key={b} value={b}>
+                  <DropdownMenuCheckboxItem
+                    key={b}
+                    checked={bdFilter.includes(b)}
+                    onCheckedChange={(checked) => {
+                      if (checked) setBdFilter((prev) => [...prev, b])
+                      else setBdFilter((prev) => prev.filter((v) => v !== b))
+                    }}
+                  >
                     {b}
-                  </SelectItem>
+                  </DropdownMenuCheckboxItem>
                 ))}
-              </SelectContent>
-            </Select>
-            <Select value={hospitalFilter} onValueChange={setHospitalFilter}>
-              <SelectTrigger className="h-9 w-[220px] bg-background">
-                <SelectValue placeholder="Hospital" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All hospitals</SelectItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-9 w-[220px] justify-start gap-2 border-slate-300 bg-background/90 dark:border-slate-600">
+                  Hospital {hospitalFilter.length > 0 && `(${hospitalFilter.length})`}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48 max-h-[min(70vh,300px)] overflow-y-auto">
+                <DropdownMenuLabel>Select hospitals</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem
+                  checked={hospitalFilter.length === filterOptions.hospitals.length}
+                  onCheckedChange={(checked) => {
+                    if (checked) setHospitalFilter(filterOptions.hospitals)
+                    else setHospitalFilter([])
+                  }}
+                >
+                  All
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuSeparator />
                 {filterOptions.hospitals.map((h) => (
-                  <SelectItem key={h} value={h}>
+                  <DropdownMenuCheckboxItem
+                    key={h}
+                    checked={hospitalFilter.includes(h)}
+                    onCheckedChange={(checked) => {
+                      if (checked) setHospitalFilter((prev) => [...prev, h])
+                      else setHospitalFilter((prev) => prev.filter((v) => v !== h))
+                    }}
+                  >
                     {h}
-                  </SelectItem>
+                  </DropdownMenuCheckboxItem>
                 ))}
-              </SelectContent>
-            </Select>
-            <Select value={doctorFilter} onValueChange={setDoctorFilter}>
-              <SelectTrigger className="h-9 w-[200px] bg-background">
-                <SelectValue placeholder="Doctor" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All doctors</SelectItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-9 w-[200px] justify-start gap-2 border-slate-300 bg-background/90 dark:border-slate-600">
+                  Doctor {doctorFilter.length > 0 && `(${doctorFilter.length})`}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48 max-h-[min(70vh,300px)] overflow-y-auto">
+                <DropdownMenuLabel>Select doctors</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem
+                  checked={doctorFilter.length === filterOptions.doctors.length}
+                  onCheckedChange={(checked) => {
+                    if (checked) setDoctorFilter(filterOptions.doctors)
+                    else setDoctorFilter([])
+                  }}
+                >
+                  All
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuSeparator />
                 {filterOptions.doctors.map((d) => (
-                  <SelectItem key={d} value={d}>
+                  <DropdownMenuCheckboxItem
+                    key={d}
+                    checked={doctorFilter.includes(d)}
+                    onCheckedChange={(checked) => {
+                      if (checked) setDoctorFilter((prev) => [...prev, d])
+                      else setDoctorFilter((prev) => prev.filter((v) => v !== d))
+                    }}
+                  >
                     {d}
-                  </SelectItem>
+                  </DropdownMenuCheckboxItem>
                 ))}
-              </SelectContent>
-            </Select>
-            <Select value={outstandingFilter} onValueChange={setOutstandingFilter}>
-              <SelectTrigger className="h-9 w-[180px] bg-background">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="NEW">New</SelectItem>
-                <SelectItem value="DRAFT">Draft</SelectItem>
-                <SelectItem value="OUTSTANDING">Outstanding</SelectItem>
-              </SelectContent>
-            </Select>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-9 w-[180px] justify-start gap-2 border-slate-300 bg-background/90 dark:border-slate-600">
+                  Status {outstandingFilter.length > 0 && `(${outstandingFilter.length})`}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48 max-h-[min(70vh,300px)] overflow-y-auto">
+                <DropdownMenuLabel>Select status</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem
+                  checked={outstandingFilter.length === 3}
+                  onCheckedChange={(checked) => {
+                    if (checked) setOutstandingFilter(['NEW', 'DRAFT', 'OUTSTANDING'])
+                    else setOutstandingFilter([])
+                  }}
+                >
+                  All
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuSeparator />
+                {['NEW', 'DRAFT', 'OUTSTANDING'].map((s) => (
+                  <DropdownMenuCheckboxItem
+                    key={s}
+                    checked={outstandingFilter.includes(s)}
+                    onCheckedChange={(checked) => {
+                      if (checked) setOutstandingFilter((prev) => [...prev, s])
+                      else setOutstandingFilter((prev) => prev.filter((v) => v !== s))
+                    }}
+                  >
+                    {s === 'NEW' ? 'New' : s === 'DRAFT' ? 'Draft' : 'Outstanding'}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             {activeFilterCount > 0 && (
               <Button type="button" variant="ghost" size="sm" className="h-9" onClick={clearFilters}>
                 Clear filters ({activeFilterCount})

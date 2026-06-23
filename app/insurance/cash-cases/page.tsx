@@ -706,9 +706,6 @@ export default function InsuranceCashCasesPage() {
                         const tier = getPriorityTier(lead)
                         const isDischargeUrgent = tier === 2
                         const isReviewUrgent = tier === 1
-                        const atsPercentDiff = lead.atsAmount && lead.settledTotal
-                          ? ((lead.settledTotal - lead.atsAmount) / lead.atsAmount * 100)
-                          : null
 
                         const rowBg = isDischargeUrgent
                           ? 'bg-orange-50/60 dark:bg-orange-950/20'
@@ -767,23 +764,21 @@ export default function InsuranceCashCasesPage() {
                               )}
                             </TableCell>
                             <TableCell>
-                              {lead.atsAmount && lead.settledTotal ? (
-                                <div className="flex flex-col gap-1">
-                                  {atsPercentDiff !== null && atsPercentDiff >= 0 ? (
-                                    <Badge className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800 text-xs">
-                                      <CheckCircle2 className="w-3 h-3 mr-1" />
-                                      Auto-Approved
-                                    </Badge>
-                                  ) : (
-                                    <Badge className="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 text-xs">
-                                      <AlertTriangle className="w-3 h-3 mr-1" />
-                                      Needs Approval
-                                    </Badge>
-                                  )}
-                                </div>
-                              ) : (
-                                <span className="text-gray-400 text-sm">-</span>
-                              )}
+                              <div className="flex flex-col gap-1">
+                                {lead.atsStatus === 'ABOVE_ATS' ? (
+                                  <Badge className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800 text-xs">
+                                    <CheckCircle2 className="w-3 h-3 mr-1" />
+                                    Auto-Approved
+                                  </Badge>
+                                ) : lead.atsStatus === 'BELOW_ATS' ? (
+                                  <Badge className="bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 text-xs">
+                                    <AlertTriangle className="w-3 h-3 mr-1" />
+                                    Needs Approval
+                                  </Badge>
+                                ) : (
+                                  <span className="text-gray-400 text-sm">-</span>
+                                )}
+                              </div>
                             </TableCell>
                             <TableCell>{getStageBadge(lead.caseStage)}</TableCell>
                             <TableCell className="text-gray-600 dark:text-gray-400">

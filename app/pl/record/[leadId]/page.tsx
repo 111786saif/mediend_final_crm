@@ -37,6 +37,9 @@ interface Lead {
     admissionDate?: string
     surgeryDate?: string
     notes?: string
+    ipdStatusNotes?: string
+    implantConsumables?: string
+    instrument?: string
   }
   plRecord?: Record<string, unknown> & {
     finalProfit?: number
@@ -379,6 +382,11 @@ export default function PLRecordEditPage() {
   }
 
   const bdNotes = record?.admissionRecord?.notes || ''
+  const bdIpdStatusNotes = record?.admissionRecord?.ipdStatusNotes || ''
+  const bdImplantConsumables = record?.admissionRecord?.implantConsumables || ''
+  const bdInstrument = record?.admissionRecord?.instrument || ''
+  const leadRemarks = (record?.remarks as string) || ''
+  const hasBdNotes = bdNotes || bdIpdStatusNotes || bdImplantConsumables || bdInstrument || leadRemarks
 
   if (loadingLead || !record) {
     return (
@@ -431,13 +439,42 @@ export default function PLRecordEditPage() {
             </Badge>
           </div>
 
-          {bdNotes && (
+          {hasBdNotes && (
             <Card className="overflow-hidden border-amber-200/50 shadow-md dark:border-amber-800/40">
               <CardHeader className="border-b bg-gradient-to-r from-amber-500/10 to-yellow-500/10 pb-2">
                 <CardTitle className="text-sm text-amber-950 dark:text-amber-100">BD Notes for PL Head</CardTitle>
               </CardHeader>
-              <CardContent className="pt-3 text-sm whitespace-pre-wrap">
-                {bdNotes}
+              <CardContent className="pt-3 text-sm space-y-3">
+                {bdNotes && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Additional Notes</p>
+                    <p className="whitespace-pre-wrap">{bdNotes}</p>
+                  </div>
+                )}
+                {bdIpdStatusNotes && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">IPD Status Notes</p>
+                    <p className="whitespace-pre-wrap">{bdIpdStatusNotes}</p>
+                  </div>
+                )}
+                {bdImplantConsumables && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Implants / Consumables</p>
+                    <p className="whitespace-pre-wrap">{bdImplantConsumables}</p>
+                  </div>
+                )}
+                {bdInstrument && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Instruments</p>
+                    <p className="whitespace-pre-wrap">{bdInstrument}</p>
+                  </div>
+                )}
+                {leadRemarks && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Lead Remarks</p>
+                    <p className="whitespace-pre-wrap">{leadRemarks}</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}

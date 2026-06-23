@@ -179,6 +179,8 @@ export async function GET(request: NextRequest) {
       netProfit: true,
       surgeryDate: true,
       flowType: true,
+      atsAmount: true,
+      atsStatus: true,
       bd: {
         select: {
           id: true,
