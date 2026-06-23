@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
-import { Menu, X, ChevronRight, Book, Users, DollarSign, ShoppingCart, Shield, TrendingUp, AlertCircle, GitBranch, Code } from 'lucide-react'
+import { Menu, X, ChevronRight, Book, Users, DollarSign, ShoppingCart, Shield, TrendingUp, AlertCircle, GitBranch, Code, Database } from 'lucide-react'
 
 interface DocSection {
   id: string
@@ -116,6 +116,14 @@ const sections: DocSection[] = [
       { id: 'fe-components', label: 'Key Components' },
       { id: 'fe-navigation', label: 'Navigation System' },
       { id: 'fe-state', label: 'State Management' },
+    ],
+  },
+  {
+    id: 'mysql-sync-group',
+    label: 'MySQL Sync',
+    icon: <Database className="h-4 w-4" />,
+    children: [
+      { id: 'mysql-sync', label: 'Legacy Database Sync' },
     ],
   },
 ]
