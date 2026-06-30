@@ -73,9 +73,9 @@ export async function GET(request: NextRequest) {
     if (caseStage) {
       const stages = caseStage.split(',').map((s) => s.trim()).filter(Boolean)
       if (stages.length === 1) {
-        where.caseStage = stages[0]
+        where.caseStage = stages[0] as any
       } else if (stages.length > 1) {
-        where.caseStage = { in: stages }
+        where.caseStage = { in: stages as any[] }
       }
     }
     if (bdId) where.bdId = bdId
@@ -226,6 +226,7 @@ export async function GET(request: NextRequest) {
           id: true,
           name: true,
           email: true,
+          role: true,
           employee: {
             select: {
               team: {

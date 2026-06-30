@@ -1,10 +1,15 @@
 'use client'
 
+import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
+import { cn } from '@/lib/utils'
+import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
+import { PendingPayoutsDrawer } from '@/components/pl/pending-payouts-drawer'
+import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
+import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 import { ProtectedRoute } from '@/components/protected-route'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -13,37 +18,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useQuery } from '@tanstack/react-query'
-import { apiGet } from '@/lib/api-client'
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Lead } from '@/hooks/use-leads'
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { apiGet } from '@/lib/api-client'
 import {
-  DollarSign,
-  TrendingUp,
-  FileText,
-  CheckCircle,
-  Users,
-  Calendar,
-  Activity,
-  CheckCircle2,
-  Settings2,
-  LayoutDashboard,
-  X,
-  ReceiptText,
-} from 'lucide-react'
-import Link from 'next/link'
-import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
-import { cn } from '@/lib/utils'
-import {
-  resolvePlRow,
   formatPlDate,
   formatPlMonth,
   formatPlRupee,
+  resolvePlRow,
 } from '@/lib/pl/resolve-pl-row'
-import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
-import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
-import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
-import { PendingPayoutsDrawer } from '@/components/pl/pending-payouts-drawer'
+import { useQuery } from '@tanstack/react-query'
+import {
+  Activity,
+  Calendar,
+  CheckCircle,
+  CheckCircle2,
+  DollarSign,
+  LayoutDashboard,
+  ReceiptText,
+  Settings2,
+  TrendingUp,
+  Users,
+  X
+} from 'lucide-react'
+import Link from 'next/link'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const LS_COLUMNS = 'pl-ledger-column-visibility'
 
@@ -77,6 +76,9 @@ type PipelineStats = {
   surgeryScheduled: number
   ipdDone: number
   discharged: number
+  postponed?: number
+  cancelled?: number
+  posted?: number
 }
 
 const DEFAULT_COLS: Record<string, boolean> = {
@@ -231,6 +233,7 @@ export default function PLLedgerPage() {
   const [patientDrawerTitle, setPatientDrawerTitle] = useState('')
   const [patientDrawerStage, setPatientDrawerStage] = useState('')
   const [patientDrawerDateField, setPatientDrawerDateField] = useState<'surgery' | 'admission' | 'discharge'>('surgery')
+  const [selectedStage, setSelectedStage] = useState<string | null>(null)
 
   const [bdFilter, setBdFilter] = useState<string[]>([])
   const [hospitalFilter, setHospitalFilter] = useState<string[]>([])
@@ -254,13 +257,14 @@ export default function PLLedgerPage() {
     }
   }, [records])
 
-  const activeFilterCount = bdFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length
+  const activeFilterCount = bdFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length + (selectedStage ? 1 : 0)
 
   const clearFilters = () => {
     setBdFilter([])
     setHospitalFilter([])
     setDoctorFilter([])
     setOutstandingFilter([])
+    setSelectedStage(null)
   }
 
   const tableRecords = useMemo(
@@ -270,18 +274,37 @@ export default function PLLedgerPage() {
         const hasInsuranceDs = !!(r as Lead).dischargeSheet;
         const isCashCase = r.caseStage?.toString().startsWith('CASH_');
         const hasPlData = !!(r as Lead).plRecord;
-        if (!hasInsuranceDs && !(isCashCase && hasPlData)) return false
+
+        if (selectedStage) {
+          const stage = r.caseStage?.toString() || ''
+          if (selectedStage === 'admitted') {
+            if (stage !== 'ADMITTED') return false
+          } else if (selectedStage === 'ipd_done') {
+            if (stage !== 'IPD_DONE' && stage !== 'CASH_IPD_DONE' && stage !== 'DISCHARGED' && stage !== 'CASH_DISCHARGED' && stage !== 'PL_PENDING' && stage !== 'OUTSTANDING') return false
+          } else if (selectedStage === 'discharged') {
+            if (stage !== 'DISCHARGED' && stage !== 'CASH_DISCHARGED') return false
+          } else if (selectedStage === 'scheduled') {
+            if (stage !== 'PREAUTH_COMPLETE' && stage !== 'INITIATED') return false
+          } else if (selectedStage === 'posted') {
+            if (stage !== 'INITIATED') return false
+          } else if (selectedStage === 'cancelled') {
+            if (stage !== 'CANCELLED') return false
+          }
+        } else {
+          if (!hasInsuranceDs && !(isCashCase && hasPlData)) return false
+        }
+
         if (activeFilterCount === 0) return true
         const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
-        if (bdFilter.length > 0 && !bdFilter.includes(resolved.bdm)) return false
-        if (hospitalFilter.length > 0 && !hospitalFilter.includes(resolved.hospital)) return false
-        if (doctorFilter.length > 0 && !doctorFilter.includes(resolved.doctor)) return false
+        if (bdFilter.length > 0 && !bdFilter.includes(resolved.bdm ?? '')) return false
+        if (hospitalFilter.length > 0 && !hospitalFilter.includes(resolved.hospital ?? '')) return false
+        if (doctorFilter.length > 0 && !doctorFilter.includes(resolved.doctor ?? '')) return false
         const pl = (r as Lead).plRecord as Record<string, unknown> | undefined
         const ostStatus = (pl?.outstandingStatus as string) || 'NEW'
         if (outstandingFilter.length > 0 && !outstandingFilter.includes(ostStatus)) return false
         return true
       }),
-    [records, bdFilter, hospitalFilter, doctorFilter, outstandingFilter, activeFilterCount]
+    [records, bdFilter, hospitalFilter, doctorFilter, outstandingFilter, activeFilterCount, selectedStage]
   )
 
   const pendingPayoutRecords = useMemo(
@@ -295,6 +318,18 @@ export default function PLLedgerPage() {
   )
 
   const visibleCount = useMemo(() => 1 + Object.values(visibleCols).filter(Boolean).length, [visibleCols])
+
+  const totalMediendShare = useMemo(() => {
+    return (
+      tableRecords?.reduce((sum: number, r: Lead) => {
+        const pl = r.plRecord as Record<string, unknown> | undefined
+        const share = pl?.hospitalShareAmount != null
+          ? Number(pl.hospitalShareAmount)
+          : ((r as any).hospitalShare || 0)
+        return sum + share
+      }, 0) || 0
+    )
+  }, [tableRecords])
 
   const columnTotals = useMemo(() => {
     const records = tableRecords ?? []
@@ -630,179 +665,333 @@ export default function PLLedgerPage() {
               {tableRecords?.length ?? 0} of {records?.length ?? 0} rows
             </span>
           </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="flex flex-wrap gap-1.5">
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-indigo-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
-                'bg-gradient-to-br from-indigo-50/90 to-card dark:from-indigo-950/35 dark:to-card'
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                selectedStage === 'admitted'
+                  ? "border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20"
+                  : "border-indigo-500/20 bg-indigo-950/10 hover:border-indigo-500/40"
               )}
               onClick={() => {
-                setPatientDrawerTitle('Admitted Patients')
-                setPatientDrawerStage('ADMITTED,INITIATED')
-                setPatientDrawerDateField('admission')
-                setPatientDrawerOpen(true)
+                setSelectedStage(prev => prev === 'admitted' ? null : 'admitted')
               }}
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-indigo-900/90 dark:text-indigo-100/90">Admitted</CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
-                  <Users className="h-4 w-4" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-300">
+                  Admitted
+                </span>
+                {selectedStage === 'admitted' ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedStage(null)
+                    }}
+                    className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-500/25 text-indigo-700 hover:bg-indigo-500/40 dark:text-indigo-300 dark:hover:bg-indigo-500/30 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                ) : (
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                    <Users className="h-3 w-3" />
+                  </div>
+                )}
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
                   {pipelineStats?.admitted ?? '—'}
                 </div>
-                <p className="text-xs text-indigo-800/70 dark:text-indigo-200/70 mt-1">By admission date</p>
-              </CardContent>
+                <p className="text-[10px] text-indigo-800/70 dark:text-indigo-200/60 mt-0.5">By admission date</p>
+              </div>
             </Card>
             <Card
-              className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-violet-500',
-                'bg-gradient-to-br from-violet-50/90 to-card dark:from-violet-950/35 dark:to-card'
-              )}
+              className="overflow-hidden border border-violet-500/20 bg-violet-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-violet-900/90 dark:text-violet-100/90">ATS</CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-500/15 text-violet-700 dark:text-violet-300">
-                  <ReceiptText className="h-4 w-4" />
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-violet-400 dark:text-violet-300">
+                  ATS
+                </span>
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-violet-500/15 text-violet-700 dark:text-violet-300">
+                  <ReceiptText className="h-3 w-3" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-violet-950 dark:text-violet-50">
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-violet-950 dark:text-violet-50">
                   {tableRecords && tableRecords.length > 0
                     ? `₹${Math.round(columnTotals.amountPaid / tableRecords.length).toLocaleString('en-IN')}`
                     : '—'}
                 </div>
-                <p className="text-xs text-violet-800/70 dark:text-violet-200/70 mt-1">Amount paid per case</p>
-              </CardContent>
+                <p className="text-[10px] text-violet-800/70 dark:text-violet-200/60 mt-0.5">Amount paid per case</p>
+              </div>
             </Card>
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-cyan-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
-                'bg-gradient-to-br from-cyan-50/90 to-card dark:from-cyan-950/35 dark:to-card'
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                selectedStage === 'ipd_done'
+                  ? "border-cyan-500 ring-2 ring-cyan-500/30 bg-cyan-950/20"
+                  : "border-cyan-500/20 bg-cyan-950/10 hover:border-cyan-500/40"
               )}
               onClick={() => {
-                setPatientDrawerTitle('IPD Done')
-                setPatientDrawerStage('IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED,PL_PENDING,OUTSTANDING')
-                setPatientDrawerDateField('surgery')
-                setPatientDrawerOpen(true)
+                setSelectedStage(prev => prev === 'ipd_done' ? null : 'ipd_done')
               }}
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-cyan-900/90 dark:text-cyan-100/90">IPD done</CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">
-                  <Activity className="h-4 w-4" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400 dark:text-cyan-300">
+                  IPD done
+                </span>
+                {selectedStage === 'ipd_done' ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedStage(null)
+                    }}
+                    className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-500/25 text-cyan-700 hover:bg-cyan-500/40 dark:text-cyan-300 dark:hover:bg-cyan-500/30 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                ) : (
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-cyan-500/15 text-cyan-700 dark:text-cyan-300">
+                    <Activity className="h-3 w-3" />
+                  </div>
+                )}
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
                   {records?.length ?? '—'}
                 </div>
-                <p className="text-xs text-cyan-800/70 dark:text-cyan-200/70 mt-1">Status update in range</p>
-              </CardContent>
+                <p className="text-[10px] text-cyan-800/70 dark:text-cyan-200/60 mt-0.5">Status update in range</p>
+              </div>
             </Card>
             <Card
               className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
-                'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/35 dark:to-card'
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                selectedStage === 'discharged'
+                  ? "border-emerald-500 ring-2 ring-emerald-500/30 bg-emerald-950/20"
+                  : "border-emerald-500/20 bg-emerald-950/10 hover:border-emerald-500/40"
               )}
               onClick={() => {
-                setPatientDrawerTitle('Discharged Patients')
-                setPatientDrawerStage('DISCHARGED,CASH_DISCHARGED')
-                setPatientDrawerDateField('discharge')
-                setPatientDrawerOpen(true)
+                setSelectedStage(prev => prev === 'discharged' ? null : 'discharged')
               }}
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">Discharged</CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                  <CheckCircle2 className="h-4 w-4" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400 dark:text-emerald-300">
+                  Discharged
+                </span>
+                {selectedStage === 'discharged' ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedStage(null)
+                    }}
+                    className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/25 text-emerald-700 hover:bg-emerald-500/40 dark:text-emerald-300 dark:hover:bg-emerald-500/30 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                ) : (
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                    <CheckCircle2 className="h-3 w-3" />
+                  </div>
+                )}
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
                   {pipelineStats?.discharged ?? '—'}
                 </div>
-                <p className="text-xs text-emerald-800/70 dark:text-emerald-200/70 mt-1">Discharge date</p>
-              </CardContent>
+                <p className="text-[10px] text-emerald-800/70 dark:text-emerald-200/60 mt-0.5">Discharge date</p>
+              </div>
+            </Card>
+            <Card
+              className={cn(
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                selectedStage === 'scheduled'
+                  ? "border-blue-500 ring-2 ring-blue-500/30 bg-blue-950/20"
+                  : "border-blue-500/20 bg-blue-950/10 hover:border-blue-500/40"
+              )}
+              onClick={() => {
+                setSelectedStage(prev => prev === 'scheduled' ? null : 'scheduled')
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 dark:text-blue-300">
+                  IPD Scheduled
+                </span>
+                {selectedStage === 'scheduled' ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedStage(null)
+                    }}
+                    className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500/25 text-blue-700 hover:bg-blue-500/40 dark:text-blue-300 dark:hover:bg-blue-500/30 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                ) : (
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-blue-500/15 text-blue-700 dark:text-blue-300">
+                    <Calendar className="h-3 w-3" />
+                  </div>
+                )}
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-blue-950 dark:text-blue-50">
+                  {pipelineStats?.surgeryScheduled ?? '—'}
+                </div>
+                <p className="text-[10px] text-blue-800/70 dark:text-blue-200/60 mt-0.5">By surgery date</p>
+              </div>
+            </Card>
+            <Card
+              className={cn(
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                selectedStage === 'posted'
+                  ? "border-sky-500 ring-2 ring-sky-500/30 bg-sky-950/20"
+                  : "border-sky-500/20 bg-sky-950/10 hover:border-sky-500/40"
+              )}
+              onClick={() => {
+                setSelectedStage(prev => prev === 'posted' ? null : 'posted')
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-sky-400 dark:text-sky-300">
+                  Posted
+                </span>
+                {selectedStage === 'posted' ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedStage(null)
+                    }}
+                    className="flex h-5 w-5 items-center justify-center rounded-full bg-sky-500/25 text-sky-700 hover:bg-sky-500/40 dark:text-sky-300 dark:hover:bg-sky-500/30 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                ) : (
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-sky-500/15 text-sky-700 dark:text-sky-300">
+                    <Calendar className="h-3 w-3" />
+                  </div>
+                )}
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-sky-950 dark:text-sky-50">
+                  {pipelineStats?.posted ?? '—'}
+                </div>
+                <p className="text-[10px] text-sky-800/70 dark:text-sky-200/60 mt-0.5">By surgery date</p>
+              </div>
+            </Card>
+            <Card
+              className={cn(
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                selectedStage === 'cancelled'
+                  ? "border-rose-500 ring-2 ring-rose-500/30 bg-rose-950/20"
+                  : "border-rose-500/20 bg-rose-950/10 hover:border-rose-500/40"
+              )}
+              onClick={() => {
+                setSelectedStage(prev => prev === 'cancelled' ? null : 'cancelled')
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-rose-400 dark:text-rose-300">
+                  Cancelled
+                </span>
+                {selectedStage === 'cancelled' ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedStage(null)
+                    }}
+                    className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-500/25 text-rose-700 hover:bg-rose-500/40 dark:text-rose-300 dark:hover:bg-rose-500/30 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                ) : (
+                  <div className="flex h-5 w-5 items-center justify-center rounded bg-rose-500/15 text-rose-700 dark:text-rose-300">
+                    <X className="h-3 w-3" />
+                  </div>
+                )}
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-rose-950 dark:text-rose-50">
+                  {pipelineStats?.cancelled ?? '—'}
+                </div>
+                <p className="text-[10px] text-rose-800/70 dark:text-rose-200/60 mt-0.5">Cancelled status</p>
+              </div>
             </Card>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="flex flex-wrap gap-1.5">
             <Card
-              className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-emerald-600',
-                'bg-gradient-to-br from-emerald-50/90 to-card dark:from-emerald-950/40 dark:to-card'
-              )}
+              className="overflow-hidden border border-emerald-500/20 bg-emerald-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-emerald-900/90 dark:text-emerald-100/90">Total net profit</CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600/15 text-emerald-700 dark:text-emerald-300">
-                  <DollarSign className="h-4 w-4" />
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400 dark:text-emerald-300">
+                  Total net profit
+                </span>
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                  <DollarSign className="h-3 w-3" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-emerald-950 dark:text-emerald-50">
                   ₹{totalProfit.toLocaleString('en-IN')}
                 </div>
-                <p className="text-xs text-emerald-800/70 dark:text-emerald-200/70 mt-1">In filtered rows</p>
-              </CardContent>
+                <p className="text-[10px] text-emerald-800/70 dark:text-emerald-200/60 mt-0.5">In filtered rows</p>
+              </div>
             </Card>
             <Card
-              className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-teal-500',
-                'bg-gradient-to-br from-teal-50/90 to-card dark:from-teal-950/35 dark:to-card'
-              )}
+              className="overflow-hidden border border-teal-500/20 bg-teal-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-teal-900/90 dark:text-teal-100/90">Avg ticket size</CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-500/15 text-teal-700 dark:text-teal-300">
-                  <TrendingUp className="h-4 w-4" />
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-teal-400 dark:text-teal-300">
+                  Avg ticket size
+                </span>
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-teal-500/15 text-teal-700 dark:text-teal-300">
+                  <TrendingUp className="h-3 w-3" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-teal-950 dark:text-teal-50">
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-teal-950 dark:text-teal-50">
                   ₹{avgTicketSize.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                 </div>
-                <p className="text-xs text-teal-800/70 dark:text-teal-200/70 mt-1">Average per case</p>
-              </CardContent>
+                <p className="text-[10px] text-teal-800/70 dark:text-teal-200/60 mt-0.5">Average per case</p>
+              </div>
             </Card>
             <Card
-              className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-amber-500 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5',
-                'bg-gradient-to-br from-amber-50/90 to-card dark:from-amber-950/35 dark:to-card'
-              )}
-              onClick={() => setPayoutsDrawerOpen(true)}
+              className="overflow-hidden border border-blue-500/20 bg-blue-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-amber-900/90 dark:text-amber-100/90">Pending payouts</CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/15 text-amber-700 dark:text-amber-300">
-                  <FileText className="h-4 w-4" />
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 dark:text-blue-300">
+                  Total cases
+                </span>
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-blue-500/15 text-blue-700 dark:text-blue-300">
+                  <CheckCircle className="h-3 w-3" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-amber-950 dark:text-amber-50">{pendingPayouts}</div>
-                <p className="text-xs text-amber-800/70 dark:text-amber-200/70 mt-1">Hospital or doctor pending</p>
-              </CardContent>
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-blue-950 dark:text-blue-50">{tableRecords?.length || 0}</div>
+                <p className="text-[10px] text-blue-800/70 dark:text-blue-200/60 mt-0.5">Rows in table</p>
+              </div>
             </Card>
             <Card
-              className={cn(
-                'overflow-hidden border-0 shadow-md border-l-4 border-l-blue-500',
-                'bg-gradient-to-br from-blue-50/90 to-card dark:from-blue-950/35 dark:to-card'
-              )}
+              className="overflow-hidden border border-indigo-500/20 bg-indigo-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-blue-900/90 dark:text-blue-100/90">Total cases</CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/15 text-blue-700 dark:text-blue-300">
-                  <CheckCircle className="h-4 w-4" />
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-300">
+                  MediEND Share
+                </span>
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
+                  <ReceiptText className="h-3 w-3" />
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-blue-950 dark:text-blue-50">{tableRecords?.length || 0}</div>
-                <p className="text-xs text-blue-800/70 dark:text-blue-200/70 mt-1">Rows in table</p>
-              </CardContent>
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
+                  ₹{totalMediendShare.toLocaleString('en-IN')}
+                </div>
+                <p className="text-[10px] text-indigo-800/70 dark:text-indigo-200/60 mt-0.5">Total share sum</p>
+              </div>
             </Card>
           </div>
 
@@ -987,17 +1176,17 @@ export default function PLLedgerPage() {
                           )}
                           {visibleCols.hospitalShareAmt && (
                             <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.hospitalShareAmount != null ? Number(pl.hospitalShareAmount) : null)}
+                              {rupee(pl?.hospitalShareAmount != null ? Number(pl.hospitalShareAmount) : ((record as any).hospitalShare || null))}
                             </TableCell>
                           )}
                           {visibleCols.doctorCharges && (
                             <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.doctorCharges != null ? Number(pl.doctorCharges) : null)}
+                              {rupee(pl?.doctorCharges != null ? Number(pl.doctorCharges) : ((record as any).doctorShare || null))}
                             </TableCell>
                           )}
                           {visibleCols.implant && (
                             <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.implantCost != null ? Number(pl.implantCost) : null)}
+                              {rupee(pl?.implantCost != null ? Number(pl.implantCost) : ((record as any).implantAmount || null))}
                             </TableCell>
                           )}
                           {visibleCols.implantPaidBy && (
@@ -1048,7 +1237,7 @@ export default function PLLedgerPage() {
                           )}
                           {visibleCols.mediendShareAmt && (
                             <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.mediendShareAmount != null ? Number(pl.mediendShareAmount) : null)}
+                              {rupee(pl?.mediendShareAmount != null ? Number(pl.mediendShareAmount) : ((record as any).mediendProfit || null))}
                             </TableCell>
                           )}
                           {visibleCols.netProfit && (
@@ -1064,9 +1253,11 @@ export default function PLLedgerPage() {
                           )}
                           {visibleCols.mediendProfit && (
                             <TableCell className="whitespace-nowrap font-medium">
-                              {record.plRecord?.mediendProfit != null
-                                ? `₹${Number(record.plRecord.mediendProfit).toLocaleString('en-IN')}`
-                                : '—'}
+                              {(record.plRecord as any)?.mediendProfit != null
+                                ? `₹${Number((record.plRecord as any).mediendProfit).toLocaleString('en-IN')}`
+                                : (record as any).mediendProfit
+                                  ? `₹${Number((record as any).mediendProfit).toLocaleString('en-IN')}`
+                                  : '—'}
                             </TableCell>
                           )}
                           {visibleCols.remarks && (

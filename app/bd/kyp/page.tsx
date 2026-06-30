@@ -9,13 +9,14 @@ import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { apiGet } from '@/lib/api-client'
+import { ColumnFilter } from '@/components/ui/column-filter'
+import { CaseStage } from '@/generated/prisma/enums'
 import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
+import { apiGet } from '@/lib/api-client'
 import { getLatestActivityTime } from '@/lib/lead-activity'
 import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
-import { CaseStage } from '@/generated/prisma/enums'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { Plus, Search } from 'lucide-react'
@@ -135,33 +136,55 @@ export default function CaseTrackerPage() {
   const [stageFilter, setStageFilter] = useState<Bucket | 'all'>('all')
   const [teamFilter, setTeamFilter] = useState('all')
   const [bdFilter, setBdFilter] = useState('all')
-  const [circleFilter, setCircleFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
   const [doctorFilter, setDoctorFilter] = useState('all')
   const [treatmentFilter, setTreatmentFilter] = useState('all')
+  const [circleFilter, setCircleFilter] = useState('all')
+
+  // Multi-select header column states consolidated in a single object
+  const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
+
+  const handleColumnFilterChange = (key: string, selected: string[]) => {
+    setColumnFilters((prev) => ({ ...prev, [key]: selected }))
+  }
 
   const leadFilters = useMemo(() => {
-    if (user?.role === 'PL_HEAD') {
-      return {
-        view: 'pipeline' as const,
-        caseStage: 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED',
-        ...(phoneParsed ? { phoneSearch: phoneParsed.last10 } : {}),
-      }
-    }
-    // view=pipeline uses a slim Lead select on /api/leads (avoids heavy KYP/preAuth joins that caused 60s+ loads)
-    if (user?.role === 'BD' && user.id) {
-      return {
-        bdId: user.id,
-        view: 'pipeline' as const,
-        ...(phoneParsed ? { phoneSearch: phoneParsed.last10 } : {}),
-      }
-    }
-    return {
+    const filters: any = {
       view: 'pipeline' as const,
-      caseStage: 'KYP_BASIC_PENDING,KYP_BASIC_COMPLETE,KYP_DETAILED_PENDING,KYP_DETAILED_COMPLETE,KYP_PENDING,KYP_COMPLETE,HOSPITALS_SUGGESTED,PREAUTH_RAISED,PREAUTH_COMPLETE,INITIATED,ADMITTED,CASH_IPD_PENDING,CASH_IPD_SUBMITTED,CASH_APPROVED,CASH_ON_HOLD,IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED,PL_PENDING,OUTSTANDING',
       ...(phoneParsed ? { phoneSearch: phoneParsed.last10 } : {}),
     }
-  }, [user?.role, user?.id, phoneParsed])
+
+    if (user?.role === 'PL_HEAD') {
+      filters.caseStage = 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED'
+    } else if (user?.role === 'BD' && user.id) {
+      filters.bdId = user.id
+    } else {
+      filters.caseStage = 'KYP_BASIC_PENDING,KYP_BASIC_COMPLETE,KYP_DETAILED_PENDING,KYP_DETAILED_COMPLETE,KYP_PENDING,KYP_COMPLETE,HOSPITALS_SUGGESTED,PREAUTH_RAISED,PREAUTH_COMPLETE,INITIATED,ADMITTED,CASH_IPD_PENDING,CASH_IPD_SUBMITTED,CASH_APPROVED,CASH_ON_HOLD,IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED,PL_PENDING,OUTSTANDING'
+    }
+
+    // Pass compatible column filters to API if exactly one option is selected
+    if (columnFilters.circle?.length === 1) {
+      filters.circle = columnFilters.circle[0]
+    }
+    if (columnFilters.hospital?.length === 1) {
+      filters.hospitalName = columnFilters.hospital[0]
+    }
+    if (columnFilters.treatment?.length === 1) {
+      filters.treatment = columnFilters.treatment[0]
+    }
+
+    // Pass Date Range filters to the API
+    if (columnFilters.date?.length === 2) {
+      filters.startDate = columnFilters.date[0]
+      filters.endDate = columnFilters.date[1]
+    } else if (columnFilters.surgeryDate?.length === 2) {
+      filters.startDate = columnFilters.surgeryDate[0]
+      filters.endDate = columnFilters.surgeryDate[1]
+      filters.dateField = 'surgery'
+    }
+
+    return filters
+  }, [user, phoneParsed, columnFilters.circle, columnFilters.hospital, columnFilters.treatment, columnFilters.date, columnFilters.surgeryDate])
 
   const { leads, isLoading } = useLeads(leadFilters)
 
@@ -179,15 +202,35 @@ export default function CaseTrackerPage() {
       const resolvedBucket = bucket === undefined && (
         lead.caseStage === CaseStage.PL_PENDING || lead.caseStage === CaseStage.OUTSTANDING
       ) && (
-        (lead as { surgeryDate?: unknown }).surgeryDate != null ||
-        (lead as { admissionRecord?: { surgeryDate?: unknown } }).admissionRecord?.surgeryDate != null
-      ) ? 'IPD_DONE' : bucket
+          (lead as { surgeryDate?: unknown }).surgeryDate != null ||
+          (lead as { admissionRecord?: { surgeryDate?: unknown } }).admissionRecord?.surgeryDate != null
+        ) ? 'IPD_DONE' : bucket
       if (!resolvedBucket) continue
       const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
       out.push({ lead, bucket: resolvedBucket, hospital: hospital ?? '', doctor: doctor ?? '' })
     }
     return out
   }, [leads])
+
+  // Mapping dynamic distinct unique lists safely from active data
+  const leadRefOptions = useMemo(() => uniqueSorted(decorated.map((d) => String(d.lead.leadRef ?? ''))), [decorated])
+  const dateOptions = useMemo(() => uniqueSorted(decorated.map((d) => {
+    const dt = d.lead.leadEntryDate || d.lead.createdDate
+    return dt ? format(new Date(dt as string), 'MMM d, yyyy') : ''
+  })), [decorated])
+  const surgeryDateOptions = useMemo(() => uniqueSorted(decorated.map((d) => {
+    const sd = d.lead.surgeryDate ?? (d.lead as any).admissionRecord?.surgeryDate
+    return sd ? format(new Date(sd as string), 'MMM d, yyyy') : ''
+  })), [decorated])
+  const patientOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.lead.patientName)), [decorated])
+  const ageSexOptions = useMemo(() => uniqueSorted(decorated.map((d) => formatLeadAgeSex(d.lead))), [decorated])
+  const circleOptions = useMemo(() => uniqueSorted(decorated.map((d) => (typeof d.lead.circle === 'string' ? d.lead.circle : ''))), [decorated])
+  const cityOptions = useMemo(() => uniqueSorted(decorated.map((d) => (typeof d.lead.city === 'string' ? d.lead.city : ''))), [decorated])
+  const treatmentOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.lead.treatment)), [decorated])
+  const bdmOptions = useMemo(() => uniqueSorted(decorated.map((d) => (d.lead.plRecord?.bdmName ?? d.lead.bd?.name ?? '').trim())), [decorated])
+  const hospitalOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.hospital)), [decorated])
+  const doctorOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.doctor)), [decorated])
+  const stageOptions = useMemo(() => uniqueSorted(decorated.map((d) => BUCKET_BADGE[d.bucket]?.label ?? '')), [decorated])
 
   const monthForTarget = monthFilter !== 'all' ? monthFilter : currentMonthKey
 
@@ -302,14 +345,6 @@ export default function CaseTrackerPage() {
     return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]))
   }, [decorated, showBdFilter, showTeamFilter, teamsData])
 
-  const circleOptions = useMemo(
-    () => uniqueSorted(decorated.map((d) => (typeof d.lead.circle === 'string' ? d.lead.circle : ''))),
-    [decorated]
-  )
-  const hospitalOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.hospital)), [decorated])
-  const doctorOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.doctor)), [decorated])
-  const treatmentOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.lead.treatment)), [decorated])
-
   const monthFiltered = useMemo<DecoratedLead[]>(() => {
     if (monthFilter === 'all') return decorated
 
@@ -361,6 +396,49 @@ export default function CaseTrackerPage() {
     if (bdFilter !== 'all') {
       rows = rows.filter((d) => (d.lead.bd as { id?: string } | undefined)?.id === bdFilter)
     }
+
+    // Checking row parameters validations safely
+    if (columnFilters.leadRef?.length) rows = rows.filter((d) => columnFilters.leadRef.includes(String(d.lead.leadRef ?? '')))
+    if (columnFilters.date?.length === 2) {
+      const [startStr, endStr] = columnFilters.date
+      const start = startStr ? new Date(startStr) : null
+      const end = endStr ? new Date(endStr) : null
+      if (start && end) {
+        start.setHours(0, 0, 0, 0)
+        end.setHours(23, 59, 59, 999)
+        rows = rows.filter((d) => {
+          const dt = d.lead.leadEntryDate || d.lead.createdDate
+          if (!dt) return false
+          const t = new Date(dt as string).getTime()
+          return t >= start.getTime() && t <= end.getTime()
+        })
+      }
+    }
+    if (columnFilters.surgeryDate?.length === 2) {
+      const [startStr, endStr] = columnFilters.surgeryDate
+      const start = startStr ? new Date(startStr) : null
+      const end = endStr ? new Date(endStr) : null
+      if (start && end) {
+        start.setHours(0, 0, 0, 0)
+        end.setHours(23, 59, 59, 999)
+        rows = rows.filter((d) => {
+          const sd = d.lead.surgeryDate ?? (d.lead as any).admissionRecord?.surgeryDate
+          if (!sd) return false
+          const t = new Date(sd as string).getTime()
+          return t >= start.getTime() && t <= end.getTime()
+        })
+      }
+    }
+    if (columnFilters.patient?.length) rows = rows.filter((d) => columnFilters.patient.includes(d.lead.patientName ?? ''))
+    if (columnFilters.ageSex?.length) rows = rows.filter((d) => columnFilters.ageSex.includes(formatLeadAgeSex(d.lead)))
+    if (columnFilters.circle?.length) rows = rows.filter((d) => columnFilters.circle.includes(typeof d.lead.circle === 'string' ? d.lead.circle : ''))
+    if (columnFilters.city?.length) rows = rows.filter((d) => columnFilters.city.includes(typeof d.lead.city === 'string' ? d.lead.city : ''))
+    if (columnFilters.treatment?.length) rows = rows.filter((d) => columnFilters.treatment.includes(d.lead.treatment ?? ''))
+    if (columnFilters.bdm?.length) rows = rows.filter((d) => columnFilters.bdm.includes((d.lead.plRecord?.bdmName ?? d.lead.bd?.name ?? '').trim()))
+    if (columnFilters.hospital?.length) rows = rows.filter((d) => columnFilters.hospital.includes(d.hospital))
+    if (columnFilters.doctor?.length) rows = rows.filter((d) => columnFilters.doctor.includes(d.doctor))
+    if (columnFilters.stage?.length) rows = rows.filter((d) => columnFilters.stage.includes(BUCKET_BADGE[d.bucket]?.label ?? ''))
+
     if (circleFilter !== 'all') rows = rows.filter((d) => (d.lead.circle ?? '') === circleFilter)
     if (hospitalFilter !== 'all') rows = rows.filter((d) => d.hospital === hospitalFilter)
     if (doctorFilter !== 'all') rows = rows.filter((d) => d.doctor === doctorFilter)
@@ -375,7 +453,7 @@ export default function CaseTrackerPage() {
       )
     }
     return [...rows].sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
-  }, [monthFiltered, stageFilter, teamFilter, bdFilter, circleFilter, hospitalFilter, doctorFilter, treatmentFilter, search, phoneParsed, teamsData])
+  }, [monthFiltered, stageFilter, teamFilter, bdFilter, columnFilters, circleFilter, hospitalFilter, doctorFilter, treatmentFilter, search, phoneParsed, teamsData])
 
   const pipelinePath = user?.role === 'TEAM_LEAD' ? '/team-lead/pipeline' : '/bd/pipeline'
 
@@ -429,9 +507,7 @@ export default function CaseTrackerPage() {
               <button
                 type="button"
                 onClick={() => setStageFilter('all')}
-                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
-                  stageFilter === 'all' ? 'ring-2 ring-primary' : ''
-                }`}
+                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${stageFilter === 'all' ? 'ring-2 ring-primary' : ''}`}
               >
                 <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">All active</p>
                 <p className="mt-1 text-2xl font-bold tabular-nums">{monthFiltered.length}</p>
@@ -442,9 +518,7 @@ export default function CaseTrackerPage() {
                 key={key}
                 type="button"
                 onClick={() => setStageFilter(key)}
-                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${
-                  stageFilter === key ? 'ring-2 ring-primary' : ''
-                }`}
+                className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${stageFilter === key ? 'ring-2 ring-primary' : ''}`}
               >
                 <p className="line-clamp-2 text-[11px] font-medium text-muted-foreground">{label}</p>
                 <p className={`mt-1 text-2xl font-bold tabular-nums ${tone}`}>{counts[key]}</p>
@@ -452,7 +526,7 @@ export default function CaseTrackerPage() {
             ))}
           </div>
 
-          {/* ── Table ── */}
+          {/* Table Card */}
           <Card className="border-border/80 shadow-sm">
             <CardHeader className="gap-3 pb-3">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -588,17 +662,87 @@ export default function CaseTrackerPage() {
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-muted/50">
-                        <TableHead>Lead ref</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Surgery Date</TableHead>
-                        <TableHead>Patient</TableHead>
-                        <TableHead>Age/Sex</TableHead>
-                        <TableHead>Circle</TableHead>
-                        <TableHead>Treatment</TableHead>
-                        {showBdFilter && <TableHead>BDM</TableHead>}
-                        <TableHead>Hospital</TableHead>
-                        <TableHead>Doctor</TableHead>
-                        <TableHead>Stage</TableHead>
+                        
+                        {/* ── FIXED SPACE ALLOCATION WITH min-w FOR PERFECT ROW DISPLAY ── */}
+                        <TableHead className="min-w-[120px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Lead ref</span>
+                            <ColumnFilter options={leadRefOptions} onChange={(selected) => handleColumnFilterChange('leadRef', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        <TableHead className="min-w-[110px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Date</span>
+                            <ColumnFilter type="date" options={dateOptions} onChange={(selected) => handleColumnFilterChange('date', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        <TableHead className="min-w-[140px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Surgery Date</span>
+                            <ColumnFilter type="date" options={surgeryDateOptions} onChange={(selected) => handleColumnFilterChange('surgeryDate', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        <TableHead className="min-w-[120px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Patient</span>
+                            <ColumnFilter options={patientOptions} onChange={(selected) => handleColumnFilterChange('patient', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        <TableHead className="min-w-[110px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Age/Sex</span>
+                            <ColumnFilter options={ageSexOptions} onChange={(selected) => handleColumnFilterChange('ageSex', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        <TableHead className="min-w-[110px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Circle</span>
+                            <ColumnFilter options={circleOptions} onChange={(selected) => handleColumnFilterChange('circle', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        <TableHead className="min-w-[130px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Treatment</span>
+                            <ColumnFilter options={treatmentOptions} onChange={(selected) => handleColumnFilterChange('treatment', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        {showBdFilter && (
+                          <TableHead className="min-w-[110px]">
+                            <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                              <span>BDM</span>
+                              <ColumnFilter options={bdmOptions} onChange={(selected) => handleColumnFilterChange('bdm', selected)} />
+                            </div>
+                          </TableHead>
+                        )}
+                        
+                        <TableHead className="min-w-[140px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Hospital</span>
+                            <ColumnFilter options={hospitalOptions} onChange={(selected) => handleColumnFilterChange('hospital', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        <TableHead className="min-w-[130px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Doctor</span>
+                            <ColumnFilter options={doctorOptions} onChange={(selected) => handleColumnFilterChange('doctor', selected)} />
+                          </div>
+                        </TableHead>
+                        
+                        <TableHead className="min-w-[110px]">
+                          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                            <span>Stage</span>
+                            <ColumnFilter options={stageOptions} onChange={(selected) => handleColumnFilterChange('stage', selected)} />
+                          </div>
+                        </TableHead>
+                        
                         <TableHead className="w-[90px]" />
                       </TableRow>
                     </TableHeader>

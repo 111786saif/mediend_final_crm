@@ -490,11 +490,17 @@ export default function PLRecordEditPage() {
               </Button>
             </CardHeader>
             <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-teal-50/40 to-indigo-50/25 dark:from-teal-950/20 dark:to-indigo-950/15 rounded-b-lg">
-              <div className="sm:col-span-2">
-                <Label className="text-xs text-muted-foreground">Lead ref</Label>
-                <div className="flex items-center gap-1 mt-1">
-                  <span className="font-medium">{record.leadRef ?? '—'}</span>
-                  {record.leadRef && <CopyLeadRefButton leadRef={String(record.leadRef)} />}
+              <div className="sm:col-span-2 grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-xs text-muted-foreground">Lead ref</Label>
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="font-medium">{record.leadRef ?? '—'}</span>
+                    {record.leadRef && <CopyLeadRefButton leadRef={String(record.leadRef)} />}
+                  </div>
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">Lead source</Label>
+                  <p className="font-medium mt-1">{record.source ?? '—'}</p>
                 </div>
               </div>
               <div>
@@ -534,7 +540,7 @@ export default function PLRecordEditPage() {
             </CardContent>
           </Card>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Reporting &amp; people</CardTitle>

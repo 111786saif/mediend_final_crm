@@ -42,7 +42,9 @@ export async function GET(request: NextRequest) {
       include: {
         bd: {
           select: {
+            id: true,
             name: true,
+            role: true,
             employee: {
               select: {
                 team: {

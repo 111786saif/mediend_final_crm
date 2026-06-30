@@ -74,6 +74,12 @@ function pickFirstNumber(...values: Array<unknown>): number {
 function resolveManagerName(lead: LeadWithHydrate | null | undefined): string | null {
   if (!lead?.bd) return null
   const bd = lead.bd as AnyRecord
+
+  // If BDM is a Team Lead, their manager name is themselves
+  if (bd.role === 'TEAM_LEAD') {
+    return (bd.name as string | undefined) ?? null
+  }
+
   const employee = bd.employee as AnyRecord | null | undefined
   const team = employee?.team as AnyRecord | null | undefined
   const teamLead = team?.teamLead as AnyRecord | null | undefined

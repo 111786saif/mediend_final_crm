@@ -309,6 +309,7 @@ export function AppSidebar() {
               src={logo}
               alt="Mediend"
               fill
+              sizes="128px"
               className="object-contain"
               priority
             />

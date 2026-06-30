@@ -40,7 +40,7 @@ interface LeadWithStage {
 export default function BDDashboardPage() {
   const { user } = useAuth()
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState<'awaiting-kyp' | 'ready-preauth' | 'preauth-complete' | 'admitted' | 'queries'>('awaiting-kyp')
+  const [activeTab, setActiveTab] = useState<'awaiting-kyp' | 'ready-preauth' | 'preauth-complete' | 'ipd-scheduled' | 'admitted' | 'queries'>('awaiting-kyp')
 
   const { leads, isLoading } = useLeads({ bdId: user?.id })
 
@@ -85,8 +85,10 @@ export default function BDDashboardPage() {
         return kyp?.status === 'KYP_DETAILS_ADDED' && lead.caseStage === CaseStage.KYP_COMPLETE
       case 'preauth-complete':
         return lead.caseStage === CaseStage.PREAUTH_COMPLETE
+      case 'ipd-scheduled':
+        return lead.caseStage === CaseStage.INITIATED
       case 'admitted':
-        return lead.caseStage === CaseStage.INITIATED || lead.caseStage === CaseStage.ADMITTED
+        return lead.caseStage === CaseStage.ADMITTED
       case 'queries':
         return pendingQueries.length > 0
       default:
@@ -147,9 +149,8 @@ export default function BDDashboardPage() {
 
     const preAuthComplete = leads.filter((lead) => lead.caseStage === CaseStage.PREAUTH_COMPLETE).length
 
-    const admitted = leads.filter((lead) => 
-      lead.caseStage === CaseStage.INITIATED || lead.caseStage === CaseStage.ADMITTED
-    ).length
+    const ipdScheduled = leads.filter((lead) => lead.caseStage === CaseStage.INITIATED).length
+    const admitted = leads.filter((lead) => lead.caseStage === CaseStage.ADMITTED).length
 
     const pendingQueries = queries?.filter((q: any) => q.status === 'PENDING').length || 0
 
@@ -157,6 +158,7 @@ export default function BDDashboardPage() {
       awaitingKYP,
       readyPreAuth,
       preAuthComplete,
+      ipdScheduled,
       admitted,
       pendingQueries,
     }
@@ -174,7 +176,7 @@ export default function BDDashboardPage() {
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('awaiting-kyp')}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Awaiting KYP</CardTitle>
@@ -197,6 +199,14 @@ export default function BDDashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats.preAuthComplete}</div>
+              </CardContent>
+            </Card>
+            <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('ipd-scheduled')}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">IPD Scheduled</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.ipdScheduled}</div>
               </CardContent>
             </Card>
             <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('admitted')}>
@@ -229,6 +239,7 @@ export default function BDDashboardPage() {
                     {activeTab === 'awaiting-kyp' && 'Awaiting KYP Submission'}
                     {activeTab === 'ready-preauth' && 'Ready for Pre-Auth'}
                     {activeTab === 'preauth-complete' && 'Pre-Auth Complete'}
+                    {activeTab === 'ipd-scheduled' && 'IPD Scheduled Patients'}
                     {activeTab === 'admitted' && 'Admitted Patients'}
                     {activeTab === 'queries' && 'Pending Queries'}
                   </CardTitle>
@@ -262,11 +273,19 @@ export default function BDDashboardPage() {
                     Complete
                   </Button>
                   <Button
+                    variant={activeTab === 'ipd-scheduled' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setActiveTab('ipd-scheduled')}
+                  >
+                    <Clock className="w-4 h-4 mr-2" />
+                    Scheduled
+                  </Button>
+                  <Button
                     variant={activeTab === 'admitted' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setActiveTab('admitted')}
                   >
-                    <Clock className="w-4 h-4 mr-2" />
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
                     Admitted
                   </Button>
                   <Button

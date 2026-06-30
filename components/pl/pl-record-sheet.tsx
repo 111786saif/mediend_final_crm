@@ -226,7 +226,10 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           month: monthValue ? monthValue.slice(0, 7) : '',
           admissionDate: admissionRaw ? new Date(admissionRaw as string).toISOString().slice(0, 10) : '',
           surgeryDate: surgeryDate ? new Date(surgeryDate as string).toISOString().slice(0, 10) : '',
-          managerName: (pl?.managerName as string) || (ds?.managerName as string) || (record.bd as any)?.employee?.team?.teamLead?.user?.name || (record.bd as any)?.employee?.team?.department?.head?.name || '',
+          managerName:
+            (record.bd as any)?.role === 'TEAM_LEAD'
+              ? (record.bd?.name || '')
+              : ((pl?.managerName as string) || (ds?.managerName as string) || (record.bd as any)?.employee?.team?.teamLead?.user?.name || (record.bd as any)?.employee?.team?.department?.head?.name || ''),
           bdmName: (pl?.bdmName as string) || record.bd?.name || '',
           paymentType: (pl?.paymentType as string) || '',
           status: (pl?.status as string) || '',
@@ -623,11 +626,17 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                     </Button>
                   </CardHeader>
                   <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-teal-50/40 to-indigo-50/25 dark:from-teal-950/20 dark:to-indigo-950/15 rounded-b-lg">
-                    <div className="sm:col-span-2">
-                      <Label className="text-xs text-muted-foreground">Lead ref</Label>
-                      <div className="flex items-center gap-1 mt-1">
-                        <span className="font-medium">{record.leadRef ?? '—'}</span>
-                        {record.leadRef && <CopyLeadRefButton leadRef={String(record.leadRef)} />}
+                    <div className="sm:col-span-2 grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Lead ref</Label>
+                        <div className="flex items-center gap-1 mt-1">
+                          <span className="font-medium">{record.leadRef ?? '—'}</span>
+                          {record.leadRef && <CopyLeadRefButton leadRef={String(record.leadRef)} />}
+                        </div>
+                      </div>
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Lead source</Label>
+                        <p className="font-medium mt-1">{record.source ?? '—'}</p>
                       </div>
                     </div>
                     <div>
@@ -679,7 +688,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                   </CardContent>
                 </Card>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
                   <Card>
                     <CardHeader>
                       <CardTitle>Reporting &amp; people</CardTitle>

@@ -124,19 +124,25 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
   )
   const monthDate = pickDate(pl?.month, ds?.month) ?? firstOfMonth(surgery) ?? firstOfMonth(admissionDate)
 
+  let managerName = pickString(
+    pl?.managerName,
+    ds?.managerName,
+    // Raw Prisma shape used by /api/leads list
+    teamLeadUser?.name,
+    departmentHead?.name,
+    bdManagerUser?.name,
+    // Legacy shape used by /api/leads/[id] (toLegacyBdShape flattens employee.team)
+    ((bd?.team as AnyRecord | undefined)?.salesHead as AnyRecord | undefined)?.name,
+    (bd?.manager as AnyRecord | undefined)?.name,
+  )
+
+  if (bd && (bd as any).role === "TEAM_LEAD") {
+    managerName = ((bd as any).name as string) || managerName
+  }
+
   return {
     month: monthDate,
-    manager: pickString(
-      pl?.managerName,
-      ds?.managerName,
-      // Raw Prisma shape used by /api/leads list
-      teamLeadUser?.name,
-      departmentHead?.name,
-      bdManagerUser?.name,
-      // Legacy shape used by /api/leads/[id] (toLegacyBdShape flattens employee.team)
-      (bd?.team as AnyRecord | undefined)?.salesHead?.name,
-      (bd?.manager as AnyRecord | undefined)?.name,
-    ),
+    manager: managerName,
     bdm: pickString(pl?.bdmName, ds?.bdmName, bd?.name),
     patient: pickString(record.patientName, pl?.patientName, ds?.patientName),
     category: pickString(record.category, pl?.category, ds?.category),
@@ -160,22 +166,23 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
     ),
     admission: admissionDate,
     surgery,
-    paymentType: pickString(pl?.paymentType, ds?.paymentType),
+    paymentType: pickString(pl?.paymentType, ds?.paymentType, record.flowType),
     status: pickString(pl?.status, ds?.status, record.caseStage),
     totalBill: pickNumber(pl?.billAmount, ds?.totalFinalBill, record.billAmount),
     approvedAmount: pickNumber(
       pl?.totalAmount,
       ds?.finalApprovedAmount,
-      pl?.approvedOrCash
+      pl?.approvedOrCash,
+      record.settledTotal
     ),
-    deductionPatient: pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid),
+    deductionPatient: pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid, record.copay),
     deductionTotal: pickNumber(ds?.deductionAmount, record.deduction),
-    deductionPaidByPatient: pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid),
+    deductionPaidByPatient: pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid, record.copay),
     deductionWaived: (() => {
       const stored = pickNumber(ds?.waivedOffAmount)
       if (stored != null) return stored
       const total = pickNumber(ds?.deductionAmount, record.deduction)
-      const paid = pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid)
+      const paid = pickNumber(pl?.cashOrDedPaid, ds?.cashOrDedPaid, record.copay)
       if (total == null && paid == null) return null
       return (total ?? 0) - (paid ?? 0)
     })(),
