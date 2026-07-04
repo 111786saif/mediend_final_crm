@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 
-const PUBLIC_PATHS = ['/login', '/documents/acknowledge']
+const PUBLIC_PATHS = ['/login', '/documents/acknowledge', '/savemyleads']
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
@@ -39,4 +39,3 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   return <>{children}</>
 }
-
