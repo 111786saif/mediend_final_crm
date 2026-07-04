@@ -10,10 +10,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Lint runs separately too; don't pay the RAM cost here.
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   experimental: {
     // Allows larger multipart bodies for Server Actions; pair with `/api/kyp/upload` + useFileUpload 20 MB cap.
     serverActions: {
