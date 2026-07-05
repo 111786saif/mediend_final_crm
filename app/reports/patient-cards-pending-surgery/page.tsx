@@ -24,8 +24,9 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { useState, useMemo } from 'react'
-import { AlertTriangle, ChevronDown, ClipboardList, Download } from 'lucide-react'
+import { AlertTriangle, ChevronDown, Download } from 'lucide-react'
 import Link from 'next/link'
+import { CASE_STAGE_CONFIG, getCaseStageLabel } from '@/lib/case-stage-labels'
 import { cn } from '@/lib/utils'
 
 type Row = {
@@ -119,7 +120,7 @@ function downloadCsv(rows: Row[]) {
         r.teamLeadName ?? '',
         r.uploadDate.slice(0, 10),
         r.daysSinceUpload,
-        r.caseStage,
+        getCaseStageLabel(r.caseStage),
         r.pipelineStage,
         r.hospitalName,
         r.treatment ?? '',
@@ -145,6 +146,68 @@ function rowTone(daysSinceUpload: number): string {
   return ''
 }
 
+type AgingBucket = '30' | '60' | '90'
+
+function matchesAging(days: number, bucket: AgingBucket | null): boolean {
+  if (!bucket) return true
+  if (bucket === '30') return days <= 30
+  if (bucket === '60') return days >= 31 && days <= 60
+  return days > 60
+}
+
+// Several caseStage enum values share a display label (e.g. KYP_PENDING and
+// KYP_BASIC_PENDING are both "Card Details Pending"), so dedupe by label and
+// let one option match every underlying stage with that label.
+const STAGE_OPTIONS: Array<{ value: string; label: string; stages: string[] }> = (() => {
+  const byLabel = new Map<string, string[]>()
+  for (const [stage, { label }] of Object.entries(CASE_STAGE_CONFIG)) {
+    const arr = byLabel.get(label) ?? []
+    arr.push(stage)
+    byLabel.set(label, arr)
+  }
+  return Array.from(byLabel.entries())
+    .map(([label, stages]) => ({ value: stages.join(','), label, stages }))
+    .sort((a, b) => a.label.localeCompare(b.label))
+})()
+
+const AGING_CARDS: Array<{
+  key: AgingBucket
+  label: string
+  subtitle: string
+  borderClass: string
+  bgClass: string
+  titleClass: string
+  countClass: string
+}> = [
+  {
+    key: '30',
+    label: '30 Days',
+    subtitle: 'Pending 0–30 days',
+    borderClass: 'border-l-emerald-500',
+    bgClass: 'from-emerald-50/90 dark:from-emerald-950/35',
+    titleClass: 'text-emerald-900/90 dark:text-emerald-100/90',
+    countClass: 'text-emerald-950 dark:text-emerald-50',
+  },
+  {
+    key: '60',
+    label: '60 Days',
+    subtitle: 'Pending 31–60 days',
+    borderClass: 'border-l-amber-500',
+    bgClass: 'from-amber-50/90 dark:from-amber-950/35',
+    titleClass: 'text-amber-900/90 dark:text-amber-100/90',
+    countClass: 'text-amber-950 dark:text-amber-50',
+  },
+  {
+    key: '90',
+    label: '90 Days',
+    subtitle: 'Pending more than 60 days',
+    borderClass: 'border-l-red-500',
+    bgClass: 'from-red-50/90 dark:from-red-950/35',
+    titleClass: 'text-red-900/90 dark:text-red-100/90',
+    countClass: 'text-red-950 dark:text-red-50',
+  },
+]
+
 export default function PatientCardsPendingSurgeryPage() {
   const { user } = useAuth()
   const isTL = user?.role === 'TEAM_LEAD'
@@ -157,6 +220,8 @@ export default function PatientCardsPendingSurgeryPage() {
   ])
   const [teamLeadFilter, setTeamLeadFilter] = useState<string>('all')
   const [groupByTeam, setGroupByTeam] = useState(true)
+  const [agingFilter, setAgingFilter] = useState<AgingBucket | null>(null)
+  const [stageFilter, setStageFilter] = useState<string>('all')
 
   const monthsParam = useMemo(() => [...selectedMonths].sort().join(','), [selectedMonths])
 
@@ -182,26 +247,68 @@ export default function PatientCardsPendingSurgeryPage() {
     enabled: !!monthsParam && !!user,
   })
 
-  const rows = useMemo(() => data?.rows ?? [], [data])
-  const groups = useMemo(() => data?.groups ?? [], [data])
+  const baseRows = useMemo(() => data?.rows ?? [], [data])
+
+  const stageScopedRows = useMemo(() => {
+    if (stageFilter === 'all') return baseRows
+    const stages = new Set(stageFilter.split(','))
+    return baseRows.filter((r) => stages.has(r.caseStage))
+  }, [baseRows, stageFilter])
+
+  const filteredRows = useMemo(() => {
+    if (!agingFilter) return stageScopedRows
+    return stageScopedRows.filter((r) => matchesAging(r.daysSinceUpload, agingFilter))
+  }, [stageScopedRows, agingFilter])
+
+  const agingCounts = useMemo(
+    () => ({
+      '30': stageScopedRows.filter((r) => matchesAging(r.daysSinceUpload, '30')).length,
+      '60': stageScopedRows.filter((r) => matchesAging(r.daysSinceUpload, '60')).length,
+      '90': stageScopedRows.filter((r) => matchesAging(r.daysSinceUpload, '90')).length,
+    }),
+    [stageScopedRows]
+  )
+
+  const groupsForUi = useMemo(() => {
+    const counts = new Map<string, { name: string; count: number }>()
+    for (const r of stageScopedRows) {
+      if (!r.teamLeadId) continue
+      const existing = counts.get(r.teamLeadId)
+      if (existing) existing.count += 1
+      else counts.set(r.teamLeadId, { name: r.teamLeadName ?? '', count: 1 })
+    }
+    return Array.from(counts.entries())
+      .map(([teamLeadId, v]) => ({ teamLeadId, teamLeadName: v.name, count: v.count }))
+      .sort((a, b) => b.count - a.count)
+  }, [stageScopedRows])
 
   const groupedRows = useMemo(() => {
-    if (!groups.length) return null
+    if (!groupsForUi.length) return null
     const byTl = new Map<string, Row[]>()
-    for (const r of rows) {
+    for (const r of filteredRows) {
       const key = r.teamLeadId ?? '__unassigned'
       const arr = byTl.get(key) ?? []
       arr.push(r)
       byTl.set(key, arr)
     }
-    return groups
-      .map((g) => ({ ...g, rows: byTl.get(g.teamLeadId) ?? [] }))
+    return groupsForUi
+      .map((g) => ({ ...g, rows: byTl.get(g.teamLeadId) ?? [], count: (byTl.get(g.teamLeadId) ?? []).length }))
       .concat(
         byTl.has('__unassigned')
-          ? [{ teamLeadId: '__unassigned', teamLeadName: 'Unassigned', count: byTl.get('__unassigned')!.length, rows: byTl.get('__unassigned')! }]
+          ? [{
+              teamLeadId: '__unassigned',
+              teamLeadName: 'Unassigned',
+              count: byTl.get('__unassigned')!.length,
+              rows: byTl.get('__unassigned')!,
+            }]
           : []
       )
-  }, [groups, rows])
+      .filter((g) => g.rows.length > 0)
+  }, [groupsForUi, filteredRows])
+
+  const toggleAging = (bucket: AgingBucket) => {
+    setAgingFilter((prev) => (prev === bucket ? null : bucket))
+  }
 
   return (
     <ProtectedRoute>
@@ -287,14 +394,14 @@ export default function PatientCardsPendingSurgeryPage() {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-              {!isTL && groups.length > 0 && (
+              {!isTL && groupsForUi.length > 0 && (
                 <Select value={teamLeadFilter} onValueChange={setTeamLeadFilter}>
                   <SelectTrigger className="h-8 w-[200px]">
                     <SelectValue placeholder="All teams" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All teams</SelectItem>
-                    {groups.map((g) => (
+                    {groupsForUi.map((g) => (
                       <SelectItem key={g.teamLeadId} value={g.teamLeadId}>
                         {g.teamLeadName} ({g.count})
                       </SelectItem>
@@ -302,6 +409,19 @@ export default function PatientCardsPendingSurgeryPage() {
                   </SelectContent>
                 </Select>
               )}
+              <Select value={stageFilter} onValueChange={setStageFilter}>
+                <SelectTrigger className="h-8 w-[220px]">
+                  <SelectValue placeholder="All stages" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[320px]">
+                  <SelectItem value="all">All stages</SelectItem>
+                  {STAGE_OPTIONS.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {!isTL && (
                 <Button
                   variant={groupByTeam ? 'secondary' : 'ghost'}
@@ -316,8 +436,8 @@ export default function PatientCardsPendingSurgeryPage() {
                 variant="outline"
                 size="sm"
                 className="h-8 gap-2"
-                onClick={() => downloadCsv(rows)}
-                disabled={rows.length === 0}
+                onClick={() => downloadCsv(filteredRows)}
+                disabled={filteredRows.length === 0}
               >
                 <Download className="h-4 w-4" />
                 CSV
@@ -326,49 +446,68 @@ export default function PatientCardsPendingSurgeryPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <Card className="overflow-hidden border-0 shadow-md border-l-4 border-l-indigo-500 bg-gradient-to-br from-indigo-50/90 to-card dark:from-indigo-950/35 dark:to-card">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-indigo-900/90 dark:text-indigo-100/90">
-                  Pending cards
-                </CardTitle>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-700 dark:text-indigo-300">
-                  <ClipboardList className="h-4 w-4" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-indigo-950 dark:text-indigo-50">
-                  {rows.length}
-                </div>
-                <p className="text-xs text-indigo-800/70 dark:text-indigo-200/70 mt-1">
-                  Surgery not done in filtered window
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="overflow-hidden border-0 shadow-md border-l-4 border-l-amber-500 bg-gradient-to-br from-amber-50/90 to-card dark:from-amber-950/35 dark:to-card">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-amber-900/90 dark:text-amber-100/90">
-                  Stale &gt; 30 days
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-amber-950 dark:text-amber-50">
-                  {rows.filter((r) => r.daysSinceUpload > 30).length}
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="overflow-hidden border-0 shadow-md border-l-4 border-l-red-500 bg-gradient-to-br from-red-50/90 to-card dark:from-red-950/35 dark:to-card">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-red-900/90 dark:text-red-100/90">
-                  Critical &gt; 60 days
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold tabular-nums text-red-950 dark:text-red-50">
-                  {rows.filter((r) => r.daysSinceUpload > 60).length}
-                </div>
-              </CardContent>
-            </Card>
+            {AGING_CARDS.map((card) => {
+              const active = agingFilter === card.key
+              return (
+                <button
+                  key={card.key}
+                  type="button"
+                  onClick={() => toggleAging(card.key)}
+                  className="text-left"
+                >
+                  <Card
+                    className={cn(
+                      'overflow-hidden border-0 shadow-md border-l-4 bg-gradient-to-br to-card transition-all hover:shadow-lg',
+                      card.borderClass,
+                      card.bgClass,
+                      active && 'ring-2 ring-primary ring-offset-2 ring-offset-background'
+                    )}
+                  >
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className={cn('text-sm font-medium', card.titleClass)}>
+                        {card.label}
+                      </CardTitle>
+                      {active && (
+                        <Badge variant="secondary" className="text-[10px]">
+                          Active
+                        </Badge>
+                      )}
+                    </CardHeader>
+                    <CardContent>
+                      <div className={cn('text-2xl font-bold tabular-nums', card.countClass)}>
+                        {agingCounts[card.key]}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">{card.subtitle}</p>
+                    </CardContent>
+                  </Card>
+                </button>
+              )
+            })}
           </div>
+
+          {(agingFilter || stageFilter !== 'all') && (
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-muted-foreground">
+                Showing {filteredRows.length} of {baseRows.length} patient{baseRows.length === 1 ? '' : 's'}
+              </span>
+              {agingFilter && (
+                <Badge variant="outline" className="gap-1">
+                  Aging: {AGING_CARDS.find((c) => c.key === agingFilter)?.label}
+                  <button type="button" className="ml-1 hover:text-foreground" onClick={() => setAgingFilter(null)} aria-label="Clear aging filter">
+                    ×
+                  </button>
+                </Badge>
+              )}
+              {stageFilter !== 'all' && (
+                <Badge variant="outline" className="gap-1">
+                  Stage: {STAGE_OPTIONS.find((o) => o.value === stageFilter)?.label ?? getCaseStageLabel(stageFilter.split(',')[0])}
+                  <button type="button" className="ml-1 hover:text-foreground" onClick={() => setStageFilter('all')} aria-label="Clear stage filter">
+                    ×
+                  </button>
+                </Badge>
+              )}
+            </div>
+          )}
 
           {data?.truncated && (
             <div className="flex items-center gap-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100">
@@ -384,7 +523,7 @@ export default function PatientCardsPendingSurgeryPage() {
           )}
 
           {isTL || !groupByTeam ? (
-            <FlatTable rows={rows} isLoading={isLoading} />
+            <FlatTable rows={filteredRows} totalInScope={stageScopedRows.length} isLoading={isLoading} />
           ) : (
             <GroupedTables groups={groupedRows ?? []} isLoading={isLoading} />
           )}
@@ -394,12 +533,22 @@ export default function PatientCardsPendingSurgeryPage() {
   )
 }
 
-function FlatTable({ rows, isLoading }: { rows: Row[]; isLoading: boolean }) {
+function FlatTable({
+  rows,
+  totalInScope,
+  isLoading,
+}: {
+  rows: Row[]
+  totalInScope: number
+  isLoading: boolean
+}) {
   return (
     <Card className="overflow-hidden border-teal-200/50 shadow-lg dark:border-teal-800/40">
       <CardHeader className="border-b bg-gradient-to-r from-teal-500/12 via-indigo-500/10 to-transparent pb-4">
         <CardTitle className="text-lg text-teal-950 dark:text-teal-100">Patient cards</CardTitle>
-        <CardDescription>Click a row to open the lead.</CardDescription>
+        <CardDescription>
+          {rows.length} shown{rows.length !== totalInScope ? ` · ${totalInScope} in scope` : ''} — click a row to open the lead.
+        </CardDescription>
       </CardHeader>
       <CardContent className="overflow-x-auto p-0">
         {isLoading ? (
@@ -495,7 +644,7 @@ function ReportTable({ rows }: { rows: Row[] }) {
             <TableCell className="whitespace-nowrap">{r.teamLeadName || '—'}</TableCell>
             <TableCell className="whitespace-nowrap">{r.uploadDate.slice(0, 10)}</TableCell>
             <TableCell className="whitespace-nowrap text-right tabular-nums">{r.daysSinceUpload}</TableCell>
-            <TableCell className="whitespace-nowrap">{r.caseStage}</TableCell>
+            <TableCell className="whitespace-nowrap">{getCaseStageLabel(r.caseStage)}</TableCell>
             <TableCell className="whitespace-nowrap">{r.pipelineStage}</TableCell>
             <TableCell className="whitespace-nowrap">{r.hospitalName || '—'}</TableCell>
             <TableCell className="whitespace-nowrap">{r.treatment || '—'}</TableCell>
