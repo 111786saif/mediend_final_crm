@@ -6,31 +6,39 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { CaseTrackerDateRangeFilter } from '@/components/case-tracker/date-range-filter'
+import { MultiSelectDropdown } from '@/components/case-tracker/multi-select-dropdown'
+import { PatientDetailDrawer } from '@/components/case-tracker/patient-detail-drawer'
 import { useCaseTracker, type CaseTrackerFilters } from '@/hooks/use-case-tracker'
-import { type Lead } from '@/hooks/use-leads'
 import {
   getDefaultCaseTrackerDateRange,
   loadCaseTrackerDateRangeFromStorage,
-  monthKeyFromDateRange,
   saveCaseTrackerDateRangeToStorage,
   type CaseTrackerDateRange,
 } from '@/lib/case-tracker-date-range'
+import {
+  CASE_TRACKER_COLUMNS,
+  compareCaseRows,
+  exportCaseRowsCsv,
+  formatCaseCellDisplay,
+  getCaseRowSearchBlob,
+  type Bucket,
+  type CaseTrackerColumnKey,
+  type DecoratedCaseRow,
+} from '@/lib/case-tracker-table'
 import { getLatestActivityTime } from '@/lib/lead-activity'
-import { formatLeadAgeSex, resolveLeadCity, resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
+import { canViewPhoneNumber } from '@/lib/case-permissions'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useQuery } from '@tanstack/react-query'
-import { format } from 'date-fns'
-import { Plus, Search } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { apiGet } from '@/lib/api-client'
+import { ArrowDown, ArrowUp, ArrowUpDown, Download, Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { cn } from '@/lib/utils'
 
 function useDebouncedValue<T>(value: T, ms: number): T {
   const [debounced, setDebounced] = useState(value)
@@ -46,13 +54,9 @@ function useDebouncedValue<T>(value: T, ms: number): T {
    form = "IPD scheduled" (not admitted); the next milestone is "IPD done".
    Discharged / PL / outstanding are handled by insurance and intentionally
    dropped from this active tracker. */
-type Bucket =
-  | 'KYP'
-  | 'HOSPITALS_SUGGESTED'
-  | 'PREAUTH_RAISED'
-  | 'PREAUTH_COMPLETE'
-  | 'IPD_SCHEDULED'
-  | 'IPD_DONE'
+type BucketFilter = Bucket | 'all'
+
+const ALL_COLUMN_KEYS = CASE_TRACKER_COLUMNS.map((c) => c.key)
 
 const BUCKET_OF_STAGE: Partial<Record<CaseStage, Bucket>> = {
   [CaseStage.KYP_BASIC_PENDING]: 'KYP',
@@ -96,18 +100,6 @@ const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
   IPD_DONE: { label: 'IPD done', className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300' },
 }
 
-interface TargetProgress {
-  id: string
-  targetType: 'BD' | 'TEAM'
-  targetForId: string
-  entityName: string
-  metric: string
-  targetValue: number
-  actual: number
-  percentage: number
-  bdBreakdown?: { id: string; name: string; actual: number; percentage: number }[]
-}
-
 function uniqueSorted(values: (string | null | undefined)[]): string[] {
   const set = new Set<string>()
   for (const v of values) {
@@ -117,21 +109,23 @@ function uniqueSorted(values: (string | null | undefined)[]): string[] {
   return Array.from(set).sort((a, b) => a.localeCompare(b))
 }
 
-type DecoratedLead = { lead: Lead; bucket: Bucket; hospital: string; doctor: string }
-
 export default function CaseTrackerPage() {
   const { user } = useAuth()
-  const router = useRouter()
-
-  const currentMonthKey = useMemo(() => {
-    const now = new Date()
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-  }, [])
-
-  const isOrgViewer = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT' || user?.role === 'PL_HEAD'
+  const canViewPhone = canViewPhoneNumber(user)
 
   const [search, setSearch] = useState('')
-  const phoneParsed = useMemo(() => parsePhoneSearchQuery(search), [search])
+  const debouncedSearch = useDebouncedValue(search, 250)
+  const phoneParsed = useMemo(() => parsePhoneSearchQuery(debouncedSearch), [debouncedSearch])
+
+  const [searchColumnKeys, setSearchColumnKeys] = useState<string[]>([])
+  const activeSearchColumns = useMemo<CaseTrackerColumnKey[]>(
+    () => (searchColumnKeys.length === 0 ? ALL_COLUMN_KEYS : (searchColumnKeys as CaseTrackerColumnKey[])),
+    [searchColumnKeys]
+  )
+
+  const [sortKey, setSortKey] = useState<CaseTrackerColumnKey | null>(null)
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
+  const [drawerRow, setDrawerRow] = useState<DecoratedCaseRow | null>(null)
 
   const [dateRange, setDateRange] = useState<CaseTrackerDateRange>(getDefaultCaseTrackerDateRange)
 
@@ -143,9 +137,9 @@ export default function CaseTrackerPage() {
   useEffect(() => {
     saveCaseTrackerDateRangeToStorage(dateRange)
   }, [dateRange])
-  const [stageFilter, setStageFilter] = useState<Bucket | 'all'>('all')
+  const [stageFilter, setStageFilter] = useState<BucketFilter>('all')
   const [teamFilter, setTeamFilter] = useState('all')
-  const [bdFilter, setBdFilter] = useState('all')
+  const [selectedBdIds, setSelectedBdIds] = useState<string[]>([])
   const [circleFilter, setCircleFilter] = useState('all')
   const [hospitalFilter, setHospitalFilter] = useState('all')
   const [doctorFilter, setDoctorFilter] = useState('all')
@@ -178,8 +172,8 @@ export default function CaseTrackerPage() {
 
   // Map every lead to a unified bucket; anything without a bucket (NEW_LEAD,
   // discharged, PL, outstanding) is dropped from the active tracker.
-  const decorated = useMemo<DecoratedLead[]>(() => {
-    const out: DecoratedLead[] = []
+  const decorated = useMemo<DecoratedCaseRow[]>(() => {
+    const out: DecoratedCaseRow[] = []
     for (const lead of leads) {
       if (
         typeof lead.patientName !== 'string' ||
@@ -195,72 +189,17 @@ export default function CaseTrackerPage() {
       ) ? 'IPD_DONE' : bucket
       if (!resolvedBucket) continue
       const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
-      out.push({ lead, bucket: resolvedBucket, hospital: hospital ?? '', doctor: doctor ?? '' })
+      const badge = BUCKET_BADGE[resolvedBucket]
+      out.push({
+        lead,
+        bucket: resolvedBucket,
+        hospital: hospital ?? '',
+        doctor: doctor ?? '',
+        stageLabel: badge.label,
+      })
     }
     return out
   }, [leads])
-
-  const monthForTarget = monthKeyFromDateRange(dateRange, currentMonthKey)
-
-  const { data: targetProgress } = useQuery<TargetProgress[]>({
-    queryKey: ['targets', 'progress', monthForTarget],
-    queryFn: () => apiGet<TargetProgress[]>(`/api/targets/progress?month=${monthForTarget}`),
-    enabled: !!user,
-  })
-
-  const targetCard = useMemo(() => {
-    const list = targetProgress ?? []
-    if (!list.length) return null
-    const prefer = (arr: TargetProgress[]) =>
-      arr.find((t) => t.metric === 'IPD_DONE') ??
-      arr.find((t) => t.metric === 'SURGERIES_DONE') ??
-      arr[0]
-    const toCard = (name: string, metric: string, actual: number, goal: number, pct: number) => ({
-      name,
-      metric,
-      actual,
-      goal,
-      pct,
-    })
-
-    if (user?.role === 'TEAM_LEAD') {
-      if (bdFilter !== 'all') {
-        const bdTarget = list.find((t) => t.targetType === 'BD' && t.targetForId === bdFilter)
-        if (bdTarget) return toCard(bdTarget.entityName, bdTarget.metric, bdTarget.actual, bdTarget.targetValue, bdTarget.percentage)
-        for (const t of list) {
-          const b = t.bdBreakdown?.find((x) => x.id === bdFilter)
-          if (b) return toCard(b.name, t.metric, b.actual, t.targetValue, b.percentage)
-        }
-        return null
-      }
-      const teamTargets = list.filter((t) => t.targetType === 'TEAM')
-      const t = prefer(teamTargets.length ? teamTargets : list)
-      return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
-    }
-
-    if (isOrgViewer) {
-      if (bdFilter !== 'all') {
-        const bdTarget = list.find((t) => t.targetType === 'BD' && t.targetForId === bdFilter)
-        if (bdTarget) return toCard(bdTarget.entityName, bdTarget.metric, bdTarget.actual, bdTarget.targetValue, bdTarget.percentage)
-        for (const t of list) {
-          const b = t.bdBreakdown?.find((x) => x.id === bdFilter)
-          if (b) return toCard(b.name, t.metric, b.actual, t.targetValue, b.percentage)
-        }
-        return null
-      }
-      if (teamFilter !== 'all') {
-        const teamTarget = list.find((t) => t.targetType === 'TEAM' && t.targetForId === teamFilter)
-        if (teamTarget) return toCard(teamTarget.entityName, teamTarget.metric, teamTarget.actual, teamTarget.targetValue, teamTarget.percentage)
-      }
-      const t = prefer(list)
-      return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
-    }
-
-    // BD (the progress API already scopes to the signed-in BD)
-    const bdTargets = list.filter((t) => t.targetType === 'BD')
-    const t = prefer(bdTargets.length ? bdTargets : list)
-    return t ? toCard(t.entityName, t.metric, t.actual, t.targetValue, t.percentage) : null
-  }, [targetProgress, user?.role, bdFilter, teamFilter, isOrgViewer])
 
   const showBdFilter = user?.role === 'TEAM_LEAD' || user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
   const showTeamFilter = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
@@ -286,8 +225,10 @@ export default function CaseTrackerPage() {
     const map = new Map<string, string>()
     if (showTeamFilter) {
       const teams = teamsData ?? []
-      for (const team of teams) {
-        for (const member of team.members) {
+      const team = teamFilter !== 'all' ? teams.find((t) => t.id === teamFilter) : null
+      const sourceTeams = team ? [team] : teams
+      for (const t of sourceTeams) {
+        for (const member of t.members) {
           if (member.id && member.name) map.set(member.id, member.name)
         }
       }
@@ -297,8 +238,10 @@ export default function CaseTrackerPage() {
         if (bd?.id && bd.name) map.set(bd.id, bd.name)
       }
     }
-    return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]))
-  }, [decorated, showBdFilter, showTeamFilter, teamsData])
+    return Array.from(map.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([value, label]) => ({ value, label }))
+  }, [decorated, showBdFilter, showTeamFilter, teamsData, teamFilter])
 
   const circleOptions = useMemo(
     () => uniqueSorted(decorated.map((d) => (typeof d.lead.circle === 'string' ? d.lead.circle : ''))),
@@ -328,70 +271,108 @@ export default function CaseTrackerPage() {
       const teamBdIds = new Set(teamsData?.find((t) => t.id === teamFilter)?.members.map((m) => m.id) ?? [])
       rows = rows.filter((d) => teamBdIds.has((d.lead.bd as { id?: string } | undefined)?.id ?? ''))
     }
-    if (bdFilter !== 'all') {
-      rows = rows.filter((d) => (d.lead.bd as { id?: string } | undefined)?.id === bdFilter)
+    if (selectedBdIds.length > 0) {
+      const bdSet = new Set(selectedBdIds)
+      rows = rows.filter((d) => bdSet.has((d.lead.bd as { id?: string } | undefined)?.id ?? ''))
     }
     if (circleFilter !== 'all') rows = rows.filter((d) => (d.lead.circle ?? '') === circleFilter)
     if (hospitalFilter !== 'all') rows = rows.filter((d) => d.hospital === hospitalFilter)
     if (doctorFilter !== 'all') rows = rows.filter((d) => d.doctor === doctorFilter)
     if (treatmentFilter !== 'all') rows = rows.filter((d) => (d.lead.treatment ?? '') === treatmentFilter)
-    if (search.trim() && !phoneParsed) {
-      const q = search.toLowerCase()
-      rows = rows.filter(
-        (d) =>
-          String(d.lead.patientName ?? '').toLowerCase().includes(q) ||
-          d.hospital.toLowerCase().includes(q) ||
-          String(d.lead.treatment ?? '').toLowerCase().includes(q)
-      )
+    if (debouncedSearch.trim() && !phoneParsed) {
+      const q = debouncedSearch.toLowerCase()
+      rows = rows.filter((d) => getCaseRowSearchBlob(d, activeSearchColumns, canViewPhone).includes(q))
     }
-    return [...rows].sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
-  }, [decorated, stageFilter, teamFilter, bdFilter, circleFilter, hospitalFilter, doctorFilter, treatmentFilter, search, phoneParsed, teamsData])
+    const sorted = [...rows]
+    if (sortKey) {
+      sorted.sort((a, b) => compareCaseRows(a, b, sortKey, sortDir, canViewPhone))
+    } else {
+      sorted.sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
+    }
+    return sorted
+  }, [
+    decorated,
+    stageFilter,
+    teamFilter,
+    selectedBdIds,
+    circleFilter,
+    hospitalFilter,
+    doctorFilter,
+    treatmentFilter,
+    debouncedSearch,
+    phoneParsed,
+    activeSearchColumns,
+    canViewPhone,
+    sortKey,
+    sortDir,
+    teamsData,
+  ])
 
-  const pipelinePath = user?.role === 'TEAM_LEAD' ? '/team-lead/pipeline' : '/bd/pipeline'
+  const visibleColumns = useMemo(() => {
+    return CASE_TRACKER_COLUMNS.filter((col) => {
+      if (col.key === 'bd' && !showBdFilter) return false
+      return true
+    })
+  }, [showBdFilter])
 
-  const isMoneyMetric =
-    targetCard?.metric === 'NET_PROFIT' ||
-    targetCard?.metric === 'BILL_AMOUNT' ||
-    targetCard?.metric === 'REVENUE'
-  const fmtTarget = (n: number) =>
-    isMoneyMetric ? `₹${Math.round(n).toLocaleString('en-IN')}` : Math.round(n).toLocaleString('en-IN')
+  const toggleSort = (key: CaseTrackerColumnKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+    } else {
+      setSortKey(key)
+      setSortDir('asc')
+    }
+  }
+
+  const columnSearchOptions = useMemo(
+    () => CASE_TRACKER_COLUMNS.map((c) => ({ value: c.key, label: c.label })),
+    []
+  )
 
   return (
     <AuthenticatedLayout>
       <div className="min-h-screen bg-[#F2F2F7] dark:bg-background">
         <div className="mx-auto max-w-7xl space-y-5 p-4 md:p-6">
           {/* ── Header ── */}
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">Case tracker</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {user?.role === 'PL_HEAD' ? 'IPD done cases across all teams' : 'Active cash &amp; insurance cases after KYP — tap a card to filter'}
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              {user?.role !== 'PL_HEAD' && targetCard && (
-                <div className="min-w-[240px] rounded-xl border bg-card p-3 shadow-sm">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      Target · {targetCard.metric.replace(/_/g, ' ').toLowerCase()}
-                    </p>
-                    <p className="text-xs font-semibold text-muted-foreground">{Math.round(targetCard.pct)}%</p>
-                  </div>
-                  <p className="mt-0.5 text-lg font-bold tabular-nums">
-                    {fmtTarget(targetCard.actual)}{' '}
-                    <span className="text-sm font-normal text-muted-foreground">/ {fmtTarget(targetCard.goal)}</span>
-                  </p>
-                  <Progress value={Math.min(100, targetCard.pct)} className="mt-2 h-1.5" />
-                </div>
-              )}
-              {user?.role !== 'PL_HEAD' && (
-                <Button onClick={() => router.push(pipelinePath)} className="shrink-0">
-                  <Plus className="mr-2 h-4 w-4" />
-                  New case submission
-                </Button>
-              )}
-            </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Case tracker</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {user?.role === 'PL_HEAD'
+                ? 'IPD done cases across all teams'
+                : 'Active cash & insurance cases after KYP — tap a card to filter'}
+            </p>
           </div>
+
+          {/* ── Global search ── */}
+          <Card className="border-border/80 shadow-sm">
+            <CardContent className="pt-4 pb-4">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    className="pl-9 h-10"
+                    placeholder="Search patient, phone, UHID, hospital, insurance, TPA, BD, city, status…"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+                <MultiSelectDropdown
+                  options={columnSearchOptions}
+                  selected={searchColumnKeys}
+                  onChange={setSearchColumnKeys}
+                  placeholder="Search columns"
+                  searchPlaceholder="Filter columns…"
+                  emptyLabel="All columns"
+                  className="w-full lg:w-[220px]"
+                />
+              </div>
+              {searchColumnKeys.length > 0 && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Searching in {searchColumnKeys.length} selected column{searchColumnKeys.length === 1 ? '' : 's'} only
+                </p>
+              )}
+            </CardContent>
+          </Card>
 
           {/* ── Stage cards ── */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -432,22 +413,24 @@ export default function CaseTrackerPage() {
                     {filteredRows.length} shown · {decorated.length} active
                   </CardDescription>
                 </div>
-                <div className="relative w-full sm:w-72">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    className="pl-9"
-                    placeholder="Name, ref, hospital… — or full mobile (10 digits)"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0"
+                  onClick={() => exportCaseRowsCsv(filteredRows, visibleColumns, canViewPhone)}
+                  disabled={filteredRows.length === 0}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Export CSV
+                </Button>
               </div>
               {/* Filters */}
               <div className="flex flex-wrap items-center gap-2">
                 <CaseTrackerDateRangeFilter value={dateRange} onChange={setDateRange} />
 
                 {showTeamFilter && (
-                  <Select value={teamFilter} onValueChange={(v) => { setTeamFilter(v); setBdFilter('all') }}>
+                  <Select value={teamFilter} onValueChange={(v) => { setTeamFilter(v); setSelectedBdIds([]) }}>
                     <SelectTrigger className="w-[150px]">
                       <SelectValue placeholder="Team" />
                     </SelectTrigger>
@@ -463,19 +446,15 @@ export default function CaseTrackerPage() {
                 )}
 
                 {showBdFilter && (
-                  <Select value={bdFilter} onValueChange={setBdFilter}>
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder="BD" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All BDs</SelectItem>
-                      {bdOptions.map(([id, name]) => (
-                        <SelectItem key={id} value={id}>
-                          {name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <MultiSelectDropdown
+                    options={bdOptions}
+                    selected={selectedBdIds}
+                    onChange={setSelectedBdIds}
+                    placeholder="Business developer"
+                    searchPlaceholder="Search BDs…"
+                    emptyLabel="All BDs"
+                    className="w-[180px]"
+                  />
                 )}
 
                 <Select value={circleFilter} onValueChange={setCircleFilter}>
@@ -543,75 +522,84 @@ export default function CaseTrackerPage() {
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-muted/50">
-                        <TableHead>Lead ref</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Surgery Date</TableHead>
-                        <TableHead>Patient</TableHead>
-                        <TableHead>Age/Sex</TableHead>
-                        <TableHead>Circle</TableHead>
-                        <TableHead>City</TableHead>
-                        <TableHead>Treatment</TableHead>
-                        {showBdFilter && <TableHead>BDM</TableHead>}
-                        <TableHead>Hospital</TableHead>
-                        <TableHead>Doctor</TableHead>
-                        <TableHead>Stage</TableHead>
-                        <TableHead className="w-[90px]" />
+                        {visibleColumns.map((col) => (
+                          <TableHead key={col.key}>
+                            {col.sortable ? (
+                              <button
+                                type="button"
+                                className="inline-flex items-center gap-1 hover:text-foreground"
+                                onClick={() => toggleSort(col.key)}
+                              >
+                                {col.label}
+                                {sortKey === col.key ? (
+                                  sortDir === 'asc' ? (
+                                    <ArrowUp className="h-3.5 w-3.5" />
+                                  ) : (
+                                    <ArrowDown className="h-3.5 w-3.5" />
+                                  )
+                                ) : (
+                                  <ArrowUpDown className="h-3.5 w-3.5 opacity-40" />
+                                )}
+                              </button>
+                            ) : (
+                              col.label
+                            )}
+                          </TableHead>
+                        ))}
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredRows.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={showBdFilter ? 13 : 12} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={visibleColumns.length} className="py-10 text-center text-muted-foreground">
                             No leads match
                           </TableCell>
                         </TableRow>
                       ) : (
-                        filteredRows.map(({ lead, bucket, hospital, doctor }) => {
-                          const badge = BUCKET_BADGE[bucket]
-                          const d = lead.leadEntryDate || lead.createdDate
+                        filteredRows.map((row) => {
+                          const badge = BUCKET_BADGE[row.bucket]
                           return (
                             <TableRow
-                              key={lead.id}
-                              className="cursor-pointer"
-                              onClick={() => router.push(`/patient/${lead.id}`)}
+                              key={row.lead.id}
+                              className="cursor-pointer hover:bg-muted/40"
+                              onClick={() => setDrawerRow(row)}
                             >
-                              <TableCell>
-                                <div className="flex items-center gap-0.5">
-                                  <span className="font-medium">{lead.leadRef}</span>
-                                  {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
-                                </div>
-                              </TableCell>
-                              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                {d ? format(new Date(d as string), 'MMM d, yyyy') : '—'}
-                              </TableCell>
-                              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                {(() => {
-                                  const sd = lead.surgeryDate ?? (lead as { admissionRecord?: { surgeryDate?: string } }).admissionRecord?.surgeryDate
-                                  return sd ? format(new Date(sd as string), 'MMM d, yyyy') : '—'
-                                })()}
-                              </TableCell>
-                              <TableCell>{lead.patientName}</TableCell>
-                              <TableCell className="whitespace-nowrap text-sm">{formatLeadAgeSex(lead)}</TableCell>
-                              <TableCell>{typeof lead.circle === 'string' ? lead.circle : '—'}</TableCell>
-                              <TableCell>{resolveLeadCity(lead) ?? '-'}</TableCell>
-                              <TableCell className="max-w-[140px] truncate">{lead.treatment ?? '—'}</TableCell>
-                              {showBdFilter && (
-                                <TableCell className="max-w-[120px] truncate">
-                                  {(lead.plRecord?.bdmName ?? lead.bd?.name ?? '').trim() || '—'}
-                                </TableCell>
-                              )}
-                              <TableCell className="max-w-[160px] truncate">{hospital || '—'}</TableCell>
-                              <TableCell className="max-w-[160px] truncate">{doctor || '—'}</TableCell>
-                              <TableCell>
-                                <Badge variant="secondary" className={badge.className}>
-                                  {badge.label}
-                                </Badge>
-                              </TableCell>
-                              <TableCell onClick={(e) => e.stopPropagation()}>
-                                <Button size="sm" variant="outline" asChild>
-                                  <Link href={`/patient/${lead.id}`}>Open</Link>
-                                </Button>
-                              </TableCell>
+                              {visibleColumns.map((col) => {
+                                if (col.key === 'leadRef') {
+                                  return (
+                                    <TableCell key={col.key} onClick={(e) => e.stopPropagation()}>
+                                      <div className="flex items-center gap-0.5">
+                                        <span className="font-medium">{row.lead.leadRef}</span>
+                                        {row.lead.leadRef && (
+                                          <CopyLeadRefButton leadRef={String(row.lead.leadRef)} />
+                                        )}
+                                      </div>
+                                    </TableCell>
+                                  )
+                                }
+                                if (col.key === 'stage') {
+                                  return (
+                                    <TableCell key={col.key}>
+                                      <Badge variant="secondary" className={badge.className}>
+                                        {badge.label}
+                                      </Badge>
+                                    </TableCell>
+                                  )
+                                }
+                                const display = formatCaseCellDisplay(row, col.key, canViewPhone)
+                                return (
+                                  <TableCell
+                                    key={col.key}
+                                    className={cn(
+                                      'text-sm',
+                                      ['patientName', 'hospital', 'doctor', 'treatment', 'insurance', 'tpa', 'bd'].includes(col.key) &&
+                                        'max-w-[160px] truncate'
+                                    )}
+                                  >
+                                    {display}
+                                  </TableCell>
+                                )
+                              })}
                             </TableRow>
                           )
                         })
@@ -624,6 +612,13 @@ export default function CaseTrackerPage() {
           </Card>
         </div>
       </div>
+
+      <PatientDetailDrawer
+        row={drawerRow}
+        open={!!drawerRow}
+        onClose={() => setDrawerRow(null)}
+        stageBadgeClassName={drawerRow ? BUCKET_BADGE[drawerRow.bucket].className : undefined}
+      />
     </AuthenticatedLayout>
   )
 }
