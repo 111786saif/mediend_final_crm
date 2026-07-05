@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Building2, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ProtectedRoute } from '@/components/protected-route'
+import { ColumnFilter } from '@/components/ui/column-filter'
 import {
   Card,
   CardContent,
@@ -77,18 +78,89 @@ export default function HospitalsListPage() {
     setDateRange(rangeForPreset(preset, customStart, customEnd))
   }, [preset, customStart, customEnd])
 
+  // Filter states
+  const [hospitalFilter, setHospitalFilter] = useState<string[]>([])
+  const [totalCasesFilter, setTotalCasesFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [amountReceivedFilter, setAmountReceivedFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [pendingOutstandingFilter, setPendingOutstandingFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [mediendShareFilter, setMediendShareFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+
+  const { data: filterConfig } = useQuery<{
+    filters: Array<{
+      field: string
+      label: string
+      filterType: string
+      filterable: boolean
+      options?: Array<{ label: string; value: string }>
+      min?: number
+      max?: number
+    }>
+  }>({
+    queryKey: ['hospitals', 'list', 'filter-config'],
+    queryFn: () => apiGet('/api/hospitals/filter-config'),
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const filterOptions = useMemo(() => {
+    const filters = filterConfig?.filters || []
+    const find = (field: string) => filters.find((f) => f.field === field)
+    return {
+      hospitals: find('hospital')?.options || [],
+      casesBounds: { min: find('totalCases')?.min ?? 0, max: find('totalCases')?.max ?? 0 },
+      receivedBounds: { min: find('amountReceived')?.min ?? 0, max: find('amountReceived')?.max ?? 0 },
+      pendingBounds: { min: find('pendingOutstanding')?.min ?? 0, max: find('pendingOutstanding')?.max ?? 0 },
+      shareBounds: { min: find('mediendShare')?.min ?? 0, max: find('mediendShare')?.max ?? 0 },
+    }
+  }, [filterConfig])
+
   const { data, isLoading } = useQuery<Hospital[]>({
-    queryKey: ['hospitals', 'list', dateRange],
+    queryKey: [
+      'hospitals', 'list', dateRange,
+      hospitalFilter, totalCasesFilter, amountReceivedFilter, pendingOutstandingFilter, mediendShareFilter,
+    ],
     queryFn: () => {
+      const filters = []
+      if (hospitalFilter.length > 0) filters.push({ field: 'hospital', operator: 'in', value: hospitalFilter })
+      if (totalCasesFilter && (totalCasesFilter.min != null || totalCasesFilter.max != null)) {
+        filters.push({ field: 'totalCases', operator: 'between', value: totalCasesFilter })
+      }
+      if (amountReceivedFilter && (amountReceivedFilter.min != null || amountReceivedFilter.max != null)) {
+        filters.push({ field: 'amountReceived', operator: 'between', value: amountReceivedFilter })
+      }
+      if (pendingOutstandingFilter && (pendingOutstandingFilter.min != null || pendingOutstandingFilter.max != null)) {
+        filters.push({ field: 'pendingOutstanding', operator: 'between', value: pendingOutstandingFilter })
+      }
+      if (mediendShareFilter && (mediendShareFilter.min != null || mediendShareFilter.max != null)) {
+        filters.push({ field: 'mediendShare', operator: 'between', value: mediendShareFilter })
+      }
+
       const params = new URLSearchParams()
       if (dateRange.start && dateRange.end) {
         params.set('startDate', dateRange.start)
         params.set('endDate', dateRange.end)
       }
+      if (filters.length > 0) {
+        params.set('filters', JSON.stringify(filters))
+      }
       const qs = params.toString()
       return apiGet<Hospital[]>(`/api/hospitals${qs ? `?${qs}` : ''}`)
     },
   })
+
+  const activeFilterCount =
+    hospitalFilter.length +
+    (totalCasesFilter ? 1 : 0) +
+    (amountReceivedFilter ? 1 : 0) +
+    (pendingOutstandingFilter ? 1 : 0) +
+    (mediendShareFilter ? 1 : 0)
+
+  const clearFilters = () => {
+    setHospitalFilter([])
+    setTotalCasesFilter(null)
+    setAmountReceivedFilter(null)
+    setPendingOutstandingFilter(null)
+    setMediendShareFilter(null)
+  }
 
   const rows = useMemo(() => {
     if (!data) return []
@@ -153,6 +225,17 @@ export default function HospitalsListPage() {
                   <CardTitle className="flex items-center gap-2 text-sky-950 dark:text-sky-100">
                     <Building2 className="h-5 w-5" />
                     Hospitals
+                    {activeFilterCount > 0 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 text-[10px] text-rose-600 dark:text-rose-400 hover:text-rose-700 font-medium px-2 py-0"
+                        onClick={clearFilters}
+                      >
+                        Clear Filters ({activeFilterCount})
+                      </Button>
+                    )}
                   </CardTitle>
                   <CardDescription>Click a row for case-level details</CardDescription>
                 </div>
@@ -171,11 +254,65 @@ export default function HospitalsListPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-sky-50/40 hover:bg-sky-50/40 dark:bg-sky-950/20">
-                    <TableHead>Hospital</TableHead>
-                    <TableHead className="text-right">Cases</TableHead>
-                    <TableHead className="text-right">Amount Received</TableHead>
-                    <TableHead className="text-right">Pending Outstanding</TableHead>
-                    <TableHead className="text-right">MediEND Share</TableHead>
+                    <TableHead className="w-[280px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">Hospital</span>
+                        <ColumnFilter
+                          type="multiSelect"
+                          options={filterOptions.hospitals}
+                          value={hospitalFilter}
+                          onChange={setHospitalFilter}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[120px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">Cases</span>
+                        <ColumnFilter
+                          type="numberRange"
+                          value={totalCasesFilter}
+                          onChange={setTotalCasesFilter}
+                          min={filterOptions.casesBounds.min}
+                          max={filterOptions.casesBounds.max}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[160px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">Amount Received</span>
+                        <ColumnFilter
+                          type="numberRange"
+                          value={amountReceivedFilter}
+                          onChange={setAmountReceivedFilter}
+                          min={filterOptions.receivedBounds.min}
+                          max={filterOptions.receivedBounds.max}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[180px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">Pending Outstanding</span>
+                        <ColumnFilter
+                          type="numberRange"
+                          value={pendingOutstandingFilter}
+                          onChange={setPendingOutstandingFilter}
+                          min={filterOptions.pendingBounds.min}
+                          max={filterOptions.pendingBounds.max}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[160px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">MediEND Share</span>
+                        <ColumnFilter
+                          type="numberRange"
+                          value={mediendShareFilter}
+                          onChange={setMediendShareFilter}
+                          min={filterOptions.shareBounds.min}
+                          max={filterOptions.shareBounds.max}
+                        />
+                      </div>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

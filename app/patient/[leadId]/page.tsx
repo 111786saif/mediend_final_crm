@@ -891,7 +891,7 @@ export default function PatientDetailsPage() {
                     {lead.category?.toLowerCase() === 'lipoma' && (
                       <DossierField icon={Tag} label="Count" value={lead.quantityGrade} />
                     )}
-                    {(lead.category?.toLowerCase() === 'gynaecology' || lead.category?.toLowerCase() === 'gynecology') && (
+                    {(lead.treatment?.toLowerCase().includes('gynecomastia') || lead.category?.toLowerCase() === 'gynecomastia') && (
                       <DossierField icon={Tag} label="Grade" value={lead.quantityGrade} />
                     )}
                     <DossierField

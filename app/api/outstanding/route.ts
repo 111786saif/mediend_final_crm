@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    const where: Prisma.LeadWhereInput = {
+    let finalWhere: Prisma.LeadWhereInput = {
       pipelineStage: { in: ['PL', 'COMPLETED'] },
     }
 
@@ -32,13 +32,323 @@ export async function GET(request: NextRequest) {
         end.setHours(23, 59, 59, 999)
         dischargeRange.lte = end
       }
-      where.dischargeSheet = { dischargeDate: dischargeRange }
+      finalWhere.dischargeSheet = { dischargeDate: dischargeRange }
     } else {
-      where.dischargeSheet = { isNot: null }
+      finalWhere.dischargeSheet = { isNot: null }
+    }
+
+    const filtersParam = searchParams.get('filters')
+    if (filtersParam) {
+      try {
+        const parsedFilters = JSON.parse(filtersParam)
+        if (Array.isArray(parsedFilters)) {
+          const filterConditions: Prisma.LeadWhereInput[] = []
+
+          for (const f of parsedFilters) {
+            const { field, operator, value } = f
+            if (!field || value === undefined || value === null) continue
+
+            // ── multiSelect / in ─────────────────────────────────────────
+            if (field === 'manager') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { managerName: { in: value } } },
+                    { dischargeSheet: { managerName: { in: value } } },
+                  ],
+                })
+              }
+            } else if (field === 'bdm') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { bdmName: { in: value } } },
+                    { dischargeSheet: { bdmName: { in: value } } },
+                    { bd: { name: { in: value } } },
+                  ],
+                })
+              }
+            } else if (field === 'doctor') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { doctorName: { in: value } } },
+                    { dischargeSheet: { doctorName: { in: value } } },
+                  ],
+                })
+              }
+            } else if (field === 'hospital') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { hospitalName: { in: value } },
+                    { plRecord: { hospitalName: { in: value } } },
+                    { dischargeSheet: { hospitalName: { in: value } } },
+                  ],
+                })
+              }
+            } else if (field === 'status') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { status: { in: value } } },
+                    { dischargeSheet: { status: { in: value } } },
+                    { caseStage: { in: value } },
+                  ],
+                })
+              }
+            } else if (field === 'category') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { category: { in: value } },
+                    { plRecord: { category: { in: value } } },
+                    { dischargeSheet: { category: { in: value } } },
+                  ],
+                })
+              }
+            } else if (field === 'paymentType') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { paymentType: { in: value } } },
+                    { dischargeSheet: { paymentType: { in: value } } },
+                  ],
+                })
+              }
+            } else if (field === 'mediendPayout') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  plRecord: { hospitalPayoutStatus: { in: value } },
+                })
+              }
+            } else if (field === 'doctorPayout') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  plRecord: { doctorPayoutStatus: { in: value } },
+                })
+              }
+            } else if (field === 'invoiceStatus') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({
+                  plRecord: { mediendInvoiceStatus: { in: value } },
+                })
+              }
+
+            // ── boolean ──────────────────────────────────────────────────
+            } else if (field === 'paymentReceived') {
+              if (typeof value === 'boolean') {
+                filterConditions.push({
+                  outstandingCase: { paymentReceived: value },
+                })
+              }
+
+            // ── search / contains ────────────────────────────────────────
+            } else if (field === 'leadRef') {
+              if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({
+                  leadRef: { contains: value.trim(), mode: 'insensitive' },
+                })
+              }
+            } else if (field === 'patient') {
+              if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({
+                  OR: [
+                    { patientName: { contains: value.trim(), mode: 'insensitive' } },
+                    { plRecord: { patientName: { contains: value.trim(), mode: 'insensitive' } } },
+                    { dischargeSheet: { patientName: { contains: value.trim(), mode: 'insensitive' } } },
+                  ],
+                })
+              }
+            } else if (field === 'treatment') {
+              if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({
+                  OR: [
+                    { treatment: { contains: value.trim(), mode: 'insensitive' } },
+                    { plRecord: { treatment: { contains: value.trim(), mode: 'insensitive' } } },
+                    { dischargeSheet: { treatment: { contains: value.trim(), mode: 'insensitive' } } },
+                  ],
+                })
+              }
+
+            // ── dateRange / between ──────────────────────────────────────
+            } else if (field === 'leadReceived') {
+              if (Array.isArray(value) && value.length === 2 && value[0]) {
+                const from = new Date(value[0])
+                const to = new Date(value[1] || value[0])
+                to.setHours(23, 59, 59, 999)
+                filterConditions.push({
+                  dischargeSheet: { markedAt: { gte: from, lte: to } },
+                })
+              }
+            } else if (field === 'admissionDate') {
+              if (Array.isArray(value) && value.length === 2 && value[0]) {
+                const from = new Date(value[0])
+                const to = new Date(value[1] || value[0])
+                to.setHours(23, 59, 59, 999)
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { admissionDate: { gte: from, lte: to } } },
+                    { admissionRecord: { is: { admissionDate: { gte: from, lte: to } } } },
+                  ],
+                })
+              }
+            } else if (field === 'surgeryDate') {
+              if (Array.isArray(value) && value.length === 2 && value[0]) {
+                const from = new Date(value[0])
+                const to = new Date(value[1] || value[0])
+                to.setHours(23, 59, 59, 999)
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { surgeryDate: { gte: from, lte: to } } },
+                    { surgeryDate: { gte: from, lte: to } },
+                    { admissionRecord: { is: { surgeryDate: { gte: from, lte: to } } } },
+                  ],
+                })
+              }
+
+            // ── numberRange / between ────────────────────────────────────
+            } else if (field === 'hospitalTotalAmount') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { hospitalShareAmount: range } },
+                    { dischargeSheet: { hospitalShareAmount: range } },
+                  ],
+                })
+              }
+            } else if (field === 'hospitalOutstandingAmount') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  plRecord: { hospitalAmountPending: range },
+                })
+              }
+            } else if (field === 'doctorPayoutAmount') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { doctorCharges: range } },
+                    { dischargeSheet: { doctorCharges: range } },
+                  ],
+                })
+              }
+            } else if (field === 'doctorOutstandingAmount') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  plRecord: { doctorAmountPending: range },
+                })
+              }
+            } else if (field === 'totalBill') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { billAmount: range } },
+                    { dischargeSheet: { totalFinalBill: range } },
+                    { billAmount: range },
+                  ],
+                })
+              }
+            } else if (field === 'approvedAmount') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { totalAmount: range } },
+                    { dischargeSheet: { finalApprovedAmount: range } },
+                    { settledTotal: range },
+                  ],
+                })
+              }
+            } else if (field === 'deductionTotal') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { dischargeSheet: { deductionAmount: range } },
+                    { deduction: range },
+                  ],
+                })
+              }
+            } else if (field === 'deductionPaid') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { cashOrDedPaid: range } },
+                    { dischargeSheet: { cashOrDedPaid: range } },
+                    { copay: range },
+                  ],
+                })
+              }
+            } else if (field === 'waivedOff') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  dischargeSheet: { waivedOffAmount: range },
+                })
+              }
+            } else if (field === 'netProfit') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: Prisma.FloatFilter = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({
+                  OR: [
+                    { plRecord: { finalProfit: range } },
+                    { plRecord: { mediendNetProfit: range } },
+                    { netProfit: range },
+                  ],
+                })
+              }
+            }
+          }
+
+          if (filterConditions.length > 0) {
+            finalWhere = {
+              AND: [finalWhere, ...filterConditions],
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error parsing outstanding filters:', err)
+      }
     }
 
     const leads = await prisma.lead.findMany({
-      where,
+      where: finalWhere,
       include: {
         bd: {
           select: {
@@ -92,6 +402,7 @@ export async function GET(request: NextRequest) {
             cashOrDedPaid: true,
             mediendShareAmount: true,
             hospitalShareAmount: true,
+            doctorCharges: true,
             doctorRemarks: true,
             costBreakdownRemarks: true,
             dischargeSummaryUrl: true,

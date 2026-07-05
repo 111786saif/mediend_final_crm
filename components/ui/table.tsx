@@ -357,9 +357,10 @@ function hasColumnFilter(node: React.ReactNode): boolean {
 function TableHead({
   className,
   colIndex,
+  rowIndex,
   isHeader,
   ...props
-}: React.ComponentProps<"th"> & { colIndex?: number; isHeader?: boolean }) {
+}: React.ComponentProps<"th"> & { colIndex?: number; rowIndex?: number; isHeader?: boolean }) {
   const context = React.useContext(TableFilterContext)
   const headerText = React.useMemo(() => getTextContent(props.children).trim(), [props.children])
 

@@ -140,10 +140,22 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
     managerName = ((bd as any).name as string) || managerName
   }
 
+  const resolvedBdm = pickString(pl?.bdmName, ds?.bdmName, bd?.name)
+  const resolvedHospital = pickString(
+    pl?.hospitalName,
+    ds?.hospitalName,
+    preAuthHospital,
+    admission?.admittingHospital,
+    preAuth?.hospitalNameSuggestion,
+    firstSuggested?.hospitalName,
+    record.hospitalName
+  )
+  const resolvedPaymentType = pickString(pl?.paymentType, ds?.paymentType, record.flowType)
+
   return {
     month: monthDate,
     manager: managerName,
-    bdm: pickString(pl?.bdmName, ds?.bdmName, bd?.name),
+    bdm: resolvedBdm,
     patient: pickString(record.patientName, pl?.patientName, ds?.patientName),
     category: pickString(record.category, pl?.category, ds?.category),
     treatment: pickString(record.treatment, pl?.treatment, ds?.treatment),
@@ -155,18 +167,10 @@ export function resolvePlRow(record: AnyRecord): ResolvedPlRow {
       record.surgeonName,
       firstSuggested?.suggestedDoctor
     ),
-    hospital: pickString(
-      pl?.hospitalName,
-      ds?.hospitalName,
-      preAuthHospital,
-      admission?.admittingHospital,
-      preAuth?.hospitalNameSuggestion,
-      firstSuggested?.hospitalName,
-      record.hospitalName
-    ),
+    hospital: resolvedHospital,
     admission: admissionDate,
     surgery,
-    paymentType: pickString(pl?.paymentType, ds?.paymentType, record.flowType),
+    paymentType: resolvedPaymentType,
     status: pickString(pl?.status, ds?.status, record.caseStage),
     totalBill: pickNumber(pl?.billAmount, ds?.totalFinalBill, record.billAmount),
     approvedAmount: pickNumber(

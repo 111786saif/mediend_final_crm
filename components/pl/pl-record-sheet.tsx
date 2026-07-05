@@ -115,6 +115,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
     managerName: '',
     bdmName: '',
     paymentType: '',
+    cashCollectedBy: '',
     status: '',
     paymentCollectedAt: '',
     totalAmount: '',
@@ -232,6 +233,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
               : ((pl?.managerName as string) || (ds?.managerName as string) || (record.bd as any)?.employee?.team?.teamLead?.user?.name || (record.bd as any)?.employee?.team?.department?.head?.name || ''),
           bdmName: (pl?.bdmName as string) || record.bd?.name || '',
           paymentType: (pl?.paymentType as string) || '',
+          cashCollectedBy: (pl?.cashCollectedBy as string) || (ds?.cashCollectedBy as string) || '',
           status: (pl?.status as string) || '',
           paymentCollectedAt: (pl?.paymentCollectedAt as string) || 
             (() => {
@@ -486,6 +488,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       paymentType: formData.paymentType || undefined,
       status: formData.status || undefined,
       paymentCollectedAt: formData.paymentCollectedAt || undefined,
+      cashCollectedBy: formData.cashCollectedBy || undefined,
       totalAmount: parseFloat(formData.totalAmount) || 0,
       billAmount: parseFloat(formData.billAmount) || 0,
       cashPaidByPatient: 0,
@@ -735,6 +738,10 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                             <SelectItem value="Hospital">Hospital</SelectItem>
                           </SelectContent>
                         </Select>
+                      </div>
+                      <div>
+                        <Label>Cash collected by</Label>
+                        <Input value={formData.cashCollectedBy} onChange={(e) => update('cashCollectedBy', e.target.value)} placeholder="e.g. BD Name" className="mt-1" />
                       </div>
                     </CardContent>
                   </Card>

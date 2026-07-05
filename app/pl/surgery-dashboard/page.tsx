@@ -2,7 +2,6 @@
 
 import { ProtectedRoute } from '@/components/protected-route'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -15,7 +14,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import { ColumnDef } from '@tanstack/react-table'
+import { DataTable } from '@/components/ui/data-table'
+import { ColumnFilter } from '@/components/ui/column-filter'
 import {
   BarChart3,
   DollarSign,
@@ -94,6 +96,14 @@ export default function PLSurgeryDashboardPage() {
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
   const [teamTab, setTeamTab] = useState('all')
 
+  // Per-column filter state
+  const [bdFilter, setBdFilter] = useState<string[]>([])
+  const [teamFilter, setTeamFilter] = useState<string[]>([])
+  const [surgeriesFilter, setSurgeriesFilter] = useState<[number, number] | undefined>()
+  const [revenueFilter, setRevenueFilter] = useState<[number, number] | undefined>()
+  const [expensesFilter, setExpensesFilter] = useState<[number, number] | undefined>()
+  const [netProfitFilter, setNetProfitFilter] = useState<[number, number] | undefined>()
+
   useEffect(() => {
     if (selectedMonths.length === 0) {
       setDateRange({ startDate: '', endDate: '' })
@@ -134,6 +144,172 @@ export default function PLSurgeryDashboardPage() {
       surgeries: h.count,
       revenue: h.revenue,
     })) ?? []
+
+  // Compute filter options (unique values + numeric bounds) from raw data
+  const filterOptions = useMemo(() => {
+    const breakdown = data?.bdBreakdown ?? []
+
+    let minSurgeries = 0, maxSurgeries = 0
+    let minRevenue = 0, maxRevenue = 0
+    let minExpenses = 0, maxExpenses = 0
+    let minNetProfit = 0, maxNetProfit = 0
+
+    if (breakdown.length > 0) {
+      minSurgeries = Math.min(...breakdown.map((r) => r.surgeries))
+      maxSurgeries = Math.max(...breakdown.map((r) => r.surgeries))
+      minRevenue = Math.min(...breakdown.map((r) => r.revenue))
+      maxRevenue = Math.max(...breakdown.map((r) => r.revenue))
+      minExpenses = Math.min(...breakdown.map((r) => r.expenses))
+      maxExpenses = Math.max(...breakdown.map((r) => r.expenses))
+      minNetProfit = Math.min(...breakdown.map((r) => r.netProfit))
+      maxNetProfit = Math.max(...breakdown.map((r) => r.netProfit))
+    }
+
+    return {
+      bd: Array.from(new Set(breakdown.map((r) => r.bdName).filter(Boolean))).sort() as string[],
+      team: Array.from(new Set(breakdown.map((r) => r.teamName ?? '—').filter(Boolean))).sort() as string[],
+      surgeriesBounds: { min: minSurgeries, max: maxSurgeries },
+      revenueBounds: { min: minRevenue, max: maxRevenue },
+      expensesBounds: { min: minExpenses, max: maxExpenses },
+      netProfitBounds: { min: minNetProfit, max: maxNetProfit },
+    }
+  }, [data])
+
+  // Apply all active filters client-side
+  const filteredBdBreakdown = useMemo(() => {
+    let rows = data?.bdBreakdown ?? []
+
+    if (bdFilter.length > 0) {
+      rows = rows.filter((r) => bdFilter.includes(r.bdName))
+    }
+    if (teamFilter.length > 0) {
+      rows = rows.filter((r) => teamFilter.includes(r.teamName ?? '—'))
+    }
+    if (surgeriesFilter) {
+      rows = rows.filter((r) => r.surgeries >= surgeriesFilter[0] && r.surgeries <= surgeriesFilter[1])
+    }
+    if (revenueFilter) {
+      rows = rows.filter((r) => r.revenue >= revenueFilter[0] && r.revenue <= revenueFilter[1])
+    }
+    if (expensesFilter) {
+      rows = rows.filter((r) => r.expenses >= expensesFilter[0] && r.expenses <= expensesFilter[1])
+    }
+    if (netProfitFilter) {
+      rows = rows.filter((r) => r.netProfit >= netProfitFilter[0] && r.netProfit <= netProfitFilter[1])
+    }
+
+    return rows
+  }, [data, bdFilter, teamFilter, surgeriesFilter, revenueFilter, expensesFilter, netProfitFilter])
+
+  // TanStack ColumnDef array — filters live inside each header renderer
+  const columns = useMemo<ColumnDef<SurgeryDashboardData['bdBreakdown'][number]>[]>(() => [
+    {
+      id: 'bdName',
+      header: () => (
+        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+          <span className="font-semibold text-slate-700 dark:text-slate-300">BD</span>
+          <ColumnFilter
+            type="multiSelect"
+            options={filterOptions.bd}
+            value={bdFilter}
+            onChange={(val) => setBdFilter(val as string[])}
+          />
+        </div>
+      ),
+      cell: ({ row }) => <div className="font-medium">{row.original.bdName}</div>,
+    },
+    {
+      id: 'teamName',
+      header: () => (
+        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
+          <span className="font-semibold text-slate-700 dark:text-slate-300">Team Leader</span>
+          <ColumnFilter
+            type="multiSelect"
+            options={filterOptions.team}
+            value={teamFilter}
+            onChange={(val) => setTeamFilter(val as string[])}
+          />
+        </div>
+      ),
+      cell: ({ row }) => <div className="text-muted-foreground">{row.original.teamName ?? '—'}</div>,
+    },
+    {
+      id: 'surgeries',
+      header: () => (
+        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[120px]">
+          <span className="font-semibold text-slate-700 dark:text-slate-300">Surgeries</span>
+          <ColumnFilter
+            type="numberRange"
+            value={surgeriesFilter}
+            onChange={(val) => setSurgeriesFilter(val as [number, number] | undefined)}
+            min={filterOptions.surgeriesBounds.min}
+            max={filterOptions.surgeriesBounds.max}
+          />
+        </div>
+      ),
+      cell: ({ row }) => <div className="text-right">{row.original.surgeries}</div>,
+    },
+    {
+      id: 'revenue',
+      header: () => (
+        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+          <span className="font-semibold text-slate-700 dark:text-slate-300">Revenue</span>
+          <ColumnFilter
+            type="numberRange"
+            value={revenueFilter}
+            onChange={(val) => setRevenueFilter(val as [number, number] | undefined)}
+            min={filterOptions.revenueBounds.min}
+            max={filterOptions.revenueBounds.max}
+          />
+        </div>
+      ),
+      cell: ({ row }) => <div className="text-right">₹{row.original.revenue.toLocaleString('en-IN')}</div>,
+    },
+    {
+      id: 'expenses',
+      header: () => (
+        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+          <span className="font-semibold text-slate-700 dark:text-slate-300">Expenses</span>
+          <ColumnFilter
+            type="numberRange"
+            value={expensesFilter}
+            onChange={(val) => setExpensesFilter(val as [number, number] | undefined)}
+            min={filterOptions.expensesBounds.min}
+            max={filterOptions.expensesBounds.max}
+          />
+        </div>
+      ),
+      cell: ({ row }) => <div className="text-right">₹{row.original.expenses.toLocaleString('en-IN')}</div>,
+    },
+    {
+      id: 'netProfit',
+      header: () => (
+        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+          <span className="font-semibold text-slate-700 dark:text-slate-300">Net Profit</span>
+          <ColumnFilter
+            type="numberRange"
+            value={netProfitFilter}
+            onChange={(val) => setNetProfitFilter(val as [number, number] | undefined)}
+            min={filterOptions.netProfitBounds.min}
+            max={filterOptions.netProfitBounds.max}
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="text-right font-medium tabular-nums">
+          ₹{row.original.netProfit.toLocaleString('en-IN')}
+        </div>
+      ),
+    },
+  ], [
+    filterOptions,
+    bdFilter,
+    teamFilter,
+    surgeriesFilter,
+    revenueFilter,
+    expensesFilter,
+    netProfitFilter,
+  ])
 
   return (
     <ProtectedRoute>
@@ -313,35 +489,11 @@ export default function PLSurgeryDashboardPage() {
                       <CardDescription>Revenue = Mediend share; net = share − Mediend expenses</CardDescription>
                     </CardHeader>
                     <CardContent className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>BD</TableHead>
-                            <TableHead>Team Leader</TableHead>
-                            <TableHead className="text-right">Surgeries</TableHead>
-                            <TableHead className="text-right">Revenue</TableHead>
-                            <TableHead className="text-right">Expenses</TableHead>
-                            <TableHead className="text-right">Net Profit</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {(data?.bdBreakdown ?? []).map((row) => (
-                            <TableRow key={row.bdId}>
-                              <TableCell className="font-medium">{row.bdName}</TableCell>
-                              <TableCell className="text-muted-foreground">{row.teamName ?? '—'}</TableCell>
-                              <TableCell className="text-right">{row.surgeries}</TableCell>
-                              <TableCell className="text-right">₹{row.revenue.toLocaleString('en-IN')}</TableCell>
-                              <TableCell className="text-right">₹{row.expenses.toLocaleString('en-IN')}</TableCell>
-                              <TableCell className="text-right font-medium tabular-nums">₹{row.netProfit.toLocaleString('en-IN')}</TableCell>
-                            </TableRow>
-                          ))}
-                          {(!data?.bdBreakdown || data.bdBreakdown.length === 0) && (
-                            <TableRow>
-                              <TableCell colSpan={6} className="text-center text-muted-foreground py-8">No surgeries in this period</TableCell>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      </Table>
+                      <DataTable
+                        columns={columns}
+                        data={filteredBdBreakdown}
+                        enablePagination={false}
+                      />
                     </CardContent>
                   </Card>
                 </>

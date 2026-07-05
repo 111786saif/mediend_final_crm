@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { ChevronDown } from 'lucide-react'
 import {
   DropdownMenu,
@@ -13,22 +13,106 @@ import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
 import type { DateRange } from 'react-day-picker'
 
-interface ColumnFilterProps {
-  options: string[]
-  onChange: (selected: string[]) => void
-  type?: 'text' | 'date'
+interface FilterOption {
+  label: string
+  value: string
 }
 
-export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterProps) {
+interface ColumnFilterProps {
+  options?: FilterOption[] | string[]
+  value?: any
+  onChange: (value: any) => void
+  type?: 'search' | 'multiSelect' | 'dateRange' | 'numberRange' | 'boolean' | 'text' | 'date'
+  min?: number
+  max?: number
+  placeholder?: string
+}
+
+export function ColumnFilter({
+  options = [],
+  value,
+  onChange,
+  type = 'multiSelect',
+  min,
+  max,
+  placeholder,
+}: ColumnFilterProps) {
+  // Normalize options to FilterOption[]
+  const normalizedOptions = useMemo(() => {
+    if (!options) return []
+    return options.map((opt) => {
+      if (typeof opt === 'string') {
+        return { label: opt, value: opt }
+      }
+      return { label: String(opt.label), value: String(opt.value) }
+    })
+  }, [options])
+
   const [selected, setSelected] = useState<string[]>([])
   const [tempSelected, setTempSelected] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState('')
 
-  // For date range
+  // Text search input state
+  const [textSearch, setTextSearch] = useState('')
+  const [tempTextSearch, setTempTextSearch] = useState('')
+
+  // Date range state
   const [selectedRange, setSelectedRange] = useState<DateRange | undefined>(undefined)
   const [tempRange, setTempRange] = useState<DateRange | undefined>(undefined)
 
+  // Number range state
+  const [numMin, setNumMin] = useState<string>('')
+  const [numMax, setNumMax] = useState<string>('')
+  const [tempNumMin, setTempNumMin] = useState<string>('')
+  const [tempNumMax, setTempNumMax] = useState<string>('')
+
+  // Boolean state
+  const [boolValue, setBoolValue] = useState<boolean | null>(null)
+  const [tempBoolValue, setTempBoolValue] = useState<boolean | null>(null)
+
   const [open, setOpen] = useState(false)
+
+  // Mapping types to legacy text/date formats
+  const resolvedType = useMemo(() => {
+    if (type === 'text') return 'multiSelect'
+    if (type === 'date') return 'dateRange'
+    return type
+  }, [type])
+
+  // Synchronize temp states when value changes or popover opens
+  useEffect(() => {
+    if (resolvedType === 'dateRange') {
+      const range = value as DateRange | [string, string] | undefined
+      if (Array.isArray(range)) {
+        const fromVal = range[0] ? new Date(range[0]) : undefined
+        const toVal = range[1] ? new Date(range[1]) : undefined
+        setTempRange({ from: fromVal, to: toVal })
+        setSelectedRange({ from: fromVal, to: toVal })
+      } else {
+        setTempRange(range)
+        setSelectedRange(range)
+      }
+    } else if (resolvedType === 'numberRange') {
+      const numRange = value as { min: number | null; max: number | null } | undefined
+      const minStr = numRange?.min != null ? String(numRange.min) : ''
+      const maxStr = numRange?.max != null ? String(numRange.max) : ''
+      setTempNumMin(minStr)
+      setTempNumMax(maxStr)
+      setNumMin(minStr)
+      setNumMax(maxStr)
+    } else if (resolvedType === 'boolean') {
+      setTempBoolValue(value as boolean | null)
+      setBoolValue(value as boolean | null)
+    } else if (resolvedType === 'search') {
+      const strVal = (value as string) || ''
+      setTempTextSearch(strVal)
+      setTextSearch(strVal)
+    } else {
+      const arrVal = (value as string[]) || []
+      setTempSelected(arrVal)
+      setSelected(arrVal)
+    }
+  }, [value, resolvedType, open])
 
   const getQuickRange = (range: 'current' | '3months' | '6months') => {
     const now = new Date()
@@ -63,23 +147,19 @@ export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterP
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen)
     if (nextOpen) {
-      if (type === 'date') {
-        setTempRange(selectedRange)
-      } else {
-        setTempSelected(selected)
-        setSearchQuery('') // Clear search query when dropdown opens
-      }
+      setSearchQuery('')
     }
   }
 
-  const handleCheckedChange = (option: string, checked: boolean) => {
+  const handleCheckedChange = (optionValue: string, checked: boolean) => {
     setTempSelected((prev) =>
-      checked ? [...prev, option] : prev.filter((item) => item !== option)
+      checked ? [...prev, optionValue] : prev.filter((item) => item !== optionValue)
     )
   }
 
   const handleApply = () => {
-    if (type === 'date') {
+    console.log('[ColumnFilter] Applying filters:', { resolvedType, tempSelected, tempRange, tempNumMin, tempNumMax, tempBoolValue, tempTextSearch })
+    if (resolvedType === 'dateRange') {
       setSelectedRange(tempRange)
       if (tempRange?.from) {
         const fromStr = tempRange.from.toISOString()
@@ -88,6 +168,18 @@ export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterP
       } else {
         onChange([])
       }
+    } else if (resolvedType === 'numberRange') {
+      setNumMin(tempNumMin)
+      setNumMax(tempNumMax)
+      const minVal = tempNumMin ? Number(tempNumMin) : null
+      const maxVal = tempNumMax ? Number(tempNumMax) : null
+      onChange({ min: minVal, max: maxVal })
+    } else if (resolvedType === 'boolean') {
+      setBoolValue(tempBoolValue)
+      onChange(tempBoolValue)
+    } else if (resolvedType === 'search') {
+      setTextSearch(tempTextSearch)
+      onChange(tempTextSearch)
     } else {
       setSelected(tempSelected)
       onChange(tempSelected)
@@ -96,10 +188,25 @@ export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterP
   }
 
   const handleClear = () => {
-    if (type === 'date') {
+    console.log('[ColumnFilter] Clearing filters for:', resolvedType)
+    if (resolvedType === 'dateRange') {
       setSelectedRange(undefined)
       setTempRange(undefined)
       onChange([])
+    } else if (resolvedType === 'numberRange') {
+      setNumMin('')
+      setNumMax('')
+      setTempNumMin('')
+      setTempNumMax('')
+      onChange(null)
+    } else if (resolvedType === 'boolean') {
+      setBoolValue(null)
+      setTempBoolValue(null)
+      onChange(null)
+    } else if (resolvedType === 'search') {
+      setTextSearch('')
+      setTempTextSearch('')
+      onChange('')
     } else {
       setSelected([])
       setTempSelected([])
@@ -108,13 +215,25 @@ export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterP
     setOpen(false)
   }
 
-  const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredOptions = normalizedOptions.filter((option) =>
+    option.label.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const hasActiveFilters = type === 'date'
-    ? !!selectedRange?.from
-    : selected.length > 0
+  const hasActiveFilters = useMemo(() => {
+    if (resolvedType === 'dateRange') {
+      return !!selectedRange?.from
+    }
+    if (resolvedType === 'numberRange') {
+      return numMin !== '' || numMax !== ''
+    }
+    if (resolvedType === 'boolean') {
+      return boolValue !== null
+    }
+    if (resolvedType === 'search') {
+      return textSearch !== ''
+    }
+    return selected.length > 0
+  }, [resolvedType, selectedRange, numMin, numMax, boolValue, textSearch, selected])
 
   return (
     <DropdownMenu open={open} onOpenChange={handleOpenChange}>
@@ -131,7 +250,7 @@ export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterP
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-auto p-2 z-50">
-        {type === 'date' ? (
+        {resolvedType === 'dateRange' && (
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between gap-1.5 px-1 pt-1 border-b pb-2">
               <Button
@@ -175,7 +294,72 @@ export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterP
               numberOfMonths={1}
             />
           </div>
-        ) : (
+        )}
+
+        {resolvedType === 'numberRange' && (
+          <div className="flex flex-col gap-2 w-48 p-1">
+            <span className="text-xs font-semibold text-muted-foreground">Range</span>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                placeholder={min !== undefined ? `Min (${min})` : 'Min'}
+                value={tempNumMin}
+                onChange={(e) => setTempNumMin(e.target.value)}
+                className="h-8 text-xs"
+                onKeyDown={(e) => e.stopPropagation()}
+              />
+              <span className="text-muted-foreground text-xs">to</span>
+              <Input
+                type="number"
+                placeholder={max !== undefined ? `Max (${max})` : 'Max'}
+                value={tempNumMax}
+                onChange={(e) => setTempNumMax(e.target.value)}
+                className="h-8 text-xs"
+                onKeyDown={(e) => e.stopPropagation()}
+              />
+            </div>
+          </div>
+        )}
+
+        {resolvedType === 'boolean' && (
+          <div className="flex flex-col gap-1 w-40 p-1">
+            <span className="text-xs font-semibold text-muted-foreground mb-1">Select option</span>
+            {[
+              { label: 'Yes', value: true },
+              { label: 'No', value: false },
+            ].map((opt) => (
+              <DropdownMenuCheckboxItem
+                key={opt.label}
+                checked={tempBoolValue === opt.value}
+                onCheckedChange={(checked) => {
+                  if (checked) setTempBoolValue(opt.value)
+                  else setTempBoolValue(null)
+                }}
+                onSelect={(e) => e.preventDefault()}
+              >
+                {opt.label}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </div>
+        )}
+
+        {resolvedType === 'search' && (
+          <div className="flex flex-col gap-2 w-52 p-1">
+            <Input
+              type="text"
+              placeholder={placeholder || 'Search...'}
+              value={tempTextSearch}
+              onChange={(e) => setTempTextSearch(e.target.value)}
+              className="h-8 text-xs px-2"
+              onKeyDown={(e) => {
+                e.stopPropagation()
+                if (e.key === 'Enter') handleApply()
+              }}
+            />
+          </div>
+        )}
+
+        {resolvedType === 'multiSelect' && (
           <div className="flex flex-col gap-2 w-56">
             <Input
               type="text"
@@ -183,7 +367,7 @@ export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterP
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-8 text-xs px-2"
-              onKeyDown={(e) => e.stopPropagation()} // Prevent closing on keyboard interaction (e.g., Space)
+              onKeyDown={(e) => e.stopPropagation()}
             />
             <div className="max-h-48 overflow-y-auto border rounded-md">
               {filteredOptions.length === 0 ? (
@@ -193,18 +377,19 @@ export function ColumnFilter({ options, onChange, type = 'text' }: ColumnFilterP
               ) : (
                 filteredOptions.map((option) => (
                   <DropdownMenuCheckboxItem
-                    key={option}
-                    checked={tempSelected.includes(option)}
-                    onCheckedChange={(checked) => handleCheckedChange(option, checked)}
-                    onSelect={(e) => e.preventDefault()} // Prevent closing when clicking checkbox
+                    key={option.value}
+                    checked={tempSelected.includes(option.value)}
+                    onCheckedChange={(checked) => handleCheckedChange(option.value, checked)}
+                    onSelect={(e) => e.preventDefault()}
                   >
-                    {option}
+                    {option.label}
                   </DropdownMenuCheckboxItem>
                 ))
               )}
             </div>
           </div>
         )}
+
         <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t">
           <Button
             size="sm"

@@ -90,7 +90,44 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const list = Array.from(byHospital.values()).sort(
+    let list = Array.from(byHospital.values())
+
+    // Apply filters query parameter in JS
+    const filtersParam = url.searchParams.get('filters')
+    if (filtersParam) {
+      try {
+        const parsedFilters = JSON.parse(filtersParam)
+        if (Array.isArray(parsedFilters)) {
+          for (const f of parsedFilters) {
+            const { field, operator, value } = f
+            if (!field || value === undefined || value === null) continue
+
+            if (field === 'hospital') {
+              if (Array.isArray(value) && value.length > 0) {
+                list = list.filter(h => value.includes(h.name))
+              }
+            } else if (
+              field === 'totalCases' ||
+              field === 'amountReceived' ||
+              field === 'pendingOutstanding' ||
+              field === 'mediendShare'
+            ) {
+              const { min, max } = value as { min: number | null; max: number | null }
+              list = list.filter(h => {
+                const val = h[field as keyof HospitalSummary] as number
+                if (min != null && val < min) return false
+                if (max != null && val > max) return false
+                return true
+              })
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error parsing hospitals list filters:', err)
+      }
+    }
+
+    list.sort(
       (a, b) => b.totalCases - a.totalCases || a.name.localeCompare(b.name)
     )
 

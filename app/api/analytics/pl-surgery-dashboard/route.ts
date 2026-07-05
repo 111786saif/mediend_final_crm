@@ -148,7 +148,7 @@ export async function GET(request: NextRequest) {
       .map(([hospital, v]) => ({ hospital, count: v.count, revenue: v.revenue }))
       .sort((a, b) => b.count - a.count)
 
-    const bdBreakdown = Array.from(bdMap.values()).map((b) => ({
+    let bdBreakdown = Array.from(bdMap.values()).map((b) => ({
       bdId: b.bdId,
       bdName: b.bdName,
       teamName: b.managerName,
@@ -157,6 +157,45 @@ export async function GET(request: NextRequest) {
       expenses: b.expenses,
       netProfit: b.mediendShare - b.expenses,
     }))
+
+    // Apply filters parameter in JS if present
+    const filtersParam = searchParams.get('filters')
+    if (filtersParam) {
+      try {
+        const parsedFilters = JSON.parse(filtersParam)
+        if (Array.isArray(parsedFilters)) {
+          for (const f of parsedFilters) {
+            const { field, operator, value } = f
+            if (!field || value === undefined || value === null) continue
+
+            if (field === 'bd') {
+              if (Array.isArray(value) && value.length > 0) {
+                bdBreakdown = bdBreakdown.filter(x => value.includes(x.bdName))
+              }
+            } else if (field === 'team') {
+              if (Array.isArray(value) && value.length > 0) {
+                bdBreakdown = bdBreakdown.filter(x => value.includes(x.teamName || '—'))
+              }
+            } else if (
+              field === 'surgeries' ||
+              field === 'revenue' ||
+              field === 'expenses' ||
+              field === 'netProfit'
+            ) {
+              const { min, max } = value as { min: number | null; max: number | null }
+              bdBreakdown = bdBreakdown.filter(x => {
+                const val = x[field as 'surgeries' | 'revenue' | 'expenses' | 'netProfit']
+                if (min != null && val < min) return false
+                if (max != null && val > max) return false
+                return true
+              })
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error parsing surgery dashboard filters:', err)
+      }
+    }
 
     // Only Sales teams: managers with role TEAM_LEAD who have BD subordinates
     const managerGroups = await getManagerGroups()

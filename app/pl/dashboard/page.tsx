@@ -8,12 +8,16 @@ import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
 import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Badge } from '@/components/ui/badge'
+import { ColumnFilter } from '@/components/ui/column-filter'
 import { Button } from '@/components/ui/button'
+import { DataTable } from '@/components/ui/data-table'
+import { ColumnDef } from '@tanstack/react-table'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -21,6 +25,7 @@ import {
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Lead } from '@/hooks/use-leads'
 import { apiGet } from '@/lib/api-client'
+import { toast } from 'sonner'
 import {
   formatPlDate,
   formatPlMonth,
@@ -34,6 +39,7 @@ import {
   CheckCircle,
   CheckCircle2,
   DollarSign,
+  Download,
   LayoutDashboard,
   ReceiptText,
   Settings2,
@@ -167,32 +173,141 @@ export default function PLLedgerPage() {
     setDateRange({ startDate: start, endDate: end })
   }, [selectedMonths])
 
-  const persistCols = useCallback((next: Record<string, boolean>) => {
-    setVisibleCols(next)
-    try {
-      localStorage.setItem(LS_COLUMNS, JSON.stringify(next))
-    } catch {
-      /* ignore */
-    }
+  const persistCols = useCallback((updaterOrValue: Record<string, boolean> | ((old: Record<string, boolean>) => Record<string, boolean>)) => {
+    setVisibleCols((prev) => {
+      const next = typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue
+      try {
+        localStorage.setItem(LS_COLUMNS, JSON.stringify(next))
+      } catch {
+        /* ignore */
+      }
+      return next
+    })
   }, [])
 
   const toggleCol = useCallback(
     (id: string) => {
       if (id === 'leadRef') return
-      persistCols({ ...visibleCols, [id]: !visibleCols[id] })
+      persistCols((prev) => ({ ...prev, [id]: !prev[id] }))
     },
-    [visibleCols, persistCols]
+    [persistCols]
   )
 
+  const [bdFilter, setBdFilter] = useState<string[]>([])
+  const [hospitalFilter, setHospitalFilter] = useState<string[]>([])
+  const [doctorFilter, setDoctorFilter] = useState<string[]>([])
+  const [outstandingFilter, setOutstandingFilter] = useState<string[]>([])
+  const [categoryFilter, setCategoryFilter] = useState<string[]>([])
+  const [circleFilter, setCircleFilter] = useState<string[]>([])
+  const [paymentTypeFilter, setPaymentTypeFilter] = useState<string[]>([])
+  const [hospPayoutFilter, setHospPayoutFilter] = useState<string[]>([])
+  const [docPayoutFilter, setDocPayoutFilter] = useState<string[]>([])
+  const [invoiceFilter, setInvoiceFilter] = useState<string[]>([])
+  const [treatmentFilter, setTreatmentFilter] = useState<string>('')
+  const [patientFilter, setPatientFilter] = useState<string>('')
+  const [admissionDateFilter, setAdmissionDateFilter] = useState<string[]>([])
+  const [surgeryDateFilter, setSurgeryDateFilter] = useState<string[]>([])
+  const [totalBillFilter, setTotalBillFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [approvedAmountFilter, setApprovedAmountFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [hospitalShareAmtFilter, setHospitalShareAmtFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [doctorChargesFilter, setDoctorChargesFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+  const [netProfitFilter, setNetProfitFilter] = useState<{ min: number | null; max: number | null } | null>(null)
+
+  const { data: filterConfig } = useQuery<{
+    filters: Array<{
+      field: string
+      label: string
+      filterType: string
+      filterable: boolean
+      options?: Array<{ label: string; value: string }>
+      min?: number
+      max?: number
+    }>
+  }>({
+    queryKey: ['pl', 'filter-config'],
+    queryFn: () => apiGet('/api/leads/filter-config'),
+    staleTime: 5 * 60 * 1000, // cache 5 min — options rarely change
+  })
+
+  const filterOptions = useMemo(() => {
+    const filters = filterConfig?.filters || []
+    const find = (field: string) => filters.find((f) => f.field === field)
+    return {
+      bds: find('bdm')?.options || [],
+      hospitals: find('hospital')?.options || [],
+      doctors: find('doctor')?.options || [],
+      managers: find('manager')?.options || [],
+      categories: find('category')?.options || [],
+      circles: find('circle')?.options || [],
+      paymentTypes: find('paymentType')?.options || [],
+      hospPayouts: find('hospPayout')?.options || [],
+      docPayouts: find('docPayout')?.options || [],
+      invoices: find('invoice')?.options || [],
+      totalBillBounds: { min: find('totalBill')?.min ?? 0, max: find('totalBill')?.max ?? 0 },
+      approvedAmountBounds: { min: find('approvedAmount')?.min ?? 0, max: find('approvedAmount')?.max ?? 0 },
+      hospitalShareAmtBounds: { min: find('hospitalShareAmt')?.min ?? 0, max: find('hospitalShareAmt')?.max ?? 0 },
+      doctorChargesBounds: { min: find('doctorCharges')?.min ?? 0, max: find('doctorCharges')?.max ?? 0 },
+      netProfitBounds: { min: find('netProfit')?.min ?? 0, max: find('netProfit')?.max ?? 0 },
+    }
+  }, [filterConfig])
+
   const { data: records, isLoading } = useQuery<Lead[]>({
-    queryKey: ['pl', 'records', dateRange],
+    queryKey: [
+      'pl', 'records', dateRange,
+      bdFilter, hospitalFilter, doctorFilter, outstandingFilter,
+      categoryFilter, circleFilter, paymentTypeFilter,
+      hospPayoutFilter, docPayoutFilter, invoiceFilter,
+      treatmentFilter, patientFilter,
+      admissionDateFilter, surgeryDateFilter,
+      totalBillFilter, approvedAmountFilter, hospitalShareAmtFilter,
+      doctorChargesFilter, netProfitFilter,
+    ],
     queryFn: async () => {
+      const filters: Array<{ field: string; operator: string; value: unknown }> = []
+
+      // multiSelect filters
+      if (bdFilter.length > 0) filters.push({ field: 'bdm', operator: 'in', value: bdFilter })
+      if (hospitalFilter.length > 0) filters.push({ field: 'hospital', operator: 'in', value: hospitalFilter })
+      if (doctorFilter.length > 0) filters.push({ field: 'doctor', operator: 'in', value: doctorFilter })
+      if (outstandingFilter.length > 0) filters.push({ field: 'outstandingStatus', operator: 'in', value: outstandingFilter })
+      if (categoryFilter.length > 0) filters.push({ field: 'category', operator: 'in', value: categoryFilter })
+      if (circleFilter.length > 0) filters.push({ field: 'circle', operator: 'in', value: circleFilter })
+      if (paymentTypeFilter.length > 0) filters.push({ field: 'paymentType', operator: 'in', value: paymentTypeFilter })
+      if (hospPayoutFilter.length > 0) filters.push({ field: 'hospPayout', operator: 'in', value: hospPayoutFilter })
+      if (docPayoutFilter.length > 0) filters.push({ field: 'docPayout', operator: 'in', value: docPayoutFilter })
+      if (invoiceFilter.length > 0) filters.push({ field: 'invoice', operator: 'in', value: invoiceFilter })
+
+      // search filters
+      if (treatmentFilter.trim()) filters.push({ field: 'treatment', operator: 'contains', value: treatmentFilter })
+      if (patientFilter.trim()) filters.push({ field: 'patient', operator: 'contains', value: patientFilter })
+
+      // dateRange filters
+      if (admissionDateFilter.length === 2 && admissionDateFilter[0])
+        filters.push({ field: 'admissionDate', operator: 'between', value: admissionDateFilter })
+      if (surgeryDateFilter.length === 2 && surgeryDateFilter[0])
+        filters.push({ field: 'surgeryDate', operator: 'between', value: surgeryDateFilter })
+
+      // numberRange filters
+      if (totalBillFilter && (totalBillFilter.min != null || totalBillFilter.max != null))
+        filters.push({ field: 'totalBill', operator: 'between', value: totalBillFilter })
+      if (approvedAmountFilter && (approvedAmountFilter.min != null || approvedAmountFilter.max != null))
+        filters.push({ field: 'approvedAmount', operator: 'between', value: approvedAmountFilter })
+      if (hospitalShareAmtFilter && (hospitalShareAmtFilter.min != null || hospitalShareAmtFilter.max != null))
+        filters.push({ field: 'hospitalShareAmt', operator: 'between', value: hospitalShareAmtFilter })
+      if (doctorChargesFilter && (doctorChargesFilter.min != null || doctorChargesFilter.max != null))
+        filters.push({ field: 'doctorCharges', operator: 'between', value: doctorChargesFilter })
+      if (netProfitFilter && (netProfitFilter.min != null || netProfitFilter.max != null))
+        filters.push({ field: 'netProfit', operator: 'between', value: netProfitFilter })
+
       const params = new URLSearchParams({
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
         caseStage: 'IPD_DONE,CASH_IPD_DONE,DISCHARGED,CASH_DISCHARGED,PL_PENDING,OUTSTANDING',
         dateField: 'surgery',
       })
+      if (filters.length > 0) {
+        params.set('filters', JSON.stringify(filters))
+      }
       const leads = await apiGet<Lead[]>(`/api/leads?${params.toString()}`)
       return leads.map((lead: Lead) => ({
         ...lead,
@@ -235,35 +350,36 @@ export default function PLLedgerPage() {
   const [patientDrawerDateField, setPatientDrawerDateField] = useState<'surgery' | 'admission' | 'discharge'>('surgery')
   const [selectedStage, setSelectedStage] = useState<string | null>(null)
 
-  const [bdFilter, setBdFilter] = useState<string[]>([])
-  const [hospitalFilter, setHospitalFilter] = useState<string[]>([])
-  const [doctorFilter, setDoctorFilter] = useState<string[]>([])
-  const [outstandingFilter, setOutstandingFilter] = useState<string[]>([])
-
-  const filterOptions = useMemo(() => {
-    const bds = new Set<string>()
-    const hospitals = new Set<string>()
-    const doctors = new Set<string>()
-    for (const r of records ?? []) {
-      const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
-      if (resolved.bdm) bds.add(resolved.bdm)
-      if (resolved.hospital) hospitals.add(resolved.hospital)
-      if (resolved.doctor) doctors.add(resolved.doctor)
-    }
-    return {
-      bds: Array.from(bds).sort((a, b) => a.localeCompare(b)),
-      hospitals: Array.from(hospitals).sort((a, b) => a.localeCompare(b)),
-      doctors: Array.from(doctors).sort((a, b) => a.localeCompare(b)),
-    }
-  }, [records])
-
-  const activeFilterCount = bdFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length + (selectedStage ? 1 : 0)
+  const activeFilterCount =
+    bdFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length +
+    categoryFilter.length + circleFilter.length + paymentTypeFilter.length +
+    hospPayoutFilter.length + docPayoutFilter.length + invoiceFilter.length +
+    (treatmentFilter.trim() ? 1 : 0) + (patientFilter.trim() ? 1 : 0) +
+    (admissionDateFilter.length > 0 ? 1 : 0) + (surgeryDateFilter.length > 0 ? 1 : 0) +
+    (totalBillFilter ? 1 : 0) + (approvedAmountFilter ? 1 : 0) +
+    (hospitalShareAmtFilter ? 1 : 0) + (doctorChargesFilter ? 1 : 0) + (netProfitFilter ? 1 : 0) +
+    (selectedStage ? 1 : 0)
 
   const clearFilters = () => {
     setBdFilter([])
     setHospitalFilter([])
     setDoctorFilter([])
     setOutstandingFilter([])
+    setCategoryFilter([])
+    setCircleFilter([])
+    setPaymentTypeFilter([])
+    setHospPayoutFilter([])
+    setDocPayoutFilter([])
+    setInvoiceFilter([])
+    setTreatmentFilter('')
+    setPatientFilter('')
+    setAdmissionDateFilter([])
+    setSurgeryDateFilter([])
+    setTotalBillFilter(null)
+    setApprovedAmountFilter(null)
+    setHospitalShareAmtFilter(null)
+    setDoctorChargesFilter(null)
+    setNetProfitFilter(null)
     setSelectedStage(null)
   }
 
@@ -294,17 +410,9 @@ export default function PLLedgerPage() {
           if (!hasInsuranceDs && !(isCashCase && hasPlData)) return false
         }
 
-        if (activeFilterCount === 0) return true
-        const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
-        if (bdFilter.length > 0 && !bdFilter.includes(resolved.bdm ?? '')) return false
-        if (hospitalFilter.length > 0 && !hospitalFilter.includes(resolved.hospital ?? '')) return false
-        if (doctorFilter.length > 0 && !doctorFilter.includes(resolved.doctor ?? '')) return false
-        const pl = (r as Lead).plRecord as Record<string, unknown> | undefined
-        const ostStatus = (pl?.outstandingStatus as string) || 'NEW'
-        if (outstandingFilter.length > 0 && !outstandingFilter.includes(ostStatus)) return false
         return true
       }),
-    [records, bdFilter, hospitalFilter, doctorFilter, outstandingFilter, activeFilterCount, selectedStage]
+    [records, selectedStage]
   )
 
   const pendingPayoutRecords = useMemo(
@@ -366,10 +474,594 @@ export default function PLLedgerPage() {
   const rupee = (n: number | null | undefined) =>
     n != null && Number(n) !== 0 ? `₹${Number(n).toLocaleString('en-IN')}` : '—'
 
+  const handleExport = (format: 'csv' | 'xlsx') => {
+    if (!tableRecords || tableRecords.length === 0) {
+      toast.error('No data to export')
+      return
+    }
+
+    const dataToExport = tableRecords.map((record) => {
+      const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
+      const pl = record.plRecord as Record<string, any> | undefined
+
+      return {
+        'Lead Ref': record.leadRef ?? '—',
+        'Month': resolved.month ? resolved.month.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—',
+        'Lead Received (Insurance)': resolved.leadReceivedFromInsuranceAt ? resolved.leadReceivedFromInsuranceAt.toLocaleDateString('en-IN') : '—',
+        'Manager': resolved.manager ?? '—',
+        'BDM': resolved.bdm ?? '—',
+        'Patient': resolved.patient ?? '—',
+        'Category': resolved.category ?? '—',
+        'Treatment': resolved.treatment ?? '—',
+        'Circle': record.circle ?? '—',
+        'Doctor': resolved.doctor ?? '—',
+        'Hospital': resolved.hospital ?? '—',
+        'Admission Date': resolved.admission ? resolved.admission.toLocaleDateString('en-IN') : '—',
+        'Surgery Date': resolved.surgery ? resolved.surgery.toLocaleDateString('en-IN') : '—',
+        'Payment Type': resolved.paymentType ?? '—',
+        'PL Status': pl?.outstandingStatus ?? 'NEW',
+        'Status': resolved.status ?? '—',
+        'Total Bill': resolved.totalBill ?? 0,
+        'Approved Amount': resolved.approvedAmount ?? 0,
+        'Total Deduction': resolved.deductionTotal ?? 0,
+        'Deduction Paid by Patient': resolved.deductionPaidByPatient ?? 0,
+        'Waived Off': resolved.deductionWaived ?? 0,
+        'Amount Paid': (resolved.approvedAmount ?? 0) + (resolved.deductionPaidByPatient ?? 0),
+        'MediEND %': pl?.hospitalSharePct ?? '—',
+        'MediEND Share': pl?.hospitalShareAmount ?? 0,
+        'Doctor Fee': pl?.doctorCharges ?? 0,
+        'Implant': pl?.implantCost ?? 0,
+        'Implant By': pl?.implantPaidBy ?? '—',
+        'Instrument': pl?.instrumentsCost ?? 0,
+        'Instrument By': pl?.instrumentsPaidBy ?? '—',
+        'Actual Implant': pl?.actualImplantCost ?? 0,
+        'Actual Instrument': pl?.actualInstrumentCost ?? 0,
+        'Hospital Recover': pl?.hospitalRecoverAmount ?? 0,
+        'D&C': pl?.dcCharges ?? 0,
+        'Cab': pl?.cabCharges ?? 0,
+        'Referral': pl?.referralAmount ?? 0,
+        'MediEND Net %': pl?.mediendSharePct ?? '—',
+        'MediEND Net': pl?.mediendShareAmount ?? 0,
+        'Net Profit': record.plRecord?.finalProfit ?? record.plRecord?.mediendNetProfit ?? record.netProfit ?? 0,
+        'Mediend Profit': pl?.mediendProfit ?? 0,
+        'Remarks': pl?.remarks ?? '',
+        'MediEND Payout': pl?.hospitalPayoutStatus ?? 'PENDING',
+        'Doctor Payout': pl?.doctorPayoutStatus ?? 'PENDING',
+        'Invoice Status': pl?.mediendInvoiceStatus ?? 'PENDING',
+      }
+    })
+
+    if (format === 'csv') {
+      const headers = Object.keys(dataToExport[0])
+      const csvRows = [
+        headers.join(','),
+        ...dataToExport.map((row) =>
+          headers
+            .map((fieldName) => {
+              const val = row[fieldName as keyof typeof row]
+              const stringVal = val === null || val === undefined ? '' : String(val)
+              const escaped = stringVal.replace(/"/g, '""')
+              if (escaped.includes(',') || escaped.includes('"') || escaped.includes('\n')) {
+                return `"${escaped}"`
+              }
+              return escaped
+            })
+            .join(',')
+        ),
+      ]
+      const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.setAttribute('href', url)
+      link.setAttribute('download', `pl_ledger_${new Date().toISOString().split('T')[0]}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } else {
+      import('xlsx').then((XLSX) => {
+        const worksheet = XLSX.utils.json_to_sheet(dataToExport)
+        const workbook = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'PL Ledger')
+        XLSX.writeFile(workbook, `pl_ledger_${new Date().toISOString().split('T')[0]}.xlsx`)
+      }).catch((err) => {
+        toast.error('Failed to export to Excel: ' + err.message)
+      })
+    }
+  }
+
+  const columns = useMemo<ColumnDef<any>[]>(() => {
+    const paidBy = (v: unknown) => (v === 'HOSPITAL' ? 'Hospital' : v === 'MEDIEND' ? 'Mediend' : '—')
+    return [
+      {
+        id: 'leadRef',
+        header: 'Lead ref',
+        accessorKey: 'leadRef',
+        cell: ({ row }) => {
+          const record = row.original
+          return (
+            <div className="flex items-center gap-0.5">
+              <span className="truncate max-w-[120px]" title={String(record.leadRef ?? '')}>
+                {record.leadRef ?? '—'}
+              </span>
+              {record.leadRef && (
+                <CopyLeadRefButton leadRef={String(record.leadRef)} className="h-7 w-7" />
+              )}
+            </div>
+          )
+        },
+      },
+      {
+        id: 'actions',
+        header: 'Actions',
+        cell: ({ row }) => {
+          const record = row.original
+          return record.dischargeSheet ? (
+            <div onClick={(e) => e.stopPropagation()}>
+              <DischargeSummaryDialog
+                leadId={record.id}
+                preloaded={record.dischargeSheet as never}
+              />
+            </div>
+          ) : (
+            <span className="text-xs text-muted-foreground">—</span>
+          )
+        },
+      },
+      {
+        id: 'month',
+        header: 'Month',
+        accessorFn: (row) => resolvePlRow(row as any).month,
+        cell: ({ getValue }) => formatPlMonth(getValue() as any),
+      },
+      {
+        id: 'leadReceived',
+        header: 'Lead Received (Insurance)',
+        accessorFn: (row) => resolvePlRow(row as any).leadReceivedFromInsuranceAt,
+        cell: ({ getValue }) => formatPlDate(getValue() as any),
+      },
+      {
+        id: 'manager',
+        header: 'Manager',
+        accessorFn: (row) => resolvePlRow(row as any).manager,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'bdm',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>BDM</span>
+            <ColumnFilter
+              options={filterOptions.bds}
+              value={bdFilter}
+              onChange={setBdFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).bdm,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'patient',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Patient</span>
+            <ColumnFilter value={patientFilter} onChange={setPatientFilter} type="search" placeholder="Search patient..." />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).patient,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'category',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Category</span>
+            <ColumnFilter options={filterOptions.categories} value={categoryFilter} onChange={setCategoryFilter} type="multiSelect" />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).category,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'treatment',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Treatment</span>
+            <ColumnFilter value={treatmentFilter} onChange={setTreatmentFilter} type="search" placeholder="Search treatment..." />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).treatment,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'circle',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Circle</span>
+            <ColumnFilter options={filterOptions.circles} value={circleFilter} onChange={setCircleFilter} type="multiSelect" />
+          </div>
+        ),
+        accessorKey: 'circle',
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'doctor',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Doctor</span>
+            <ColumnFilter
+              options={filterOptions.doctors}
+              value={doctorFilter}
+              onChange={setDoctorFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).doctor,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'hospital',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Hospital</span>
+            <ColumnFilter
+              options={filterOptions.hospitals}
+              value={hospitalFilter}
+              onChange={setHospitalFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).hospital,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'admissionDate',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Admission</span>
+            <ColumnFilter value={admissionDateFilter} onChange={setAdmissionDateFilter} type="dateRange" />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).admission,
+        cell: ({ getValue }) => formatPlDate(getValue() as any),
+      },
+      {
+        id: 'surgeryDate',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Surgery</span>
+            <ColumnFilter value={surgeryDateFilter} onChange={setSurgeryDateFilter} type="dateRange" />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).surgery,
+        cell: ({ getValue }) => formatPlDate(getValue() as any),
+      },
+      {
+        id: 'paymentType',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Payment</span>
+            <ColumnFilter options={filterOptions.paymentTypes} value={paymentTypeFilter} onChange={setPaymentTypeFilter} type="multiSelect" />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).paymentType,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'outstandingStatus',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>PL Status</span>
+            <ColumnFilter
+              options={[
+                { label: 'New', value: 'NEW' },
+                { label: 'Draft', value: 'DRAFT' },
+                { label: 'Outstanding', value: 'OUTSTANDING' }
+              ]}
+              value={outstandingFilter}
+              onChange={setOutstandingFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
+        accessorFn: (row) => row.plRecord?.outstandingStatus || 'NEW',
+        cell: ({ getValue }) => (
+          <Badge
+            variant={
+              getValue() === 'OUTSTANDING'
+                ? 'default'
+                : getValue() === 'DRAFT'
+                  ? 'secondary'
+                  : 'outline'
+            }
+            className="text-xs"
+          >
+            {getValue() as string}
+          </Badge>
+        ),
+      },
+      {
+        id: 'status',
+        header: 'Status',
+        accessorFn: (row) => resolvePlRow(row as any).status,
+        cell: ({ getValue }) => (getValue() as string) || '—',
+      },
+      {
+        id: 'totalBill',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Total bill</span>
+            <ColumnFilter value={totalBillFilter} onChange={setTotalBillFilter} type="numberRange" min={filterOptions.totalBillBounds.min} max={filterOptions.totalBillBounds.max} />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).totalBill,
+        cell: ({ getValue }) => formatPlRupee(getValue() as any),
+      },
+      {
+        id: 'approvedAmount',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Approved amount</span>
+            <ColumnFilter value={approvedAmountFilter} onChange={setApprovedAmountFilter} type="numberRange" min={filterOptions.approvedAmountBounds.min} max={filterOptions.approvedAmountBounds.max} />
+          </div>
+        ),
+        accessorFn: (row) => resolvePlRow(row as any).approvedAmount,
+        cell: ({ getValue }) => formatPlRupee(getValue() as any),
+      },
+      {
+        id: 'deductionTotal',
+        header: 'Total Deduction',
+        accessorFn: (row) => resolvePlRow(row as any).deductionTotal,
+        cell: ({ getValue }) => formatPlRupee(getValue() as any),
+      },
+      {
+        id: 'deductionPatient',
+        header: 'Deduction Paid by Patient',
+        accessorFn: (row) => resolvePlRow(row as any).deductionPaidByPatient,
+        cell: ({ getValue }) => formatPlRupee(getValue() as any),
+      },
+      {
+        id: 'deductionWaived',
+        header: 'Waived Off',
+        accessorFn: (row) => resolvePlRow(row as any).deductionWaived,
+        cell: ({ getValue }) => formatPlRupee(getValue() as any),
+      },
+      {
+        id: 'amountPaid',
+        header: 'Amount paid',
+        accessorFn: (row) => {
+          const res = resolvePlRow(row as any)
+          return (res.approvedAmount ?? 0) + (res.deductionPaidByPatient ?? 0) || null
+        },
+        cell: ({ getValue }) => formatPlRupee(getValue() as any),
+      },
+      {
+        id: 'hospitalSharePct',
+        header: 'MediEND %',
+        accessorFn: (row) => row.plRecord?.hospitalSharePct,
+        cell: ({ getValue }) => getValue() != null ? `${getValue()}%` : '—',
+      },
+      {
+        id: 'hospitalShareAmt',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>MediEND share</span>
+            <ColumnFilter value={hospitalShareAmtFilter} onChange={setHospitalShareAmtFilter} type="numberRange" min={filterOptions.hospitalShareAmtBounds.min} max={filterOptions.hospitalShareAmtBounds.max} />
+          </div>
+        ),
+        accessorFn: (row) => row.plRecord?.hospitalShareAmount != null ? Number(row.plRecord.hospitalShareAmount) : ((row as any).hospitalShare || null),
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'doctorCharges',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Doctor fee</span>
+            <ColumnFilter value={doctorChargesFilter} onChange={setDoctorChargesFilter} type="numberRange" min={filterOptions.doctorChargesBounds.min} max={filterOptions.doctorChargesBounds.max} />
+          </div>
+        ),
+        accessorFn: (row) => row.plRecord?.doctorCharges != null ? Number(row.plRecord.doctorCharges) : ((row as any).doctorShare || null),
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'implant',
+        header: 'Implant',
+        accessorFn: (row) => row.plRecord?.implantCost != null ? Number(row.plRecord.implantCost) : ((row as any).implantAmount || null),
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'implantPaidBy',
+        header: 'Implant by',
+        accessorFn: (row) => row.plRecord?.implantPaidBy,
+        cell: ({ getValue }) => paidBy(getValue()),
+      },
+      {
+        id: 'instruments',
+        header: 'Instrument',
+        accessorFn: (row) => row.plRecord?.instrumentsCost != null ? Number(row.plRecord.instrumentsCost) : null,
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'instrumentsPaidBy',
+        header: 'Instr. by',
+        accessorFn: (row) => row.plRecord?.instrumentsPaidBy,
+        cell: ({ getValue }) => paidBy(getValue()),
+      },
+      {
+        id: 'actualImplantCost',
+        header: 'Actual Implant',
+        accessorFn: (row) => row.plRecord?.actualImplantCost != null ? Number(row.plRecord.actualImplantCost) : null,
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'actualInstrumentCost',
+        header: 'Actual Instrument',
+        accessorFn: (row) => row.plRecord?.actualInstrumentCost != null ? Number(row.plRecord.actualInstrumentCost) : null,
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'hospitalRecoverAmount',
+        header: 'Hospital Recover',
+        accessorFn: (row) => row.plRecord?.hospitalRecoverAmount != null ? Number(row.plRecord.hospitalRecoverAmount) : null,
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'dc',
+        header: 'D&C',
+        accessorFn: (row) => row.plRecord?.dcCharges != null ? Number(row.plRecord.dcCharges) : null,
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'cab',
+        header: 'Cab',
+        accessorFn: (row) => row.plRecord?.cabCharges != null ? Number(row.plRecord.cabCharges) : null,
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'referral',
+        header: 'Referral',
+        accessorFn: (row) => row.plRecord?.referralAmount != null ? Number(row.plRecord.referralAmount) : null,
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'mediendSharePct',
+        header: 'MediEND Net %',
+        accessorFn: (row) => row.plRecord?.mediendSharePct,
+        cell: ({ getValue }) => getValue() != null ? `${getValue()}%` : '—',
+      },
+      {
+        id: 'mediendShareAmt',
+        header: 'MediEND Net',
+        accessorFn: (row) => row.plRecord?.mediendShareAmount != null ? Number(row.plRecord.mediendShareAmount) : ((row as any).mediendProfit || null),
+        cell: ({ getValue }) => rupee(getValue() as any),
+      },
+      {
+        id: 'netProfit',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Net profit</span>
+            <ColumnFilter value={netProfitFilter} onChange={setNetProfitFilter} type="numberRange" min={filterOptions.netProfitBounds.min} max={filterOptions.netProfitBounds.max} />
+          </div>
+        ),
+        accessorFn: (row) => row.plRecord?.finalProfit ?? row.plRecord?.mediendNetProfit ?? row.netProfit ?? 0,
+        cell: ({ getValue }) => `₹${(getValue() as number).toLocaleString('en-IN')}`,
+      },
+      {
+        id: 'mediendProfit',
+        header: 'Mediend Profit',
+        accessorFn: (row) => (row.plRecord as any)?.mediendProfit != null ? Number((row.plRecord as any).mediendProfit) : ((row as any).mediendProfit ? Number((row as any).mediendProfit) : null),
+        cell: ({ getValue }) => getValue() != null ? `₹${(getValue() as number).toLocaleString('en-IN')}` : '—',
+      },
+      {
+        id: 'remarks',
+        header: 'Remarks',
+        accessorFn: (row) => row.plRecord?.remarks,
+        cell: ({ getValue }) => (
+          <span className="truncate max-w-[120px] block" title={String(getValue() || '')}>
+            {(getValue() as string) || '—'}
+          </span>
+        ),
+      },
+      {
+        id: 'hospPayout',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>MediEND payout</span>
+            <ColumnFilter options={filterOptions.hospPayouts} value={hospPayoutFilter} onChange={setHospPayoutFilter} type="multiSelect" />
+          </div>
+        ),
+        accessorFn: (row) => row.plRecord?.hospitalPayoutStatus || 'PENDING',
+        cell: ({ getValue }) => (
+          <Badge
+            variant={
+              getValue() === 'PAID'
+                ? 'default'
+                : getValue() === 'PARTIAL'
+                  ? 'secondary'
+                  : 'outline'
+            }
+          >
+            {getValue() as string}
+          </Badge>
+        ),
+      },
+      {
+        id: 'docPayout',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Dr payout</span>
+            <ColumnFilter options={filterOptions.docPayouts} value={docPayoutFilter} onChange={setDocPayoutFilter} type="multiSelect" />
+          </div>
+        ),
+        accessorFn: (row) => row.plRecord?.doctorPayoutStatus || 'PENDING',
+        cell: ({ getValue }) => (
+          <Badge
+            variant={
+              getValue() === 'PAID'
+                ? 'default'
+                : getValue() === 'PARTIAL'
+                  ? 'secondary'
+                  : 'outline'
+            }
+          >
+            {getValue() as string}
+          </Badge>
+        ),
+      },
+      {
+        id: 'invoice',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Invoice</span>
+            <ColumnFilter options={filterOptions.invoices} value={invoiceFilter} onChange={setInvoiceFilter} type="multiSelect" />
+          </div>
+        ),
+        accessorFn: (row) => row.plRecord?.mediendInvoiceStatus || 'PENDING',
+        cell: ({ getValue }) => (
+          <Badge
+            variant={
+              getValue() === 'PAID'
+                ? 'default'
+                : getValue() === 'SENT'
+                  ? 'secondary'
+                  : 'outline'
+            }
+          >
+            {getValue() as string}
+          </Badge>
+        ),
+      },
+    ]
+  }, [
+    filterOptions,
+    bdFilter,
+    patientFilter,
+    categoryFilter,
+    treatmentFilter,
+    circleFilter,
+    doctorFilter,
+    hospitalFilter,
+    admissionDateFilter,
+    surgeryDateFilter,
+    paymentTypeFilter,
+    outstandingFilter,
+    totalBillFilter,
+    approvedAmountFilter,
+    hospitalShareAmtFilter,
+    doctorChargesFilter,
+    netProfitFilter,
+    hospPayoutFilter,
+    docPayoutFilter,
+    invoiceFilter,
+  ])
+
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-teal-50/35 to-indigo-50/45 p-6 dark:from-slate-950 dark:via-teal-950/20 dark:to-indigo-950/25">
-        <div className="mx-auto max-w-[1600px] space-y-6">
+      <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-slate-50 via-teal-50/35 to-indigo-50/45 p-6 dark:from-slate-950 dark:via-teal-950/20 dark:to-indigo-950/25">
+        <div className="mx-auto max-w-6xl w-full space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
               <span
@@ -524,140 +1216,8 @@ export default function PLLedgerPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 w-[180px] justify-start gap-2 border-slate-300 bg-background/90 dark:border-slate-600">
-                  BD {bdFilter.length > 0 && `(${bdFilter.length})`}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48 max-h-[min(70vh,300px)] overflow-y-auto">
-                <DropdownMenuLabel>Select BDs</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={bdFilter.length === filterOptions.bds.length}
-                  onCheckedChange={(checked) => {
-                    if (checked) setBdFilter(filterOptions.bds)
-                    else setBdFilter([])
-                  }}
-                >
-                  All
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator />
-                {filterOptions.bds.map((b) => (
-                  <DropdownMenuCheckboxItem
-                    key={b}
-                    checked={bdFilter.includes(b)}
-                    onCheckedChange={(checked) => {
-                      if (checked) setBdFilter((prev) => [...prev, b])
-                      else setBdFilter((prev) => prev.filter((v) => v !== b))
-                    }}
-                  >
-                    {b}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 w-[220px] justify-start gap-2 border-slate-300 bg-background/90 dark:border-slate-600">
-                  Hospital {hospitalFilter.length > 0 && `(${hospitalFilter.length})`}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48 max-h-[min(70vh,300px)] overflow-y-auto">
-                <DropdownMenuLabel>Select hospitals</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={hospitalFilter.length === filterOptions.hospitals.length}
-                  onCheckedChange={(checked) => {
-                    if (checked) setHospitalFilter(filterOptions.hospitals)
-                    else setHospitalFilter([])
-                  }}
-                >
-                  All
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator />
-                {filterOptions.hospitals.map((h) => (
-                  <DropdownMenuCheckboxItem
-                    key={h}
-                    checked={hospitalFilter.includes(h)}
-                    onCheckedChange={(checked) => {
-                      if (checked) setHospitalFilter((prev) => [...prev, h])
-                      else setHospitalFilter((prev) => prev.filter((v) => v !== h))
-                    }}
-                  >
-                    {h}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 w-[200px] justify-start gap-2 border-slate-300 bg-background/90 dark:border-slate-600">
-                  Doctor {doctorFilter.length > 0 && `(${doctorFilter.length})`}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48 max-h-[min(70vh,300px)] overflow-y-auto">
-                <DropdownMenuLabel>Select doctors</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={doctorFilter.length === filterOptions.doctors.length}
-                  onCheckedChange={(checked) => {
-                    if (checked) setDoctorFilter(filterOptions.doctors)
-                    else setDoctorFilter([])
-                  }}
-                >
-                  All
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator />
-                {filterOptions.doctors.map((d) => (
-                  <DropdownMenuCheckboxItem
-                    key={d}
-                    checked={doctorFilter.includes(d)}
-                    onCheckedChange={(checked) => {
-                      if (checked) setDoctorFilter((prev) => [...prev, d])
-                      else setDoctorFilter((prev) => prev.filter((v) => v !== d))
-                    }}
-                  >
-                    {d}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-9 w-[180px] justify-start gap-2 border-slate-300 bg-background/90 dark:border-slate-600">
-                  Status {outstandingFilter.length > 0 && `(${outstandingFilter.length})`}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48 max-h-[min(70vh,300px)] overflow-y-auto">
-                <DropdownMenuLabel>Select status</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={outstandingFilter.length === 3}
-                  onCheckedChange={(checked) => {
-                    if (checked) setOutstandingFilter(['NEW', 'DRAFT', 'OUTSTANDING'])
-                    else setOutstandingFilter([])
-                  }}
-                >
-                  All
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator />
-                {['NEW', 'DRAFT', 'OUTSTANDING'].map((s) => (
-                  <DropdownMenuCheckboxItem
-                    key={s}
-                    checked={outstandingFilter.includes(s)}
-                    onCheckedChange={(checked) => {
-                      if (checked) setOutstandingFilter((prev) => [...prev, s])
-                      else setOutstandingFilter((prev) => prev.filter((v) => v !== s))
-                    }}
-                  >
-                    {s === 'NEW' ? 'New' : s === 'DRAFT' ? 'Draft' : 'Outstanding'}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
             {activeFilterCount > 0 && (
-              <Button type="button" variant="ghost" size="sm" className="h-9" onClick={clearFilters}>
+              <Button type="button" variant="ghost" size="sm" className="h-9 text-rose-600 dark:text-rose-400 hover:text-rose-700 hover:bg-rose-500/10" onClick={clearFilters}>
                 Clear filters ({activeFilterCount})
               </Button>
             )}
@@ -665,6 +1225,7 @@ export default function PLLedgerPage() {
               {tableRecords?.length ?? 0} of {records?.length ?? 0} rows
             </span>
           </div>
+
           <div className="flex flex-wrap gap-1.5">
             <Card
               className={cn(
@@ -996,335 +1557,48 @@ export default function PLLedgerPage() {
           </div>
 
           <Card className="overflow-hidden border-teal-200/50 shadow-lg dark:border-teal-800/40">
-            <CardHeader className="border-b bg-gradient-to-r from-teal-500/12 via-indigo-500/10 to-transparent pb-4">
-              <CardTitle className="text-lg text-teal-950 dark:text-teal-100">P/L records</CardTitle>
-              <CardDescription>Click a row to edit. Filtered by surgery date (lead or P/L record).</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between border-b bg-gradient-to-r from-teal-500/12 via-indigo-500/10 to-transparent pb-4">
+              <div>
+                <CardTitle className="text-lg text-teal-950 dark:text-teal-100">P/L records</CardTitle>
+                <CardDescription className="mt-1">Click a row to edit. Filtered by surgery date (lead or P/L record).</CardDescription>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 border-slate-300 bg-background/90 dark:border-slate-600"
+                  >
+                    <Download className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+                    Export
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => handleExport('csv')} className="cursor-pointer">
+                    Export to CSV
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleExport('xlsx')} className="cursor-pointer">
+                    Export to Excel (.xlsx)
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </CardHeader>
-            <CardContent className="overflow-x-auto">
-              {isLoading ? (
-                <div className="text-center py-8 text-muted-foreground">Loading…</div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-b border-teal-200/50 bg-teal-50/60 hover:bg-teal-50/60 dark:border-teal-800/35 dark:bg-teal-950/30">
-                      <TableHead className="min-w-[140px] font-semibold text-teal-950 dark:text-teal-100">Lead ref</TableHead>
-                      {visibleCols.actions && <TableHead>Actions</TableHead>}
-                      {visibleCols.month && <TableHead>Month</TableHead>}
-                      {visibleCols.leadReceived && <TableHead>Lead Received (Insurance)</TableHead>}
-                      {visibleCols.manager && <TableHead>Manager</TableHead>}
-                      {visibleCols.bdm && <TableHead>BDM</TableHead>}
-                      {visibleCols.patient && <TableHead>Patient</TableHead>}
-                      {visibleCols.category && <TableHead>Category</TableHead>}
-                      {visibleCols.treatment && <TableHead>Treatment</TableHead>}
-                      {visibleCols.circle && <TableHead>Circle</TableHead>}
-                      {visibleCols.doctor && <TableHead>Doctor</TableHead>}
-                      {visibleCols.hospital && <TableHead>Hospital</TableHead>}
-                      {visibleCols.admissionDate && <TableHead>Admission</TableHead>}
-                      {visibleCols.surgeryDate && <TableHead>Surgery</TableHead>}
-                      {visibleCols.paymentType && <TableHead>Payment</TableHead>}
-                      {visibleCols.outstandingStatus && <TableHead>PL Status</TableHead>}
-                      {visibleCols.status && <TableHead>Status</TableHead>}
-                      {visibleCols.totalBill && <TableHead>Total bill</TableHead>}
-                      {visibleCols.approvedAmount && <TableHead>Approved amount</TableHead>}
-                      {visibleCols.deductionTotal && <TableHead>Total Deduction</TableHead>}
-                      {visibleCols.deductionPatient && <TableHead>Deduction Paid by Patient</TableHead>}
-                      {visibleCols.deductionWaived && <TableHead>Waived Off</TableHead>}
-                      {visibleCols.amountPaid && <TableHead>Amount paid</TableHead>}
-                      {visibleCols.hospitalSharePct && <TableHead>MediEND %</TableHead>}
-                      {visibleCols.hospitalShareAmt && <TableHead>MediEND share</TableHead>}
-                      {visibleCols.doctorCharges && <TableHead>Doctor fee</TableHead>}
-                      {visibleCols.implant && <TableHead>Implant</TableHead>}
-                      {visibleCols.implantPaidBy && <TableHead>Implant by</TableHead>}
-                      {visibleCols.instruments && <TableHead>Instrument</TableHead>}
-                      {visibleCols.instrumentsPaidBy && <TableHead>Instr. by</TableHead>}
-                      {visibleCols.actualImplantCost && <TableHead>Actual Implant</TableHead>}
-                      {visibleCols.actualInstrumentCost && <TableHead>Actual Instrument</TableHead>}
-                      {visibleCols.hospitalRecoverAmount && <TableHead>Hospital Recover</TableHead>}
-                      {visibleCols.dc && <TableHead>D&amp;C</TableHead>}
-                      {visibleCols.cab && <TableHead>Cab</TableHead>}
-                      {visibleCols.referral && <TableHead>Referral</TableHead>}
-                      {visibleCols.mediendSharePct && <TableHead>MediEND Net %</TableHead>}
-                      {visibleCols.mediendShareAmt && <TableHead>MediEND Net</TableHead>}
-                      {visibleCols.netProfit && <TableHead>Net profit</TableHead>}
-                      {visibleCols.mediendProfit && <TableHead>Mediend Profit</TableHead>}
-                      {visibleCols.remarks && <TableHead>Remarks</TableHead>}
-                      {visibleCols.hospPayout && <TableHead>MediEND payout</TableHead>}
-                      {visibleCols.docPayout && <TableHead>Dr payout</TableHead>}
-                      {visibleCols.invoice && <TableHead>Invoice</TableHead>}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {tableRecords?.map((record) => {
-                      const pl = record.plRecord as Record<string, unknown> | undefined
-                      const resolved = resolvePlRow(record as unknown as Record<string, unknown>)
-                      const paidBy = (v: unknown) => (v === 'HOSPITAL' ? 'Hospital' : v === 'MEDIEND' ? 'Mediend' : '—')
-
-                      return (
-                        <TableRow
-                          key={record.id}
-                          className="cursor-pointer border-b border-slate-100/80 transition-colors hover:bg-teal-50/50 dark:border-slate-800/50 dark:hover:bg-teal-950/20"
-                          onClick={() => { setSheetLeadId(record.id); setSheetOpen(true) }}
-                        >
-                          <TableCell className="whitespace-nowrap">
-                            <div className="flex items-center gap-0.5">
-                              <span className="truncate max-w-[120px]" title={String(record.leadRef ?? '')}>
-                                {record.leadRef ?? '—'}
-                              </span>
-                              {record.leadRef && (
-                                <CopyLeadRefButton leadRef={String(record.leadRef)} className="h-7 w-7" />
-                              )}
-                            </div>
-                          </TableCell>
-                          {visibleCols.actions && (
-                            <TableCell className="whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                              {record.dischargeSheet ? (
-                                <DischargeSummaryDialog
-                                  leadId={record.id}
-                                  preloaded={record.dischargeSheet as never}
-                                />
-                              ) : (
-                                <span className="text-xs text-muted-foreground">—</span>
-                              )}
-                            </TableCell>
-                          )}
-                          {visibleCols.month && (
-                            <TableCell className="whitespace-nowrap">{formatPlMonth(resolved.month)}</TableCell>
-                          )}
-                          {visibleCols.leadReceived && (
-                            <TableCell className="whitespace-nowrap">
-                              {formatPlDate(resolved.leadReceivedFromInsuranceAt)}
-                            </TableCell>
-                          )}
-                          {visibleCols.manager && (
-                            <TableCell className="whitespace-nowrap">{resolved.manager ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.bdm && (
-                            <TableCell className="whitespace-nowrap">{resolved.bdm ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.patient && (
-                            <TableCell className="whitespace-nowrap">{resolved.patient ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.category && (
-                            <TableCell className="whitespace-nowrap">{resolved.category ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.treatment && (
-                            <TableCell className="whitespace-nowrap">{resolved.treatment ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.circle && (
-                            <TableCell className="whitespace-nowrap">{String(record.circle || '') || '—'}</TableCell>
-                          )}
-                          {visibleCols.doctor && (
-                            <TableCell className="whitespace-nowrap">{resolved.doctor ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.hospital && (
-                            <TableCell className="whitespace-nowrap">{resolved.hospital ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.admissionDate && (
-                            <TableCell className="whitespace-nowrap">{formatPlDate(resolved.admission)}</TableCell>
-                          )}
-                          {visibleCols.surgeryDate && (
-                            <TableCell className="whitespace-nowrap">{formatPlDate(resolved.surgery)}</TableCell>
-                          )}
-                          {visibleCols.paymentType && (
-                            <TableCell className="whitespace-nowrap">{resolved.paymentType ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.outstandingStatus && (
-                            <TableCell className="whitespace-nowrap">
-                              <Badge
-                                variant={
-                                  (pl?.outstandingStatus as string) === 'OUTSTANDING'
-                                    ? 'default'
-                                    : (pl?.outstandingStatus as string) === 'DRAFT'
-                                      ? 'secondary'
-                                      : 'outline'
-                                }
-                                className="text-xs"
-                              >
-                                {(pl?.outstandingStatus as string) || 'NEW'}
-                              </Badge>
-                            </TableCell>
-                          )}
-                          {visibleCols.status && (
-                            <TableCell className="whitespace-nowrap">{resolved.status ?? '—'}</TableCell>
-                          )}
-                          {visibleCols.totalBill && (
-                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.totalBill)}</TableCell>
-                          )}
-                          {visibleCols.approvedAmount && (
-                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.approvedAmount)}</TableCell>
-                          )}
-                          {visibleCols.deductionTotal && (
-                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionTotal)}</TableCell>
-                          )}
-                          {visibleCols.deductionPatient && (
-                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionPaidByPatient)}</TableCell>
-                          )}
-                          {visibleCols.deductionWaived && (
-                            <TableCell className="whitespace-nowrap">{formatPlRupee(resolved.deductionWaived)}</TableCell>
-                          )}
-                          {visibleCols.amountPaid && (
-                            <TableCell className="whitespace-nowrap">
-                              {formatPlRupee(
-                                (resolved.approvedAmount ?? 0) + (resolved.deductionPaidByPatient ?? 0) || null
-                              )}
-                            </TableCell>
-                          )}
-                          {visibleCols.hospitalSharePct && (
-                            <TableCell className="whitespace-nowrap">
-                              {pl?.hospitalSharePct != null ? `${pl.hospitalSharePct}%` : '—'}
-                            </TableCell>
-                          )}
-                          {visibleCols.hospitalShareAmt && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.hospitalShareAmount != null ? Number(pl.hospitalShareAmount) : ((record as any).hospitalShare || null))}
-                            </TableCell>
-                          )}
-                          {visibleCols.doctorCharges && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.doctorCharges != null ? Number(pl.doctorCharges) : ((record as any).doctorShare || null))}
-                            </TableCell>
-                          )}
-                          {visibleCols.implant && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.implantCost != null ? Number(pl.implantCost) : ((record as any).implantAmount || null))}
-                            </TableCell>
-                          )}
-                          {visibleCols.implantPaidBy && (
-                            <TableCell className="whitespace-nowrap">{paidBy(pl?.implantPaidBy)}</TableCell>
-                          )}
-                          {visibleCols.instruments && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.instrumentsCost != null ? Number(pl.instrumentsCost) : null)}
-                            </TableCell>
-                          )}
-                          {visibleCols.instrumentsPaidBy && (
-                            <TableCell className="whitespace-nowrap">{paidBy(pl?.instrumentsPaidBy)}</TableCell>
-                          )}
-                          {visibleCols.actualImplantCost && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.actualImplantCost != null ? Number(pl.actualImplantCost) : null)}
-                            </TableCell>
-                          )}
-                          {visibleCols.actualInstrumentCost && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.actualInstrumentCost != null ? Number(pl.actualInstrumentCost) : null)}
-                            </TableCell>
-                          )}
-                          {visibleCols.hospitalRecoverAmount && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.hospitalRecoverAmount != null ? Number(pl.hospitalRecoverAmount) : null)}
-                            </TableCell>
-                          )}
-                          {visibleCols.dc && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.dcCharges != null ? Number(pl.dcCharges) : null)}
-                            </TableCell>
-                          )}
-                          {visibleCols.cab && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.cabCharges != null ? Number(pl.cabCharges) : null)}
-                            </TableCell>
-                          )}
-                          {visibleCols.referral && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.referralAmount != null ? Number(pl.referralAmount) : null)}
-                            </TableCell>
-                          )}
-                          {visibleCols.mediendSharePct && (
-                            <TableCell className="whitespace-nowrap">
-                              {pl?.mediendSharePct != null ? `${pl.mediendSharePct}%` : '—'}
-                            </TableCell>
-                          )}
-                          {visibleCols.mediendShareAmt && (
-                            <TableCell className="whitespace-nowrap">
-                              {rupee(pl?.mediendShareAmount != null ? Number(pl.mediendShareAmount) : ((record as any).mediendProfit || null))}
-                            </TableCell>
-                          )}
-                          {visibleCols.netProfit && (
-                            <TableCell className="whitespace-nowrap font-medium">
-                              ₹
-                              {(
-                                record.plRecord?.finalProfit ??
-                                record.plRecord?.mediendNetProfit ??
-                                record.netProfit ??
-                                0
-                              ).toLocaleString('en-IN')}
-                            </TableCell>
-                          )}
-                          {visibleCols.mediendProfit && (
-                            <TableCell className="whitespace-nowrap font-medium">
-                              {(record.plRecord as any)?.mediendProfit != null
-                                ? `₹${Number((record.plRecord as any).mediendProfit).toLocaleString('en-IN')}`
-                                : (record as any).mediendProfit
-                                  ? `₹${Number((record as any).mediendProfit).toLocaleString('en-IN')}`
-                                  : '—'}
-                            </TableCell>
-                          )}
-                          {visibleCols.remarks && (
-                            <TableCell
-                              className="whitespace-nowrap max-w-[120px] truncate"
-                              title={(pl?.remarks as string) || ''}
-                            >
-                              {(pl?.remarks as string) || '—'}
-                            </TableCell>
-                          )}
-                          {visibleCols.hospPayout && (
-                            <TableCell>
-                              <Badge
-                                variant={
-                                  record.plRecord?.hospitalPayoutStatus === 'PAID'
-                                    ? 'default'
-                                    : record.plRecord?.hospitalPayoutStatus === 'PARTIAL'
-                                      ? 'secondary'
-                                      : 'outline'
-                                }
-                              >
-                                {record.plRecord?.hospitalPayoutStatus || 'PENDING'}
-                              </Badge>
-                            </TableCell>
-                          )}
-                          {visibleCols.docPayout && (
-                            <TableCell>
-                              <Badge
-                                variant={
-                                  record.plRecord?.doctorPayoutStatus === 'PAID'
-                                    ? 'default'
-                                    : record.plRecord?.doctorPayoutStatus === 'PARTIAL'
-                                      ? 'secondary'
-                                      : 'outline'
-                                }
-                              >
-                                {record.plRecord?.doctorPayoutStatus || 'PENDING'}
-                              </Badge>
-                            </TableCell>
-                          )}
-                          {visibleCols.invoice && (
-                            <TableCell>
-                              <Badge
-                                variant={
-                                  record.plRecord?.mediendInvoiceStatus === 'PAID'
-                                    ? 'default'
-                                    : record.plRecord?.mediendInvoiceStatus === 'SENT'
-                                      ? 'secondary'
-                                      : 'outline'
-                                }
-                              >
-                                {record.plRecord?.mediendInvoiceStatus || 'PENDING'}
-                              </Badge>
-                            </TableCell>
-                          )}
-                        </TableRow>
-                      )
-                    })}
-                    {(!tableRecords || tableRecords.length === 0) && (
-                      <TableRow>
-                        <TableCell colSpan={visibleCount} className="text-center text-muted-foreground py-8">
-                          No P/L records found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                  {tableRecords && tableRecords.length > 0 && (
+            <CardContent className="p-0">
+              <DataTable
+                columns={columns}
+                data={tableRecords ?? []}
+                isLoading={isLoading}
+                emptyMessage="No P/L records found"
+                onRowClick={(record) => {
+                  setSheetLeadId(record.id)
+                  setSheetOpen(true)
+                }}
+                columnVisibility={visibleCols}
+                onColumnVisibilityChange={persistCols}
+                footer={
+                  tableRecords && tableRecords.length > 0 && (
                     <TableFooter>
                       <TableRow className="border-t-2 border-teal-200/70 bg-teal-50/70 font-semibold dark:border-teal-800/50 dark:bg-teal-950/40">
                         <TableCell className="whitespace-nowrap">Total ({tableRecords.length})</TableCell>
@@ -1373,9 +1647,9 @@ export default function PLLedgerPage() {
                         {visibleCols.invoice && <TableCell>—</TableCell>}
                       </TableRow>
                     </TableFooter>
-                  )}
-                </Table>
-              )}
+                  )
+                }
+              />
             </CardContent>
           </Card>
 
