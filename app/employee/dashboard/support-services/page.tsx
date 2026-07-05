@@ -2,6 +2,8 @@
 
 import { useState, useMemo, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useTabPermissions } from '@/hooks/use-tab-permissions'
+import { PermissionsGuard } from '@/components/permissions-guard'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/hooks/use-auth'
 import type { BadgeCounts } from '@/app/api/badge-counts/route'
@@ -215,13 +217,6 @@ function SupportServicesPageContent() {
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('feedback')
 
-  useEffect(() => {
-    const t = searchParams.get('tab')
-    if (t && SUPPORT_TAB_VALUES.some((x) => x.value === t)) {
-      setActiveTab(t)
-    }
-  }, [searchParams])
-
   const { data: badges } = useQuery<BadgeCounts>({
     queryKey: ['badge-counts'],
     queryFn: () => apiGet<BadgeCounts>('/api/badge-counts'),
@@ -243,26 +238,58 @@ function SupportServicesPageContent() {
     [badges, isHead]
   )
 
+  const tabsWithPerms = useMemo(() => {
+    return tabs.map((t) => {
+      let key = t.value
+      if (key === 'tickets') key = 'ticket'
+      else if (key === 'md-connect') key = 'mdconnect'
+      else if (key === 'mental-health') key = 'mental_health'
+      else if (key === 'job-postings') key = 'job_postings'
+      return {
+        ...t,
+        perm: `myhrms.my_support_services.${key}`,
+      }
+    })
+  }, [tabs])
+
+  const { allowedTabs, isLoading: isPermsLoading } = useTabPermissions(tabsWithPerms, activeTab, setActiveTab)
+
+  useEffect(() => {
+    if (allowedTabs.length > 0) {
+      const t = searchParams.get('tab')
+      if (t && allowedTabs.some((x) => x.value === t)) {
+        setActiveTab(t)
+      }
+    }
+  }, [allowedTabs, searchParams])
+
   // Determine variant based on active tab
   const tabVariant: 'support' | 'mental-health' = activeTab === 'mental-health' ? 'mental-health' : 'support'
 
   return (
-    <div className="space-y-6">
-      <TabNavigation
-        tabs={tabs}
-        value={activeTab}
-        onValueChange={setActiveTab}
-        variant={tabVariant}
-      />
+    <PermissionsGuard
+      isLoading={isPermsLoading}
+      hasAccess={allowedTabs.length > 0}
+      resourceName="Support Services"
+      variant="card"
+    >
+      <div className="space-y-6">
+        <TabNavigation
+          tabs={allowedTabs}
+          value={activeTab}
+          onValueChange={setActiveTab}
+          variant={tabVariant}
+        />
 
-      <div className="mt-6">
-        {activeTab === 'feedback' && <FeedbackTab />}
-        {activeTab === 'tickets' && <TicketsTab />}
-        {activeTab === 'md-connect' && <MDServicesTab />}
-        {activeTab === 'mental-health' && <MentalHealthTab />}
-        {activeTab === 'job-postings' && <JobPostingsTab />}
+        <div className="mt-6">
+          {activeTab === 'feedback' && <FeedbackTab />}
+          {activeTab === 'tickets' && <TicketsTab />}
+          {activeTab === 'md-connect' && <MDServicesTab />}
+          {activeTab === 'mental-health' && <MentalHealthTab />}
+          {activeTab === 'job-postings' && <JobPostingsTab />}
+        </div>
       </div>
-    </div>
+    </PermissionsGuard>
   )
 }
 
@@ -1065,91 +1092,91 @@ function MentalHealthTab() {
 
   return (
     <div className="space-y-6">
-        <div className="mb-6 relative overflow-hidden rounded-xl bg-gradient-to-br from-rose-50 via-pink-50 to-rose-50/50 p-6 shadow-sm">
-          <div className="relative z-10">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                <div className="rounded-full bg-rose-100 p-3">
-                  <Heart className="h-6 w-6 text-rose-500 fill-rose-500" />
-                </div>
+      <div className="mb-6 relative overflow-hidden rounded-xl bg-gradient-to-br from-rose-50 via-pink-50 to-rose-50/50 p-6 shadow-sm">
+        <div className="relative z-10">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <div className="rounded-full bg-rose-100 p-3">
+                <Heart className="h-6 w-6 text-rose-500 fill-rose-500" />
               </div>
-              <div className="flex-1 space-y-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">We&apos;re here for you</h3>
+            </div>
+            <div className="flex-1 space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">We&apos;re here for you</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="mt-1 shrink-0">
+                    <div className="h-2 w-2 rounded-full bg-rose-500"></div>
+                  </div>
+                  <p className="text-base text-gray-800 leading-7 font-medium">
+                    Your mental health and wellbeing are our top priority
+                  </p>
                 </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="mt-1 shrink-0">
-                      <div className="h-2 w-2 rounded-full bg-rose-500"></div>
-                    </div>
-                    <p className="text-base text-gray-800 leading-7 font-medium">
-                      Your mental health and wellbeing are our top priority
-                    </p>
+                <div className="flex items-center gap-3">
+                  <div className="mt-1 shrink-0">
+                    <div className="h-2 w-2 rounded-full bg-rose-500"></div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="mt-1 shrink-0">
-                      <div className="h-2 w-2 rounded-full bg-rose-500"></div>
-                    </div>
-                    <p className="text-base text-gray-800 leading-7 font-medium">
-                      All requests are handled with complete confidentiality and care
-                    </p>
+                  <p className="text-base text-gray-800 leading-7 font-medium">
+                    All requests are handled with complete confidentiality and care
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="mt-1 shrink-0">
+                    <div className="h-2 w-2 rounded-full bg-rose-500"></div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="mt-1 shrink-0">
-                      <div className="h-2 w-2 rounded-full bg-rose-500"></div>
-                    </div>
-                    <p className="text-base text-gray-800 leading-7 font-medium">
-                      Our HR team will respond with empathy within 48 hours
-                    </p>
+                  <p className="text-base text-gray-800 leading-7 font-medium">
+                    Our HR team will respond with empathy within 48 hours
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="mt-1 shrink-0">
+                    <div className="h-2 w-2 rounded-full bg-rose-500"></div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="mt-1 shrink-0">
-                      <div className="h-2 w-2 rounded-full bg-rose-500"></div>
-                    </div>
-                    <p className="text-base text-gray-800 leading-7 font-medium">
-                      You can share as much or as little as you&apos;re comfortable with
-                    </p>
-                  </div>
+                  <p className="text-base text-gray-800 leading-7 font-medium">
+                    You can share as much or as little as you&apos;re comfortable with
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          {/* Decorative background element */}
-          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-rose-100/40 blur-2xl"></div>
-          <div className="absolute -bottom-6 -left-6 h-24 w-24 rounded-full bg-pink-100/40 blur-2xl"></div>
         </div>
-        {hasPending ? (
-          <div className="flex items-center gap-3 p-4 bg-rose-100 border border-rose-300 rounded-lg">
-            <AlertCircle className="h-5 w-5 text-rose-600 shrink-0" />
-            <p className="text-rose-800 text-sm">
-              You have a pending request. Our HR team will respond with care within 48 hours.
+        {/* Decorative background element */}
+        <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-rose-100/40 blur-2xl"></div>
+        <div className="absolute -bottom-6 -left-6 h-24 w-24 rounded-full bg-pink-100/40 blur-2xl"></div>
+      </div>
+      {hasPending ? (
+        <div className="flex items-center gap-3 p-4 bg-rose-100 border border-rose-300 rounded-lg">
+          <AlertCircle className="h-5 w-5 text-rose-600 shrink-0" />
+          <p className="text-rose-800 text-sm">
+            You have a pending request. Our HR team will respond with care within 48 hours.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Textarea
+              id="mh-reason"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="You can share what you're going through, or simply request support without details. We're here to listen and help..."
+              rows={5}
+              className="mt-2 border-rose-200 focus:border-rose-400 focus:ring-rose-400"
+            />
+            <p className="text-xs text-rose-700 mt-1.5">
+              This is completely optional. You can request support without sharing any details.
             </p>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Textarea
-                id="mh-reason"
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder="You can share what you're going through, or simply request support without details. We're here to listen and help..."
-                rows={5}
-                className="mt-2 border-rose-200 focus:border-rose-400 focus:ring-rose-400"
-              />
-              <p className="text-xs text-rose-700 mt-1.5">
-                This is completely optional. You can request support without sharing any details.
-              </p>
-            </div>
-            <Button
-              type="submit"
-              disabled={submitMutation.isPending}
-              className="bg-rose-600 hover:bg-rose-700 text-white shadow-sm"
-            >
-              <Heart className="h-4 w-4 mr-2" />
-              {submitMutation.isPending ? 'Submitting...' : 'Request support'}
-            </Button>
-          </form>
-        )}
+          <Button
+            type="submit"
+            disabled={submitMutation.isPending}
+            className="bg-rose-600 hover:bg-rose-700 text-white shadow-sm"
+          >
+            <Heart className="h-4 w-4 mr-2" />
+            {submitMutation.isPending ? 'Submitting...' : 'Request support'}
+          </Button>
+        </form>
+      )}
 
       <SectionContainer title="My mental health requests">
         {isLoading ? (
@@ -1223,38 +1250,38 @@ function JobPostingsTab() {
 
   return (
     <div className="space-y-6">
-        {loadingPostings ? (
-          <div className="text-center py-8 text-muted-foreground">Loading...</div>
-        ) : postings && postings.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            {postings.map((posting) => (
-              <div key={posting.id} className="border rounded-lg p-4">
-                <h3 className="font-medium text-lg">{posting.title}</h3>
-                {posting.department && (
-                  <p className="text-sm text-muted-foreground">{posting.department}</p>
-                )}
-                <p className="text-sm mt-2 line-clamp-3">{posting.description}</p>
-                {posting.requirements && (
-                  <div className="mt-2">
-                    <p className="text-sm font-medium">Requirements:</p>
-                    <p className="text-sm text-muted-foreground line-clamp-2">{posting.requirements}</p>
-                  </div>
-                )}
-                <div className="mt-4">
-                  <ReferralDialog
-                    posting={posting}
-                    onSuccess={() => queryClient.invalidateQueries({ queryKey: ['my-referrals'] })}
-                  />
+      {loadingPostings ? (
+        <div className="text-center py-8 text-muted-foreground">Loading...</div>
+      ) : postings && postings.length > 0 ? (
+        <div className="grid gap-4 md:grid-cols-2">
+          {postings.map((posting) => (
+            <div key={posting.id} className="border rounded-lg p-4">
+              <h3 className="font-medium text-lg">{posting.title}</h3>
+              {posting.department && (
+                <p className="text-sm text-muted-foreground">{posting.department}</p>
+              )}
+              <p className="text-sm mt-2 line-clamp-3">{posting.description}</p>
+              {posting.requirements && (
+                <div className="mt-2">
+                  <p className="text-sm font-medium">Requirements:</p>
+                  <p className="text-sm text-muted-foreground line-clamp-2">{posting.requirements}</p>
                 </div>
+              )}
+              <div className="mt-4">
+                <ReferralDialog
+                  posting={posting}
+                  onSuccess={() => queryClient.invalidateQueries({ queryKey: ['my-referrals'] })}
+                />
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            <Briefcase className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>No open positions at the moment</p>
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-8 text-muted-foreground">
+          <Briefcase className="h-12 w-12 mx-auto mb-4 opacity-50" />
+          <p>No open positions at the moment</p>
+        </div>
+      )}
 
       <SectionContainer title="My referrals">
         {loadingReferrals ? (

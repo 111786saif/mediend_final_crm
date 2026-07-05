@@ -34,6 +34,8 @@ import { format, parseISO } from 'date-fns'
 import { getDisabledNormalizationDateKeys } from '@/lib/hrms/normalization-deadline'
 import { Calendar, Check, Clock, Users, X, UserCheck, ChevronRight } from 'lucide-react'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useTabPermissions } from '@/hooks/use-tab-permissions'
+import { PermissionsGuard } from '@/components/permissions-guard'
 import { toast } from 'sonner'
 import { ManagerMarkLeavePanel } from '@/components/hrms/ManagerMarkLeavePanel'
 
@@ -268,6 +270,19 @@ function AttendancePeriodStats({
 
 export default function MyTeamPage() {
   const queryClient = useQueryClient()
+  const [activeTab, setActiveTab] = useState('attendance')
+
+  const staticTabs = useMemo(
+    () => [
+      { value: 'attendance', label: 'Attendance & leave', icon: Clock, perm: 'myhrms.my_team.attendance_leave' },
+      { value: 'leaves', label: 'Leaves', icon: Calendar, perm: 'myhrms.my_team.loans' },
+      { value: 'normalization', label: 'Normalization', icon: UserCheck, perm: 'myhrms.my_team.normalization' },
+    ],
+    []
+  )
+
+  const { allowedTabs, isLoading: isPermsLoading } = useTabPermissions(staticTabs, activeTab, setActiveTab)
+
   const [fromDate, setFromDate] = useState(
     format(new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'yyyy-MM-dd')
   )
@@ -431,6 +446,12 @@ export default function MyTeamPage() {
   }, [members, entries])
 
   return (
+    <PermissionsGuard
+      isLoading={isPermsLoading}
+      hasAccess={allowedTabs.length > 0}
+      resourceName="My Team"
+      variant="page"
+    >
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">My Team</h1>
@@ -494,20 +515,17 @@ export default function MyTeamPage() {
         }}
       />
 
-      <Tabs defaultValue="attendance" className="space-y-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList>
-          <TabsTrigger value="attendance" className="gap-2">
-            <Clock className="h-4 w-4" />
-            Attendance &amp; leave
-          </TabsTrigger>
-          <TabsTrigger value="leaves" className="gap-2">
-            <Calendar className="h-4 w-4" />
-            Leaves
-          </TabsTrigger>
-          <TabsTrigger value="normalization" className="gap-2">
-            <UserCheck className="h-4 w-4" />
-            Normalization
-          </TabsTrigger>
+          {allowedTabs.map((t) => {
+            const Icon = t.icon
+            return (
+              <TabsTrigger key={t.value} value={t.value} className="gap-2">
+                <Icon className="h-4 w-4" />
+                {t.label}
+              </TabsTrigger>
+            )
+          })}
         </TabsList>
 
         <TabsContent value="attendance" className="space-y-4">
@@ -1085,6 +1103,7 @@ export default function MyTeamPage() {
         </DialogContent>
       </Dialog>
     </div>
+    </PermissionsGuard>
   )
 }
 

@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useTabPermissions } from '@/hooks/use-tab-permissions'
+import { PermissionsGuard } from '@/components/permissions-guard'
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
@@ -253,24 +255,43 @@ export default function CoreHRPage() {
     [badges]
   )
 
+  const tabsWithPerms = useMemo(() => {
+    return tabs.map((t) => {
+      const key = t.value === 'policies' ? 'hr_policies' : t.value
+      return {
+        ...t,
+        perm: `myhrms.my_core_hr.${key}`,
+      }
+    })
+  }, [tabs])
+
+  const { allowedTabs, isLoading: isPermsLoading } = useTabPermissions(tabsWithPerms, activeTab, setActiveTab)
+
   return (
-    <div className="space-y-6">
+    <PermissionsGuard
+      isLoading={isPermsLoading}
+      hasAccess={allowedTabs.length > 0}
+      resourceName="Core HR"
+      variant="card"
+    >
+      <div className="space-y-6">
 
-      <TabNavigation
-        tabs={tabs}
-        value={activeTab}
-        onValueChange={setActiveTab}
-        variant="core-hr"
-      />
+        <TabNavigation
+          tabs={allowedTabs}
+          value={activeTab}
+          onValueChange={setActiveTab}
+          variant="core-hr"
+        />
 
-      <div className="mt-6">
-        {activeTab === 'attendance' && <AttendanceTab />}
-        {activeTab === 'leaves' && <LeavesTab />}
-        {activeTab === 'holidays' && <HolidaysTab />}
-        {activeTab === 'documents' && <DocumentsTab router={router} />}
-        {activeTab === 'policies' && <PoliciesTab />}
+        <div className="mt-6">
+          {activeTab === 'attendance' && <AttendanceTab />}
+          {activeTab === 'leaves' && <LeavesTab />}
+          {activeTab === 'holidays' && <HolidaysTab />}
+          {activeTab === 'documents' && <DocumentsTab router={router} />}
+          {activeTab === 'policies' && <PoliciesTab />}
+        </div>
       </div>
-    </div>
+    </PermissionsGuard>
   )
 }
 
@@ -636,69 +657,69 @@ function AttendanceTab() {
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">Self Normalize</Button>
             </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Normalize a day</DialogTitle>
-              <DialogDescription className="space-y-2">
-                <span className="block">
-                  Select a date and how many hours (1, 2, or 3) to use from your monthly allowance. No reason is required
-                  for self-normalization.
-                </span>
-                <span className="block text-xs text-muted-foreground">{SELF_NORMALIZATION_RULE_TEXT}</span>
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label>Date</Label>
-                <Input
-                  type="date"
-                  value={normalizeDate}
-                  max={format(new Date(), 'yyyy-MM-dd')}
-                  onChange={(e) => setNormalizeDate(e.target.value)}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label>Hours to use (1, 2, or 3)</Label>
-                <div className="flex gap-2 mt-2">
-                  {([1, 2, 3] as const).map((h) => (
-                    <Button
-                      key={h}
-                      type="button"
-                      variant={normalizeHours === h ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setNormalizeHours(h)}
-                    >
-                      {h} hr{h > 1 ? 's' : ''}
-                    </Button>
-                  ))}
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Normalize a day</DialogTitle>
+                <DialogDescription className="space-y-2">
+                  <span className="block">
+                    Select a date and how many hours (1, 2, or 3) to use from your monthly allowance. No reason is required
+                    for self-normalization.
+                  </span>
+                  <span className="block text-xs text-muted-foreground">{SELF_NORMALIZATION_RULE_TEXT}</span>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>Date</Label>
+                  <Input
+                    type="date"
+                    value={normalizeDate}
+                    max={format(new Date(), 'yyyy-MM-dd')}
+                    onChange={(e) => setNormalizeDate(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Hours to use (1, 2, or 3)</Label>
+                  <div className="flex gap-2 mt-2">
+                    {([1, 2, 3] as const).map((h) => (
+                      <Button
+                        key={h}
+                        type="button"
+                        variant={normalizeHours === h ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setNormalizeHours(h)}
+                      >
+                        {h} hr{h > 1 ? 's' : ''}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setNormalizeDialogOpen(false)}>Cancel</Button>
+                  <Button
+                    onClick={() => {
+                      if (!normalizeDate) {
+                        toast.error('Select a date')
+                        return
+                      }
+                      if (normalizeDate > format(new Date(), 'yyyy-MM-dd')) {
+                        toast.error('Cannot normalize a future date')
+                        return
+                      }
+                      normalizeMutation.mutate({
+                        date: normalizeDate,
+                        hours: normalizeHours,
+                      })
+                    }}
+                    disabled={!normalizeDate || normalizeMutation.isPending}
+                  >
+                    {normalizeMutation.isPending ? 'Normalizing...' : 'Normalize'}
+                  </Button>
                 </div>
               </div>
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setNormalizeDialogOpen(false)}>Cancel</Button>
-                <Button
-                  onClick={() => {
-                    if (!normalizeDate) {
-                      toast.error('Select a date')
-                      return
-                    }
-                    if (normalizeDate > format(new Date(), 'yyyy-MM-dd')) {
-                      toast.error('Cannot normalize a future date')
-                      return
-                    }
-                    normalizeMutation.mutate({
-                      date: normalizeDate,
-                      hours: normalizeHours,
-                    })
-                  }}
-                  disabled={!normalizeDate || normalizeMutation.isPending}
-                >
-                  {normalizeMutation.isPending ? 'Normalizing...' : 'Normalize'}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 

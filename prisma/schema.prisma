@@ -508,6 +508,10 @@ model User {
   featurePermissions        UserFeaturePermission[]
   featurePermissionsGranted UserFeaturePermission[] @relation("PermissionGranter")
 
+  // RBAC Access Matrix relations
+  permissionSubjects        PermissionAssignment[]  @relation("PermissionSubject")
+  permissionsGranted        PermissionAssignment[]  @relation("GrantedBy")
+
   // FnF completed by (HR marking Full and Final settlement done)
   fnfCompletedForEmployees Employee[] @relation("FnFCompletedBy")
 
@@ -2215,6 +2219,79 @@ model UserFeaturePermission {
   @@unique([userId, featureKey])
   @@index([userId])
   @@index([featureKey])
+}
+
+// ==========================================
+// RBAC / Access Matrix Models & Enums
+// ==========================================
+
+enum ResourceType {
+  MODULE
+  SECTION
+  ENTITY
+}
+
+enum PermissionLevel {
+  NONE
+  READ
+  READ_WRITE
+  READ_WRITE_DELETE
+  FULL_ACCESS
+}
+
+enum SubjectType {
+  USER
+  ROLE
+}
+
+model Resource {
+  id        String        @id @default(cuid())
+  key       String        @unique
+  label     String
+  type      ResourceType
+  parentId  String?
+  parent    Resource?     @relation("Tree", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Resource[]    @relation("Tree")
+  sortOrder Int           @default(0)
+  isActive  Boolean       @default(true)
+
+  assignments PermissionAssignment[]
+}
+
+model PermissionAssignment {
+  id              String          @id @default(cuid())
+  subjectType     SubjectType     @default(USER)
+  userId          String?
+  user            User?           @relation("PermissionSubject", fields: [userId], references: [id], onDelete: Cascade)
+  role            String?
+
+  resourceId      String
+  resource        Resource        @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  permissionLevel PermissionLevel @default(NONE)
+  canGrant        Boolean         @default(false)
+
+  grantedById     String
+  grantedBy       User            @relation("GrantedBy", fields: [grantedById], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([userId, resourceId])
+  @@index([resourceId])
+  @@index([role])
+}
+
+model PermissionAuditLog {
+  id            String   @id @default(cuid())
+  actorId       String
+  targetUserId  String
+  resourceId    String
+  oldLevel      PermissionLevel?
+  newLevel      PermissionLevel?
+  oldCanGrant   Boolean?
+  newCanGrant   Boolean?
+  createdAt     DateTime @default(now())
 }
 
 /// Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + month-of-leadEntryDate

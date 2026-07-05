@@ -19,6 +19,8 @@ import { useSidebar } from '@/components/ui/sidebar'
 import { getCampaignCplNavItem, getFilteredNavItemsWithUrls } from '@/lib/sidebar-nav'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
+import { usePermissions } from '@/hooks/use-permissions'
+import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 import {
   BarChart3,
   BookOpen,
@@ -147,6 +149,7 @@ export function AppSidebar() {
     sales: false,
     insurancePl: false,
   })
+  const { hasAccess } = usePermissions()
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({
@@ -170,51 +173,51 @@ export function AppSidebar() {
   const navigationItems =
     user.role === 'MD'
       ? itemsWithUrls.filter(
+        (item) =>
+          item.title === 'Tasks' ||
+          item.title === 'Meets' ||
+          item.title === 'Calendar' ||
+          item.title === 'Sales Dashboard' ||
+          item.title === 'Finance Dashboard' ||
+          item.title === 'MD HR Dashboard' ||
+          item.title === 'DM Dashboard' ||
+          item.title === 'Dept Targets' ||
+          item.title.startsWith('MD ')
+      )
+      : user.role === 'ADMIN' || user.role === 'TESTER'
+        ? itemsWithUrls.filter(
           (item) =>
+            item.title === 'Home' ||
             item.title === 'Tasks' ||
             item.title === 'Meets' ||
             item.title === 'Calendar' ||
             item.title === 'Sales Dashboard' ||
             item.title === 'Finance Dashboard' ||
             item.title === 'MD HR Dashboard' ||
-            item.title === 'DM Dashboard' ||
-            item.title === 'Dept Targets' ||
-            item.title.startsWith('MD ')
+            item.title.startsWith('MD ') ||
+            item.title === 'Attendance & Normalizations' ||
+            item.title === 'People & Org' ||
+            item.title === 'Compensation & Docs' ||
+            item.title === 'Engagement'
         )
-      : user.role === 'ADMIN' || user.role === 'TESTER'
-        ? itemsWithUrls.filter(
+        : user.role === 'EXECUTIVE_ASSISTANT'
+          ? itemsWithUrls.filter(
             (item) =>
               item.title === 'Home' ||
               item.title === 'Tasks' ||
               item.title === 'Meets' ||
               item.title === 'Calendar' ||
-              item.title === 'Sales Dashboard' ||
-              item.title === 'Finance Dashboard' ||
-              item.title === 'MD HR Dashboard' ||
-              item.title.startsWith('MD ') ||
-              item.title === 'Attendance & Normalizations' ||
-              item.title === 'People & Org' ||
-              item.title === 'Compensation & Docs' ||
-              item.title === 'Engagement'
+              item.title === 'Chat' ||
+              item.title === 'Master Data' ||
+              item.title === 'Compliance' ||
+              SALES_TITLES.includes(item.title) ||
+              INSURANCE_PL_TITLES.includes(item.title) ||
+              EA_HRM_TITLES.includes(item.title) ||
+              item.title.startsWith('My ') ||
+              EA_MYHRMS_EXTRA.includes(item.title)
           )
-        : user.role === 'EXECUTIVE_ASSISTANT'
-          ? itemsWithUrls.filter(
-              (item) =>
-                item.title === 'Home' ||
-                item.title === 'Tasks' ||
-                item.title === 'Meets' ||
-                item.title === 'Calendar' ||
-                item.title === 'Chat' ||
-                item.title === 'Master Data' ||
-                item.title === 'Compliance' ||
-                SALES_TITLES.includes(item.title) ||
-                INSURANCE_PL_TITLES.includes(item.title) ||
-                EA_HRM_TITLES.includes(item.title) ||
-                item.title.startsWith('My ') ||
-                EA_MYHRMS_EXTRA.includes(item.title)
-            )
           : user.role === 'USER'
-          ? itemsWithUrls.filter(
+            ? itemsWithUrls.filter(
               (item) =>
                 item.title === 'Home' ||
                 item.title === 'Tasks' ||
@@ -222,33 +225,33 @@ export function AppSidebar() {
                 item.title === 'Calendar' ||
                 item.title.startsWith('My ')
             )
-          : user.role === 'COMPLIANCE_HEAD'
-          ? itemsWithUrls.filter(
-              (item) =>
-                item.title === 'Home' ||
-                item.title === 'Tasks' ||
-                item.title === 'Meets' ||
-                item.title === 'Calendar' ||
-                item.title === 'Chat' ||
-                item.title === 'Compliance' ||
-                item.title.startsWith('My ')
-            )
-          : itemsWithUrls.filter(
-              (item) => {
-                if (user.role === 'SALES_HEAD' && HRM_TITLES.includes(item.title)) return false
-                return (
+            : user.role === 'COMPLIANCE_HEAD'
+              ? itemsWithUrls.filter(
+                (item) =>
                   item.title === 'Home' ||
-                  item.title.startsWith('My ') ||
-                  item.title === 'Attendance & Normalizations' ||
-                  item.title === 'People & Org' ||
-                  item.title === 'Compensation & Docs' ||
-                  item.title === 'Engagement' ||
-                  (!item.title.startsWith('Svc ') &&
-                    !item.title.startsWith('MD ') &&
-                    !item.title.startsWith('Fin '))
-                )
-              }
-            )
+                  item.title === 'Tasks' ||
+                  item.title === 'Meets' ||
+                  item.title === 'Calendar' ||
+                  item.title === 'Chat' ||
+                  item.title === 'Compliance' ||
+                  item.title.startsWith('My ')
+              )
+              : itemsWithUrls.filter(
+                (item) => {
+                  if (user.role === 'SALES_HEAD' && HRM_TITLES.includes(item.title)) return false
+                  return (
+                    item.title === 'Home' ||
+                    item.title.startsWith('My ') ||
+                    item.title === 'Attendance & Normalizations' ||
+                    item.title === 'People & Org' ||
+                    item.title === 'Compensation & Docs' ||
+                    item.title === 'Engagement' ||
+                    (!item.title.startsWith('Svc ') &&
+                      !item.title.startsWith('MD ') &&
+                      !item.title.startsWith('Fin '))
+                  )
+                }
+              )
 
   const navigationItemsWithCpl =
     cplAccessData?.allowed === true && !navigationItems.some((i) => i.title === 'Campaign CPL')
@@ -257,26 +260,40 @@ export function AppSidebar() {
 
   const isEa = user.role === 'EXECUTIVE_ASSISTANT'
 
-  const mainItems = navigationItemsWithCpl.filter((item) => {
-    if (item.title.startsWith('My ')) return false
-    if (HRM_TITLES.includes(item.title)) return user.role !== 'HR_HEAD'
-    if (isEa) {
-      if (SALES_TITLES.includes(item.title)) return false
-      if (INSURANCE_PL_TITLES.includes(item.title)) return false
-      if (EA_HRM_TITLES.includes(item.title)) return false
-      if (EA_MYHRMS_EXTRA.includes(item.title)) return false
+  const filterByPermission = (item: any) => {
+    const resourceKey = Object.keys(RESOURCE_MAP).find(
+      (key) => (RESOURCE_MAP as any)[key].path === item.url
+    )
+    if (resourceKey) {
+      return hasAccess(resourceKey, 'READ')
     }
     return true
-  })
+  }
 
-  const salesItems = isEa ? navigationItemsWithCpl.filter((item) => SALES_TITLES.includes(item.title)) : []
-  const insurancePlItems = isEa ? navigationItemsWithCpl.filter((item) => INSURANCE_PL_TITLES.includes(item.title)) : []
-  const hrItems = navigationItemsWithCpl.filter((item) =>
-    isEa ? EA_HRM_TITLES.includes(item.title) : HRM_TITLES.includes(item.title)
-  )
-  const myHrmsItems = navigationItemsWithCpl.filter((item) =>
-    isEa ? (item.title.startsWith('My ') || EA_MYHRMS_EXTRA.includes(item.title)) : item.title.startsWith('My ')
-  )
+  const mainItems = navigationItemsWithCpl
+    .filter((item) => {
+      if (item.title.startsWith('My ')) return false
+      if (HRM_TITLES.includes(item.title)) return user.role !== 'HR_HEAD'
+      if (isEa) {
+        if (SALES_TITLES.includes(item.title)) return false
+        if (INSURANCE_PL_TITLES.includes(item.title)) return false
+        if (EA_HRM_TITLES.includes(item.title)) return false
+        if (EA_MYHRMS_EXTRA.includes(item.title)) return false
+      }
+      return true
+    })
+    .filter(filterByPermission)
+
+  const salesItems = (isEa ? navigationItemsWithCpl.filter((item) => SALES_TITLES.includes(item.title)) : [])
+    .filter(filterByPermission)
+  const insurancePlItems = (isEa ? navigationItemsWithCpl.filter((item) => INSURANCE_PL_TITLES.includes(item.title)) : [])
+    .filter(filterByPermission)
+  const hrItems = navigationItemsWithCpl
+    .filter((item) => (isEa ? EA_HRM_TITLES.includes(item.title) : HRM_TITLES.includes(item.title)))
+    .filter(filterByPermission)
+  const myHrmsItems = navigationItemsWithCpl
+    .filter((item) => (isEa ? (item.title.startsWith('My ') || EA_MYHRMS_EXTRA.includes(item.title)) : item.title.startsWith('My ')))
+    .filter(filterByPermission)
 
   const showHrSection = (user.role === 'HR_HEAD' || isEa) && hrItems.length > 0
   const showMyHrmsSection = myHrmsItems.length > 0
@@ -285,12 +302,12 @@ export function AppSidebar() {
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
-        (sum, item) => {
-          if (isEa && !HRM_TITLES.includes(item.title)) return sum
-          return sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
-        },
-        0
-      )
+      (sum, item) => {
+        if (isEa && !HRM_TITLES.includes(item.title)) return sum
+        return sum + getBadgeCount(item.title, badgeCounts, !!isMdOrAdmin)
+      },
+      0
+    )
     : 0
   const myHrmsSectionBadge = myHrmsItems.reduce(
     (sum, item) => {
@@ -309,7 +326,6 @@ export function AppSidebar() {
               src={logo}
               alt="Mediend"
               fill
-              sizes="128px"
               className="object-contain"
               priority
             />
@@ -364,15 +380,13 @@ export function AppSidebar() {
                 )}
               </div>
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  openSections.hr ? 'rotate-180' : ''
-                }`}
+                className={`h-4 w-4 transition-transform duration-200 ${openSections.hr ? 'rotate-180' : ''
+                  }`}
               />
             </button>
             <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                openSections.hr ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-              }`}
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.hr ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               {openSections.hr && (
                 <SidebarGroupContent>
@@ -419,15 +433,13 @@ export function AppSidebar() {
                 )}
               </div>
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  openSections.myHrms ? 'rotate-180' : ''
-                }`}
+                className={`h-4 w-4 transition-transform duration-200 ${openSections.myHrms ? 'rotate-180' : ''
+                  }`}
               />
             </button>
             <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                openSections.myHrms ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-              }`}
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.myHrms ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               {openSections.myHrms && (
                 <SidebarGroupContent>
@@ -469,15 +481,13 @@ export function AppSidebar() {
                 <span>Sales</span>
               </div>
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  openSections.sales ? 'rotate-180' : ''
-                }`}
+                className={`h-4 w-4 transition-transform duration-200 ${openSections.sales ? 'rotate-180' : ''
+                  }`}
               />
             </button>
             <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                openSections.sales ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-              }`}
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.sales ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               {openSections.sales && (
                 <SidebarGroupContent>
@@ -519,15 +529,13 @@ export function AppSidebar() {
                 <span>Insurance & P/L</span>
               </div>
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  openSections.insurancePl ? 'rotate-180' : ''
-                }`}
+                className={`h-4 w-4 transition-transform duration-200 ${openSections.insurancePl ? 'rotate-180' : ''
+                  }`}
               />
             </button>
             <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                openSections.insurancePl ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-              }`}
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.insurancePl ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               {openSections.insurancePl && (
                 <SidebarGroupContent>
@@ -563,40 +571,38 @@ export function AppSidebar() {
                 <span>Services</span>
               </div>
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  openSections.services ? 'rotate-180' : ''
-                }`}
+                className={`h-4 w-4 transition-transform duration-200 ${openSections.services ? 'rotate-180' : ''
+                  }`}
               />
             </button>
             <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                openSections.services ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-              }`}
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.services ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               {openSections.services && (
                 <SidebarGroupContent>
                   <SidebarMenu>
-                  {itemsWithUrls
-                    .filter((item) => item.title.startsWith('Svc '))
-                    .map((item) => {
-                      const Icon = item.icon
-                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
-                      return (
-                        <SidebarMenuItem key={item.title}>
-                          <SidebarMenuButton asChild isActive={isActive} tooltip={item.title.replace('Svc ', '')}>
-                            <Link href={item.url} onClick={closeSidebarOnMobile}>
-                              <Icon />
-                              <span>{item.title.replace('Svc ', '')}</span>
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    })}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                )}
-              </div>
-            </SidebarGroup>
+                    {itemsWithUrls
+                      .filter((item) => item.title.startsWith('Svc '))
+                      .map((item) => {
+                        const Icon = item.icon
+                        const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
+                        return (
+                          <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton asChild isActive={isActive} tooltip={item.title.replace('Svc ', '')}>
+                              <Link href={item.url} onClick={closeSidebarOnMobile}>
+                                <Icon />
+                                <span>{item.title.replace('Svc ', '')}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        )
+                      })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              )}
+            </div>
+          </SidebarGroup>
         )}
         {user.role !== 'HR_HEAD' && itemsWithUrls.some((item) => item.title.startsWith('Fin ')) && (
           <SidebarGroup className="pb-1">
@@ -609,15 +615,13 @@ export function AppSidebar() {
                 <span>Finance</span>
               </div>
               <ChevronDown
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  openSections.finance ? 'rotate-180' : ''
-                }`}
+                className={`h-4 w-4 transition-transform duration-200 ${openSections.finance ? 'rotate-180' : ''
+                  }`}
               />
             </button>
             <div
-              className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                openSections.finance ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-              }`}
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${openSections.finance ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                }`}
             >
               {openSections.finance && (
                 <SidebarGroupContent>

@@ -332,6 +332,21 @@ export type MDApprovalRequest = Prisma.MDApprovalRequestModel
  */
 export type UserFeaturePermission = Prisma.UserFeaturePermissionModel
 /**
+ * Model Resource
+ * 
+ */
+export type Resource = Prisma.ResourceModel
+/**
+ * Model PermissionAssignment
+ * 
+ */
+export type PermissionAssignment = Prisma.PermissionAssignmentModel
+/**
+ * Model PermissionAuditLog
+ * 
+ */
+export type PermissionAuditLog = Prisma.PermissionAuditLogModel
+/**
  * Model CampaignCPL
  * Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + month-of-leadEntryDate
  */

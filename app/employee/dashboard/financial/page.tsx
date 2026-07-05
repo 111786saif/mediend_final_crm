@@ -2,6 +2,8 @@
 
 import { useState, useMemo, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useTabPermissions } from '@/hooks/use-tab-permissions'
+import { PermissionsGuard } from '@/components/permissions-guard'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import type { BadgeCounts } from '@/app/api/badge-counts/route'
@@ -113,13 +115,6 @@ function FinancialPageContent() {
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState('payroll')
 
-  useEffect(() => {
-    const t = searchParams.get('tab')
-    if (t === 'increment' || t === 'payroll') {
-      setActiveTab(t)
-    }
-  }, [searchParams])
-
   const { data: badges } = useQuery<BadgeCounts>({
     queryKey: ['badge-counts'],
     queryFn: () => apiGet<BadgeCounts>('/api/badge-counts'),
@@ -135,21 +130,46 @@ function FinancialPageContent() {
     [badges]
   )
 
+  const tabsWithPerms = useMemo(() => {
+    return tabs.map((t) => ({
+      ...t,
+      perm: `myhrms.my_financial.${t.value}`,
+    }))
+  }, [tabs])
+
+  const { allowedTabs, isLoading: isPermsLoading } = useTabPermissions(tabsWithPerms, activeTab, setActiveTab)
+
+  useEffect(() => {
+    if (allowedTabs.length > 0) {
+      const t = searchParams.get('tab')
+      if (t && allowedTabs.some((x) => x.value === t)) {
+        setActiveTab(t)
+      }
+    }
+  }, [allowedTabs, searchParams])
+
   return (
-    <div className="space-y-6">
+    <PermissionsGuard
+      isLoading={isPermsLoading}
+      hasAccess={allowedTabs.length > 0}
+      resourceName="Financial"
+      variant="card"
+    >
+      <div className="space-y-6">
 
-      <TabNavigation
-        tabs={tabs}
-        value={activeTab}
-        onValueChange={setActiveTab}
-        variant="financial"
-      />
+        <TabNavigation
+          tabs={allowedTabs}
+          value={activeTab}
+          onValueChange={setActiveTab}
+          variant="financial"
+        />
 
-      <div className="mt-6">
-        {activeTab === 'payroll' && <PayrollTab />}
-        {activeTab === 'increment' && <IncrementTab />}
+        <div className="mt-6">
+          {activeTab === 'payroll' && <PayrollTab />}
+          {activeTab === 'increment' && <IncrementTab />}
+        </div>
       </div>
-    </div>
+    </PermissionsGuard>
   )
 }
 

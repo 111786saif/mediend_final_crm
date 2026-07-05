@@ -136,9 +136,9 @@
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 .dark .fc-calendar-modern .fc {
-  --fc-border-color: rgba(255, 255, 255, 0.15);
-  --fc-today-bg-color: #212d47;
-  --fc-neutral-bg-color: #27272a;
+  --fc-border-color: rgba(255, 255, 255, 0.12);
+  --fc-today-bg-color: #1b2540;
+  --fc-neutral-bg-color: #161e2e;
 }
 .fc-calendar-modern .fc-toolbar-title {
   font-size: 1.25rem;
@@ -159,7 +159,7 @@
   padding: 0.5rem 0;
 }
 .dark .fc-calendar-modern .fc-col-header-cell {
-  background: #27272a;
+  background: #161e2e;
 }
 .fc-calendar-modern .fc-daygrid-day-number {
   border-radius: 9999px;

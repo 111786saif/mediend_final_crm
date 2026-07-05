@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     const where: Prisma.UserWhereInput = {}
     if (userId) where.id = userId
-    if (role && role in UserRole) where.role = role as (typeof UserRole)[keyof typeof UserRole]
+    if (role && Object.values(UserRole).includes(role as any)) where.role = role as (typeof UserRole)[keyof typeof UserRole]
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },

@@ -38,6 +38,7 @@ export function useAuth() {
     }
     setActiveRoleState(role)
     queryClient.invalidateQueries({ queryKey: ['auth', 'me'] })
+    queryClient.invalidateQueries({ queryKey: ['me', 'permissions'] })
   }
 
   const loginMutation = useMutation({
