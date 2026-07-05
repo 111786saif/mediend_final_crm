@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { UserRole } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
-import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { resolveSuggestedIpdTarget } from '@/lib/targets/ipd-target-rules'
 
 /**
  * GET /api/targets/teams
@@ -38,6 +38,13 @@ export async function GET(request: NextRequest) {
             id: true,
             userId: true,
             employeeCode: true,
+            joinDate: true,
+            salary: true,
+            salaryStructures: {
+              orderBy: { effectiveFrom: 'desc' },
+              take: 1,
+              select: { monthlyGross: true },
+            },
             user: {
               select: {
                 id: true,
@@ -61,12 +68,22 @@ export async function GET(request: NextRequest) {
       profilePicture: tl.user.profilePicture,
       employeeCode: tl.employeeCode,
       memberCount: tl.subordinates.length,
-      members: tl.subordinates.map((s) => ({
-        id: s.userId,
-        employeeId: s.id,
-        name: s.user.name,
-        profilePicture: s.user.profilePicture,
-      })),
+      members: tl.subordinates.map((s) => {
+        const suggested = resolveSuggestedIpdTarget({
+          joinDate: s.joinDate,
+          salary: s.salary,
+          monthlyGross: s.salaryStructures?.[0]?.monthlyGross,
+        })
+        return {
+          id: s.userId,
+          employeeId: s.id,
+          name: s.user.name,
+          profilePicture: s.user.profilePicture,
+          suggestedTarget: suggested.suggestedTarget,
+          suggestedBasis: suggested.basis,
+          suggestedLabel: suggested.label,
+        }
+      }),
     }))
 
     return successResponse(teams)

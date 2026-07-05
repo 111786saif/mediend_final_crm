@@ -1,0 +1,36 @@
+---
+description: Mediend Workspace master application context for AI assistants
+alwaysApply: true
+---
+
+# Mediend Workspace — AI Context
+
+Before making changes, read **`docs/AI-APPLICATION-CONTEXT.md`** for the full application map.
+
+## Quick facts
+
+- **Stack:** Next.js 16 App Router · TypeScript · Prisma 7 → PostgreSQL · React Query · Tailwind/Radix
+- **Auth:** JWT cookie `mediend_session` · `getSessionFromRequest()` in API routes · permissions in `lib/rbac.ts`
+- **Central entity:** `Lead` = patient case (no separate Patient table)
+- **API pattern:** `app/api/*/route.ts` → session → `hasPermission()` → Prisma → `successResponse`/`errorResponse`
+- **Client pattern:** `'use client'` pages · `apiGet`/`apiPost` from `lib/api-client.ts` · React Query hooks
+- **Prisma client:** `generated/prisma/` — run `npx prisma generate` + restart dev server after schema changes
+- **Uploads:** S3 in prod; local `public/uploads/` in dev when AWS keys are placeholders
+- **Nav/roles:** `lib/sidebar-nav.ts` · `EXECUTIVE_ASSISTANT` = Project Head (cross-domain)
+
+## Key docs
+
+| Doc | Topic |
+|-----|-------|
+| `docs/AI-APPLICATION-CONTEXT.md` | Master context (read first) |
+| `docs/PATIENT-CASE-FLOW.md` | Case workflow, stages, permissions |
+| `docs/HOME-PAGE-ARCHITECTURE.md` | Home page structure |
+| `SETUP.md` | Local dev setup |
+
+## Conventions
+
+- Minimize diff scope; match existing code style
+- Gate features in API (security) AND UI (visibility)
+- Use `z.string()` for upload URLs (relative `/uploads/...` paths in dev)
+- Do not commit `.env`, `generated/`, `.next/`
+- Only git commit when user explicitly asks

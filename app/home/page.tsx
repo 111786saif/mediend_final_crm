@@ -52,6 +52,7 @@ import { FnFReminderCard } from '@/components/hr/fnf-reminder-card'
 import { BirthdayCelebrationCard } from '@/components/birthday-celebration-card'
 import { BirthdayPopup } from '@/components/birthday-popup'
 import { TeamTargetWidget } from '@/components/targets/team-target-widget'
+import { EaProjectHeadTeamsSection } from '@/components/home/ea-project-head-teams-section'
 
 // ─── Greeting ─────────────────────────────────────────────────────────────────
 
@@ -691,6 +692,9 @@ export default function HomePage() {
 
       {/* Target progress widget (for TL and Sales Head) */}
       <TeamTargetWidget />
+
+      {/* Project Head view — Executive Assistant only */}
+      <EaProjectHeadTeamsSection />
 
       {/* KPIs */}
       <div>
