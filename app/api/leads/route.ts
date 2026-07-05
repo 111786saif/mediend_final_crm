@@ -193,6 +193,7 @@ export async function GET(request: NextRequest) {
           id: true,
           status: true,
           updatedAt: true,
+          location: true,
           preAuthData: {
             select: {
               updatedAt: true,

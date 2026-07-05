@@ -22,7 +22,7 @@ import {
   type CaseTrackerDateRange,
 } from '@/lib/case-tracker-date-range'
 import { getLatestActivityTime } from '@/lib/lead-activity'
-import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { formatLeadAgeSex, resolveLeadCity, resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useQuery } from '@tanstack/react-query'
@@ -549,6 +549,7 @@ export default function CaseTrackerPage() {
                         <TableHead>Patient</TableHead>
                         <TableHead>Age/Sex</TableHead>
                         <TableHead>Circle</TableHead>
+                        <TableHead>City</TableHead>
                         <TableHead>Treatment</TableHead>
                         {showBdFilter && <TableHead>BDM</TableHead>}
                         <TableHead>Hospital</TableHead>
@@ -560,7 +561,7 @@ export default function CaseTrackerPage() {
                     <TableBody>
                       {filteredRows.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={showBdFilter ? 12 : 11} className="py-10 text-center text-muted-foreground">
+                          <TableCell colSpan={showBdFilter ? 13 : 12} className="py-10 text-center text-muted-foreground">
                             No leads match
                           </TableCell>
                         </TableRow>
@@ -592,6 +593,7 @@ export default function CaseTrackerPage() {
                               <TableCell>{lead.patientName}</TableCell>
                               <TableCell className="whitespace-nowrap text-sm">{formatLeadAgeSex(lead)}</TableCell>
                               <TableCell>{typeof lead.circle === 'string' ? lead.circle : '—'}</TableCell>
+                              <TableCell>{resolveLeadCity(lead) ?? '-'}</TableCell>
                               <TableCell className="max-w-[140px] truncate">{lead.treatment ?? '—'}</TableCell>
                               {showBdFilter && (
                                 <TableCell className="max-w-[120px] truncate">

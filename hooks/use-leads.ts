@@ -61,6 +61,7 @@ export interface Lead {
     id: string
     status?: string
     updatedAt?: string | Date
+    location?: string | null
     preAuthData?: {
       updatedAt?: string | Date
       queries?: { updatedAt?: string | Date }[]
