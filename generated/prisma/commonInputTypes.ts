@@ -1252,6 +1252,13 @@ export type EnumSatisfactionLevelNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel> | $Enums.SatisfactionLevel | null
 }
 
+export type EnumReviewStatusNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewStatus | Prisma.EnumReviewStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ReviewStatus[] | Prisma.ListEnumReviewStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ReviewStatus[] | Prisma.ListEnumReviewStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumReviewStatusNullableFilter<$PrismaModel> | $Enums.ReviewStatus | null
+}
+
 export type EnumComplianceCallStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ComplianceCallStatus | Prisma.EnumComplianceCallStatusFieldRefInput<$PrismaModel>
   in?: $Enums.ComplianceCallStatus[] | Prisma.ListEnumComplianceCallStatusFieldRefInput<$PrismaModel>
@@ -1270,6 +1277,16 @@ export type EnumSatisfactionLevelNullableWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel>
+}
+
+export type EnumReviewStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewStatus | Prisma.EnumReviewStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ReviewStatus[] | Prisma.ListEnumReviewStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ReviewStatus[] | Prisma.ListEnumReviewStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumReviewStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.ReviewStatus | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReviewStatusNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReviewStatusNullableFilter<$PrismaModel>
 }
 
 export type EnumTaskPriorityFilter<$PrismaModel = never> = {
@@ -2617,6 +2634,13 @@ export type NestedEnumSatisfactionLevelNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel> | $Enums.SatisfactionLevel | null
 }
 
+export type NestedEnumReviewStatusNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewStatus | Prisma.EnumReviewStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ReviewStatus[] | Prisma.ListEnumReviewStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ReviewStatus[] | Prisma.ListEnumReviewStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumReviewStatusNullableFilter<$PrismaModel> | $Enums.ReviewStatus | null
+}
+
 export type NestedEnumComplianceCallStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.ComplianceCallStatus | Prisma.EnumComplianceCallStatusFieldRefInput<$PrismaModel>
   in?: $Enums.ComplianceCallStatus[] | Prisma.ListEnumComplianceCallStatusFieldRefInput<$PrismaModel>
@@ -2635,6 +2659,16 @@ export type NestedEnumSatisfactionLevelNullableWithAggregatesFilter<$PrismaModel
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSatisfactionLevelNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumReviewStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReviewStatus | Prisma.EnumReviewStatusFieldRefInput<$PrismaModel> | null
+  in?: $Enums.ReviewStatus[] | Prisma.ListEnumReviewStatusFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.ReviewStatus[] | Prisma.ListEnumReviewStatusFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumReviewStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.ReviewStatus | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReviewStatusNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReviewStatusNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumTaskPriorityFilter<$PrismaModel = never> = {
