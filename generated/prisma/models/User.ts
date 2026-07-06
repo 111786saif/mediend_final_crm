@@ -33,6 +33,9 @@ export type UserMinAggregateOutputType = {
   phoneNumber: string | null
   address: string | null
   profilePicture: string | null
+  gender: string | null
+  emergencyContactName: string | null
+  emergencyContactPhone: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +49,9 @@ export type UserMaxAggregateOutputType = {
   phoneNumber: string | null
   address: string | null
   profilePicture: string | null
+  gender: string | null
+  emergencyContactName: string | null
+  emergencyContactPhone: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +65,11 @@ export type UserCountAggregateOutputType = {
   phoneNumber: number
   address: number
   profilePicture: number
+  gender: number
+  emergencyContactName: number
+  emergencyContactPhone: number
+  currentAddress: number
+  permanentAddress: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,6 +85,9 @@ export type UserMinAggregateInputType = {
   phoneNumber?: true
   address?: true
   profilePicture?: true
+  gender?: true
+  emergencyContactName?: true
+  emergencyContactPhone?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +101,9 @@ export type UserMaxAggregateInputType = {
   phoneNumber?: true
   address?: true
   profilePicture?: true
+  gender?: true
+  emergencyContactName?: true
+  emergencyContactPhone?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +117,11 @@ export type UserCountAggregateInputType = {
   phoneNumber?: true
   address?: true
   profilePicture?: true
+  gender?: true
+  emergencyContactName?: true
+  emergencyContactPhone?: true
+  currentAddress?: true
+  permanentAddress?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -186,6 +208,11 @@ export type UserGroupByOutputType = {
   phoneNumber: string | null
   address: string | null
   profilePicture: string | null
+  gender: string | null
+  emergencyContactName: string | null
+  emergencyContactPhone: string | null
+  currentAddress: runtime.JsonValue | null
+  permanentAddress: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -220,6 +247,11 @@ export type UserWhereInput = {
   phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
   address?: Prisma.StringNullableFilter<"User"> | string | null
   profilePicture?: Prisma.StringNullableFilter<"User"> | string | null
+  gender?: Prisma.StringNullableFilter<"User"> | string | null
+  emergencyContactName?: Prisma.StringNullableFilter<"User"> | string | null
+  emergencyContactPhone?: Prisma.StringNullableFilter<"User"> | string | null
+  currentAddress?: Prisma.JsonNullableFilter<"User">
+  permanentAddress?: Prisma.JsonNullableFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdLeads?: Prisma.LeadListRelationFilter
@@ -314,6 +346,11 @@ export type UserOrderByWithRelationInput = {
   phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePicture?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  permanentAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   createdLeads?: Prisma.LeadOrderByRelationAggregateInput
@@ -411,6 +448,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
   address?: Prisma.StringNullableFilter<"User"> | string | null
   profilePicture?: Prisma.StringNullableFilter<"User"> | string | null
+  gender?: Prisma.StringNullableFilter<"User"> | string | null
+  emergencyContactName?: Prisma.StringNullableFilter<"User"> | string | null
+  emergencyContactPhone?: Prisma.StringNullableFilter<"User"> | string | null
+  currentAddress?: Prisma.JsonNullableFilter<"User">
+  permanentAddress?: Prisma.JsonNullableFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   createdLeads?: Prisma.LeadListRelationFilter
@@ -505,6 +547,11 @@ export type UserOrderByWithAggregationInput = {
   phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePicture?: Prisma.SortOrderInput | Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  currentAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  permanentAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -524,6 +571,11 @@ export type UserScalarWhereWithAggregatesInput = {
   phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   profilePicture?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  gender?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emergencyContactName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emergencyContactPhone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  currentAddress?: Prisma.JsonNullableWithAggregatesFilter<"User">
+  permanentAddress?: Prisma.JsonNullableWithAggregatesFilter<"User">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -537,6 +589,11 @@ export type UserCreateInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -631,6 +688,11 @@ export type UserUncheckedCreateInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -725,6 +787,11 @@ export type UserUpdateInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -819,6 +886,11 @@ export type UserUncheckedUpdateInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -913,6 +985,11 @@ export type UserCreateManyInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -926,6 +1003,11 @@ export type UserUpdateManyMutationInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -939,6 +1021,11 @@ export type UserUncheckedUpdateManyInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -952,6 +1039,11 @@ export type UserCountOrderByAggregateInput = {
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   profilePicture?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrder
+  currentAddress?: Prisma.SortOrder
+  permanentAddress?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -965,6 +1057,9 @@ export type UserMaxOrderByAggregateInput = {
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   profilePicture?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -978,6 +1073,9 @@ export type UserMinOrderByAggregateInput = {
   phoneNumber?: Prisma.SortOrder
   address?: Prisma.SortOrder
   profilePicture?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -2207,6 +2305,11 @@ export type UserCreateWithoutStatusesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -2300,6 +2403,11 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2409,6 +2517,11 @@ export type UserUpdateWithoutStatusesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -2502,6 +2615,11 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -2595,6 +2713,11 @@ export type UserCreateWithoutAssignedLeadsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -2688,6 +2811,11 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -2786,6 +2914,11 @@ export type UserCreateWithoutCreatedLeadsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
@@ -2879,6 +3012,11 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
@@ -2977,6 +3115,11 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -3070,6 +3213,11 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3179,6 +3327,11 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -3272,6 +3425,11 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3376,6 +3534,11 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
@@ -3469,6 +3632,11 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
@@ -3573,6 +3741,11 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -3666,6 +3839,11 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -3759,6 +3937,11 @@ export type UserCreateWithoutLeadCallNotesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -3852,6 +4035,11 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -3961,6 +4149,11 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -4054,6 +4247,11 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4147,6 +4345,11 @@ export type UserCreateWithoutLeadStageEventsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -4240,6 +4443,11 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4349,6 +4557,11 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -4442,6 +4655,11 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4535,6 +4753,11 @@ export type UserCreateWithoutCreatedTargetsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -4628,6 +4851,11 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -4737,6 +4965,11 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -4830,6 +5063,11 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -4923,6 +5161,11 @@ export type UserCreateWithoutInsuranceCasesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -5016,6 +5259,11 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5125,6 +5373,11 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -5218,6 +5471,11 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5311,6 +5569,11 @@ export type UserCreateWithoutPlRecordsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -5404,6 +5667,11 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5513,6 +5781,11 @@ export type UserUpdateWithoutPlRecordsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -5606,6 +5879,11 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -5699,6 +5977,11 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -5792,6 +6075,11 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -5901,6 +6189,11 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -5994,6 +6287,11 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6087,6 +6385,11 @@ export type UserCreateWithoutEmployeeInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -6180,6 +6483,11 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6278,6 +6586,11 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -6371,6 +6684,11 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -6480,6 +6798,11 @@ export type UserUpdateWithoutEmployeeInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -6573,6 +6896,11 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6677,6 +7005,11 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -6770,6 +7103,11 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -6863,6 +7201,11 @@ export type UserCreateWithoutApprovedLeavesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -6956,6 +7299,11 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7065,6 +7413,11 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -7158,6 +7511,11 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -7251,6 +7609,11 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -7344,6 +7707,11 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7442,6 +7810,11 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -7535,6 +7908,11 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -7644,6 +8022,11 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -7737,6 +8120,11 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -7841,6 +8229,11 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -7934,6 +8327,11 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8027,6 +8425,11 @@ export type UserCreateWithoutMeetsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -8120,6 +8523,11 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8229,6 +8637,11 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -8322,6 +8735,11 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8415,6 +8833,11 @@ export type UserCreateWithoutMeetParticipationsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -8508,6 +8931,11 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8617,6 +9045,11 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -8710,6 +9143,11 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -8803,6 +9241,11 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -8896,6 +9339,11 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -8994,6 +9442,11 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -9087,6 +9540,11 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9185,6 +9643,11 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -9278,6 +9741,11 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9376,6 +9844,11 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -9469,6 +9942,11 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9567,6 +10045,11 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -9660,6 +10143,11 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9758,6 +10246,11 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -9851,6 +10344,11 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -9949,6 +10447,11 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -10042,6 +10545,11 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -10151,6 +10659,11 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -10244,6 +10757,11 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10348,6 +10866,11 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -10441,6 +10964,11 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10545,6 +11073,11 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -10638,6 +11171,11 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10742,6 +11280,11 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -10835,6 +11378,11 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -10939,6 +11487,11 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -11032,6 +11585,11 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11136,6 +11694,11 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -11229,6 +11792,11 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11333,6 +11901,11 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -11426,6 +11999,11 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11519,6 +12097,11 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -11612,6 +12195,11 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -11721,6 +12309,11 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -11814,6 +12407,11 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -11907,6 +12505,11 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -12000,6 +12603,11 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12109,6 +12717,11 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -12202,6 +12815,11 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12295,6 +12913,11 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -12388,6 +13011,11 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12497,6 +13125,11 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -12590,6 +13223,11 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -12683,6 +13321,11 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -12776,6 +13419,11 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -12885,6 +13533,11 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -12978,6 +13631,11 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13071,6 +13729,11 @@ export type UserCreateWithoutIssuesReceivedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -13164,6 +13827,11 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13262,6 +13930,11 @@ export type UserCreateWithoutIssuesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -13355,6 +14028,11 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -13464,6 +14142,11 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -13557,6 +14240,11 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13661,6 +14349,11 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -13754,6 +14447,11 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -13847,6 +14545,11 @@ export type UserCreateWithoutKypSubmissionsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -13940,6 +14643,11 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14049,6 +14757,11 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -14142,6 +14855,11 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -14235,6 +14953,11 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -14328,6 +15051,11 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14426,6 +15154,11 @@ export type UserCreateWithoutPreAuthHandledInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -14519,6 +15252,11 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14617,6 +15355,11 @@ export type UserCreateWithoutPreAuthHeldInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -14710,6 +15453,11 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -14819,6 +15567,11 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -14912,6 +15665,11 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15016,6 +15774,11 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -15109,6 +15872,11 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15213,6 +15981,11 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -15306,6 +16079,11 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15399,6 +16177,11 @@ export type UserCreateWithoutNotificationsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -15492,6 +16275,11 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -15601,6 +16389,11 @@ export type UserUpdateWithoutNotificationsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -15694,6 +16487,11 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -15787,6 +16585,11 @@ export type UserCreateWithoutNoticesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -15880,6 +16683,11 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -15989,6 +16797,11 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -16082,6 +16895,11 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -16175,6 +16993,11 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -16268,6 +17091,11 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16377,6 +17205,11 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -16470,6 +17303,11 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -16563,6 +17401,11 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -16656,6 +17499,11 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16754,6 +17602,11 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -16847,6 +17700,11 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -16945,6 +17803,11 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -17038,6 +17901,11 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17147,6 +18015,11 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -17240,6 +18113,11 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17344,6 +18222,11 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -17437,6 +18320,11 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17541,6 +18429,11 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -17634,6 +18527,11 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -17727,6 +18625,11 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -17820,6 +18723,11 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -17918,6 +18826,11 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -18011,6 +18924,11 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18120,6 +19038,11 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -18213,6 +19136,11 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18317,6 +19245,11 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -18410,6 +19343,11 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18503,6 +19441,11 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -18596,6 +19539,11 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -18705,6 +19653,11 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -18798,6 +19751,11 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -18891,6 +19849,11 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -18984,6 +19947,11 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19093,6 +20061,11 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -19186,6 +20159,11 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -19279,6 +20257,11 @@ export type UserCreateWithoutQueriesRaisedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -19372,6 +20355,11 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19470,6 +20458,11 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -19563,6 +20556,11 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -19672,6 +20670,11 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -19765,6 +20768,11 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -19869,6 +20877,11 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -19962,6 +20975,11 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20055,6 +21073,11 @@ export type UserCreateWithoutPdfsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -20148,6 +21171,11 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20257,6 +21285,11 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -20350,6 +21383,11 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20443,6 +21481,11 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -20536,6 +21579,11 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -20645,6 +21693,11 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -20738,6 +21791,11 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -20831,6 +21889,11 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -20924,6 +21987,11 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -21033,6 +22101,11 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -21126,6 +22199,11 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21219,6 +22297,11 @@ export type UserCreateWithoutCaseStageChangesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -21312,6 +22395,11 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -21421,6 +22509,11 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -21514,6 +22607,11 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21607,6 +22705,11 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -21700,6 +22803,11 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -21809,6 +22917,11 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -21902,6 +23015,11 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -21995,6 +23113,11 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -22088,6 +23211,11 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22197,6 +23325,11 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -22290,6 +23423,11 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -22383,6 +23521,11 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -22476,6 +23619,11 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22574,6 +23722,11 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -22667,6 +23820,11 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22765,6 +23923,11 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -22858,6 +24021,11 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -22967,6 +24135,11 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -23060,6 +24233,11 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23164,6 +24342,11 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -23257,6 +24440,11 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23361,6 +24549,11 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -23454,6 +24647,11 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23547,6 +24745,11 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -23640,6 +24843,11 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -23749,6 +24957,11 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -23842,6 +25055,11 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -23935,6 +25153,11 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -24028,6 +25251,11 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24137,6 +25365,11 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -24230,6 +25463,11 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24323,6 +25561,11 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -24416,6 +25659,11 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24525,6 +25773,11 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -24618,6 +25871,11 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -24711,6 +25969,11 @@ export type UserCreateWithoutTasksAssignedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -24804,6 +26067,11 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -24902,6 +26170,11 @@ export type UserCreateWithoutTasksCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -24995,6 +26268,11 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25093,6 +26371,11 @@ export type UserCreateWithoutTasksCompletedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -25186,6 +26469,11 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -25295,6 +26583,11 @@ export type UserUpdateWithoutTasksAssignedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -25388,6 +26681,11 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -25492,6 +26790,11 @@ export type UserUpdateWithoutTasksCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -25585,6 +26888,11 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -25689,6 +26997,11 @@ export type UserUpdateWithoutTasksCompletedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -25782,6 +27095,11 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -25875,6 +27193,11 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -25968,6 +27291,11 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -26077,6 +27405,11 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -26170,6 +27503,11 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -26263,6 +27601,11 @@ export type UserCreateWithoutUserTaskSeenInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -26356,6 +27699,11 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -26465,6 +27813,11 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -26558,6 +27911,11 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -26651,6 +28009,11 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -26744,6 +28107,11 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -26842,6 +28210,11 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -26935,6 +28308,11 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27044,6 +28422,11 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -27137,6 +28520,11 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -27241,6 +28629,11 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -27334,6 +28727,11 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -27427,6 +28825,11 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -27520,6 +28923,11 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -27629,6 +29037,11 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -27722,6 +29135,11 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -27815,6 +29233,11 @@ export type UserCreateWithoutTaskCommentsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -27908,6 +29331,11 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -28017,6 +29445,11 @@ export type UserUpdateWithoutTaskCommentsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -28110,6 +29543,11 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28203,6 +29641,11 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -28296,6 +29739,11 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -28405,6 +29853,11 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -28498,6 +29951,11 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -28591,6 +30049,11 @@ export type UserCreateWithoutWarningsReceivedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -28684,6 +30147,11 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -28782,6 +30250,11 @@ export type UserCreateWithoutWarningsIssuedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -28875,6 +30348,11 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -28984,6 +30462,11 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -29077,6 +30560,11 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -29181,6 +30669,11 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -29274,6 +30767,11 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -29367,6 +30865,11 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -29460,6 +30963,11 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29569,6 +31077,11 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -29662,6 +31175,11 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -29755,6 +31273,11 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -29848,6 +31371,11 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -29957,6 +31485,11 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -30050,6 +31583,11 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30143,6 +31681,11 @@ export type UserCreateWithoutWorkLogsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -30236,6 +31779,11 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30345,6 +31893,11 @@ export type UserUpdateWithoutWorkLogsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -30438,6 +31991,11 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30531,6 +32089,11 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -30624,6 +32187,11 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -30733,6 +32301,11 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -30826,6 +32399,11 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -30919,6 +32497,11 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -31012,6 +32595,11 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -31121,6 +32709,11 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -31214,6 +32807,11 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -31307,6 +32905,11 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -31400,6 +33003,11 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -31509,6 +33117,11 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -31602,6 +33215,11 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -31695,6 +33313,11 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -31788,6 +33411,11 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -31897,6 +33525,11 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -31990,6 +33623,11 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32083,6 +33721,11 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -32176,6 +33819,11 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -32285,6 +33933,11 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -32378,6 +34031,11 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32471,6 +34129,11 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -32564,6 +34227,11 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -32673,6 +34341,11 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -32766,6 +34439,11 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -32859,6 +34537,11 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -32952,6 +34635,11 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -33061,6 +34749,11 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -33154,6 +34847,11 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -33247,6 +34945,11 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
@@ -33340,6 +35043,11 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   phoneNumber?: string | null
   address?: string | null
   profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
@@ -33449,6 +35157,11 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
@@ -33542,6 +35255,11 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -34377,6 +36095,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   phoneNumber?: boolean
   address?: boolean
   profilePicture?: boolean
+  gender?: boolean
+  emergencyContactName?: boolean
+  emergencyContactPhone?: boolean
+  currentAddress?: boolean
+  permanentAddress?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   createdLeads?: boolean | Prisma.User$createdLeadsArgs<ExtArgs>
@@ -34472,6 +36195,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phoneNumber?: boolean
   address?: boolean
   profilePicture?: boolean
+  gender?: boolean
+  emergencyContactName?: boolean
+  emergencyContactPhone?: boolean
+  currentAddress?: boolean
+  permanentAddress?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -34485,6 +36213,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phoneNumber?: boolean
   address?: boolean
   profilePicture?: boolean
+  gender?: boolean
+  emergencyContactName?: boolean
+  emergencyContactPhone?: boolean
+  currentAddress?: boolean
+  permanentAddress?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -34498,11 +36231,16 @@ export type UserSelectScalar = {
   phoneNumber?: boolean
   address?: boolean
   profilePicture?: boolean
+  gender?: boolean
+  emergencyContactName?: boolean
+  emergencyContactPhone?: boolean
+  currentAddress?: boolean
+  permanentAddress?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "role" | "phoneNumber" | "address" | "profilePicture" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "role" | "phoneNumber" | "address" | "profilePicture" | "gender" | "emergencyContactName" | "emergencyContactPhone" | "currentAddress" | "permanentAddress" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   createdLeads?: boolean | Prisma.User$createdLeadsArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
@@ -34684,6 +36422,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     phoneNumber: string | null
     address: string | null
     profilePicture: string | null
+    gender: string | null
+    emergencyContactName: string | null
+    emergencyContactPhone: string | null
+    currentAddress: runtime.JsonValue | null
+    permanentAddress: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -35198,6 +36941,11 @@ export interface UserFieldRefs {
   readonly phoneNumber: Prisma.FieldRef<"User", 'String'>
   readonly address: Prisma.FieldRef<"User", 'String'>
   readonly profilePicture: Prisma.FieldRef<"User", 'String'>
+  readonly gender: Prisma.FieldRef<"User", 'String'>
+  readonly emergencyContactName: Prisma.FieldRef<"User", 'String'>
+  readonly emergencyContactPhone: Prisma.FieldRef<"User", 'String'>
+  readonly currentAddress: Prisma.FieldRef<"User", 'Json'>
+  readonly permanentAddress: Prisma.FieldRef<"User", 'Json'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

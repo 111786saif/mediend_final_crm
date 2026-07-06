@@ -2082,7 +2082,7 @@ export default function PatientDetailsPage() {
 
         {/* IPD Mark Modal */}
         <Dialog open={showIPDMarkModal} onOpenChange={setShowIPDMarkModal}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Update IPD Status</DialogTitle>
               <DialogDescription>
@@ -2091,6 +2091,14 @@ export default function PatientDetailsPage() {
             </DialogHeader>
             <IPDMarkComponent
               leadId={leadId}
+              defaultPatientName={lead.patientName ?? ''}
+              existingAadharFiles={
+                lead.kypSubmission?.aadharFiles && lead.kypSubmission.aadharFiles.length > 0
+                  ? lead.kypSubmission.aadharFiles
+                  : lead.kypSubmission?.aadharFileUrl
+                    ? [{ name: 'Aadhaar', url: lead.kypSubmission.aadharFileUrl }]
+                    : []
+              }
               defaultSurgeryDate={lead.admissionRecord?.surgeryDate ?? lead.surgeryDate ?? null}
               onSuccess={() => {
                 setShowIPDMarkModal(false)

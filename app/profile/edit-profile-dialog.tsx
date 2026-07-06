@@ -10,47 +10,25 @@ import { useState, useRef } from 'react'
 import { Camera } from 'lucide-react'
 import { toast } from 'sonner'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import type { AddressDetails, ProfileData } from '@/lib/profile-types'
 
-export interface ProfileUser {
-  id: string
-  name: string
-  email: string
-  role: string
-  teamId: string | null
-  phoneNumber: string | null
-  address: string | null
-  profilePicture: string | null
-}
-
-export interface ProfileEmployee {
-  id: string
-  employeeCode: string
-  joinDate: Date | null
-  dateOfBirth: Date | null
-  designation: string | null
-  panNumber: string | null
-  aadharNumber: string | null
-  uanNumber: string | null
-  bankAccountName: string | null
-  bankAccountNumber: string | null
-  ifscCode: string | null
-  department: {
-    id: string
-    name: string
-    description: string | null
-  } | null
-}
-
-export interface ProfileData {
-  user: ProfileUser
-  employee: ProfileEmployee | null
-}
+export type { ProfileData } from '@/lib/profile-types'
 
 interface EditProfileDialogProps {
   profile: ProfileData
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
+}
+
+function emptyAddress(address?: AddressDetails): AddressDetails {
+  return {
+    line: address?.line ?? '',
+    city: address?.city ?? '',
+    state: address?.state ?? '',
+    pinCode: address?.pinCode ?? '',
+    country: address?.country ?? '',
+  }
 }
 
 export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: EditProfileDialogProps) {
@@ -61,8 +39,12 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
     name: user.name,
     email: user.email,
     phoneNumber: user.phoneNumber ?? '',
-    address: user.address ?? '',
     profilePicture: user.profilePicture ?? '',
+    gender: user.gender ?? '',
+    emergencyContactName: user.emergencyContactName ?? '',
+    emergencyContactPhone: user.emergencyContactPhone ?? '',
+    currentAddress: emptyAddress(user.currentAddress),
+    permanentAddress: emptyAddress(user.permanentAddress),
     panNumber: employee?.panNumber ?? '',
     aadharNumber: employee?.aadharNumber ?? '',
     uanNumber: employee?.uanNumber ?? '',
@@ -95,7 +77,7 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
   }
 
   const mutation = useMutation({
-    mutationFn: (data: Record<string, string | null>) => apiPatch('/api/profile', data),
+    mutationFn: (data: Record<string, unknown>) => apiPatch('/api/profile', data),
     onSuccess: () => {
       toast.success('Profile updated')
       onOpenChange(false)
@@ -104,33 +86,67 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
     onError: (e: Error) => toast.error(e.message || 'Update failed'),
   })
 
+  const resetForm = () => {
+    setFormData({
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phoneNumber ?? '',
+      profilePicture: user.profilePicture ?? '',
+      gender: user.gender ?? '',
+      emergencyContactName: user.emergencyContactName ?? '',
+      emergencyContactPhone: user.emergencyContactPhone ?? '',
+      currentAddress: emptyAddress(user.currentAddress),
+      permanentAddress: emptyAddress(user.permanentAddress),
+      panNumber: employee?.panNumber ?? '',
+      aadharNumber: employee?.aadharNumber ?? '',
+      uanNumber: employee?.uanNumber ?? '',
+      bankAccountName: employee?.bankAccountName ?? '',
+      bankAccountNumber: employee?.bankAccountNumber ?? '',
+      ifscCode: employee?.ifscCode ?? '',
+    })
+  }
+
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open)
-    if (open) {
-      setFormData({
-        name: user.name,
-        email: user.email,
-        phoneNumber: user.phoneNumber ?? '',
-        address: user.address ?? '',
-        profilePicture: user.profilePicture ?? '',
-        panNumber: employee?.panNumber ?? '',
-        aadharNumber: employee?.aadharNumber ?? '',
-        uanNumber: employee?.uanNumber ?? '',
-        bankAccountName: employee?.bankAccountName ?? '',
-        bankAccountNumber: employee?.bankAccountNumber ?? '',
-        ifscCode: employee?.ifscCode ?? '',
-      })
-    }
+    if (open) resetForm()
+  }
+
+  const setAddressField = (
+    which: 'currentAddress' | 'permanentAddress',
+    key: keyof AddressDetails,
+    value: string
+  ) => {
+    setFormData((p) => ({
+      ...p,
+      [which]: { ...p[which], [key]: value },
+    }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const payload: Record<string, string | null> = {
+    const payload: Record<string, unknown> = {
       name: formData.name,
       email: formData.email,
       phoneNumber: formData.phoneNumber || null,
-      address: formData.address || null,
       profilePicture: formData.profilePicture || null,
+      gender: formData.gender || null,
+      emergencyContactName: formData.emergencyContactName || null,
+      emergencyContactPhone: formData.emergencyContactPhone || null,
+      currentAddress: {
+        line: formData.currentAddress.line || null,
+        city: formData.currentAddress.city || null,
+        state: formData.currentAddress.state || null,
+        pinCode: formData.currentAddress.pinCode || null,
+        country: formData.currentAddress.country || null,
+      },
+      permanentAddress: {
+        line: formData.permanentAddress.line || null,
+        city: formData.permanentAddress.city || null,
+        state: formData.permanentAddress.state || null,
+        pinCode: formData.permanentAddress.pinCode || null,
+        country: formData.permanentAddress.country || null,
+      },
+      address: formData.currentAddress.line || null,
     }
     if (employee) {
       if (!panLocked) payload.panNumber = formData.panNumber || null
@@ -154,11 +170,11 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
-            PAN, Aadhar, UAN and bank details can only be changed by HR once saved.
+            Update your personal details. Bank details can only be changed by HR once saved.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -202,7 +218,9 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
               <Input
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value.toLowerCase().trim() }))}
+                onChange={(e) =>
+                  setFormData((p) => ({ ...p, email: e.target.value.toLowerCase().trim() }))
+                }
                 required
                 className="mt-1.5"
               />
@@ -217,18 +235,62 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
               />
             </div>
             <div>
-              <Label>Address</Label>
+              <Label>Gender</Label>
               <Input
-                value={formData.address}
-                onChange={(e) => setFormData((p) => ({ ...p, address: e.target.value }))}
-                placeholder="Your address"
+                value={formData.gender}
+                onChange={(e) => setFormData((p) => ({ ...p, gender: e.target.value }))}
+                placeholder="e.g. Male, Female, Other"
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label>Emergency contact name</Label>
+              <Input
+                value={formData.emergencyContactName}
+                onChange={(e) => setFormData((p) => ({ ...p, emergencyContactName: e.target.value }))}
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label>Emergency contact phone</Label>
+              <Input
+                value={formData.emergencyContactPhone}
+                onChange={(e) => setFormData((p) => ({ ...p, emergencyContactPhone: e.target.value }))}
                 className="mt-1.5"
               />
             </div>
           </div>
 
+          <div className="space-y-3 border-t pt-3">
+            <p className="text-xs font-medium text-muted-foreground">Current address</p>
+            {(['line', 'city', 'state', 'pinCode', 'country'] as const).map((key) => (
+              <div key={`current-${key}`}>
+                <Label className="capitalize">{key === 'pinCode' ? 'PIN code' : key.replace(/([A-Z])/g, ' $1')}</Label>
+                <Input
+                  value={formData.currentAddress[key] ?? ''}
+                  onChange={(e) => setAddressField('currentAddress', key, e.target.value)}
+                  className="mt-1.5"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-3 border-t pt-3">
+            <p className="text-xs font-medium text-muted-foreground">Permanent address</p>
+            {(['line', 'city', 'state', 'pinCode', 'country'] as const).map((key) => (
+              <div key={`permanent-${key}`}>
+                <Label className="capitalize">{key === 'pinCode' ? 'PIN code' : key.replace(/([A-Z])/g, ' $1')}</Label>
+                <Input
+                  value={formData.permanentAddress[key] ?? ''}
+                  onChange={(e) => setAddressField('permanentAddress', key, e.target.value)}
+                  className="mt-1.5"
+                />
+              </div>
+            ))}
+          </div>
+
           {employee && (
-            <div className="space-y-3 pt-3 border-t">
+            <div className="space-y-3 border-t pt-3">
               <p className="text-xs font-medium text-muted-foreground">Identity & bank (first-time only)</p>
               <div>
                 <Label>PAN</Label>
@@ -240,35 +302,41 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
                   disabled={panLocked}
                   className="mt-1.5 font-mono"
                 />
-                {panLocked && <p className="text-xs text-muted-foreground mt-1">Contact HR to update</p>}
+                {panLocked && <p className="mt-1 text-xs text-muted-foreground">Contact HR to update</p>}
               </div>
               <div>
                 <Label>Aadhar</Label>
                 <Input
                   value={formData.aadharNumber}
                   onChange={(e) =>
-                    setFormData((p) => ({ ...p, aadharNumber: e.target.value.replace(/\D/g, '').slice(0, 12) }))
+                    setFormData((p) => ({
+                      ...p,
+                      aadharNumber: e.target.value.replace(/\D/g, '').slice(0, 12),
+                    }))
                   }
                   placeholder="12 digits"
                   maxLength={12}
                   disabled={aadharLocked}
                   className="mt-1.5 font-mono"
                 />
-                {aadharLocked && <p className="text-xs text-muted-foreground mt-1">Contact HR to update</p>}
+                {aadharLocked && <p className="mt-1 text-xs text-muted-foreground">Contact HR to update</p>}
               </div>
               <div>
                 <Label>UAN</Label>
                 <Input
                   value={formData.uanNumber}
                   onChange={(e) =>
-                    setFormData((p) => ({ ...p, uanNumber: e.target.value.replace(/\D/g, '').slice(0, 12) }))
+                    setFormData((p) => ({
+                      ...p,
+                      uanNumber: e.target.value.replace(/\D/g, '').slice(0, 12),
+                    }))
                   }
                   placeholder="12 digits"
                   maxLength={12}
                   disabled={uanLocked}
                   className="mt-1.5 font-mono"
                 />
-                {uanLocked && <p className="text-xs text-muted-foreground mt-1">Contact HR to update</p>}
+                {uanLocked && <p className="mt-1 text-xs text-muted-foreground">Contact HR to update</p>}
               </div>
               <div>
                 <Label>Bank account holder</Label>
@@ -284,7 +352,10 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
                 <Input
                   value={formData.bankAccountNumber}
                   onChange={(e) =>
-                    setFormData((p) => ({ ...p, bankAccountNumber: e.target.value.replace(/\D/g, '') }))
+                    setFormData((p) => ({
+                      ...p,
+                      bankAccountNumber: e.target.value.replace(/\D/g, ''),
+                    }))
                   }
                   disabled={bankLocked}
                   className="mt-1.5 font-mono"
@@ -300,7 +371,7 @@ export function EditProfileDialog({ profile, isOpen, onOpenChange, onSuccess }: 
                   disabled={bankLocked}
                   className="mt-1.5 font-mono"
                 />
-                {bankLocked && <p className="text-xs text-muted-foreground mt-1">Contact HR to update</p>}
+                {bankLocked && <p className="mt-1 text-xs text-muted-foreground">Contact HR to update</p>}
               </div>
             </div>
           )}

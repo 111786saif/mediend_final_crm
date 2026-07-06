@@ -438,17 +438,25 @@ export async function GET(request: NextRequest) {
           employee: { select: { team: { select: { id: true } } } },
         },
       },
+      phoneNumber: true,
+      insuranceName: true,
+      tpa: true,
       kypSubmission: {
         select: {
           id: true,
           status: true,
           updatedAt: true,
+          submittedAt: true,
+          insuranceType: true,
+          location: true,
           preAuthData: {
             select: {
               updatedAt: true,
               requestedHospitalName: true,
               hospitalNameSuggestion: true,
               hospitalSuggestions: true,
+              insurance: true,
+              tpa: true,
             },
           },
         },

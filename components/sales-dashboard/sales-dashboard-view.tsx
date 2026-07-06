@@ -5,17 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useEffect, useState } from 'react'
+import type { DateRange } from 'react-day-picker'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Progress } from '@/components/ui/progress'
 import { TabNavigation } from '@/components/employee/tab-navigation'
-import { format } from 'date-fns'
+import { format, startOfMonth, endOfMonth } from 'date-fns'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
   PieChart,
@@ -43,6 +44,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
+import { cn } from '@/lib/utils'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -125,8 +127,17 @@ interface IpdBreakdown {
   byHospital: Array<{ hospitalName: string; circle: string; count: number; revenue: number; profit: number }>
   bySource: Array<{ source: string; count: number; revenue: number; profit: number }>
   byCampaign: Array<{ campaign: string; count: number; revenue: number; profit: number }>
+  byInsurance: Array<{ insurance: string; count: number; revenue: number; profit: number }>
+  byTpa: Array<{ tpa: string; count: number; revenue: number; profit: number }>
   byMonth: Array<{ month: string; count: number; revenue: number; profit: number }>
   surgeonCrossAnalysis: Array<{ surgeonName: string; hospitalName: string; treatment: string; count: number; revenue: number; profit: number }>
+}
+
+interface TargetSummary {
+  ipdDone: number
+  assignedTarget: number
+  achievementPercentage: number | null
+  teamTargetCount: number
 }
 
 interface LeadsBreakdown {
@@ -212,48 +223,133 @@ function StatCard({ label, value, sub, color }: { label: string; value: string |
   )
 }
 
+function TargetVsActualCard({
+  ipdDone,
+  assignedTarget,
+  achievementPercentage,
+}: {
+  ipdDone: number | string
+  assignedTarget: number | string
+  achievementPercentage: number | string | null
+}) {
+  const pct = typeof achievementPercentage === 'number' ? achievementPercentage : null
+  const pctColor =
+    pct == null ? 'text-muted-foreground' :
+    pct >= 100 ? 'text-emerald-600 dark:text-emerald-400' :
+    pct >= 60 ? 'text-blue-600 dark:text-blue-400' :
+    'text-red-500 dark:text-red-400'
+
+  return (
+    <Card className="bg-violet-500/10 text-violet-900 dark:text-violet-100 border-0">
+      <CardContent className="pt-4 pb-4">
+        <p className="text-xs font-medium opacity-75 flex items-center gap-1.5">
+          <Target className="h-3.5 w-3.5" /> IPD Done vs Assigned Target
+        </p>
+        <div className="mt-2 space-y-1">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-[10px] uppercase tracking-wide opacity-60">IPD Done</span>
+            <span className="text-xl font-bold tabular-nums">{ipdDone}</span>
+          </div>
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-[10px] uppercase tracking-wide opacity-60">Target</span>
+            <span className="text-xl font-bold tabular-nums">{assignedTarget}</span>
+          </div>
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-[10px] uppercase tracking-wide opacity-60">Achievement</span>
+            <span className={cn('text-xl font-bold tabular-nums', pctColor)}>
+              {pct != null ? `${pct}%` : '–'}
+            </span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function formatDateRangeLabel(range: DateRange | undefined): string {
+  if (!range?.from) return 'Select period'
+  const from = range.from
+  const to = range.to ?? range.from
+  if (from.getTime() === to.getTime()) return format(from, 'dd MMM yyyy')
+  return `${format(from, 'dd MMM yyyy')} – ${format(to, 'dd MMM yyyy')}`
+}
+
 // ─── Date Picker ─────────────────────────────────────────────────────────────
 
 function DateRangePicker({
-  startDate, endDate, setStartDate, setEndDate
+  value,
+  onChange,
 }: {
-  startDate: Date | undefined
-  endDate: Date | undefined
-  setStartDate: (d: Date | undefined) => void
-  setEndDate: (d: Date | undefined) => void
+  value: DateRange | undefined
+  onChange: (range: DateRange | undefined) => void
 }) {
-  const [isStartOpen, setIsStartOpen] = useState(false)
-  const [isEndOpen, setIsEndOpen] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [months, setMonths] = useState(1)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    const apply = () => setMonths(mq.matches ? 2 : 1)
+    apply()
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [])
+
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm text-muted-foreground">From</span>
-      <Dialog open={isStartOpen} onOpenChange={setIsStartOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="w-[120px] justify-start">
-            <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
-            {startDate ? format(startDate, 'dd MMM yy') : 'Pick'}
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className={cn(
+            'justify-start text-left font-normal w-full sm:w-auto min-w-0 sm:min-w-[240px] md:min-w-[280px]',
+            !value?.from && 'text-muted-foreground'
+          )}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
+          <span className="truncate">{formatDateRangeLabel(value)}</span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto max-w-[calc(100vw-1rem)] p-0" align="end">
+        <Calendar
+          mode="range"
+          defaultMonth={value?.from ?? new Date()}
+          selected={value}
+          onSelect={(range) => {
+            onChange(range)
+            if (range?.from && range?.to) setOpen(false)
+          }}
+          numberOfMonths={months}
+        />
+        <div className="flex items-center justify-between gap-2 border-t p-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-xs"
+            onClick={() => {
+              onChange(undefined)
+              setOpen(false)
+            }}
+          >
+            Clear
           </Button>
-        </DialogTrigger>
-        <DialogContent className="w-auto p-0">
-          <Calendar mode="single" selected={startDate} onSelect={(d) => { setStartDate(d); setIsStartOpen(false) }} />
-        </DialogContent>
-      </Dialog>
-      <span className="text-sm text-muted-foreground">To</span>
-      <Dialog open={isEndOpen} onOpenChange={setIsEndOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="w-[120px] justify-start">
-            <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
-            {endDate ? format(endDate, 'dd MMM yy') : 'Pick'}
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-xs"
+            onClick={() => {
+              const d = new Date()
+              onChange({ from: startOfMonth(d), to: endOfMonth(d) })
+              setOpen(false)
+            }}
+          >
+            This month
           </Button>
-        </DialogTrigger>
-        <DialogContent className="w-auto p-0">
-          <Calendar mode="single" selected={endDate} onSelect={(d) => { setEndDate(d); setIsEndOpen(false) }} />
-        </DialogContent>
-      </Dialog>
-      {(startDate || endDate) && (
-        <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => { setStartDate(undefined); setEndDate(undefined) }}>Clear</Button>
-      )}
-    </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -541,6 +637,58 @@ function TeamDetailSheet({
   )
 }
 
+// ─── Overview Breakdown Table ─────────────────────────────────────────────────
+
+type OverviewRow = { category: string; name: string; count: number; revenue: number; profit: number }
+
+function OverviewBreakdownTable({ rows }: { rows: OverviewRow[] }) {
+  if (rows.length === 0) {
+    return <p className="text-center text-muted-foreground py-6 text-sm">No data in selected range</p>
+  }
+
+  const categories = ['Insurance', 'TPA', 'Lead Sources'] as const
+
+  return (
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Category</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead className="text-right">IPD Done</TableHead>
+            <TableHead className="text-right">Revenue</TableHead>
+            <TableHead className="text-right">Net Profit</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {categories.map((category) => {
+            const categoryRows = rows.filter((r) => r.category === category)
+            if (categoryRows.length === 0) {
+              return (
+                <TableRow key={category}>
+                  <TableCell className="font-semibold text-sm">{category}</TableCell>
+                  <TableCell colSpan={4} className="text-muted-foreground text-sm">No data</TableCell>
+                </TableRow>
+              )
+            }
+            return categoryRows.map((row, idx) => (
+              <TableRow key={`${category}-${row.name}`}>
+                <TableCell className="font-semibold text-sm">
+                  {idx === 0 ? category : ''}
+                </TableCell>
+                <TableCell className="max-w-[180px] truncate">{row.name}</TableCell>
+                <TableCell className="text-right tabular-nums font-semibold text-emerald-600">{row.count}</TableCell>
+                <TableCell className="text-right tabular-nums">{fmtK(row.revenue)}</TableCell>
+                <TableCell className="text-right tabular-nums">{fmtK(row.profit)}</TableCell>
+              </TableRow>
+            ))
+          })}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
 // ─── Overview Tab ─────────────────────────────────────────────────────────────
 
 function overviewDateQueryString(dateParams: string): string {
@@ -568,6 +716,11 @@ function OverviewTab({
       apiGet<IpdComparison>(`/api/analytics/sales-dashboard/ipd-comparison${comparisonQs}`),
   })
 
+  const { data: targetSummary } = useQuery<TargetSummary>({
+    queryKey: ['sales-dashboard', variant, 'target-summary', qs],
+    queryFn: () => apiGet<TargetSummary>(`/api/analytics/sales-dashboard/target-summary${comparisonQs}`),
+  })
+
   const { data: bdLeaderboard } = useQuery<LeaderboardEntry[]>({
     queryKey: ['sales-dashboard', variant, 'leaderboard-bd', qs],
     queryFn: () => apiGet(`/api/analytics/leaderboard?type=bd&${qs}`),
@@ -591,6 +744,30 @@ function OverviewTab({
 
   const monthChartData = (ipdBreakdown?.byMonth ?? []).slice(-12)
 
+  const overviewRows: OverviewRow[] = [
+    ...(ipdBreakdown?.byInsurance ?? []).slice(0, 10).map((i) => ({
+      category: 'Insurance',
+      name: i.insurance,
+      count: i.count,
+      revenue: i.revenue,
+      profit: i.profit,
+    })),
+    ...(ipdBreakdown?.byTpa ?? []).slice(0, 10).map((t) => ({
+      category: 'TPA',
+      name: t.tpa,
+      count: t.count,
+      revenue: t.revenue,
+      profit: t.profit,
+    })),
+    ...(ipdBreakdown?.bySource ?? []).slice(0, 10).map((s) => ({
+      category: 'Lead Sources',
+      name: s.source,
+      count: s.count,
+      revenue: s.revenue,
+      profit: s.profit,
+    })),
+  ]
+
   return (
     <div className="space-y-6">
       {/* IPD Pulse */}
@@ -602,7 +779,11 @@ function OverviewTab({
           <StatCard label="IPD (selected range)" value={comparison?.ipdThisMonth ?? '–'} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
           <StatCard label="Prior period (vs same dates last month)" value={comparison?.ipdByThisDayLastMonth ?? '–'} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
           <StatCard label={`Best month (by day ${comparison?.dayOfMonth ?? ''} in year)`} value={comparison?.ipdBestMonthByThisDay ?? '–'} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
-          <StatCard label="Best month this year" value={comparison?.bestMonthThisYear?.count ?? '–'} sub={comparison?.bestMonthThisYear?.monthLabel ?? undefined} color="bg-amber-500/10 text-amber-900 dark:text-amber-100" />
+          <TargetVsActualCard
+            ipdDone={targetSummary?.ipdDone ?? comparison?.ipdThisMonth ?? '–'}
+            assignedTarget={targetSummary?.assignedTarget ?? '–'}
+            achievementPercentage={targetSummary?.achievementPercentage ?? null}
+          />
         </div>
       </div>
 
@@ -624,6 +805,18 @@ function OverviewTab({
           </CardContent>
         </Card>
       )}
+
+      {/* Dashboard Overview */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" /> Dashboard Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0 pb-2">
+          <OverviewBreakdownTable rows={overviewRows} />
+        </CardContent>
+      </Card>
 
       {/* Leaderboards side by side */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -1155,17 +1348,16 @@ function CircleTab({ dateParams, variant }: { dateParams: string; variant: Dashb
 
 export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVariant }) {
   const [activeTab, setActiveTab] = useState('overview')
-  const [startDate, setStartDate] = useState<Date | undefined>(() => {
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const t = new Date()
-    return new Date(t.getFullYear(), t.getMonth(), 1)
-  })
-  const [endDate, setEndDate] = useState<Date | undefined>(() => {
-    const t = new Date()
-    return new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59, 999)
+    return { from: startOfMonth(t), to: endOfMonth(t) }
   })
 
   const [selectedBdId, setSelectedBdId] = useState<string | null>(null)
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)
+
+  const startDate = dateRange?.from
+  const endDate = dateRange?.to ?? dateRange?.from
 
   const dateParams = [
     startDate ? `startDate=${format(startDate, 'yyyy-MM-dd')}` : '',
@@ -1203,7 +1395,9 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
                 <Link href="/team-lead/pipeline">View pipeline</Link>
               </Button>
             )}
-            <DateRangePicker startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
+          <div className="flex w-full sm:w-auto shrink-0">
+            <DateRangePicker value={dateRange} onChange={setDateRange} />
+          </div>
           </div>
         </div>
 

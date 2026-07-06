@@ -406,10 +406,15 @@ model User {
   passwordHash   String
   name           String
   role           UserRole
-  phoneNumber    String?
-  address        String?  @db.Text
-  profilePicture String?
-  createdAt      DateTime @default(now())
+  phoneNumber            String?
+  address                String?  @db.Text
+  profilePicture         String?
+  gender                 String?
+  emergencyContactName   String?
+  emergencyContactPhone  String?
+  currentAddress         Json?
+  permanentAddress       Json?
+  createdAt              DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   // Relations
@@ -965,6 +970,19 @@ model Employee {
   bankAccountName       String?
   bankAccountNumber     String?
   ifscCode              String?
+  bankName              String?
+  bankBranch            String?
+  upiId                 String?
+  bloodGroup            String?
+  employmentType        String?
+  workLocation          String?
+  passportDocUrl        String?
+  drivingLicenseDocUrl  String?
+  resumeDocUrl          String?
+  educationalCertDocUrl String?
+  experienceCertDocUrl  String?
+  appointmentLetterDocUrl String?
+  otherDocuments        Json?
   uanNumber             String?
   status                EmployeeStatus  @default(ACTIVE)
   pipStartDate          DateTime?

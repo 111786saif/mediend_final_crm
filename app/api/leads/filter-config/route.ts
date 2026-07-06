@@ -27,6 +27,8 @@ export async function GET(request: NextRequest) {
     const [
       // BDM: always use User table with role=BD for complete, authoritative list
       bdUsers,
+      // Lead refs (for KYP case tracker column filter)
+      leadRefs,
       plHospitals, dsHospitals, leadHospitals,
       plDoctors, dsDoctors,
       plManagers, dsManagers,
@@ -47,6 +49,13 @@ export async function GET(request: NextRequest) {
         where: { role: UserRole.BD },
         select: { name: true },
         orderBy: { name: 'asc' },
+      }),
+
+      // Lead refs — distinct values from Lead table (used by KYP case tracker)
+      prisma.lead.findMany({
+        select: { leadRef: true },
+        distinct: ['leadRef'],
+        orderBy: { leadRef: 'asc' },
       }),
 
       // Hospital names
@@ -133,9 +142,13 @@ export async function GET(request: NextRequest) {
     ]
     const paymentTypeOptions = toOptions([...knownPaymentTypes, ...dbPaymentTypes])
 
+    // Lead ref options (string values of leadRef)
+    const leadRefOptions = toOptions(leadRefs.map(r => r.leadRef != null ? String(r.leadRef) : null))
+
     return successResponse({
       filters: [
         // ── multiSelect ──────────────────────────────────────────────────
+        { field: 'leadRef', label: 'Lead Ref', filterType: 'multiSelect', filterable: true, options: leadRefOptions },
         { field: 'bdm', label: 'BDM', filterType: 'multiSelect', filterable: true, options: bdmOptions },
         { field: 'hospital', label: 'Hospital', filterType: 'multiSelect', filterable: true, options: hospitalOptions },
         { field: 'doctor', label: 'Doctor', filterType: 'multiSelect', filterable: true, options: doctorOptions },
@@ -182,6 +195,7 @@ export async function GET(request: NextRequest) {
         { field: 'patient', label: 'Patient Name', filterType: 'search', filterable: true },
 
         // ── dateRange ────────────────────────────────────────────────────
+        { field: 'date', label: 'Lead Date', filterType: 'dateRange', filterable: true },
         { field: 'admissionDate', label: 'Admission Date', filterType: 'dateRange', filterable: true },
         { field: 'surgeryDate', label: 'Surgery Date', filterType: 'dateRange', filterable: true },
 

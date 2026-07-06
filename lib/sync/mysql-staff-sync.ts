@@ -121,10 +121,17 @@ export async function syncStaffFromMySQL(): Promise<StaffSyncResult> {
         }
       }
 
-      // 2. Find or create Employee record with bdNumber
+      // 2. Find or create Employee record with bdNumber.
+      // userId is unique on Employee, so we must also reuse rows already linked
+      // to this user (even when bdNumber is empty/outdated) to avoid P2002.
       let employee = await prisma.employee.findFirst({
-        where: { bdNumber: staff.staffid }
+        where: { bdNumber: staff.staffid },
       })
+      if (!employee) {
+        employee = await prisma.employee.findFirst({
+          where: { userId: user.id },
+        })
+      }
 
       const employeeCode = `CRM-${staff.staffid}`
 
@@ -142,11 +149,12 @@ export async function syncStaffFromMySQL(): Promise<StaffSyncResult> {
         result.employeesCreated++
         console.log(`✅ Created employee record for ${fullName} (BD#${staff.staffid})`)
       } else {
-        // Update employee if needed
-        const needsEmployeeUpdate = 
-          employee.employeeCode !== employeeCode || 
+        // Update employee if needed. Keep existing values unless stale/missing.
+        const needsEmployeeUpdate =
+          employee.employeeCode !== employeeCode ||
           employee.designation !== staff.Designation ||
-          employee.userId !== user.id
+          employee.userId !== user.id ||
+          employee.bdNumber !== staff.staffid
 
         if (needsEmployeeUpdate) {
           await prisma.employee.update({
@@ -155,6 +163,7 @@ export async function syncStaffFromMySQL(): Promise<StaffSyncResult> {
               employeeCode,
               designation: staff.Designation || null,
               userId: user.id,
+              bdNumber: staff.staffid,
             }
           })
           result.employeesUpdated++
