@@ -8176,6 +8176,11 @@ export const UserScalarFieldEnum = {
   phoneNumber: 'phoneNumber',
   address: 'address',
   profilePicture: 'profilePicture',
+  gender: 'gender',
+  emergencyContactName: 'emergencyContactName',
+  emergencyContactPhone: 'emergencyContactPhone',
+  currentAddress: 'currentAddress',
+  permanentAddress: 'permanentAddress',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -8504,6 +8509,19 @@ export const EmployeeScalarFieldEnum = {
   bankAccountName: 'bankAccountName',
   bankAccountNumber: 'bankAccountNumber',
   ifscCode: 'ifscCode',
+  bankName: 'bankName',
+  bankBranch: 'bankBranch',
+  upiId: 'upiId',
+  bloodGroup: 'bloodGroup',
+  employmentType: 'employmentType',
+  workLocation: 'workLocation',
+  passportDocUrl: 'passportDocUrl',
+  drivingLicenseDocUrl: 'drivingLicenseDocUrl',
+  resumeDocUrl: 'resumeDocUrl',
+  educationalCertDocUrl: 'educationalCertDocUrl',
+  experienceCertDocUrl: 'experienceCertDocUrl',
+  appointmentLetterDocUrl: 'appointmentLetterDocUrl',
+  otherDocuments: 'otherDocuments',
   uanNumber: 'uanNumber',
   status: 'status',
   pipStartDate: 'pipStartDate',
@@ -10161,14 +10179,6 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -10176,6 +10186,14 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 
@@ -10209,6 +10227,20 @@ export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'UserRole[]'
  */
 export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -10370,20 +10402,6 @@ export type EnumTargetMetricFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'TargetMetric[]'
  */
 export type ListEnumTargetMetricFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TargetMetric[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 

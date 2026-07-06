@@ -181,6 +181,11 @@ export const UserScalarFieldEnum = {
   phoneNumber: 'phoneNumber',
   address: 'address',
   profilePicture: 'profilePicture',
+  gender: 'gender',
+  emergencyContactName: 'emergencyContactName',
+  emergencyContactPhone: 'emergencyContactPhone',
+  currentAddress: 'currentAddress',
+  permanentAddress: 'permanentAddress',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -509,6 +514,19 @@ export const EmployeeScalarFieldEnum = {
   bankAccountName: 'bankAccountName',
   bankAccountNumber: 'bankAccountNumber',
   ifscCode: 'ifscCode',
+  bankName: 'bankName',
+  bankBranch: 'bankBranch',
+  upiId: 'upiId',
+  bloodGroup: 'bloodGroup',
+  employmentType: 'employmentType',
+  workLocation: 'workLocation',
+  passportDocUrl: 'passportDocUrl',
+  drivingLicenseDocUrl: 'drivingLicenseDocUrl',
+  resumeDocUrl: 'resumeDocUrl',
+  educationalCertDocUrl: 'educationalCertDocUrl',
+  experienceCertDocUrl: 'experienceCertDocUrl',
+  appointmentLetterDocUrl: 'appointmentLetterDocUrl',
+  otherDocuments: 'otherDocuments',
   uanNumber: 'uanNumber',
   status: 'status',
   pipStartDate: 'pipStartDate',
@@ -2166,14 +2184,6 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -2181,4 +2191,12 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

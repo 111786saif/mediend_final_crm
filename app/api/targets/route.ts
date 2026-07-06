@@ -16,7 +16,7 @@ const targetSchema = z.object({
   targetValue: z.number(),
 })
 
-import { getSubordinateUserIdsForLeadAccess } from '@/lib/hierarchy'
+import { validateTargetAssignment } from '@/lib/targets/target-assignment'
 
 export async function GET(request: NextRequest) {
   try {
@@ -88,6 +88,11 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const data = targetSchema.parse(body)
+
+    const validation = await validateTargetAssignment(user, data.targetType, data.targetForId)
+    if (!validation.ok) {
+      return errorResponse(validation.message, 403)
+    }
 
     const target = await prisma.target.create({
       data: {

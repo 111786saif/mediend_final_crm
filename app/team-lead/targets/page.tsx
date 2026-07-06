@@ -17,7 +17,7 @@ import { Progress } from '@/components/ui/progress'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
   Plus,
@@ -43,6 +43,9 @@ interface TeamMember {
   employeeId: string
   name: string
   profilePicture: string | null
+  suggestedTarget?: number
+  suggestedBasis?: 'salary_slab' | 'tenure'
+  suggestedLabel?: string
 }
 
 interface TeamInfo {
@@ -329,6 +332,14 @@ function AssignBDTargetDialog({
   const [selectedBdId, setSelectedBdId] = useState('')
   const [targetValue, setTargetValue] = useState('')
 
+  const selectedMember = members.find((m) => m.id === selectedBdId)
+
+  useEffect(() => {
+    if (selectedMember?.suggestedTarget) {
+      setTargetValue(String(selectedMember.suggestedTarget))
+    }
+  }, [selectedBdId, selectedMember?.suggestedTarget])
+
   const periodStart = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1)
   const periodEnd = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0)
 
@@ -382,6 +393,11 @@ function AssignBDTargetDialog({
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-sm font-medium flex-1 truncate">{m.name}</span>
+                    {m.suggestedTarget != null && (
+                      <Badge variant="outline" className="text-[10px] shrink-0 tabular-nums">
+                        Suggested: {m.suggestedTarget}
+                      </Badge>
+                    )}
                     {isSelected && (
                       <div className="h-5 w-5 rounded-full bg-violet-500 flex items-center justify-center shrink-0">
                         <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -405,7 +421,14 @@ function AssignBDTargetDialog({
               min={1}
               required
             />
-            <p className="text-xs text-muted-foreground mt-1">Number of IPDs expected from this BD</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Number of IPDs expected from this BD
+              {selectedMember?.suggestedLabel && (
+                <span className="block mt-0.5 text-violet-600 dark:text-violet-400">
+                  Suggested ({selectedMember.suggestedLabel}): {selectedMember.suggestedTarget ?? '–'}
+                </span>
+              )}
+            </p>
           </div>
           <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={isLoading || !selectedBdId}>
             {isLoading ? 'Assigning...' : 'Assign Target'}
