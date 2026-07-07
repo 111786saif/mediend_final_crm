@@ -9702,6 +9702,8 @@ export const ComplianceCallScalarFieldEnum = {
   additionalRemark: 'additionalRemark',
   satisfaction: 'satisfaction',
   concernCategories: 'concernCategories',
+  reviewStatus: 'reviewStatus',
+  reviewScreenshot: 'reviewScreenshot',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -11004,6 +11006,20 @@ export type ListEnumConcernCategoryFieldRefInput<$PrismaModel> = FieldRefInputTy
  * Reference to a field of type 'ConcernCategory'
  */
 export type EnumConcernCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConcernCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'ReviewStatus'
+ */
+export type EnumReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ReviewStatus[]'
+ */
+export type ListEnumReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReviewStatus[]'>
     
 
 

@@ -1707,6 +1707,8 @@ export const ComplianceCallScalarFieldEnum = {
   additionalRemark: 'additionalRemark',
   satisfaction: 'satisfaction',
   concernCategories: 'concernCategories',
+  reviewStatus: 'reviewStatus',
+  reviewScreenshot: 'reviewScreenshot',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

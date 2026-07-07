@@ -207,6 +207,7 @@ export function AppSidebar() {
                 item.title === 'Chat' ||
                 item.title === 'Master Data' ||
                 item.title === 'Compliance' ||
+                item.title === 'Cumulative Report' ||
                 SALES_TITLES.includes(item.title) ||
                 INSURANCE_PL_TITLES.includes(item.title) ||
                 EA_HRM_TITLES.includes(item.title) ||
@@ -231,6 +232,7 @@ export function AppSidebar() {
                 item.title === 'Calendar' ||
                 item.title === 'Chat' ||
                 item.title === 'Compliance' ||
+                item.title === 'Cumulative Report' ||
                 item.title.startsWith('My ')
             )
           : itemsWithUrls.filter(

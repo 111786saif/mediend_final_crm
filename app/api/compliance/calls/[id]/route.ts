@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
-import { ComplianceCallStatus, SatisfactionLevel, ConcernCategory } from '@/generated/prisma/client'
+import { ComplianceCallStatus, SatisfactionLevel, ConcernCategory, ReviewStatus, Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
@@ -34,6 +34,9 @@ const updateSchema = z.object({
 
   satisfaction: z.nativeEnum(SatisfactionLevel).nullable().optional(),
   concernCategories: z.array(z.nativeEnum(ConcernCategory)).optional(),
+
+  reviewStatus: z.nativeEnum(ReviewStatus).nullable().optional(),
+  reviewScreenshot: z.string().max(2000).nullable().optional(),
 })
 
 export async function GET(
@@ -110,7 +113,7 @@ export async function PATCH(
     if (!existing) return errorResponse('Compliance call not found', 404)
 
     const data: Parameters<typeof prisma.complianceCall.update>[0]['data'] = {
-      calledByUserId: user.id,
+      calledBy: { connect: { id: user.id } },
     }
 
     const now = new Date()
@@ -157,6 +160,8 @@ export async function PATCH(
       'opdMode',
       'additionalRemark',
       'satisfaction',
+      'reviewStatus',
+      'reviewScreenshot',
     ] as const
     for (const key of passthrough) {
       if (parsed.data[key] !== undefined) {
@@ -210,6 +215,36 @@ export async function PATCH(
     return successResponse(updated)
   } catch (error) {
     console.error('Error updating compliance call:', error)
-    return errorResponse('Failed to update compliance call', 500)
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2022') {
+        return errorResponse(
+          'Review fields are missing in the database. Apply migration 20260706120000_compliance_review_fields and restart the server.',
+          503,
+        )
+      }
+      const column = (error.meta?.column as string | undefined) ?? ''
+      return errorResponse(
+        column
+          ? `Database error: column "${column}" is unavailable (${error.code}).`
+          : `Database error (${error.code}).`,
+        500,
+      )
+    }
+
+    if (error instanceof Prisma.PrismaClientValidationError) {
+      const unknownField = error.message.match(/Unknown argument `(\w+)`/)?.[1]
+      return errorResponse(
+        unknownField
+          ? `Server misconfiguration: cannot update field "${unknownField}".`
+          : 'Invalid update payload. Refresh the page and try again.',
+        400,
+      )
+    }
+
+    return errorResponse(
+      error instanceof Error ? error.message : 'Failed to update compliance call',
+      500,
+    )
   }
 }

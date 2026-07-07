@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Prisma, ComplianceCallStatus } from '@/generated/prisma/client'
+import { Prisma, ComplianceCallStatus, ReviewStatus } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { buildComplianceCallWhere } from '@/lib/compliance-query'
 
 const DISCHARGED_STAGES = [
   'DISCHARGED',
@@ -39,39 +40,62 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
+    const dischargeStart =
+      searchParams.get('dischargeStart') ??
+      searchParams.get('caseStart') ??
+      searchParams.get('surgeryStart')
+    const dischargeEnd =
+      searchParams.get('dischargeEnd') ??
+      searchParams.get('caseEnd') ??
+      searchParams.get('surgeryEnd')
 
-    const where: Prisma.ComplianceCallWhereInput = {}
-    if (startDate || endDate) {
-      where.createdAt = {}
-      if (startDate) where.createdAt.gte = new Date(startDate)
-      if (endDate) where.createdAt.lte = new Date(endDate)
-    }
+    const baseWhere = buildComplianceCallWhere({
+      startDate,
+      endDate,
+      dischargeStart,
+      dischargeEnd,
+    })
 
-    // Discharge counters are global (independent of the page's month filter):
-    // total discharges in the current calendar month and today, off the
-    // canonical DischargeSheet.dischargeDate.
-    const now = new Date()
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const [
+      totalSurgeries,
+      statusGroups,
+      reviewDoneCount,
+      reviewNotDoneCount,
+      ratingGroups,
+      aggregate,
+      dischargesToday,
+    ] = await Promise.all([
+      prisma.complianceCall.count({ where: baseWhere }),
+      prisma.complianceCall.groupBy({
+        by: ['status'],
+        where: baseWhere,
+        _count: { _all: true },
+      }),
+      prisma.complianceCall.count({
+        where: { ...baseWhere, reviewStatus: ReviewStatus.DONE },
+      }),
+      prisma.complianceCall.count({
+        where: { ...baseWhere, reviewStatus: ReviewStatus.NOT_DONE },
+      }),
+      prisma.complianceCall.groupBy({
+        by: ['rating'],
+        where: { ...baseWhere, status: ComplianceCallStatus.COMPLETED, rating: { not: null } },
+        _count: { _all: true },
+      }),
+      prisma.complianceCall.aggregate({
+        where: { ...baseWhere, status: ComplianceCallStatus.COMPLETED, rating: { not: null } },
+        _avg: { rating: true },
+        _count: { _all: true },
+      }),
+      (() => {
+        const now = new Date()
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        return prisma.dischargeSheet.count({ where: { dischargeDate: { gte: todayStart } } })
+      })(),
+    ])
 
-    const [ratingGroups, pending, aggregate, dischargesThisMonth, dischargesToday] =
-      await Promise.all([
-        prisma.complianceCall.groupBy({
-          by: ['rating'],
-          where: { ...where, status: ComplianceCallStatus.COMPLETED, rating: { not: null } },
-          _count: { _all: true },
-        }),
-        prisma.complianceCall.count({
-          where: { ...where, status: ComplianceCallStatus.PENDING },
-        }),
-        prisma.complianceCall.aggregate({
-          where: { ...where, status: ComplianceCallStatus.COMPLETED, rating: { not: null } },
-          _avg: { rating: true },
-          _count: { _all: true },
-        }),
-        prisma.dischargeSheet.count({ where: { dischargeDate: { gte: monthStart } } }),
-        prisma.dischargeSheet.count({ where: { dischargeDate: { gte: todayStart } } }),
-      ])
+    const statusCount = (status: ComplianceCallStatus) =>
+      statusGroups.find((g) => g.status === status)?._count._all ?? 0
 
     const byRating: Record<'1' | '2' | '3' | '4' | '5', number> = {
       '1': 0, '2': 0, '3': 0, '4': 0, '5': 0,
@@ -84,14 +108,51 @@ export async function GET(request: NextRequest) {
 
     return successResponse({
       byRating,
-      pending,
+      totalSurgeries,
+      pendingCount: statusCount(ComplianceCallStatus.PENDING),
+      completedCount: statusCount(ComplianceCallStatus.COMPLETED),
+      dnpCount: statusCount(ComplianceCallStatus.DID_NOT_PICK),
+      reviewDoneCount,
+      reviewNotDoneCount,
+      // Legacy fields kept for MD dashboard compatibility
+      pending: statusCount(ComplianceCallStatus.PENDING),
       totalCompleted: aggregate._count._all,
       averageRating: aggregate._avg.rating,
-      dischargesThisMonth,
+      dischargesThisMonth: totalSurgeries,
       dischargesToday,
     })
   } catch (error) {
     console.error('Error fetching compliance stats:', error)
-    return errorResponse('Failed to fetch compliance stats', 500)
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2022') {
+        return errorResponse(
+          'Review fields are missing in the database. Apply migration 20260706120000_compliance_review_fields and restart the dev server.',
+          503,
+        )
+      }
+      return errorResponse(`Database error (${error.code}).`, 500)
+    }
+
+    if (error instanceof Prisma.PrismaClientValidationError) {
+      const unknownField = error.message.match(/Unknown argument `(\w+)`/)?.[1]
+      if (unknownField === 'reviewStatus') {
+        return errorResponse(
+          'Review fields are not available yet. Run: npx prisma generate, apply migration 20260706120000_compliance_review_fields, then restart the dev server.',
+          503,
+        )
+      }
+      return errorResponse(
+        unknownField
+          ? `Server misconfiguration: unknown filter field "${unknownField}". Restart the dev server after running npx prisma generate.`
+          : 'Invalid stats query. Restart the dev server and try again.',
+        503,
+      )
+    }
+
+    return errorResponse(
+      error instanceof Error ? error.message : 'Failed to fetch compliance stats',
+      500,
+    )
   }
 }

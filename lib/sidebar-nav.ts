@@ -14,6 +14,7 @@ import {
   DollarSign,
   FileText,
   FolderTree,
+  FileSpreadsheet,
   Heart,
   Home,
   IndianRupee,
@@ -401,6 +402,12 @@ export const navItems: NavItem[] = [
     title: 'Compliance',
     url: '/compliance/dashboard',
     icon: Stethoscope,
+    roles: ['COMPLIANCE_HEAD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
+  },
+  {
+    title: 'Cumulative Report',
+    url: '/cumulative-report',
+    icon: FileSpreadsheet,
     roles: ['COMPLIANCE_HEAD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
