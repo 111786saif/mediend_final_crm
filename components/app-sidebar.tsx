@@ -173,87 +173,87 @@ export function AppSidebar() {
   const navigationItems =
     user.role === 'MD'
       ? itemsWithUrls.filter(
-        (item) =>
-          item.title === 'Tasks' ||
-          item.title === 'Meets' ||
-          item.title === 'Calendar' ||
-          item.title === 'Sales Dashboard' ||
-          item.title === 'Finance Dashboard' ||
-          item.title === 'MD HR Dashboard' ||
-          item.title === 'DM Dashboard' ||
-          item.title === 'Dept Targets' ||
-          item.title.startsWith('MD ')
-      )
-      : user.role === 'ADMIN' || user.role === 'TESTER'
-        ? itemsWithUrls.filter(
           (item) =>
-            item.title === 'Home' ||
             item.title === 'Tasks' ||
             item.title === 'Meets' ||
             item.title === 'Calendar' ||
             item.title === 'Sales Dashboard' ||
             item.title === 'Finance Dashboard' ||
             item.title === 'MD HR Dashboard' ||
-            item.title.startsWith('MD ') ||
-            item.title === 'Attendance & Normalizations' ||
-            item.title === 'People & Org' ||
-            item.title === 'Compensation & Docs' ||
-            item.title === 'Engagement'
+            item.title === 'DM Dashboard' ||
+            item.title === 'Dept Targets' ||
+            item.title.startsWith('MD ')
         )
-        : user.role === 'EXECUTIVE_ASSISTANT'
-          ? itemsWithUrls.filter(
+      : user.role === 'ADMIN' || user.role === 'TESTER'
+        ? itemsWithUrls.filter(
             (item) =>
               item.title === 'Home' ||
               item.title === 'Tasks' ||
               item.title === 'Meets' ||
               item.title === 'Calendar' ||
-              item.title === 'Chat' ||
-              item.title === 'Master Data' ||
-              item.title === 'Compliance' ||
-              item.title === 'Cumulative Report' ||
-              SALES_TITLES.includes(item.title) ||
-              INSURANCE_PL_TITLES.includes(item.title) ||
-              EA_HRM_TITLES.includes(item.title) ||
-              item.title.startsWith('My ') ||
-              EA_MYHRMS_EXTRA.includes(item.title)
+              item.title === 'Sales Dashboard' ||
+              item.title === 'Finance Dashboard' ||
+              item.title === 'MD HR Dashboard' ||
+              item.title.startsWith('MD ') ||
+              item.title === 'Attendance & Normalizations' ||
+              item.title === 'People & Org' ||
+              item.title === 'Compensation & Docs' ||
+              item.title === 'Engagement'
           )
-          : user.role === 'USER'
-            ? itemsWithUrls.filter(
+        : user.role === 'EXECUTIVE_ASSISTANT'
+          ? itemsWithUrls.filter(
               (item) =>
                 item.title === 'Home' ||
                 item.title === 'Tasks' ||
                 item.title === 'Meets' ||
                 item.title === 'Calendar' ||
-                item.title.startsWith('My ')
+                item.title === 'Chat' ||
+                item.title === 'Master Data' ||
+                item.title === 'Compliance' ||
+                item.title === 'Cumulative Report' ||
+                SALES_TITLES.includes(item.title) ||
+                INSURANCE_PL_TITLES.includes(item.title) ||
+                EA_HRM_TITLES.includes(item.title) ||
+                item.title.startsWith('My ') ||
+                EA_MYHRMS_EXTRA.includes(item.title)
             )
-            : user.role === 'COMPLIANCE_HEAD'
-              ? itemsWithUrls.filter(
+          : user.role === 'USER'
+            ? itemsWithUrls.filter(
                 (item) =>
                   item.title === 'Home' ||
                   item.title === 'Tasks' ||
                   item.title === 'Meets' ||
                   item.title === 'Calendar' ||
-                  item.title === 'Chat' ||
-                  item.title === 'Compliance' ||
-                  item.title === 'Cumulative Report' ||
                   item.title.startsWith('My ')
               )
-              : itemsWithUrls.filter(
-                (item) => {
-                  if (user.role === 'SALES_HEAD' && HRM_TITLES.includes(item.title)) return false
-                  return (
+            : user.role === 'COMPLIANCE_HEAD'
+              ? itemsWithUrls.filter(
+                  (item) =>
                     item.title === 'Home' ||
-                    item.title.startsWith('My ') ||
-                    item.title === 'Attendance & Normalizations' ||
-                    item.title === 'People & Org' ||
-                    item.title === 'Compensation & Docs' ||
-                    item.title === 'Engagement' ||
-                    (!item.title.startsWith('Svc ') &&
-                      !item.title.startsWith('MD ') &&
-                      !item.title.startsWith('Fin '))
-                  )
-                }
-              )
+                    item.title === 'Tasks' ||
+                    item.title === 'Meets' ||
+                    item.title === 'Calendar' ||
+                    item.title === 'Chat' ||
+                    item.title === 'Compliance' ||
+                    item.title === 'Cumulative Report' ||
+                    item.title.startsWith('My ')
+                )
+              : itemsWithUrls.filter(
+                  (item) => {
+                    if (user.role === 'SALES_HEAD' && HRM_TITLES.includes(item.title)) return false
+                    return (
+                      item.title === 'Home' ||
+                      item.title.startsWith('My ') ||
+                      item.title === 'Attendance & Normalizations' ||
+                      item.title === 'People & Org' ||
+                      item.title === 'Compensation & Docs' ||
+                      item.title === 'Engagement' ||
+                      (!item.title.startsWith('Svc ') &&
+                        !item.title.startsWith('MD ') &&
+                        !item.title.startsWith('Fin '))
+                    )
+                  }
+                )
 
   const navigationItemsWithCpl =
     cplAccessData?.allowed === true && !navigationItems.some((i) => i.title === 'Campaign CPL')
