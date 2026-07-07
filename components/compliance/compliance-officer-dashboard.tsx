@@ -2,19 +2,22 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react"
 import {
-  Activity,
   Building2,
-  CalendarRange,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  ClipboardCheck,
+  ClipboardX,
   Clock3,
   Filter,
   PhoneCall,
+  PhoneOff,
+  Scissors,
   Search,
   Stethoscope,
   UserRound,
   X,
+  type LucideIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
@@ -150,12 +153,16 @@ export function ComplianceOfficerDashboard() {
 
   const monthOptions = useMemo(() => buildMonthOptions(12), [])
   const { data: filterOptions } = useComplianceFilterOptions()
-  const { data: stats } = useComplianceStats({})
 
   const dischargeRange = useMemo(
     () => (monthFilter === ALL ? null : monthRange(monthFilter)),
     [monthFilter],
   )
+
+  const { data: stats } = useComplianceStats({
+    dischargeStart: dischargeRange?.start ?? null,
+    dischargeEnd: dischargeRange?.end ?? null,
+  })
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useComplianceCalls({
@@ -202,10 +209,13 @@ export function ComplianceOfficerDashboard() {
     setHospitalFilter(ALL)
     setDoctorFilter(ALL)
     setBdFilter(ALL)
-    setMonthFilter(ALL)
+    setMonthFilter(currentMonthValue())
   }
 
-  const totalTracked = (stats?.pending ?? 0) + (stats?.totalCompleted ?? 0)
+  const totalTracked =
+    (stats?.pendingCount ?? 0) +
+    (stats?.completedCount ?? 0) +
+    (stats?.dnpCount ?? 0)
 
   return (
     <div className="space-y-6 pb-10">
@@ -243,34 +253,48 @@ export function ComplianceOfficerDashboard() {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <HeroMetricCard
-            label="Discharges this month"
-            value={stats?.dischargesThisMonth ?? 0}
+            label="Total surgeries"
+            value={stats?.totalSurgeries ?? 0}
             hint={selectedMonthLabel}
-            icon={CalendarRange}
+            icon={Scissors}
             tone="emerald"
           />
           <HeroMetricCard
-            label="Today's discharges"
-            value={stats?.dischargesToday ?? 0}
-            hint="Fresh follow-ups"
-            icon={Activity}
-            tone="sky"
-          />
-          <HeroMetricCard
             label="Pending calls"
-            value={stats?.pending ?? 0}
+            value={stats?.pendingCount ?? 0}
             hint="Needs action"
             icon={Clock3}
             tone="amber"
           />
           <HeroMetricCard
             label="Completed calls"
-            value={stats?.totalCompleted ?? 0}
+            value={stats?.completedCount ?? 0}
             hint={`${totalTracked} tracked cases`}
             icon={CheckCircle2}
             tone="slate"
+          />
+          <HeroMetricCard
+            label="DNP"
+            value={stats?.dnpCount ?? 0}
+            hint="Did not pick"
+            icon={PhoneOff}
+            tone="orange"
+          />
+          <HeroMetricCard
+            label="Review done"
+            value={stats?.reviewDoneCount ?? 0}
+            hint="Google review posted"
+            icon={ClipboardCheck}
+            tone="sky"
+          />
+          <HeroMetricCard
+            label="Review not done"
+            value={stats?.reviewNotDoneCount ?? 0}
+            hint="Review pending"
+            icon={ClipboardX}
+            tone="rose"
           />
         </div>
       </section>
@@ -550,14 +574,16 @@ function HeroMetricCard({
   label: string
   value: number
   hint: string
-  icon: typeof CalendarRange
-  tone: "emerald" | "sky" | "amber" | "slate"
+  icon: LucideIcon
+  tone: "emerald" | "sky" | "amber" | "slate" | "orange" | "rose"
 }) {
   const toneClasses = {
     emerald: "border-emerald-200/80 bg-white/80 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/20 dark:text-emerald-200",
     sky: "border-sky-200/80 bg-white/80 text-sky-700 dark:border-sky-900/60 dark:bg-sky-950/20 dark:text-sky-200",
     amber: "border-amber-200/80 bg-white/80 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/20 dark:text-amber-200",
     slate: "border-slate-200/80 bg-white/80 text-slate-700 dark:border-slate-800 dark:bg-slate-950/40 dark:text-slate-200",
+    orange: "border-orange-200/80 bg-white/80 text-orange-700 dark:border-orange-900/60 dark:bg-orange-950/20 dark:text-orange-200",
+    rose: "border-rose-200/80 bg-white/80 text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/20 dark:text-rose-200",
   } as const
 
   return (

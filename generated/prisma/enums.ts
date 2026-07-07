@@ -68,6 +68,14 @@ export const ConcernCategory = {
 export type ConcernCategory = (typeof ConcernCategory)[keyof typeof ConcernCategory]
 
 
+export const ReviewStatus = {
+  DONE: 'DONE',
+  NOT_DONE: 'NOT_DONE'
+} as const
+
+export type ReviewStatus = (typeof ReviewStatus)[keyof typeof ReviewStatus]
+
+
 export const FlowType = {
   INSURANCE: 'INSURANCE',
   CASH: 'CASH'

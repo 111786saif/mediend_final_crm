@@ -57,6 +57,11 @@ enum ConcernCategory {
   OTHERS
 }
 
+enum ReviewStatus {
+  DONE
+  NOT_DONE
+}
+
 enum FlowType {
   INSURANCE
   CASH
@@ -2816,6 +2821,10 @@ model ComplianceCall {
   satisfaction      SatisfactionLevel?
   concernCategories ConcernCategory[]  @default([])
 
+  // Google review tracking
+  reviewStatus      ReviewStatus?
+  reviewScreenshot  String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -2824,6 +2833,7 @@ model ComplianceCall {
   @@index([rating])
   @@index([completedAt])
   @@index([satisfaction])
+  @@index([reviewStatus])
 }
 
 // ==========================================

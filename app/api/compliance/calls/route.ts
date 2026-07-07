@@ -4,7 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { stripDrPrefix } from '@/lib/lead-display'
+import { buildComplianceCallWhere } from '@/lib/compliance-query'
 
 const PAGE_SIZE = 20
 
@@ -67,76 +67,20 @@ export async function GET(request: NextRequest) {
     const limitParam = searchParams.get('limit')
     const limit = limitParam ? Math.min(parseInt(limitParam, 10), 100) : PAGE_SIZE
 
-    const where: Prisma.ComplianceCallWhereInput = {}
-
-    if (status) {
-      where.status = status as Prisma.EnumComplianceCallStatusFilter['equals']
-    }
-    if (ratingParam) {
-      const rating = parseInt(ratingParam, 10)
-      if (!Number.isNaN(rating)) where.rating = rating
-    }
-    if (startDate || endDate) {
-      where.createdAt = {}
-      if (startDate) where.createdAt.gte = new Date(startDate)
-      if (endDate) where.createdAt.lte = new Date(endDate)
-    }
-
-    const leadFilters: Prisma.LeadWhereInput = {}
-    const leadAnd: Prisma.LeadWhereInput[] = []
-
-    // Compliance is a post-discharge workflow, so month filtering should follow
-    // the canonical discharge date on the discharge sheet.
-    if (dischargeStart || dischargeEnd) {
-      const dateFilter: Prisma.DateTimeFilter = {}
-      if (dischargeStart) dateFilter.gte = new Date(dischargeStart)
-      if (dischargeEnd) dateFilter.lt = new Date(dischargeEnd)
-      leadAnd.push({
-        dischargeSheet: { dischargeDate: dateFilter },
-      })
-    }
-    // Hospital/doctor dropdowns are built from the *resolved* hospital/doctor
-    // (lib/lead-display.resolveLeadHospitalDoctor) shown on each row, which may
-    // live on the lead, the discharge sheet, or ipdDrName. Match across the same
-    // fields so a dropdown selection filters consistently with what's displayed.
-    if (hospitalName) {
-      leadAnd.push({
-        OR: [
-          { hospitalName: { contains: hospitalName, mode: 'insensitive' } },
-          { dischargeSheet: { hospitalName: { contains: hospitalName, mode: 'insensitive' } } },
-        ],
-      })
-    }
-    if (surgeonName) {
-      const core = stripDrPrefix(surgeonName)
-      leadAnd.push({
-        OR: [
-          { surgeonName: { contains: core, mode: 'insensitive' } },
-          { ipdDrName: { contains: core, mode: 'insensitive' } },
-          { dischargeSheet: { doctorName: { contains: core, mode: 'insensitive' } } },
-        ],
-      })
-    }
-    if (bdId) leadFilters.bdId = bdId
-    if (circle) {
-      leadAnd.push({ circle: { equals: circle, mode: 'insensitive' } })
-    }
-    if (treatment) {
-      leadAnd.push({ treatment: { contains: treatment, mode: 'insensitive' } })
-    }
-    if (q) {
-      leadAnd.push({
-        OR: [
-          { patientName: { contains: q, mode: 'insensitive' } },
-          { phoneNumber: { contains: q } },
-          { leadRef: { contains: q, mode: 'insensitive' } },
-        ],
-      })
-    }
-    if (leadAnd.length > 0) leadFilters.AND = leadAnd
-    if (Object.keys(leadFilters).length > 0) {
-      where.lead = leadFilters
-    }
+    const where = buildComplianceCallWhere({
+      status,
+      rating: ratingParam ? parseInt(ratingParam, 10) : null,
+      startDate,
+      endDate,
+      dischargeStart,
+      dischargeEnd,
+      hospitalName,
+      surgeonName,
+      bdId,
+      circle,
+      treatment,
+      q,
+    })
 
     let orderBy: Prisma.ComplianceCallOrderByWithRelationInput[]
     switch (sort) {
