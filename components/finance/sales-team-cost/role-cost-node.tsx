@@ -124,9 +124,9 @@ export function RoleCostNode({ node, depth = 0 }: RoleCostNodeProps) {
             <span>
               Direct misc: <strong>{formatCurrency(direct.misc)}</strong>
             </span>
-            {node.type === 'bd' && (
+            {(node.type === 'bd' || node.type === 'tl' || node.type === 'salesHead') && (
               <span>
-                Marketing: <strong>{formatCurrency(direct.marketing)}</strong>
+                Direct marketing: <strong>{formatCurrency(direct.marketing)}</strong>
               </span>
             )}
             <span className="font-medium">
