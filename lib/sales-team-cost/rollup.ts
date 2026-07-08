@@ -1,8 +1,7 @@
-import {
-  canReceiveIncentive,
-  type SalesTeamCostRole,
-  type SalesTeamCostRollup,
-  type SalesTeamCostSummary,
+import type {
+  SalesTeamCostRole,
+  SalesTeamCostRollup,
+  SalesTeamCostSummary,
 } from '@/lib/sales-team-cost/types'
 
 export function sumEntries(entries: { amount: number }[]): number {
@@ -11,9 +10,9 @@ export function sumEntries(entries: { amount: number }[]): number {
 
 export function computeDirectRollup(node: SalesTeamCostRole): SalesTeamCostRollup {
   const salary = node.salaryPerHead * node.count
-  const incentives = canReceiveIncentive(node.type) ? sumEntries(node.incentives) : 0
-  const seating = sumEntries(node.seatingCosts)
-  const misc = sumEntries(node.miscCosts)
+  const incentives = node.incentiveAmount
+  const seating = node.seatingAmount
+  const misc = node.miscAmount
   const marketing = node.type === 'bd' ? (node.marketingCost ?? 0) : 0
   return {
     salary,

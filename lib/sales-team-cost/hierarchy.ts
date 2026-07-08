@@ -1,10 +1,11 @@
-import { SalesTeamCostEntryType, UserRole } from '@/generated/prisma/client'
+import { UserRole } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
+import { loadApprovedIncentiveTotalsByEmployee, type SalesTeamCostPeriod } from '@/lib/sales-team-cost/incentives'
 import { getMarketingCostForBD } from '@/lib/sales-team-cost/marketing'
 import { getSalaryForRole } from '@/lib/sales-team-cost/payroll'
+import { loadApprovedSeatingMiscByEmployee } from '@/lib/sales-team-cost/seating-misc'
 import { buildSummary } from '@/lib/sales-team-cost/rollup'
 import type {
-  SalesTeamCostEntryRecord,
   SalesTeamCostResponse,
   SalesTeamCostRole,
   SalesTeamCostRoleType,
@@ -47,72 +48,11 @@ function toRoleType(role: UserRole): SalesTeamCostRoleType {
   }
 }
 
-function mapEntry(e: {
-  id: string
-  amount: number
-  entryDate: Date
-  note: string | null
-  createdAt: Date
-  addedBy: { name: string }
-}): SalesTeamCostEntryRecord {
-  return {
-    id: e.id,
-    amount: e.amount,
-    date: e.entryDate.toISOString().slice(0, 10),
-    note: e.note,
-    addedBy: e.addedBy.name,
-    addedAt: e.createdAt.toISOString(),
-  }
-}
-
-async function loadEntriesByEmployee(): Promise<
-  Map<string, { incentives: SalesTeamCostEntryRecord[]; seatingCosts: SalesTeamCostEntryRecord[]; miscCosts: SalesTeamCostEntryRecord[] }>
-> {
-  const entries = await prisma.salesTeamCostEntry.findMany({
-    orderBy: { entryDate: 'desc' },
-    select: {
-      id: true,
-      employeeId: true,
-      amount: true,
-      entryDate: true,
-      note: true,
-      entryType: true,
-      createdAt: true,
-      addedBy: { select: { name: true } },
-    },
-  })
-
-  const map = new Map<
-    string,
-    { incentives: SalesTeamCostEntryRecord[]; seatingCosts: SalesTeamCostEntryRecord[]; miscCosts: SalesTeamCostEntryRecord[] }
-  >()
-
-  for (const entry of entries) {
-    let bucket = map.get(entry.employeeId)
-    if (!bucket) {
-      bucket = { incentives: [], seatingCosts: [], miscCosts: [] }
-      map.set(entry.employeeId, bucket)
-    }
-    const mapped = mapEntry(entry)
-    if (entry.entryType === SalesTeamCostEntryType.INCENTIVE) {
-      bucket.incentives.push(mapped)
-    } else if (entry.entryType === SalesTeamCostEntryType.SEATING) {
-      bucket.seatingCosts.push(mapped)
-    } else if (entry.entryType === SalesTeamCostEntryType.MISC) {
-      bucket.miscCosts.push(mapped)
-    }
-  }
-
-  return map
-}
-
 async function buildRoleNode(
   employee: EmployeeRow,
   employeesByManager: Map<string, EmployeeRow[]>,
-  entriesByEmployee: Map<
-    string,
-    { incentives: SalesTeamCostEntryRecord[]; seatingCosts: SalesTeamCostEntryRecord[]; miscCosts: SalesTeamCostEntryRecord[] }
-  >,
+  incentiveTotals: Map<string, number>,
+  seatingMiscTotals: Map<string, { seating: number; misc: number }>,
 ): Promise<SalesTeamCostRole | null> {
   if (!SALES_ROLES.includes(employee.user.role)) return null
 
@@ -124,15 +64,12 @@ async function buildRoleNode(
 
   const children: SalesTeamCostRole[] = []
   for (const child of childEmployees) {
-    const node = await buildRoleNode(child, employeesByManager, entriesByEmployee)
+    const node = await buildRoleNode(child, employeesByManager, incentiveTotals, seatingMiscTotals)
     if (node) children.push(node)
   }
 
   const salaryPerHead = await getSalaryForRole(employee.id)
-  const entryBucket = entriesByEmployee.get(employee.id)
-  const incentives = entryBucket?.incentives ?? []
-  const seatingCosts = entryBucket?.seatingCosts ?? []
-  const miscCosts = entryBucket?.miscCosts ?? []
+  const costs = seatingMiscTotals.get(employee.id)
 
   let marketingCost: number | undefined
   if (roleType === 'bd') {
@@ -146,16 +83,18 @@ async function buildRoleNode(
     type: roleType,
     count: 1,
     salaryPerHead,
-    incentives,
-    seatingCosts,
-    miscCosts,
+    incentiveAmount: incentiveTotals.get(employee.id) ?? 0,
+    seatingAmount: costs?.seating ?? 0,
+    miscAmount: costs?.misc ?? 0,
     marketingCost,
     children,
   }
 }
 
-export async function buildSalesTeamCostHierarchy(): Promise<SalesTeamCostResponse> {
-  const [employees, entriesByEmployee] = await Promise.all([
+export async function buildSalesTeamCostHierarchy(
+  period: SalesTeamCostPeriod,
+): Promise<SalesTeamCostResponse> {
+  const [employees, incentiveTotals, seatingMiscTotals] = await Promise.all([
     prisma.employee.findMany({
       where: {
         status: 'ACTIVE',
@@ -169,7 +108,8 @@ export async function buildSalesTeamCostHierarchy(): Promise<SalesTeamCostRespon
       },
       orderBy: { user: { name: 'asc' } },
     }),
-    loadEntriesByEmployee(),
+    loadApprovedIncentiveTotalsByEmployee(period),
+    loadApprovedSeatingMiscByEmployee(period),
   ])
 
   const employeesByManager = new Map<string, EmployeeRow[]>()
@@ -191,12 +131,14 @@ export async function buildSalesTeamCostHierarchy(): Promise<SalesTeamCostRespon
 
   const roots: SalesTeamCostRole[] = []
   for (const root of rootEmployees) {
-    const node = await buildRoleNode(root, employeesByManager, entriesByEmployee)
+    const node = await buildRoleNode(root, employeesByManager, incentiveTotals, seatingMiscTotals)
     if (node) roots.push(node)
   }
 
   return {
     roots,
     summary: buildSummary(roots),
+    month: period.month,
+    year: period.year,
   }
 }

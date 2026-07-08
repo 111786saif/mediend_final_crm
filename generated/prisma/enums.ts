@@ -85,6 +85,24 @@ export const SalesTeamCostEntryType = {
 export type SalesTeamCostEntryType = (typeof SalesTeamCostEntryType)[keyof typeof SalesTeamCostEntryType]
 
 
+export const EmployeeIncentiveStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID'
+} as const
+
+export type EmployeeIncentiveStatus = (typeof EmployeeIncentiveStatus)[keyof typeof EmployeeIncentiveStatus]
+
+
+export const EmployeeSeatingMiscCostStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID'
+} as const
+
+export type EmployeeSeatingMiscCostStatus = (typeof EmployeeSeatingMiscCostStatus)[keyof typeof EmployeeSeatingMiscCostStatus]
+
+
 export const FlowType = {
   INSURANCE: 'INSURANCE',
   CASH: 'CASH'

@@ -32,6 +32,8 @@ export type Permission =
   | 'finance:approve'
   | 'finance:payroll:read'
   | 'finance:payroll:write'
+  | 'incentive:read'
+  | 'incentive:write'
   | 'departments:create'
   | 'departments:assign_head'
   | 'users:create_tl'
@@ -122,6 +124,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'sales:pnl:read',
     'compliance:read',
     'compliance:write',
+    'incentive:read',
+    'incentive:write',
   ],
   SALES_HEAD: [
     'leads:read',
@@ -141,6 +145,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hrms:employees:read',
     'hrms:employees:write',
     'sales:pnl:read',
+    'incentive:read',
+    'incentive:write',
   ],
   CATEGORY_MANAGER: [
     'leads:read',
@@ -346,6 +352,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'loan-demat:write',
     'compliance:read',
     'compliance:write',
+    'incentive:read',
+    'incentive:write',
   ],
   USER: [
     'hrms:read',

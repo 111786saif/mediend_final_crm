@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, ChevronRight, Plus } from 'lucide-react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -10,32 +10,20 @@ import { formatCurrency } from '@/lib/finance/payroll-types'
 import {
   computeDirectRollup,
   computeNodeTotal,
-  sumEntries,
 } from '@/lib/sales-team-cost/rollup'
-import {
-  canReceiveIncentive,
-  SALES_TEAM_COST_ROLE_LABEL,
-  type SalesTeamCostRole,
-} from '@/lib/sales-team-cost/types'
-import { CostEntryDialog } from '@/components/finance/sales-team-cost/cost-entry-dialog'
-import { EntryAuditList } from '@/components/finance/sales-team-cost/entry-audit-list'
+import { SALES_TEAM_COST_ROLE_LABEL, type SalesTeamCostRole } from '@/lib/sales-team-cost/types'
 
 interface RoleCostNodeProps {
   node: SalesTeamCostRole
   depth?: number
-  canWrite?: boolean
 }
 
-export function RoleCostNode({ node, depth = 0, canWrite = false }: RoleCostNodeProps) {
+export function RoleCostNode({ node, depth = 0 }: RoleCostNodeProps) {
   const [expanded, setExpanded] = useState(depth < 2)
-  const [incentiveOpen, setIncentiveOpen] = useState(false)
-  const [seatingOpen, setSeatingOpen] = useState(false)
-  const [miscOpen, setMiscOpen] = useState(false)
 
   const direct = computeDirectRollup(node)
   const subtreeTotal = computeNodeTotal(node)
   const hasChildren = node.children.length > 0
-  const showIncentive = canReceiveIncentive(node.type)
 
   const roleBadgeVariant =
     node.type === 'salesHead'
@@ -84,66 +72,34 @@ export function RoleCostNode({ node, depth = 0, canWrite = false }: RoleCostNode
               <p className="mt-1 text-[10px] text-muted-foreground">(From Payroll)</p>
             </div>
 
-            {showIncentive && (
-              <div className="space-y-2">
-                <EntryAuditList
-                  label="Incentive"
-                  total={sumEntries(node.incentives)}
-                  entries={node.incentives}
-                />
-                {canWrite && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="h-8 w-full gap-1 text-xs"
-                    onClick={() => setIncentiveOpen(true)}
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    Add incentive
-                  </Button>
-                )}
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <EntryAuditList
-                label="Seating cost"
-                total={sumEntries(node.seatingCosts)}
-                entries={node.seatingCosts}
-              />
-              {canWrite && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="h-8 w-full gap-1 text-xs"
-                  onClick={() => setSeatingOpen(true)}
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Add seating cost
-                </Button>
-              )}
+            <div className="rounded-md border p-3">
+              <p className="text-xs font-medium text-muted-foreground">Incentive</p>
+              <p className="text-sm font-semibold">{formatCurrency(node.incentiveAmount)}</p>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                {node.incentiveAmount > 0
+                  ? '(From Incentive module · approved)'
+                  : 'No incentive for selected month'}
+              </p>
             </div>
 
-            <div className="space-y-2">
-              <EntryAuditList
-                label="Misc cost"
-                total={sumEntries(node.miscCosts)}
-                entries={node.miscCosts}
-              />
-              {canWrite && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="h-8 w-full gap-1 text-xs"
-                  onClick={() => setMiscOpen(true)}
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Add misc cost
-                </Button>
-              )}
+            <div className="rounded-md border p-3">
+              <p className="text-xs font-medium text-muted-foreground">Seating cost</p>
+              <p className="text-sm font-semibold">{formatCurrency(node.seatingAmount)}</p>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                {node.seatingAmount > 0
+                  ? '(From Seating & Misc Cost · approved)'
+                  : 'No seating cost for selected month'}
+              </p>
+            </div>
+
+            <div className="rounded-md border p-3">
+              <p className="text-xs font-medium text-muted-foreground">Misc cost</p>
+              <p className="text-sm font-semibold">{formatCurrency(node.miscAmount)}</p>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                {node.miscAmount > 0
+                  ? '(From Seating & Misc Cost · approved)'
+                  : 'No misc cost for selected month'}
+              </p>
             </div>
 
             {node.type === 'bd' && (
@@ -159,11 +115,9 @@ export function RoleCostNode({ node, depth = 0, canWrite = false }: RoleCostNode
             <span>
               Direct salary: <strong>{formatCurrency(direct.salary)}</strong>
             </span>
-            {showIncentive && (
-              <span>
-                Direct incentives: <strong>{formatCurrency(direct.incentives)}</strong>
-              </span>
-            )}
+            <span>
+              Direct incentives: <strong>{formatCurrency(direct.incentives)}</strong>
+            </span>
             <span>
               Direct seating: <strong>{formatCurrency(direct.seating)}</strong>
             </span>
@@ -182,38 +136,10 @@ export function RoleCostNode({ node, depth = 0, canWrite = false }: RoleCostNode
         </CardContent>
       </Card>
 
-      {canWrite && (
-        <>
-          {showIncentive && (
-            <CostEntryDialog
-              open={incentiveOpen}
-              onOpenChange={setIncentiveOpen}
-              employeeId={node.id}
-              employeeName={node.name}
-              entryType="INCENTIVE"
-            />
-          )}
-          <CostEntryDialog
-            open={seatingOpen}
-            onOpenChange={setSeatingOpen}
-            employeeId={node.id}
-            employeeName={node.name}
-            entryType="SEATING"
-          />
-          <CostEntryDialog
-            open={miscOpen}
-            onOpenChange={setMiscOpen}
-            employeeId={node.id}
-            employeeName={node.name}
-            entryType="MISC"
-          />
-        </>
-      )}
-
       {hasChildren && expanded && (
         <div className="space-y-2">
           {node.children.map((child) => (
-            <RoleCostNode key={child.id} node={child} depth={depth + 1} canWrite={canWrite} />
+            <RoleCostNode key={child.id} node={child} depth={depth + 1} />
           ))}
         </div>
       )}

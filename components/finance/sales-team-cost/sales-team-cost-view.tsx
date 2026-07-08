@@ -1,17 +1,38 @@
 'use client'
 
+import { useMemo, useState } from 'react'
 import { Loader2, Users, Wallet } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatCurrency } from '@/lib/finance/payroll-types'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { formatCurrency, MONTHS } from '@/lib/finance/payroll-types'
+import { formatIncentiveMonthYear } from '@/lib/incentives/types'
 import { useSalesTeamCost } from '@/hooks/use-sales-team-cost'
 import { RoleCostNode } from '@/components/finance/sales-team-cost/role-cost-node'
-import { useAuth } from '@/hooks/use-auth'
-import { hasPermission } from '@/lib/rbac'
+
+const YEAR_OPTIONS = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - 2 + i)
 
 export function SalesTeamCostView() {
-  const { data, isLoading, isError, refetch, isFetching } = useSalesTeamCost()
-  const { user } = useAuth()
-  const canWrite = user ? hasPermission(user, 'finance:write') : false
+  const now = new Date()
+  const [filterMonth, setFilterMonth] = useState(String(now.getMonth() + 1))
+  const [filterYear, setFilterYear] = useState(String(now.getFullYear()))
+
+  const filters = useMemo(
+    () => ({
+      month: Number(filterMonth),
+      year: Number(filterYear),
+    }),
+    [filterMonth, filterYear],
+  )
+
+  const { data, isLoading, isError, refetch, isFetching } = useSalesTeamCost(filters)
+
+  const periodLabel = formatIncentiveMonthYear(filters.month, filters.year)
 
   if (isLoading) {
     return (
@@ -38,14 +59,47 @@ export function SalesTeamCostView() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Sales Team Cost</h1>
-        <p className="text-sm text-muted-foreground">
-          Hierarchy: Sales Head → Category Manager → Team Leader → Business Developer. Salary and
-          marketing are sourced automatically; incentives (Sales Head only), seating, and misc costs
-          are append-only finance logs that roll up through the hierarchy.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Sales Team Cost</h1>
+          <p className="text-sm text-muted-foreground">
+            Hierarchy: Sales Head → Category Manager → Team Leader → Business Developer. Salary and
+            marketing are sourced automatically; incentives, seating, and misc costs come from their
+            respective finance modules (approved only) and roll up through the hierarchy.
+          </p>
+        </div>
+        <div className="flex shrink-0 gap-2">
+          <Select value={filterMonth} onValueChange={setFilterMonth}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Month" />
+            </SelectTrigger>
+            <SelectContent>
+              {MONTHS.map((label, i) => (
+                <SelectItem key={label} value={String(i + 1)}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={filterYear} onValueChange={setFilterYear}>
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="Year" />
+            </SelectTrigger>
+            <SelectContent>
+              {YEAR_OPTIONS.map((y) => (
+                <SelectItem key={y} value={String(y)}>
+                  {y}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
+      <p className="text-xs text-muted-foreground">
+        Showing costs for <span className="font-medium text-foreground">{periodLabel}</span>
+        {isFetching && !isLoading ? ' · Updating…' : ''}
+      </p>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -55,9 +109,6 @@ export function SalesTeamCostView() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(summary.grandTotal)}</div>
-            {isFetching && !isLoading && (
-              <p className="mt-1 text-xs text-muted-foreground">Updating…</p>
-            )}
           </CardContent>
         </Card>
 
@@ -113,7 +164,7 @@ export function SalesTeamCostView() {
       ) : (
         <div className="space-y-4">
           {roots.map((root) => (
-            <RoleCostNode key={root.id} node={root} canWrite={canWrite} />
+            <RoleCostNode key={root.id} node={root} />
           ))}
         </div>
       )}

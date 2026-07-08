@@ -36,6 +36,9 @@ import {
   Users,
   Megaphone,
   Wallet,
+  Award,
+  Armchair,
+  Layers,
 } from 'lucide-react'
 import { SessionUser } from '@/lib/auth'
 import { hasPermission, type Permission } from '@/lib/rbac'
@@ -86,6 +89,12 @@ export const navItems: NavItem[] = [
     url: '/md/sales',
     icon: TrendingUp,
     roles: ['MD', 'ADMIN', 'SALES_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
+  },
+  {
+    title: 'Incentive',
+    url: '/incentives',
+    icon: Award,
+    permission: 'incentive:read',
   },
   {
     title: 'Finance Dashboard',
@@ -366,6 +375,18 @@ export const navItems: NavItem[] = [
     title: 'Sales Team Cost',
     url: '/finance/sales-team-cost',
     icon: DollarSign,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Master Seating Cost',
+    url: '/finance/master-seating-cost',
+    icon: Armchair,
+    roles: ['FINANCE_HEAD', 'ADMIN'],
+  },
+  {
+    title: 'Seating & Misc Cost',
+    url: '/finance/seating-misc-cost',
+    icon: Layers,
     permission: 'finance:read',
   },
   {
