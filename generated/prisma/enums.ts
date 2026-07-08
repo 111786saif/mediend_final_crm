@@ -76,6 +76,15 @@ export const ReviewStatus = {
 export type ReviewStatus = (typeof ReviewStatus)[keyof typeof ReviewStatus]
 
 
+export const SalesTeamCostEntryType = {
+  INCENTIVE: 'INCENTIVE',
+  SEATING: 'SEATING',
+  MISC: 'MISC'
+} as const
+
+export type SalesTeamCostEntryType = (typeof SalesTeamCostEntryType)[keyof typeof SalesTeamCostEntryType]
+
+
 export const FlowType = {
   INSURANCE: 'INSURANCE',
   CASH: 'CASH'

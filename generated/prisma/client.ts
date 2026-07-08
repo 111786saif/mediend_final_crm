@@ -397,6 +397,11 @@ export type PaymentInstallment = Prisma.PaymentInstallmentModel
  */
 export type ComplianceCall = Prisma.ComplianceCallModel
 /**
+ * Model SalesTeamCostEntry
+ * 
+ */
+export type SalesTeamCostEntry = Prisma.SalesTeamCostEntryModel
+/**
  * Model Task
  * 
  */

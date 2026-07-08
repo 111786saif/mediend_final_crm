@@ -122,6 +122,7 @@ export const ModelName = {
   OutstandingCase: 'OutstandingCase',
   PaymentInstallment: 'PaymentInstallment',
   ComplianceCall: 'ComplianceCall',
+  SalesTeamCostEntry: 'SalesTeamCostEntry',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
   UserTaskSeen: 'UserTaskSeen',
@@ -1714,6 +1715,20 @@ export const ComplianceCallScalarFieldEnum = {
 } as const
 
 export type ComplianceCallScalarFieldEnum = (typeof ComplianceCallScalarFieldEnum)[keyof typeof ComplianceCallScalarFieldEnum]
+
+
+export const SalesTeamCostEntryScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  entryType: 'entryType',
+  amount: 'amount',
+  entryDate: 'entryDate',
+  note: 'note',
+  addedByUserId: 'addedByUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type SalesTeamCostEntryScalarFieldEnum = (typeof SalesTeamCostEntryScalarFieldEnum)[keyof typeof SalesTeamCostEntryScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {

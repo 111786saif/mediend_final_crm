@@ -455,6 +455,7 @@ export const ModelName = {
   OutstandingCase: 'OutstandingCase',
   PaymentInstallment: 'PaymentInstallment',
   ComplianceCall: 'ComplianceCall',
+  SalesTeamCostEntry: 'SalesTeamCostEntry',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
   UserTaskSeen: 'UserTaskSeen',
@@ -502,7 +503,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5760,6 +5761,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SalesTeamCostEntry: {
+      payload: Prisma.$SalesTeamCostEntryPayload<ExtArgs>
+      fields: Prisma.SalesTeamCostEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SalesTeamCostEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SalesTeamCostEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.SalesTeamCostEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SalesTeamCostEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>
+        }
+        findMany: {
+          args: Prisma.SalesTeamCostEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>[]
+        }
+        create: {
+          args: Prisma.SalesTeamCostEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>
+        }
+        createMany: {
+          args: Prisma.SalesTeamCostEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SalesTeamCostEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.SalesTeamCostEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>
+        }
+        update: {
+          args: Prisma.SalesTeamCostEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.SalesTeamCostEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SalesTeamCostEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SalesTeamCostEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.SalesTeamCostEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamCostEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.SalesTeamCostEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSalesTeamCostEntry>
+        }
+        groupBy: {
+          args: Prisma.SalesTeamCostEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SalesTeamCostEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SalesTeamCostEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SalesTeamCostEntryCountAggregateOutputType> | number
+        }
+      }
+    }
     Task: {
       payload: Prisma.$TaskPayload<ExtArgs>
       fields: Prisma.TaskFieldRefs
@@ -9711,6 +9786,20 @@ export const ComplianceCallScalarFieldEnum = {
 export type ComplianceCallScalarFieldEnum = (typeof ComplianceCallScalarFieldEnum)[keyof typeof ComplianceCallScalarFieldEnum]
 
 
+export const SalesTeamCostEntryScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  entryType: 'entryType',
+  amount: 'amount',
+  entryDate: 'entryDate',
+  note: 'note',
+  addedByUserId: 'addedByUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type SalesTeamCostEntryScalarFieldEnum = (typeof SalesTeamCostEntryScalarFieldEnum)[keyof typeof SalesTeamCostEntryScalarFieldEnum]
+
+
 export const TaskScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -11024,6 +11113,20 @@ export type ListEnumReviewStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'SalesTeamCostEntryType'
+ */
+export type EnumSalesTeamCostEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SalesTeamCostEntryType'>
+    
+
+
+/**
+ * Reference to a field of type 'SalesTeamCostEntryType[]'
+ */
+export type ListEnumSalesTeamCostEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SalesTeamCostEntryType[]'>
+    
+
+
+/**
  * Reference to a field of type 'TaskPriority'
  */
 export type EnumTaskPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskPriority'>
@@ -11328,6 +11431,7 @@ export type GlobalOmitConfig = {
   outstandingCase?: Prisma.OutstandingCaseOmit
   paymentInstallment?: Prisma.PaymentInstallmentOmit
   complianceCall?: Prisma.ComplianceCallOmit
+  salesTeamCostEntry?: Prisma.SalesTeamCostEntryOmit
   task?: Prisma.TaskOmit
   taskDueDateApproval?: Prisma.TaskDueDateApprovalOmit
   userTaskSeen?: Prisma.UserTaskSeenOmit

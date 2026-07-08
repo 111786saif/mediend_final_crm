@@ -363,6 +363,12 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
+    title: 'Sales Team Cost',
+    url: '/finance/sales-team-cost',
+    icon: DollarSign,
+    permission: 'finance:read',
+  },
+  {
     title: 'Company P&L',
     url: '/finance/pnl',
     icon: PieChart,
