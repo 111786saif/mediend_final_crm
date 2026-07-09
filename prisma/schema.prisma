@@ -62,6 +62,24 @@ enum ReviewStatus {
   NOT_DONE
 }
 
+enum SalesTeamCostEntryType {
+  INCENTIVE
+  SEATING
+  MISC
+}
+
+enum EmployeeIncentiveStatus {
+  PENDING
+  APPROVED
+  PAID
+}
+
+enum EmployeeSeatingMiscCostStatus {
+  PENDING
+  APPROVED
+  PAID
+}
+
 enum FlowType {
   INSURANCE
   CASH
@@ -536,6 +554,16 @@ model User {
   pnlCategoriesCreated      PnLCategory[]        @relation("PnLCategoryCreator")
   pnlEntriesCreated         PnLEntry[]           @relation("PnLEntryCreator")
   targetPnlEntriesCreated   TargetPnLEntry[]     @relation("TargetPnLEntryCreator")
+
+  // Finance: sales team cost entries added by this user
+  salesTeamCostEntriesAdded SalesTeamCostEntry[] @relation("SalesTeamCostEntryAddedBy")
+  employeeIncentivesCreated EmployeeMonthlyIncentive[] @relation("EmployeeIncentiveCreatedBy")
+  employeeIncentivesUpdated EmployeeMonthlyIncentive[] @relation("EmployeeIncentiveUpdatedBy")
+  masterSeatingCostsCreated EmployeeMasterSeatingCost[] @relation("MasterSeatingCostCreatedBy")
+  masterSeatingCostsUpdated EmployeeMasterSeatingCost[] @relation("MasterSeatingCostUpdatedBy")
+  seatingMiscCostsCreated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostCreatedBy")
+  seatingMiscCostsUpdated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostUpdatedBy")
+  seatingMiscCostHistory    EmployeeMonthlySeatingMiscCostHistory[] @relation("SeatingMiscCostHistoryBy")
 
   // Meets (calendar / interviews / MD appointments)
   meetsCreated       Meet[]            @relation("MeetsCreated")
@@ -1023,6 +1051,10 @@ model Employee {
   mdTaskTeamMemberships                   MDTaskTeamMember[]
   mdWatchlistMemberships                  MDWatchlistEmployee[]
   itProjectResources                      ITProjectResource[]
+  salesTeamCostEntries                    SalesTeamCostEntry[]
+  monthlyIncentives                       EmployeeMonthlyIncentive[]
+  masterSeatingCost                       EmployeeMasterSeatingCost?
+  monthlySeatingMiscCosts                 EmployeeMonthlySeatingMiscCost[]
 
   @@index([userId])
   @@index([employeeCode])
@@ -2757,6 +2789,102 @@ model ComplianceCall {
   @@index([completedAt])
   @@index([satisfaction])
   @@index([reviewStatus])
+}
+
+// Finance: append-only incentive / seating / misc cost entries per sales org employee
+model SalesTeamCostEntry {
+  id            String                   @id @default(cuid())
+  employeeId    String
+  employee      Employee                 @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  entryType     SalesTeamCostEntryType
+  amount        Float
+  entryDate     DateTime
+  note          String?                  @db.Text
+  addedByUserId String
+  addedBy       User                     @relation("SalesTeamCostEntryAddedBy", fields: [addedByUserId], references: [id])
+  createdAt     DateTime                 @default(now())
+
+  @@index([employeeId, entryType])
+  @@index([entryDate])
+}
+
+model EmployeeMonthlyIncentive {
+  id              String                  @id @default(cuid())
+  employeeId      String
+  employee        Employee                @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month           Int
+  year            Int
+  amount          Float
+  status          EmployeeIncentiveStatus @default(PENDING)
+  note            String?                 @db.Text
+  createdByUserId String
+  createdBy       User                    @relation("EmployeeIncentiveCreatedBy", fields: [createdByUserId], references: [id])
+  updatedByUserId String?
+  updatedBy       User?                   @relation("EmployeeIncentiveUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  @@unique([employeeId, month, year])
+  @@index([month, year])
+  @@index([status])
+}
+
+model EmployeeMasterSeatingCost {
+  id              String   @id @default(cuid())
+  employeeId      String   @unique
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  amount          Float
+  note            String?  @db.Text
+  createdByUserId String
+  createdBy       User     @relation("MasterSeatingCostCreatedBy", fields: [createdByUserId], references: [id])
+  updatedByUserId String?
+  updatedBy       User?    @relation("MasterSeatingCostUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  monthlyCosts    EmployeeMonthlySeatingMiscCost[]
+
+  @@index([updatedAt])
+}
+
+model EmployeeMonthlySeatingMiscCost {
+  id                    String                        @id @default(cuid())
+  employeeId            String
+  employee              Employee                      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month                 Int
+  year                  Int
+  seatingCost           Float
+  masterSeatingCostId   String?
+  masterSeatingCost     EmployeeMasterSeatingCost?    @relation(fields: [masterSeatingCostId], references: [id], onDelete: SetNull)
+  miscCost              Float                         @default(0)
+  status                EmployeeSeatingMiscCostStatus @default(PENDING)
+  remarks               String?                       @db.Text
+  createdByUserId       String
+  createdBy             User                          @relation("SeatingMiscCostCreatedBy", fields: [createdByUserId], references: [id])
+  updatedByUserId       String?
+  updatedBy             User?                         @relation("SeatingMiscCostUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt             DateTime                      @default(now())
+  updatedAt             DateTime                      @updatedAt
+  history               EmployeeMonthlySeatingMiscCostHistory[]
+
+  @@unique([employeeId, month, year])
+  @@index([month, year])
+  @@index([status])
+}
+
+model EmployeeMonthlySeatingMiscCostHistory {
+  id              String                        @id @default(cuid())
+  recordId        String
+  record          EmployeeMonthlySeatingMiscCost  @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  action          String
+  seatingCost     Float
+  miscCost        Float
+  status          EmployeeSeatingMiscCostStatus
+  remarks         String?                       @db.Text
+  changedByUserId String
+  changedBy       User                          @relation("SeatingMiscCostHistoryBy", fields: [changedByUserId], references: [id])
+  changedAt       DateTime                      @default(now())
+
+  @@index([recordId, changedAt])
 }
 
 // ==========================================

@@ -1,6 +1,10 @@
 import { ApiResponse } from './api-utils'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+/** In the browser, use same-origin relative URLs so cookies work on localhost and LAN IP. */
+const API_BASE_URL =
+  typeof window !== 'undefined'
+    ? ''
+    : process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
 export async function apiRequest<T>(
   endpoint: string,

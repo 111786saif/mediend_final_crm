@@ -573,6 +573,10 @@ export type EmployeeWhereInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberListRelationFilter
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeListRelationFilter
   itProjectResources?: Prisma.ITProjectResourceListRelationFilter
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryListRelationFilter
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveListRelationFilter
+  masterSeatingCost?: Prisma.XOR<Prisma.EmployeeMasterSeatingCostNullableScalarRelationFilter, Prisma.EmployeeMasterSeatingCostWhereInput> | null
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostListRelationFilter
 }
 
 export type EmployeeOrderByWithRelationInput = {
@@ -651,6 +655,10 @@ export type EmployeeOrderByWithRelationInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberOrderByRelationAggregateInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeOrderByRelationAggregateInput
   itProjectResources?: Prisma.ITProjectResourceOrderByRelationAggregateInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryOrderByRelationAggregateInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveOrderByRelationAggregateInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostOrderByWithRelationInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostOrderByRelationAggregateInput
 }
 
 export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -732,6 +740,10 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberListRelationFilter
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeListRelationFilter
   itProjectResources?: Prisma.ITProjectResourceListRelationFilter
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryListRelationFilter
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveListRelationFilter
+  masterSeatingCost?: Prisma.XOR<Prisma.EmployeeMasterSeatingCostNullableScalarRelationFilter, Prisma.EmployeeMasterSeatingCostWhereInput> | null
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostListRelationFilter
 }, "id" | "userId" | "employeeCode" | "bdNumber">
 
 export type EmployeeOrderByWithAggregationInput = {
@@ -911,6 +923,10 @@ export type EmployeeCreateInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateInput = {
@@ -984,6 +1000,10 @@ export type EmployeeUncheckedCreateInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUpdateInput = {
@@ -1057,6 +1077,10 @@ export type EmployeeUpdateInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateInput = {
@@ -1130,6 +1154,10 @@ export type EmployeeUncheckedUpdateInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyInput = {
@@ -1959,6 +1987,62 @@ export type EmployeeUpdateOneRequiredWithoutIjpApplicationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutIjpApplicationsInput, Prisma.EmployeeUpdateWithoutIjpApplicationsInput>, Prisma.EmployeeUncheckedUpdateWithoutIjpApplicationsInput>
 }
 
+export type EmployeeCreateNestedOneWithoutSalesTeamCostEntriesInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutSalesTeamCostEntriesInput, Prisma.EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutSalesTeamCostEntriesInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutSalesTeamCostEntriesNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutSalesTeamCostEntriesInput, Prisma.EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutSalesTeamCostEntriesInput
+  upsert?: Prisma.EmployeeUpsertWithoutSalesTeamCostEntriesInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutSalesTeamCostEntriesInput, Prisma.EmployeeUpdateWithoutSalesTeamCostEntriesInput>, Prisma.EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput>
+}
+
+export type EmployeeCreateNestedOneWithoutMonthlyIncentivesInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutMonthlyIncentivesInput, Prisma.EmployeeUncheckedCreateWithoutMonthlyIncentivesInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutMonthlyIncentivesInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutMonthlyIncentivesNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutMonthlyIncentivesInput, Prisma.EmployeeUncheckedCreateWithoutMonthlyIncentivesInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutMonthlyIncentivesInput
+  upsert?: Prisma.EmployeeUpsertWithoutMonthlyIncentivesInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutMonthlyIncentivesInput, Prisma.EmployeeUpdateWithoutMonthlyIncentivesInput>, Prisma.EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput>
+}
+
+export type EmployeeCreateNestedOneWithoutMasterSeatingCostInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutMasterSeatingCostInput, Prisma.EmployeeUncheckedCreateWithoutMasterSeatingCostInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutMasterSeatingCostInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutMasterSeatingCostNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutMasterSeatingCostInput, Prisma.EmployeeUncheckedCreateWithoutMasterSeatingCostInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutMasterSeatingCostInput
+  upsert?: Prisma.EmployeeUpsertWithoutMasterSeatingCostInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutMasterSeatingCostInput, Prisma.EmployeeUpdateWithoutMasterSeatingCostInput>, Prisma.EmployeeUncheckedUpdateWithoutMasterSeatingCostInput>
+}
+
+export type EmployeeCreateNestedOneWithoutMonthlySeatingMiscCostsInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutMonthlySeatingMiscCostsInput, Prisma.EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutMonthlySeatingMiscCostsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+}
+
+export type EmployeeUpdateOneRequiredWithoutMonthlySeatingMiscCostsNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutMonthlySeatingMiscCostsInput, Prisma.EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput>
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutMonthlySeatingMiscCostsInput
+  upsert?: Prisma.EmployeeUpsertWithoutMonthlySeatingMiscCostsInput
+  connect?: Prisma.EmployeeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeeUpdateToOneWithWhereWithoutMonthlySeatingMiscCostsInput, Prisma.EmployeeUpdateWithoutMonthlySeatingMiscCostsInput>, Prisma.EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput>
+}
+
 export type EmployeeCreateNestedOneWithoutMdTaskTeamMembershipsInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutMdTaskTeamMembershipsInput, Prisma.EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutMdTaskTeamMembershipsInput
@@ -2073,6 +2157,10 @@ export type EmployeeCreateWithoutUserInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutUserInput = {
@@ -2145,6 +2233,10 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutUserInput = {
@@ -2222,6 +2314,10 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
@@ -2294,6 +2390,10 @@ export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutFnfCompletedByInput = {
@@ -2387,6 +2487,10 @@ export type EmployeeUpdateWithoutUserInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutUserInput = {
@@ -2459,6 +2563,10 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithWhereUniqueWithoutFnfCompletedByInput = {
@@ -2599,6 +2707,10 @@ export type EmployeeCreateWithoutDepartmentInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutDepartmentInput = {
@@ -2671,6 +2783,10 @@ export type EmployeeUncheckedCreateWithoutDepartmentInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutDepartmentInput = {
@@ -2769,6 +2885,10 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
@@ -2841,6 +2961,10 @@ export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTeamLeadOfInput = {
@@ -2918,6 +3042,10 @@ export type EmployeeCreateWithoutTeamInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutTeamInput = {
@@ -2990,6 +3118,10 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutTeamInput = {
@@ -3083,6 +3215,10 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
@@ -3155,6 +3291,10 @@ export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithWhereUniqueWithoutTeamInput = {
@@ -3243,6 +3383,10 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
@@ -3315,6 +3459,10 @@ export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSubordinatesInput = {
@@ -3392,6 +3540,10 @@ export type EmployeeCreateWithoutManagerInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutManagerInput = {
@@ -3464,6 +3616,10 @@ export type EmployeeUncheckedCreateWithoutManagerInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutManagerInput = {
@@ -3557,6 +3713,10 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
@@ -3629,6 +3789,10 @@ export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithWhereUniqueWithoutManagerInput = {
@@ -3717,6 +3881,10 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
@@ -3789,6 +3957,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceLogsInput = {
@@ -3877,6 +4049,10 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
@@ -3949,6 +4125,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
@@ -4021,6 +4201,10 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput = {
@@ -4093,6 +4277,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceNormalizationsAsSubjectInput = {
@@ -4170,6 +4358,10 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput = {
@@ -4242,6 +4434,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceNormalizationsRequestedInput = {
@@ -4319,6 +4515,10 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput = {
@@ -4391,6 +4591,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput 
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceNormalizationsApprovedInput = {
@@ -4468,6 +4672,10 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprovedInput = {
@@ -4540,6 +4748,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprove
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutAttendanceNormalizationsManagerApprovedInput = {
@@ -4628,6 +4840,10 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
@@ -4700,6 +4916,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutAttendanceNormalizationsRequestedInput = {
@@ -4783,6 +5003,10 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput = {
@@ -4855,6 +5079,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutAttendanceNormalizationsApprovedInput = {
@@ -4938,6 +5166,10 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput = {
@@ -5010,6 +5242,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput 
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutAttendanceNormalizationsManagerApprovedInput = {
@@ -5093,6 +5329,10 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprovedInput = {
@@ -5165,6 +5405,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprove
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutLeaveRequestsInput = {
@@ -5237,6 +5481,10 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
@@ -5309,6 +5557,10 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutLeaveRequestsInput = {
@@ -5386,6 +5638,10 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
@@ -5458,6 +5714,10 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutLeaveRequestsTargetApproverInput = {
@@ -5546,6 +5806,10 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
@@ -5618,6 +5882,10 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUpsertWithoutLeaveRequestsTargetApproverInput = {
@@ -5701,6 +5969,10 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
@@ -5773,6 +6045,10 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutLeaveBalancesInput = {
@@ -5845,6 +6121,10 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
@@ -5917,6 +6197,10 @@ export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutLeaveBalancesInput = {
@@ -6005,6 +6289,10 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
@@ -6077,6 +6365,10 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
@@ -6149,6 +6441,10 @@ export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
@@ -6221,6 +6517,10 @@ export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutLeaveBalanceEditRequestsInput = {
@@ -6309,6 +6609,10 @@ export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
@@ -6381,6 +6685,10 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutPayrollRecordsInput = {
@@ -6453,6 +6761,10 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
@@ -6525,6 +6837,10 @@ export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutPayrollRecordsInput = {
@@ -6613,6 +6929,10 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
@@ -6685,6 +7005,10 @@ export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutSalaryStructuresInput = {
@@ -6757,6 +7081,10 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
@@ -6829,6 +7157,10 @@ export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSalaryStructuresInput = {
@@ -6917,6 +7249,10 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
@@ -6989,6 +7325,10 @@ export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMonthlyPayrollsInput = {
@@ -7061,6 +7401,10 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
@@ -7133,6 +7477,10 @@ export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMonthlyPayrollsInput = {
@@ -7221,6 +7569,10 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
@@ -7293,6 +7645,10 @@ export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutDocumentsInput = {
@@ -7365,6 +7721,10 @@ export type EmployeeCreateWithoutDocumentsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutDocumentsInput = {
@@ -7437,6 +7797,10 @@ export type EmployeeUncheckedCreateWithoutDocumentsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutDocumentsInput = {
@@ -7525,6 +7889,10 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
@@ -7597,6 +7965,10 @@ export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutFeedbacksInput = {
@@ -7669,6 +8041,10 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
@@ -7741,6 +8117,10 @@ export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutFeedbacksInput = {
@@ -7829,6 +8209,10 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
@@ -7901,6 +8285,10 @@ export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMdAppointmentsInput = {
@@ -7973,6 +8361,10 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
@@ -8045,6 +8437,10 @@ export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMdAppointmentsInput = {
@@ -8133,6 +8529,10 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
@@ -8205,6 +8605,10 @@ export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMentalHealthRequestsInput = {
@@ -8277,6 +8681,10 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
@@ -8349,6 +8757,10 @@ export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMentalHealthRequestsInput = {
@@ -8437,6 +8849,10 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
@@ -8509,6 +8925,10 @@ export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutSupportTicketsInput = {
@@ -8581,6 +9001,10 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
@@ -8653,6 +9077,10 @@ export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutSupportTicketsInput = {
@@ -8741,6 +9169,10 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
@@ -8813,6 +9245,10 @@ export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutIncrementRequestsInput = {
@@ -8885,6 +9321,10 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
@@ -8957,6 +9397,10 @@ export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutIncrementRequestsInput = {
@@ -9045,6 +9489,10 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
@@ -9117,6 +9565,10 @@ export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutIjpApplicationsInput = {
@@ -9189,6 +9641,10 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
@@ -9261,6 +9717,10 @@ export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutIjpApplicationsInput = {
@@ -9349,6 +9809,10 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
@@ -9421,6 +9885,1290 @@ export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutSalesTeamCostEntriesInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutSalesTeamCostEntriesInput, Prisma.EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput>
+}
+
+export type EmployeeUpsertWithoutSalesTeamCostEntriesInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutSalesTeamCostEntriesInput, Prisma.EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutSalesTeamCostEntriesInput, Prisma.EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutSalesTeamCostEntriesInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutSalesTeamCostEntriesInput, Prisma.EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput>
+}
+
+export type EmployeeUpdateWithoutSalesTeamCostEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutMonthlyIncentivesInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutMonthlyIncentivesInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutMonthlyIncentivesInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutMonthlyIncentivesInput, Prisma.EmployeeUncheckedCreateWithoutMonthlyIncentivesInput>
+}
+
+export type EmployeeUpsertWithoutMonthlyIncentivesInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutMonthlyIncentivesInput, Prisma.EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutMonthlyIncentivesInput, Prisma.EmployeeUncheckedCreateWithoutMonthlyIncentivesInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutMonthlyIncentivesInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutMonthlyIncentivesInput, Prisma.EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput>
+}
+
+export type EmployeeUpdateWithoutMonthlyIncentivesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutMasterSeatingCostInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutMasterSeatingCostInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutMasterSeatingCostInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutMasterSeatingCostInput, Prisma.EmployeeUncheckedCreateWithoutMasterSeatingCostInput>
+}
+
+export type EmployeeUpsertWithoutMasterSeatingCostInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutMasterSeatingCostInput, Prisma.EmployeeUncheckedUpdateWithoutMasterSeatingCostInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutMasterSeatingCostInput, Prisma.EmployeeUncheckedCreateWithoutMasterSeatingCostInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutMasterSeatingCostInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutMasterSeatingCostInput, Prisma.EmployeeUncheckedUpdateWithoutMasterSeatingCostInput>
+}
+
+export type EmployeeUpdateWithoutMasterSeatingCostInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutMasterSeatingCostInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeCreateWithoutMonthlySeatingMiscCostsInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutMonthlySeatingMiscCostsInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutMonthlySeatingMiscCostsInput, Prisma.EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput>
+}
+
+export type EmployeeUpsertWithoutMonthlySeatingMiscCostsInput = {
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutMonthlySeatingMiscCostsInput, Prisma.EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutMonthlySeatingMiscCostsInput, Prisma.EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput>
+  where?: Prisma.EmployeeWhereInput
+}
+
+export type EmployeeUpdateToOneWithWhereWithoutMonthlySeatingMiscCostsInput = {
+  where?: Prisma.EmployeeWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutMonthlySeatingMiscCostsInput, Prisma.EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput>
+}
+
+export type EmployeeUpdateWithoutMonthlySeatingMiscCostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
@@ -9493,6 +11241,10 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
@@ -9565,6 +11317,10 @@ export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
   ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMdTaskTeamMembershipsInput = {
@@ -9653,6 +11409,10 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
@@ -9725,6 +11485,10 @@ export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
   ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
@@ -9797,6 +11561,10 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
@@ -9869,6 +11637,10 @@ export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
   ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutMdWatchlistMembershipsInput = {
@@ -9957,6 +11729,10 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
@@ -10029,6 +11805,10 @@ export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
   ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateWithoutItProjectResourcesInput = {
@@ -10101,6 +11881,10 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
@@ -10173,6 +11957,10 @@ export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
   ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
 }
 
 export type EmployeeCreateOrConnectWithoutItProjectResourcesInput = {
@@ -10261,6 +12049,10 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
@@ -10333,6 +12125,10 @@ export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
   ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeCreateManyFnfCompletedByInput = {
@@ -10453,6 +12249,10 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
@@ -10525,6 +12325,10 @@ export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutFnfCompletedByInput = {
@@ -10693,6 +12497,10 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
@@ -10765,6 +12573,10 @@ export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutDepartmentInput = {
@@ -10933,6 +12745,10 @@ export type EmployeeUpdateWithoutTeamInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutTeamInput = {
@@ -11005,6 +12821,10 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutTeamInput = {
@@ -11173,6 +12993,10 @@ export type EmployeeUpdateWithoutManagerInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateWithoutManagerInput = {
@@ -11245,6 +13069,10 @@ export type EmployeeUncheckedUpdateWithoutManagerInput = {
   mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
   mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
   itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
 }
 
 export type EmployeeUncheckedUpdateManyWithoutManagerInput = {
@@ -11324,6 +13152,9 @@ export type EmployeeCountOutputType = {
   mdTaskTeamMemberships: number
   mdWatchlistMemberships: number
   itProjectResources: number
+  salesTeamCostEntries: number
+  monthlyIncentives: number
+  monthlySeatingMiscCosts: number
 }
 
 export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -11350,6 +13181,9 @@ export type EmployeeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensio
   mdTaskTeamMemberships?: boolean | EmployeeCountOutputTypeCountMdTaskTeamMembershipsArgs
   mdWatchlistMemberships?: boolean | EmployeeCountOutputTypeCountMdWatchlistMembershipsArgs
   itProjectResources?: boolean | EmployeeCountOutputTypeCountItProjectResourcesArgs
+  salesTeamCostEntries?: boolean | EmployeeCountOutputTypeCountSalesTeamCostEntriesArgs
+  monthlyIncentives?: boolean | EmployeeCountOutputTypeCountMonthlyIncentivesArgs
+  monthlySeatingMiscCosts?: boolean | EmployeeCountOutputTypeCountMonthlySeatingMiscCostsArgs
 }
 
 /**
@@ -11523,6 +13357,27 @@ export type EmployeeCountOutputTypeCountItProjectResourcesArgs<ExtArgs extends r
   where?: Prisma.ITProjectResourceWhereInput
 }
 
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountSalesTeamCostEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SalesTeamCostEntryWhereInput
+}
+
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountMonthlyIncentivesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMonthlyIncentiveWhereInput
+}
+
+/**
+ * EmployeeCountOutputType without action
+ */
+export type EmployeeCountOutputTypeCountMonthlySeatingMiscCostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMonthlySeatingMiscCostWhereInput
+}
+
 
 export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -11600,6 +13455,10 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   mdTaskTeamMemberships?: boolean | Prisma.Employee$mdTaskTeamMembershipsArgs<ExtArgs>
   mdWatchlistMemberships?: boolean | Prisma.Employee$mdWatchlistMembershipsArgs<ExtArgs>
   itProjectResources?: boolean | Prisma.Employee$itProjectResourcesArgs<ExtArgs>
+  salesTeamCostEntries?: boolean | Prisma.Employee$salesTeamCostEntriesArgs<ExtArgs>
+  monthlyIncentives?: boolean | Prisma.Employee$monthlyIncentivesArgs<ExtArgs>
+  masterSeatingCost?: boolean | Prisma.Employee$masterSeatingCostArgs<ExtArgs>
+  monthlySeatingMiscCosts?: boolean | Prisma.Employee$monthlySeatingMiscCostsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -11791,6 +13650,10 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   mdTaskTeamMemberships?: boolean | Prisma.Employee$mdTaskTeamMembershipsArgs<ExtArgs>
   mdWatchlistMemberships?: boolean | Prisma.Employee$mdWatchlistMembershipsArgs<ExtArgs>
   itProjectResources?: boolean | Prisma.Employee$itProjectResourcesArgs<ExtArgs>
+  salesTeamCostEntries?: boolean | Prisma.Employee$salesTeamCostEntriesArgs<ExtArgs>
+  monthlyIncentives?: boolean | Prisma.Employee$monthlyIncentivesArgs<ExtArgs>
+  masterSeatingCost?: boolean | Prisma.Employee$masterSeatingCostArgs<ExtArgs>
+  monthlySeatingMiscCosts?: boolean | Prisma.Employee$monthlySeatingMiscCostsArgs<ExtArgs>
   _count?: boolean | Prisma.EmployeeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -11840,6 +13703,10 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     mdTaskTeamMemberships: Prisma.$MDTaskTeamMemberPayload<ExtArgs>[]
     mdWatchlistMemberships: Prisma.$MDWatchlistEmployeePayload<ExtArgs>[]
     itProjectResources: Prisma.$ITProjectResourcePayload<ExtArgs>[]
+    salesTeamCostEntries: Prisma.$SalesTeamCostEntryPayload<ExtArgs>[]
+    monthlyIncentives: Prisma.$EmployeeMonthlyIncentivePayload<ExtArgs>[]
+    masterSeatingCost: Prisma.$EmployeeMasterSeatingCostPayload<ExtArgs> | null
+    monthlySeatingMiscCosts: Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -12311,6 +14178,10 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   mdTaskTeamMemberships<T extends Prisma.Employee$mdTaskTeamMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$mdTaskTeamMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MDTaskTeamMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mdWatchlistMemberships<T extends Prisma.Employee$mdWatchlistMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$mdWatchlistMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MDWatchlistEmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   itProjectResources<T extends Prisma.Employee$itProjectResourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$itProjectResourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ITProjectResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  salesTeamCostEntries<T extends Prisma.Employee$salesTeamCostEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$salesTeamCostEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesTeamCostEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  monthlyIncentives<T extends Prisma.Employee$monthlyIncentivesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$monthlyIncentivesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlyIncentivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  masterSeatingCost<T extends Prisma.Employee$masterSeatingCostArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$masterSeatingCostArgs<ExtArgs>>): Prisma.Prisma__EmployeeMasterSeatingCostClient<runtime.Types.Result.GetResult<Prisma.$EmployeeMasterSeatingCostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  monthlySeatingMiscCosts<T extends Prisma.Employee$monthlySeatingMiscCostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$monthlySeatingMiscCostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13431,6 +15302,97 @@ export type Employee$itProjectResourcesArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.ITProjectResourceScalarFieldEnum | Prisma.ITProjectResourceScalarFieldEnum[]
+}
+
+/**
+ * Employee.salesTeamCostEntries
+ */
+export type Employee$salesTeamCostEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SalesTeamCostEntry
+   */
+  select?: Prisma.SalesTeamCostEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SalesTeamCostEntry
+   */
+  omit?: Prisma.SalesTeamCostEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SalesTeamCostEntryInclude<ExtArgs> | null
+  where?: Prisma.SalesTeamCostEntryWhereInput
+  orderBy?: Prisma.SalesTeamCostEntryOrderByWithRelationInput | Prisma.SalesTeamCostEntryOrderByWithRelationInput[]
+  cursor?: Prisma.SalesTeamCostEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SalesTeamCostEntryScalarFieldEnum | Prisma.SalesTeamCostEntryScalarFieldEnum[]
+}
+
+/**
+ * Employee.monthlyIncentives
+ */
+export type Employee$monthlyIncentivesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMonthlyIncentive
+   */
+  select?: Prisma.EmployeeMonthlyIncentiveSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMonthlyIncentive
+   */
+  omit?: Prisma.EmployeeMonthlyIncentiveOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMonthlyIncentiveInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMonthlyIncentiveWhereInput
+  orderBy?: Prisma.EmployeeMonthlyIncentiveOrderByWithRelationInput | Prisma.EmployeeMonthlyIncentiveOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMonthlyIncentiveWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMonthlyIncentiveScalarFieldEnum | Prisma.EmployeeMonthlyIncentiveScalarFieldEnum[]
+}
+
+/**
+ * Employee.masterSeatingCost
+ */
+export type Employee$masterSeatingCostArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMasterSeatingCost
+   */
+  select?: Prisma.EmployeeMasterSeatingCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMasterSeatingCost
+   */
+  omit?: Prisma.EmployeeMasterSeatingCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMasterSeatingCostInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMasterSeatingCostWhereInput
+}
+
+/**
+ * Employee.monthlySeatingMiscCosts
+ */
+export type Employee$monthlySeatingMiscCostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMonthlySeatingMiscCost
+   */
+  select?: Prisma.EmployeeMonthlySeatingMiscCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMonthlySeatingMiscCost
+   */
+  omit?: Prisma.EmployeeMonthlySeatingMiscCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMonthlySeatingMiscCostInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMonthlySeatingMiscCostWhereInput
+  orderBy?: Prisma.EmployeeMonthlySeatingMiscCostOrderByWithRelationInput | Prisma.EmployeeMonthlySeatingMiscCostOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMonthlySeatingMiscCostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMonthlySeatingMiscCostScalarFieldEnum | Prisma.EmployeeMonthlySeatingMiscCostScalarFieldEnum[]
 }
 
 /**

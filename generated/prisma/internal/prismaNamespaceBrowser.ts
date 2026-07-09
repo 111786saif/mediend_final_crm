@@ -122,6 +122,11 @@ export const ModelName = {
   OutstandingCase: 'OutstandingCase',
   PaymentInstallment: 'PaymentInstallment',
   ComplianceCall: 'ComplianceCall',
+  SalesTeamCostEntry: 'SalesTeamCostEntry',
+  EmployeeMonthlyIncentive: 'EmployeeMonthlyIncentive',
+  EmployeeMasterSeatingCost: 'EmployeeMasterSeatingCost',
+  EmployeeMonthlySeatingMiscCost: 'EmployeeMonthlySeatingMiscCost',
+  EmployeeMonthlySeatingMiscCostHistory: 'EmployeeMonthlySeatingMiscCostHistory',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
   UserTaskSeen: 'UserTaskSeen',
@@ -1714,6 +1719,85 @@ export const ComplianceCallScalarFieldEnum = {
 } as const
 
 export type ComplianceCallScalarFieldEnum = (typeof ComplianceCallScalarFieldEnum)[keyof typeof ComplianceCallScalarFieldEnum]
+
+
+export const SalesTeamCostEntryScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  entryType: 'entryType',
+  amount: 'amount',
+  entryDate: 'entryDate',
+  note: 'note',
+  addedByUserId: 'addedByUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type SalesTeamCostEntryScalarFieldEnum = (typeof SalesTeamCostEntryScalarFieldEnum)[keyof typeof SalesTeamCostEntryScalarFieldEnum]
+
+
+export const EmployeeMonthlyIncentiveScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  status: 'status',
+  note: 'note',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeMonthlyIncentiveScalarFieldEnum = (typeof EmployeeMonthlyIncentiveScalarFieldEnum)[keyof typeof EmployeeMonthlyIncentiveScalarFieldEnum]
+
+
+export const EmployeeMasterSeatingCostScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  amount: 'amount',
+  note: 'note',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeMasterSeatingCostScalarFieldEnum = (typeof EmployeeMasterSeatingCostScalarFieldEnum)[keyof typeof EmployeeMasterSeatingCostScalarFieldEnum]
+
+
+export const EmployeeMonthlySeatingMiscCostScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  seatingCost: 'seatingCost',
+  masterSeatingCostId: 'masterSeatingCostId',
+  miscCost: 'miscCost',
+  status: 'status',
+  remarks: 'remarks',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeMonthlySeatingMiscCostScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostScalarFieldEnum]
+
+
+export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
+  id: 'id',
+  recordId: 'recordId',
+  action: 'action',
+  seatingCost: 'seatingCost',
+  miscCost: 'miscCost',
+  status: 'status',
+  remarks: 'remarks',
+  changedByUserId: 'changedByUserId',
+  changedAt: 'changedAt'
+} as const
+
+export type EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {

@@ -332,6 +332,14 @@ export type UserWhereInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryListRelationFilter
   pnlEntriesCreated?: Prisma.PnLEntryListRelationFilter
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryListRelationFilter
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryListRelationFilter
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveListRelationFilter
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveListRelationFilter
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostListRelationFilter
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostListRelationFilter
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostListRelationFilter
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostListRelationFilter
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryListRelationFilter
   meetsCreated?: Prisma.MeetListRelationFilter
   meetParticipations?: Prisma.MeetParticipantListRelationFilter
   statuses?: Prisma.UserStatusListRelationFilter
@@ -431,6 +439,14 @@ export type UserOrderByWithRelationInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryOrderByRelationAggregateInput
   pnlEntriesCreated?: Prisma.PnLEntryOrderByRelationAggregateInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryOrderByRelationAggregateInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryOrderByRelationAggregateInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveOrderByRelationAggregateInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveOrderByRelationAggregateInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostOrderByRelationAggregateInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostOrderByRelationAggregateInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostOrderByRelationAggregateInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostOrderByRelationAggregateInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryOrderByRelationAggregateInput
   meetsCreated?: Prisma.MeetOrderByRelationAggregateInput
   meetParticipations?: Prisma.MeetParticipantOrderByRelationAggregateInput
   statuses?: Prisma.UserStatusOrderByRelationAggregateInput
@@ -533,6 +549,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   pnlCategoriesCreated?: Prisma.PnLCategoryListRelationFilter
   pnlEntriesCreated?: Prisma.PnLEntryListRelationFilter
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryListRelationFilter
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryListRelationFilter
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveListRelationFilter
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveListRelationFilter
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostListRelationFilter
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostListRelationFilter
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostListRelationFilter
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostListRelationFilter
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryListRelationFilter
   meetsCreated?: Prisma.MeetListRelationFilter
   meetParticipations?: Prisma.MeetParticipantListRelationFilter
   statuses?: Prisma.UserStatusListRelationFilter
@@ -674,6 +698,14 @@ export type UserCreateInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -773,6 +805,14 @@ export type UserUncheckedCreateInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -872,6 +912,14 @@ export type UserUpdateInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -971,6 +1019,14 @@ export type UserUncheckedUpdateInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -1966,6 +2022,124 @@ export type UserUpdateOneWithoutComplianceCallsHandledNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutComplianceCallsHandledInput, Prisma.UserUpdateWithoutComplianceCallsHandledInput>, Prisma.UserUncheckedUpdateWithoutComplianceCallsHandledInput>
 }
 
+export type UserCreateNestedOneWithoutSalesTeamCostEntriesAddedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSalesTeamCostEntriesAddedInput, Prisma.UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSalesTeamCostEntriesAddedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSalesTeamCostEntriesAddedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSalesTeamCostEntriesAddedInput, Prisma.UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSalesTeamCostEntriesAddedInput
+  upsert?: Prisma.UserUpsertWithoutSalesTeamCostEntriesAddedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSalesTeamCostEntriesAddedInput, Prisma.UserUpdateWithoutSalesTeamCostEntriesAddedInput>, Prisma.UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput>
+}
+
+export type UserCreateNestedOneWithoutEmployeeIncentivesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEmployeeIncentivesCreatedInput, Prisma.UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmployeeIncentivesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutEmployeeIncentivesUpdatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEmployeeIncentivesUpdatedInput, Prisma.UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmployeeIncentivesUpdatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutEmployeeIncentivesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEmployeeIncentivesCreatedInput, Prisma.UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmployeeIncentivesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutEmployeeIncentivesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEmployeeIncentivesCreatedInput, Prisma.UserUpdateWithoutEmployeeIncentivesCreatedInput>, Prisma.UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput>
+}
+
+export type UserUpdateOneWithoutEmployeeIncentivesUpdatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEmployeeIncentivesUpdatedInput, Prisma.UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEmployeeIncentivesUpdatedInput
+  upsert?: Prisma.UserUpsertWithoutEmployeeIncentivesUpdatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEmployeeIncentivesUpdatedInput, Prisma.UserUpdateWithoutEmployeeIncentivesUpdatedInput>, Prisma.UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput>
+}
+
+export type UserCreateNestedOneWithoutMasterSeatingCostsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMasterSeatingCostsCreatedInput, Prisma.UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMasterSeatingCostsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutMasterSeatingCostsUpdatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMasterSeatingCostsUpdatedInput, Prisma.UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMasterSeatingCostsUpdatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMasterSeatingCostsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMasterSeatingCostsCreatedInput, Prisma.UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMasterSeatingCostsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutMasterSeatingCostsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMasterSeatingCostsCreatedInput, Prisma.UserUpdateWithoutMasterSeatingCostsCreatedInput>, Prisma.UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput>
+}
+
+export type UserUpdateOneWithoutMasterSeatingCostsUpdatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMasterSeatingCostsUpdatedInput, Prisma.UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMasterSeatingCostsUpdatedInput
+  upsert?: Prisma.UserUpsertWithoutMasterSeatingCostsUpdatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMasterSeatingCostsUpdatedInput, Prisma.UserUpdateWithoutMasterSeatingCostsUpdatedInput>, Prisma.UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput>
+}
+
+export type UserCreateNestedOneWithoutSeatingMiscCostsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostsCreatedInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSeatingMiscCostsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutSeatingMiscCostsUpdatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostsUpdatedInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSeatingMiscCostsUpdatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSeatingMiscCostsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostsCreatedInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSeatingMiscCostsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutSeatingMiscCostsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSeatingMiscCostsCreatedInput, Prisma.UserUpdateWithoutSeatingMiscCostsCreatedInput>, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput>
+}
+
+export type UserUpdateOneWithoutSeatingMiscCostsUpdatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostsUpdatedInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSeatingMiscCostsUpdatedInput
+  upsert?: Prisma.UserUpsertWithoutSeatingMiscCostsUpdatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSeatingMiscCostsUpdatedInput, Prisma.UserUpdateWithoutSeatingMiscCostsUpdatedInput>, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput>
+}
+
+export type UserCreateNestedOneWithoutSeatingMiscCostHistoryInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostHistoryInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostHistoryInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSeatingMiscCostHistoryInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSeatingMiscCostHistoryNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostHistoryInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostHistoryInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSeatingMiscCostHistoryInput
+  upsert?: Prisma.UserUpsertWithoutSeatingMiscCostHistoryInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSeatingMiscCostHistoryInput, Prisma.UserUpdateWithoutSeatingMiscCostHistoryInput>, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput>
+}
+
 export type UserCreateNestedOneWithoutTasksAssignedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTasksAssignedInput, Prisma.UserUncheckedCreateWithoutTasksAssignedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTasksAssignedInput
@@ -2390,6 +2564,14 @@ export type UserCreateWithoutStatusesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
 }
@@ -2488,6 +2670,14 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2602,6 +2792,14 @@ export type UserUpdateWithoutStatusesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
 }
@@ -2700,6 +2898,14 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2797,6 +3003,14 @@ export type UserCreateWithoutAssignedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -2895,6 +3109,14 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -2998,6 +3220,14 @@ export type UserCreateWithoutCreatedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -3096,6 +3326,14 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -3199,6 +3437,14 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -3297,6 +3543,14 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -3411,6 +3665,14 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -3509,6 +3771,14 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -3618,6 +3888,14 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -3716,6 +3994,14 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -3825,6 +4111,14 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -3923,6 +4217,14 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -4021,6 +4323,14 @@ export type UserCreateWithoutLeadCallNotesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -4119,6 +4429,14 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -4233,6 +4551,14 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -4331,6 +4657,14 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -4429,6 +4763,14 @@ export type UserCreateWithoutLeadStageEventsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -4527,6 +4869,14 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -4641,6 +4991,14 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -4739,6 +5097,14 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -4837,6 +5203,14 @@ export type UserCreateWithoutCreatedTargetsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -4935,6 +5309,14 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -5049,6 +5431,14 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -5147,6 +5537,14 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -5245,6 +5643,14 @@ export type UserCreateWithoutInsuranceCasesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -5343,6 +5749,14 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -5457,6 +5871,14 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -5555,6 +5977,14 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -5653,6 +6083,14 @@ export type UserCreateWithoutPlRecordsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -5751,6 +6189,14 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -5865,6 +6311,14 @@ export type UserUpdateWithoutPlRecordsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -5963,6 +6417,14 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -6061,6 +6523,14 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -6159,6 +6629,14 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -6273,6 +6751,14 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -6371,6 +6857,14 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -6469,6 +6963,14 @@ export type UserCreateWithoutEmployeeInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -6567,6 +7069,14 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -6670,6 +7180,14 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -6768,6 +7286,14 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -6882,6 +7408,14 @@ export type UserUpdateWithoutEmployeeInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -6980,6 +7514,14 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -7089,6 +7631,14 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -7187,6 +7737,14 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -7285,6 +7843,14 @@ export type UserCreateWithoutApprovedLeavesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -7383,6 +7949,14 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -7497,6 +8071,14 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -7595,6 +8177,14 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -7693,6 +8283,14 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -7791,6 +8389,14 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -7894,6 +8500,14 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -7992,6 +8606,14 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -8106,6 +8728,14 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -8204,6 +8834,14 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -8313,6 +8951,14 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -8411,6 +9057,14 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -8510,6 +9164,14 @@ export type UserCreateWithoutMeetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
@@ -8608,6 +9270,14 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
@@ -8722,6 +9392,14 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
@@ -8820,6 +9498,14 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -8918,6 +9604,14 @@ export type UserCreateWithoutMeetParticipationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
 }
@@ -9016,6 +9710,14 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
 }
@@ -9130,6 +9832,14 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
 }
@@ -9228,6 +9938,14 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -9325,6 +10043,14 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -9423,6 +10149,14 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -9526,6 +10260,14 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -9624,6 +10366,14 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -9727,6 +10477,14 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -9825,6 +10583,14 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -9928,6 +10694,14 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -10026,6 +10800,14 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -10129,6 +10911,14 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -10227,6 +11017,14 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -10330,6 +11128,14 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -10428,6 +11234,14 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -10531,6 +11345,14 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -10629,6 +11451,14 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -10743,6 +11573,14 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -10841,6 +11679,14 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -10950,6 +11796,14 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -11048,6 +11902,14 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -11157,6 +12019,14 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -11255,6 +12125,14 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -11364,6 +12242,14 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -11462,6 +12348,14 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -11571,6 +12465,14 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -11669,6 +12571,14 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -11778,6 +12688,14 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -11876,6 +12794,14 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -11985,6 +12911,14 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -12083,6 +13017,14 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -12181,6 +13123,14 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -12279,6 +13229,14 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -12393,6 +13351,14 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -12491,6 +13457,14 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -12589,6 +13563,14 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -12687,6 +13669,14 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -12801,6 +13791,14 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -12899,6 +13897,14 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -12997,6 +14003,14 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -13095,6 +14109,14 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -13209,6 +14231,14 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -13307,6 +14337,14 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -13405,6 +14443,14 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -13503,6 +14549,14 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -13617,6 +14671,14 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -13715,6 +14777,14 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -13813,6 +14883,14 @@ export type UserCreateWithoutIssuesReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -13911,6 +14989,14 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -14014,6 +15100,14 @@ export type UserCreateWithoutIssuesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -14112,6 +15206,14 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -14226,6 +15328,14 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -14324,6 +15434,14 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -14433,6 +15551,14 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -14531,6 +15657,14 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -14629,6 +15763,14 @@ export type UserCreateWithoutKypSubmissionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -14727,6 +15869,14 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -14841,6 +15991,14 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -14939,6 +16097,14 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -15037,6 +16203,14 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -15135,6 +16309,14 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -15238,6 +16420,14 @@ export type UserCreateWithoutPreAuthHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -15336,6 +16526,14 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -15439,6 +16637,14 @@ export type UserCreateWithoutPreAuthHeldInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -15537,6 +16743,14 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -15651,6 +16865,14 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -15749,6 +16971,14 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -15858,6 +17088,14 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -15956,6 +17194,14 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -16065,6 +17311,14 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -16163,6 +17417,14 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -16261,6 +17523,14 @@ export type UserCreateWithoutNotificationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -16359,6 +17629,14 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -16473,6 +17751,14 @@ export type UserUpdateWithoutNotificationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -16571,6 +17857,14 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -16669,6 +17963,14 @@ export type UserCreateWithoutNoticesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -16767,6 +18069,14 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -16881,6 +18191,14 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -16979,6 +18297,14 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -17077,6 +18403,14 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -17175,6 +18509,14 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -17289,6 +18631,14 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -17387,6 +18737,14 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -17485,6 +18843,14 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -17583,6 +18949,14 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -17686,6 +19060,14 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -17784,6 +19166,14 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -17887,6 +19277,14 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -17985,6 +19383,14 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -18099,6 +19505,14 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -18197,6 +19611,14 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -18306,6 +19728,14 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -18404,6 +19834,14 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -18513,6 +19951,14 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -18611,6 +20057,14 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -18709,6 +20163,14 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -18807,6 +20269,14 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -18910,6 +20380,14 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -19008,6 +20486,14 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -19122,6 +20608,14 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -19220,6 +20714,14 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -19329,6 +20831,14 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -19427,6 +20937,14 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -19525,6 +21043,14 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -19623,6 +21149,14 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -19737,6 +21271,14 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -19835,6 +21377,14 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -19933,6 +21483,14 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -20031,6 +21589,14 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -20145,6 +21711,14 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -20243,6 +21817,14 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -20341,6 +21923,14 @@ export type UserCreateWithoutQueriesRaisedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -20439,6 +22029,14 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -20542,6 +22140,14 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -20640,6 +22246,14 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -20754,6 +22368,14 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -20852,6 +22474,14 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -20961,6 +22591,14 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -21059,6 +22697,14 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -21157,6 +22803,14 @@ export type UserCreateWithoutPdfsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -21255,6 +22909,14 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -21369,6 +23031,14 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -21467,6 +23137,14 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -21565,6 +23243,14 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -21663,6 +23349,14 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -21777,6 +23471,14 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -21875,6 +23577,14 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -21973,6 +23683,14 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -22071,6 +23789,14 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -22185,6 +23911,14 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -22283,6 +24017,14 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -22381,6 +24123,14 @@ export type UserCreateWithoutCaseStageChangesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -22479,6 +24229,14 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -22593,6 +24351,14 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -22691,6 +24457,14 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -22789,6 +24563,14 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -22887,6 +24669,14 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -23001,6 +24791,14 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -23099,6 +24897,14 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -23197,6 +25003,14 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -23295,6 +25109,14 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -23409,6 +25231,14 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -23507,6 +25337,14 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -23605,6 +25443,14 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -23703,6 +25549,14 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -23806,6 +25660,14 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -23904,6 +25766,14 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -24007,6 +25877,14 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -24105,6 +25983,14 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -24219,6 +26105,14 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -24317,6 +26211,14 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -24426,6 +26328,14 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -24524,6 +26434,14 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -24633,6 +26551,14 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -24731,6 +26657,14 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -24829,6 +26763,14 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -24927,6 +26869,14 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -25041,6 +26991,14 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -25139,6 +27097,14 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -25237,6 +27203,14 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -25335,6 +27309,14 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -25449,6 +27431,14 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -25547,6 +27537,14 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -25645,6 +27643,14 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -25743,6 +27749,14 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -25857,6 +27871,14 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -25955,6 +27977,3534 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSalesTeamCostEntriesAddedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSalesTeamCostEntriesAddedInput, Prisma.UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput>
+}
+
+export type UserUpsertWithoutSalesTeamCostEntriesAddedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSalesTeamCostEntriesAddedInput, Prisma.UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSalesTeamCostEntriesAddedInput, Prisma.UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSalesTeamCostEntriesAddedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSalesTeamCostEntriesAddedInput, Prisma.UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput>
+}
+
+export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutEmployeeIncentivesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEmployeeIncentivesCreatedInput, Prisma.UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput>
+}
+
+export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutEmployeeIncentivesUpdatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEmployeeIncentivesUpdatedInput, Prisma.UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput>
+}
+
+export type UserUpsertWithoutEmployeeIncentivesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEmployeeIncentivesCreatedInput, Prisma.UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEmployeeIncentivesCreatedInput, Prisma.UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEmployeeIncentivesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEmployeeIncentivesCreatedInput, Prisma.UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput>
+}
+
+export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutEmployeeIncentivesUpdatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEmployeeIncentivesUpdatedInput, Prisma.UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEmployeeIncentivesUpdatedInput, Prisma.UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEmployeeIncentivesUpdatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEmployeeIncentivesUpdatedInput, Prisma.UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput>
+}
+
+export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMasterSeatingCostsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMasterSeatingCostsCreatedInput, Prisma.UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput>
+}
+
+export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMasterSeatingCostsUpdatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMasterSeatingCostsUpdatedInput, Prisma.UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput>
+}
+
+export type UserUpsertWithoutMasterSeatingCostsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMasterSeatingCostsCreatedInput, Prisma.UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMasterSeatingCostsCreatedInput, Prisma.UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMasterSeatingCostsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMasterSeatingCostsCreatedInput, Prisma.UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput>
+}
+
+export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutMasterSeatingCostsUpdatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMasterSeatingCostsUpdatedInput, Prisma.UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMasterSeatingCostsUpdatedInput, Prisma.UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMasterSeatingCostsUpdatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMasterSeatingCostsUpdatedInput, Prisma.UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput>
+}
+
+export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSeatingMiscCostsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostsCreatedInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput>
+}
+
+export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSeatingMiscCostsUpdatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostsUpdatedInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput>
+}
+
+export type UserUpsertWithoutSeatingMiscCostsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSeatingMiscCostsCreatedInput, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostsCreatedInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSeatingMiscCostsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSeatingMiscCostsCreatedInput, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput>
+}
+
+export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutSeatingMiscCostsUpdatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSeatingMiscCostsUpdatedInput, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostsUpdatedInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSeatingMiscCostsUpdatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSeatingMiscCostsUpdatedInput, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput>
+}
+
+export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSeatingMiscCostHistoryInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSeatingMiscCostHistoryInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostHistoryInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostHistoryInput>
+}
+
+export type UserUpsertWithoutSeatingMiscCostHistoryInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSeatingMiscCostHistoryInput, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSeatingMiscCostHistoryInput, Prisma.UserUncheckedCreateWithoutSeatingMiscCostHistoryInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSeatingMiscCostHistoryInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSeatingMiscCostHistoryInput, Prisma.UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput>
+}
+
+export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -26053,6 +31603,14 @@ export type UserCreateWithoutTasksAssignedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -26151,6 +31709,14 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -26254,6 +31820,14 @@ export type UserCreateWithoutTasksCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -26352,6 +31926,14 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -26455,6 +32037,14 @@ export type UserCreateWithoutTasksCompletedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -26553,6 +32143,14 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -26667,6 +32265,14 @@ export type UserUpdateWithoutTasksAssignedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -26765,6 +32371,14 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -26874,6 +32488,14 @@ export type UserUpdateWithoutTasksCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -26972,6 +32594,14 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -27081,6 +32711,14 @@ export type UserUpdateWithoutTasksCompletedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -27179,6 +32817,14 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -27277,6 +32923,14 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -27375,6 +33029,14 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -27489,6 +33151,14 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -27587,6 +33257,14 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -27685,6 +33363,14 @@ export type UserCreateWithoutUserTaskSeenInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -27783,6 +33469,14 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -27897,6 +33591,14 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -27995,6 +33697,14 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -28093,6 +33803,14 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -28191,6 +33909,14 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -28294,6 +34020,14 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -28392,6 +34126,14 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -28506,6 +34248,14 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -28604,6 +34354,14 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -28713,6 +34471,14 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -28811,6 +34577,14 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -28909,6 +34683,14 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -29007,6 +34789,14 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -29121,6 +34911,14 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -29219,6 +35017,14 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -29317,6 +35123,14 @@ export type UserCreateWithoutTaskCommentsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -29415,6 +35229,14 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -29529,6 +35351,14 @@ export type UserUpdateWithoutTaskCommentsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -29627,6 +35457,14 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -29725,6 +35563,14 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -29823,6 +35669,14 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -29937,6 +35791,14 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -30035,6 +35897,14 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -30133,6 +36003,14 @@ export type UserCreateWithoutWarningsReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -30231,6 +36109,14 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -30334,6 +36220,14 @@ export type UserCreateWithoutWarningsIssuedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -30432,6 +36326,14 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -30546,6 +36448,14 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -30644,6 +36554,14 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -30753,6 +36671,14 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -30851,6 +36777,14 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -30949,6 +36883,14 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -31047,6 +36989,14 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -31161,6 +37111,14 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -31259,6 +37217,14 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -31357,6 +37323,14 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -31455,6 +37429,14 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -31569,6 +37551,14 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -31667,6 +37657,14 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -31765,6 +37763,14 @@ export type UserCreateWithoutWorkLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -31863,6 +37869,14 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -31977,6 +37991,14 @@ export type UserUpdateWithoutWorkLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -32075,6 +38097,14 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -32173,6 +38203,14 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -32271,6 +38309,14 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -32385,6 +38431,14 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -32483,6 +38537,14 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -32581,6 +38643,14 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -32679,6 +38749,14 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -32793,6 +38871,14 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -32891,6 +38977,14 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -32989,6 +39083,14 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -33087,6 +39189,14 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -33201,6 +39311,14 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -33299,6 +39417,14 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -33397,6 +39523,14 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -33495,6 +39629,14 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -33609,6 +39751,14 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -33707,6 +39857,14 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -33805,6 +39963,14 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -33903,6 +40069,14 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -34017,6 +40191,14 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -34115,6 +40297,14 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -34213,6 +40403,14 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -34311,6 +40509,14 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -34425,6 +40631,14 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -34523,6 +40737,14 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -34621,6 +40843,14 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -34719,6 +40949,14 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -34833,6 +41071,14 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -34931,6 +41177,14 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -35029,6 +41283,14 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
@@ -35127,6 +41389,14 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
   meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
   meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
   statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
@@ -35241,6 +41511,14 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
@@ -35339,6 +41617,14 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
   pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
   meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
   statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
@@ -35427,6 +41713,14 @@ export type UserCountOutputType = {
   pnlCategoriesCreated: number
   pnlEntriesCreated: number
   targetPnlEntriesCreated: number
+  salesTeamCostEntriesAdded: number
+  employeeIncentivesCreated: number
+  employeeIncentivesUpdated: number
+  masterSeatingCostsCreated: number
+  masterSeatingCostsUpdated: number
+  seatingMiscCostsCreated: number
+  seatingMiscCostsUpdated: number
+  seatingMiscCostHistory: number
   meetsCreated: number
   meetParticipations: number
   statuses: number
@@ -35510,6 +41804,14 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   pnlCategoriesCreated?: boolean | UserCountOutputTypeCountPnlCategoriesCreatedArgs
   pnlEntriesCreated?: boolean | UserCountOutputTypeCountPnlEntriesCreatedArgs
   targetPnlEntriesCreated?: boolean | UserCountOutputTypeCountTargetPnlEntriesCreatedArgs
+  salesTeamCostEntriesAdded?: boolean | UserCountOutputTypeCountSalesTeamCostEntriesAddedArgs
+  employeeIncentivesCreated?: boolean | UserCountOutputTypeCountEmployeeIncentivesCreatedArgs
+  employeeIncentivesUpdated?: boolean | UserCountOutputTypeCountEmployeeIncentivesUpdatedArgs
+  masterSeatingCostsCreated?: boolean | UserCountOutputTypeCountMasterSeatingCostsCreatedArgs
+  masterSeatingCostsUpdated?: boolean | UserCountOutputTypeCountMasterSeatingCostsUpdatedArgs
+  seatingMiscCostsCreated?: boolean | UserCountOutputTypeCountSeatingMiscCostsCreatedArgs
+  seatingMiscCostsUpdated?: boolean | UserCountOutputTypeCountSeatingMiscCostsUpdatedArgs
+  seatingMiscCostHistory?: boolean | UserCountOutputTypeCountSeatingMiscCostHistoryArgs
   meetsCreated?: boolean | UserCountOutputTypeCountMeetsCreatedArgs
   meetParticipations?: boolean | UserCountOutputTypeCountMeetParticipationsArgs
   statuses?: boolean | UserCountOutputTypeCountStatusesArgs
@@ -36067,6 +42369,62 @@ export type UserCountOutputTypeCountTargetPnlEntriesCreatedArgs<ExtArgs extends 
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountSalesTeamCostEntriesAddedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SalesTeamCostEntryWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEmployeeIncentivesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMonthlyIncentiveWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEmployeeIncentivesUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMonthlyIncentiveWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMasterSeatingCostsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMasterSeatingCostWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMasterSeatingCostsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMasterSeatingCostWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSeatingMiscCostsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMonthlySeatingMiscCostWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSeatingMiscCostsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMonthlySeatingMiscCostWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSeatingMiscCostHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmployeeMonthlySeatingMiscCostHistoryWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountMeetsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MeetWhereInput
 }
@@ -36180,6 +42538,14 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   pnlCategoriesCreated?: boolean | Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>
   pnlEntriesCreated?: boolean | Prisma.User$pnlEntriesCreatedArgs<ExtArgs>
   targetPnlEntriesCreated?: boolean | Prisma.User$targetPnlEntriesCreatedArgs<ExtArgs>
+  salesTeamCostEntriesAdded?: boolean | Prisma.User$salesTeamCostEntriesAddedArgs<ExtArgs>
+  employeeIncentivesCreated?: boolean | Prisma.User$employeeIncentivesCreatedArgs<ExtArgs>
+  employeeIncentivesUpdated?: boolean | Prisma.User$employeeIncentivesUpdatedArgs<ExtArgs>
+  masterSeatingCostsCreated?: boolean | Prisma.User$masterSeatingCostsCreatedArgs<ExtArgs>
+  masterSeatingCostsUpdated?: boolean | Prisma.User$masterSeatingCostsUpdatedArgs<ExtArgs>
+  seatingMiscCostsCreated?: boolean | Prisma.User$seatingMiscCostsCreatedArgs<ExtArgs>
+  seatingMiscCostsUpdated?: boolean | Prisma.User$seatingMiscCostsUpdatedArgs<ExtArgs>
+  seatingMiscCostHistory?: boolean | Prisma.User$seatingMiscCostHistoryArgs<ExtArgs>
   meetsCreated?: boolean | Prisma.User$meetsCreatedArgs<ExtArgs>
   meetParticipations?: boolean | Prisma.User$meetParticipationsArgs<ExtArgs>
   statuses?: boolean | Prisma.User$statusesArgs<ExtArgs>
@@ -36320,6 +42686,14 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   pnlCategoriesCreated?: boolean | Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>
   pnlEntriesCreated?: boolean | Prisma.User$pnlEntriesCreatedArgs<ExtArgs>
   targetPnlEntriesCreated?: boolean | Prisma.User$targetPnlEntriesCreatedArgs<ExtArgs>
+  salesTeamCostEntriesAdded?: boolean | Prisma.User$salesTeamCostEntriesAddedArgs<ExtArgs>
+  employeeIncentivesCreated?: boolean | Prisma.User$employeeIncentivesCreatedArgs<ExtArgs>
+  employeeIncentivesUpdated?: boolean | Prisma.User$employeeIncentivesUpdatedArgs<ExtArgs>
+  masterSeatingCostsCreated?: boolean | Prisma.User$masterSeatingCostsCreatedArgs<ExtArgs>
+  masterSeatingCostsUpdated?: boolean | Prisma.User$masterSeatingCostsUpdatedArgs<ExtArgs>
+  seatingMiscCostsCreated?: boolean | Prisma.User$seatingMiscCostsCreatedArgs<ExtArgs>
+  seatingMiscCostsUpdated?: boolean | Prisma.User$seatingMiscCostsUpdatedArgs<ExtArgs>
+  seatingMiscCostHistory?: boolean | Prisma.User$seatingMiscCostHistoryArgs<ExtArgs>
   meetsCreated?: boolean | Prisma.User$meetsCreatedArgs<ExtArgs>
   meetParticipations?: boolean | Prisma.User$meetParticipationsArgs<ExtArgs>
   statuses?: boolean | Prisma.User$statusesArgs<ExtArgs>
@@ -36409,6 +42783,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     pnlCategoriesCreated: Prisma.$PnLCategoryPayload<ExtArgs>[]
     pnlEntriesCreated: Prisma.$PnLEntryPayload<ExtArgs>[]
     targetPnlEntriesCreated: Prisma.$TargetPnLEntryPayload<ExtArgs>[]
+    salesTeamCostEntriesAdded: Prisma.$SalesTeamCostEntryPayload<ExtArgs>[]
+    employeeIncentivesCreated: Prisma.$EmployeeMonthlyIncentivePayload<ExtArgs>[]
+    employeeIncentivesUpdated: Prisma.$EmployeeMonthlyIncentivePayload<ExtArgs>[]
+    masterSeatingCostsCreated: Prisma.$EmployeeMasterSeatingCostPayload<ExtArgs>[]
+    masterSeatingCostsUpdated: Prisma.$EmployeeMasterSeatingCostPayload<ExtArgs>[]
+    seatingMiscCostsCreated: Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>[]
+    seatingMiscCostsUpdated: Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>[]
+    seatingMiscCostHistory: Prisma.$EmployeeMonthlySeatingMiscCostHistoryPayload<ExtArgs>[]
     meetsCreated: Prisma.$MeetPayload<ExtArgs>[]
     meetParticipations: Prisma.$MeetParticipantPayload<ExtArgs>[]
     statuses: Prisma.$UserStatusPayload<ExtArgs>[]
@@ -36901,6 +43283,14 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   pnlCategoriesCreated<T extends Prisma.User$pnlCategoriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pnlCategoriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PnLCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pnlEntriesCreated<T extends Prisma.User$pnlEntriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pnlEntriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PnLEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   targetPnlEntriesCreated<T extends Prisma.User$targetPnlEntriesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$targetPnlEntriesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TargetPnLEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  salesTeamCostEntriesAdded<T extends Prisma.User$salesTeamCostEntriesAddedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$salesTeamCostEntriesAddedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalesTeamCostEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  employeeIncentivesCreated<T extends Prisma.User$employeeIncentivesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$employeeIncentivesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlyIncentivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  employeeIncentivesUpdated<T extends Prisma.User$employeeIncentivesUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$employeeIncentivesUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlyIncentivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  masterSeatingCostsCreated<T extends Prisma.User$masterSeatingCostsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$masterSeatingCostsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMasterSeatingCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  masterSeatingCostsUpdated<T extends Prisma.User$masterSeatingCostsUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$masterSeatingCostsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMasterSeatingCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  seatingMiscCostsCreated<T extends Prisma.User$seatingMiscCostsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$seatingMiscCostsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  seatingMiscCostsUpdated<T extends Prisma.User$seatingMiscCostsUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$seatingMiscCostsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlySeatingMiscCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  seatingMiscCostHistory<T extends Prisma.User$seatingMiscCostHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$seatingMiscCostHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeeMonthlySeatingMiscCostHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meetsCreated<T extends Prisma.User$meetsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$meetsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meetParticipations<T extends Prisma.User$meetParticipationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$meetParticipationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeetParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   statuses<T extends Prisma.User$statusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$statusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserStatusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -39205,6 +45595,198 @@ export type User$targetPnlEntriesCreatedArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.TargetPnLEntryScalarFieldEnum | Prisma.TargetPnLEntryScalarFieldEnum[]
+}
+
+/**
+ * User.salesTeamCostEntriesAdded
+ */
+export type User$salesTeamCostEntriesAddedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SalesTeamCostEntry
+   */
+  select?: Prisma.SalesTeamCostEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SalesTeamCostEntry
+   */
+  omit?: Prisma.SalesTeamCostEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SalesTeamCostEntryInclude<ExtArgs> | null
+  where?: Prisma.SalesTeamCostEntryWhereInput
+  orderBy?: Prisma.SalesTeamCostEntryOrderByWithRelationInput | Prisma.SalesTeamCostEntryOrderByWithRelationInput[]
+  cursor?: Prisma.SalesTeamCostEntryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SalesTeamCostEntryScalarFieldEnum | Prisma.SalesTeamCostEntryScalarFieldEnum[]
+}
+
+/**
+ * User.employeeIncentivesCreated
+ */
+export type User$employeeIncentivesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMonthlyIncentive
+   */
+  select?: Prisma.EmployeeMonthlyIncentiveSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMonthlyIncentive
+   */
+  omit?: Prisma.EmployeeMonthlyIncentiveOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMonthlyIncentiveInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMonthlyIncentiveWhereInput
+  orderBy?: Prisma.EmployeeMonthlyIncentiveOrderByWithRelationInput | Prisma.EmployeeMonthlyIncentiveOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMonthlyIncentiveWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMonthlyIncentiveScalarFieldEnum | Prisma.EmployeeMonthlyIncentiveScalarFieldEnum[]
+}
+
+/**
+ * User.employeeIncentivesUpdated
+ */
+export type User$employeeIncentivesUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMonthlyIncentive
+   */
+  select?: Prisma.EmployeeMonthlyIncentiveSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMonthlyIncentive
+   */
+  omit?: Prisma.EmployeeMonthlyIncentiveOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMonthlyIncentiveInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMonthlyIncentiveWhereInput
+  orderBy?: Prisma.EmployeeMonthlyIncentiveOrderByWithRelationInput | Prisma.EmployeeMonthlyIncentiveOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMonthlyIncentiveWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMonthlyIncentiveScalarFieldEnum | Prisma.EmployeeMonthlyIncentiveScalarFieldEnum[]
+}
+
+/**
+ * User.masterSeatingCostsCreated
+ */
+export type User$masterSeatingCostsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMasterSeatingCost
+   */
+  select?: Prisma.EmployeeMasterSeatingCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMasterSeatingCost
+   */
+  omit?: Prisma.EmployeeMasterSeatingCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMasterSeatingCostInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMasterSeatingCostWhereInput
+  orderBy?: Prisma.EmployeeMasterSeatingCostOrderByWithRelationInput | Prisma.EmployeeMasterSeatingCostOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMasterSeatingCostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMasterSeatingCostScalarFieldEnum | Prisma.EmployeeMasterSeatingCostScalarFieldEnum[]
+}
+
+/**
+ * User.masterSeatingCostsUpdated
+ */
+export type User$masterSeatingCostsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMasterSeatingCost
+   */
+  select?: Prisma.EmployeeMasterSeatingCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMasterSeatingCost
+   */
+  omit?: Prisma.EmployeeMasterSeatingCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMasterSeatingCostInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMasterSeatingCostWhereInput
+  orderBy?: Prisma.EmployeeMasterSeatingCostOrderByWithRelationInput | Prisma.EmployeeMasterSeatingCostOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMasterSeatingCostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMasterSeatingCostScalarFieldEnum | Prisma.EmployeeMasterSeatingCostScalarFieldEnum[]
+}
+
+/**
+ * User.seatingMiscCostsCreated
+ */
+export type User$seatingMiscCostsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMonthlySeatingMiscCost
+   */
+  select?: Prisma.EmployeeMonthlySeatingMiscCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMonthlySeatingMiscCost
+   */
+  omit?: Prisma.EmployeeMonthlySeatingMiscCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMonthlySeatingMiscCostInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMonthlySeatingMiscCostWhereInput
+  orderBy?: Prisma.EmployeeMonthlySeatingMiscCostOrderByWithRelationInput | Prisma.EmployeeMonthlySeatingMiscCostOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMonthlySeatingMiscCostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMonthlySeatingMiscCostScalarFieldEnum | Prisma.EmployeeMonthlySeatingMiscCostScalarFieldEnum[]
+}
+
+/**
+ * User.seatingMiscCostsUpdated
+ */
+export type User$seatingMiscCostsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMonthlySeatingMiscCost
+   */
+  select?: Prisma.EmployeeMonthlySeatingMiscCostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMonthlySeatingMiscCost
+   */
+  omit?: Prisma.EmployeeMonthlySeatingMiscCostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMonthlySeatingMiscCostInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMonthlySeatingMiscCostWhereInput
+  orderBy?: Prisma.EmployeeMonthlySeatingMiscCostOrderByWithRelationInput | Prisma.EmployeeMonthlySeatingMiscCostOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMonthlySeatingMiscCostWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMonthlySeatingMiscCostScalarFieldEnum | Prisma.EmployeeMonthlySeatingMiscCostScalarFieldEnum[]
+}
+
+/**
+ * User.seatingMiscCostHistory
+ */
+export type User$seatingMiscCostHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmployeeMonthlySeatingMiscCostHistory
+   */
+  select?: Prisma.EmployeeMonthlySeatingMiscCostHistorySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmployeeMonthlySeatingMiscCostHistory
+   */
+  omit?: Prisma.EmployeeMonthlySeatingMiscCostHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeeMonthlySeatingMiscCostHistoryInclude<ExtArgs> | null
+  where?: Prisma.EmployeeMonthlySeatingMiscCostHistoryWhereInput
+  orderBy?: Prisma.EmployeeMonthlySeatingMiscCostHistoryOrderByWithRelationInput | Prisma.EmployeeMonthlySeatingMiscCostHistoryOrderByWithRelationInput[]
+  cursor?: Prisma.EmployeeMonthlySeatingMiscCostHistoryWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum | Prisma.EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum[]
 }
 
 /**

@@ -397,6 +397,31 @@ export type PaymentInstallment = Prisma.PaymentInstallmentModel
  */
 export type ComplianceCall = Prisma.ComplianceCallModel
 /**
+ * Model SalesTeamCostEntry
+ * 
+ */
+export type SalesTeamCostEntry = Prisma.SalesTeamCostEntryModel
+/**
+ * Model EmployeeMonthlyIncentive
+ * 
+ */
+export type EmployeeMonthlyIncentive = Prisma.EmployeeMonthlyIncentiveModel
+/**
+ * Model EmployeeMasterSeatingCost
+ * 
+ */
+export type EmployeeMasterSeatingCost = Prisma.EmployeeMasterSeatingCostModel
+/**
+ * Model EmployeeMonthlySeatingMiscCost
+ * 
+ */
+export type EmployeeMonthlySeatingMiscCost = Prisma.EmployeeMonthlySeatingMiscCostModel
+/**
+ * Model EmployeeMonthlySeatingMiscCostHistory
+ * 
+ */
+export type EmployeeMonthlySeatingMiscCostHistory = Prisma.EmployeeMonthlySeatingMiscCostHistoryModel
+/**
  * Model Task
  * 
  */
