@@ -16,16 +16,16 @@ import { cn } from '@/lib/utils'
 export type CalendarView = 'month' | 'week' | 'day'
 
 const STATUS_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  AVAILABLE: { bg: '#d1fae5', border: '#10b981', text: '#065f46' },
-  ONLINE_ONLY: { bg: '#e0f2fe', border: '#0ea5e9', text: '#0c4a6e' },
-  UNAVAILABLE: { bg: '#ffe4e6', border: '#f43f5e', text: '#881337' },
-  CUSTOM: { bg: '#ede9fe', border: '#8b5cf6', text: '#4c1d95' },
+  AVAILABLE: { bg: '#10b981', border: '#059669', text: '#ffffff' },
+  ONLINE_ONLY: { bg: '#f59e0b', border: '#d97706', text: '#0f172a' },
+  UNAVAILABLE: { bg: '#f43f5e', border: '#e11d48', text: '#ffffff' },
+  CUSTOM: { bg: '#8b5cf6', border: '#7c3aed', text: '#ffffff' },
 }
 
 const MODULE_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  INTERVIEW: { bg: '#ede9fe', border: '#7c3aed', text: '#4c1d95' },
-  MD_APPOINTMENT: { bg: '#fef3c7', border: '#d97706', text: '#78350f' },
-  GENERAL: { bg: '#e0e7ff', border: '#4f46e5', text: '#312e81' },
+  INTERVIEW: { bg: '#8b5cf6', border: '#7c3aed', text: '#ffffff' },
+  MD_APPOINTMENT: { bg: '#f59e0b', border: '#d97706', text: '#0f172a' },
+  GENERAL: { bg: '#06b6d4', border: '#0891b2', text: '#0f172a' },
 }
 
 function statusLabel(kind: string, fallback: string | null): string {
@@ -176,27 +176,94 @@ export function TeamCalendar({
           font-family: inherit;
           font-size: 13px;
         }
-        .team-calendar .fc .fc-scrollgrid,
-        .team-calendar .fc .fc-scrollgrid td,
-        .team-calendar .fc .fc-scrollgrid th {
-          border-color: hsl(var(--border));
+        
+        /* 1. Remove standard grid borders and make cells collapse separate with gap spacing */
+        .team-calendar .fc .fc-scrollgrid {
+          border: none !important;
         }
-        .team-calendar .fc .fc-col-header-cell-cushion,
-        .team-calendar .fc .fc-daygrid-day-number {
-          color: hsl(var(--foreground));
-          padding: 4px 6px;
-          font-weight: 500;
+        .team-calendar .fc-scrollgrid-sync-table,
+        .team-calendar .fc-daygrid-body table,
+        .team-calendar .fc .fc-timegrid-slots table,
+        .team-calendar .fc .fc-timegrid-cols table {
+          border-collapse: separate !important;
+          border-spacing: 6px 6px !important;
+        }
+
+        /* 2. Format Header Weekday Labels (SUN, MON...) */
+        .team-calendar .fc .fc-col-header-cell {
+          background-color: #232b41 !important;
+          border: 1px solid #2e374f !important;
+          border-radius: 8px !important;
+          padding: 6px 0 !important;
+        }
+        .team-calendar .fc .fc-col-header-cell-cushion {
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #64748b !important;
           text-decoration: none;
         }
-        .team-calendar .fc .fc-day-today {
-          background: color-mix(in oklab, hsl(var(--primary)) 8%, transparent) !important;
+
+        /* 3. Style day cells as elevated cards with #232B41 background */
+        .team-calendar .fc .fc-daygrid-day {
+          background-color: #232b41 !important;
+          border: 1px solid #2e374f !important;
+          border-radius: 10px !important;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .team-calendar .fc .fc-event {
-          border-radius: 6px;
-          border-width: 0 0 0 3px;
-          padding: 1px 4px;
+        /* Hover effect to make cells appear "uplifted" */
+        .team-calendar .fc .fc-daygrid-day:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+          border-color: #3e4866 !important;
+        }
+
+        /* Reduce the height of date block cells */
+        .team-calendar .fc .fc-daygrid-day-frame {
+          min-height: 42px !important;
+        }
+
+        /* 4. Muted shade for other-month days */
+        .team-calendar .fc .fc-day-other {
+          background-color: #181d2a !important;
+          opacity: 0.45;
+        }
+
+        /* 5. Day Number on the top-left */
+        .team-calendar .fc .fc-daygrid-day-top {
+          flex-direction: row !important;
+          justify-content: flex-start !important;
+          padding: 4px 6px !important;
+        }
+        .team-calendar .fc .fc-daygrid-day-number {
           font-size: 11px;
+          font-weight: 600;
+          color: #94a3b8 !important;
+          text-decoration: none;
+        }
+
+        /* 6. Today/focused cell with cyan highlight */
+        .team-calendar .fc .fc-day-today {
+          background-color: #2a344d !important;
+          border-color: #06b6d4 !important;
+          box-shadow: inset 0 0 0 1.5px #06b6d4, 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+        }
+        .team-calendar .fc .fc-day-today .fc-daygrid-day-number {
+          color: #06b6d4 !important;
+        }
+
+        /* 7. Event Pills fully rounded and matching mockup spacing */
+        .team-calendar .fc .fc-event {
+          border-radius: 9999px;
+          border-width: 1px;
+          padding: 2px 8px;
+          font-size: 11px;
+          font-weight: 600;
           cursor: pointer;
+          margin: 3px 6px;
+          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
         .team-calendar .fc .fc-timegrid-event {
           border-radius: 6px;
@@ -204,8 +271,17 @@ export function TeamCalendar({
         .team-calendar .fc .fc-daygrid-more-link {
           font-size: 10px;
           font-weight: 600;
-          color: hsl(var(--primary));
+          color: #06b6d4;
+          margin-left: 6px;
         }
+
+        /* 8. Timegrid (Week / Day views) slot overrides */
+        .team-calendar .fc .fc-timegrid-slot,
+        .team-calendar .fc .fc-timegrid-col {
+          background-color: #232b41 !important;
+          border-color: #2e374f !important;
+        }
+
         @media (max-width: 640px) {
           .team-calendar .fc {
             font-size: 11px;
@@ -214,7 +290,7 @@ export function TeamCalendar({
             padding: 2px 4px;
           }
           .team-calendar .fc .fc-event {
-            padding: 0 3px;
+            padding: 0 4px;
             font-size: 10px;
           }
         }

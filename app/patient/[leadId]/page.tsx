@@ -2,10 +2,10 @@
 
 import { IPDCashForm } from '@/components/admission/ipd-cash-form'
 import { IPDDetailsCard } from '@/components/admission/ipd-details-card'
-import { PatientDischargeInfo } from '@/components/discharge/patient-discharge-info'
 import { IPDDetailsForm } from '@/components/admission/ipd-details-form'
 import { IPDMarkComponent } from '@/components/admission/ipd-mark-component'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
+import { PatientDischargeInfo } from '@/components/discharge/patient-discharge-info'
 import { InitiateFormCard } from '@/components/insurance/initiate-form-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Phone, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -29,17 +29,18 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { CaseStage, FlowType } from '@/generated/prisma/enums'
 import {
   canAddKYPDetails,
   canCompletePreAuth,
   canEditDischargeSheet,
+  canEditIPDDetails,
   canEditKYP,
   canFillCashDischarge,
   canFillInitiateForm,
   canFillIPDCashForm,
   canGeneratePDF,
   canInitiate,
-  canEditIPDDetails,
   canMarkIPD,
   canMarkLost,
   canModifyHospitals,
@@ -53,7 +54,6 @@ import {
 } from '@/lib/case-permissions'
 import { getKYPStatusLabel } from '@/lib/kyp-status-labels'
 import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
-import { CaseStage, FlowType } from '@/generated/prisma/enums'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
@@ -141,82 +141,83 @@ interface Lead {
   leadEntryDate?: string | null
   assignedDate?: string | null
   createdDate?: string | null
+  surgeryDate?: string | null
   month?: string | null
   profession?: string | null
   teamLeadId?: number | null
-    kypSubmission?: {
+  kypSubmission?: {
+    id: string
+    status: string
+    submittedAt: string
+    insuranceType?: string | null
+    location?: string | null
+    area?: string | null
+    aadhar?: string | null
+    pan?: string | null
+    insuranceCard?: string | null
+    disease?: string | null
+    remark?: string | null
+    patientConsent?: boolean
+    aadharFileUrl?: string | null
+    panFileUrl?: string | null
+    aadharFiles?: Array<{ name: string; url: string }> | null
+    panFiles?: Array<{ name: string; url: string }> | null
+    insuranceCardFileUrl?: string | null
+    prescriptionFileUrl?: string | null
+    diseasePhotos?: Array<{ name: string; url: string }> | null
+    otherFiles?: Array<{ name: string; url: string }> | null
+    submittedBy: {
       id: string
-      status: string
-      submittedAt: string
-      insuranceType?: string | null
-      location?: string | null
-      area?: string | null
-      aadhar?: string | null
-      pan?: string | null
-      insuranceCard?: string | null
-      disease?: string | null
-      remark?: string | null
-      patientConsent?: boolean
-      aadharFileUrl?: string | null
-      panFileUrl?: string | null
-      aadharFiles?: Array<{ name: string; url: string }> | null
-      panFiles?: Array<{ name: string; url: string }> | null
-      insuranceCardFileUrl?: string | null
-      prescriptionFileUrl?: string | null
-      diseasePhotos?: Array<{ name: string; url: string }> | null
-      otherFiles?: Array<{ name: string; url: string }> | null
-      submittedBy: {
+      name: string
+    }
+    preAuthData?: {
+      id: string
+      sumInsured: string | null
+      balanceInsured: string | null
+      roomRent: string | null
+      capping: number | null
+      copay: string | null
+      icu: string | null
+      hospitalNameSuggestion: string | null
+      hospitalSuggestions?: string[] | null
+      roomTypes?: Array<{ name: string; rent: string }> | null
+      suggestedHospitals?: Array<{
+        id: string
+        hospitalName: string
+        suggestedDoctor?: string | null
+        tentativeBill?: number | null
+        roomRentGeneral?: number | null
+        roomRentSingle?: number | null
+        roomRentDeluxe?: number | null
+        roomRentSemiPrivate?: number | null
+        notes?: string | null
+      }> | null
+      insurance: string | null
+      tpa: string | null
+      requestedHospitalName?: string | null
+      requestedRoomType?: string | null
+      diseaseDescription?: string | null
+      diseaseImages?: Array<{ name: string; url: string }> | null
+      investigationFileUrls?: Array<{ name: string; url: string }> | null
+      prescriptionFiles?: Array<{ name: string; url: string }> | null
+      preAuthRaisedAt?: string | null
+      handledAt?: string | null
+      approvalStatus?: string | null
+      approvalNotes?: string | null
+      rejectionReason?: string | null
+      handledBy?: {
         id: string
         name: string
-      }
-      preAuthData?: {
-        id: string
-        sumInsured: string | null
-        balanceInsured: string | null
-        roomRent: string | null
-        capping: number | null
-        copay: string | null
-        icu: string | null
-        hospitalNameSuggestion: string | null
-        hospitalSuggestions?: string[] | null
-        roomTypes?: Array<{ name: string; rent: string }> | null
-        suggestedHospitals?: Array<{
-          id: string
-          hospitalName: string
-          suggestedDoctor?: string | null
-          tentativeBill?: number | null
-          roomRentGeneral?: number | null
-          roomRentSingle?: number | null
-          roomRentDeluxe?: number | null
-          roomRentSemiPrivate?: number | null
-          notes?: string | null
-        }> | null
-        insurance: string | null
-        tpa: string | null
-        requestedHospitalName?: string | null
-        requestedRoomType?: string | null
-        diseaseDescription?: string | null
-        diseaseImages?: Array<{ name: string; url: string }> | null
-        investigationFileUrls?: Array<{ name: string; url: string }> | null
-        prescriptionFiles?: Array<{ name: string; url: string }> | null
-        preAuthRaisedAt?: string | null
-        handledAt?: string | null
-        approvalStatus?: string | null
-        approvalNotes?: string | null
-        rejectionReason?: string | null
-        handledBy?: {
-          id: string
-          name: string
-        } | null
-        preAuthRaisedBy?: {
-          id: string
-          name: string
-        } | null
       } | null
-      followUpData?: {
+      preAuthRaisedBy?: {
         id: string
+        name: string
       } | null
     } | null
+    followUpData?: {
+      id: string
+    } | null
+  } | null
   dischargeSheet?: {
     id: string
     billAmount?: number | null
@@ -429,7 +430,7 @@ export default function PatientDetailsPage() {
     retry: false,
   })
 
-    const { data: kypSubmission, isLoading: isLoadingKYP } = useQuery<KYPSubmission | null>({
+  const { data: kypSubmission, isLoading: isLoadingKYP } = useQuery<KYPSubmission | null>({
     queryKey: ['kyp-submission', leadId],
     queryFn: async () => {
       try {
@@ -586,10 +587,10 @@ export default function PatientDetailsPage() {
     const key = requestedRoom.replace(/\s*-\s*/, '').replace(/\s+/g, '')
     const rent =
       key === 'general' ? hospital.roomRentGeneral :
-      key === 'single' ? hospital.roomRentSingle :
-      key === 'deluxe' ? hospital.roomRentDeluxe :
-      (key === 'semiprivate' || key === 'semi-private') ? hospital.roomRentSemiPrivate :
-      undefined
+        key === 'single' ? hospital.roomRentSingle :
+          key === 'deluxe' ? hospital.roomRentDeluxe :
+            (key === 'semiprivate' || key === 'semi-private') ? hospital.roomRentSemiPrivate :
+              undefined
     return rent != null ? rent : undefined
   })()
 
@@ -618,22 +619,22 @@ export default function PatientDetailsPage() {
       const value = extractLatestAmountFromRemarks(lead.remarks, key)
       return value == null ? null : String(value)
     }
-      const emiItems = lead.modeOfPayment === 'EMI' ? [
-        `EMI Amount: ${extractFromRemarks('EMI Amount') ?? '—'}`,
-        `Processing Fee: ${extractFromRemarks('Processing Fee') ?? '—'}`,
-        `GST: ${extractFromRemarks('GST') ?? '—'}`,
-        `Subvention Fee: ${extractFromRemarks('Subvention Fee') ?? '—'}`,
-        `Final EMI Amount: ${extractFromRemarks('Final EMI Amount') ?? '—'}`,
-      ] : []
-      const totalCollectedAmount = extractFromRemarks('Collected')
-      const discharge = lead.dischargeSheet
-      const approvedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : discharge?.settlementPart
-      const finalBillAmount = (lead.billAmount ?? 0) > 0 ? lead.billAmount : discharge?.billAmount
-      const discountAmount = (lead.discount ?? 0) > 0 ? lead.discount : discharge?.discountAmount
-      const deductionAmount = (lead.deduction ?? 0) > 0 ? lead.deduction : discharge?.deductionAmount
-      const collectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : discharge?.collectedByMediend
-      const collectedByHospital = (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : discharge?.collectedByHospital
-      const lines = [
+    const emiItems = lead.modeOfPayment === 'EMI' ? [
+      `EMI Amount: ${extractFromRemarks('EMI Amount') ?? '—'}`,
+      `Processing Fee: ${extractFromRemarks('Processing Fee') ?? '—'}`,
+      `GST: ${extractFromRemarks('GST') ?? '—'}`,
+      `Subvention Fee: ${extractFromRemarks('Subvention Fee') ?? '—'}`,
+      `Final EMI Amount: ${extractFromRemarks('Final EMI Amount') ?? '—'}`,
+    ] : []
+    const totalCollectedAmount = extractFromRemarks('Collected')
+    const discharge = lead.dischargeSheet
+    const approvedAmount = (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : discharge?.settlementPart
+    const finalBillAmount = (lead.billAmount ?? 0) > 0 ? lead.billAmount : discharge?.billAmount
+    const discountAmount = (lead.discount ?? 0) > 0 ? lead.discount : discharge?.discountAmount
+    const deductionAmount = (lead.deduction ?? 0) > 0 ? lead.deduction : discharge?.deductionAmount
+    const collectedByMediend = (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : discharge?.collectedByMediend
+    const collectedByHospital = (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : discharge?.collectedByHospital
+    const lines = [
       `*IPD Details — ${lead.patientName}*`,
       `Ref: ${lead.leadRef}`,
       '',
@@ -651,7 +652,9 @@ export default function PatientDetailsPage() {
       `*Treatment*`,
       `Treatment: ${lead.treatment ?? '—'}`,
       `Category: ${lead.category ?? '—'}`,
-      lead.quantityGrade ? `Grade: ${lead.quantityGrade}` : null,
+      lead.quantityGrade
+        ? `${lead.category?.toLowerCase() === 'lipoma' ? 'Count' : 'Grade'}: ${lead.quantityGrade}`
+        : null,
       lead.anesthesia ? `Anaesthesia: ${lead.anesthesia}` : null,
       '',
       `*Surgeon*`,
@@ -663,19 +666,19 @@ export default function PatientDetailsPage() {
       rec?.hospitalAddress ? `Address: ${rec.hospitalAddress}` : null,
       rec?.googleMapLocation ? `Maps: ${rec.googleMapLocation}` : null,
       '',
-        ...(isCash ? [
-          `*Payment*`,
-          `Mode: ${lead.modeOfPayment ?? '—'}`,
-          `Approved / Cash Package: ${fmtMoney(approvedAmount)}`,
-          `Final Bill Amount: ${fmtMoney(finalBillAmount)}`,
-          totalCollectedAmount ? `Cash / Deduction Collected: ${fmtMoney(totalCollectedAmount)}` : null,
-          discountAmount ? `Discount: ${fmtMoney(discountAmount)}` : null,
-          lead.copay ? `Copay: ${fmtMoney(lead.copay)}` : null,
-          deductionAmount ? `Deduction: ${fmtMoney(deductionAmount)}` : null,
-          `Collected by Mediend: ${fmtMoney(collectedByMediend)}`,
-          `Collected by Hospital: ${fmtMoney(collectedByHospital)}`,
-          ...emiItems,
-        ] : [
+      ...(isCash ? [
+        `*Payment*`,
+        `Mode: ${lead.modeOfPayment ?? '—'}`,
+        `Approved / Cash Package: ${fmtMoney(approvedAmount)}`,
+        `Final Bill Amount: ${fmtMoney(finalBillAmount)}`,
+        totalCollectedAmount ? `Cash / Deduction Collected: ${fmtMoney(totalCollectedAmount)}` : null,
+        discountAmount ? `Discount: ${fmtMoney(discountAmount)}` : null,
+        lead.copay ? `Copay: ${fmtMoney(lead.copay)}` : null,
+        deductionAmount ? `Deduction: ${fmtMoney(deductionAmount)}` : null,
+        `Collected by Mediend: ${fmtMoney(collectedByMediend)}`,
+        `Collected by Hospital: ${fmtMoney(collectedByHospital)}`,
+        ...emiItems,
+      ] : [
         `*Insurance*`,
         `Company: ${lead.insuranceName ?? '—'}`,
         `Type: ${lead.kypSubmission?.insuranceType ?? lead.insuranceType ?? '—'}`,
@@ -767,474 +770,479 @@ export default function PatientDetailsPage() {
       <div className="space-y-6">
         {/* Professional Header Section */}
 
-            <div className="space-y-6">
-              {/* Patient Dossier Card */}
-              <Card className="overflow-hidden border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                <div className="h-[3px] bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
+        <div className="space-y-6">
+          {/* Patient Dossier Card */}
+          <Card className="overflow-hidden border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
+            <div className="h-[3px] bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
 
-                {/* Identity strip */}
-                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 px-5 pb-4 pt-5 dark:border-gray-900 sm:px-6">
-                  <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => router.back()}
-                      className="-ml-2 mt-0.5 shrink-0 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-700 text-lg font-semibold text-white shadow-sm ring-4 ring-emerald-50 dark:ring-emerald-950/40">
-                      {(() => {
-                        const parts = (lead.patientName || '')
-                          .trim()
-                          .split(/\s+/)
-                          .filter(Boolean)
-                        if (parts.length === 0) return '·'
-                        if (parts.length === 1)
-                          return (parts[0][0] ?? '·').toUpperCase()
-                        return (
-                          (parts[0][0] ?? '') +
-                          (parts[parts.length - 1][0] ?? '')
-                        ).toUpperCase()
-                      })()}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400">
-                        Patient Dossier · {lead.leadRef}
-                      </p>
-                      <h1 className="mt-0.5 truncate text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-50 sm:text-3xl">
-                        {lead.patientName}
-                      </h1>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-gray-600 dark:text-gray-400">
-                        <span>
-                          {lead.age ?? '—'} / {lead.sex ?? '—'}
-                        </span>
-                        {lead.profession && (
-                          <>
-                            <span className="text-gray-300 dark:text-gray-700">·</span>
-                            <span>{lead.profession}</span>
-                          </>
-                        )}
-                        {lead.phoneNumber && lead.phoneNumber !== '—' && (
-                          <>
-                            <span className="text-gray-300 dark:text-gray-700">·</span>
-                            <span className="font-mono text-xs">{lead.phoneNumber}</span>
-                          </>
-                        )}
-                        {lead.status && (
-                          <>
-                            <span className="text-gray-300 dark:text-gray-700">·</span>
-                            <span className="text-gray-500 dark:text-gray-400">{lead.status}</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 flex-wrap items-center gap-2">
-                    <Button asChild size="sm" variant="outline" className="gap-2">
-                      <Link href={`/chat/${leadId}`}>
-                        <MessageCircle className="h-4 w-4" />
-                        Chat
-                      </Link>
-                    </Button>
-                    <Badge
-                      variant="outline"
-                      className="border-gray-300 font-mono text-[10px] uppercase tracking-wider dark:border-gray-700"
-                    >
-                      {lead.pipelineStage}
-                    </Badge>
-                    <Badge className={`border-2 ${getStageBadgeColor(lead.caseStage)}`}>
-                      {lead.caseStage.replace(/_/g, ' ')}
-                    </Badge>
-                  </div>
+            {/* Identity strip */}
+            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-gray-100 px-5 pb-4 pt-5 dark:border-gray-900 sm:px-6">
+              <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => router.back()}
+                  className="-ml-2 mt-0.5 shrink-0 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-700 text-lg font-semibold text-white shadow-sm ring-4 ring-emerald-50 dark:ring-emerald-950/40">
+                  {(() => {
+                    const parts = (lead.patientName || '')
+                      .trim()
+                      .split(/\s+/)
+                      .filter(Boolean)
+                    if (parts.length === 0) return '·'
+                    if (parts.length === 1)
+                      return (parts[0][0] ?? '·').toUpperCase()
+                    return (
+                      (parts[0][0] ?? '') +
+                      (parts[parts.length - 1][0] ?? '')
+                    ).toUpperCase()
+                  })()}
                 </div>
-
-                {/* Dossier grid — 4 sections, paper-style dividers via gap-px */}
-                {(() => {
-                  const location =
-                    lead.kypSubmission?.location?.trim() || lead.circle || null
-                  const area = lead.kypSubmission?.area?.trim() || null
-                  const surgeonLine = [lead.surgeonName, lead.surgeonType]
-                    .filter(Boolean)
-                    .join(' · ')
-                  const leadDate = lead.leadEntryDate || lead.createdDate
-                  const rec = lead.admissionRecord
-                  const isPostponed = rec?.ipdStatus === 'POSTPONED'
-                  const effectiveSurgeryDate =
-                    isPostponed && rec?.newSurgeryDate
-                      ? rec.newSurgeryDate
-                      : rec?.surgeryDate
-                  const surgeryDateNode = effectiveSurgeryDate ? (
-                    <span className="inline-flex items-center gap-1.5">
-                      <span>
-                        {format(new Date(effectiveSurgeryDate), 'dd MMM yyyy')}
-                        {rec?.surgeryTime && !isPostponed ? ` · ${rec.surgeryTime}` : ''}
-                      </span>
-                      {isPostponed && (
-                        <span className="rounded-sm bg-amber-100 px-1 py-px font-mono text-[9px] uppercase tracking-wider text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
-                          rescheduled
-                        </span>
-                      )}
-                    </span>
-                  ) : null
-                  return (
-                    <div className="grid grid-cols-1 gap-px bg-gray-100 dark:bg-gray-900 md:grid-cols-3">
-                      <dl className="bg-white px-5 py-4 dark:bg-gray-950">
-                        <DossierSectionHeader icon={Stethoscope} label="Clinical" />
-                        <DossierField icon={Activity} label="Treatment" value={lead.treatment} />
-                        <DossierField icon={Tag} label="Category" value={lead.category} />
-                        <DossierField icon={User} label="Surgeon" value={surgeonLine || null} />
-                        <DossierField icon={Activity} label="Anesthesia" value={lead.anesthesia} />
-                        <DossierField icon={Tag} label="Grade" value={lead.quantityGrade} />
-                        <DossierField
-                          icon={Stethoscope}
-                          label="Disease"
-                          value={lead.kypSubmission?.disease}
-                        />
-                      </dl>
-                      <dl className="bg-white px-5 py-4 dark:bg-gray-950">
-                        <DossierSectionHeader icon={Building2} label="Hospital & Cover" />
-                        <DossierField icon={Building2} label="Hospital" value={resolveLeadHospitalDoctor(lead).hospital} />
-                        <DossierField icon={User} label="IPD Doctor" value={lead.ipdDrName} />
-                        <DossierField icon={MapPin} label="City" value={location} />
-                        <DossierField icon={MapPin} label="Area" value={area} />
-                        <DossierField icon={Shield} label="Insurance" value={lead.insuranceName} />
-                        <DossierField icon={Shield} label="Type" value={lead.insuranceType} />
-                      </dl>
-                      <dl className="bg-white px-5 py-4 dark:bg-gray-950">
-                        <DossierSectionHeader icon={CalendarIcon} label="Team & Timeline" />
-                        <DossierField icon={User} label="BD" value={lead.bd?.name} />
-                        <DossierField
-                          icon={User}
-                          label="Manager"
-                          value={lead.bd?.manager?.name}
-                        />
-                        <DossierField
-                          icon={CalendarIcon}
-                          label="Lead Date"
-                          value={
-                            leadDate ? format(new Date(leadDate), 'dd MMM yyyy') : null
-                          }
-                          mono
-                        />
-                        <DossierField
-                          icon={CalendarIcon}
-                          label="Assigned"
-                          value={
-                            lead.assignedDate
-                              ? format(new Date(lead.assignedDate), 'dd MMM yyyy')
-                              : null
-                          }
-                          mono
-                        />
-                        <DossierField
-                          icon={CalendarIcon}
-                          label="Surgery"
-                          value={surgeryDateNode}
-                          mono
-                        />
-                        <DossierField
-                          icon={CalendarIcon}
-                          label="Admission"
-                          value={
-                            rec?.admissionDate
-                              ? `${format(new Date(rec.admissionDate), 'dd MMM yyyy')}${rec.admissionTime ? ` · ${rec.admissionTime}` : ''}`
-                              : null
-                          }
-                          mono
-                        />
-                        <DossierField
-                          icon={CalendarIcon}
-                          label="Discharge"
-                          value={
-                            rec?.ipdDischargeDate
-                              ? format(new Date(rec.ipdDischargeDate), 'dd MMM yyyy')
-                              : null
-                          }
-                          mono
-                        />
-                      </dl>
-                    </div>
-                  )
-                })()}
-              </Card>
-
-              {/* Surgery / IPD status banner — updates when postponed, cancelled, or discharged */}
-              {lead.admissionRecord && (() => {
-                const rec = lead.admissionRecord
-                const status = rec.ipdStatus
-
-                if (status === 'CANCELLED') {
-                  return (
-                    <Card className="border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30">
-                      <CardContent className="py-4">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/50">
-                            <Clock className="h-5 w-5 text-red-600 dark:text-red-400" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-red-800 dark:text-red-200">Surgery cancelled</p>
-                            {rec.ipdStatusReason && (
-                              <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">{rec.ipdStatusReason}</p>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )
-                }
-
-                if (status === 'ADMITTED_DONE') {
-                  const admitStr = rec.admissionDate
-                    ? format(new Date(rec.admissionDate), 'dd MMM yyyy')
-                    : '—'
-                  return (
-                    <Card className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30">
-                      <CardContent className="py-4">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/50">
-                            <Clock className="h-5 w-5 text-green-600 dark:text-green-400" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-green-800 dark:text-green-200">
-                              Patient admitted{admitStr !== '—' ? ` — ${admitStr}` : ''}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )
-                }
-
-                if (status === 'IPD_DONE') {
-                  const surgeryStr = rec.surgeryDate
-                    ? `${format(new Date(rec.surgeryDate), 'dd MMM yyyy')}${rec.surgeryTime ? ` at ${rec.surgeryTime}` : ''}`
-                    : '—'
-                  return (
-                    <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
-                      <CardContent className="py-4">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/50">
-                            <Clock className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
-                              Surgery completed — {surgeryStr}
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )
-                }
-
-                if (status === 'DISCHARGED') {
-                  const dischargeStr = rec.ipdDischargeDate
-                    ? format(new Date(rec.ipdDischargeDate), 'EEEE, dd MMM yyyy')
-                    : '—'
-                  return (
-                    <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
-                      <CardContent className="py-4">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/50">
-                            <Clock className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
-                              Discharged on {dischargeStr}
-                            </p>
-                            {rec.ipdStatusReason && (
-                              <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">{rec.ipdStatusReason}</p>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )
-                }
-
-                const effectiveDate = (status === 'POSTPONED' && rec.newSurgeryDate) ? rec.newSurgeryDate : rec.surgeryDate
-                const surgeryTime = rec.surgeryTime ?? ''
-                if (!effectiveDate) return null
-                let surgeryDateTime: Date
-                try {
-                  surgeryDateTime = new Date(effectiveDate)
-                  if (surgeryTime && status !== 'POSTPONED') {
-                    const [h, m] = surgeryTime.trim().split(/[:\s]/).map(Number)
-                    if (!isNaN(h)) surgeryDateTime.setHours(isNaN(m) ? h : h, isNaN(m) ? 0 : m, 0, 0)
-                  }
-                } catch {
-                  return null
-                }
-                const now = new Date()
-                const isPast = surgeryDateTime.getTime() < now.getTime()
-                const countdown = isPast
-                  ? `Was ${format(surgeryDateTime, 'dd MMM yyyy')}${surgeryTime && status !== 'POSTPONED' ? ` at ${surgeryTime}` : ''}`
-                  : `in ${formatDistanceToNow(surgeryDateTime, { addSuffix: false })}`
-                const isRescheduled = status === 'POSTPONED'
-                return (
-                  <Card className="border-2 border-teal-200 dark:border-teal-800 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30">
-                    <CardContent className="py-4">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <div className="p-2 rounded-lg bg-teal-100 dark:bg-teal-900/50">
-                          <Clock className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-teal-800 dark:text-teal-200">
-                            {isRescheduled ? 'Surgery rescheduled' : isPast ? 'Surgery was scheduled' : 'Surgery scheduled'} — {format(surgeryDateTime, 'EEEE, dd MMM yyyy')}
-                            {surgeryTime && status !== 'POSTPONED' ? ` at ${surgeryTime}` : ''}
-                          </p>
-                          <p className="text-xs text-teal-600 dark:text-teal-400 mt-0.5">
-                            {isPast ? countdown : `${countdown} from now`}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )
-              })()}
-
-              {/* Compact Stage Progress */}
-              <div className="border-t border-gray-200 dark:border-gray-800 pt-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-gray-700 dark:text-gray-300 text-sm font-semibold">
-                    {lead.flowType === FlowType.CASH ? 'Cash Flow Progress' : 'Case Progress'}
+                <div className="min-w-0">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400">
+                    Patient Dossier · {lead.leadRef}
                   </p>
-                  {lead.flowType === FlowType.CASH && (
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                      Cash Mode
-                    </Badge>
-                  )}
+                  <h1 className="mt-0.5 truncate text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-50 sm:text-3xl">
+                    {lead.patientName}
+                  </h1>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-gray-600 dark:text-gray-400">
+                    <span>
+                      {lead.age ?? '—'} / {lead.sex ?? '—'}
+                    </span>
+                    {lead.profession && (
+                      <>
+                        <span className="text-gray-300 dark:text-gray-700">·</span>
+                        <span>{lead.profession}</span>
+                      </>
+                    )}
+                    {lead.phoneNumber && lead.phoneNumber !== '—' && (
+                      <>
+                        <span className="text-gray-300 dark:text-gray-700">·</span>
+                        <span className="font-mono text-xs">{lead.phoneNumber}</span>
+                      </>
+                    )}
+                    {lead.status && (
+                      <>
+                        <span className="text-gray-300 dark:text-gray-700">·</span>
+                        <span className="text-gray-500 dark:text-gray-400">{lead.status}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
-                {lead.flowType === FlowType.CASH ? (
-                  <CashStageProgress currentStage={lead.caseStage} />
-                ) : (
-                  <StageProgress
-                    currentStage={lead.caseStage}
-                    hasInitiateForm={!!lead.insuranceInitiateForm?.id}
-                    hasIpdMark={!!lead.admissionRecord?.ipdStatus}
-                  />
-                )}
+              </div>
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <Button asChild size="sm" variant="outline" className="gap-2">
+                  <Link href={`/chat/${leadId}`}>
+                    <MessageCircle className="h-4 w-4" />
+                    Chat
+                  </Link>
+                </Button>
+                <Badge
+                  variant="outline"
+                  className="border-gray-300 font-mono text-[10px] uppercase tracking-wider dark:border-gray-700"
+                >
+                  {lead.pipelineStage}
+                </Badge>
+                <Badge className={`border-2 ${getStageBadgeColor(lead.caseStage)}`}>
+                  {lead.caseStage.replace(/_/g, ' ')}
+                </Badge>
               </div>
             </div>
+
+            {/* Dossier grid — 4 sections, paper-style dividers via gap-px */}
+            {(() => {
+              const location =
+                lead.kypSubmission?.location?.trim() || lead.circle || null
+              const area = lead.kypSubmission?.area?.trim() || null
+              const surgeonLine = [lead.surgeonName, lead.surgeonType]
+                .filter(Boolean)
+                .join(' · ')
+              const leadDate = lead.leadEntryDate || lead.createdDate
+              const rec = lead.admissionRecord
+              const isPostponed = rec?.ipdStatus === 'POSTPONED'
+              const effectiveSurgeryDate =
+                isPostponed && rec?.newSurgeryDate
+                  ? rec.newSurgeryDate
+                  : rec?.surgeryDate
+              const surgeryDateNode = effectiveSurgeryDate ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <span>
+                    {format(new Date(effectiveSurgeryDate), 'dd MMM yyyy')}
+                    {rec?.surgeryTime && !isPostponed ? ` · ${rec.surgeryTime}` : ''}
+                  </span>
+                  {isPostponed && (
+                    <span className="rounded-sm bg-amber-100 px-1 py-px font-mono text-[9px] uppercase tracking-wider text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+                      rescheduled
+                    </span>
+                  )}
+                </span>
+              ) : null
+              return (
+                <div className="grid grid-cols-1 gap-px bg-gray-100 dark:bg-gray-900 md:grid-cols-3">
+                  <dl className="bg-white px-5 py-4 dark:bg-gray-950">
+                    <DossierSectionHeader icon={Stethoscope} label="Clinical" />
+                    <DossierField icon={Activity} label="Treatment" value={lead.treatment} />
+                    <DossierField icon={Tag} label="Category" value={lead.category} />
+                    <DossierField icon={User} label="Surgeon" value={surgeonLine || null} />
+                    <DossierField icon={Activity} label="Anesthesia" value={lead.anesthesia} />
+                    {lead.category?.toLowerCase() === 'lipoma' && (
+                      <DossierField icon={Tag} label="Count" value={lead.quantityGrade} />
+                    )}
+                    {(lead.treatment?.toLowerCase().includes('gynecomastia') || lead.category?.toLowerCase() === 'gynecomastia') && (
+                      <DossierField icon={Tag} label="Grade" value={lead.quantityGrade} />
+                    )}
+                    <DossierField
+                      icon={Stethoscope}
+                      label="Disease"
+                      value={lead.kypSubmission?.disease}
+                    />
+                  </dl>
+                  <dl className="bg-white px-5 py-4 dark:bg-gray-950">
+                    <DossierSectionHeader icon={Building2} label="Hospital & Cover" />
+                    <DossierField icon={Building2} label="Hospital" value={resolveLeadHospitalDoctor(lead).hospital} />
+                    <DossierField icon={User} label="IPD Doctor" value={lead.ipdDrName} />
+                    <DossierField icon={MapPin} label="City" value={location} />
+                    <DossierField icon={MapPin} label="Area" value={area} />
+                    <DossierField icon={Shield} label="Insurance" value={lead.insuranceName} />
+                    <DossierField icon={Shield} label="Type" value={lead.insuranceType} />
+                  </dl>
+                  <dl className="bg-white px-5 py-4 dark:bg-gray-950">
+                    <DossierSectionHeader icon={CalendarIcon} label="Team & Timeline" />
+                    <DossierField icon={User} label="BD" value={lead.bd?.name} />
+                    <DossierField
+                      icon={User}
+                      label="Manager"
+                      value={lead.bd?.manager?.name}
+                    />
+                    <DossierField
+                      icon={CalendarIcon}
+                      label="Lead Date"
+                      value={
+                        leadDate ? format(new Date(leadDate), 'dd MMM yyyy') : null
+                      }
+                      mono
+                    />
+                    <DossierField
+                      icon={CalendarIcon}
+                      label="Assigned"
+                      value={
+                        lead.assignedDate
+                          ? format(new Date(lead.assignedDate), 'dd MMM yyyy')
+                          : null
+                      }
+                      mono
+                    />
+                    <DossierField
+                      icon={CalendarIcon}
+                      label="Surgery"
+                      value={surgeryDateNode}
+                      mono
+                    />
+                    <DossierField
+                      icon={CalendarIcon}
+                      label="Admission"
+                      value={
+                        rec?.admissionDate
+                          ? `${format(new Date(rec.admissionDate), 'dd MMM yyyy')}${rec.admissionTime ? ` · ${rec.admissionTime}` : ''}`
+                          : null
+                      }
+                      mono
+                    />
+                    <DossierField
+                      icon={CalendarIcon}
+                      label="Discharge"
+                      value={
+                        rec?.ipdDischargeDate
+                          ? format(new Date(rec.ipdDischargeDate), 'dd MMM yyyy')
+                          : null
+                      }
+                      mono
+                    />
+                  </dl>
+                </div>
+              )
+            })()}
+          </Card>
+
+          {/* Surgery / IPD status banner — updates when postponed, cancelled, or discharged */}
+          {lead.admissionRecord && (() => {
+            const rec = lead.admissionRecord
+            const status = rec.ipdStatus
+
+            if (status === 'CANCELLED') {
+              return (
+                <Card className="border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30">
+                  <CardContent className="py-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/50">
+                        <Clock className="h-5 w-5 text-red-600 dark:text-red-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-red-800 dark:text-red-200">Surgery cancelled</p>
+                        {rec.ipdStatusReason && (
+                          <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">{rec.ipdStatusReason}</p>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            }
+
+            if (status === 'ADMITTED_DONE') {
+              const admitStr = rec.admissionDate
+                ? format(new Date(rec.admissionDate), 'dd MMM yyyy')
+                : '—'
+              return (
+                <Card className="border-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30">
+                  <CardContent className="py-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/50">
+                        <Clock className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                          Patient admitted{admitStr !== '—' ? ` — ${admitStr}` : ''}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            }
+
+            if (status === 'IPD_DONE') {
+              const surgeryStr = rec.surgeryDate
+                ? `${format(new Date(rec.surgeryDate), 'dd MMM yyyy')}${rec.surgeryTime ? ` at ${rec.surgeryTime}` : ''}`
+                : '—'
+              return (
+                <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
+                  <CardContent className="py-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/50">
+                        <Clock className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
+                          Surgery completed — {surgeryStr}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            }
+
+            if (status === 'DISCHARGED') {
+              const dischargeStr = rec.ipdDischargeDate
+                ? format(new Date(rec.ipdDischargeDate), 'EEEE, dd MMM yyyy')
+                : '—'
+              return (
+                <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
+                  <CardContent className="py-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/50">
+                        <Clock className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
+                          Discharged on {dischargeStr}
+                        </p>
+                        {rec.ipdStatusReason && (
+                          <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">{rec.ipdStatusReason}</p>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            }
+
+            const effectiveDate = (status === 'POSTPONED' && rec.newSurgeryDate) ? rec.newSurgeryDate : rec.surgeryDate
+            const surgeryTime = rec.surgeryTime ?? ''
+            if (!effectiveDate) return null
+            let surgeryDateTime: Date
+            try {
+              surgeryDateTime = new Date(effectiveDate)
+              if (surgeryTime && status !== 'POSTPONED') {
+                const [h, m] = surgeryTime.trim().split(/[:\s]/).map(Number)
+                if (!isNaN(h)) surgeryDateTime.setHours(isNaN(m) ? h : h, isNaN(m) ? 0 : m, 0, 0)
+              }
+            } catch {
+              return null
+            }
+            const now = new Date()
+            const isPast = surgeryDateTime.getTime() < now.getTime()
+            const countdown = isPast
+              ? `Was ${format(surgeryDateTime, 'dd MMM yyyy')}${surgeryTime && status !== 'POSTPONED' ? ` at ${surgeryTime}` : ''}`
+              : `in ${formatDistanceToNow(surgeryDateTime, { addSuffix: false })}`
+            const isRescheduled = status === 'POSTPONED'
+            return (
+              <Card className="border-2 border-teal-200 dark:border-teal-800 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-950/30 dark:to-emerald-950/30">
+                <CardContent className="py-4">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="p-2 rounded-lg bg-teal-100 dark:bg-teal-900/50">
+                      <Clock className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-teal-800 dark:text-teal-200">
+                        {isRescheduled ? 'Surgery rescheduled' : isPast ? 'Surgery was scheduled' : 'Surgery scheduled'} — {format(surgeryDateTime, 'EEEE, dd MMM yyyy')}
+                        {surgeryTime && status !== 'POSTPONED' ? ` at ${surgeryTime}` : ''}
+                      </p>
+                      <p className="text-xs text-teal-600 dark:text-teal-400 mt-0.5">
+                        {isPast ? countdown : `${countdown} from now`}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })()}
+
+          {/* Compact Stage Progress */}
+          <div className="border-t border-gray-200 dark:border-gray-800 pt-4">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-gray-700 dark:text-gray-300 text-sm font-semibold">
+                {lead.flowType === FlowType.CASH ? 'Cash Flow Progress' : 'Case Progress'}
+              </p>
+              {lead.flowType === FlowType.CASH && (
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  Cash Mode
+                </Badge>
+              )}
+            </div>
+            {lead.flowType === FlowType.CASH ? (
+              <CashStageProgress currentStage={lead.caseStage} />
+            ) : (
+              <StageProgress
+                currentStage={lead.caseStage}
+                hasInitiateForm={!!lead.insuranceInitiateForm?.id}
+                hasIpdMark={!!lead.admissionRecord?.ipdStatus}
+              />
+            )}
+          </div>
+        </div>
 
 
         {/* Uploaded Documents Grid */}
         {uploadedDocuments.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {uploadedDocuments.map((doc, index) => {
-                  const isBd = user?.role === 'BD'
-                  const canEdit = isBd && doc.documentField && doc.kypId && (doc.editCount ?? 0) < 1
-                  const remainingEdits = 1 - (doc.editCount ?? 0)
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {uploadedDocuments.map((doc, index) => {
+              const isBd = user?.role === 'BD'
+              const canEdit = isBd && doc.documentField && doc.kypId && (doc.editCount ?? 0) < 1
+              const remainingEdits = 1 - (doc.editCount ?? 0)
 
-                  return (
-                  <div
-                    key={`${doc.url}-${index}`}
-                    className={cn(
-                      "flex flex-col rounded-lg border-2 overflow-hidden hover:shadow-md transition-all",
-                      doc.isEdited
-                        ? "border-amber-300 dark:border-amber-700"
-                        : "border-gray-200 dark:border-gray-800 hover:border-blue-400 dark:hover:border-blue-600"
+              return (
+                <div
+                  key={`${doc.url}-${index}`}
+                  className={cn(
+                    "flex flex-col rounded-lg border-2 overflow-hidden hover:shadow-md transition-all",
+                    doc.isEdited
+                      ? "border-amber-300 dark:border-amber-700"
+                      : "border-gray-200 dark:border-gray-800 hover:border-blue-400 dark:hover:border-blue-600"
+                  )}
+                >
+                  <div className="w-full h-[200px] shrink-0 overflow-hidden bg-gray-100 dark:bg-gray-900 flex items-center justify-center relative">
+                    {doc.isEdited && (
+                      <span className="absolute top-1.5 right-1.5 z-10 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-[10px] font-bold">
+                        <Pencil className="w-2.5 h-2.5" /> Edited ({doc.editCount}x)
+                      </span>
                     )}
-                  >
-                    <div className="w-full h-[200px] shrink-0 overflow-hidden bg-gray-100 dark:bg-gray-900 flex items-center justify-center relative">
-                      {doc.isEdited && (
-                        <span className="absolute top-1.5 right-1.5 z-10 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-[10px] font-bold">
-                          <Pencil className="w-2.5 h-2.5" /> Edited ({doc.editCount}x)
-                        </span>
-                      )}
-                      {doc.isImage ? (
-                        <iframe
-                          src={doc.url}
-                          title={doc.title}
-                          className="w-full h-full border-0 pointer-events-none select-none"
-                          style={{ overflow: 'hidden' }}
-                        />
-                      ) : (
-                        <a
-                          href={doc.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex flex-col items-center justify-center gap-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 p-4 no-underline"
-                        >
-                          <FileText className="w-12 h-12" />
-                          <span className="text-xs text-center line-clamp-2">{doc.title}</span>
-                          <span className="text-xs font-medium">Open in new tab</span>
-                        </a>
-                      )}
-                    </div>
-                    <div className="p-2 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shrink-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate" title={doc.title}>
-                        {doc.title}
-                      </p>
-                      <div className="flex items-center justify-between mt-0.5">
-                        <a
-                          href={doc.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                          Open
-                        </a>
-                        {canEdit && (
-                          <label className="text-xs text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 cursor-pointer">
-                            <Pencil className="h-3 w-3" />
-                            Edit ({remainingEdits} left)
-                            <input
-                              type="file"
-                              className="hidden"
-                              accept="image/*,application/pdf"
-                              onChange={async (e) => {
-                                const file = e.target.files?.[0]
-                                if (!file) return
-                                try {
-                                  const formData = new FormData()
-                                  formData.append('file', file)
-                                  formData.append('folder', 'kyp')
-                                  const uploadRes = await fetch('/api/kyp/upload', {
-                                    method: 'POST',
-                                    body: formData,
-                                    credentials: 'include',
-                                  })
-                                  const uploadData = await uploadRes.json()
-                                  if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed')
+                    {doc.isImage ? (
+                      <iframe
+                        src={doc.url}
+                        title={doc.title}
+                        className="w-full h-full border-0 pointer-events-none select-none"
+                        style={{ overflow: 'hidden' }}
+                      />
+                    ) : (
+                      <a
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center justify-center gap-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 p-4 no-underline"
+                      >
+                        <FileText className="w-12 h-12" />
+                        <span className="text-xs text-center line-clamp-2">{doc.title}</span>
+                        <span className="text-xs font-medium">Open in new tab</span>
+                      </a>
+                    )}
+                  </div>
+                  <div className="p-2 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shrink-0">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate" title={doc.title}>
+                      {doc.title}
+                    </p>
+                    <div className="flex items-center justify-between mt-0.5">
+                      <a
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                        Open
+                      </a>
+                      {canEdit && (
+                        <label className="text-xs text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 cursor-pointer">
+                          <Pencil className="h-3 w-3" />
+                          Edit ({remainingEdits} left)
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept="image/*,application/pdf"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0]
+                              if (!file) return
+                              try {
+                                const formData = new FormData()
+                                formData.append('file', file)
+                                formData.append('folder', 'kyp')
+                                const uploadRes = await fetch('/api/kyp/upload', {
+                                  method: 'POST',
+                                  body: formData,
+                                  credentials: 'include',
+                                })
+                                const uploadData = await uploadRes.json()
+                                if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed')
 
-                                  const fileUrl = uploadData.data?.url || uploadData.url
-                                  const isJsonField = ['aadharFiles', 'panFiles', 'diseasePhotos', 'otherFiles'].includes(doc.documentField!)
-                                  const editBody: Record<string, unknown> = { documentField: doc.documentField }
-                                  if (isJsonField) {
-                                    editBody.newFiles = [{ name: file.name, url: fileUrl }]
-                                  } else {
-                                    editBody.newFileUrl = fileUrl
-                                  }
-
-                                  const editRes = await fetch(`/api/kyp/${doc.kypId}/edit-document`, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(editBody),
-                                    credentials: 'include',
-                                  })
-                                  const editData = await editRes.json()
-                                  if (!editRes.ok) throw new Error(editData.error || 'Edit failed')
-
-                                  toast.success(`Document updated (${editData.data?.remainingEdits ?? 0} edits remaining)`)
-                                  queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
-                                  queryClient.invalidateQueries({ queryKey: ['kyp-submission', leadId] })
-                                } catch (err) {
-                                  toast.error(err instanceof Error ? err.message : 'Failed to edit document')
+                                const fileUrl = uploadData.data?.url || uploadData.url
+                                const isJsonField = ['aadharFiles', 'panFiles', 'diseasePhotos', 'otherFiles'].includes(doc.documentField!)
+                                const editBody: Record<string, unknown> = { documentField: doc.documentField }
+                                if (isJsonField) {
+                                  editBody.newFiles = [{ name: file.name, url: fileUrl }]
+                                } else {
+                                  editBody.newFileUrl = fileUrl
                                 }
-                                e.target.value = ''
-                              }}
-                            />
-                          </label>
-                        )}
-                      </div>
+
+                                const editRes = await fetch(`/api/kyp/${doc.kypId}/edit-document`, {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify(editBody),
+                                  credentials: 'include',
+                                })
+                                const editData = await editRes.json()
+                                if (!editRes.ok) throw new Error(editData.error || 'Edit failed')
+
+                                toast.success(`Document updated (${editData.data?.remainingEdits ?? 0} edits remaining)`)
+                                queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
+                                queryClient.invalidateQueries({ queryKey: ['kyp-submission', leadId] })
+                              } catch (err) {
+                                toast.error(err instanceof Error ? err.message : 'Failed to edit document')
+                              }
+                              e.target.value = ''
+                            }}
+                          />
+                        </label>
+                      )}
                     </div>
                   </div>
-                  )
-                })}
-              </div>
+                </div>
+              )
+            })}
+          </div>
         )}
 
         {/* Action Buttons Section */}
@@ -1391,7 +1399,7 @@ export default function PatientDetailsPage() {
                     Update IPD Status
                   </Button>
                 )}
-                
+
                 {/* Insurance: Suggest hospitals (when KYP Basic just submitted – KYP_BASIC_COMPLETE) */}
                 {showSuggestHospitals && (
                   <Button
@@ -1700,9 +1708,9 @@ export default function PatientDetailsPage() {
                     {kypSubmission.remark && (
                       <div>
                         <Label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Remarks</Label>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mt-1 bg-amber-50/30 dark:bg-amber-950/10 p-3 rounded-lg border border-amber-100/50 dark:border-amber-900/20 italic">
-                        &quot;{kypSubmission.remark}&quot;
-                      </p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 mt-1 bg-amber-50/30 dark:bg-amber-950/10 p-3 rounded-lg border border-amber-100/50 dark:border-amber-900/20 italic">
+                          &quot;{kypSubmission.remark}&quot;
+                        </p>
                       </div>
                     )}
                     <div className="space-y-3">
@@ -1743,8 +1751,8 @@ export default function PatientDetailsPage() {
                     <Badge className={cn(
                       "border-0",
                       kypSubmission.preAuthData.approvalStatus === 'APPROVED' ? "bg-green-100 text-green-700" :
-                      kypSubmission.preAuthData.approvalStatus === 'REJECTED' ? "bg-red-100 text-red-700" :
-                      "bg-amber-100 text-amber-700"
+                        kypSubmission.preAuthData.approvalStatus === 'REJECTED' ? "bg-red-100 text-red-700" :
+                          "bg-amber-100 text-amber-700"
                     )}>
                       {kypSubmission.preAuthData.approvalStatus}
                     </Badge>
@@ -1806,8 +1814,8 @@ export default function PatientDetailsPage() {
                         <p className="text-sm font-semibold">
                           {kypSubmission.preAuthData.capping != null && kypSubmission.preAuthData.capping !== ''
                             ? (typeof kypSubmission.preAuthData.capping === 'string' && !Number.isNaN(Number(kypSubmission.preAuthData.capping))
-                                ? `₹${Number(kypSubmission.preAuthData.capping).toLocaleString('en-IN')}`
-                                : String(kypSubmission.preAuthData.capping))
+                              ? `₹${Number(kypSubmission.preAuthData.capping).toLocaleString('en-IN')}`
+                              : String(kypSubmission.preAuthData.capping))
                             : 'No'}
                         </p>
                       </div>
@@ -1843,9 +1851,9 @@ export default function PatientDetailsPage() {
                             const rent = selectedHosp
                               ? (requestedRoom.includes('single') && selectedHosp.roomRentSingle != null ? selectedHosp.roomRentSingle
                                 : (requestedRoom.includes('semi') || requestedRoom.includes('private')) && selectedHosp.roomRentSemiPrivate != null ? selectedHosp.roomRentSemiPrivate
-                                : requestedRoom.includes('deluxe') && selectedHosp.roomRentDeluxe != null ? selectedHosp.roomRentDeluxe
-                                : requestedRoom.includes('general') && selectedHosp.roomRentGeneral != null ? selectedHosp.roomRentGeneral
-                                : selectedHosp.roomRentSingle ?? selectedHosp.roomRentSemiPrivate ?? selectedHosp.roomRentDeluxe ?? selectedHosp.roomRentGeneral ?? null)
+                                  : requestedRoom.includes('deluxe') && selectedHosp.roomRentDeluxe != null ? selectedHosp.roomRentDeluxe
+                                    : requestedRoom.includes('general') && selectedHosp.roomRentGeneral != null ? selectedHosp.roomRentGeneral
+                                      : selectedHosp.roomRentSingle ?? selectedHosp.roomRentSemiPrivate ?? selectedHosp.roomRentDeluxe ?? selectedHosp.roomRentGeneral ?? null)
                               : null
                             return rent != null ? `₹${Number(rent).toLocaleString('en-IN')}` : '-'
                           })()}
@@ -1873,8 +1881,8 @@ export default function PatientDetailsPage() {
                       kypSubmission.preAuthData.suggestedHospitals.map((hosp, idx) => (
                         <div key={hosp.id} className={cn(
                           "p-2 rounded border text-xs space-y-1",
-                          hosp.hospitalName === kypSubmission.preAuthData?.requestedHospitalName 
-                            ? "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 ring-1 ring-blue-500" 
+                          hosp.hospitalName === kypSubmission.preAuthData?.requestedHospitalName
+                            ? "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 ring-1 ring-blue-500"
                             : "bg-gray-50 border-gray-100 dark:bg-gray-900 dark:border-gray-800"
                         )}>
                           <div className="flex justify-between font-bold">
@@ -1918,8 +1926,8 @@ export default function PatientDetailsPage() {
                         </Label>
                         <p className={cn(
                           "text-sm mt-1 p-3 rounded-lg border italic",
-                          kypSubmission.preAuthData.approvalStatus === 'REJECTED' 
-                            ? "bg-red-50 border-red-100 text-red-700 dark:bg-red-950/10 dark:border-red-900/20" 
+                          kypSubmission.preAuthData.approvalStatus === 'REJECTED'
+                            ? "bg-red-50 border-red-100 text-red-700 dark:bg-red-950/10 dark:border-red-900/20"
                             : "bg-amber-50 border-amber-100 text-amber-700 dark:bg-amber-950/10 dark:border-amber-900/20"
                         )}>
                           &quot;{kypSubmission.preAuthData.rejectionReason || kypSubmission.preAuthData.approvalNotes}&quot;
@@ -2049,18 +2057,18 @@ export default function PatientDetailsPage() {
                 bdName={lead.bd?.name}
                 bdManagerName={lead.bd?.manager?.name ?? undefined}
                 // Pass existing data if editing (admissionRecord + lead financials for collected amounts)
-                  initialData={lead.admissionRecord ? {
-                    ...lead.admissionRecord,
-                    modeOfPayment: lead.modeOfPayment,
-                    approvedAmount: (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : lead.dischargeSheet?.settlementPart,
-                    finalBillAmount: (lead.billAmount ?? 0) > 0 ? lead.billAmount : lead.dischargeSheet?.billAmount,
-                    collectedAmount: extractLatestAmountFromRemarks(lead.remarks, 'Collected'),
-                    collectedByMediend: (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : lead.dischargeSheet?.collectedByMediend,
-                    collectedByHospital: (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : lead.dischargeSheet?.collectedByHospital,
-                    discount: (lead.discount ?? 0) > 0 ? lead.discount : lead.dischargeSheet?.discountAmount,
-                    copay: lead.copay,
-                    deduction: (lead.deduction ?? 0) > 0 ? lead.deduction : lead.dischargeSheet?.deductionAmount,
-                  } : undefined}
+                initialData={lead.admissionRecord ? {
+                  ...lead.admissionRecord,
+                  modeOfPayment: lead.modeOfPayment,
+                  approvedAmount: (lead.settledTotal ?? 0) > 0 ? lead.settledTotal : lead.dischargeSheet?.settlementPart,
+                  finalBillAmount: (lead.billAmount ?? 0) > 0 ? lead.billAmount : lead.dischargeSheet?.billAmount,
+                  collectedAmount: extractLatestAmountFromRemarks(lead.remarks, 'Collected'),
+                  collectedByMediend: (lead.collectedByMediend ?? 0) > 0 ? lead.collectedByMediend : lead.dischargeSheet?.collectedByMediend,
+                  collectedByHospital: (lead.collectedByHospital ?? 0) > 0 ? lead.collectedByHospital : lead.dischargeSheet?.collectedByHospital,
+                  discount: (lead.discount ?? 0) > 0 ? lead.discount : lead.dischargeSheet?.discountAmount,
+                  copay: lead.copay,
+                  deduction: (lead.deduction ?? 0) > 0 ? lead.deduction : lead.dischargeSheet?.deductionAmount,
+                } : undefined}
                 isEditMode={!!lead.admissionRecord}
                 onSuccess={() => {
                   setShowIPDCashModal(false)

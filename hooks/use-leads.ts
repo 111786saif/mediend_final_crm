@@ -21,6 +21,8 @@ export interface LeadFilters {
   view?: string
   /** Last 10 digits — server-only filter; omit from list responses */
   phoneSearch?: string
+  /** Server-side JSON-serialized filter configs */
+  filters?: string
 }
 
 import { CaseStage } from '@/generated/prisma/enums'
@@ -72,7 +74,11 @@ export interface Lead {
     ipdStatusUpdatedAt?: string | Date | null
     initiatedAt?: string | Date
   } | null
-  dischargeSheet?: { updatedAt?: string | Date } | null
+  dischargeSheet?: {
+    updatedAt?: string | Date
+    hospitalShareAmount?: number
+    doctorCharges?: number
+  } | null
   caseStageHistory?: { changedAt?: string | Date }[]
   caseChatMessages?: { createdAt?: string | Date }[]
   insuranceCase?: {
@@ -98,6 +104,8 @@ export interface Lead {
     bdmName?: string
     closedAt?: string | null
     updatedAt?: string | Date
+    hospitalShareAmount?: number
+    doctorCharges?: number
   }
   [key: string]: unknown
 }

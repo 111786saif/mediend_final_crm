@@ -516,7 +516,7 @@ function NavCards() {
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
         {navItems.map((item) => (
           <NavCard
-            key={item.url}
+            key={item.title}
             title={item.title}
             url={item.url}
             icon={item.icon}

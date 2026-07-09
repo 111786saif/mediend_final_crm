@@ -421,6 +421,7 @@ export async function PATCH(
       const plData = (raw.update && typeof raw.update === 'object' ? raw.update : raw) as Record<string, unknown>
       const plAllowed = [
         'month', 'admissionDate', 'surgeryDate', 'status', 'paymentType', 'approvedOrCash', 'paymentCollectedAt',
+        'cashCollectedBy',
         'managerRole', 'managerName', 'bdmName', 'patientName', 'patientPhone', 'doctorName', 'hospitalName',
         'category', 'treatment', 'circle', 'leadSource',
         'totalAmount', 'billAmount', 'cashPaidByPatient', 'cashOrDedPaid', 'referralAmount', 'cabCharges',

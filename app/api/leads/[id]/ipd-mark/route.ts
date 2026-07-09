@@ -204,6 +204,9 @@ export async function POST(
         leadUpdateData.surgeryDate = surgeryDate
         leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
         leadUpdateData.conversionDate = surgeryDate
+      } else if (data.status === 'ADMITTED_DONE') {
+        toStage = CaseStage.ADMITTED
+        leadUpdateData.caseStage = CaseStage.ADMITTED
       }
     }
 

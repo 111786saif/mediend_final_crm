@@ -60,6 +60,9 @@ JWT_SECRET=your_jwt_secret_key_here_change_in_production
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# RBAC Enable/Disable (disable for local development(true), enable for production(false))
+DISABLE_RBAC_LIMITS=true
 ```
 
 ### 3. Database Setup

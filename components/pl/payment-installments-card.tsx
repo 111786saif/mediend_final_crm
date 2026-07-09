@@ -44,11 +44,12 @@ function todayYmd(): string {
 
 interface Props {
   leadId: string
-  /** Restrict the add form to one recipient (used by doctor / hospital drill-down pages). */
   lockRecipient?: Recipient
+  doctorName?: string | null
+  hospitalName?: string | null
 }
 
-export function PaymentInstallmentsCard({ leadId, lockRecipient }: Props) {
+export function PaymentInstallmentsCard({ leadId, lockRecipient, doctorName, hospitalName }: Props) {
   const queryClient = useQueryClient()
   const [paidOn, setPaidOn] = useState(todayYmd())
   const [amount, setAmount] = useState('')
@@ -167,7 +168,8 @@ export function PaymentInstallmentsCard({ leadId, lockRecipient }: Props) {
               <SelectContent>
                 {RECIPIENTS.map((r) => (
                   <SelectItem key={r} value={r}>
-                    {r}
+                    {r === 'HOSPITAL' && hospitalName ? `HOSPITAL (${hospitalName})` :
+                     r === 'DOCTOR' && doctorName ? `DOCTOR (${doctorName})` : r}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -246,7 +248,10 @@ export function PaymentInstallmentsCard({ leadId, lockRecipient }: Props) {
                       {formatPlDate(new Date(r.paidOn))}
                     </td>
                     <td className="px-3 py-2">
-                      <Badge variant="outline">{r.recipient}</Badge>
+                      <Badge variant="outline">
+                        {r.recipient === 'HOSPITAL' && hospitalName ? `HOSPITAL (${hospitalName})` :
+                         r.recipient === 'DOCTOR' && doctorName ? `DOCTOR (${doctorName})` : r.recipient}
+                      </Badge>
                     </td>
                     <td className="px-3 py-2 text-right tabular-nums font-medium">
                       {formatPlRupee(r.amount)}

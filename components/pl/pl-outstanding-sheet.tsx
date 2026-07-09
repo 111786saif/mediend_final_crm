@@ -17,10 +17,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PaymentInstallmentsCard } from '@/components/pl/payment-installments-card'
+import { resolvePlRow } from '@/lib/pl/resolve-pl-row'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -67,6 +68,10 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
     queryFn: () => apiGet<Lead>(`/api/leads/${leadId}`),
     enabled: !!leadId && open,
   })
+
+  const resolved = useMemo(() => {
+    return record ? resolvePlRow(record as unknown as Record<string, unknown>) : null
+  }, [record])
 
   const [formData, setFormData] = useState({
     hospitalPayoutStatus: 'PENDING',
@@ -132,8 +137,8 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault()
     const payload: Record<string, unknown> = {
       hospitalPayoutStatus: formData.hospitalPayoutStatus,
       doctorPayoutStatus: formData.doctorPayoutStatus,
@@ -193,7 +198,7 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
                       </Button>
                     </div>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-violet-50/40 to-amber-50/20 dark:from-violet-950/20 dark:to-amber-950/10 rounded-b-lg">
+                  <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 bg-gradient-to-br from-violet-50/40 to-amber-50/20 dark:from-violet-950/20 dark:to-amber-950/10 rounded-b-lg">
                     <div>
                       <Label className="text-xs text-muted-foreground">Lead Ref</Label>
                       <div className="flex items-center gap-1 mt-0.5">
@@ -203,15 +208,19 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Patient</Label>
-                      <p className="font-medium">{record.patientName ?? '—'}</p>
+                      <p className="font-medium">{resolved?.patient ?? record.patientName ?? '—'}</p>
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Hospital</Label>
-                      <p className="font-medium">{record.hospitalName ?? '—'}</p>
+                      <p className="font-medium">{resolved?.hospital ?? record.hospitalName ?? '—'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Doctor</Label>
+                      <p className="font-medium">{resolved?.doctor ?? '—'}</p>
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Treatment</Label>
-                      <p className="font-medium">{record.treatment ?? '—'}</p>
+                      <p className="font-medium">{resolved?.treatment ?? record.treatment ?? '—'}</p>
                     </div>
                     <div>
                       <Label className="text-xs text-muted-foreground">Surgery date</Label>
@@ -222,7 +231,7 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
                   </CardContent>
                 </Card>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-6">
                   <Card className="overflow-hidden border-teal-200/50 shadow-sm dark:border-teal-800/35">
                     <CardHeader className="border-b bg-gradient-to-r from-teal-500/10 to-cyan-500/8">
                       <CardTitle className="text-teal-950 dark:text-teal-100">Payout Statuses</CardTitle>
@@ -333,11 +342,16 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
                     </CardContent>
                   </Card>
 
-                  <PaymentInstallmentsCard leadId={leadId} />
+                  <PaymentInstallmentsCard
+                    leadId={leadId}
+                    doctorName={resolved?.doctor}
+                    hospitalName={resolved?.hospital}
+                  />
 
                   <div className="flex gap-3 pb-4">
                     <Button
-                      type="submit"
+                      type="button"
+                      onClick={() => handleSubmit()}
                       disabled={updateMutation.isPending}
                       className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md hover:from-violet-700 hover:to-indigo-700"
                     >
@@ -348,7 +362,7 @@ export function PlOutstandingSheet({ open, onOpenChange, leadId }: PlOutstanding
                       Cancel
                     </Button>
                   </div>
-                </form>
+                </div>
               </div>
           </>
         )}
