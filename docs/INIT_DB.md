@@ -138,7 +138,24 @@ bun run sync:leads -- --from 2020-01-01
 
 ## Troubleshooting
 
-### Verify migrations are inside the Docker image
+### Access Denied after login
+
+Role permissions must be seeded **after** employees. The employee seed deletes a temporary placeholder user; if permissions were granted by that user, they are cascade-deleted.
+
+```bash
+# Fix: re-seed RBAC + role permissions (order matters)
+docker compose --profile tools run --rm init-db -- --only rbac,permissions
+```
+
+Or permissions only (if resources already exist):
+
+```bash
+docker compose --profile tools run --rm init-db -- --only permissions
+```
+
+Log out and log back in (or hard refresh) to reload the permissions cache.
+
+### Verify permissions in DB
 
 After `git pull`, always rebuild:
 

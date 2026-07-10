@@ -275,6 +275,14 @@ async function main() {
       where: { createdById: placeholder.id },
       data: { createdById: fallbackUserId },
     })
+    // PermissionAssignment.grantedById cascades on user delete — reassign before removing placeholder
+    const permReassign = await prisma.permissionAssignment.updateMany({
+      where: { grantedById: placeholder.id },
+      data: { grantedById: fallbackUserId },
+    })
+    if (permReassign.count > 0) {
+      console.log(`Reassigned grantedById on ${permReassign.count} permission row(s) to MD.`)
+    }
   }
 
   const client = await pool.connect()
@@ -287,6 +295,20 @@ async function main() {
   }
 
   console.log('CSV employee seed complete.')
+  console.log('Re-seeding role permissions (required after employee reset)...')
+  const { spawn } = await import('node:child_process')
+  await new Promise<void>((resolve, reject) => {
+    const child = spawn('bun', ['run', 'scripts/seed-role-permissions.ts'], {
+      stdio: 'inherit',
+      shell: process.platform === 'win32',
+      env: process.env,
+      cwd: process.cwd(),
+    })
+    child.on('error', reject)
+    child.on('close', (code) =>
+      code === 0 ? resolve() : reject(new Error(`seed-role-permissions exited with ${code}`))
+    )
+  })
 }
 
 main()

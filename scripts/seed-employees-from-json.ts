@@ -339,6 +339,13 @@ async function main() {
     await prisma.lead.updateMany({ where: { createdById: pid }, data: { createdById: fallbackUserId } })
     await prisma.lead.updateMany({ where: { updatedById: pid }, data: { updatedById: fallbackUserId } })
     await prisma.target.updateMany({ where: { createdById: pid }, data: { createdById: fallbackUserId } })
+    const permReassign = await prisma.permissionAssignment.updateMany({
+      where: { grantedById: pid },
+      data: { grantedById: fallbackUserId },
+    })
+    if (permReassign.count > 0) {
+      console.log(`Reassigned grantedById on ${permReassign.count} permission row(s) to MD.`)
+    }
   }
   // Remove placeholder using a single connection with FK checks disabled
   const client2 = await pool.connect()
