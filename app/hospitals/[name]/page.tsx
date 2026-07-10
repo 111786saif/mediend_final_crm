@@ -725,7 +725,7 @@ export default function HospitalDetailPage() {
               <div className="relative w-20 h-20 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90">
                   <circle className="text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
-                  <circle className="text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" stroke-dasharray="213.6" stroke-dashoffset="42.7" strokeWidth="4"></circle>
+                  <circle className="text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
                 </svg>
                 <div className="absolute flex flex-col items-center">
                   <span className="text-base font-bold text-white">80%</span>
