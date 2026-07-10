@@ -20,7 +20,7 @@ set -e
 # Usage: ./deploy.sh
 # ============================================================
 
-APP_DIR="/opt/mediend-crm/mediend-crm2"
+APP_DIR="/root/mediend.workspace"
 NGINX_CONF="/etc/nginx/conf.d/mediend-upstream.conf"
 PORT=3000
 

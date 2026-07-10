@@ -30,7 +30,7 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -52,13 +52,37 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
     profiles:
       - tools
     entrypoint: ["bun", "run", "db:seed:masters"]
+
+  # One-off: fresh production DB bootstrap (schema + baseline + RBAC + users + masters + leads).
+  # Requires employee JSON mounted; MySQL env vars in .env for lead sync.
+  #
+  # Full init:
+  #   docker compose --profile tools run --rm \
+  #     -v "/path/to/csvjson(5).json:/app/csvjson(5).json" \
+  #     init-db -- --employees-json /app/csvjson(5).json --leads-from 2020-01-01
+  #
+  # Schema + reference data only (no users/leads):
+  #   docker compose --profile tools run --rm init-db -- --skip-employees --skip-leads
+  init-db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/init-db.ts"]
 
   # One-off: run Prisma migrations (apply all pending migrations)
   # Usage: docker compose --profile tools run --rm migrate-deploy
@@ -69,7 +93,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -84,7 +108,7 @@ services:
       context: .
       dockerfile: Dockerfile.migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -99,7 +123,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -115,7 +139,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -135,7 +159,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -168,7 +192,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -184,7 +208,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -200,7 +224,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -217,7 +241,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -234,7 +258,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -250,7 +274,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -269,7 +293,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -288,7 +312,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -308,7 +332,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -330,7 +354,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -346,7 +370,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -365,7 +389,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -382,7 +406,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -410,7 +434,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -438,7 +462,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -454,7 +478,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -473,7 +497,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -488,7 +512,7 @@ services:
   fix-leave-balances:
     image: postgres:16-alpine
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -517,7 +541,7 @@ services:
   rebuild-sales-teams:
     image: postgres:16-alpine
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -540,7 +564,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -568,7 +592,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -582,7 +606,7 @@ services:
       dockerfile: Dockerfile
       target: migrate
     env_file:
-      - /opt/mediend-crm/mediend-crm2/.env
+      - /root/mediend.workspace/.env
     depends_on:
       postgres:
         condition: service_healthy

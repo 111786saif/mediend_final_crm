@@ -108,11 +108,25 @@ const roleAllowedSections: Record<string, string[]> = {
 
 async function main() {
   console.log('Fetching granter account...')
-  const defaultAdmin = await prisma.user.findFirst({
-    where: { role: 'ADMIN' },
-    select: { id: true }
-  })
-  const grantedById = defaultAdmin?.id ?? 'cmmmx97hp0015w8u8icuqm3qv'
+  const granter =
+    (await prisma.user.findFirst({
+      where: { role: 'MD' },
+      select: { id: true },
+      orderBy: { createdAt: 'asc' },
+    })) ??
+    (await prisma.user.findFirst({
+      where: { role: 'ADMIN' },
+      select: { id: true },
+      orderBy: { createdAt: 'asc' },
+    }))
+
+  if (!granter) {
+    console.error(
+      'No MD or ADMIN user found. Seed employees (or prisma/seed.ts) before running role permissions.'
+    )
+    process.exit(1)
+  }
+  const grantedById = granter.id
 
   console.log('Fetching active system resources...')
   const allResources = await prisma.resource.findMany({

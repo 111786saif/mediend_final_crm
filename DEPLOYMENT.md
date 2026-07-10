@@ -74,12 +74,12 @@ ufw allow 22 && ufw allow 80 && ufw allow 443 && ufw enable
 ### Step 2: Clone Repo and Setup Environment
 
 ```bash
-mkdir -p /opt/mediend-crm
-cd /opt/mediend-crm
-git clone https://github.com/YOUR-ORG/mediend-crm-v2.git .
+mkdir -p /root/mediend.workspace
+cd /root/mediend.workspace
+git clone https://github.com/YOUR-ORG/mediend.workspace.git .
 
-# Create production env file
-nano .env.production
+# Create production env file (referenced by docker-compose.yml)
+nano .env
 ```
 
 Required environment variables:
@@ -189,7 +189,7 @@ Add these lines (replace YOUR_CRON_SECRET with actual value from .env.production
 ### Step 5: First Deployment
 
 ```bash
-cd /opt/mediend-crm
+cd /root/mediend.workspace
 docker compose up -d
 
 # Check status
@@ -244,15 +244,33 @@ Auto-refresh available (5-second interval).
 
 ## Database: What to run on the server
 
-The app uses **Prisma `db push`** (no migration history in this repo). Schema is applied automatically when the container starts.
+Production uses **Prisma Migrate** with a single squashed init migration (`20260710120000_init`). See **[docs/INIT_DB.md](docs/INIT_DB.md)** for the full bootstrap guide.
 
-### On each deploy
+### Fresh database (first-time prod)
 
-- **Schema**: Applied automatically by the Dockerfile (`prisma db push` then start the app). No manual step.
-- **Optional first-time or after schema changes**: If you ever run the app without the Docker CMD (e.g. manual start), run once:
-  ```bash
-  docker compose exec app bunx prisma db push
-  ```
+```bash
+docker compose --profile tools run --rm --build \
+  -v "/path/to/csvjson(5).json:/app/csvjson(5).json" \
+  init-db -- \
+  --employees-json /app/csvjson(5).json \
+  --leads-from 2020-01-01
+```
+
+This applies schema, baseline data, RBAC, users, masters, and MySQL leads in one flow.
+
+### Schema only (migrations on existing empty DB)
+
+```bash
+docker compose --profile tools run --rm migrate-deploy
+```
+
+### On each deploy (existing DB with migration history)
+
+After the first init, routine deploys only rebuild the app — **no** automatic migration. When new migrations are added:
+
+```bash
+docker compose --profile tools run --rm migrate-deploy
+```
 
 ### One-time data migration (case stages v2)
 
@@ -278,17 +296,12 @@ DATABASE_URL="postgresql://user:pass@localhost:5432/mediend_crm" bun run migrate
 
 Use `migrate:case-stages` for initial stage assignment; use `migrate:case-stages-v2` when migrating from the old enum values to the new workflow (KYP_BASIC_*, KYP_DETAILED_*, etc.).
 
-### First-time only: seed
+### Incremental seeds (after init)
 
 ```bash
-docker compose exec app npx prisma db seed
+docker compose --profile tools run --rm seed-treatments
+docker compose --profile tools run --rm sync-attendance -- --from 2025-01-01
 ```
-
-### If you switch to Prisma Migrate later
-
-1. Locally: `bunx prisma migrate dev --name init` (creates `prisma/migrations/`), then commit it.
-2. Change Dockerfile CMD to: `bunx prisma migrate deploy && node server.js`.
-3. On server: future deploys will apply new migrations on startup.
 
 ## Database Backups
 
