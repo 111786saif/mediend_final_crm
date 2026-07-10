@@ -130,6 +130,24 @@ services:
     profiles:
       - tools
 
+  # One-off: seed users/employees from CSV backup (employee-backup-supabase.csv)
+  # Usage: docker compose --profile tools run --rm \
+  #   -v "/root/mediend.workspace/scripts/db/employee-backup-supabase.csv:/app/employees.csv" \
+  #   seed-csv /app/employees.csv
+  seed-csv:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    env_file:
+      - /root/mediend.workspace/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+    entrypoint: ["bun", "run", "scripts/seed-employees-from-csv.ts"]
+
   # One-off: seed users/employees from JSON and update BD number map
   # Usage: docker compose --profile tools run --rm -v "$(pwd)/csvjson(5).json:/app/csvjson(5).json" seed
   # Or with custom path: docker compose --profile tools run --rm -v "$(pwd)/path/to/file.json:/app/employees.json" seed npx tsx scripts/seed-employees-from-json.ts /app/employees.json

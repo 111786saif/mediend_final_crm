@@ -31,6 +31,7 @@
     "fix:lead-mappings": "tsx scripts/fix-existing-lead-mappings.ts",
     "fix:lead-categories-circles": "bun run scripts/fix-lead-categories-circles.ts",
     "seed:employees": "bun scripts/seed-employees-from-json.ts",
+    "seed:employees:csv": "bun scripts/seed-employees-from-csv.ts",
     "seed:leads": "tsx prisma/seed-leads.ts",
     "db:seed:masters": "tsx prisma/seed-masters.ts",
     "db:seed:insurance-tpa": "tsx scripts/seed-insurance-tpa.ts"

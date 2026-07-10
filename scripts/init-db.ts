@@ -146,11 +146,33 @@ async function main() {
         break
 
       case 'employees': {
-        const jsonPath = employeesJson || path.join(process.cwd(), 'csvjson(5).json')
+        const csvPath = employeesJson.endsWith('.csv') ? employeesJson : ''
+        const jsonPath = employeesJson && !csvPath
+          ? employeesJson
+          : employeesJson || path.join(process.cwd(), 'csvjson(5).json')
+        const defaultCsv = path.join(process.cwd(), 'scripts/db/employee-backup-supabase.csv')
+
+        if (csvPath) {
+          if (!existsSync(csvPath)) {
+            console.error(`Employee CSV not found: ${csvPath}`)
+            process.exit(1)
+          }
+          await runBunScript('scripts/seed-employees-from-csv.ts', [csvPath])
+          break
+        }
+
+        if (existsSync(defaultCsv)) {
+          console.log(`Using default CSV: ${defaultCsv}`)
+          await runBunScript('scripts/seed-employees-from-csv.ts', [defaultCsv])
+          break
+        }
+
         if (!existsSync(jsonPath)) {
           console.error(
-            `Employee JSON not found: ${jsonPath}\n` +
-              'Pass --employees-json <path> or mount the file in Docker.'
+            `Employee file not found.\n` +
+              `  Tried CSV: ${defaultCsv}\n` +
+              `  Tried JSON: ${jsonPath}\n` +
+              'Pass --employees-json <path> (JSON or CSV) or mount the file in Docker.'
           )
           process.exit(1)
         }
