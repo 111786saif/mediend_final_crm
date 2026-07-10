@@ -160,7 +160,6 @@ async function resetUsersAndEmployees(placeholderId: string) {
     await client.query('DELETE FROM "PreAuthorization"')
     await client.query('DELETE FROM "PLRecord"')
     await client.query('DELETE FROM "Employee"')
-    await client.query('DELETE FROM "Team"')
     await client.query('DELETE FROM "User" WHERE id != $1', [placeholderId])
     await client.query('SET session_replication_role = DEFAULT')
   } finally {

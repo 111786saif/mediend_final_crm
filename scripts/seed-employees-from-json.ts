@@ -174,7 +174,6 @@ async function main() {
     await client.query('DELETE FROM "PreAuthorization"')
     await client.query('DELETE FROM "PLRecord"')
     await client.query('DELETE FROM "Employee"')
-    await client.query('DELETE FROM "Team"')
     await client.query('DELETE FROM "User" WHERE id != $1', [pid])
 
     await client.query('SET session_replication_role = DEFAULT')
