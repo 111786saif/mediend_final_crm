@@ -6,6 +6,26 @@ import { prisma } from './prisma'
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
 const SESSION_COOKIE_NAME = 'mediend_session'
 
+/** Secure cookies require HTTPS. Override with COOKIE_SECURE=false for HTTP/IP testing. */
+function sessionCookieSecure(): boolean {
+  if (process.env.COOKIE_SECURE === 'true') return true
+  if (process.env.COOKIE_SECURE === 'false') return false
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ''
+  if (appUrl.startsWith('https://')) return true
+  if (appUrl.startsWith('http://')) return false
+  return process.env.NODE_ENV === 'production'
+}
+
+function sessionCookieOptions() {
+  return {
+    httpOnly: true,
+    secure: sessionCookieSecure(),
+    sameSite: 'lax' as const,
+    maxAge: 60 * 60 * 24 * 7,
+    path: '/',
+  }
+}
+
 export interface SessionToken {
   userId: string
   email: string
@@ -24,13 +44,7 @@ export async function createSession(user: SessionUser): Promise<string> {
   )
 
   const cookieStore = await cookies()
-  cookieStore.set(SESSION_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    path: '/',
-  })
+  cookieStore.set(SESSION_COOKIE_NAME, token, sessionCookieOptions())
 
   return token
 }
@@ -75,7 +89,7 @@ export async function getSessionWithFreshUser(): Promise<SessionUser | null> {
 
 export async function destroySession(): Promise<void> {
   const cookieStore = await cookies()
-  cookieStore.delete(SESSION_COOKIE_NAME)
+  cookieStore.set(SESSION_COOKIE_NAME, '', { ...sessionCookieOptions(), maxAge: 0 })
 }
 
 export function getSessionFromRequest(request: Request): SessionUser | null {
@@ -92,7 +106,7 @@ export function getSessionFromRequest(request: Request): SessionUser | null {
       const eqIdx = cookie.indexOf('=')
       if (eqIdx === -1) return acc
       const key = cookie.slice(0, eqIdx).trim()
-      const value = cookie.slice(eqIdx + 1)
+      const value = decodeURIComponent(cookie.slice(eqIdx + 1).trim())
       acc[key] = value
       return acc
     }, {} as Record<string, string>)

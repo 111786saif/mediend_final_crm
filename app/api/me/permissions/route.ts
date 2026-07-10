@@ -23,9 +23,9 @@ export async function GET(request: NextRequest) {
       return successResponse({ permissions })
     }
 
-    // 2. Fetch user-level assignments
+    // 2. Fetch user-level assignments only (not role rows)
     const userAssignments = await prisma.permissionAssignment.findMany({
-      where: { userId: user.id },
+      where: { userId: user.id, subjectType: SubjectType.USER },
       select: { resourceId: true, permissionLevel: true, canGrant: true },
     })
 

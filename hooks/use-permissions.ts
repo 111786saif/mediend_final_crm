@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
+import { useAuth } from '@/hooks/use-auth'
 export type PermissionLevel = 'NONE' | 'READ' | 'READ_WRITE' | 'READ_WRITE_DELETE' | 'FULL_ACCESS'
 
 export const PermissionLevel = {
@@ -21,25 +22,34 @@ const PERMISSION_RANKS: Record<PermissionLevel, number> = {
 }
 
 export function usePermissions() {
-  const activeRole = typeof window !== 'undefined' ? localStorage.getItem('mediend_tester_active_role') : null
+  const { user } = useAuth()
+  const activeRole =
+    user?.role === 'TESTER' && typeof window !== 'undefined'
+      ? localStorage.getItem('mediend_tester_active_role')
+      : null
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['me', 'permissions', activeRole],
+  const { data, isLoading, error, isFetching } = useQuery({
+    queryKey: ['me', 'permissions', user?.id, activeRole],
+    enabled: !!user?.id,
     queryFn: () => {
       const url = activeRole ? `/api/me/permissions?role=${activeRole}` : '/api/me/permissions'
       return apiGet<{ permissions: Record<string, { level: PermissionLevel; canGrant: boolean }> }>(url)
     },
-    staleTime: 5 * 60 * 1000, // Cache permissions for 5 minutes
-    refetchOnWindowFocus: false,
+    staleTime: 60_000,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
   })
 
   const permissions = data?.permissions ?? {}
+  const permissionsReady = !!user?.id && !!data && !isFetching
 
   /**
    * Check if the user has access to a resource key at the required permission level.
    * Centralized evaluation logic.
    */
   const hasAccess = (resourceKey: string, requiredLevel: PermissionLevel = PermissionLevel.READ): boolean => {
+    if (!permissionsReady) return true
+
     const userPerm = permissions[resourceKey]
     if (!userPerm) return false
 
@@ -52,7 +62,8 @@ export function usePermissions() {
   return {
     permissions,
     hasAccess,
-    isLoading: isLoading && !data, // Only consider loading if we don't have cached data yet
+    isLoading: !!user?.id && (isLoading || isFetching) && !data,
+    permissionsReady,
     error,
   }
 }
