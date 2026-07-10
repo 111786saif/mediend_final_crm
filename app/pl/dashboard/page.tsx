@@ -12,6 +12,7 @@ import { ColumnFilter } from '@/components/ui/column-filter'
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
+import { usePermissions } from '@/hooks/use-permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   DropdownMenu,
@@ -152,6 +153,7 @@ function loadColVisibility(): Record<string, boolean> {
 }
 
 export default function PLLedgerPage() {
+  const { hasAccess, permissions } = usePermissions()
   const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
   const [visibleCols, setVisibleCols] = useState<Record<string, boolean>>(DEFAULT_COLS)
@@ -571,7 +573,7 @@ export default function PLLedgerPage() {
 
   const columns = useMemo<ColumnDef<any>[]>(() => {
     const paidBy = (v: unknown) => (v === 'HOSPITAL' ? 'Hospital' : v === 'MEDIEND' ? 'Mediend' : '—')
-    return [
+    const cols: ColumnDef<any>[] = [
       {
         id: 'leadRef',
         header: 'Lead ref',
@@ -1035,6 +1037,44 @@ export default function PLLedgerPage() {
         ),
       },
     ]
+
+    return cols.filter((col) => {
+      let colId = col.id || (col as any).accessorKey
+      if (!colId) return true
+      
+      // Handle special mappings to match resourceMap.ts
+      if (colId === 'leadReceived') colId = 'lead_received'
+      else if (colId === 'admissionDate') colId = 'admission_date'
+      else if (colId === 'surgeryDate') colId = 'surgery_date'
+      else if (colId === 'paymentType') colId = 'payment_type'
+      else if (colId === 'outstandingStatus') colId = 'outstanding_status'
+      else if (colId === 'totalBill') colId = 'total_bill'
+      else if (colId === 'approvedAmount') colId = 'approved_amount'
+      else if (colId === 'deductionTotal') colId = 'deduction_total'
+      else if (colId === 'deductionPatient') colId = 'deduction_patient'
+      else if (colId === 'deductionWaived') colId = 'deduction_waived'
+      else if (colId === 'amountPaid') colId = 'amount_paid'
+      else if (colId === 'hospitalSharePct') colId = 'hospital_share_pct'
+      else if (colId === 'hospitalShareAmt') colId = 'hospital_share_amt'
+      else if (colId === 'doctorCharges') colId = 'doctor_charges'
+      else if (colId === 'implantPaidBy') colId = 'implant_paid_by'
+      else if (colId === 'instrumentsPaidBy') colId = 'instruments_paid_by'
+      else if (colId === 'actualImplantCost') colId = 'actual_implant_cost'
+      else if (colId === 'actualInstrumentCost') colId = 'actual_instrument_cost'
+      else if (colId === 'hospitalRecoverAmount') colId = 'hospital_recover_amount'
+      else if (colId === 'mediendSharePct') colId = 'mediend_share_pct'
+      else if (colId === 'mediendShareAmt') colId = 'mediend_share_amt'
+      else if (colId === 'netProfit') colId = 'net_profit'
+      else if (colId === 'mediendProfit') colId = 'mediend_profit'
+      else if (colId === 'hospPayout') colId = 'hosp_payout'
+      else if (colId === 'docPayout') colId = 'doc_payout'
+      
+      const resourceKey = `insurance_pl.pl_ledger.table.dischargeSheet.column.${colId}`
+      if (permissions && resourceKey in permissions) {
+        return hasAccess(resourceKey, 'READ')
+      }
+      return true
+    })
   }, [
     filterOptions,
     bdFilter,
@@ -1056,6 +1096,8 @@ export default function PLLedgerPage() {
     hospPayoutFilter,
     docPayoutFilter,
     invoiceFilter,
+    hasAccess,
+    permissions
   ])
 
   return (

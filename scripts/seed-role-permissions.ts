@@ -5,11 +5,11 @@ import { SubjectType, PermissionLevel } from '../generated/prisma/client'
 // Predefined allowed sections/pages for each role
 const roleAllowedSections: Record<string, string[]> = {
   MD: [
-    'main.home', 'main.md_home', 'main.tasks', 'main.calendar', 'main.meets', 
-    'main.dashboard', 'main.finance_dashboard', 'main.md_hr_dashboard', 'main.md_attendance', 
-    'main.md_leave_balances', 'main.master_data', 'main.dept_targets', 'main.chat', 
-    'main.md_messages', 'main.md_appointments', 'main.company_pnl', 'main.targeted_pnl', 
-    'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue', 'main.it_permissions', 
+    'main.home', 'main.md_home', 'main.tasks', 'main.calendar', 'main.meets',
+    'main.dashboard', 'main.finance_dashboard', 'main.md_hr_dashboard', 'main.md_attendance',
+    'main.md_leave_balances', 'main.master_data', 'main.dept_targets', 'main.chat',
+    'main.md_messages', 'main.md_appointments', 'main.company_pnl', 'main.targeted_pnl',
+    'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue', 'main.it_permissions',
     'main.compliance', 'main.md_compliance', 'main.md_outstanding',
     'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
@@ -25,8 +25,8 @@ const roleAllowedSections: Record<string, string[]> = {
     'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions' // TESTER gets all
   ],
   EXECUTIVE_ASSISTANT: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 
-    'main.md_hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org', 
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
+    'main.md_hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org',
     'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_dashboard', 'sales.case_tracker'
@@ -57,7 +57,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   PL_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'sales.case_tracker', 'main.master_data', 'main.chat',
     'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.cash_cases', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_pnl'
@@ -144,8 +144,8 @@ async function main() {
 
   for (const [role, allowedKeys] of Object.entries(roleAllowedSections)) {
     const allowedResources = allResources.filter((res) => {
-      return allowedKeys.some((allowedKey) => 
-        res.key === allowedKey || 
+      return allowedKeys.some((allowedKey) =>
+        res.key === allowedKey ||
         res.key.startsWith(allowedKey + '.') ||
         allowedKey.startsWith(res.key + '.')
       )
@@ -154,7 +154,7 @@ async function main() {
     const canGrant = role === 'ADMIN' || role === 'MD'
 
     console.log(`Setting up ${allowedResources.length} assignments for role: ${role}...`)
-    
+
     for (const res of allowedResources) {
       await prisma.permissionAssignment.create({
         data: {

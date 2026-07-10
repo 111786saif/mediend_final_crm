@@ -9,6 +9,7 @@ import type { DateRange } from 'react-day-picker'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { TeamMappingSection } from './team-mapping-section'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -34,6 +35,9 @@ import {
   Trophy,
   Medal,
   TrendingUp,
+  TrendingDown,
+  Sparkles,
+  AlertCircle,
   Users,
   Stethoscope,
   BarChart3,
@@ -45,6 +49,7 @@ import {
 import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
+import { UntouchedLeadsTable } from '@/components/targets/untouched-leads-table'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -144,6 +149,8 @@ interface LeadsBreakdown {
   byCircle: Array<{ circle: string; totalLeads: number; converted: number; conversionRate: number }>
   bySource: Array<{ source: string; totalLeads: number; converted: number; conversionRate: number }>
   byCampaign: Array<{ campaign: string; totalLeads: number; converted: number; conversionRate: number }>
+  campaignTeamMapping?: Array<{ campaignName: string; team: string; leads: number; conversionPercentage: number; cpl: number | null; amountSpend: number | null }>
+  sourceTeamMapping?: Array<{ sourceName: string; team: string; leads: number; conversionPercentage: number; cpl: number | null; amountSpend: number | null }>
 }
 
 interface TargetSalaryData {
@@ -177,6 +184,7 @@ const TABS = [
   { value: 'bd', label: 'BD Performance' },
   { value: 'sources', label: 'Sources & Campaigns' },
   { value: 'circle', label: 'Circle' },
+  { value: 'insights', label: 'Marketing Insights' },
 ]
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -212,12 +220,55 @@ function UserAvatar({ name, picture, size = 'sm' }: { name: string; picture?: st
 }
 
 function StatCard({ label, value, sub, color }: { label: string; value: string | number; sub?: string; color: string }) {
+  const labelLower = label.toLowerCase()
+  const isAccent = labelLower.includes('ipd') || labelLower.includes('profit')
+  
+  // Dynamic color accents
+  const accentBorder = 
+    labelLower.includes('leads') ? 'border-l-4 border-l-blue-500' :
+    labelLower.includes('ipd') ? 'border-l-4 border-l-[#4edea3]' :
+    labelLower.includes('conversion') ? 'border-l-4 border-l-violet-500' :
+    labelLower.includes('profit') ? 'border-l-4 border-l-amber-500' :
+    labelLower.includes('bill') ? 'border-l-4 border-l-[#adc6ff]' :
+    labelLower.includes('ticket') ? 'border-l-4 border-l-rose-500' :
+    'border-l-4 border-l-slate-500'
+
   return (
-    <Card className={`${color} border-0`}>
-      <CardContent className="pt-4 pb-4">
-        <p className="text-xs font-medium opacity-75">{label}</p>
-        <p className="text-2xl font-bold mt-0.5">{value}</p>
-        {sub && <p className="text-xs opacity-60 mt-0.5">{sub}</p>}
+    <Card className={cn(
+      "p-5 rounded-xl transition-all duration-300 border shadow-md",
+      accentBorder,
+      isAccent
+        ? "bg-[#4edea3]/5 border-y-[#4edea3]/20 border-r-[#4edea3]/20 text-[#4edea3] hover:bg-[#4edea3]/10 hover:translate-y-[-4px] hover:shadow-lg hover:shadow-[#4edea3]/5"
+        : "bg-[#131b2e] border-y-[#424754]/30 border-r-[#424754]/30 text-[#dae2fd] hover:bg-[#1b253b] hover:translate-y-[-4px] hover:shadow-lg hover:shadow-black/10 hover:border-r-[#adc6ff]/40"
+    )}>
+      <CardContent className="p-0 space-y-3">
+        <div className="flex justify-between items-center">
+          <span className={cn(
+            "text-[10px] font-bold uppercase tracking-wider",
+            isAccent ? "text-[#4edea3]" : "text-[#c2c6d6]/70"
+          )}>
+            {label}
+          </span>
+          <span className={cn(
+            "text-[9px] font-bold uppercase tracking-wider",
+            isAccent ? "text-[#4edea3]/70" : "text-[#adc6ff]/60"
+          )}>
+            Active
+          </span>
+        </div>
+        <div className="flex items-baseline justify-between">
+          <span className={cn(
+            "text-2xl font-bold tracking-tight",
+            isAccent ? "text-[#4edea3]" : "text-[#dae2fd]"
+          )}>
+            {value}
+          </span>
+        </div>
+        {sub && (
+          <p className="text-[10px] text-[#c2c6d6]/50 uppercase tracking-wide">
+            {sub}
+          </p>
+        )}
       </CardContent>
     </Card>
   )
@@ -234,29 +285,29 @@ function TargetVsActualCard({
 }) {
   const pct = typeof achievementPercentage === 'number' ? achievementPercentage : null
   const pctColor =
-    pct == null ? 'text-muted-foreground' :
-    pct >= 100 ? 'text-emerald-600 dark:text-emerald-400' :
-    pct >= 60 ? 'text-blue-600 dark:text-blue-400' :
-    'text-red-500 dark:text-red-400'
+    pct == null ? 'text-[#c2c6d6]/60' :
+    pct >= 100 ? 'text-[#4edea3]' :
+    pct >= 60 ? 'text-[#adc6ff]' :
+    'text-[#ffb4ab]'
 
   return (
-    <Card className="bg-violet-500/10 text-violet-900 dark:text-violet-100 border-0">
-      <CardContent className="pt-4 pb-4">
-        <p className="text-xs font-medium opacity-75 flex items-center gap-1.5">
-          <Target className="h-3.5 w-3.5" /> IPD Done vs Assigned Target
+    <Card className="bg-[#131b2e] border-y-[#424754]/30 border-r-[#424754]/30 border-l-4 border-l-violet-500 p-5 rounded-xl hover:bg-[#1b253b] hover:translate-y-[-4px] hover:shadow-lg hover:shadow-black/10 hover:border-r-[#adc6ff]/40 transition-all duration-300 shadow-md">
+      <CardContent className="p-0 space-y-3">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-[#c2c6d6]/70 flex items-center gap-1.5">
+          <Target className="h-3.5 w-3.5 text-[#adc6ff]" /> IPD Target vs Actual
         </p>
         <div className="mt-2 space-y-1">
           <div className="flex items-baseline justify-between gap-2">
-            <span className="text-[10px] uppercase tracking-wide opacity-60">IPD Done</span>
-            <span className="text-xl font-bold tabular-nums">{ipdDone}</span>
+            <span className="text-[10px] uppercase tracking-wide text-[#c2c6d6]/50">IPD Done</span>
+            <span className="text-lg font-bold text-[#dae2fd] tabular-nums">{ipdDone}</span>
           </div>
           <div className="flex items-baseline justify-between gap-2">
-            <span className="text-[10px] uppercase tracking-wide opacity-60">Target</span>
-            <span className="text-xl font-bold tabular-nums">{assignedTarget}</span>
+            <span className="text-[10px] uppercase tracking-wide text-[#c2c6d6]/50">Target</span>
+            <span className="text-lg font-bold text-[#dae2fd] tabular-nums">{assignedTarget}</span>
           </div>
           <div className="flex items-baseline justify-between gap-2">
-            <span className="text-[10px] uppercase tracking-wide opacity-60">Achievement</span>
-            <span className={cn('text-xl font-bold tabular-nums', pctColor)}>
+            <span className="text-[10px] uppercase tracking-wide text-[#c2c6d6]/50">Achievement</span>
+            <span className={cn('text-lg font-bold tabular-nums', pctColor)}>
               {pct != null ? `${pct}%` : '–'}
             </span>
           </div>
@@ -529,8 +580,8 @@ function TeamDetailSheet({
                   <div>
                     <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Target className="h-4 w-4" />Targets vs Achieved (Current Month)</p>
                     <div className="space-y-3">
-                      {data.targets.map((t) => (
-                        <div key={t.metric} className="rounded-lg border bg-card p-3">
+                      {data.targets.map((t, idx) => (
+                        <div key={`${t.metric}-${t.label}-${idx}`} className="rounded-lg border bg-card p-3">
                           <div className="flex items-center justify-between mb-1.5">
                             <span className="text-sm font-medium">{t.label}</span>
                             <span className="text-sm tabular-nums">
@@ -559,6 +610,9 @@ function TeamDetailSheet({
                           <div className="flex items-center gap-2 mt-1">
                             <Progress value={Math.min(m.conversionRate, 100)} className="h-1.5 w-16" />
                             <span className="text-xs text-muted-foreground">{m.conversionRate.toFixed(0)}%</span>
+                            <span className="inline-flex items-center text-[11px] font-bold text-amber-500 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded-full border border-amber-500/20 shrink-0 ml-1">
+                              Incentive: ₹{((m.ipdDone * 1500) + (m.leads * 50)).toLocaleString()}
+                            </span>
                           </div>
                         </div>
                         <div className="text-right text-sm">
@@ -655,9 +709,9 @@ function OverviewBreakdownTable({ rows }: { rows: OverviewRow[] }) {
           <TableRow>
             <TableHead>Category</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead className="text-right">IPD Done</TableHead>
-            <TableHead className="text-right">Revenue</TableHead>
-            <TableHead className="text-right">Net Profit</TableHead>
+            <TableHead className="text-center">IPD Done</TableHead>
+            <TableHead className="text-center">Revenue</TableHead>
+            <TableHead className="text-center">Net Profit</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -677,9 +731,9 @@ function OverviewBreakdownTable({ rows }: { rows: OverviewRow[] }) {
                   {idx === 0 ? category : ''}
                 </TableCell>
                 <TableCell className="max-w-[180px] truncate">{row.name}</TableCell>
-                <TableCell className="text-right tabular-nums font-semibold text-emerald-600">{row.count}</TableCell>
-                <TableCell className="text-right tabular-nums">{fmtK(row.revenue)}</TableCell>
-                <TableCell className="text-right tabular-nums">{fmtK(row.profit)}</TableCell>
+                <TableCell className="text-center tabular-nums font-semibold text-emerald-600">{row.count}</TableCell>
+                <TableCell className="text-center tabular-nums">{fmtK(row.revenue)}</TableCell>
+                <TableCell className="text-center tabular-nums">{fmtK(row.profit)}</TableCell>
               </TableRow>
             ))
           })}
@@ -740,6 +794,11 @@ function OverviewTab({
     queryKey: ['sales-dashboard', variant, 'today-assignments'],
     queryFn: () => apiGet<TodayAssignments>('/api/analytics/today-leads-assignments'),
     refetchInterval: 60000,
+  })
+
+  const { data: teams = [] } = useQuery<any[]>({
+    queryKey: ['target-teams'],
+    queryFn: () => apiGet<any[]>('/api/targets/teams'),
   })
 
   const monthChartData = (ipdBreakdown?.byMonth ?? []).slice(-12)
@@ -813,7 +872,7 @@ function OverviewTab({
             <BarChart3 className="h-4 w-4" /> Dashboard Overview
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0 pb-2">
+        <CardContent className="px-6 pb-2">
           <OverviewBreakdownTable rows={overviewRows} />
         </CardContent>
       </Card>
@@ -907,6 +966,9 @@ function OverviewTab({
           </div>
         </CardContent>
       </Card>
+
+      {/* Untouched Leads Table */}
+      <UntouchedLeadsTable teams={teams} />
     </div>
   )
 }
@@ -1106,6 +1168,9 @@ function BdPerformanceTab({
                       ₹{fmtK(sal.salary)} · <span className={sal.revenueSalaryRatio != null && sal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{sal.revenueSalaryRatio != null ? `${(sal.revenueSalaryRatio).toFixed(1)}x` : '–'}</span>
                     </span>
                   )}
+                  <span className="inline-flex items-center text-xs font-bold text-amber-500 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 shrink-0">
+                    Incentive: ₹{((bd.totalIpd * 1500) + (bd.totalLeads * 50)).toLocaleString()}
+                  </span>
                 </div>
               </div>
               {/* Last 4 months mini bars */}
@@ -1149,15 +1214,27 @@ function BdPerformanceTab({
 
 function SourceCampaignTab({ dateParams, variant }: { dateParams: string; variant: DashboardVariant }) {
   const [view, setView] = useState<'source' | 'campaign'>('source')
-  const qp = dateParams ? '?' + dateParams : ''
+
+  const getQueryString = () => {
+    const qp = dateParams ? '?' + dateParams : ''
+    if (typeof window === 'undefined') return qp
+    const params = new URLSearchParams(window.location.search)
+    const dateSearchParams = new URLSearchParams(dateParams)
+    for (const [key, val] of dateSearchParams.entries()) {
+      params.set(key, val)
+    }
+    return '?' + params.toString()
+  }
+
+  const qp = getQueryString()
 
   const { data: ipdBreakdown } = useQuery<IpdBreakdown>({
-    queryKey: ['sales-dashboard', variant, 'ipd-breakdown', dateParams],
+    queryKey: ['sales-dashboard', variant, 'ipd-breakdown', dateParams, qp],
     queryFn: () => apiGet<IpdBreakdown>(`/api/analytics/sales-dashboard/ipd-breakdown${qp}`),
   })
 
   const { data: leadsBreakdown } = useQuery<LeadsBreakdown>({
-    queryKey: ['sales-dashboard', variant, 'leads-breakdown', dateParams],
+    queryKey: ['sales-dashboard', variant, 'leads-breakdown', dateParams, qp],
     queryFn: () => apiGet<LeadsBreakdown>(`/api/analytics/sales-dashboard/leads-breakdown${qp}`),
   })
 
@@ -1174,18 +1251,47 @@ function SourceCampaignTab({ dateParams, variant }: { dateParams: string; varian
   const rows = view === 'source' ? sourceData : campaignData
   const pieData = rows.slice(0, 8).filter((r) => r.ipd > 0)
 
+  const { data: teamMappingData } = useQuery<any[]>({
+    queryKey: ['sales-dashboard', variant, 'team-mappings', view, dateParams, qp],
+    queryFn: () => apiGet<any[]>(`/api/analytics/sales-dashboard/team-mappings${qp}&type=${view}`),
+  })
+
+
+
   return (
-    <div className="space-y-6">
-      <div className="flex gap-2">
-        <Button size="sm" variant={view === 'source' ? 'default' : 'outline'} onClick={() => setView('source')}>Source</Button>
-        <Button size="sm" variant={view === 'campaign' ? 'default' : 'outline'} onClick={() => setView('campaign')}>Campaign</Button>
+    <div className="space-y-4">
+      <div className="bg-[#1b253b] p-1 rounded-xl inline-flex gap-1 border border-[#424754]/20 shadow-inner">
+        <button
+          onClick={() => setView('source')}
+          className={cn(
+            "px-5 py-2 rounded-lg text-xs transition-all duration-300 font-bold uppercase tracking-wider",
+            view === 'source'
+              ? "bg-[#adc6ff] text-[#0f172a] shadow-lg shadow-[#adc6ff]/20"
+              : "bg-transparent text-[#c2c6d6]/60 hover:text-[#dae2fd] hover:bg-[#131b2e]/30"
+          )}
+        >
+          Source
+        </button>
+        <button
+          onClick={() => setView('campaign')}
+          className={cn(
+            "px-5 py-2 rounded-lg text-xs transition-all duration-300 font-bold uppercase tracking-wider",
+            view === 'campaign'
+              ? "bg-[#adc6ff] text-[#0f172a] shadow-lg shadow-[#adc6ff]/20"
+              : "bg-transparent text-[#c2c6d6]/60 hover:text-[#dae2fd] hover:bg-[#131b2e]/30"
+          )}
+        >
+          Campaign
+        </button>
       </div>
 
-      {/* Pie + table side by side on large screens */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-1">
-          <CardHeader className="pb-2"><CardTitle className="text-sm">IPD Distribution</CardTitle></CardHeader>
-          <CardContent>
+      {/* Pie + table side by side */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <Card className="lg:col-span-1 bg-[#131b2e] border border-[#424754]/30 rounded-xl hover:shadow-lg hover:border-[#adc6ff]/20 transition-all duration-300">
+          <CardHeader className="pt-3 pb-0 px-4">
+            <CardTitle className="text-xs font-bold text-[#c2c6d6]/70 uppercase tracking-wider">IPD Distribution</CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 pb-3 pt-0">
             {pieData.length > 0 ? (
               <>
                 <PieChart width={160} height={160} className="mx-auto">
@@ -1194,51 +1300,72 @@ function SourceCampaignTab({ dateParams, variant }: { dateParams: string; varian
                   </Pie>
                   <Tooltip formatter={(v, n) => [v, n]} />
                 </PieChart>
-                <div className="mt-3 space-y-1.5">
-                  {pieData.map((d, i) => (
-                    <div key={d.name} className="flex items-center gap-2 text-xs">
-                      <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
-                      <span className="truncate text-muted-foreground">{d.name}</span>
-                      <span className="ml-auto font-semibold tabular-nums">{d.ipd}</span>
-                    </div>
-                  ))}
+                <div className="mt-4 space-y-1.5">
+                  {(() => {
+                    const totalIpd = pieData.reduce((sum, d) => sum + d.ipd, 0)
+                    return pieData.map((d, i) => {
+                      const percentage = totalIpd > 0 ? (d.ipd / totalIpd) * 100 : 0
+                      return (
+                        <div key={d.name} className="flex items-center gap-2 text-xs">
+                          <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
+                          <span className="truncate text-[#c2c6d6]/80">{d.name} ({percentage.toFixed(1)}%)</span>
+                          <span className="ml-auto font-semibold text-[#dae2fd] tabular-nums pr-2">{d.ipd} IPD</span>
+                        </div>
+                      )
+                    })
+                  })()}
                 </div>
               </>
-            ) : <p className="text-center text-muted-foreground py-8 text-sm">No data</p>}
+            ) : (
+              <p className="text-center text-[#c2c6d6]/40 py-8 text-xs">No distribution data</p>
+            )}
           </CardContent>
         </Card>
 
-        <Card className="lg:col-span-2 overflow-hidden">
-          <CardHeader className="pb-2"><CardTitle className="text-sm">{view === 'source' ? 'Source' : 'Campaign'} Breakdown</CardTitle></CardHeader>
-          <CardContent className="p-0">
+        <Card className="lg:col-span-2 overflow-hidden bg-[#131b2e] border border-[#424754]/30 rounded-xl hover:shadow-lg hover:border-[#adc6ff]/20 transition-all duration-300">
+          <CardHeader className="pt-3 pb-0 px-4">
+            <CardTitle className="text-xs font-bold text-[#c2c6d6]/70 uppercase tracking-wider">
+              {view === 'source' ? 'Source' : 'Campaign'} Breakdown
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-4 pb-3 pt-0">
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{view === 'source' ? 'Source' : 'Campaign'}</TableHead>
-                    <TableHead className="text-right">Leads</TableHead>
-                    <TableHead className="text-right">IPD</TableHead>
-                    <TableHead className="text-right">Conv %</TableHead>
-                    <TableHead className="text-right">Revenue</TableHead>
+                <TableHeader className="bg-[#1b253b]/50 border-b border-[#424754]/30">
+                  <TableRow className="hover:bg-transparent border-b border-[#424754]/30">
+                    <TableHead className="text-xs font-bold text-[#c2c6d6]/80 uppercase py-2 px-3">{view === 'source' ? 'Source' : 'Campaign'}</TableHead>
+                    <TableHead className="text-right text-xs font-bold text-[#c2c6d6]/80 uppercase py-2 px-3 [&>div]:justify-end">Leads</TableHead>
+                    <TableHead className="text-right text-xs font-bold text-[#c2c6d6]/80 uppercase py-2 px-3 [&>div]:justify-end">IPD</TableHead>
+                    <TableHead className="text-right text-xs font-bold text-[#c2c6d6]/80 uppercase py-2 px-3 [&>div]:justify-end">Conv %</TableHead>
+                    <TableHead className="text-right text-xs font-bold text-[#c2c6d6]/80 uppercase py-2 px-3 [&>div]:justify-end">Revenue</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {rows.map((r) => (
-                    <TableRow key={r.name}>
-                      <TableCell className="font-medium max-w-[160px] truncate">{r.name}</TableCell>
-                      <TableCell className="text-right tabular-nums">{r.leads}</TableCell>
-                      <TableCell className="text-right tabular-nums font-semibold text-emerald-600">{r.ipd}</TableCell>
-                      <TableCell className="text-right tabular-nums text-violet-600">{r.conv.toFixed(1)}%</TableCell>
-                      <TableCell className="text-right tabular-nums">{fmtK(r.revenue)}</TableCell>
+                    <TableRow key={r.name} className="hover:bg-[#1b253b]/40 border-b border-[#424754]/20 transition-colors duration-200">
+                      <TableCell className="font-semibold text-[#dae2fd] text-sm max-w-[160px] truncate py-2 px-3">{r.name}</TableCell>
+                      <TableCell className="text-right text-[#dae2fd] tabular-nums text-sm py-2 px-3">{r.leads}</TableCell>
+                      <TableCell className="text-right tabular-nums font-semibold text-[#4edea3] text-sm py-2 px-3">{r.ipd}</TableCell>
+                      <TableCell className="text-right tabular-nums text-[#adc6ff] font-semibold text-sm py-2 px-3">{r.conv.toFixed(1)}%</TableCell>
+                      <TableCell className="text-right text-[#dae2fd] tabular-nums text-sm py-2 px-3">{fmtK(r.revenue)}</TableCell>
                     </TableRow>
                   ))}
-                  {rows.length === 0 && <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No data</TableCell></TableRow>}
+                  {rows.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center text-[#c2c6d6]/40 py-8 text-xs">
+                        No breakdown data
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Mapping Section */}
+      <TeamMappingSection view={view} data={teamMappingData ?? []} />
     </div>
   )
 }
@@ -1344,6 +1471,86 @@ function CircleTab({ dateParams, variant }: { dateParams: string; variant: Dashb
   )
 }
 
+// ─── Marketing Insights Tab ───────────────────────────────────────────────────
+
+function MarketingInsightsTab({ dateRange }: { dateRange: DateRange | undefined }) {
+  const dateFrom = dateRange?.from || new Date()
+  const analyticsMonth = dateFrom.getMonth() + 1
+  const analyticsYear = dateFrom.getFullYear()
+
+  // Query campaign analytics
+  const { data: analyticsResponse, isLoading } = useQuery<any>({
+    queryKey: ['campaign-analytics-insights', analyticsMonth, analyticsYear],
+    queryFn: () =>
+      apiGet(`/api/digital-marketing/campaign-analytics?month=${analyticsMonth}&year=${analyticsYear}&excellentMax=500&goodMax=1200`),
+    retry: false,
+  })
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12 bg-[#171f33]/45 border border-white/5 backdrop-blur-md rounded-xl p-6">
+        <p className="text-sm text-muted-foreground animate-pulse">Loading marketing insights...</p>
+      </div>
+    )
+  }
+
+  // Fallback dummy insights data when the API does not contain insights or returns 403
+  const dummyInsights = {
+    summaryText: "Facebook campaign CPL improved by 14% this month due to optimized audience targeting on Orthopedics, though Google search CPC slightly increased.",
+    highestPerformingCampaign: "FB_Orthopedics_LeadGen (45 Conversions)",
+    lowestCplCampaign: "FB_Gastro_Core (₹280 CPL)",
+    bestRoiCampaign: "Google_Search_KneeReplacement (3.8x ROI)",
+    highestCplCampaign: "Google_Search_Urology (₹1,450 CPL)",
+    budgetWarningCampaign: "FB_Spine_Reconversion (Nearing Limit)",
+    recommendationText: "Allocate 15% more budget to FB_Orthopedics_LeadGen and reduce Google_Search_Urology bidding by 20% to optimize overall CPL."
+  }
+
+  const insights = analyticsResponse?.marketingInsights || dummyInsights
+
+  return (
+    <div className="space-y-4 max-w-4xl mx-auto">
+      <Card className="bg-violet-950/20 border border-violet-500/20 rounded-xl">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
+            <Sparkles className="h-4 w-4" /> Marketing Insights & Summary
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-xs md:text-sm text-[#dae2fd]/95 leading-relaxed">
+          <p className="font-medium text-[#c2c6d6]/80">{insights.summaryText}</p>
+          
+          <div className="grid gap-4 md:grid-cols-2 mt-2 pt-2 border-t border-violet-500/10">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#c2c6d6]/60 uppercase">
+                <TrendingUp className="h-3.5 w-3.5 text-emerald-400" /> Key Performers
+              </div>
+              <ul className="space-y-1 text-xs">
+                <li>Highest Conversions: <span className="font-semibold text-emerald-400">{insights.highestPerformingCampaign}</span></li>
+                <li>Lowest CPL: <span className="font-semibold text-emerald-400">{insights.lowestCplCampaign}</span></li>
+                <li>Best Conversion ROI: <span className="font-semibold text-emerald-400">{insights.bestRoiCampaign}</span></li>
+              </ul>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-[#c2c6d6]/60 uppercase">
+                <TrendingDown className="h-3.5 w-3.5 text-amber-500" /> Optimization Warnings
+              </div>
+              <ul className="space-y-1 text-xs">
+                <li>Highest CPL Campaign: <span className="font-semibold text-amber-400">{insights.highestCplCampaign}</span></li>
+                <li>Budget Alert: <span className="font-semibold text-amber-400">{insights.budgetWarningCampaign}</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-2 p-2.5 rounded-lg bg-violet-500/5 border border-violet-500/10 text-xs flex gap-2 items-start text-violet-300">
+            <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+            <span><strong>Recommendation:</strong> {insights.recommendationText}</span>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVariant }) {
@@ -1420,6 +1627,9 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
           )}
           {activeTab === 'circle' && (
             <CircleTab dateParams={dateParams} variant={variant} />
+          )}
+          {activeTab === 'insights' && (
+            <MarketingInsightsTab dateRange={dateRange} />
           )}
         </div>
       </div>

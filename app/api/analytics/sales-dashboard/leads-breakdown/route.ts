@@ -37,17 +37,19 @@ export async function GET(request: NextRequest) {
       return errorResponse('Forbidden', 403)
     }
 
+    const { searchParams } = new URL(request.url)
+    const startDate = searchParams.get('startDate')
+    const endDate = searchParams.get('endDate')
+    const circle = searchParams.get('circle')
+    const teamId = searchParams.get('teamId')
+
+    const dateFilter: Prisma.DateTimeFilter = buildDateRange(startDate, endDate)
+
     let teamScope: Prisma.LeadWhereInput = {}
     if (user.role === 'TEAM_LEAD') {
       const subIds = await getSubordinateUserIdsForLeadAccess(user.id)
       teamScope = { bdId: { in: [user.id, ...subIds] } }
     }
-
-    const { searchParams } = new URL(request.url)
-    const startDate = searchParams.get('startDate')
-    const endDate = searchParams.get('endDate')
-
-    const dateFilter: Prisma.DateTimeFilter = buildDateRange(startDate, endDate)
 
     const leadEntryDateFilter: Prisma.LeadWhereInput =
       Object.keys(dateFilter).length > 0
@@ -58,11 +60,34 @@ export async function GET(request: NextRequest) {
             ],
           }
         : {}
+
     const allLeadsWhere: Prisma.LeadWhereInput = { ...leadEntryDateFilter, ...teamScope }
+    if (circle) {
+      allLeadsWhere.circle = circle
+    }
+    if (teamId) {
+      const team = await prisma.departmentTeam.findUnique({
+        where: { id: teamId },
+        select: { members: { select: { userId: true } } },
+      })
+      const memberUserIds = team?.members.map((m) => m.userId) ?? []
+      allLeadsWhere.bdId = { in: memberUserIds }
+    }
 
     const completedWhere: Prisma.LeadWhereInput = {
       ...teamScope,
       ...canonicalSalesCompletedWhere(dateFilter),
+    }
+    if (circle) {
+      completedWhere.circle = circle
+    }
+    if (teamId) {
+      const team = await prisma.departmentTeam.findUnique({
+        where: { id: teamId },
+        select: { members: { select: { userId: true } } },
+      })
+      const memberUserIds = team?.members.map((m) => m.userId) ?? []
+      completedWhere.bdId = { in: memberUserIds }
     }
 
     const [
@@ -77,7 +102,7 @@ export async function GET(request: NextRequest) {
       allLeadsForAge,
     ] = await Promise.all([
       prisma.lead.groupBy({ by: ['circle'], where: allLeadsWhere, _count: { id: true } }),
-      prisma.lead.groupBy({ by: ['circle'], where: { ...completedWhere }, _count: { id: true } }),
+      prisma.lead.groupBy({ by: ['circle'], where: completedWhere, _count: { id: true } }),
       prisma.lead.groupBy({ by: ['treatment'], where: { ...allLeadsWhere, treatment: { not: null } }, _count: { id: true } }),
       prisma.lead.groupBy({ by: ['treatment'], where: { ...completedWhere, treatment: { not: null } }, _count: { id: true } }),
       prisma.lead.groupBy({ by: ['source'], where: { ...allLeadsWhere, source: { not: null } }, _count: { id: true } }),
@@ -86,7 +111,7 @@ export async function GET(request: NextRequest) {
       prisma.lead.groupBy({ by: ['campaignName'], where: { ...completedWhere, campaignName: { not: null } }, _count: { id: true } }),
       prisma.lead.findMany({
         where: allLeadsWhere,
-        select: { id: true, bdId: true, pipelineStage: true, surgeryDate: true, leadEntryDate: true, createdDate: true },
+        select: { id: true, bdId: true, pipelineStage: true, surgeryDate: true, leadEntryDate: true, createdDate: true, campaignName: true, source: true },
       }),
     ])
 
@@ -121,6 +146,16 @@ export async function GET(request: NextRequest) {
     // By-team breakdown: manager group (manager + direct subordinates) from org chart
     const managerGroups = await getManagerGroups()
     const teamMap = new Map<string, { teamName: string; totalLeads: number; converted: number }>()
+    const bdIdToTeamName = new Map<string, string>()
+
+    for (const group of managerGroups) {
+      const teamName = `${group.managerName}'s Team`
+      bdIdToTeamName.set(group.managerUserId, teamName)
+      for (const sub of group.subordinates) {
+        bdIdToTeamName.set(sub.userId, teamName)
+      }
+    }
+
     for (const group of managerGroups) {
       const groupUserIds = new Set([group.managerUserId, ...group.subordinates.map((s) => s.userId)])
       const key = group.managerId
@@ -147,9 +182,11 @@ export async function GET(request: NextRequest) {
     const ageBuckets = { new: { total: 0, converted: 0 }, oneMonth: { total: 0, converted: 0 }, twoMonths: { total: 0, converted: 0 }, old: { total: 0, converted: 0 } }
     allLeadsForAge.forEach((lead) => {
       const effectiveLeadDate = lead.leadEntryDate ?? lead.createdDate
-      const bucket = getLeadAgeBucket(effectiveLeadDate, asOf)
-      ageBuckets[bucket].total += 1
-      if (lead.surgeryDate) ageBuckets[bucket].converted += 1
+      if (effectiveLeadDate) {
+        const bucket = getLeadAgeBucket(effectiveLeadDate, asOf)
+        ageBuckets[bucket].total += 1
+        if (lead.surgeryDate) ageBuckets[bucket].converted += 1
+      }
     })
     const leadAgeBreakdown = (['new', 'oneMonth', 'twoMonths', 'old'] as const).map((key) => ({
       bucket: LEAD_AGE_BUCKETS[key].label,

@@ -189,7 +189,11 @@ export async function PATCH(
     if (data.managerName !== undefined) updateData.managerName = data.managerName
     if (data.bdmName !== undefined) updateData.bdmName = data.bdmName
     if (data.patientName !== undefined) updateData.patientName = data.patientName
-    if (data.patientPhone !== undefined) updateData.patientPhone = data.patientPhone
+    if (data.patientPhone !== undefined) {
+      if (data.patientPhone !== null && data.patientPhone.trim() !== '') {
+        updateData.patientPhone = data.patientPhone
+      }
+    }
     if (data.doctorName !== undefined) updateData.doctorName = data.doctorName
     if (data.hospitalName !== undefined) updateData.hospitalName = data.hospitalName
     if (data.category !== undefined) updateData.category = data.category

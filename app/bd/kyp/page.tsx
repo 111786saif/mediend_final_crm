@@ -10,6 +10,7 @@ import { ColumnFilter } from '@/components/ui/column-filter'
 import { DataTable } from '@/components/ui/data-table'
 import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
+import { usePermissions } from '@/hooks/use-permissions'
 import { apiGet } from '@/lib/api-client'
 import { getLatestActivityTime } from '@/lib/lead-activity'
 import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
@@ -111,6 +112,7 @@ const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
 
 export default function CaseTrackerPage() {
   const { user } = useAuth()
+  const { hasAccess, permissions } = usePermissions()
   const router = useRouter()
   const canViewPhone = canViewPhoneNumber(user)
 
@@ -493,9 +495,17 @@ export default function CaseTrackerPage() {
       }
     )
 
-    return cols
+    return cols.filter((col) => {
+      const colId = col.id
+      if (!colId) return true
+      const resourceKey = `sales.case_tracker.table.lead.column.${colId}`
+      if (permissions && resourceKey in permissions) {
+        return hasAccess(resourceKey, 'READ')
+      }
+      return true
+    })
   }, [
-    columnFilters, leadRefOptions, patientOptions, ageSexOptions, filterOptions, stageOptions, showBdFilter
+    columnFilters, leadRefOptions, patientOptions, ageSexOptions, filterOptions, stageOptions, showBdFilter, hasAccess, permissions
   ])
 
   return (

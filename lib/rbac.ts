@@ -51,6 +51,7 @@ export type Permission =
   | 'pnl:write'
   /** Surgery / sales P&L slice only (no full company P&L) */
   | 'sales:pnl:read'
+  | 'sales:read'
   | 'masters:read'
   | 'masters:write'
   | 'compliance:read'
@@ -61,6 +62,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'leads:read',
     'leads:write',
     'analytics:read',
+    'targets:read',
     'users:read',
     'insurance:read',
     'pl:read',
@@ -147,6 +149,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'sales:pnl:read',
     'incentive:read',
     'incentive:write',
+    'pl:read',
   ],
   CATEGORY_MANAGER: [
     'leads:read',
