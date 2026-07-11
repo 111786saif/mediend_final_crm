@@ -488,6 +488,9 @@ function dedupeNavItemsByUrl(items: (NavItem & { url: string })[]): (NavItem & {
 
 function filterNavItems(user: SessionUser | null): NavItem[] {
   if (!user) return []
+  if (user.role === 'ACCESS_MATRIX') {
+    return navItems.filter((item) => item.title === 'IT Permissions')
+  }
   return navItems.filter((item) => {
     if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Calendar') return true
     if (item.title === 'Meets') return user.role !== 'BD'
@@ -585,6 +588,7 @@ export function getFirstNavUrl(user: SessionUser | null): string {
   if (user) {
     if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
+    if (user.role === 'ACCESS_MATRIX') return '/it/permissions'
     return '/home'
   }
   const items = getFilteredNavItemsWithUrls(user)

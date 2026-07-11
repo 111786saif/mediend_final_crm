@@ -4,37 +4,24 @@ import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Building2, ExternalLink, FileText, Loader2 } from 'lucide-react'
-import { toast } from 'sonner'
-import { ProtectedRoute } from '@/components/protected-route'
 import {
   ArrowLeft,
-  Building2,
   Activity,
   ReceiptText,
-  UserCheck,
   TrendingUp,
   AlertCircle,
-  Calendar,
-  ArrowRight,
-  Paperclip,
-  X,
   FileText,
   ChevronRight,
+  ExternalLink,
+  Loader2,
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { ProtectedRoute } from '@/components/protected-route'
 import { RecentActivityLog } from '@/components/recent-activity-log'
-import { RecordPaymentForm } from '@/components/record-payment-form'
 import { ColumnFilter } from '@/components/ui/column-filter'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -46,9 +33,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Table,
   TableBody,
@@ -57,7 +41,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { apiGet, apiPost } from '@/lib/api-client'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card'
+import { apiGet } from '@/lib/api-client'
 import { formatPlDate, formatPlMonth, formatPlRupee } from '@/lib/pl/resolve-pl-row'
 import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
@@ -97,12 +88,19 @@ type HospitalDetail = {
   cases: HospitalCase[]
 }
 
-function invoiceRequestBadgeVariant(
-  status: InvoiceRequestStatus,
-): 'default' | 'secondary' | 'destructive' | 'outline' {
-  if (status === 'VERIFIED') return 'default'
-  if (status === 'REJECTED') return 'destructive'
-  return 'outline'
+
+type FilterConfigItem = {
+  field: string
+  label: string
+  filterType: string
+  filterable: boolean
+  options?: Array<{ label: string; value: string }>
+  min?: number
+  max?: number
+}
+
+type FilterConfig = {
+  filters: FilterConfigItem[]
 }
 
 export default function HospitalDetailPage() {
@@ -120,6 +118,20 @@ export default function HospitalDetailPage() {
   const [requestRemarks, setRequestRemarks] = useState('')
   const [invoiceNumber, setInvoiceNumber] = useState('')
   const [invoiceAmount, setInvoiceAmount] = useState('')
+
+  // Column filter states
+  const [selectedLeads, setSelectedLeads] = useState<string[]>([])
+  const [leadRefFilter, setLeadRefFilter] = useState('')
+  const [patientNameFilter, setPatientNameFilter] = useState('')
+  const [doctorFilter, setDoctorFilter] = useState<string[]>([])
+  const [monthFilter, setMonthFilter] = useState<string[]>([])
+  const [surgeryDateFilter, setSurgeryDateFilter] = useState<string[]>([])
+  const [statusFilter, setStatusFilter] = useState<string[]>([])
+  const [billAmountFilter, setBillAmountFilter] = useState<{ min?: number; max?: number } | null>(null)
+  const [mediendShareAmountFilter, setMediendShareAmountFilter] = useState<{ min?: number; max?: number } | null>(null)
+  const [mediendReceivedFilter, setMediendReceivedFilter] = useState<{ min?: number; max?: number } | null>(null)
+  const [hospitalAmountPendingFilter, setHospitalAmountPendingFilter] = useState<{ min?: number; max?: number } | null>(null)
+  const [mediendInvoiceStatusFilter, setMediendInvoiceStatusFilter] = useState<string[]>([])
 
   const { data, isLoading } = useQuery<HospitalDetail>({
     queryKey: [
@@ -190,6 +202,28 @@ export default function HospitalDetailPage() {
   }, [invoiceData?.requests])
 
   const createInvoice = useCreatePlInvoiceRequest()
+
+  // ── Filter-Config API (backend-driven options) ──────────────────────────
+  const { data: filterConfig } = useQuery<FilterConfig>({
+    queryKey: ['hospitals', name, 'filter-config'],
+    queryFn: () => apiGet<FilterConfig>(`/api/hospitals/${encodeURIComponent(name)}/filter-config`),
+    enabled: !!name,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const filterOptions = useMemo(() => {
+    const filters = filterConfig?.filters ?? []
+    const find = (field: string) => filters.find(f => f.field === field)
+    return {
+      doctors:               find('doctor')?.options               ?? [],
+      statuses:              find('status')?.options               ?? [],
+      mediendInvoiceStatuses: find('mediendInvoiceStatus')?.options ?? [],
+      billBounds:     { min: find('billAmount')?.min          ?? 0, max: find('billAmount')?.max          ?? 0 },
+      shareBounds:    { min: find('mediendShareAmount')?.min  ?? 0, max: find('mediendShareAmount')?.max  ?? 0 },
+      receivedBounds: { min: find('mediendReceived')?.min     ?? 0, max: find('mediendReceived')?.max     ?? 0 },
+      pendingBounds:  { min: find('hospitalAmountPending')?.min ?? 0, max: find('hospitalAmountPending')?.max ?? 0 },
+    }
+  }, [filterConfig])
 
   const openRequestDialog = (c: HospitalCase, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -503,6 +537,20 @@ export default function HospitalDetailPage() {
                           className="cursor-pointer hover:bg-sky-50/30 dark:hover:bg-sky-950/15"
                           onClick={() => (window.location.href = `/pl/outstanding/${c.leadId}`)}
                         >
+                          {/* Checkbox col */}
+                          <TableCell className="pl-4" onClick={(e) => e.stopPropagation()}>
+                            <Checkbox
+                              className="border-[#283150] data-[state=checked]:bg-[#22d3ee] data-[state=checked]:text-[#07112f]"
+                              checked={selectedLeads.includes(c.leadId)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedLeads((prev) => [...prev, c.leadId])
+                                } else {
+                                  setSelectedLeads((prev) => prev.filter((id) => id !== c.leadId))
+                                }
+                              }}
+                            />
+                          </TableCell>
                           <TableCell className="whitespace-nowrap">{c.leadRef ?? '—'}</TableCell>
                           <TableCell>{c.patientName ?? '—'}</TableCell>
                           <TableCell>{c.doctorName ?? '—'}</TableCell>
@@ -523,8 +571,16 @@ export default function HospitalDetailPage() {
                           <TableCell className="text-right tabular-nums">
                             {formatPlRupee(c.hospitalAmountPending)}
                           </TableCell>
+                          {/* Invoice status col */}
                           <TableCell onClick={(e) => e.stopPropagation()}>
-                            <InvoiceCell
+                            <InvoiceStatusCell
+                              invoiceReq={invoiceReq}
+                              invoicesLoading={invoicesLoading}
+                            />
+                          </TableCell>
+                          {/* Action col */}
+                          <TableCell className="text-right pr-4" onClick={(e) => e.stopPropagation()}>
+                            <InvoiceActionCell
                               caseRow={c}
                               invoiceReq={invoiceReq}
                               invoicesLoading={invoicesLoading}
@@ -541,8 +597,8 @@ export default function HospitalDetailPage() {
                   )}
                 </TableBody>
               </Table>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Activity Log & Health Score Section */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
@@ -635,7 +691,42 @@ export default function HospitalDetailPage() {
   )
 }
 
-function InvoiceCell({
+/** Invoice column — shows only the status badge */
+function InvoiceStatusCell({
+  invoiceReq,
+  invoicesLoading,
+}: {
+  invoiceReq?: InvoiceRequestRecord
+  invoicesLoading: boolean
+}) {
+  if (invoicesLoading) {
+    return <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+  }
+
+  if (!invoiceReq) {
+    return (
+      <Badge variant="outline" className="text-[#c7c6cd]/60 border-[#283150]">
+        Pending
+      </Badge>
+    )
+  }
+
+  const variant =
+    invoiceReq.status === 'VERIFIED'
+      ? 'default'
+      : invoiceReq.status === 'REJECTED'
+        ? 'destructive'
+        : 'secondary'
+
+  return (
+    <Badge variant={variant}>
+      {INVOICE_REQUEST_STATUS_LABEL[invoiceReq.status]}
+    </Badge>
+  )
+}
+
+/** Action column — shows request / view invoice button */
+function InvoiceActionCell({
   caseRow,
   invoiceReq,
   invoicesLoading,
@@ -650,34 +741,46 @@ function InvoiceCell({
   requesting: boolean
   onRequest: (e: React.MouseEvent) => void
 }) {
-  if (invoicesLoading) {
-    return <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+  if (invoicesLoading) return null
+
+  // VERIFIED with PDF → View Invoice link
+  if (invoiceReq?.status === 'VERIFIED' && invoiceReq.invoicePdfUrl) {
+    return (
+      <a
+        href={invoiceReq.invoicePdfUrl}
+        target="_blank"
+        rel="noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        className="inline-flex items-center gap-1 text-xs font-medium text-[#22d3ee] hover:underline"
+      >
+        <FileText className="h-3.5 w-3.5" />
+        View Invoice
+        <ExternalLink className="h-3 w-3" />
+      </a>
+    )
   }
 
-  if (invoiceReq) {
+  // VERIFIED without PDF yet → show label
+  if (invoiceReq?.status === 'VERIFIED') {
     return (
-      <div className="flex flex-col items-start gap-1.5">
-        <Badge variant={invoiceRequestBadgeVariant(invoiceReq.status)}>
-          {INVOICE_REQUEST_STATUS_LABEL[invoiceReq.status]}
-        </Badge>
+      <span className="text-xs text-emerald-400 font-medium">Invoice Ready</span>
+    )
+  }
 
-        {invoiceReq.status === 'VERIFIED' && invoiceReq.invoicePdfUrl && (
-          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" asChild>
-            <a href={invoiceReq.invoicePdfUrl} target="_blank" rel="noreferrer">
-              <FileText className="mr-1 h-3.5 w-3.5" />
-              File
-              <ExternalLink className="ml-1 h-3 w-3" />
-            </a>
-          </Button>
-        )}
-
-        {invoiceReq.status === 'REJECTED' && canRequest && (
-          <Button size="sm" variant="secondary" className="h-7 px-2 text-xs" onClick={onRequest}>
-            Re-request
-          </Button>
-        )}
-
-        {invoiceReq.status === 'REJECTED' && invoiceReq.rejectionRemarks && (
+  // REJECTED → re-request button
+  if (invoiceReq?.status === 'REJECTED' && canRequest) {
+    return (
+      <div className="flex flex-col items-start gap-1">
+        <Button
+          size="sm"
+          variant="secondary"
+          className="h-7 px-2 text-xs"
+          onClick={onRequest}
+          disabled={requesting}
+        >
+          {requesting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Re-request'}
+        </Button>
+        {invoiceReq.rejectionRemarks && (
           <p className="max-w-[160px] text-[10px] text-muted-foreground line-clamp-2">
             {invoiceReq.rejectionRemarks}
           </p>
@@ -686,31 +789,26 @@ function InvoiceCell({
     )
   }
 
-  return (
-    <div className="flex flex-col items-start gap-1.5">
-      <Badge
-        variant={
-          caseRow.mediendInvoiceStatus === 'PAID'
-            ? 'default'
-            : caseRow.mediendInvoiceStatus === 'SENT'
-              ? 'secondary'
-              : 'outline'
-        }
+  // PENDING (request submitted, awaiting review) → no action needed
+  if (invoiceReq?.status === 'PENDING') {
+    return <span className="text-xs text-[#c7c6cd]/50">Awaiting review</span>
+  }
+
+  // No invoice request yet → Request Invoice button
+  if (canRequest) {
+    return (
+      <Button
+        size="sm"
+        className="h-7 px-2 text-xs"
+        onClick={onRequest}
+        disabled={requesting}
       >
-        {caseRow.mediendInvoiceStatus ?? 'PENDING'}
-      </Badge>
-      {canRequest && (
-        <Button
-          size="sm"
-          className="h-7 px-2 text-xs"
-          onClick={onRequest}
-          disabled={requesting}
-        >
-          {requesting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Request'}
-        </Button>
-      )}
-    </div>
-  )
+        {requesting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Request Invoice'}
+      </Button>
+    )
+  }
+
+  return null
 }
 
 function KpiTile({ label, value }: { label: string; value: React.ReactNode }) {

@@ -13,7 +13,6 @@ import {
   TrendingUp,
   AlertCircle,
   Calendar,
-  ArrowRight,
   Paperclip,
   X,
   FileText,
@@ -638,29 +637,18 @@ export default function DoctorDetailPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right pr-4" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-2 text-xs border-[#283150] bg-[#07112f] text-[#22d3ee] hover:bg-[#283150] hover:text-[#22d3ee]"
-                              onClick={() => {
-                                setSelectedLeads([c.leadId])
-                                setRequestDialogOpen(true)
-                              }}
-                            >
-                              Request Invoice
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-[#c7c6cd] hover:text-[#22d3ee]"
-                              asChild
-                            >
-                              <Link href={`/pl/outstanding/${c.leadId}`}>
-                                <ArrowRight className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </div>
+                          <Button
+                            size="sm"
+                            className="h-7 px-2 text-xs bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/20"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedLeads([c.leadId])
+                              setRequestDialogOpen(true)
+                            }}
+                          >
+                            <FileText className="mr-1 h-3.5 w-3.5" />
+                            Request Invoice
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))

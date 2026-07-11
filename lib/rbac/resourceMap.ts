@@ -63,6 +63,8 @@ export const RESOURCE_MAP = {
   "sales.targets": { path: "/sales/targets", component: "TargetsPage" },
   "sales.sales_pnl": { path: "/sales/pnl", component: "SalesPnLPage" },
   "sales.campaign_cpl": { path: "/digital-marketing/cpl", component: "CampaignCPLPage" },
+  "sales.sales_pipeline": { path: "/bd/pipeline", component: "SalesPipelinePage" },
+  "sales.team_lead_pipeline": { path: "/team-lead/pipeline", component: "TeamLeadPipelinePage" },
 
   // Insurance Group Pages
   "insurance_pl.insurance": { path: "/insurance/dashboard", component: "InsurancePage" },
