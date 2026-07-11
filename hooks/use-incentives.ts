@@ -34,10 +34,11 @@ export function useIncentives(filters: IncentiveFilters) {
 }
 
 export interface CreateIncentiveInput {
-  employeeIds: string[]
+  employeeIds?: string[]
+  entries?: { employeeId: string; amount: number }[]
   month: number
   year: number
-  amount: number
+  amount?: number
   status?: 'PENDING' | 'APPROVED' | 'PAID'
   note?: string | null
 }

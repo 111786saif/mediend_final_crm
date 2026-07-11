@@ -8,14 +8,28 @@ import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-
 import { incentiveInclude, mapIncentiveRecord } from '@/lib/incentives/mapper'
 import type { IncentiveEmployeeOption } from '@/lib/incentives/types'
 
-const createSchema = z.object({
-  employeeIds: z.array(z.string().min(1)).min(1),
-  month: z.number().int().min(1).max(12),
-  year: z.number().int().min(2000).max(2100),
+const entrySchema = z.object({
+  employeeId: z.string().min(1),
   amount: z.number().positive(),
-  status: z.enum(['PENDING', 'APPROVED', 'PAID']).optional(),
-  note: z.string().max(2000).nullable().optional(),
 })
+
+const createSchema = z
+  .object({
+    employeeIds: z.array(z.string().min(1)).optional(),
+    entries: z.array(entrySchema).optional(),
+    month: z.number().int().min(1).max(12),
+    year: z.number().int().min(2000).max(2100),
+    amount: z.number().positive().optional(),
+    status: z.enum(['PENDING', 'APPROVED', 'PAID']).optional(),
+    note: z.string().max(2000).nullable().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.entries && data.entries.length > 0) return true
+      return Boolean(data.employeeIds?.length && data.amount)
+    },
+    { message: 'Provide entries or employeeIds with amount' },
+  )
 
 export async function GET(request: NextRequest) {
   try {
@@ -99,7 +113,17 @@ export async function POST(request: NextRequest) {
       return errorResponse(parsed.error.errors[0]?.message ?? 'Invalid input', 400)
     }
 
-    const { employeeIds, month, year, amount, status, note } = parsed.data
+    const { month, year, status, note } = parsed.data
+
+    const rows =
+      parsed.data.entries && parsed.data.entries.length > 0
+        ? parsed.data.entries
+        : parsed.data.employeeIds!.map((employeeId) => ({
+            employeeId,
+            amount: parsed.data.amount!,
+          }))
+
+    const employeeIds = rows.map((r) => r.employeeId)
 
     const existing = await prisma.employeeMonthlyIncentive.findMany({
       where: {
@@ -118,7 +142,7 @@ export async function POST(request: NextRequest) {
     }
 
     const created = await prisma.$transaction(
-      employeeIds.map((employeeId) =>
+      rows.map(({ employeeId, amount }) =>
         prisma.employeeMonthlyIncentive.create({
           data: {
             employeeId,
