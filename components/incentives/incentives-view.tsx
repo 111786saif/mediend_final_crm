@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { format } from 'date-fns'
-import { Loader2, Pencil, Plus, Search, Trash2 } from 'lucide-react'
+import { Loader2, Pencil, Search, Trash2, Upload, UserPlus, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import {
@@ -50,6 +50,7 @@ import {
   INCENTIVE_STATUS_OPTIONS,
   formatIncentiveMonthYear,
   type IncentiveRecord,
+  type IncentiveEmployeeOption,
 } from '@/lib/incentives/types'
 import {
   useCreateIncentives,
@@ -80,7 +81,9 @@ export function IncentivesView() {
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
 
-  const [addOpen, setAddOpen] = useState(false)
+  const [addEmployeeOpen, setAddEmployeeOpen] = useState(false)
+  const [uploadOpen, setUploadOpen] = useState(false)
+  const [queuedEmployees, setQueuedEmployees] = useState<IncentiveEmployeeOption[]>([])
   const [editRecord, setEditRecord] = useState<IncentiveRecord | null>(null)
   const [deleteRecord, setDeleteRecord] = useState<IncentiveRecord | null>(null)
 
@@ -126,12 +129,71 @@ export function IncentivesView() {
           </p>
         </div>
         {canWrite && (
-          <Button onClick={() => setAddOpen(true)} className="gap-2 shrink-0">
-            <Plus className="h-4 w-4" />
-            Add incentive
-          </Button>
+          <div className="flex flex-wrap gap-2 shrink-0">
+            <Button variant="outline" onClick={() => setAddEmployeeOpen(true)} className="gap-2">
+              <UserPlus className="h-4 w-4" />
+              Add employee
+            </Button>
+            <Button
+              onClick={() => setUploadOpen(true)}
+              disabled={queuedEmployees.length === 0}
+              className="gap-2"
+            >
+              <Upload className="h-4 w-4" />
+              Upload incentive
+              {queuedEmployees.length > 0 && (
+                <Badge variant="secondary" className="ml-1 rounded-sm px-1.5 py-0 text-xs">
+                  {queuedEmployees.length}
+                </Badge>
+              )}
+            </Button>
+          </div>
         )}
       </div>
+
+      {canWrite && queuedEmployees.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <CardTitle className="text-base">Employees ready for upload</CardTitle>
+                <CardDescription>
+                  {queuedEmployees.length} employee{queuedEmployees.length === 1 ? '' : 's'} added.
+                  Click Upload incentive to enter amounts.
+                </CardDescription>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground"
+                onClick={() => setQueuedEmployees([])}
+              >
+                Clear all
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {queuedEmployees.map((emp) => (
+                <Badge key={emp.id} variant="outline" className="gap-1 py-1 pl-2 pr-1">
+                  <span>{emp.name}</span>
+                  <span className="text-muted-foreground">· {emp.employeeCode}</span>
+                  <button
+                    type="button"
+                    className="ml-0.5 rounded-sm p-0.5 hover:bg-muted"
+                    onClick={() =>
+                      setQueuedEmployees((prev) => prev.filter((e) => e.id !== emp.id))
+                    }
+                    aria-label={`Remove ${emp.name}`}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
@@ -296,19 +358,35 @@ export function IncentivesView() {
 
       {canWrite && (
         <>
-          <AddIncentiveDialog
-            open={addOpen}
-            onOpenChange={setAddOpen}
-            employees={employees}
+          <AddEmployeeDialog
+            open={addEmployeeOpen}
+            onOpenChange={setAddEmployeeOpen}
+            employees={employees.filter((e) => !queuedEmployees.some((q) => q.id === e.id))}
+            onAdd={(selected) => {
+              if (selected.length === 0) {
+                toast.error('Select at least one employee')
+                return
+              }
+              setQueuedEmployees((prev) => [...prev, ...selected])
+              toast.success(`Added ${selected.length} employee(s) for incentive upload`)
+              setAddEmployeeOpen(false)
+            }}
+          />
+
+          <UploadIncentiveDialog
+            open={uploadOpen}
+            onOpenChange={setUploadOpen}
+            employees={queuedEmployees}
             defaultMonth={filterMonth === ALL ? now.getMonth() + 1 : Number(filterMonth)}
             defaultYear={filterYear === ALL ? now.getFullYear() : Number(filterYear)}
             onSubmit={async (input) => {
               try {
                 await createIncentives.mutateAsync(input)
-                toast.success(`Incentive added for ${input.employeeIds.length} employee(s)`)
-                setAddOpen(false)
+                toast.success(`Incentive added for ${input.entries!.length} employee(s)`)
+                setQueuedEmployees([])
+                setUploadOpen(false)
               } catch (err) {
-                toast.error(err instanceof Error ? err.message : 'Failed to add incentive')
+                toast.error(err instanceof Error ? err.message : 'Failed to upload incentives')
               }
             }}
             isPending={createIncentives.isPending}
@@ -368,69 +446,27 @@ export function IncentivesView() {
   )
 }
 
-function AddIncentiveDialog({
+function AddEmployeeDialog({
   open,
   onOpenChange,
   employees,
-  defaultMonth,
-  defaultYear,
-  onSubmit,
-  isPending,
+  onAdd,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
-  employees: { id: string; employeeCode: string; name: string; department: string | null; designation: string | null }[]
-  defaultMonth: number
-  defaultYear: number
-  onSubmit: (input: {
-    employeeIds: string[]
-    month: number
-    year: number
-    amount: number
-    status?: 'PENDING' | 'APPROVED' | 'PAID'
-    note?: string | null
-  }) => Promise<void>
-  isPending: boolean
+  employees: IncentiveEmployeeOption[]
+  onAdd: (selected: IncentiveEmployeeOption[]) => void
 }) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
-  const [month, setMonth] = useState(String(defaultMonth))
-  const [year, setYear] = useState(String(defaultYear))
-  const [amount, setAmount] = useState('')
-  const [status, setStatus] = useState<'PENDING' | 'APPROVED' | 'PAID'>('PENDING')
-  const [note, setNote] = useState('')
 
-  const reset = () => {
-    setSelectedIds([])
-    setMonth(String(defaultMonth))
-    setYear(String(defaultYear))
-    setAmount('')
-    setStatus('PENDING')
-    setNote('')
-  }
+  const reset = () => setSelectedIds([])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (selectedIds.length === 0) {
-      toast.error('Select at least one employee')
-      return
-    }
-    const parsedAmount = Number(amount)
-    if (!parsedAmount || parsedAmount <= 0) {
-      toast.error('Enter a valid incentive amount')
-      return
-    }
-    await onSubmit({
-      employeeIds: selectedIds,
-      month: Number(month),
-      year: Number(year),
-      amount: parsedAmount,
-      status,
-      note: note.trim() || null,
-    })
+    const selected = employees.filter((e) => selectedIds.includes(e.id))
+    onAdd(selected)
     reset()
   }
-
-  const yearOptions = [defaultYear - 1, defaultYear, defaultYear + 1]
 
   return (
     <Dialog
@@ -443,13 +479,114 @@ function AddIncentiveDialog({
       <DialogContent className="gap-0 p-0 sm:max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="space-y-1 px-4 pt-4 pb-2">
-            <DialogTitle>Add monthly incentive</DialogTitle>
+            <DialogTitle>Add employees for incentive</DialogTitle>
             <DialogDescription className="text-xs">
-              Select employees, period, and amount.
+              Select employees to include in the next incentive upload.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 px-4 py-3">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs">Employees</Label>
+              <EmployeeMultiSelect
+                employees={employees}
+                selectedIds={selectedIds}
+                onChange={setSelectedIds}
+                placeholder="Search and select employees"
+              />
+            </div>
+          </div>
+          <DialogFooter className="gap-2 border-t px-4 py-3 sm:gap-0">
+            <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" size="sm" disabled={selectedIds.length === 0}>
+              Add to list
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function UploadIncentiveDialog({
+  open,
+  onOpenChange,
+  employees,
+  defaultMonth,
+  defaultYear,
+  onSubmit,
+  isPending,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  employees: IncentiveEmployeeOption[]
+  defaultMonth: number
+  defaultYear: number
+  onSubmit: (input: {
+    entries: { employeeId: string; amount: number }[]
+    month: number
+    year: number
+    status?: 'PENDING' | 'APPROVED' | 'PAID'
+    note?: string | null
+  }) => Promise<void>
+  isPending: boolean
+}) {
+  const [month, setMonth] = useState(String(defaultMonth))
+  const [year, setYear] = useState(String(defaultYear))
+  const [status, setStatus] = useState<'PENDING' | 'APPROVED' | 'PAID'>('PENDING')
+  const [note, setNote] = useState('')
+  const [amounts, setAmounts] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    if (open) {
+      setMonth(String(defaultMonth))
+      setYear(String(defaultYear))
+      setStatus('PENDING')
+      setNote('')
+      setAmounts(Object.fromEntries(employees.map((e) => [e.id, ''])))
+    }
+  }, [open, defaultMonth, defaultYear, employees])
+
+  const yearOptions = [defaultYear - 1, defaultYear, defaultYear + 1]
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const entries: { employeeId: string; amount: number }[] = []
+
+    for (const emp of employees) {
+      const parsed = Number(amounts[emp.id])
+      if (!parsed || parsed <= 0) {
+        toast.error(`Enter a valid amount for ${emp.name}`)
+        return
+      }
+      entries.push({ employeeId: emp.id, amount: parsed })
+    }
+
+    await onSubmit({
+      entries,
+      month: Number(month),
+      year: Number(year),
+      status,
+      note: note.trim() || null,
+    })
+  }
+
+  const totalAmount = employees.reduce((sum, emp) => sum + (Number(amounts[emp.id]) || 0), 0)
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="gap-0 p-0 sm:max-w-2xl">
+        <form onSubmit={handleSubmit}>
+          <DialogHeader className="space-y-1 px-4 pt-4 pb-2">
+            <DialogTitle>Upload incentive</DialogTitle>
+            <DialogDescription className="text-xs">
+              Enter the incentive amount for each employee, then submit.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3 px-4 py-3">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               <div className="space-y-1.5">
                 <Label className="text-xs">Month</Label>
                 <Select value={month} onValueChange={setMonth}>
@@ -480,35 +617,7 @@ function AddIncentiveDialog({
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs">Employees</Label>
-              <EmployeeMultiSelect
-                employees={employees}
-                selectedIds={selectedIds}
-                onChange={setSelectedIds}
-                placeholder="Select employees"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="amount" className="text-xs">
-                  Amount (INR)
-                </Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  min="1"
-                  step="0.01"
-                  className="h-9"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 sm:col-span-1 col-span-2">
                 <Label className="text-xs">Status</Label>
                 <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
                   <SelectTrigger className="h-9">
@@ -525,12 +634,55 @@ function AddIncentiveDialog({
               </div>
             </div>
 
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Employee</TableHead>
+                    <TableHead className="w-[180px] text-right">Incentive amount (INR)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {employees.map((emp) => (
+                    <TableRow key={emp.id}>
+                      <TableCell>
+                        <div className="font-medium">{emp.name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {emp.employeeCode}
+                          {emp.department ? ` · ${emp.department}` : ''}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Input
+                          type="number"
+                          min="1"
+                          step="0.01"
+                          className="h-9 text-right"
+                          placeholder="0"
+                          value={amounts[emp.id] ?? ''}
+                          onChange={(e) =>
+                            setAmounts((prev) => ({ ...prev, [emp.id]: e.target.value }))
+                          }
+                          required
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div className="flex items-center justify-between rounded-md bg-muted/40 px-3 py-2 text-sm">
+              <span className="text-muted-foreground">Total</span>
+              <span className="font-semibold">{formatCurrency(totalAmount)}</span>
+            </div>
+
             <div className="space-y-1.5">
-              <Label htmlFor="note" className="text-xs">
+              <Label htmlFor="upload-note" className="text-xs">
                 Note <span className="text-muted-foreground">(optional)</span>
               </Label>
               <Textarea
-                id="note"
+                id="upload-note"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 rows={2}
@@ -538,13 +690,14 @@ function AddIncentiveDialog({
               />
             </div>
           </div>
+
           <DialogFooter className="gap-2 border-t px-4 py-3 sm:gap-0">
             <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" size="sm" disabled={isPending}>
+            <Button type="submit" size="sm" disabled={isPending || employees.length === 0}>
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save
+              Submit all incentives
             </Button>
           </DialogFooter>
         </form>

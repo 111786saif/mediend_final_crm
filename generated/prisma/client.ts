@@ -87,6 +87,11 @@ export type InsuranceCase = Prisma.InsuranceCaseModel
  */
 export type PLRecord = Prisma.PLRecordModel
 /**
+ * Model InvoiceRequest
+ * 
+ */
+export type InvoiceRequest = Prisma.InvoiceRequestModel
+/**
  * Model IncomingLead
  * 
  */

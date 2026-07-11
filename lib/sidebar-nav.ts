@@ -372,6 +372,12 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
+    title: 'Fin Invoice Requests',
+    url: '/finance/invoice-requests',
+    icon: FileText,
+    permission: 'finance:read',
+  },
+  {
     title: 'Sales Team Cost',
     url: '/finance/sales-team-cost',
     icon: DollarSign,
@@ -465,7 +471,19 @@ export function getDashboardUrl(role: string): string {
   if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
   if (role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
   if (role === 'DIGITAL_MARKETING_HEAD') return '/pl/dashboard'
+  if (role === 'PL_HEAD') return '/pl/surgery-dashboard'
+  if (role === 'INSURANCE_HEAD') return '/insurance/dashboard'
+  if (role === 'OUTSTANDING_HEAD') return '/pl/outstanding'
   return '/md/tasks'
+}
+
+function dedupeNavItemsByUrl(items: (NavItem & { url: string })[]): (NavItem & { url: string })[] {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    if (seen.has(item.url)) return false
+    seen.add(item.url)
+    return true
+  })
 }
 
 function filterNavItems(user: SessionUser | null): NavItem[] {
@@ -555,7 +573,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
  */
 export function getFilteredNavItemsWithUrls(user: SessionUser | null): (NavItem & { url: string })[] {
   const filtered = filterNavItems(user)
-  return mapItemUrls(filtered, user?.role ?? '')
+  return dedupeNavItemsByUrl(mapItemUrls(filtered, user?.role ?? ''))
 }
 
 /**

@@ -103,6 +103,15 @@ export const EmployeeSeatingMiscCostStatus = {
 export type EmployeeSeatingMiscCostStatus = (typeof EmployeeSeatingMiscCostStatus)[keyof typeof EmployeeSeatingMiscCostStatus]
 
 
+export const InvoiceRequestStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type InvoiceRequestStatus = (typeof InvoiceRequestStatus)[keyof typeof InvoiceRequestStatus]
+
+
 export const FlowType = {
   INSURANCE: 'INSURANCE',
   CASH: 'CASH'

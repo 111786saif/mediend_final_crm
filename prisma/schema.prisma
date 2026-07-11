@@ -80,6 +80,12 @@ enum EmployeeSeatingMiscCostStatus {
   PAID
 }
 
+enum InvoiceRequestStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
 enum FlowType {
   INSURANCE
   CASH
@@ -569,6 +575,9 @@ model User {
   seatingMiscCostsUpdated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostUpdatedBy")
   seatingMiscCostHistory    EmployeeMonthlySeatingMiscCostHistory[] @relation("SeatingMiscCostHistoryBy")
 
+  invoiceRequestsSubmitted  InvoiceRequest[] @relation("InvoiceRequestRequestedBy")
+  invoiceRequestsReviewed   InvoiceRequest[] @relation("InvoiceRequestReviewedBy")
+
   // Meets (calendar / interviews / MD appointments)
   meetsCreated       Meet[]            @relation("MeetsCreated")
   meetParticipations MeetParticipant[]
@@ -735,6 +744,7 @@ model Lead {
   chatReadReceipts      ChatReadReceipt[]      @relation("ChatReadLead")
   callNotes             CallNote[]
   paymentInstallments   PaymentInstallment[]
+  invoiceRequests       InvoiceRequest[]
 
   @@index([bdId])
   @@index([status])
@@ -923,6 +933,36 @@ model PLRecord {
   @@index([month])
   @@index([surgeryDate])
   @@index([status])
+}
+
+model InvoiceRequest {
+  id               String               @id @default(cuid())
+  leadId           String
+  lead             Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  status           InvoiceRequestStatus @default(PENDING)
+
+  requestRemarks   String?              @db.Text
+  invoiceNumber    String?
+  invoiceAmount    Float?
+
+  invoicePdfUrl    String?
+  invoicePdfName   String?
+  financeRemarks   String?              @db.Text
+  rejectionRemarks String?              @db.Text
+
+  requestedById    String
+  requestedBy      User                 @relation("InvoiceRequestRequestedBy", fields: [requestedById], references: [id])
+  reviewedById     String?
+  reviewedBy       User?                @relation("InvoiceRequestReviewedBy", fields: [reviewedById], references: [id])
+  reviewedAt       DateTime?
+
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  @@index([leadId])
+  @@index([status])
+  @@index([requestedById])
+  @@index([createdAt])
 }
 
 model IncomingLead {

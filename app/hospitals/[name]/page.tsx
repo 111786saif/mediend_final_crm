@@ -1,9 +1,12 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { ArrowLeft, Building2, ExternalLink, FileText, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { ProtectedRoute } from '@/components/protected-route'
 import {
   ArrowLeft,
   Building2,
@@ -36,6 +39,17 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
   Table,
   TableBody,
   TableCell,
@@ -45,12 +59,31 @@ import {
 } from '@/components/ui/table'
 import { apiGet, apiPost } from '@/lib/api-client'
 import { formatPlDate, formatPlMonth, formatPlRupee } from '@/lib/pl/resolve-pl-row'
-import { toast } from 'sonner'
+import { useAuth } from '@/hooks/use-auth'
+import { hasPermission } from '@/lib/rbac'
+import {
+  useCreatePlInvoiceRequest,
+  usePlInvoiceRequests,
+} from '@/hooks/use-invoice-requests'
+import {
+  INVOICE_REQUEST_STATUS_LABEL,
+  type InvoiceRequestRecord,
+  type InvoiceRequestStatus,
+} from '@/lib/finance/invoice-request/types'
 
-type Attachment = {
-  name: string
-  url: string
-  type: string
+type HospitalCase = {
+  leadId: string
+  leadRef: string | null
+  patientName: string | null
+  doctorName: string | null
+  surgeryDate: string | null
+  month: string | null
+  status: string | null
+  billAmount: number | null
+  mediendShareAmount: number | null
+  hospitalAmountPending: number | null
+  mediendInvoiceStatus: string | null
+  mediendReceived: number
 }
 
 type HospitalDetail = {
@@ -61,81 +94,32 @@ type HospitalDetail = {
     pendingOutstanding: number
     mediendShare: number
   }
-  cases: Array<{
-    leadId: string
-    leadRef: string | null
-    patientName: string | null
-    doctorName: string | null
-    surgeryDate: string | null
-    month: string | null
-    status: string | null
-    billAmount: number | null
-    mediendShareAmount: number | null
-    hospitalAmountPending: number | null
-    mediendInvoiceStatus: string | null
-    mediendReceived: number
-  }>
+  cases: HospitalCase[]
+}
+
+function invoiceRequestBadgeVariant(
+  status: InvoiceRequestStatus,
+): 'default' | 'secondary' | 'destructive' | 'outline' {
+  if (status === 'VERIFIED') return 'default'
+  if (status === 'REJECTED') return 'destructive'
+  return 'outline'
 }
 
 export default function HospitalDetailPage() {
   const params = useParams()
   const search = useSearchParams()
+  const { user } = useAuth()
+  const canRequestInvoice = user ? hasPermission(user, 'pl:write') : false
+
   const rawName = params.name as string
   const name = decodeURIComponent(rawName)
   const startDate = search.get('startDate')
   const endDate = search.get('endDate')
 
-  const [selectedLeads, setSelectedLeads] = useState<string[]>([])
-  const [requestDialogOpen, setRequestDialogOpen] = useState(false)
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [amount, setAmount] = useState('')
-  const [attachments, setAttachments] = useState<Attachment[]>([])
-  const [uploadingFiles, setUploadingFiles] = useState(false)
-
-  // Filter states
-  const [leadRefFilter, setLeadRefFilter] = useState<string>('')
-  const [patientNameFilter, setPatientNameFilter] = useState<string>('')
-  const [doctorFilter, setDoctorFilter] = useState<string[]>([])
-  const [monthFilter, setMonthFilter] = useState<string[]>([])
-  const [surgeryDateFilter, setSurgeryDateFilter] = useState<string[]>([])
-  const [statusFilter, setStatusFilter] = useState<string[]>([])
-  const [billAmountFilter, setBillAmountFilter] = useState<{ min: number | null; max: number | null } | null>(null)
-  const [mediendShareAmountFilter, setMediendShareAmountFilter] = useState<{ min: number | null; max: number | null } | null>(null)
-  const [mediendReceivedFilter, setMediendReceivedFilter] = useState<{ min: number | null; max: number | null } | null>(null)
-  const [hospitalAmountPendingFilter, setHospitalAmountPendingFilter] = useState<{ min: number | null; max: number | null } | null>(null)
-  const [mediendInvoiceStatusFilter, setMediendInvoiceStatusFilter] = useState<string[]>([])
-
-  const { data: filterConfig } = useQuery<{
-    filters: Array<{
-      field: string
-      label: string
-      filterType: string
-      filterable: boolean
-      options?: Array<{ label: string; value: string }>
-      min?: number
-      max?: number
-    }>
-  }>({
-    queryKey: ['hospitals', name, 'filter-config'],
-    queryFn: () => apiGet(`/api/hospitals/${encodeURIComponent(name)}/filter-config`),
-    enabled: !!name,
-    staleTime: 5 * 60 * 1000,
-  })
-
-  const filterOptions = useMemo(() => {
-    const filters = filterConfig?.filters || []
-    const find = (field: string) => filters.find((f) => f.field === field)
-    return {
-      doctors: find('doctor')?.options || [],
-      statuses: find('status')?.options || [],
-      mediendInvoiceStatuses: find('mediendInvoiceStatus')?.options || [],
-      billBounds: { min: find('billAmount')?.min ?? 0, max: find('billAmount')?.max ?? 0 },
-      shareBounds: { min: find('mediendShareAmount')?.min ?? 0, max: find('mediendShareAmount')?.max ?? 0 },
-      receivedBounds: { min: find('mediendReceived')?.min ?? 0, max: find('mediendReceived')?.max ?? 0 },
-      pendingBounds: { min: find('hospitalAmountPending')?.min ?? 0, max: find('hospitalAmountPending')?.max ?? 0 },
-    }
-  }, [filterConfig])
+  const [requestCase, setRequestCase] = useState<HospitalCase | null>(null)
+  const [requestRemarks, setRequestRemarks] = useState('')
+  const [invoiceNumber, setInvoiceNumber] = useState('')
+  const [invoiceAmount, setInvoiceAmount] = useState('')
 
   const { data, isLoading } = useQuery<HospitalDetail>({
     queryKey: [
@@ -182,151 +166,70 @@ export default function HospitalDetailPage() {
       }
       const tail = qs.toString()
       return apiGet<HospitalDetail>(
-        `/api/hospitals/${encodeURIComponent(name)}${tail ? `?${tail}` : ''}`
+        `/api/hospitals/${encodeURIComponent(name)}${tail ? `?${tail}` : ''}`,
       )
     },
     enabled: !!name,
   })
 
-  const activeFilterCount =
-    (leadRefFilter.trim() ? 1 : 0) +
-    (patientNameFilter.trim() ? 1 : 0) +
-    doctorFilter.length +
-    monthFilter.length +
-    surgeryDateFilter.length +
-    statusFilter.length +
-    (billAmountFilter ? 1 : 0) +
-    (mediendShareAmountFilter ? 1 : 0) +
-    (mediendReceivedFilter ? 1 : 0) +
-    (hospitalAmountPendingFilter ? 1 : 0) +
-    mediendInvoiceStatusFilter.length
-
-  const clearFilters = () => {
-    setLeadRefFilter('')
-    setPatientNameFilter('')
-    setDoctorFilter([])
-    setMonthFilter([])
-    setSurgeryDateFilter([])
-    setStatusFilter([])
-    setBillAmountFilter(null)
-    setMediendShareAmountFilter(null)
-    setMediendReceivedFilter(null)
-    setHospitalAmountPendingFilter(null)
-    setMediendInvoiceStatusFilter([])
-  }
-
-  // Pre-fill request fields on dialog open or cases select change
-  useEffect(() => {
-    if (!requestDialogOpen || !data?.cases) return
-    const selectedCases = data.cases.filter((c) => selectedLeads.includes(c.leadId))
-    if (selectedCases.length === 0) return
-
-    if (selectedCases.length === 1) {
-      const c = selectedCases[0]
-      setTitle(`Invoice Request: ${name} - ${c.patientName ?? 'Patient'} (${c.leadRef ?? ''})`)
-      setAmount(c.mediendShareAmount ? String(c.mediendShareAmount) : '')
-      setDescription(
-        `Requesting invoice for Hospital: ${name}\n` +
-        `Patient Name: ${c.patientName ?? '—'}\n` +
-        `Doctor: ${c.doctorName ?? '—'}\n` +
-        `: ${c.leadRef ?? '—'}\n` +
-        `Surgery Date: ${c.surgeryDate ? new Date(c.surgeryDate).toLocaleDateString('en-IN') : '—'}\n` +
-        `Bill Amount: ${formatPlRupee(c.billAmount)}\n` +
-        `MediEND Share: ${formatPlRupee(c.mediendShareAmount)}\n` +
-        `Pending Amount: ${formatPlRupee(c.hospitalAmountPending)}`
-      )
-    } else {
-      const totalMediendShare = selectedCases.reduce((sum, c) => sum + (c.mediendShareAmount ?? 0), 0)
-      setTitle(`Invoice Request: ${name} - ${selectedCases.length} Cases`)
-      setAmount(String(totalMediendShare))
-      const casesDetails = selectedCases
-        .map(
-          (c) =>
-            `- Lead Ref: ${c.leadRef ?? '—'}, Patient: ${c.patientName ?? '—'}, MediEND Share: ${formatPlRupee(
-              c.mediendShareAmount
-            )}`
-        )
-        .join('\n')
-      setDescription(
-        `Requesting batch invoice for Hospital: ${name} (${selectedCases.length} cases).\n\n` +
-        `Cases Summary:\n${casesDetails}\n\n` +
-        `Total MediEND Share: ${formatPlRupee(totalMediendShare)}`
-      )
-    }
-  }, [requestDialogOpen, selectedLeads, data, name])
-
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || files.length === 0) return
-    setUploadingFiles(true)
-    try {
-      const newAttachments: Attachment[] = []
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i]
-        const formData = new FormData()
-        formData.append('file', file)
-        const res = await fetch('/api/md-approvals/upload', {
-          method: 'POST',
-          body: formData,
-          credentials: 'include',
-        })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || 'Upload failed')
-        newAttachments.push({
-          name: file.name,
-          url: data.data.url,
-          type: file.type,
-        })
-      }
-      setAttachments((prev) => [...prev, ...newAttachments])
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Upload failed')
-    } finally {
-      setUploadingFiles(false)
-      e.target.value = ''
-    }
-  }
-
-  const removeAttachment = (index: number) => {
-    setAttachments((prev) => prev.filter((_, i) => i !== index))
-  }
-
-  const queryClient = useQueryClient()
-  const createMutation = useMutation({
-    mutationFn: (payload: { title: string; description?: string; amount?: number; attachments?: Attachment[] }) =>
-      apiPost('/api/md-approvals', payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['md-approvals'] })
-      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
-      setRequestDialogOpen(false)
-      setTitle('')
-      setDescription('')
-      setAmount('')
-      setAttachments([])
-      setSelectedLeads([])
-      toast.success('Invoice request submitted successfully to MD')
+  const { data: invoiceData, isLoading: invoicesLoading } = usePlInvoiceRequests(
+    {
+      hospitalName: name,
+      status: 'ALL',
+      latestPerLead: true,
     },
-    onError: (err: Error) => toast.error(err.message),
-  })
+    !!name,
+  )
 
-  const handleCreateRequest = () => {
-    if (!title.trim()) {
-      toast.error('Title is required')
+  const invoiceByLeadId = useMemo(() => {
+    const map = new Map<string, InvoiceRequestRecord>()
+    for (const req of invoiceData?.requests ?? []) {
+      map.set(req.leadId, req)
+    }
+    return map
+  }, [invoiceData?.requests])
+
+  const createInvoice = useCreatePlInvoiceRequest()
+
+  const openRequestDialog = (c: HospitalCase, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setRequestCase(c)
+    setRequestRemarks('')
+    setInvoiceNumber('')
+    setInvoiceAmount(
+      c.mediendShareAmount != null && c.mediendShareAmount > 0
+        ? String(c.mediendShareAmount)
+        : '',
+    )
+  }
+
+  const closeRequestDialog = () => {
+    setRequestCase(null)
+    setRequestRemarks('')
+    setInvoiceNumber('')
+    setInvoiceAmount('')
+  }
+
+  const handleSubmitRequest = async () => {
+    if (!requestCase) return
+    const amount = invoiceAmount.trim() ? Number(invoiceAmount) : undefined
+    if (amount != null && (Number.isNaN(amount) || amount < 0)) {
+      toast.error('Invoice amount must be a valid number')
       return
     }
-    createMutation.mutate({
-      title: title.trim(),
-      description: description.trim() || undefined,
-      amount: amount ? parseFloat(amount) : undefined,
-      attachments: attachments.length > 0 ? attachments : undefined,
-    })
-  }
 
-  const renderCellAmount = (value: number | null, colorClass?: string) => {
-    if (value == null || value === 0) {
-      return <span className="text-slate-300 dark:text-slate-700">—</span>
+    try {
+      await createInvoice.mutateAsync({
+        leadId: requestCase.leadId,
+        requestRemarks: requestRemarks.trim() || undefined,
+        invoiceNumber: invoiceNumber.trim() || undefined,
+        invoiceAmount: amount,
+      })
+      toast.success('Invoice request submitted to Finance')
+      closeRequestDialog()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to submit invoice request')
     }
-    return <span className={colorClass}>{formatPlRupee(value)}</span>
   }
 
   return (
@@ -426,60 +329,14 @@ export default function HospitalDetailPage() {
             </div>
           </div>
 
-          {/* Settlement UI Section */}
-          <RecordPaymentForm
-            title="Record Hospital Payment"
-            amountLabel="Amount Received"
-            onSubmit={(amount, mode, txnId) => {
-              toast.success(`Payment of ₹${amount || '0'} recorded successfully!`)
-            }}
-          />
-
-          {/* Cases Table Component Container (UI preserved as requested, wrapper styled) */}
-          <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl overflow-hidden shadow-lg">
-            <div className="px-6 py-4 border-b border-[#283150] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[#191D2E]/80">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/20 shadow-sm shrink-0">
-                  <Activity className="h-5 w-5 animate-pulse" />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-sm font-bold text-white tracking-tight leading-none">
-                      Cases
-                    </h2>
-                    {activeFilterCount > 0 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 text-[10px] text-rose-400 hover:text-rose-300 font-medium px-2 py-0"
-                        onClick={clearFilters}
-                      >
-                        Clear Filters ({activeFilterCount})
-                      </Button>
-                    )}
-                  </div>
-                  <span className="text-xs font-normal text-[#c7c6cd]/70 flex items-center gap-1.5 leading-none">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-                    </span>
-                    Click a case to open its outstanding record
-                  </span>
-                </div>
-              </div>
-              <div>
-                <Button
-                  disabled={selectedLeads.length === 0}
-                  onClick={() => setRequestDialogOpen(true)}
-                  className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
-                >
-                  <FileText className="h-4 w-4" />
-                  Request Invoice {selectedLeads.length > 0 && `(${selectedLeads.length})`}
-                </Button>
-              </div>
-            </div>
-            <div className="overflow-x-auto p-0">
+          <Card className="overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
+            <CardHeader className="border-b bg-gradient-to-r from-sky-500/10 to-indigo-500/8">
+              <CardTitle className="text-sky-950 dark:text-sky-100">Cases</CardTitle>
+              <CardDescription>
+                Click a case to open its outstanding record. Use Invoice to request PDF from Finance.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="overflow-x-auto p-0">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[#191D2E]/90 hover:bg-[#191D2E]/90 border-b border-[#283150]">
@@ -638,78 +495,49 @@ export default function HospitalDetailPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    data.cases.map((c) => (
-                      <TableRow
-                        key={c.leadId}
-                        className="cursor-pointer transition-colors duration-150 hover:bg-[#22d3ee]/5 border-b border-[#283150]/20"
-                        onClick={() => (window.location.href = `/pl/outstanding/${c.leadId}`)}
-                      >
-                        <TableCell className="w-[50px] pl-4" onClick={(e) => e.stopPropagation()}>
-                          <Checkbox
-                            className="border-[#283150] data-[state=checked]:bg-[#22d3ee] data-[state=checked]:text-[#07112f]"
-                            checked={selectedLeads.includes(c.leadId)}
-                            onCheckedChange={(checked) => {
-                              setSelectedLeads((prev) =>
-                                checked
-                                  ? [...prev, c.leadId]
-                                  : prev.filter((id) => id !== c.leadId)
-                              )
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap font-medium text-white">{c.leadRef ?? '—'}</TableCell>
-                        <TableCell className="text-[#dce1ff]">{c.patientName ?? '—'}</TableCell>
-                        <TableCell className="text-[#c7c6cd]">{c.doctorName ?? '—'}</TableCell>
-                        <TableCell className="tabular-nums text-[#c7c6cd]/80">{formatPlMonth(c.month ? new Date(c.month) : null)}</TableCell>
-                        <TableCell className="tabular-nums text-[#c7c6cd]/80">{formatPlDate(c.surgeryDate ? new Date(c.surgeryDate) : null)}</TableCell>
-                        <TableCell>
-                          <span className="inline-flex items-center rounded-md bg-[#07112f] px-2 py-0.5 text-xs font-semibold text-[#c7c6cd] border border-[#283150]">
-                            {c.status ?? '—'}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-right tabular-nums text-[#c7c6cd]">{renderCellAmount(c.billAmount)}</TableCell>
-                        <TableCell className="text-right tabular-nums text-white font-bold">{renderCellAmount(c.mediendShareAmount)}</TableCell>
-                        <TableCell className="text-right tabular-nums text-emerald-400 font-semibold">{renderCellAmount(c.mediendReceived, 'text-emerald-400')}</TableCell>
-                        <TableCell className="text-right tabular-nums text-rose-400 font-semibold">{renderCellAmount(c.hospitalAmountPending, 'text-rose-400')}</TableCell>
-                        <TableCell>
-                          <Badge
-                            className={`border ${c.mediendInvoiceStatus === 'PAID'
-                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/10'
-                                : c.mediendInvoiceStatus === 'SENT'
-                                  ? 'bg-[#22d3ee]/10 text-[#22d3ee] border-[#22d3ee]/20 hover:bg-[#22d3ee]/10'
-                                  : 'bg-rose-500/10 text-rose-400 border-rose-500/25 hover:bg-rose-500/10'
-                              }`}
-                          >
-                            {c.mediendInvoiceStatus ?? 'PENDING'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right pr-4" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-2 text-xs border-[#283150] bg-[#07112f] text-[#22d3ee] hover:bg-[#283150] hover:text-[#22d3ee]"
-                              onClick={() => {
-                                setSelectedLeads([c.leadId])
-                                setRequestDialogOpen(true)
-                              }}
-                            >
-                              Request Invoice
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-[#c7c6cd] hover:text-[#22d3ee]"
-                              asChild
-                            >
-                              <Link href={`/pl/outstanding/${c.leadId}`}>
-                                <ArrowRight className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                    data.cases.map((c) => {
+                      const invoiceReq = invoiceByLeadId.get(c.leadId)
+                      return (
+                        <TableRow
+                          key={c.leadId}
+                          className="cursor-pointer hover:bg-sky-50/30 dark:hover:bg-sky-950/15"
+                          onClick={() => (window.location.href = `/pl/outstanding/${c.leadId}`)}
+                        >
+                          <TableCell className="whitespace-nowrap">{c.leadRef ?? '—'}</TableCell>
+                          <TableCell>{c.patientName ?? '—'}</TableCell>
+                          <TableCell>{c.doctorName ?? '—'}</TableCell>
+                          <TableCell>{formatPlMonth(c.month ? new Date(c.month) : null)}</TableCell>
+                          <TableCell>
+                            {formatPlDate(c.surgeryDate ? new Date(c.surgeryDate) : null)}
+                          </TableCell>
+                          <TableCell>{c.status ?? '—'}</TableCell>
+                          <TableCell className="text-right tabular-nums">
+                            {formatPlRupee(c.billAmount)}
+                          </TableCell>
+                          <TableCell className="text-right tabular-nums">
+                            {formatPlRupee(c.mediendShareAmount)}
+                          </TableCell>
+                          <TableCell className="text-right tabular-nums">
+                            {formatPlRupee(c.mediendReceived || null)}
+                          </TableCell>
+                          <TableCell className="text-right tabular-nums">
+                            {formatPlRupee(c.hospitalAmountPending)}
+                          </TableCell>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <InvoiceCell
+                              caseRow={c}
+                              invoiceReq={invoiceReq}
+                              invoicesLoading={invoicesLoading}
+                              canRequest={canRequestInvoice}
+                              requesting={
+                                createInvoice.isPending && requestCase?.leadId === c.leadId
+                              }
+                              onRequest={(e) => openRequestDialog(c, e)}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })
                   )}
                 </TableBody>
               </Table>
@@ -744,98 +572,154 @@ export default function HospitalDetailPage() {
         </div>
       </div>
 
-      {/* Request Invoice dialog */}
-      <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
-        <DialogContent className="max-w-md bg-[#191D2E] border-[#283150] text-[#dce1ff]">
+      <Dialog open={!!requestCase} onOpenChange={(open) => !open && closeRequestDialog()}>
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-white">
-              <FileText className="h-5 w-5 text-[#22d3ee]" />
-              Request MD Approval for Invoice
-            </DialogTitle>
+            <DialogTitle>Request Invoice</DialogTitle>
+            <DialogDescription>
+              {requestCase?.leadRef ?? 'Case'} · {requestCase?.patientName ?? 'Patient'}
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 pt-2">
-            <div>
-              <Label className="text-xs text-[#c7c6cd]">Request Title *</Label>
+
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="invoice-number">Invoice number (optional)</Label>
               <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter request title"
-                className="mt-1 bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
+                id="invoice-number"
+                value={invoiceNumber}
+                onChange={(e) => setInvoiceNumber(e.target.value)}
+                placeholder="INV-001"
               />
             </div>
-            <div>
-              <Label className="text-xs text-[#c7c6cd]">Description / Case Summary</Label>
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Case details..."
-                rows={6}
-                className="mt-1 text-xs font-mono bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
-              />
-            </div>
-            <div>
-              <Label className="text-xs text-[#c7c6cd]">Amount (INR)</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="invoice-amount">Invoice amount (optional)</Label>
               <Input
+                id="invoice-amount"
                 type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                min={0}
+                value={invoiceAmount}
+                onChange={(e) => setInvoiceAmount(e.target.value)}
                 placeholder="0"
-                className="mt-1 bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
               />
             </div>
-            <div>
-              <Label className="text-xs text-[#c7c6cd]">Attachments (optional)</Label>
-              <Input
-                type="file"
-                multiple
-                accept="image/*,application/pdf"
-                onChange={handleFileSelect}
-                disabled={uploadingFiles}
-                className="mt-1 cursor-pointer text-xs bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
+            <div className="space-y-1.5">
+              <Label htmlFor="request-remarks">Remarks (optional)</Label>
+              <Textarea
+                id="request-remarks"
+                value={requestRemarks}
+                onChange={(e) => setRequestRemarks(e.target.value)}
+                placeholder="Notes for Finance"
+                rows={3}
               />
-              {uploadingFiles && <p className="text-[11px] text-[#c7c6cd]/70 mt-1">Uploading files...</p>}
-              {attachments.length > 0 && (
-                <div className="mt-2 space-y-1 bg-[#07112f] p-2 rounded-md border border-[#283150] text-xs text-[#c7c6cd]">
-                  {attachments.map((a, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <Paperclip className="h-3 w-3 text-[#c7c6cd]/75 shrink-0" />
-                      <span className="truncate flex-1">{a.name}</span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0 text-rose-400 hover:text-rose-300 hover:bg-[#283150]"
-                        onClick={() => removeAttachment(i)}
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#283150] mt-4">
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-[#283150] bg-transparent text-[#c7c6cd] hover:bg-[#283150] hover:text-white"
-                onClick={() => setRequestDialogOpen(false)}
-                disabled={createMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleCreateRequest}
-                className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold"
-                disabled={createMutation.isPending}
-              >
-                {createMutation.isPending ? 'Submitting...' : 'Submit Request'}
-              </Button>
             </div>
           </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={closeRequestDialog} disabled={createInvoice.isPending}>
+              Cancel
+            </Button>
+            <Button onClick={handleSubmitRequest} disabled={createInvoice.isPending}>
+              {createInvoice.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Submitting…
+                </>
+              ) : (
+                'Submit request'
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </ProtectedRoute>
+  )
+}
+
+function InvoiceCell({
+  caseRow,
+  invoiceReq,
+  invoicesLoading,
+  canRequest,
+  requesting,
+  onRequest,
+}: {
+  caseRow: HospitalCase
+  invoiceReq?: InvoiceRequestRecord
+  invoicesLoading: boolean
+  canRequest: boolean
+  requesting: boolean
+  onRequest: (e: React.MouseEvent) => void
+}) {
+  if (invoicesLoading) {
+    return <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+  }
+
+  if (invoiceReq) {
+    return (
+      <div className="flex flex-col items-start gap-1.5">
+        <Badge variant={invoiceRequestBadgeVariant(invoiceReq.status)}>
+          {INVOICE_REQUEST_STATUS_LABEL[invoiceReq.status]}
+        </Badge>
+
+        {invoiceReq.status === 'VERIFIED' && invoiceReq.invoicePdfUrl && (
+          <Button size="sm" variant="outline" className="h-7 px-2 text-xs" asChild>
+            <a href={invoiceReq.invoicePdfUrl} target="_blank" rel="noreferrer">
+              <FileText className="mr-1 h-3.5 w-3.5" />
+              File
+              <ExternalLink className="ml-1 h-3 w-3" />
+            </a>
+          </Button>
+        )}
+
+        {invoiceReq.status === 'REJECTED' && canRequest && (
+          <Button size="sm" variant="secondary" className="h-7 px-2 text-xs" onClick={onRequest}>
+            Re-request
+          </Button>
+        )}
+
+        {invoiceReq.status === 'REJECTED' && invoiceReq.rejectionRemarks && (
+          <p className="max-w-[160px] text-[10px] text-muted-foreground line-clamp-2">
+            {invoiceReq.rejectionRemarks}
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col items-start gap-1.5">
+      <Badge
+        variant={
+          caseRow.mediendInvoiceStatus === 'PAID'
+            ? 'default'
+            : caseRow.mediendInvoiceStatus === 'SENT'
+              ? 'secondary'
+              : 'outline'
+        }
+      >
+        {caseRow.mediendInvoiceStatus ?? 'PENDING'}
+      </Badge>
+      {canRequest && (
+        <Button
+          size="sm"
+          className="h-7 px-2 text-xs"
+          onClick={onRequest}
+          disabled={requesting}
+        >
+          {requesting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Request'}
+        </Button>
+      )}
+    </div>
+  )
+}
+
+function KpiTile({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <Card className="border-sky-200/40 dark:border-sky-800/30">
+      <CardContent className="p-3">
+        <div className="text-xs text-muted-foreground">{label}</div>
+        <div className="text-lg font-semibold tabular-nums">{value ?? '—'}</div>
+      </CardContent>
+    </Card>
   )
 }
