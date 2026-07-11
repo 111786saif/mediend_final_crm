@@ -5,6 +5,7 @@ export type { EmployeeIncentiveStatus }
 export interface IncentiveRecord {
   id: string
   employeeId: string
+  userId?: string | null
   employeeName: string
   employeeCode: string
   department: string | null

@@ -59,7 +59,7 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
   PL_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'sales.case_tracker', 'main.master_data', 'main.chat',
-    'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.cash_cases', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
+    'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_pnl'
   ],

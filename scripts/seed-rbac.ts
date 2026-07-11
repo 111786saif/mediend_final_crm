@@ -392,9 +392,33 @@ const resourcesToSeed: ResourceSeedItem[] = [
 ]
 
 async function main() {
-  console.log('Cleaning old RBAC resources & permissions assignments...')
-  await prisma.permissionAssignment.deleteMany({})
-  await prisma.resource.deleteMany({})
+  console.log('Cleaning obsolete resources and assignments...')
+  const seededKeys = resourcesToSeed.map((r) => r.key)
+  const obsoleteResources = await prisma.resource.findMany({
+    where: { NOT: { key: { in: seededKeys } } },
+    select: { id: true, key: true }
+  })
+  
+  if (obsoleteResources.length > 0) {
+    const obsoleteIds = obsoleteResources.map((r) => r.id)
+    
+    // 1. Delete assignments for obsolete resources
+    await prisma.permissionAssignment.deleteMany({
+      where: { resourceId: { in: obsoleteIds } }
+    })
+    
+    // 2. Delete obsolete resources hierarchically to prevent foreign key errors
+    await prisma.resource.deleteMany({
+      where: { id: { in: obsoleteIds }, type: 'ENTITY' }
+    })
+    await prisma.resource.deleteMany({
+      where: { id: { in: obsoleteIds }, type: 'SECTION' }
+    })
+    await prisma.resource.deleteMany({
+      where: { id: { in: obsoleteIds }, type: 'MODULE' }
+    })
+    console.log(`Deleted ${obsoleteResources.length} obsolete resources and their assignments.`)
+  }
 
   console.log('Seeding resources...')
 

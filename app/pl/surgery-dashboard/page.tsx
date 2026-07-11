@@ -402,7 +402,7 @@ export default function PLSurgeryDashboardPage() {
                   All teams
                 </TabsTrigger>
                 {data?.teams?.map((t) => (
-                  <TabsTrigger key={t.id} value={t.id} className="max-w-[200px] truncate text-xs sm:text-sm data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-md">
+                  <TabsTrigger key={t.id} value={t.id} className="text-xs sm:text-sm whitespace-nowrap data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-md">
                     {t.name}
                   </TabsTrigger>
                 ))}
