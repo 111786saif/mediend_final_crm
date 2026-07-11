@@ -1013,8 +1013,8 @@ export default function PLOutstandingPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-slate-50 via-amber-50/40 to-orange-50/50 p-6 dark:from-slate-950 dark:via-amber-950/25 dark:to-slate-900">
-        <div className="mx-auto max-w-6xl w-full space-y-6">
+      <div className="min-h-screen w-full min-w-0 overflow-x-hidden bg-gradient-to-br from-slate-50 via-amber-50/40 to-orange-50/50 p-6 dark:from-slate-950 dark:via-amber-950/25 dark:to-slate-900">
+        <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-3">
@@ -1169,7 +1169,7 @@ export default function PLOutstandingPage() {
             </Card>
           </div>
 
-          <Card className="overflow-hidden border-violet-200/50 shadow-lg dark:border-violet-800/40">
+          <Card className="min-w-0 w-full overflow-hidden border-violet-200/50 shadow-lg dark:border-violet-800/40">
             <CardHeader className="border-b bg-gradient-to-r from-violet-500/12 via-fuchsia-500/8 to-transparent pb-4">
               <CardTitle className="text-lg text-violet-950 dark:text-violet-100">Outstanding records</CardTitle>
               <CardDescription>Click a row to edit. Filtered by discharge date.</CardDescription>

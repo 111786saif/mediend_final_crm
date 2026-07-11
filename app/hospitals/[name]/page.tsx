@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -18,6 +18,7 @@ import {
 import { toast } from 'sonner'
 import { ProtectedRoute } from '@/components/protected-route'
 import { RecentActivityLog } from '@/components/recent-activity-log'
+import { RecordPaymentForm } from '@/components/record-payment-form'
 import { ColumnFilter } from '@/components/ui/column-filter'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -48,7 +49,7 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card'
-import { apiGet } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { formatPlDate, formatPlMonth, formatPlRupee } from '@/lib/pl/resolve-pl-row'
 import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
@@ -104,6 +105,7 @@ type FilterConfig = {
 }
 
 export default function HospitalDetailPage() {
+  const queryClient = useQueryClient()
   const params = useParams()
   const search = useSearchParams()
   const { user } = useAuth()
@@ -115,6 +117,7 @@ export default function HospitalDetailPage() {
   const endDate = search.get('endDate')
 
   const [requestCase, setRequestCase] = useState<HospitalCase | null>(null)
+  const [isBatchInvoice, setIsBatchInvoice] = useState(false)
   const [requestRemarks, setRequestRemarks] = useState('')
   const [invoiceNumber, setInvoiceNumber] = useState('')
   const [invoiceAmount, setInvoiceAmount] = useState('')
@@ -225,8 +228,47 @@ export default function HospitalDetailPage() {
     }
   }, [filterConfig])
 
+  // ── Payment Collection Mutation (Reconciliation) ──────────────────────────
+  const recordPaymentMutation = useMutation({
+    mutationFn: async (payload: {
+      leadIds: string[]
+      amount: number
+      mode: 'NEFT' | 'CHEQUE' | 'UPI' | 'OTHER'
+      reference: string | null
+      attachments?: Array<{ name: string; url: string; type: string }>
+    }) => {
+      // Split the total amount equally among all selected cases
+      const splitAmount = payload.amount / payload.leadIds.length
+      const promises = payload.leadIds.map((leadId) =>
+        apiPost('/api/installments', {
+          leadId,
+          recipient: 'MEDIEND',
+          amount: splitAmount,
+          paidOn: new Date().toISOString(),
+          mode: payload.mode,
+          reference: payload.reference || null,
+          notes: `Recorded via Hospital Detail Page for ${name}. Attachments:\n${
+            payload.attachments && payload.attachments.length > 0
+              ? payload.attachments.map((a) => `- [${a.name}](${a.url})`).join('\n')
+              : 'None'
+          }`,
+        })
+      )
+      return Promise.all(promises)
+    },
+    onSuccess: () => {
+      toast.success('Hospital payment recorded successfully!')
+      setSelectedLeads([])
+      queryClient.invalidateQueries({ queryKey: ['hospitals', name] })
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to record payment')
+    },
+  })
+
   const openRequestDialog = (c: HospitalCase, e: React.MouseEvent) => {
     e.stopPropagation()
+    setIsBatchInvoice(false)
     setRequestCase(c)
     setRequestRemarks('')
     setInvoiceNumber('')
@@ -237,29 +279,51 @@ export default function HospitalDetailPage() {
     )
   }
 
-  const closeRequestDialog = () => {
+  const handleBatchInvoiceRequest = () => {
+    setIsBatchInvoice(true)
     setRequestCase(null)
     setRequestRemarks('')
     setInvoiceNumber('')
     setInvoiceAmount('')
   }
 
+  const closeRequestDialog = () => {
+    setRequestCase(null)
+    setIsBatchInvoice(false)
+    setRequestRemarks('')
+    setInvoiceNumber('')
+    setInvoiceAmount('')
+  }
+
   const handleSubmitRequest = async () => {
-    if (!requestCase) return
+    if (!isBatchInvoice && !requestCase) return
     const amount = invoiceAmount.trim() ? Number(invoiceAmount) : undefined
-    if (amount != null && (Number.isNaN(amount) || amount < 0)) {
+    if (!isBatchInvoice && amount != null && (Number.isNaN(amount) || amount < 0)) {
       toast.error('Invoice amount must be a valid number')
       return
     }
 
     try {
-      await createInvoice.mutateAsync({
-        leadId: requestCase.leadId,
-        requestRemarks: requestRemarks.trim() || undefined,
-        invoiceNumber: invoiceNumber.trim() || undefined,
-        invoiceAmount: amount,
-      })
-      toast.success('Invoice request submitted to Finance')
+      if (isBatchInvoice) {
+        await Promise.all(
+          selectedLeads.map((leadId) =>
+            createInvoice.mutateAsync({
+              leadId,
+              requestRemarks: requestRemarks.trim() || undefined,
+              invoiceNumber: invoiceNumber.trim() || undefined,
+            })
+          )
+        )
+        toast.success(`Invoice requests submitted successfully for ${selectedLeads.length} cases`)
+      } else if (requestCase) {
+        await createInvoice.mutateAsync({
+          leadId: requestCase.leadId,
+          requestRemarks: requestRemarks.trim() || undefined,
+          invoiceNumber: invoiceNumber.trim() || undefined,
+          invoiceAmount: amount,
+        })
+        toast.success('Invoice request submitted to Finance')
+      }
       closeRequestDialog()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to submit invoice request')
@@ -268,8 +332,8 @@ export default function HospitalDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
-        <div className="mx-auto max-w-7xl space-y-6">
+      <div className="min-h-screen w-full min-w-0 bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
+        <div className="w-full min-w-0 space-y-6">
           {/* Header & Navigation */}
           <div className="flex items-center gap-4">
             <Button
@@ -363,12 +427,54 @@ export default function HospitalDetailPage() {
             </div>
           </div>
 
-          <Card className="overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
-            <CardHeader className="border-b bg-gradient-to-r from-sky-500/10 to-indigo-500/8">
-              <CardTitle className="text-sky-950 dark:text-sky-100">Cases</CardTitle>
-              <CardDescription>
-                Click a case to open its outstanding record. Use Invoice to request PDF from Finance.
-              </CardDescription>
+          {/* Payment Form Section */}
+          <RecordPaymentForm
+            title="Record Hospital Payment"
+            amountLabel="Amount Paid"
+            onSubmit={async (amount, mode, txnId, attachments) => {
+              const amt = parseFloat(amount)
+              if (!amt || amt <= 0) {
+                toast.error('Please enter a valid payment amount')
+                return
+              }
+              if (selectedLeads.length === 0) {
+                toast.error('Please select at least one case from the table to record payment')
+                return
+              }
+
+              const mappedMode =
+                mode === 'Bank Transfer' ? 'NEFT' :
+                mode === 'Cheque' ? 'CHEQUE' :
+                mode === 'UPI' ? 'UPI' : 'OTHER'
+
+              recordPaymentMutation.mutate({
+                leadIds: selectedLeads,
+                amount: amt,
+                mode: mappedMode,
+                reference: txnId,
+                attachments,
+              })
+            }}
+          />
+
+          <Card className="min-w-0 w-full overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
+            <CardHeader className="border-b bg-gradient-to-r from-sky-500/10 to-indigo-500/8 flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-sky-950 dark:text-sky-100">Cases</CardTitle>
+                <CardDescription>
+                  Click a case to open its outstanding record. Use Invoice to request PDF from Finance.
+                </CardDescription>
+              </div>
+              {canRequestInvoice && (
+                <Button
+                  disabled={selectedLeads.length === 0}
+                  onClick={handleBatchInvoiceRequest}
+                  className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
+                >
+                  <FileText className="h-4 w-4" />
+                  Request Invoice {selectedLeads.length > 0 && `(${selectedLeads.length})`}
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="overflow-x-auto p-0">
               <Table>
@@ -628,53 +734,72 @@ export default function HospitalDetailPage() {
         </div>
       </div>
 
-      <Dialog open={!!requestCase} onOpenChange={(open) => !open && closeRequestDialog()}>
-        <DialogContent className="max-w-md">
+      <Dialog open={!!requestCase || isBatchInvoice} onOpenChange={(open) => !open && closeRequestDialog()}>
+        <DialogContent className="max-w-md bg-[#191D2E] border-[#283150] text-[#dce1ff]">
           <DialogHeader>
-            <DialogTitle>Request Invoice</DialogTitle>
-            <DialogDescription>
-              {requestCase?.leadRef ?? 'Case'} · {requestCase?.patientName ?? 'Patient'}
+            <DialogTitle className="text-white flex items-center gap-2">
+              <FileText className="h-5 w-5 text-[#22d3ee]" />
+              {isBatchInvoice ? `Request Batch Invoice (${selectedLeads.length} Cases)` : 'Request Invoice'}
+            </DialogTitle>
+            <DialogDescription className="text-[#c7c6cd]">
+              {isBatchInvoice
+                ? 'Submit invoice requests for all selected patient cases in this hospital.'
+                : `${requestCase?.leadRef ?? 'Case'} · ${requestCase?.patientName ?? 'Patient'}`}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3">
+          <div className="space-y-3 pt-2">
             <div className="space-y-1.5">
-              <Label htmlFor="invoice-number">Invoice number (optional)</Label>
+              <Label htmlFor="invoice-number" className="text-xs text-[#c7c6cd]">Invoice number (optional)</Label>
               <Input
                 id="invoice-number"
                 value={invoiceNumber}
                 onChange={(e) => setInvoiceNumber(e.target.value)}
                 placeholder="INV-001"
+                className="bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
               />
             </div>
+            {!isBatchInvoice && (
+              <div className="space-y-1.5">
+                <Label htmlFor="invoice-amount" className="text-xs text-[#c7c6cd]">Invoice amount (optional)</Label>
+                <Input
+                  id="invoice-amount"
+                  type="number"
+                  min={0}
+                  value={invoiceAmount}
+                  onChange={(e) => setInvoiceAmount(e.target.value)}
+                  placeholder="0"
+                  className="bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
+                />
+              </div>
+            )}
             <div className="space-y-1.5">
-              <Label htmlFor="invoice-amount">Invoice amount (optional)</Label>
-              <Input
-                id="invoice-amount"
-                type="number"
-                min={0}
-                value={invoiceAmount}
-                onChange={(e) => setInvoiceAmount(e.target.value)}
-                placeholder="0"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="request-remarks">Remarks (optional)</Label>
+              <Label htmlFor="request-remarks" className="text-xs text-[#c7c6cd]">Remarks (optional)</Label>
               <Textarea
                 id="request-remarks"
                 value={requestRemarks}
                 onChange={(e) => setRequestRemarks(e.target.value)}
                 placeholder="Notes for Finance"
                 rows={3}
+                className="bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
               />
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={closeRequestDialog} disabled={createInvoice.isPending}>
+          <DialogFooter className="pt-2 border-t border-[#283150]/30 mt-4">
+            <Button
+              variant="outline"
+              onClick={closeRequestDialog}
+              disabled={createInvoice.isPending}
+              className="border-[#283150] bg-transparent text-[#c7c6cd] hover:bg-[#283150] hover:text-white"
+            >
               Cancel
             </Button>
-            <Button onClick={handleSubmitRequest} disabled={createInvoice.isPending}>
+            <Button
+              onClick={handleSubmitRequest}
+              disabled={createInvoice.isPending}
+              className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold"
+            >
               {createInvoice.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

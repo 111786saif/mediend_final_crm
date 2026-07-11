@@ -511,8 +511,8 @@ export default function CaseTrackerPage() {
 
   return (
     <AuthenticatedLayout>
-      <div className="min-h-screen bg-[#F2F2F7] dark:bg-background">
-        <div className="mx-auto max-w-7xl space-y-5 p-4 md:p-6">
+      <div className="min-h-screen w-full min-w-0 bg-[#F2F2F7] dark:bg-background">
+        <div className="w-full min-w-0 space-y-5 p-4 md:p-6">
           {/* ── Header ── */}
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Case tracker</h1>
@@ -524,7 +524,7 @@ export default function CaseTrackerPage() {
           </div>
 
           {/* ── Global search ── */}
-          <Card className="border-border/80 shadow-sm">
+          <Card className="min-w-0 w-full border-border/80 shadow-sm">
             <CardContent className="pt-4 pb-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -564,7 +564,7 @@ export default function CaseTrackerPage() {
           </div>
 
           {/* Table Card */}
-          <Card className="border-border/80 shadow-sm">
+          <Card className="min-w-0 w-full border-border/80 shadow-sm">
             <CardHeader className="gap-3 pb-3">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
