@@ -4,7 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { canAccessLead, hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
-import { FlowType, Prisma, PipelineStage } from '@/generated/prisma/client'
+import { FlowType, Prisma, PipelineStage, CaseStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { last10DigitsFromStored } from '@/lib/phone-search'
 import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
@@ -70,12 +70,12 @@ export async function GET(request: NextRequest) {
       }
     }
     if (status) where.status = status
-    if (caseStage) {
-      const stages = caseStage.split(',').map((s) => s.trim()).filter(Boolean)
+  if (caseStage) {
+      const stages = caseStage.split(',').map((s) => s.trim()).filter(Boolean) as CaseStage[]
       if (stages.length === 1) {
-        where.caseStage = stages[0] as any
+        where.caseStage = stages[0]
       } else if (stages.length > 1) {
-        where.caseStage = { in: stages as any[] }
+        where.caseStage = { in: stages }
       }
     }
     if (bdId) where.bdId = bdId

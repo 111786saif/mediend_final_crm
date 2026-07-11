@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/select'
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -23,11 +22,11 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
-import { useState, useMemo } from 'react'
-import { AlertTriangle, ChevronDown, Download } from 'lucide-react'
+import { useState, useMemo, type ReactNode } from 'react'
+import { AlertTriangle, ChevronDown, ClipboardList, Download, Eye, Layers } from 'lucide-react'
 import Link from 'next/link'
-import { CASE_STAGE_CONFIG, getCaseStageLabel } from '@/lib/case-stage-labels'
 import { cn } from '@/lib/utils'
+import { PatientQuickViewDrawer } from '@/components/reports/patient-quick-view-drawer'
 
 type Row = {
   id: string
@@ -52,11 +51,20 @@ type Group = {
   count: number
 }
 
+type BucketCounts = {
+  all: number
+  d30: number
+  d60: number
+  d90: number
+}
+
 type ReportResponse = {
   rows: Row[]
   groups?: Group[]
   months: string[]
   truncated: boolean
+  bucketCounts: BucketCounts
+  stageOptions: string[]
 }
 
 const MONTH_LABELS = [
@@ -120,7 +128,7 @@ function downloadCsv(rows: Row[]) {
         r.teamLeadName ?? '',
         r.uploadDate.slice(0, 10),
         r.daysSinceUpload,
-        getCaseStageLabel(r.caseStage),
+        r.caseStage,
         r.pipelineStage,
         r.hospitalName,
         r.treatment ?? '',
@@ -141,72 +149,21 @@ function downloadCsv(rows: Row[]) {
 }
 
 function rowTone(daysSinceUpload: number): string {
-  if (daysSinceUpload > 60) return 'bg-red-50/70 hover:bg-red-100/70 dark:bg-red-950/30 dark:hover:bg-red-950/40'
-  if (daysSinceUpload > 30) return 'bg-amber-50/70 hover:bg-amber-100/70 dark:bg-amber-950/30 dark:hover:bg-amber-950/40'
+  if (daysSinceUpload >= 90) return 'bg-red-50/70 hover:bg-red-100/70 dark:bg-red-950/30 dark:hover:bg-red-950/40'
+  if (daysSinceUpload >= 60) return 'bg-orange-50/70 hover:bg-orange-100/70 dark:bg-orange-950/30 dark:hover:bg-orange-950/40'
+  if (daysSinceUpload >= 30) return 'bg-amber-50/70 hover:bg-amber-100/70 dark:bg-amber-950/30 dark:hover:bg-amber-950/40'
   return ''
 }
 
-type AgingBucket = '30' | '60' | '90'
+type DayBucket = 'all' | '30' | '60' | '90'
 
-function matchesAging(days: number, bucket: AgingBucket | null): boolean {
-  if (!bucket) return true
-  if (bucket === '30') return days <= 30
-  if (bucket === '60') return days >= 31 && days <= 60
-  return days > 60
+function humanizeStage(stage: string | undefined | null): string {
+  if (!stage) return '—'
+  return stage
+    .split('_')
+    .map((w) => w.charAt(0) + w.slice(1).toLowerCase())
+    .join(' ')
 }
-
-// Several caseStage enum values share a display label (e.g. KYP_PENDING and
-// KYP_BASIC_PENDING are both "Card Details Pending"), so dedupe by label and
-// let one option match every underlying stage with that label.
-const STAGE_OPTIONS: Array<{ value: string; label: string; stages: string[] }> = (() => {
-  const byLabel = new Map<string, string[]>()
-  for (const [stage, { label }] of Object.entries(CASE_STAGE_CONFIG)) {
-    const arr = byLabel.get(label) ?? []
-    arr.push(stage)
-    byLabel.set(label, arr)
-  }
-  return Array.from(byLabel.entries())
-    .map(([label, stages]) => ({ value: stages.join(','), label, stages }))
-    .sort((a, b) => a.label.localeCompare(b.label))
-})()
-
-const AGING_CARDS: Array<{
-  key: AgingBucket
-  label: string
-  subtitle: string
-  borderClass: string
-  bgClass: string
-  titleClass: string
-  countClass: string
-}> = [
-  {
-    key: '30',
-    label: '30 Days',
-    subtitle: 'Pending 0–30 days',
-    borderClass: 'border-l-emerald-500',
-    bgClass: 'from-emerald-50/90 dark:from-emerald-950/35',
-    titleClass: 'text-emerald-900/90 dark:text-emerald-100/90',
-    countClass: 'text-emerald-950 dark:text-emerald-50',
-  },
-  {
-    key: '60',
-    label: '60 Days',
-    subtitle: 'Pending 31–60 days',
-    borderClass: 'border-l-amber-500',
-    bgClass: 'from-amber-50/90 dark:from-amber-950/35',
-    titleClass: 'text-amber-900/90 dark:text-amber-100/90',
-    countClass: 'text-amber-950 dark:text-amber-50',
-  },
-  {
-    key: '90',
-    label: '90 Days',
-    subtitle: 'Pending more than 60 days',
-    borderClass: 'border-l-red-500',
-    bgClass: 'from-red-50/90 dark:from-red-950/35',
-    titleClass: 'text-red-900/90 dark:text-red-100/90',
-    countClass: 'text-red-950 dark:text-red-50',
-  },
-]
 
 export default function PatientCardsPendingSurgeryPage() {
   const { user } = useAuth()
@@ -220,8 +177,21 @@ export default function PatientCardsPendingSurgeryPage() {
   ])
   const [teamLeadFilter, setTeamLeadFilter] = useState<string>('all')
   const [groupByTeam, setGroupByTeam] = useState(true)
-  const [agingFilter, setAgingFilter] = useState<AgingBucket | null>(null)
+  const [dayBucket, setDayBucket] = useState<DayBucket>('all')
   const [stageFilter, setStageFilter] = useState<string>('all')
+  const [quickViewLeadId, setQuickViewLeadId] = useState<string | null>(null)
+  const [quickViewTeamLead, setQuickViewTeamLead] = useState<string | null>(null)
+  const [quickViewDays, setQuickViewDays] = useState<number | null>(null)
+  const [quickViewUploadDate, setQuickViewUploadDate] = useState<string | null>(null)
+  const [quickViewOpen, setQuickViewOpen] = useState(false)
+
+  const openQuickView = (row: Row) => {
+    setQuickViewLeadId(row.id)
+    setQuickViewTeamLead(row.teamLeadName)
+    setQuickViewDays(row.daysSinceUpload)
+    setQuickViewUploadDate(row.uploadDate)
+    setQuickViewOpen(true)
+  }
 
   const monthsParam = useMemo(() => [...selectedMonths].sort().join(','), [selectedMonths])
 
@@ -237,78 +207,40 @@ export default function PatientCardsPendingSurgeryPage() {
     return years
   }, [currentYear])
 
-  const { data, isLoading, error } = useQuery<ReportResponse>({
-    queryKey: ['reports/patient-cards-pending-surgery', monthsParam, teamLeadFilter],
+  const { data, isLoading, isFetching, error } = useQuery<ReportResponse>({
+    queryKey: ['reports/patient-cards-pending-surgery', monthsParam, teamLeadFilter, dayBucket, stageFilter],
     queryFn: () => {
-      const params = new URLSearchParams({ months: monthsParam })
+      const params = new URLSearchParams({ months: monthsParam, bucket: dayBucket })
       if (teamLeadFilter !== 'all') params.set('teamLeadUserId', teamLeadFilter)
+      if (stageFilter !== 'all') params.set('caseStage', stageFilter)
       return apiGet<ReportResponse>(`/api/reports/patient-cards-pending-surgery?${params.toString()}`)
     },
     enabled: !!monthsParam && !!user,
+    placeholderData: (prev) => prev,
   })
 
-  const baseRows = useMemo(() => data?.rows ?? [], [data])
-
-  const stageScopedRows = useMemo(() => {
-    if (stageFilter === 'all') return baseRows
-    const stages = new Set(stageFilter.split(','))
-    return baseRows.filter((r) => stages.has(r.caseStage))
-  }, [baseRows, stageFilter])
-
-  const filteredRows = useMemo(() => {
-    if (!agingFilter) return stageScopedRows
-    return stageScopedRows.filter((r) => matchesAging(r.daysSinceUpload, agingFilter))
-  }, [stageScopedRows, agingFilter])
-
-  const agingCounts = useMemo(
-    () => ({
-      '30': stageScopedRows.filter((r) => matchesAging(r.daysSinceUpload, '30')).length,
-      '60': stageScopedRows.filter((r) => matchesAging(r.daysSinceUpload, '60')).length,
-      '90': stageScopedRows.filter((r) => matchesAging(r.daysSinceUpload, '90')).length,
-    }),
-    [stageScopedRows]
-  )
-
-  const groupsForUi = useMemo(() => {
-    const counts = new Map<string, { name: string; count: number }>()
-    for (const r of stageScopedRows) {
-      if (!r.teamLeadId) continue
-      const existing = counts.get(r.teamLeadId)
-      if (existing) existing.count += 1
-      else counts.set(r.teamLeadId, { name: r.teamLeadName ?? '', count: 1 })
-    }
-    return Array.from(counts.entries())
-      .map(([teamLeadId, v]) => ({ teamLeadId, teamLeadName: v.name, count: v.count }))
-      .sort((a, b) => b.count - a.count)
-  }, [stageScopedRows])
+  const rows = useMemo(() => data?.rows ?? [], [data])
+  const groups = useMemo(() => data?.groups ?? [], [data])
+  const stageOptions = useMemo(() => data?.stageOptions ?? [], [data])
+  const bucketCounts = data?.bucketCounts
 
   const groupedRows = useMemo(() => {
-    if (!groupsForUi.length) return null
+    if (!groups.length) return null
     const byTl = new Map<string, Row[]>()
-    for (const r of filteredRows) {
+    for (const r of rows) {
       const key = r.teamLeadId ?? '__unassigned'
       const arr = byTl.get(key) ?? []
       arr.push(r)
       byTl.set(key, arr)
     }
-    return groupsForUi
-      .map((g) => ({ ...g, rows: byTl.get(g.teamLeadId) ?? [], count: (byTl.get(g.teamLeadId) ?? []).length }))
+    return groups
+      .map((g) => ({ ...g, rows: byTl.get(g.teamLeadId) ?? [] }))
       .concat(
         byTl.has('__unassigned')
-          ? [{
-              teamLeadId: '__unassigned',
-              teamLeadName: 'Unassigned',
-              count: byTl.get('__unassigned')!.length,
-              rows: byTl.get('__unassigned')!,
-            }]
+          ? [{ teamLeadId: '__unassigned', teamLeadName: 'Unassigned', count: byTl.get('__unassigned')!.length, rows: byTl.get('__unassigned')! }]
           : []
       )
-      .filter((g) => g.rows.length > 0)
-  }, [groupsForUi, filteredRows])
-
-  const toggleAging = (bucket: AgingBucket) => {
-    setAgingFilter((prev) => (prev === bucket ? null : bucket))
-  }
+  }, [groups, rows])
 
   return (
     <ProtectedRoute>
@@ -346,32 +278,47 @@ export default function PatientCardsPendingSurgeryPage() {
                     <span className="truncate text-left">
                       {selectedMonths.length === 0
                         ? 'Select months'
-                        : summarizeMonths(selectedMonths)}
+                        : selectedMonths.length > 5
+                          ? `${selectedMonths.length} months selected`
+                          : summarizeMonths(selectedMonths)}
                     </span>
-                    <ChevronDown className="h-4 w-4 opacity-60" />
+                    <ChevronDown className="h-4 w-4 opacity-60 shrink-0" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>Months ({year})</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  {MONTH_LABELS.map((label, idx) => {
-                    const key = monthKey(year, idx)
-                    return (
-                      <DropdownMenuCheckboxItem
-                        key={key}
-                        checked={selectedMonths.includes(key)}
-                        onCheckedChange={() => toggleMonth(key)}
-                        onSelect={(e) => e.preventDefault()}
-                      >
-                        {label} {year}
-                      </DropdownMenuCheckboxItem>
-                    )
-                  })}
-                  <DropdownMenuSeparator />
-                  <div className="flex justify-between px-2 py-1.5 text-xs">
+                <DropdownMenuContent align="end" className="w-[300px] p-3">
+                  <div className="flex items-center justify-between px-0.5 pb-2">
+                    <DropdownMenuLabel className="p-0 text-sm font-semibold">Months — {year}</DropdownMenuLabel>
+                    <Badge variant="secondary" className="font-mono text-[11px]">
+                      {selectedMonths.filter((k) => k.startsWith(String(year))).length}/12
+                    </Badge>
+                  </div>
+                  <DropdownMenuSeparator className="mb-2" />
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {MONTH_LABELS.map((label, idx) => {
+                      const key = monthKey(year, idx)
+                      const checked = selectedMonths.includes(key)
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => toggleMonth(key)}
+                          className={cn(
+                            'rounded-md border px-2 py-1.5 text-xs font-medium transition-colors',
+                            checked
+                              ? 'border-teal-500 bg-teal-500/15 text-teal-800 dark:border-teal-400 dark:text-teal-200'
+                              : 'border-border/60 bg-transparent text-muted-foreground hover:border-teal-300 hover:bg-teal-50/60 hover:text-foreground dark:hover:bg-teal-950/30'
+                          )}
+                        >
+                          {label}
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <DropdownMenuSeparator className="my-2" />
+                  <div className="flex justify-between px-0.5">
                     <button
                       type="button"
-                      className="text-muted-foreground hover:text-foreground"
+                      className="text-xs font-medium text-teal-700 hover:text-teal-900 dark:text-teal-300 dark:hover:text-teal-100"
                       onClick={() => {
                         const all = MONTH_LABELS.map((_, idx) => monthKey(year, idx))
                         const allInYear = all.every((k) => selectedMonths.includes(k))
@@ -386,7 +333,7 @@ export default function PatientCardsPendingSurgeryPage() {
                     </button>
                     <button
                       type="button"
-                      className="text-muted-foreground hover:text-foreground"
+                      className="text-xs font-medium text-muted-foreground hover:text-foreground"
                       onClick={() => setSelectedMonths([])}
                     >
                       Clear
@@ -394,14 +341,14 @@ export default function PatientCardsPendingSurgeryPage() {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-              {!isTL && groupsForUi.length > 0 && (
+              {!isTL && groups.length > 0 && (
                 <Select value={teamLeadFilter} onValueChange={setTeamLeadFilter}>
                   <SelectTrigger className="h-8 w-[200px]">
                     <SelectValue placeholder="All teams" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All teams</SelectItem>
-                    {groupsForUi.map((g) => (
+                    {groups.map((g) => (
                       <SelectItem key={g.teamLeadId} value={g.teamLeadId}>
                         {g.teamLeadName} ({g.count})
                       </SelectItem>
@@ -409,19 +356,6 @@ export default function PatientCardsPendingSurgeryPage() {
                   </SelectContent>
                 </Select>
               )}
-              <Select value={stageFilter} onValueChange={setStageFilter}>
-                <SelectTrigger className="h-8 w-[220px]">
-                  <SelectValue placeholder="All stages" />
-                </SelectTrigger>
-                <SelectContent className="max-h-[320px]">
-                  <SelectItem value="all">All stages</SelectItem>
-                  {STAGE_OPTIONS.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               {!isTL && (
                 <Button
                   variant={groupByTeam ? 'secondary' : 'ghost'}
@@ -432,12 +366,26 @@ export default function PatientCardsPendingSurgeryPage() {
                   Group by team
                 </Button>
               )}
+              <Select value={stageFilter} onValueChange={setStageFilter}>
+                <SelectTrigger className="h-8 w-[190px]">
+                  <Layers className="h-3.5 w-3.5 opacity-60 mr-1" />
+                  <SelectValue placeholder="All stages" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All stages</SelectItem>
+                  {stageOptions.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {humanizeStage(s)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Button
                 variant="outline"
                 size="sm"
                 className="h-8 gap-2"
-                onClick={() => downloadCsv(filteredRows)}
-                disabled={filteredRows.length === 0}
+                onClick={() => downloadCsv(rows)}
+                disabled={rows.length === 0}
               >
                 <Download className="h-4 w-4" />
                 CSV
@@ -445,68 +393,43 @@ export default function PatientCardsPendingSurgeryPage() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            {AGING_CARDS.map((card) => {
-              const active = agingFilter === card.key
-              return (
-                <button
-                  key={card.key}
-                  type="button"
-                  onClick={() => toggleAging(card.key)}
-                  className="text-left"
-                >
-                  <Card
-                    className={cn(
-                      'overflow-hidden border-0 shadow-md border-l-4 bg-gradient-to-br to-card transition-all hover:shadow-lg',
-                      card.borderClass,
-                      card.bgClass,
-                      active && 'ring-2 ring-primary ring-offset-2 ring-offset-background'
-                    )}
-                  >
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className={cn('text-sm font-medium', card.titleClass)}>
-                        {card.label}
-                      </CardTitle>
-                      {active && (
-                        <Badge variant="secondary" className="text-[10px]">
-                          Active
-                        </Badge>
-                      )}
-                    </CardHeader>
-                    <CardContent>
-                      <div className={cn('text-2xl font-bold tabular-nums', card.countClass)}>
-                        {agingCounts[card.key]}
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">{card.subtitle}</p>
-                    </CardContent>
-                  </Card>
-                </button>
-              )
-            })}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <BucketCard
+              label="Pending cards"
+              sublabel="Surgery not done in filtered window"
+              count={bucketCounts?.all ?? 0}
+              active={dayBucket === 'all'}
+              onClick={() => setDayBucket('all')}
+              icon={<ClipboardList className="h-4 w-4" />}
+              tone="indigo"
+            />
+            <BucketCard
+              label="Stale > 30 days"
+              sublabel="30–59 days since upload"
+              count={bucketCounts?.d30 ?? 0}
+              active={dayBucket === '30'}
+              onClick={() => setDayBucket((v) => (v === '30' ? 'all' : '30'))}
+              tone="amber"
+            />
+            <BucketCard
+              label="Critical > 60 days"
+              sublabel="60–89 days since upload"
+              count={bucketCounts?.d60 ?? 0}
+              active={dayBucket === '60'}
+              onClick={() => setDayBucket((v) => (v === '60' ? 'all' : '60'))}
+              tone="orange"
+            />
+            <BucketCard
+              label="Severe > 90 days"
+              sublabel="90+ days since upload"
+              count={bucketCounts?.d90 ?? 0}
+              active={dayBucket === '90'}
+              onClick={() => setDayBucket((v) => (v === '90' ? 'all' : '90'))}
+              tone="red"
+            />
           </div>
-
-          {(agingFilter || stageFilter !== 'all') && (
-            <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="text-muted-foreground">
-                Showing {filteredRows.length} of {baseRows.length} patient{baseRows.length === 1 ? '' : 's'}
-              </span>
-              {agingFilter && (
-                <Badge variant="outline" className="gap-1">
-                  Aging: {AGING_CARDS.find((c) => c.key === agingFilter)?.label}
-                  <button type="button" className="ml-1 hover:text-foreground" onClick={() => setAgingFilter(null)} aria-label="Clear aging filter">
-                    ×
-                  </button>
-                </Badge>
-              )}
-              {stageFilter !== 'all' && (
-                <Badge variant="outline" className="gap-1">
-                  Stage: {STAGE_OPTIONS.find((o) => o.value === stageFilter)?.label ?? getCaseStageLabel(stageFilter.split(',')[0])}
-                  <button type="button" className="ml-1 hover:text-foreground" onClick={() => setStageFilter('all')} aria-label="Clear stage filter">
-                    ×
-                  </button>
-                </Badge>
-              )}
-            </div>
+          {isFetching && !isLoading && (
+            <p className="-mt-2 text-xs text-muted-foreground">Refreshing…</p>
           )}
 
           {data?.truncated && (
@@ -523,38 +446,116 @@ export default function PatientCardsPendingSurgeryPage() {
           )}
 
           {isTL || !groupByTeam ? (
-            <FlatTable rows={filteredRows} totalInScope={stageScopedRows.length} isLoading={isLoading} />
+            <FlatTable rows={rows} isLoading={isLoading} onQuickView={openQuickView} />
           ) : (
-            <GroupedTables groups={groupedRows ?? []} isLoading={isLoading} />
+            <GroupedTables groups={groupedRows ?? []} isLoading={isLoading} onQuickView={openQuickView} />
           )}
         </div>
       </div>
+      <PatientQuickViewDrawer
+        leadId={quickViewLeadId}
+        teamLeadName={quickViewTeamLead}
+        daysSinceUpload={quickViewDays}
+        uploadDate={quickViewUploadDate}
+        open={quickViewOpen}
+        onOpenChange={(o) => {
+          setQuickViewOpen(o)
+          if (!o) setQuickViewLeadId(null)
+        }}
+      />
     </ProtectedRoute>
+  )
+}
+
+function BucketCard({
+  label,
+  sublabel,
+  count,
+  active,
+  onClick,
+  icon,
+  tone,
+}: {
+  label: string
+  sublabel: string
+  count: number
+  active: boolean
+  onClick: () => void
+  icon?: ReactNode
+  tone: 'indigo' | 'amber' | 'orange' | 'red'
+}) {
+  const toneClasses: Record<typeof tone, { border: string; bg: string; text: string; iconBg: string }> = {
+    indigo: {
+      border: 'border-l-indigo-500',
+      bg: 'from-indigo-50/90 dark:from-indigo-950/35',
+      text: 'text-indigo-900/90 dark:text-indigo-100/90',
+      iconBg: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300',
+    },
+    amber: {
+      border: 'border-l-amber-500',
+      bg: 'from-amber-50/90 dark:from-amber-950/35',
+      text: 'text-amber-900/90 dark:text-amber-100/90',
+      iconBg: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
+    },
+    orange: {
+      border: 'border-l-orange-500',
+      bg: 'from-orange-50/90 dark:from-orange-950/35',
+      text: 'text-orange-900/90 dark:text-orange-100/90',
+      iconBg: 'bg-orange-500/15 text-orange-700 dark:text-orange-300',
+    },
+    red: {
+      border: 'border-l-red-500',
+      bg: 'from-red-50/90 dark:from-red-950/35',
+      text: 'text-red-900/90 dark:text-red-100/90',
+      iconBg: 'bg-red-500/15 text-red-700 dark:text-red-300',
+    },
+  }
+  const t = toneClasses[tone]
+  return (
+    <button type="button" onClick={onClick} className="text-left">
+      <Card
+        className={cn(
+          'overflow-hidden border-0 shadow-md border-l-4 bg-gradient-to-br to-card transition-all',
+          t.border,
+          t.bg,
+          active && 'ring-2 ring-offset-1 ring-teal-500 dark:ring-teal-400'
+        )}
+      >
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className={cn('text-sm font-medium', t.text)}>{label}</CardTitle>
+          {icon && (
+            <div className={cn('flex h-9 w-9 items-center justify-center rounded-lg', t.iconBg)}>{icon}</div>
+          )}
+        </CardHeader>
+        <CardContent>
+          <div className={cn('text-2xl font-bold tabular-nums', t.text)}>{count}</div>
+          <p className={cn('text-xs mt-1 opacity-70', t.text)}>{sublabel}</p>
+        </CardContent>
+      </Card>
+    </button>
   )
 }
 
 function FlatTable({
   rows,
-  totalInScope,
   isLoading,
+  onQuickView,
 }: {
   rows: Row[]
-  totalInScope: number
   isLoading: boolean
+  onQuickView: (row: Row) => void
 }) {
   return (
     <Card className="overflow-hidden border-teal-200/50 shadow-lg dark:border-teal-800/40">
       <CardHeader className="border-b bg-gradient-to-r from-teal-500/12 via-indigo-500/10 to-transparent pb-4">
         <CardTitle className="text-lg text-teal-950 dark:text-teal-100">Patient cards</CardTitle>
-        <CardDescription>
-          {rows.length} shown{rows.length !== totalInScope ? ` · ${totalInScope} in scope` : ''} — click a row to open the lead.
-        </CardDescription>
+        <CardDescription>Click a lead ID to open the lead, or the eye icon for a quick preview.</CardDescription>
       </CardHeader>
       <CardContent className="overflow-x-auto p-0">
         {isLoading ? (
           <div className="text-center py-8 text-muted-foreground">Loading…</div>
         ) : (
-          <ReportTable rows={rows} />
+          <ReportTable rows={rows} onQuickView={onQuickView} />
         )}
       </CardContent>
     </Card>
@@ -564,9 +565,11 @@ function FlatTable({
 function GroupedTables({
   groups,
   isLoading,
+  onQuickView,
 }: {
   groups: (Group & { rows: Row[] })[]
   isLoading: boolean
+  onQuickView: (row: Row) => void
 }) {
   if (isLoading) {
     return (
@@ -591,11 +594,11 @@ function GroupedTables({
           <CardHeader className="border-b bg-gradient-to-r from-teal-500/12 via-indigo-500/10 to-transparent pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg text-teal-950 dark:text-teal-100">{g.teamLeadName}</CardTitle>
-              <Badge variant="secondary" className="font-mono">{g.count}</Badge>
+              <Badge variant="secondary" className="font-mono">{g.rows.length}</Badge>
             </div>
           </CardHeader>
           <CardContent className="overflow-x-auto p-0">
-            <ReportTable rows={g.rows} />
+            <ReportTable rows={g.rows} onQuickView={onQuickView} />
           </CardContent>
         </Card>
       ))}
@@ -603,7 +606,7 @@ function GroupedTables({
   )
 }
 
-function ReportTable({ rows }: { rows: Row[] }) {
+function ReportTable({ rows, onQuickView }: { rows: Row[]; onQuickView: (row: Row) => void }) {
   if (rows.length === 0) {
     return <div className="text-center py-8 text-muted-foreground">No rows.</div>
   }
@@ -611,6 +614,7 @@ function ReportTable({ rows }: { rows: Row[] }) {
     <Table>
       <TableHeader>
         <TableRow className="border-b border-teal-200/50 bg-teal-50/60 hover:bg-teal-50/60 dark:border-teal-800/35 dark:bg-teal-950/30">
+          <TableHead className="w-9" />
           <TableHead className="font-semibold text-teal-950 dark:text-teal-100">Lead ID</TableHead>
           <TableHead>Patient</TableHead>
           <TableHead>Phone</TableHead>
@@ -633,8 +637,24 @@ function ReportTable({ rows }: { rows: Row[] }) {
               rowTone(r.daysSinceUpload)
             )}
           >
+            <TableCell className="w-9">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                title="Quick view"
+                onClick={() => onQuickView(r)}
+              >
+                <Eye className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </TableCell>
             <TableCell className="whitespace-nowrap font-medium">
-              <Link href={`/leads/${r.id}`} className="text-teal-700 hover:underline dark:text-teal-300">
+              <Link
+                href={`/leads/${r.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-teal-700 hover:underline dark:text-teal-300"
+              >
                 {r.leadRef}
               </Link>
             </TableCell>
@@ -644,8 +664,8 @@ function ReportTable({ rows }: { rows: Row[] }) {
             <TableCell className="whitespace-nowrap">{r.teamLeadName || '—'}</TableCell>
             <TableCell className="whitespace-nowrap">{r.uploadDate.slice(0, 10)}</TableCell>
             <TableCell className="whitespace-nowrap text-right tabular-nums">{r.daysSinceUpload}</TableCell>
-            <TableCell className="whitespace-nowrap">{getCaseStageLabel(r.caseStage)}</TableCell>
-            <TableCell className="whitespace-nowrap">{r.pipelineStage}</TableCell>
+            <TableCell className="whitespace-nowrap">{humanizeStage(r.caseStage)}</TableCell>
+            <TableCell className="whitespace-nowrap">{humanizeStage(r.pipelineStage)}</TableCell>
             <TableCell className="whitespace-nowrap">{r.hospitalName || '—'}</TableCell>
             <TableCell className="whitespace-nowrap">{r.treatment || '—'}</TableCell>
           </TableRow>

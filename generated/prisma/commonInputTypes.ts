@@ -1153,6 +1153,74 @@ export type EnumMDApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumMDApprovalStatusFilter<$PrismaModel>
 }
 
+export type EnumResourceTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ResourceType | Prisma.EnumResourceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumResourceTypeFilter<$PrismaModel> | $Enums.ResourceType
+}
+
+export type EnumResourceTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ResourceType | Prisma.EnumResourceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumResourceTypeWithAggregatesFilter<$PrismaModel> | $Enums.ResourceType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumResourceTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumResourceTypeFilter<$PrismaModel>
+}
+
+export type EnumSubjectTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.SubjectType | Prisma.EnumSubjectTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.SubjectType[] | Prisma.ListEnumSubjectTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SubjectType[] | Prisma.ListEnumSubjectTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSubjectTypeFilter<$PrismaModel> | $Enums.SubjectType
+}
+
+export type EnumPermissionLevelFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionLevel | Prisma.EnumPermissionLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPermissionLevelFilter<$PrismaModel> | $Enums.PermissionLevel
+}
+
+export type EnumSubjectTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SubjectType | Prisma.EnumSubjectTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.SubjectType[] | Prisma.ListEnumSubjectTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SubjectType[] | Prisma.ListEnumSubjectTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSubjectTypeWithAggregatesFilter<$PrismaModel> | $Enums.SubjectType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSubjectTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSubjectTypeFilter<$PrismaModel>
+}
+
+export type EnumPermissionLevelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionLevel | Prisma.EnumPermissionLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPermissionLevelWithAggregatesFilter<$PrismaModel> | $Enums.PermissionLevel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPermissionLevelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPermissionLevelFilter<$PrismaModel>
+}
+
+export type EnumPermissionLevelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionLevel | Prisma.EnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPermissionLevelNullableFilter<$PrismaModel> | $Enums.PermissionLevel | null
+}
+
+export type EnumPermissionLevelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionLevel | Prisma.EnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPermissionLevelNullableWithAggregatesFilter<$PrismaModel> | $Enums.PermissionLevel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPermissionLevelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPermissionLevelNullableFilter<$PrismaModel>
+}
+
 export type EnumQueryStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.QueryStatus | Prisma.EnumQueryStatusFieldRefInput<$PrismaModel>
   in?: $Enums.QueryStatus[] | Prisma.ListEnumQueryStatusFieldRefInput<$PrismaModel>
@@ -2601,6 +2669,74 @@ export type NestedEnumMDApprovalStatusWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumMDApprovalStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumMDApprovalStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumResourceTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ResourceType | Prisma.EnumResourceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumResourceTypeFilter<$PrismaModel> | $Enums.ResourceType
+}
+
+export type NestedEnumResourceTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ResourceType | Prisma.EnumResourceTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumResourceTypeWithAggregatesFilter<$PrismaModel> | $Enums.ResourceType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumResourceTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumResourceTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumSubjectTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.SubjectType | Prisma.EnumSubjectTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.SubjectType[] | Prisma.ListEnumSubjectTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SubjectType[] | Prisma.ListEnumSubjectTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSubjectTypeFilter<$PrismaModel> | $Enums.SubjectType
+}
+
+export type NestedEnumPermissionLevelFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionLevel | Prisma.EnumPermissionLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPermissionLevelFilter<$PrismaModel> | $Enums.PermissionLevel
+}
+
+export type NestedEnumSubjectTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SubjectType | Prisma.EnumSubjectTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.SubjectType[] | Prisma.ListEnumSubjectTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SubjectType[] | Prisma.ListEnumSubjectTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSubjectTypeWithAggregatesFilter<$PrismaModel> | $Enums.SubjectType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSubjectTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSubjectTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumPermissionLevelWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionLevel | Prisma.EnumPermissionLevelFieldRefInput<$PrismaModel>
+  in?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel>
+  notIn?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumPermissionLevelWithAggregatesFilter<$PrismaModel> | $Enums.PermissionLevel
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPermissionLevelFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPermissionLevelFilter<$PrismaModel>
+}
+
+export type NestedEnumPermissionLevelNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionLevel | Prisma.EnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPermissionLevelNullableFilter<$PrismaModel> | $Enums.PermissionLevel | null
+}
+
+export type NestedEnumPermissionLevelNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.PermissionLevel | Prisma.EnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  in?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.PermissionLevel[] | Prisma.ListEnumPermissionLevelFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumPermissionLevelNullableWithAggregatesFilter<$PrismaModel> | $Enums.PermissionLevel | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumPermissionLevelNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumPermissionLevelNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumQueryStatusFilter<$PrismaModel = never> = {

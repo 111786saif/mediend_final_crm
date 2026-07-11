@@ -5,8 +5,7 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
-import { useEffect, useState } from 'react'
-import type { DateRange } from 'react-day-picker'
+import { useEffect, useMemo, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -18,7 +17,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Progress } from '@/components/ui/progress'
 import { TabNavigation } from '@/components/employee/tab-navigation'
-import { format, startOfMonth, endOfMonth } from 'date-fns'
+import { format } from 'date-fns'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
   PieChart,
@@ -51,6 +50,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
 import { UntouchedLeadsTable } from '@/components/targets/untouched-leads-table'
+import type { DateRange } from 'react-day-picker'
 
 // FLAG TO CONTROL CAPSULE BEHAVIOR FOR BD MEMBERS WITHOUT INCENTIVE IN API
 const HIDE_MISSING_INCENTIVE_CAPSULE = true
@@ -136,17 +136,8 @@ interface IpdBreakdown {
   byHospital: Array<{ hospitalName: string; circle: string; count: number; revenue: number; profit: number }>
   bySource: Array<{ source: string; count: number; revenue: number; profit: number }>
   byCampaign: Array<{ campaign: string; count: number; revenue: number; profit: number }>
-  byInsurance: Array<{ insurance: string; count: number; revenue: number; profit: number }>
-  byTpa: Array<{ tpa: string; count: number; revenue: number; profit: number }>
   byMonth: Array<{ month: string; count: number; revenue: number; profit: number }>
   surgeonCrossAnalysis: Array<{ surgeonName: string; hospitalName: string; treatment: string; count: number; revenue: number; profit: number }>
-}
-
-interface TargetSummary {
-  ipdDone: number
-  assignedTarget: number
-  achievementPercentage: number | null
-  teamTargetCount: number
 }
 
 interface LeadsBreakdown {
@@ -332,79 +323,37 @@ function formatDateRangeLabel(range: DateRange | undefined): string {
 // ─── Date Picker ─────────────────────────────────────────────────────────────
 
 function DateRangePicker({
-  value,
-  onChange,
+  value, onChange,
 }: {
   value: DateRange | undefined
   onChange: (range: DateRange | undefined) => void
 }) {
-  const [open, setOpen] = useState(false)
-  const [months, setMonths] = useState(1)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)')
-    const apply = () => setMonths(mq.matches ? 2 : 1)
-    apply()
-    mq.addEventListener('change', apply)
-    return () => mq.removeEventListener('change', apply)
-  }, [])
-
+  const [isOpen, setIsOpen] = useState(false)
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className={cn(
-            'justify-start text-left font-normal w-full sm:w-auto min-w-0 sm:min-w-[240px] md:min-w-[280px]',
-            !value?.from && 'text-muted-foreground'
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
-          <span className="truncate">{formatDateRangeLabel(value)}</span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto max-w-[calc(100vw-1rem)] p-0" align="end">
-        <Calendar
-          mode="range"
-          defaultMonth={value?.from ?? new Date()}
-          selected={value}
-          onSelect={(range) => {
-            onChange(range)
-            if (range?.from && range?.to) setOpen(false)
-          }}
-          numberOfMonths={months}
-        />
-        <div className="flex items-center justify-between gap-2 border-t p-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="text-xs"
-            onClick={() => {
-              onChange(undefined)
-              setOpen(false)
-            }}
-          >
-            Clear
+    <div className="flex flex-wrap items-center gap-2">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm" className="w-full justify-start sm:w-[240px]">
+            <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
+            {formatDateRangeLabel(value)}
           </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="text-xs"
-            onClick={() => {
-              const d = new Date()
-              onChange({ from: startOfMonth(d), to: endOfMonth(d) })
-              setOpen(false)
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start" sideOffset={6}>
+          <Calendar
+            mode="range"
+            selected={value}
+            onSelect={(range) => {
+              onChange(range)
+              if (range?.from && range?.to) setIsOpen(false)
             }}
-          >
-            This month
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
+            numberOfMonths={2}
+          />
+        </PopoverContent>
+      </Popover>
+      {(value?.from || value?.to) && (
+        <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => onChange(undefined)}>Clear</Button>
+      )}
+    </div>
   )
 }
 
@@ -728,55 +677,105 @@ function TeamDetailSheet({
   )
 }
 
-// ─── Overview Breakdown Table ─────────────────────────────────────────────────
+// ─── Month Conversion Panel ───────────────────────────────────────────────────
 
-type OverviewRow = { category: string; name: string; count: number; revenue: number; profit: number }
+function monthLabel(key: string): string {
+  const [y, m] = key.split('-')
+  return format(new Date(Number(y), Number(m) - 1, 1), 'MMM yyyy')
+}
 
-function OverviewBreakdownTable({ rows }: { rows: OverviewRow[] }) {
-  if (rows.length === 0) {
-    return <p className="text-center text-muted-foreground py-6 text-sm">No data in selected range</p>
-  }
+function MonthConversionPanel({ variant }: { variant: DashboardVariant }) {
+  const currentYear = new Date().getFullYear()
+  const yearStart = format(new Date(currentYear, 0, 1), 'yyyy-MM-dd')
+  const today = format(new Date(), 'yyyy-MM-dd')
 
-  const categories = ['Insurance', 'TPA', 'Lead Sources'] as const
+  // Independent of the page-level date-range picker — always the current
+  // calendar year, so "this month" / "last 2 months" / "best month" stay
+  // meaningful regardless of whatever range is selected elsewhere on the page.
+  const { data: bdMonthly, isLoading } = useQuery<BdMonthly>({
+    queryKey: ['sales-dashboard', variant, 'month-conversion', currentYear],
+    queryFn: () =>
+      apiGet<BdMonthly>(`/api/analytics/sales-dashboard/bd-monthly?startDate=${yearStart}&endDate=${today}`),
+  })
+
+  const recentMonthKeys = useMemo(() => {
+    const out: string[] = []
+    const d = new Date()
+    for (let i = 0; i < 3; i++) {
+      out.push(format(new Date(d.getFullYear(), d.getMonth() - i, 1), 'yyyy-MM'))
+    }
+    return out
+  }, [])
+
+  const [selectedMonth, setSelectedMonth] = useState(recentMonthKeys[0])
+
+  const monthStats = useMemo(() => {
+    const leads = bdMonthly?.totals.leads ?? {}
+    const ipd = bdMonthly?.totals.ipd ?? {}
+    return recentMonthKeys.map((key) => {
+      const l = leads[key] ?? 0
+      const i = ipd[key] ?? 0
+      return { key, label: monthLabel(key), leads: l, ipd: i, conversion: l > 0 ? (i / l) * 100 : 0 }
+    })
+  }, [bdMonthly, recentMonthKeys])
+
+  const bestMonth = useMemo(() => {
+    const leads = bdMonthly?.totals.leads ?? {}
+    const ipd = bdMonthly?.totals.ipd ?? {}
+    const yearMonths = (bdMonthly?.months ?? []).filter((m) => m.startsWith(String(currentYear)))
+    let best: { key: string; leads: number; ipd: number; conversion: number } | null = null
+    for (const key of yearMonths) {
+      const l = leads[key] ?? 0
+      const i = ipd[key] ?? 0
+      if (l <= 0) continue
+      const conversion = (i / l) * 100
+      if (!best || conversion > best.conversion) best = { key, leads: l, ipd: i, conversion }
+    }
+    return best
+  }, [bdMonthly, currentYear])
+
+  const selected = monthStats.find((m) => m.key === selectedMonth) ?? monthStats[0]
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Category</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead className="text-center">IPD Done</TableHead>
-            <TableHead className="text-center">Revenue</TableHead>
-            <TableHead className="text-center">Net Profit</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {categories.map((category) => {
-            const categoryRows = rows.filter((r) => r.category === category)
-            if (categoryRows.length === 0) {
-              return (
-                <TableRow key={category}>
-                  <TableCell className="font-semibold text-sm">{category}</TableCell>
-                  <TableCell colSpan={4} className="text-muted-foreground text-sm">No data</TableCell>
-                </TableRow>
-              )
-            }
-            return categoryRows.map((row, idx) => (
-              <TableRow key={`${category}-${row.name}`}>
-                <TableCell className="font-semibold text-sm">
-                  {idx === 0 ? category : ''}
-                </TableCell>
-                <TableCell className="max-w-[180px] truncate">{row.name}</TableCell>
-                <TableCell className="text-center tabular-nums font-semibold text-emerald-600">{row.count}</TableCell>
-                <TableCell className="text-center tabular-nums">{fmtK(row.revenue)}</TableCell>
-                <TableCell className="text-center tabular-nums">{fmtK(row.profit)}</TableCell>
-              </TableRow>
-            ))
-          })}
-        </TableBody>
-      </Table>
-    </div>
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-semibold flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-blue-500" />Month Conversion
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Month picker: current + last 2 months */}
+        <div className="flex flex-wrap gap-2">
+          {monthStats.map((m, i) => (
+            <Button
+              key={m.key}
+              size="sm"
+              variant={selectedMonth === m.key ? 'default' : 'outline'}
+              onClick={() => setSelectedMonth(m.key)}
+              className="h-7 text-xs"
+            >
+              {i === 0 ? `${m.label} (current)` : m.label}
+            </Button>
+          ))}
+        </div>
+
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground py-4 text-center">Loading…</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <StatCard label={`Leads · ${selected?.label ?? ''}`} value={selected?.leads ?? 0} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
+            <StatCard label={`IPD · ${selected?.label ?? ''}`} value={selected?.ipd ?? 0} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
+            <StatCard label="Conversion" value={`${(selected?.conversion ?? 0).toFixed(1)}%`} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
+            <StatCard
+              label="Best month this year"
+              value={bestMonth ? `${bestMonth.conversion.toFixed(1)}%` : '–'}
+              sub={bestMonth ? monthLabel(bestMonth.key) : undefined}
+              color="bg-amber-500/10 text-amber-900 dark:text-amber-100"
+            />
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
@@ -807,11 +806,6 @@ function OverviewTab({
       apiGet<IpdComparison>(`/api/analytics/sales-dashboard/ipd-comparison${comparisonQs}`),
   })
 
-  const { data: targetSummary } = useQuery<TargetSummary>({
-    queryKey: ['sales-dashboard', variant, 'target-summary', qs],
-    queryFn: () => apiGet<TargetSummary>(`/api/analytics/sales-dashboard/target-summary${comparisonQs}`),
-  })
-
   const { data: bdLeaderboard } = useQuery<LeaderboardEntry[]>({
     queryKey: ['sales-dashboard', variant, 'leaderboard-bd', qs],
     queryFn: () => apiGet(`/api/analytics/leaderboard?type=bd&${qs}`),
@@ -840,30 +834,6 @@ function OverviewTab({
 
   const monthChartData = (ipdBreakdown?.byMonth ?? []).slice(-12)
 
-  const overviewRows: OverviewRow[] = [
-    ...(ipdBreakdown?.byInsurance ?? []).slice(0, 10).map((i) => ({
-      category: 'Insurance',
-      name: i.insurance,
-      count: i.count,
-      revenue: i.revenue,
-      profit: i.profit,
-    })),
-    ...(ipdBreakdown?.byTpa ?? []).slice(0, 10).map((t) => ({
-      category: 'TPA',
-      name: t.tpa,
-      count: t.count,
-      revenue: t.revenue,
-      profit: t.profit,
-    })),
-    ...(ipdBreakdown?.bySource ?? []).slice(0, 10).map((s) => ({
-      category: 'Lead Sources',
-      name: s.source,
-      count: s.count,
-      revenue: s.revenue,
-      profit: s.profit,
-    })),
-  ]
-
   return (
     <div className="space-y-6">
       {/* IPD Pulse */}
@@ -875,13 +845,12 @@ function OverviewTab({
           <StatCard label="IPD (selected range)" value={comparison?.ipdThisMonth ?? '–'} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
           <StatCard label="Prior period (vs same dates last month)" value={comparison?.ipdByThisDayLastMonth ?? '–'} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
           <StatCard label={`Best month (by day ${comparison?.dayOfMonth ?? ''} in year)`} value={comparison?.ipdBestMonthByThisDay ?? '–'} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
-          <TargetVsActualCard
-            ipdDone={targetSummary?.ipdDone ?? comparison?.ipdThisMonth ?? '–'}
-            assignedTarget={targetSummary?.assignedTarget ?? '–'}
-            achievementPercentage={targetSummary?.achievementPercentage ?? null}
-          />
+          <StatCard label="Best month this year" value={comparison?.bestMonthThisYear?.count ?? '–'} sub={comparison?.bestMonthThisYear?.monthLabel ?? undefined} color="bg-amber-500/10 text-amber-900 dark:text-amber-100" />
         </div>
       </div>
+
+      {/* Month Conversion */}
+      <MonthConversionPanel variant={variant} />
 
       {/* IPD by Month chart */}
       {monthChartData.length > 0 && (
@@ -901,18 +870,6 @@ function OverviewTab({
           </CardContent>
         </Card>
       )}
-
-      {/* Dashboard Overview */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" /> Dashboard Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="px-6 pb-2">
-          <OverviewBreakdownTable rows={overviewRows} />
-        </CardContent>
-      </Card>
 
       {/* Leaderboards side by side */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -1623,18 +1580,18 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
   const [activeTab, setActiveTab] = useState('overview')
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const t = new Date()
-    return { from: startOfMonth(t), to: endOfMonth(t) }
+    return {
+      from: new Date(t.getFullYear(), t.getMonth(), 1),
+      to: new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59, 999),
+    }
   })
 
   const [selectedBdId, setSelectedBdId] = useState<string | null>(null)
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)
 
-  const startDate = dateRange?.from
-  const endDate = dateRange?.to ?? dateRange?.from
-
   const dateParams = [
-    startDate ? `startDate=${format(startDate, 'yyyy-MM-dd')}` : '',
-    endDate ? `endDate=${format(endDate, 'yyyy-MM-dd')}` : '',
+    dateRange?.from ? `startDate=${format(dateRange.from, 'yyyy-MM-dd')}` : '',
+    dateRange?.to ? `endDate=${format(dateRange.to, 'yyyy-MM-dd')}` : '',
   ].filter(Boolean).join('&')
 
   useEffect(() => {

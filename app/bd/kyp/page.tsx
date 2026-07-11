@@ -6,8 +6,12 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ColumnFilter } from '@/components/ui/column-filter'
 import { DataTable } from '@/components/ui/data-table'
+import { CaseOverviewSheet } from '@/components/case/case-overview-sheet'
 import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { usePermissions } from '@/hooks/use-permissions'
@@ -19,11 +23,11 @@ import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { canViewPhoneNumber } from '@/lib/case-permissions'
 import { CaseStage } from '@/generated/prisma/enums'
 import { useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
 import { Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */
 
@@ -63,6 +67,15 @@ function uniqueSorted(values: (string | null | undefined)[]): string[] {
     if (s) set.add(s)
   }
   return Array.from(set).sort((a, b) => a.localeCompare(b))
+}
+
+// Used only by the month filter — buckets a lead into a "YYYY-MM" key so we
+// can group by the surgery/activity month independently of server filtering.
+function monthKeyOf(value: unknown): string | null {
+  if (!value) return null
+  const d = new Date(value as string)
+  if (Number.isNaN(d.getTime())) return null
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
 
 /* ─── Stage / bucket definitions ─────────────────────────────────────────── */
@@ -114,16 +127,26 @@ const BUCKET_BADGE: Record<Bucket, { label: string; className: string }> = {
 export default function CaseTrackerPage() {
   const { user } = useAuth()
   const { hasAccess, permissions } = usePermissions()
-  const router = useRouter()
   const canViewPhone = canViewPhoneNumber(user)
+
+  const currentMonthKey = useMemo(() => {
+    const now = new Date()
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  }, [])
 
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebouncedValue(search, 250)
   const phoneParsed = useMemo(() => parsePhoneSearchQuery(debouncedSearch), [debouncedSearch])
 
+  // Row selected for the side-drawer overview (replaces navigating straight to /patient/[id])
+  const [overviewRow, setOverviewRow] = useState<DecoratedLead | null>(null)
+
+  const [monthFilter, setMonthFilter] = useState(currentMonthKey)
   const [stageFilter, setStageFilter] = useState<BucketFilter>('all')
   const [teamFilter, setTeamFilter] = useState('all')
-  const [bdFilter, setBdFilter] = useState('all')
+  const [bdFilter, setBdFilter] = useState<string[]>([])
+  const [bdFilterSearch, setBdFilterSearch] = useState('')
+  const [bdFilterOpen, setBdFilterOpen] = useState(false)
 
   // Multi-select header column states consolidated in a single object
   const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
@@ -251,11 +274,54 @@ export default function CaseTrackerPage() {
     return out
   }, [leads])
 
-  // Mapping dynamic distinct unique lists safely from active data
-  const leadRefOptions = useMemo(() => uniqueSorted(decorated.map((d) => String(d.lead.leadRef ?? ''))), [decorated])
-  const patientOptions = useMemo(() => uniqueSorted(decorated.map((d) => d.lead.patientName)), [decorated])
-  const ageSexOptions = useMemo(() => uniqueSorted(decorated.map((d) => formatLeadAgeSex(d.lead))), [decorated])
-  const stageOptions = useMemo(() => uniqueSorted(decorated.map((d) => BUCKET_BADGE[d.bucket]?.label ?? '')), [decorated])
+  // Month filter — client-side bucketing by surgery/activity month, layered
+  // in front of the server-side column filters below.
+  const monthFiltered = useMemo<DecoratedLead[]>(() => {
+    if (monthFilter === 'all') return decorated
+
+    return decorated.filter((d) => {
+      const isIpdDone = d.bucket === 'IPD_DONE'
+      if (isIpdDone) {
+        const adSurg = (d.lead as { admissionRecord?: { surgeryDate?: string | Date } }).admissionRecord?.surgeryDate
+        const sd = d.lead.surgeryDate ?? adSurg
+        if (sd) {
+          const t = new Date(sd as string).getTime()
+          if (Number.isFinite(t) && t > 0) {
+            return monthKeyOf(new Date(t).toISOString()) === monthFilter
+          }
+        }
+        return false
+      }
+      const surgeryTs = (() => {
+        const v = d.lead.surgeryDate
+        if (!v) return Infinity
+        const t = new Date(v as string).getTime()
+        return Number.isFinite(t) ? t : Infinity
+      })()
+      const activityTs = getLatestActivityTime(d.lead)
+      const effectiveTs = Math.min(surgeryTs, activityTs) || activityTs
+      return monthKeyOf(new Date(effectiveTs).toISOString()) === monthFilter
+    })
+  }, [decorated, monthFilter])
+
+  const monthOptions = useMemo(() => {
+    const months: string[] = []
+    const now = new Date()
+    let y = now.getFullYear()
+    let m = now.getMonth()
+    while (y > 2022 || (y === 2022 && m >= 0)) {
+      months.push(`${y}-${String(m + 1).padStart(2, '0')}`)
+      m--
+      if (m < 0) { m = 11; y-- }
+    }
+    return months
+  }, [])
+
+  // Mapping dynamic distinct unique lists safely from active (month-filtered) data
+  const leadRefOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => String(d.lead.leadRef ?? ''))), [monthFiltered])
+  const patientOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => d.lead.patientName)), [monthFiltered])
+  const ageSexOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => formatLeadAgeSex(d.lead))), [monthFiltered])
+  const stageOptions = useMemo(() => uniqueSorted(monthFiltered.map((d) => BUCKET_BADGE[d.bucket]?.label ?? '')), [monthFiltered])
 
   const showBdFilter = user?.role === 'TEAM_LEAD' || user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
   const showTeamFilter = user?.role === 'SALES_HEAD' || user?.role === 'EXECUTIVE_ASSISTANT'
@@ -289,7 +355,7 @@ export default function CaseTrackerPage() {
         }
       }
     } else {
-      for (const { lead } of decorated) {
+      for (const { lead } of monthFiltered) {
         const bd = lead.bd as { id?: string; name?: string } | undefined
         if (bd?.id && bd.name) map.set(bd.id, bd.name)
       }
@@ -297,7 +363,7 @@ export default function CaseTrackerPage() {
     return Array.from(map.entries())
       .sort((a, b) => a[1].localeCompare(b[1]))
       .map(([value, label]) => ({ value, label }))
-  }, [decorated, showBdFilter, showTeamFilter, teamsData, teamFilter])
+  }, [monthFiltered, showBdFilter, showTeamFilter, teamsData, teamFilter])
 
   const counts = useMemo(() => {
     const base: Record<Bucket, number> = {
@@ -308,19 +374,20 @@ export default function CaseTrackerPage() {
       IPD_SCHEDULED: 0,
       IPD_DONE: 0,
     }
-    for (const { bucket } of decorated) base[bucket]++
+    for (const { bucket } of monthFiltered) base[bucket]++
     return base
-  }, [decorated])
+  }, [monthFiltered])
 
   const filteredRows = useMemo(() => {
-    let rows = decorated
+    let rows = monthFiltered
     if (stageFilter !== 'all') rows = rows.filter((d) => d.bucket === stageFilter)
     if (teamFilter !== 'all') {
       const teamBdIds = new Set(teamsData?.find((t) => t.id === teamFilter)?.members.map((m) => m.id) ?? [])
       rows = rows.filter((d) => teamBdIds.has((d.lead.bd as { id?: string } | undefined)?.id ?? ''))
     }
-    if (bdFilter !== 'all') {
-      rows = rows.filter((d) => (d.lead.bd as { id?: string } | undefined)?.id === bdFilter)
+    if (bdFilter.length > 0) {
+      const bdSet = new Set(bdFilter)
+      rows = rows.filter((d) => bdSet.has((d.lead.bd as { id?: string } | undefined)?.id ?? ''))
     }
     if (columnFilters.stage?.length) rows = rows.filter((d) => columnFilters.stage.includes(BUCKET_BADGE[d.bucket]?.label ?? ''))
     if (debouncedSearch.trim() && !phoneParsed) {
@@ -345,7 +412,7 @@ export default function CaseTrackerPage() {
       })
     }
     return [...rows].sort((a, b) => getLatestActivityTime(b.lead) - getLatestActivityTime(a.lead))
-  }, [decorated, stageFilter, teamFilter, bdFilter, columnFilters, debouncedSearch, phoneParsed, canViewPhone, teamsData])
+  }, [monthFiltered, stageFilter, teamFilter, bdFilter, columnFilters, debouncedSearch, phoneParsed, canViewPhone, teamsData])
 
   const columns = useMemo<ColumnDef<DecoratedLead>[]>(() => {
     const cols: ColumnDef<DecoratedLead>[] = [
@@ -547,7 +614,7 @@ export default function CaseTrackerPage() {
                 className={`rounded-xl border bg-card p-4 text-left shadow-sm transition-all hover:shadow-md ${stageFilter === 'all' ? 'ring-2 ring-primary' : ''}`}
               >
                 <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">All active</p>
-                <p className="mt-1 text-2xl font-bold tabular-nums">{decorated.length}</p>
+                <p className="mt-1 text-2xl font-bold tabular-nums">{monthFiltered.length}</p>
               </button>
             )}
             {BUCKET_DEFS.filter(({ key }) => user?.role !== 'PL_HEAD' || key === 'IPD_DONE').map(({ key, label, tone }) => (
@@ -583,16 +650,33 @@ export default function CaseTrackerPage() {
                     )}
                   </CardTitle>
                   <CardDescription>
-                    {filteredRows.length} shown · {decorated.length} active
+                    {filteredRows.length} shown · {monthFiltered.length} active
                   </CardDescription>
                 </div>
 
-                {/* Team / BD dropdowns */}
+                {/* Month / Team / BD dropdowns */}
                 <div className="flex flex-wrap items-center gap-2">
+                  <Select value={monthFilter} onValueChange={setMonthFilter}>
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All months</SelectItem>
+                      {monthOptions.map((m) => {
+                        const [y, mo] = m.split('-')
+                        return (
+                          <SelectItem key={m} value={m}>
+                            {format(new Date(Number(y), Number(mo) - 1, 1), 'MMM yyyy')}
+                          </SelectItem>
+                        )
+                      })}
+                    </SelectContent>
+                  </Select>
+
                   {showTeamFilter && (
                     <select
                       value={teamFilter}
-                      onChange={(e) => { setTeamFilter(e.target.value); setBdFilter('all') }}
+                      onChange={(e) => { setTeamFilter(e.target.value); setBdFilter([]) }}
                       className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none"
                     >
                       <option value="all">All teams</option>
@@ -601,17 +685,82 @@ export default function CaseTrackerPage() {
                       ))}
                     </select>
                   )}
+
                   {showBdFilter && (
-                    <select
-                      value={bdFilter}
-                      onChange={(e) => setBdFilter(e.target.value)}
-                      className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none"
+                    <Popover
+                      open={bdFilterOpen}
+                      onOpenChange={(open) => {
+                        setBdFilterOpen(open)
+                        if (!open) setBdFilterSearch('')
+                      }}
                     >
-                      <option value="all">All BDs</option>
-                      {bdOptions.map(({ value, label }) => (
-                        <option key={value} value={value}>{label}</option>
-                      ))}
-                    </select>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="h-9 w-[150px] justify-start font-normal">
+                          {bdFilter.length === 0
+                            ? 'All BDs'
+                            : bdFilter.length === 1
+                              ? bdOptions.find((b) => b.value === bdFilter[0])?.label ?? '1 BD'
+                              : `${bdFilter.length} BDs selected`}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[220px] p-0" align="start">
+                        <div className="p-2 border-b">
+                          <div className="relative">
+                            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                            <Input
+                              placeholder="Search BD…"
+                              value={bdFilterSearch}
+                              onChange={(e) => setBdFilterSearch(e.target.value)}
+                              className="h-9 pl-8 text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div className="max-h-[280px] overflow-y-auto p-1">
+                          <label className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-muted/80 cursor-pointer">
+                            <Checkbox
+                              checked={bdFilter.length === bdOptions.length && bdOptions.length > 0}
+                              onCheckedChange={(checked) =>
+                                setBdFilter(checked ? bdOptions.map((b) => b.value) : [])
+                              }
+                            />
+                            Select all
+                          </label>
+                          {bdOptions
+                            .filter((b) => b.label.toLowerCase().includes(bdFilterSearch.trim().toLowerCase()))
+                            .map((b) => (
+                              <label
+                                key={b.value}
+                                className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-muted/80 cursor-pointer"
+                              >
+                                <Checkbox
+                                  checked={bdFilter.includes(b.value)}
+                                  onCheckedChange={(checked) =>
+                                    setBdFilter((prev) =>
+                                      checked ? [...prev, b.value] : prev.filter((x) => x !== b.value)
+                                    )
+                                  }
+                                />
+                                <span className="truncate">{b.label}</span>
+                              </label>
+                            ))}
+                          {bdOptions.length === 0 && (
+                            <p className="px-2 py-4 text-center text-sm text-muted-foreground">No BDs found.</p>
+                          )}
+                        </div>
+                        {bdFilter.length > 0 && (
+                          <div className="border-t p-1.5">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full text-xs text-muted-foreground"
+                              onClick={() => setBdFilter([])}
+                            >
+                              Clear selection
+                            </Button>
+                          </div>
+                        )}
+                      </PopoverContent>
+                    </Popover>
                   )}
                 </div>
               </div>
@@ -622,12 +771,18 @@ export default function CaseTrackerPage() {
                 data={filteredRows}
                 isLoading={isLoading}
                 emptyMessage="No leads match the current filters."
-                onRowClick={(row) => router.push(`/patient/${row.lead.id}`)}
+                onRowClick={(row) => setOverviewRow(row)}
                 enablePagination={true}
                 initialPageSize={50}
               />
             </CardContent>
           </Card>
+
+          <CaseOverviewSheet
+            row={overviewRow}
+            open={overviewRow !== null}
+            onClose={() => setOverviewRow(null)}
+          />
         </div>
       </div>
     </AuthenticatedLayout>

@@ -14,7 +14,7 @@ import {
   DollarSign,
   FileText,
   FolderTree,
-  FileSpreadsheet,
+  GraduationCap,
   Heart,
   Home,
   IndianRupee,
@@ -36,7 +36,6 @@ import {
   Users,
   Megaphone,
   Wallet,
-  Award,
   Armchair,
   Layers,
 } from 'lucide-react'
@@ -74,6 +73,12 @@ export const navItems: NavItem[] = [
     icon: CalendarDays,
   },
   {
+    title: 'IPD Calendar',
+    url: '/ipd-calendar',
+    icon: Stethoscope,
+    roles: ['BD', 'TEAM_LEAD'],
+  },
+  {
     title: 'Meets',
     url: '/meets',
     icon: Calendar,
@@ -89,12 +94,6 @@ export const navItems: NavItem[] = [
     url: '/md/sales',
     icon: TrendingUp,
     roles: ['MD', 'ADMIN', 'SALES_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
-  },
-  {
-    title: 'Incentive',
-    url: '/incentives',
-    icon: Award,
-    permission: 'incentive:read',
   },
   {
     title: 'Finance Dashboard',
@@ -195,6 +194,12 @@ export const navItems: NavItem[] = [
     title: 'Chat',
     url: '/chat',
     icon: MessageSquare,
+    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+  },
+  {
+    title: 'Training',
+    url: '/training',
+    icon: GraduationCap,
     roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
   },
   {
@@ -435,12 +440,6 @@ export const navItems: NavItem[] = [
     title: 'Compliance',
     url: '/compliance/dashboard',
     icon: Stethoscope,
-    roles: ['COMPLIANCE_HEAD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
-  },
-  {
-    title: 'Cumulative Report',
-    url: '/cumulative-report',
-    icon: FileSpreadsheet,
     roles: ['COMPLIANCE_HEAD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {

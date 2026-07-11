@@ -28,7 +28,8 @@ export const UserRole = {
   COMPLIANCE_HEAD: 'COMPLIANCE_HEAD',
   ADMIN: 'ADMIN',
   USER: 'USER',
-  TESTER: 'TESTER'
+  TESTER: 'TESTER',
+  ACCESS_MATRIX: 'ACCESS_MATRIX'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -351,7 +352,8 @@ export const NotificationType = {
   EMPLOYEE_ONBOARDED: 'EMPLOYEE_ONBOARDED',
   LEAVE_BALANCE_EDIT_REQUESTED: 'LEAVE_BALANCE_EDIT_REQUESTED',
   LEAVE_BALANCE_EDIT_RESOLVED: 'LEAVE_BALANCE_EDIT_RESOLVED',
-  GRACE2_MONTHLY_LIMIT_EXCEEDED: 'GRACE2_MONTHLY_LIMIT_EXCEEDED'
+  GRACE2_MONTHLY_LIMIT_EXCEEDED: 'GRACE2_MONTHLY_LIMIT_EXCEEDED',
+  RANK_IMPROVED: 'RANK_IMPROVED'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -701,6 +703,34 @@ export const InventoryTransactionStatus = {
 } as const
 
 export type InventoryTransactionStatus = (typeof InventoryTransactionStatus)[keyof typeof InventoryTransactionStatus]
+
+
+export const ResourceType = {
+  MODULE: 'MODULE',
+  SECTION: 'SECTION',
+  ENTITY: 'ENTITY'
+} as const
+
+export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType]
+
+
+export const PermissionLevel = {
+  NONE: 'NONE',
+  READ: 'READ',
+  READ_WRITE: 'READ_WRITE',
+  READ_WRITE_DELETE: 'READ_WRITE_DELETE',
+  FULL_ACCESS: 'FULL_ACCESS'
+} as const
+
+export type PermissionLevel = (typeof PermissionLevel)[keyof typeof PermissionLevel]
+
+
+export const SubjectType = {
+  USER: 'USER',
+  ROLE: 'ROLE'
+} as const
+
+export type SubjectType = (typeof SubjectType)[keyof typeof SubjectType]
 
 
 export const InstallmentRecipient = {

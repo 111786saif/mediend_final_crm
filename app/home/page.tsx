@@ -51,8 +51,14 @@ import { Megaphone } from 'lucide-react'
 import { FnFReminderCard } from '@/components/hr/fnf-reminder-card'
 import { BirthdayCelebrationCard } from '@/components/birthday-celebration-card'
 import { BirthdayPopup } from '@/components/birthday-popup'
+import { RankUpPopup } from '@/components/notifications/rank-up-popup'
 import { TeamTargetWidget } from '@/components/targets/team-target-widget'
-import { EaProjectHeadTeamsSection } from '@/components/home/ea-project-head-teams-section'
+import { TLTeamAchievements } from '@/components/targets/tl-team-achievements'   
+import { useMyTargetProgress, TargetRingInline } from '../../app/bd/dashboard/BDDashboard'
+import { TargetTrendCard } from '@/components/targets/target-trend-card'
+import { LeadsTrendCard } from '@/components/targets/leads-trend-card'
+import { MonthlySummaryCard } from '@/components/targets/monthly-summary-card'
+
 
 // ─── Greeting ─────────────────────────────────────────────────────────────────
 
@@ -112,14 +118,18 @@ function BannerSection({
   bannerUrl,
   greeting,
   firstName,
+  role,
   canEdit,
   onBannerChange,
+  targetSlot,
 }: {
   bannerUrl?: string
   greeting: string
   firstName: string
+  role?: string
   canEdit: boolean
   onBannerChange: (file: File) => void
+  targetSlot?: React.ReactNode
 }) {
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -139,10 +149,26 @@ function BannerSection({
       {/* Overlay gradient for text legibility */}
       <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
 
-      {/* Greeting text */}
-      <div className="relative z-10 flex flex-col justify-end h-full min-h-[180px] md:min-h-[220px] p-5 md:p-8">
-        <p className="text-white/80 text-sm md:text-base font-medium mb-1">{greeting},</p>
-        <h1 className="text-white text-2xl md:text-4xl font-bold tracking-tight">{firstName} 👋</h1>
+      {/* Greeting text + target ring */}
+      <div className="relative z-10 flex flex-col justify-end gap-4 h-full min-h-[180px] md:min-h-[220px] p-5 md:p-8">
+        <div>
+          <p className="text-white/80 text-sm md:text-base font-medium mb-1">{greeting},</p>
+          <h1 className="text-white text-2xl md:text-4xl font-bold tracking-tight">
+            {firstName}
+            {role && (
+              <span className="text-white/70 text-lg md:text-2xl font-semibold ml-1.5 align-middle">
+                ({role.replace(/_/g, ' ')})
+              </span>
+            )}{' '}
+            👋
+          </h1>
+        </div>
+
+        {targetSlot && (
+          <div className="shrink-0">
+            {targetSlot}
+          </div>
+        )}
       </div>
 
       {/* Change banner button - every user can set their own */}
@@ -516,7 +542,7 @@ function NavCards() {
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
         {navItems.map((item) => (
           <NavCard
-            key={item.title}
+            key={item.url}
             title={item.title}
             url={item.url}
             icon={item.icon}
@@ -620,6 +646,7 @@ export default function HomePage() {
   const firstName = user?.name?.split(' ')[0] ?? user?.email?.split('@')[0] ?? 'there'
   const bannerUrl = userBanner?.bannerUrl || DEFAULT_BANNER
   const thought = useMemo(() => getThoughtOfTheDay(), [])
+  const { isTargetRole, monthly: monthlyTarget } = useMyTargetProgress()
 
   useEffect(() => {
     if (user?.role === 'MD') {
@@ -644,6 +671,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-5 max-w-5xl mx-auto w-full">
       <BirthdayPopup />
+      <RankUpPopup />
       <NoticeBlockerModal />
       {/* Banner + Greeting */}
       {uploading && (
@@ -659,8 +687,10 @@ export default function HomePage() {
         bannerUrl={bannerUrl}
         greeting={greeting}
         firstName={firstName}
+        role={user?.role}
         canEdit={true}
         onBannerChange={handleBannerChange}
+        targetSlot={isTargetRole && monthlyTarget ? <TargetRingInline t={monthlyTarget} /> : undefined}
       />
 
       {/* Thought of the Day */}
@@ -690,11 +720,20 @@ export default function HomePage() {
         <NoticeActions />
       </div>
 
-      {/* Target progress widget (for TL and Sales Head) */}
+      {/* Target progress widget (compact — TL and Sales Head team overview) */}
       <TeamTargetWidget />
 
-      {/* Project Head view — Executive Assistant only */}
-      <EaProjectHeadTeamsSection />
+      {/* TL only: each team member's achievement vs their individual target */}
+      <TLTeamAchievements />
+
+      {/* Target trend — monthly/weekly chart for all roles with targets (BD, TL, Heads) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <TargetTrendCard />
+        <LeadsTrendCard />
+      </div>
+
+      {/* Monthly rewards summary — Sales/BD hierarchy only */}
+      <MonthlySummaryCard />
 
       {/* KPIs */}
       <div>

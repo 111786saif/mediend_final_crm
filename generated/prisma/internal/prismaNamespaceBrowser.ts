@@ -58,6 +58,7 @@ export const ModelName = {
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
+  TierDefinition: 'TierDefinition',
   InsuranceCase: 'InsuranceCase',
   PLRecord: 'PLRecord',
   InvoiceRequest: 'InvoiceRequest',
@@ -110,6 +111,9 @@ export const ModelName = {
   NoticeRecipient: 'NoticeRecipient',
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
+  Resource: 'Resource',
+  PermissionAssignment: 'PermissionAssignment',
+  PermissionAuditLog: 'PermissionAuditLog',
   CampaignCPL: 'CampaignCPL',
   DailyCampaignSpend: 'DailyCampaignSpend',
   InsuranceQuery: 'InsuranceQuery',
@@ -142,6 +146,7 @@ export const ModelName = {
   WorkLog: 'WorkLog',
   PushSubscription: 'PushSubscription',
   CronJobLog: 'CronJobLog',
+  RankSnapshot: 'RankSnapshot',
   HospitalMaster: 'HospitalMaster',
   DoctorMaster: 'DoctorMaster',
   TPAMaster: 'TPAMaster',
@@ -381,6 +386,21 @@ export const BonusRuleScalarFieldEnum = {
 } as const
 
 export type BonusRuleScalarFieldEnum = (typeof BonusRuleScalarFieldEnum)[keyof typeof BonusRuleScalarFieldEnum]
+
+
+export const TierDefinitionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  metric: 'metric',
+  thresholdValue: 'thresholdValue',
+  order: 'order',
+  rewardAmount: 'rewardAmount',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TierDefinitionScalarFieldEnum = (typeof TierDefinitionScalarFieldEnum)[keyof typeof TierDefinitionScalarFieldEnum]
 
 
 export const InsuranceCaseScalarFieldEnum = {
@@ -1404,6 +1424,50 @@ export const UserFeaturePermissionScalarFieldEnum = {
 export type UserFeaturePermissionScalarFieldEnum = (typeof UserFeaturePermissionScalarFieldEnum)[keyof typeof UserFeaturePermissionScalarFieldEnum]
 
 
+export const ResourceScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  label: 'label',
+  type: 'type',
+  parentId: 'parentId',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive'
+} as const
+
+export type ResourceScalarFieldEnum = (typeof ResourceScalarFieldEnum)[keyof typeof ResourceScalarFieldEnum]
+
+
+export const PermissionAssignmentScalarFieldEnum = {
+  id: 'id',
+  subjectType: 'subjectType',
+  userId: 'userId',
+  role: 'role',
+  resourceId: 'resourceId',
+  permissionLevel: 'permissionLevel',
+  canGrant: 'canGrant',
+  grantedById: 'grantedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PermissionAssignmentScalarFieldEnum = (typeof PermissionAssignmentScalarFieldEnum)[keyof typeof PermissionAssignmentScalarFieldEnum]
+
+
+export const PermissionAuditLogScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  targetUserId: 'targetUserId',
+  resourceId: 'resourceId',
+  oldLevel: 'oldLevel',
+  newLevel: 'newLevel',
+  oldCanGrant: 'oldCanGrant',
+  newCanGrant: 'newCanGrant',
+  createdAt: 'createdAt'
+} as const
+
+export type PermissionAuditLogScalarFieldEnum = (typeof PermissionAuditLogScalarFieldEnum)[keyof typeof PermissionAuditLogScalarFieldEnum]
+
+
 export const CampaignCPLScalarFieldEnum = {
   id: 'id',
   campaignName: 'campaignName',
@@ -2001,6 +2065,19 @@ export const CronJobLogScalarFieldEnum = {
 } as const
 
 export type CronJobLogScalarFieldEnum = (typeof CronJobLogScalarFieldEnum)[keyof typeof CronJobLogScalarFieldEnum]
+
+
+export const RankSnapshotScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  metric: 'metric',
+  month: 'month',
+  rank: 'rank',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RankSnapshotScalarFieldEnum = (typeof RankSnapshotScalarFieldEnum)[keyof typeof RankSnapshotScalarFieldEnum]
 
 
 export const HospitalMasterScalarFieldEnum = {
