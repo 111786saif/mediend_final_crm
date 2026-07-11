@@ -528,6 +528,23 @@ export type EnumPaidByPartyNullableWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel>
 }
 
+export type EnumInvoiceRequestStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.InvoiceRequestStatus | Prisma.EnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InvoiceRequestStatus[] | Prisma.ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InvoiceRequestStatus[] | Prisma.ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel> | $Enums.InvoiceRequestStatus
+}
+
+export type EnumInvoiceRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InvoiceRequestStatus | Prisma.EnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InvoiceRequestStatus[] | Prisma.ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InvoiceRequestStatus[] | Prisma.ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInvoiceRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.InvoiceRequestStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel>
+}
+
 export type JsonFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -1986,6 +2003,23 @@ export type NestedEnumPaidByPartyNullableWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPaidByPartyNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumInvoiceRequestStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.InvoiceRequestStatus | Prisma.EnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InvoiceRequestStatus[] | Prisma.ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InvoiceRequestStatus[] | Prisma.ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel> | $Enums.InvoiceRequestStatus
+}
+
+export type NestedEnumInvoiceRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.InvoiceRequestStatus | Prisma.EnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.InvoiceRequestStatus[] | Prisma.ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.InvoiceRequestStatus[] | Prisma.ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumInvoiceRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.InvoiceRequestStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel>
 }
 
 export type NestedJsonFilter<$PrismaModel = never> =
