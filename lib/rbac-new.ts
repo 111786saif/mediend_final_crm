@@ -138,3 +138,50 @@ export async function getSubordinateEmployeeIds(managerEmployeeId: string): Prom
     return []
   }
 }
+
+/**
+ * Loads active permission assignments for a user scoped to a specific database table's columns.
+ * Example target: 'lead' will only resolve keys starting with 'database.lead.column.'
+ */
+export async function loadScopedPermissionMap(
+  userId: string,
+  tableName: string
+): Promise<Record<string, PermissionLevel>> {
+  const matchPattern = `.table.${tableName}.column.`
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true }
+    })
+
+    const assignments = await prisma.permissionAssignment.findMany({
+      where: {
+        resource: {
+          key: { contains: matchPattern },
+          isActive: true
+        },
+        OR: [
+          { userId },
+          { AND: [{ subjectType: SubjectType.ROLE }, { role: user?.role }] }
+        ]
+      },
+      include: { resource: { select: { key: true } } }
+    })
+
+    const map: Record<string, PermissionLevel> = {}
+    for (const a of assignments) {
+      const parts = a.resource.key.split(matchPattern)
+      const columnName = parts[parts.length - 1]
+      
+      // User-level overrides take precedence over Role-level assignments
+      if (!map[columnName] || a.userId === userId) {
+        map[columnName] = a.permissionLevel
+      }
+    }
+    return map
+  } catch (error) {
+    console.error('Error loading scoped permission map:', error)
+    return {}
+  }
+}

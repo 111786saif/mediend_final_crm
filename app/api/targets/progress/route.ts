@@ -165,10 +165,10 @@ export async function GET(request: NextRequest) {
         }
 
         // Calculate team-level actual
-        let totalActual = 0
-        for (const bdId of bdIds) {
-          totalActual += await calculateActual(bdId, target.metric, tStart, tEnd)
-        }
+        const totalActual =
+          target.targetType === 'TEAM'
+            ? bdBreakdown.reduce((sum, item) => sum + item.actual, 0)
+            : await calculateActual(target.targetForId, target.metric, tStart, tEnd)
 
         const percentage = target.targetValue > 0
           ? Math.round((totalActual / target.targetValue) * 100 * 100) / 100

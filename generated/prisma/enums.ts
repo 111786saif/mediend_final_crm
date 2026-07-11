@@ -28,7 +28,8 @@ export const UserRole = {
   COMPLIANCE_HEAD: 'COMPLIANCE_HEAD',
   ADMIN: 'ADMIN',
   USER: 'USER',
-  TESTER: 'TESTER'
+  TESTER: 'TESTER',
+  ACCESS_MATRIX: 'ACCESS_MATRIX'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -101,6 +102,15 @@ export const EmployeeSeatingMiscCostStatus = {
 } as const
 
 export type EmployeeSeatingMiscCostStatus = (typeof EmployeeSeatingMiscCostStatus)[keyof typeof EmployeeSeatingMiscCostStatus]
+
+
+export const InvoiceRequestStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type InvoiceRequestStatus = (typeof InvoiceRequestStatus)[keyof typeof InvoiceRequestStatus]
 
 
 export const FlowType = {

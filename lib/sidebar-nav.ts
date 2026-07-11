@@ -36,6 +36,8 @@ import {
   Users,
   Megaphone,
   Wallet,
+  Armchair,
+  Layers,
 } from 'lucide-react'
 import { SessionUser } from '@/lib/auth'
 import { hasPermission, type Permission } from '@/lib/rbac'
@@ -151,7 +153,7 @@ export const navItems: NavItem[] = [
     title: 'Pipeline',
     url: '/pipeline',
     icon: ClipboardList,
-    roles: ['BD', 'TEAM_LEAD'],
+    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD'],
   },
   {
     title: 'Case Tracker',
@@ -375,6 +377,30 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
+    title: 'Fin Invoice Requests',
+    url: '/finance/invoice-requests',
+    icon: FileText,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Sales Team Cost',
+    url: '/finance/sales-team-cost',
+    icon: DollarSign,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Master Seating Cost',
+    url: '/finance/master-seating-cost',
+    icon: Armchair,
+    roles: ['FINANCE_HEAD', 'ADMIN'],
+  },
+  {
+    title: 'Seating & Misc Cost',
+    url: '/finance/seating-misc-cost',
+    icon: Layers,
+    permission: 'finance:read',
+  },
+  {
     title: 'Company P&L',
     url: '/finance/pnl',
     icon: PieChart,
@@ -444,11 +470,26 @@ export function getDashboardUrl(role: string): string {
   if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
   if (role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
   if (role === 'DIGITAL_MARKETING_HEAD') return '/pl/dashboard'
+  if (role === 'PL_HEAD') return '/pl/surgery-dashboard'
+  if (role === 'INSURANCE_HEAD') return '/insurance/dashboard'
+  if (role === 'OUTSTANDING_HEAD') return '/pl/outstanding'
   return '/md/tasks'
+}
+
+function dedupeNavItemsByUrl(items: (NavItem & { url: string })[]): (NavItem & { url: string })[] {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    if (seen.has(item.url)) return false
+    seen.add(item.url)
+    return true
+  })
 }
 
 function filterNavItems(user: SessionUser | null): NavItem[] {
   if (!user) return []
+  if (user.role === 'ACCESS_MATRIX') {
+    return navItems.filter((item) => item.title === 'IT Permissions')
+  }
   return navItems.filter((item) => {
     if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Calendar') return true
     if (item.title === 'Meets') return user.role !== 'BD'
@@ -517,6 +558,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
     if (item.title === 'Pipeline') {
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }
       if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/pipeline' }
+      if (role === 'SALES_HEAD') return { ...item, url: '/team-lead/pipeline' }
       if (role === 'ADMIN') return { ...item, url: '/bd/pipeline' }
     }
     if (item.title === 'Targets') {
@@ -533,7 +575,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
  */
 export function getFilteredNavItemsWithUrls(user: SessionUser | null): (NavItem & { url: string })[] {
   const filtered = filterNavItems(user)
-  return mapItemUrls(filtered, user?.role ?? '')
+  return dedupeNavItemsByUrl(mapItemUrls(filtered, user?.role ?? ''))
 }
 
 /**
@@ -545,6 +587,7 @@ export function getFirstNavUrl(user: SessionUser | null): string {
   if (user) {
     if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
+    if (user.role === 'ACCESS_MATRIX') return '/it/permissions'
     return '/home'
   }
   const items = getFilteredNavItemsWithUrls(user)

@@ -61,6 +61,7 @@ export const ModelName = {
   TierDefinition: 'TierDefinition',
   InsuranceCase: 'InsuranceCase',
   PLRecord: 'PLRecord',
+  InvoiceRequest: 'InvoiceRequest',
   IncomingLead: 'IncomingLead',
   Department: 'Department',
   DepartmentTeam: 'DepartmentTeam',
@@ -477,6 +478,27 @@ export const PLRecordScalarFieldEnum = {
 } as const
 
 export type PLRecordScalarFieldEnum = (typeof PLRecordScalarFieldEnum)[keyof typeof PLRecordScalarFieldEnum]
+
+
+export const InvoiceRequestScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  status: 'status',
+  requestRemarks: 'requestRemarks',
+  invoiceNumber: 'invoiceNumber',
+  invoiceAmount: 'invoiceAmount',
+  invoicePdfUrl: 'invoicePdfUrl',
+  invoicePdfName: 'invoicePdfName',
+  financeRemarks: 'financeRemarks',
+  rejectionRemarks: 'rejectionRemarks',
+  requestedById: 'requestedById',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InvoiceRequestScalarFieldEnum = (typeof InvoiceRequestScalarFieldEnum)[keyof typeof InvoiceRequestScalarFieldEnum]
 
 
 export const IncomingLeadScalarFieldEnum = {

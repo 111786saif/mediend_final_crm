@@ -1,7 +1,7 @@
 import { UserRole } from '@/generated/prisma/enums'
 import { SessionUser } from './auth'
 
-export type Permission = 
+export type Permission =
   | 'leads:read'
   | 'leads:write'
   | 'leads:assign'
@@ -51,6 +51,7 @@ export type Permission =
   | 'pnl:write'
   /** Surgery / sales P&L slice only (no full company P&L) */
   | 'sales:pnl:read'
+  | 'sales:read'
   | 'masters:read'
   | 'masters:write'
   | 'compliance:read'
@@ -61,6 +62,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'leads:read',
     'leads:write',
     'analytics:read',
+    'targets:read',
     'users:read',
     'insurance:read',
     'pl:read',
@@ -147,6 +149,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'sales:pnl:read',
     'incentive:read',
     'incentive:write',
+    'pl:read',
   ],
   CATEGORY_MANAGER: [
     'leads:read',
@@ -407,6 +410,9 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'compliance:read',
     'compliance:write',
   ],
+  ACCESS_MATRIX: [
+    'it:permissions',
+  ],
 }
 
 export function hasPermission(user: SessionUser | null, permission: Permission): boolean {
@@ -531,6 +537,7 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
     'ADMIN',
     'USER',
     'TESTER',
+    'ACCESS_MATRIX',
   ]
 
   if (user.role === 'MD' || user.role === 'ADMIN' || user.role === 'TESTER') {
@@ -561,6 +568,7 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
       'TEAM_LEAD',
       'USER',
       'BD',
+      'ACCESS_MATRIX',
     ]
   }
 

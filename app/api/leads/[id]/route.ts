@@ -269,7 +269,7 @@ export async function GET(
     }
     console.log('[DEBUG] Mapping successful')
 
-    return successResponse(mappedLead)
+    return successResponse(mappedLead, undefined, 'lead')
   } catch (error) {
     console.error('Error fetching lead:', error)
     if (error instanceof Error) {
@@ -387,7 +387,10 @@ export async function PATCH(
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
-         
+        // Restrict deleting phone numbers
+        if ((field === 'phoneNumber' || field === 'alternateNumber') && (body[field] === null || (typeof body[field] === 'string' && body[field].trim() === ''))) {
+          continue
+        }
         (updateData as any)[field] = body[field]
       }
     }
@@ -405,6 +408,9 @@ export async function PATCH(
         }
       }
       updateData.bd = { connect: { id: body.bdId } }
+      if (!lead.assignedDate) {
+        updateData.assignedDate = new Date()
+      }
     }
 
     const updatedLead = await prisma.lead.update({
@@ -488,7 +494,7 @@ export async function PATCH(
         ? { ...payload, bd: toLegacyBdShape(payload.bd) }
         : payload
 
-    return successResponse(mapped, 'Lead updated successfully')
+    return successResponse(mapped, 'Lead updated successfully', 'lead')
   } catch (error) {
     console.error('Error updating lead:', error)
     return errorResponse('Failed to update lead', 500)

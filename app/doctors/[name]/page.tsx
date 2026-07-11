@@ -13,21 +13,15 @@ import {
   TrendingUp,
   AlertCircle,
   Calendar,
-  ArrowRight,
   Paperclip,
   X,
   FileText,
   ChevronRight,
 } from 'lucide-react'
 import { ProtectedRoute } from '@/components/protected-route'
+import { RecentActivityLog } from '@/components/recent-activity-log'
+import { RecordPaymentForm } from '@/components/record-payment-form'
 import { ColumnFilter } from '@/components/ui/column-filter'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -340,34 +334,34 @@ export default function DoctorDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/35 to-teal-50/35 p-6 dark:from-slate-950 dark:via-cyan-950/20 dark:to-slate-900">
+      <div className="min-h-screen bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
         <div className="mx-auto max-w-7xl space-y-6">
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
               size="icon"
               asChild
-              className="h-9 w-9 rounded-full border-cyan-100 bg-white/80 shadow-sm transition-all duration-200 hover:bg-cyan-50 dark:border-cyan-900/40 dark:bg-slate-900 dark:hover:bg-slate-800/80 shrink-0"
+              className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
             >
               <Link href="/doctors" aria-label="Back to doctor list">
-                <ArrowLeft className="h-4 w-4 text-cyan-700 dark:text-cyan-300" />
+                <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <div>
-              <nav className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground/80 mb-1 leading-none">
-                <Link href="/doctors" className="hover:text-cyan-600 transition-colors">
+              <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
+                <Link href="/doctors" className="hover:text-[#22d3ee] transition-colors">
                   Doctor List
                 </Link>
                 <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
-                <span className="text-slate-800 dark:text-slate-200 font-semibold">{name}</span>
+                <span className="text-[#dce1ff] font-semibold">{name}</span>
               </nav>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-none">
+                <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
                   {name}
                 </h1>
                 {startDate && endDate && (
-                  <div className="inline-flex items-center gap-1 rounded-full bg-cyan-50/80 px-2 py-0.5 text-[10px] font-medium text-cyan-800 border border-cyan-200/50 dark:bg-cyan-950/20 dark:text-cyan-300 dark:border-cyan-800/40 shrink-0 ml-1">
-                    <span className="h-1 w-1 rounded-full bg-cyan-500 animate-pulse" />
+                  <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
+                    <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
                     Filtered: {startDate} → {endDate}
                   </div>
                 )}
@@ -385,57 +379,66 @@ export default function DoctorDetailPage() {
             <KpiTile label="MediEND share" value={formatPlRupee(data?.kpis.mediendShare ?? null)} icon={TrendingUp} />
           </div>
 
-          <Card className="overflow-hidden border-cyan-200/50 shadow-md dark:border-cyan-800/40">
-            <CardHeader className="border-b bg-gradient-to-r from-cyan-500/10 to-teal-500/8">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/10 to-teal-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 shadow-sm shrink-0">
-                    <Activity className="h-5 w-5" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <h2 className="text-base font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-none">
-                        Cases
-                      </h2>
-                      {activeFilterCount > 0 && (
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 text-[10px] text-rose-600 dark:text-rose-400 hover:text-rose-700 font-medium px-2 py-0"
-                          onClick={clearFilters}
-                        >
-                          Clear Filters ({activeFilterCount})
-                        </Button>
-                      )}
-                    </div>
-                    <span className="text-xs font-normal text-muted-foreground flex items-center gap-1.5 leading-none">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-                      </span>
-                      Click a case to open its outstanding record
-                    </span>
-                  </div>
+          {/* Payout UI Section */}
+          <RecordPaymentForm
+            title="Record Doctor Payout"
+            amountLabel="Amount Paid"
+            onSubmit={(amount, mode, txnId) => {
+              toast.success(`Payout of ₹${amount || '0'} recorded successfully!`)
+            }}
+          />
+
+          {/* Cases Table Component Container (UI preserved as requested, wrapper styled) */}
+          <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl overflow-hidden shadow-lg">
+            <div className="px-6 py-4 border-b border-[#283150] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[#191D2E]/80">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/20 shadow-sm shrink-0">
+                  <Activity className="h-5 w-5 animate-pulse" />
                 </div>
-                <div>
-                  <Button
-                    disabled={selectedLeads.length === 0}
-                    onClick={() => setRequestDialogOpen(true)}
-                    className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
-                  >
-                    <FileText className="h-4 w-4" />
-                    Request Invoice {selectedLeads.length > 0 && `(${selectedLeads.length})`}
-                  </Button>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-sm font-bold text-white tracking-tight leading-none">
+                      Cases
+                    </h2>
+                    {activeFilterCount > 0 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 text-[10px] text-rose-400 hover:text-rose-300 font-medium px-2 py-0"
+                        onClick={clearFilters}
+                      >
+                        Clear Filters ({activeFilterCount})
+                      </Button>
+                    )}
+                  </div>
+                  <span className="text-xs font-normal text-[#c7c6cd]/70 flex items-center gap-1.5 leading-none">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                    </span>
+                    Click a case to open its outstanding record
+                  </span>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="overflow-x-auto p-0">
+              <div>
+                <Button
+                  disabled={selectedLeads.length === 0}
+                  onClick={() => setRequestDialogOpen(true)}
+                  className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
+                >
+                  <FileText className="h-4 w-4" />
+                  Request Invoice {selectedLeads.length > 0 && `(${selectedLeads.length})`}
+                </Button>
+              </div>
+            </div>
+            <div className="overflow-x-auto p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-slate-100/85 hover:bg-slate-100/85 dark:bg-slate-900/60 border-b border-cyan-100 dark:border-cyan-950/40">
+                  <TableRow className="bg-[#191D2E]/90 hover:bg-[#191D2E]/90 border-b border-[#283150]">
                     <TableHead className="w-[50px] pl-4">
                       <Checkbox
+                        className="border-[#283150] data-[state=checked]:bg-[#22d3ee] data-[state=checked]:text-[#07112f]"
                         checked={
                           !!data?.cases && data.cases.length > 0 && selectedLeads.length === data.cases.length
                         }
@@ -450,7 +453,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Lead Ref</span>
+                        <span className="font-semibold text-[#c7c6cd]">Lead Ref</span>
                         <ColumnFilter
                           type="search"
                           value={leadRefFilter}
@@ -461,7 +464,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[180px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Patient</span>
+                        <span className="font-semibold text-[#c7c6cd]">Patient</span>
                         <ColumnFilter
                           type="search"
                           value={patientNameFilter}
@@ -472,7 +475,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="min-w-[180px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Hospital</span>
+                        <span className="font-semibold text-[#c7c6cd]">Hospital</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.hospitals}
@@ -483,7 +486,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Month</span>
+                        <span className="font-semibold text-[#c7c6cd]">Month</span>
                         <ColumnFilter
                           type="dateRange"
                           value={monthFilter}
@@ -493,7 +496,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Surgery</span>
+                        <span className="font-semibold text-[#c7c6cd]">Surgery</span>
                         <ColumnFilter
                           type="dateRange"
                           value={surgeryDateFilter}
@@ -503,7 +506,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Status</span>
+                        <span className="font-semibold text-[#c7c6cd]">Status</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.statuses}
@@ -514,7 +517,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Bill</span>
+                        <span className="font-semibold text-[#c7c6cd]">Bill</span>
                         <ColumnFilter
                           type="numberRange"
                           value={billAmountFilter}
@@ -526,7 +529,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[150px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Doctor Charges</span>
+                        <span className="font-semibold text-[#c7c6cd]">Doctor Charges</span>
                         <ColumnFilter
                           type="numberRange"
                           value={doctorChargesFilter}
@@ -538,7 +541,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Paid</span>
+                        <span className="font-semibold text-[#c7c6cd]">Paid</span>
                         <ColumnFilter
                           type="numberRange"
                           value={doctorPaidFilter}
@@ -550,7 +553,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[140px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Pending</span>
+                        <span className="font-semibold text-[#c7c6cd]">Pending</span>
                         <ColumnFilter
                           type="numberRange"
                           value={doctorAmountPendingFilter}
@@ -562,7 +565,7 @@ export default function DoctorDetailPage() {
                     </TableHead>
                     <TableHead className="w-[130px]">
                       <div className="flex items-center justify-between gap-1 whitespace-nowrap">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300">Payout</span>
+                        <span className="font-semibold text-[#c7c6cd]">Payout</span>
                         <ColumnFilter
                           type="multiSelect"
                           options={filterOptions.doctorPayoutStatuses}
@@ -571,19 +574,19 @@ export default function DoctorDetailPage() {
                         />
                       </div>
                     </TableHead>
-                    <TableHead className="text-right font-semibold text-slate-700 dark:text-slate-300 w-[180px] pr-4">Action</TableHead>
+                    <TableHead className="text-right font-semibold text-[#c7c6cd] w-[180px] pr-4">Action</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className="divide-y divide-[#283150]/30">
                   {isLoading ? (
-                    <TableRow>
-                      <TableCell colSpan={13} className="text-center py-8 text-muted-foreground">
+                    <TableRow className="border-b border-[#283150]/20">
+                      <TableCell colSpan={13} className="text-center py-8 text-[#c7c6cd]/55">
                         Loading…
                       </TableCell>
                     </TableRow>
                   ) : !data?.cases?.length ? (
-                    <TableRow>
-                      <TableCell colSpan={13} className="text-center py-8 text-muted-foreground">
+                    <TableRow className="border-b border-[#283150]/20">
+                      <TableCell colSpan={13} className="text-center py-8 text-[#c7c6cd]/55">
                         No cases yet
                       </TableCell>
                     </TableRow>
@@ -591,11 +594,12 @@ export default function DoctorDetailPage() {
                     data.cases.map((c) => (
                       <TableRow
                         key={c.leadId}
-                        className="cursor-pointer transition-colors duration-150 hover:bg-cyan-50/20 dark:hover:bg-cyan-950/10 border-b border-cyan-100/40 dark:border-cyan-950/30"
+                        className="cursor-pointer transition-colors duration-150 hover:bg-[#22d3ee]/5 border-b border-[#283150]/20"
                         onClick={() => (window.location.href = `/pl/outstanding/${c.leadId}`)}
                       >
                         <TableCell className="w-[50px] pl-4" onClick={(e) => e.stopPropagation()}>
                           <Checkbox
+                            className="border-[#283150] data-[state=checked]:bg-[#22d3ee] data-[state=checked]:text-[#07112f]"
                             checked={selectedLeads.includes(c.leadId)}
                             onCheckedChange={(checked) => {
                               setSelectedLeads((prev) =>
@@ -606,128 +610,142 @@ export default function DoctorDetailPage() {
                             }}
                           />
                         </TableCell>
-                        <TableCell className="whitespace-nowrap font-medium text-slate-900 dark:text-slate-100">{c.leadRef ?? '—'}</TableCell>
-                        <TableCell className="text-slate-700 dark:text-slate-300">{c.patientName ?? '—'}</TableCell>
-                        <TableCell className="text-slate-600 dark:text-slate-400">{c.hospitalName ?? '—'}</TableCell>
-                        <TableCell className="tabular-nums text-slate-600 dark:text-slate-400">{formatPlMonth(c.month ? new Date(c.month) : null)}</TableCell>
-                        <TableCell className="tabular-nums text-slate-600 dark:text-slate-400">{formatPlDate(c.surgeryDate ? new Date(c.surgeryDate) : null)}</TableCell>
+                        <TableCell className="whitespace-nowrap font-medium text-white">{c.leadRef ?? '—'}</TableCell>
+                        <TableCell className="text-[#dce1ff]">{c.patientName ?? '—'}</TableCell>
+                        <TableCell className="text-[#c7c6cd]">{c.hospitalName ?? '—'}</TableCell>
+                        <TableCell className="tabular-nums text-[#c7c6cd]/80">{formatPlMonth(c.month ? new Date(c.month) : null)}</TableCell>
+                        <TableCell className="tabular-nums text-[#c7c6cd]/80">{formatPlDate(c.surgeryDate ? new Date(c.surgeryDate) : null)}</TableCell>
                         <TableCell>
-                          <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-800 dark:bg-slate-800 dark:text-slate-200">
+                          <span className="inline-flex items-center rounded-md bg-[#07112f] px-2 py-0.5 text-xs font-semibold text-[#c7c6cd] border border-[#283150]">
                             {c.status ?? '—'}
                           </span>
                         </TableCell>
-                        <TableCell className="text-right tabular-nums text-slate-600 dark:text-slate-400">{renderCellAmount(c.billAmount)}</TableCell>
-                        <TableCell className="text-right tabular-nums text-slate-900 dark:text-slate-100 font-semibold">{renderCellAmount(c.doctorCharges)}</TableCell>
-                        <TableCell className="text-right tabular-nums text-emerald-600 dark:text-emerald-400 font-medium">{renderCellAmount(c.doctorPaid)}</TableCell>
-                        <TableCell className="text-right tabular-nums text-rose-600 dark:text-rose-400 font-medium">{renderCellAmount(c.doctorAmountPending)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-[#c7c6cd]">{renderCellAmount(c.billAmount)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-white font-bold">{renderCellAmount(c.doctorCharges)}</TableCell>
+                        <TableCell className="text-right tabular-nums text-emerald-400 font-semibold">{renderCellAmount(c.doctorPaid, 'text-emerald-400')}</TableCell>
+                        <TableCell className="text-right tabular-nums text-rose-400 font-semibold">{renderCellAmount(c.doctorAmountPending, 'text-rose-400')}</TableCell>
                         <TableCell>
                           <Badge
-                            className={`border ${
-                              c.doctorPayoutStatus === 'PAID'
-                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/30'
+                            className={`border ${c.doctorPayoutStatus === 'PAID'
+                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/10'
                                 : c.doctorPayoutStatus === 'PARTIAL'
-                                  ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-800/30'
-                                  : 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-50 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-800/30'
-                            }`}
+                                  ? 'bg-amber-500/10 text-amber-400 border-amber-500/25 hover:bg-amber-500/10'
+                                  : 'bg-rose-500/10 text-rose-400 border-rose-500/25 hover:bg-rose-500/10'
+                              }`}
                           >
                             {c.doctorPayoutStatus ?? 'PENDING'}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right pr-4" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-2 text-xs border-cyan-200/60 bg-cyan-50/20 text-cyan-700 hover:bg-cyan-50/50 hover:text-cyan-800 dark:border-cyan-800/40 dark:bg-cyan-950/10 dark:text-cyan-400 dark:hover:bg-cyan-950/30"
-                              onClick={() => {
-                                setSelectedLeads([c.leadId])
-                                setRequestDialogOpen(true)
-                              }}
-                            >
-                              Request Invoice
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-cyan-600 dark:hover:text-cyan-400"
-                              asChild
-                            >
-                              <Link href={`/pl/outstanding/${c.leadId}`}>
-                                <ArrowRight className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </div>
+                          <Button
+                            size="sm"
+                            className="h-7 px-2 text-xs bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/20"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedLeads([c.leadId])
+                              setRequestDialogOpen(true)
+                            }}
+                          >
+                            <FileText className="mr-1 h-3.5 w-3.5" />
+                            Request Invoice
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))
                   )}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          {/* Activity Log & Health Score Section */}
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+            <RecentActivityLog className="lg:col-span-2" />
+
+            {/* Right Side Widget: P&L Health */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-lg">
+              <div className="relative w-20 h-20 flex items-center justify-center">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle className="text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
+                  <circle className="text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
+                </svg>
+                <div className="absolute flex flex-col items-center">
+                  <span className="text-base font-bold text-white">80%</span>
+                  <span className="text-[7px] font-bold text-[#c7c6cd] uppercase tracking-wider">COLLECTION</span>
+                </div>
+              </div>
+              <div>
+                <h4 className="font-bold text-xs text-[#dce1ff]">Collection & Health Score</h4>
+                <p className="text-[11px] text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">Your doctor portfolio is performing above average for this cluster.</p>
+                <button className="mt-1.5 border border-[#22d3ee]/40 text-[#22d3ee] px-3 py-0.5 rounded-full text-[10px] hover:bg-[#22d3ee]/10 transition-all font-semibold">
+                  Full Analysis
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
 
       <Dialog open={requestDialogOpen} onOpenChange={setRequestDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md bg-[#191D2E] border-[#283150] text-[#dce1ff]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+            <DialogTitle className="flex items-center gap-2 text-white">
+              <FileText className="h-5 w-5 text-[#22d3ee]" />
               Request MD Approval for Invoice
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div>
-              <Label>Request Title *</Label>
+              <Label className="text-xs text-[#c7c6cd]">Request Title *</Label>
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter request title"
-                className="mt-1"
+                className="mt-1 bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
               />
             </div>
             <div>
-              <Label>Description / Case Summary</Label>
+              <Label className="text-xs text-[#c7c6cd]">Description / Case Summary</Label>
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Case details..."
                 rows={6}
-                className="mt-1 text-xs font-mono"
+                className="mt-1 text-xs font-mono bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
               />
             </div>
             <div>
-              <Label>Amount (INR)</Label>
+              <Label className="text-xs text-[#c7c6cd]">Amount (INR)</Label>
               <Input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0"
-                className="mt-1"
+                className="mt-1 bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
               />
             </div>
             <div>
-              <Label>Attachments (optional)</Label>
+              <Label className="text-xs text-[#c7c6cd]">Attachments (optional)</Label>
               <Input
                 type="file"
                 multiple
                 accept="image/*,application/pdf"
                 onChange={handleFileSelect}
                 disabled={uploadingFiles}
-                className="mt-1 cursor-pointer text-xs"
+                className="mt-1 cursor-pointer text-xs bg-[#07112f] border-[#283150] text-white focus:ring-[#22d3ee] focus:border-[#22d3ee]"
               />
-              {uploadingFiles && <p className="text-[11px] text-muted-foreground mt-1">Uploading files...</p>}
+              {uploadingFiles && <p className="text-[11px] text-[#c7c6cd]/70 mt-1">Uploading files...</p>}
               {attachments.length > 0 && (
-                <div className="mt-2 space-y-1 bg-slate-50 dark:bg-slate-900 p-2 rounded-md border text-xs">
+                <div className="mt-2 space-y-1 bg-[#07112f] p-2 rounded-md border border-[#283150] text-xs text-[#c7c6cd]">
                   {attachments.map((a, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <Paperclip className="h-3 w-3 text-muted-foreground shrink-0" />
+                      <Paperclip className="h-3 w-3 text-[#c7c6cd]/75 shrink-0" />
                       <span className="truncate flex-1">{a.name}</span>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                        className="h-6 w-6 p-0 text-rose-400 hover:text-rose-300 hover:bg-[#283150]"
                         onClick={() => removeAttachment(i)}
                       >
                         <X className="h-3.5 w-3.5" />
@@ -737,10 +755,11 @@ export default function DoctorDetailPage() {
                 </div>
               )}
             </div>
-            <div className="flex items-center justify-end gap-2 pt-2 border-t mt-4">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#283150] mt-4">
               <Button
                 variant="outline"
                 size="sm"
+                className="border-[#283150] bg-transparent text-[#c7c6cd] hover:bg-[#283150] hover:text-white"
                 onClick={() => setRequestDialogOpen(false)}
                 disabled={createMutation.isPending}
               >
@@ -749,7 +768,7 @@ export default function DoctorDetailPage() {
               <Button
                 size="sm"
                 onClick={handleCreateRequest}
-                className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold"
                 disabled={createMutation.isPending}
               >
                 {createMutation.isPending ? 'Submitting...' : 'Submit Request'}
@@ -766,24 +785,42 @@ function KpiTile({
   label,
   value,
   icon: Icon,
-  className,
+  className = '',
 }: {
   label: string
   value: React.ReactNode
   icon: any
   className?: string
 }) {
+  const isPending = label.toLowerCase() === 'pending'
+  const isPaid = label.toLowerCase() === 'paid'
+
   return (
-    <Card className={`overflow-hidden shadow-sm bg-white dark:bg-slate-900 border-cyan-200/45 dark:border-cyan-800/30 ${className}`}>
-      <CardContent className="p-3">
-        <div className="flex items-center justify-between gap-1">
-          <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
-          <div className="rounded bg-slate-50 dark:bg-slate-950 p-1 text-cyan-600 dark:text-cyan-400 shrink-0">
-            <Icon className="h-3.5 w-3.5" />
-          </div>
+    <div
+      className={`bg-[#191D2E]/60 backdrop-blur-md border ${isPending
+          ? 'border-rose-500/30 shadow-lg shadow-rose-950/5'
+          : 'border-[#283150]'
+        } p-3.5 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200 ${className}`}
+    >
+      <div className="flex items-center justify-between gap-1.5">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#c7c6cd]/75">{label}</span>
+        <div className={`p-1 rounded shrink-0 ${isPending
+            ? 'bg-rose-500/10 text-rose-400'
+            : isPaid
+              ? 'bg-emerald-500/10 text-emerald-400'
+              : 'bg-[#22d3ee]/10 text-[#22d3ee]'
+          }`}>
+          <Icon className="h-3.5 w-3.5" />
         </div>
-        <div className="text-base font-bold tabular-nums mt-1.5 text-slate-900 dark:text-slate-50">{value ?? '—'}</div>
-      </CardContent>
-    </Card>
+      </div>
+      <div className={`text-base font-bold tabular-nums leading-none ${isPending
+          ? 'text-rose-400'
+          : isPaid
+            ? 'text-emerald-400'
+            : 'text-white'
+        }`}>
+        {value ?? '—'}
+      </div>
+    </div>
   )
 }

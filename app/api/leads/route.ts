@@ -706,7 +706,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    return successResponse(mappedLeads)
+    return successResponse(mappedLeads, undefined, 'lead')
   } catch (error) {
     console.error('Error fetching leads:', error)
     return errorResponse('Failed to fetch leads', 500)
@@ -781,7 +781,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return successResponse(lead, 'Lead created successfully')
+    return successResponse(lead, 'Lead created successfully', 'lead')
   } catch (error) {
     console.error('Error creating lead:', error)
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {

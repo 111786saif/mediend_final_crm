@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SessionUser } from './auth'
 import { Permission, hasPermission } from './rbac'
+import { getSession } from './session'
+import { loadScopedPermissionMap, levelSatisfies } from './rbac-new'
+import { PermissionLevel } from '@/generated/prisma/client'
 
 export interface ApiResponse<T = unknown> {
   success: boolean
@@ -10,10 +13,53 @@ export interface ApiResponse<T = unknown> {
   message?: string
 }
 
-export function successResponse<T>(data: T, message?: string): NextResponse<ApiResponse<T>> {
+export function sanitizeColumns<T extends Record<string, any>>(
+  tableName: string,
+  records: T[],
+  permissions: Record<string, PermissionLevel>
+): Partial<T>[] {
+  return records.map(record => {
+    if (!record) return record
+    const cleanRecord = { ...record } as Record<string, any>
+    
+    for (const key of Object.keys(record)) {
+      // If a permission policy exists for this column key, verify read access
+      if (key in permissions) {
+        const userLevel = permissions[key]
+        if (!levelSatisfies(userLevel, PermissionLevel.READ)) {
+          cleanRecord[key] = null
+        }
+      }
+    }
+    return cleanRecord as Partial<T>
+  })
+}
+
+export async function successResponse<T>(
+  data: T,
+  message?: string,
+  entityName?: string
+): Promise<NextResponse<ApiResponse<T>>> {
+  let sanitizedData = data
+
+  if (entityName && data) {
+    const session = await getSession()
+    if (session?.id) {
+      try {
+        const isArray = Array.isArray(data)
+        const rawRecords = isArray ? data : [data]
+        const permissions = await loadScopedPermissionMap(session.id, entityName)
+        const sanitized = sanitizeColumns(entityName, rawRecords, permissions)
+        sanitizedData = (isArray ? sanitized : sanitized[0]) as unknown as T
+      } catch (error) {
+        console.error(`Column sanitization failed for entity ${entityName}:`, error)
+      }
+    }
+  }
+
   return NextResponse.json({
     success: true,
-    data,
+    data: sanitizedData,
     message,
   })
 }
