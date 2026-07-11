@@ -39,6 +39,7 @@ export const RESOURCE_MAP = {
   "main.compliance": { path: "/compliance/dashboard", component: "CompliancePage" },
   "main.md_compliance": { path: "/md/compliance", component: "MDCompliancePage" },
   "main.md_outstanding": { path: "/md/outstanding", component: "MDOutstandingPage" },
+  "main.incentive": { path: "/incentives", component: "IncentivesPage" },
 
   // HRM Group Pages
   "hrm.attendance_normalizations": { path: "/hr/attendance-leaves", component: "AttendanceLeavesPage" },
@@ -138,6 +139,18 @@ export const RESOURCE_MAP = {
   "main.it_pnl.overview": { label: "IT P&L: Overview Tab", component: "ItPnlOverviewTab" },
   "main.it_pnl.projects": { label: "IT P&L: Projects Tab", component: "ItPnlProjectsTab" },
   "main.it_pnl.resources": { label: "IT P&L: Resources Tab", component: "ItPnlResourcesTab" },
+
+  // Incentive (main.incentive)
+  "main.incentive.analytics": { label: "Incentive Analytics Section", component: "IncentiveAnalyticsSection" },
+  "main.incentive.table": { label: "Incentive Table Section", component: "IncentiveTableSection" },
+  "main.incentive.table.incentive.column.employee_name": { label: "Table Column: Employee Name", component: "IncentiveEmployeeNameColumn" },
+  "main.incentive.table.incentive.column.employee_id": { label: "Table Column: Employee ID", component: "IncentiveEmployeeIdColumn" },
+  "main.incentive.table.incentive.column.department": { label: "Table Column: Department", component: "IncentiveDepartmentColumn" },
+  "main.incentive.table.incentive.column.designation": { label: "Table Column: Designation", component: "IncentiveDesignationColumn" },
+  "main.incentive.table.incentive.column.month": { label: "Table Column: Month", component: "IncentiveMonthColumn" },
+  "main.incentive.table.incentive.column.incentive_amount": { label: "Table Column: Incentive Amount", component: "IncentiveAmountColumn" },
+  "main.incentive.table.incentive.column.status": { label: "Table Column: Status", component: "IncentiveStatusColumn" },
+  "main.incentive.table.incentive.column.actions": { label: "Table Column: Actions", component: "IncentiveActionsColumn" },
 
   // --- MODULE 2: HUMAN RESOURCE MANAGEMENT ---
   

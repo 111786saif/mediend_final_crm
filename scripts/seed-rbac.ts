@@ -47,6 +47,7 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'main.compliance', label: 'Compliance', type: 'SECTION', parentKey: 'main', sortOrder: 22 },
   { key: 'main.md_compliance', label: 'MD Compliance', type: 'SECTION', parentKey: 'main', sortOrder: 23 },
   { key: 'main.md_outstanding', label: 'MD Outstanding', type: 'SECTION', parentKey: 'main', sortOrder: 24 },
+  { key: 'main.incentive', label: 'Incentive', type: 'SECTION', parentKey: 'main', sortOrder: 25 },
 
   // Under hrm
   { key: 'hrm.attendance_normalizations', label: 'Attendance & Normalizations', type: 'SECTION', parentKey: 'hrm', sortOrder: 1 },
@@ -146,6 +147,18 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'main.it_pnl.overview', label: 'Overview Tab', type: 'SECTION', parentKey: 'main.it_pnl', sortOrder: 1 },
   { key: 'main.it_pnl.projects', label: 'Projects Tab', type: 'SECTION', parentKey: 'main.it_pnl', sortOrder: 2 },
   { key: 'main.it_pnl.resources', label: 'Resources Tab', type: 'SECTION', parentKey: 'main.it_pnl', sortOrder: 3 },
+
+  // Incentive (main.incentive)
+  { key: 'main.incentive.analytics', label: 'Incentive Analytics Section', type: 'SECTION', parentKey: 'main.incentive', sortOrder: 1 },
+  { key: 'main.incentive.table', label: 'Incentive Table Section', type: 'SECTION', parentKey: 'main.incentive', sortOrder: 2 },
+  { key: 'main.incentive.table.incentive.column.employee_name', label: 'Employee Name Column', type: 'ENTITY', parentKey: 'main.incentive.table', sortOrder: 1 },
+  { key: 'main.incentive.table.incentive.column.employee_id', label: 'Employee ID Column', type: 'ENTITY', parentKey: 'main.incentive.table', sortOrder: 2 },
+  { key: 'main.incentive.table.incentive.column.department', label: 'Department Column', type: 'ENTITY', parentKey: 'main.incentive.table', sortOrder: 3 },
+  { key: 'main.incentive.table.incentive.column.designation', label: 'Designation Column', type: 'ENTITY', parentKey: 'main.incentive.table', sortOrder: 4 },
+  { key: 'main.incentive.table.incentive.column.month', label: 'Month Column', type: 'ENTITY', parentKey: 'main.incentive.table', sortOrder: 5 },
+  { key: 'main.incentive.table.incentive.column.incentive_amount', label: 'Incentive Amount Column', type: 'ENTITY', parentKey: 'main.incentive.table', sortOrder: 6 },
+  { key: 'main.incentive.table.incentive.column.status', label: 'Status Column', type: 'ENTITY', parentKey: 'main.incentive.table', sortOrder: 7 },
+  { key: 'main.incentive.table.incentive.column.actions', label: 'Actions Column', type: 'ENTITY', parentKey: 'main.incentive.table', sortOrder: 8 },
 
   // --- MODULE 2: HUMAN RESOURCE MANAGEMENT ---
   
