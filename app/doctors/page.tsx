@@ -360,7 +360,7 @@ export default function DoctorsListPage() {
               </div>
             </CardHeader>
             <CardContent className="overflow-x-auto p-0">
-              <Table>
+              <Table className="[&_td]:px-[20px] [&_th]:px-[20px]">
                 <TableHeader>
                   <TableRow className="bg-slate-100/85 hover:bg-slate-100/85 dark:bg-slate-900/60 border-b border-cyan-100 dark:border-cyan-950/40">
                     <TableHead className="w-[280px]">

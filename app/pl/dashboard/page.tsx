@@ -1269,10 +1269,10 @@ export default function PLLedgerPage() {
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-3 w-full">
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'admitted'
                   ? "border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-950/20"
                   : "border-indigo-500/20 bg-indigo-950/10 hover:border-indigo-500/40"
@@ -1310,28 +1310,8 @@ export default function PLLedgerPage() {
               </div>
             </Card>
             <Card
-              className="overflow-hidden border border-violet-500/20 bg-violet-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-violet-400 dark:text-violet-300">
-                  ATS
-                </span>
-                <div className="flex h-5 w-5 items-center justify-center rounded bg-violet-500/15 text-violet-700 dark:text-violet-300">
-                  <ReceiptText className="h-3 w-3" />
-                </div>
-              </div>
-              <div className="mt-1">
-                <div className="text-base font-bold tabular-nums text-violet-950 dark:text-violet-50">
-                  {tableRecords && tableRecords.length > 0
-                    ? `₹${Math.round(columnTotals.amountPaid / tableRecords.length).toLocaleString('en-IN')}`
-                    : '—'}
-                </div>
-                <p className="text-[10px] text-violet-800/70 dark:text-violet-200/60 mt-0.5">Amount paid per case</p>
-              </div>
-            </Card>
-            <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'ipd_done'
                   ? "border-cyan-500 ring-2 ring-cyan-500/30 bg-cyan-950/20"
                   : "border-cyan-500/20 bg-cyan-950/10 hover:border-cyan-500/40"
@@ -1370,7 +1350,7 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'discharged'
                   ? "border-emerald-500 ring-2 ring-emerald-500/30 bg-emerald-950/20"
                   : "border-emerald-500/20 bg-emerald-950/10 hover:border-emerald-500/40"
@@ -1409,7 +1389,7 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'scheduled'
                   ? "border-blue-500 ring-2 ring-blue-500/30 bg-blue-950/20"
                   : "border-blue-500/20 bg-blue-950/10 hover:border-blue-500/40"
@@ -1448,7 +1428,7 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'posted'
                   ? "border-sky-500 ring-2 ring-sky-500/30 bg-sky-950/20"
                   : "border-sky-500/20 bg-sky-950/10 hover:border-sky-500/40"
@@ -1487,7 +1467,7 @@ export default function PLLedgerPage() {
             </Card>
             <Card
               className={cn(
-                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px] cursor-pointer",
+                "overflow-hidden border transition-all hover:-translate-y-0.5 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px] cursor-pointer",
                 selectedStage === 'cancelled'
                   ? "border-rose-500 ring-2 ring-rose-500/30 bg-rose-950/20"
                   : "border-rose-500/20 bg-rose-950/10 hover:border-rose-500/40"
@@ -1526,9 +1506,29 @@ export default function PLLedgerPage() {
             </Card>
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-3 w-full">
             <Card
-              className="overflow-hidden border border-emerald-500/20 bg-emerald-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
+              className="overflow-hidden border border-violet-500/20 bg-violet-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-violet-400 dark:text-violet-300">
+                  ATS
+                </span>
+                <div className="flex h-5 w-5 items-center justify-center rounded bg-violet-500/15 text-violet-700 dark:text-violet-300">
+                  <ReceiptText className="h-3 w-3" />
+                </div>
+              </div>
+              <div className="mt-1">
+                <div className="text-base font-bold tabular-nums text-violet-950 dark:text-violet-50">
+                  {tableRecords && tableRecords.length > 0
+                    ? `₹${Math.round(columnTotals.amountPaid / tableRecords.length).toLocaleString('en-IN')}`
+                    : '—'}
+                </div>
+                <p className="text-[10px] text-violet-800/70 dark:text-violet-200/60 mt-0.5">Amount paid per case</p>
+              </div>
+            </Card>
+            <Card
+              className="overflow-hidden border border-emerald-500/20 bg-emerald-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-400 dark:text-emerald-300">
@@ -1546,7 +1546,7 @@ export default function PLLedgerPage() {
               </div>
             </Card>
             <Card
-              className="overflow-hidden border border-teal-500/20 bg-teal-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
+              className="overflow-hidden border border-teal-500/20 bg-teal-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-teal-400 dark:text-teal-300">
@@ -1564,7 +1564,7 @@ export default function PLLedgerPage() {
               </div>
             </Card>
             <Card
-              className="overflow-hidden border border-blue-500/20 bg-blue-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
+              className="overflow-hidden border border-blue-500/20 bg-blue-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 dark:text-blue-300">
@@ -1580,7 +1580,7 @@ export default function PLLedgerPage() {
               </div>
             </Card>
             <Card
-              className="overflow-hidden border border-indigo-500/20 bg-indigo-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between w-[140px]"
+              className="overflow-hidden border border-indigo-500/20 bg-indigo-950/10 rounded-xl shadow-none p-2.5 flex flex-col justify-between flex-1 min-w-[150px]"
             >
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-400 dark:text-indigo-300">
