@@ -334,8 +334,8 @@ export default function DoctorDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
-        <div className="mx-auto max-w-7xl space-y-6">
+      <div className="min-h-screen w-full min-w-0 bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
+        <div className="w-full min-w-0 space-y-6">
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
@@ -389,7 +389,7 @@ export default function DoctorDetailPage() {
           />
 
           {/* Cases Table Component Container (UI preserved as requested, wrapper styled) */}
-          <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl overflow-hidden shadow-lg">
+          <div className="min-w-0 w-full bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl overflow-hidden shadow-lg">
             <div className="px-6 py-4 border-b border-[#283150] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[#191D2E]/80">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/20 shadow-sm shrink-0">

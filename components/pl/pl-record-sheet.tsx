@@ -235,7 +235,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           paymentType: (pl?.paymentType as string) || '',
           cashCollectedBy: (pl?.cashCollectedBy as string) || (ds?.cashCollectedBy as string) || '',
           status: (pl?.status as string) || '',
-          paymentCollectedAt: (pl?.paymentCollectedAt as string) || 
+          paymentCollectedAt: (pl?.paymentCollectedAt as string) ||
             (() => {
               const hosp = numVal(ds?.collectedByHospital)
               const med = numVal(ds?.collectedByMediend)
@@ -543,6 +543,8 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       <SheetContent side="right" className="w-[65vw] sm:max-w-[65vw] p-0 gap-0 flex flex-col">
         {loadingLead || !record ? (
           <div className="flex items-center justify-center h-full">
+            <SheetTitle className="sr-only">Loading Record</SheetTitle>
+            <SheetDescription className="sr-only">Please wait while the record is loading</SheetDescription>
             <Loader2 className="h-8 w-8 animate-spin text-teal-600" />
           </div>
         ) : (
@@ -570,528 +572,528 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
               </div>
             </SheetHeader>
             <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-6">
-                {hasBdNotes && (
-                  <Card className="overflow-hidden border-amber-200/50 shadow-md dark:border-amber-800/40">
-                    <CardHeader className="border-b bg-gradient-to-r from-amber-500/10 to-yellow-500/10 pb-2">
-                      <CardTitle className="text-sm text-amber-950 dark:text-amber-100">BD Notes for PL Head</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-3 text-sm space-y-3">
-                      {bdNotes && (
-                        <div>
-                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Additional Notes</p>
-                          <p className="whitespace-pre-wrap">{bdNotes}</p>
-                        </div>
-                      )}
-                      {bdIpdStatusNotes && (
-                        <div>
-                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">IPD Status Notes</p>
-                          <p className="whitespace-pre-wrap">{bdIpdStatusNotes}</p>
-                        </div>
-                      )}
-                      {bdImplantConsumables && (
-                        <div>
-                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Implants / Consumables</p>
-                          <p className="whitespace-pre-wrap">{bdImplantConsumables}</p>
-                        </div>
-                      )}
-                      {bdInstrument && (
-                        <div>
-                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Instruments</p>
-                          <p className="whitespace-pre-wrap">{bdInstrument}</p>
-                        </div>
-                      )}
-                      {leadRemarks && (
-                        <div>
-                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Lead Remarks</p>
-                          <p className="whitespace-pre-wrap">{leadRemarks}</p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
-
-                <Card className="overflow-hidden border-teal-200/50 shadow-md dark:border-teal-800/40">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-gradient-to-r from-teal-500/10 to-indigo-500/10">
-                    <div>
-                      <CardTitle className="text-teal-950 dark:text-teal-100">Case context</CardTitle>
-                      <CardDescription>Patient and case details (from lead)</CardDescription>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-teal-200 dark:border-teal-700"
-                      onClick={() => {
-                        onOpenChange(false)
-                        setTimeout(() => router.push(`/patient/${leadId}`), 100)
-                      }}
-                    >
-                      View patient
-                    </Button>
+              {hasBdNotes && (
+                <Card className="overflow-hidden border-amber-200/50 shadow-md dark:border-amber-800/40">
+                  <CardHeader className="border-b bg-gradient-to-r from-amber-500/10 to-yellow-500/10 pb-2">
+                    <CardTitle className="text-sm text-amber-950 dark:text-amber-100">BD Notes for PL Head</CardTitle>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-teal-50/40 to-indigo-50/25 dark:from-teal-950/20 dark:to-indigo-950/15 rounded-b-lg">
-                    <div className="sm:col-span-2 grid grid-cols-2 gap-4">
+                  <CardContent className="pt-3 text-sm space-y-3">
+                    {bdNotes && (
                       <div>
-                        <Label className="text-xs text-muted-foreground">Lead ref</Label>
-                        <div className="flex items-center gap-1 mt-1">
-                          <span className="font-medium">{record.leadRef ?? '—'}</span>
-                          {record.leadRef && <CopyLeadRefButton leadRef={String(record.leadRef)} />}
-                        </div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Additional Notes</p>
+                        <p className="whitespace-pre-wrap">{bdNotes}</p>
                       </div>
+                    )}
+                    {bdIpdStatusNotes && (
                       <div>
-                        <Label className="text-xs text-muted-foreground">Lead source</Label>
-                        <p className="font-medium mt-1">{record.source ?? '—'}</p>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">IPD Status Notes</p>
+                        <p className="whitespace-pre-wrap">{bdIpdStatusNotes}</p>
+                      </div>
+                    )}
+                    {bdImplantConsumables && (
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Implants / Consumables</p>
+                        <p className="whitespace-pre-wrap">{bdImplantConsumables}</p>
+                      </div>
+                    )}
+                    {bdInstrument && (
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Instruments</p>
+                        <p className="whitespace-pre-wrap">{bdInstrument}</p>
+                      </div>
+                    )}
+                    {leadRemarks && (
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Lead Remarks</p>
+                        <p className="whitespace-pre-wrap">{leadRemarks}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              <Card className="overflow-hidden border-teal-200/50 shadow-md dark:border-teal-800/40">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b bg-gradient-to-r from-teal-500/10 to-indigo-500/10">
+                  <div>
+                    <CardTitle className="text-teal-950 dark:text-teal-100">Case context</CardTitle>
+                    <CardDescription>Patient and case details (from leasd)</CardDescription>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-teal-200 dark:border-teal-700"
+                    onClick={() => {
+                      onOpenChange(false)
+                      setTimeout(() => router.push(`/patient/${leadId}`), 100)
+                    }}
+                  >
+                    View patient
+                  </Button>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gradient-to-br from-teal-50/40 to-indigo-50/25 dark:from-teal-950/20 dark:to-indigo-950/15 rounded-b-lg">
+                  <div className="sm:col-span-2 grid grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Lead ref</Label>
+                      <div className="flex items-center gap-1 mt-1">
+                        <span className="font-medium">{record.leadRef ?? '—'}</span>
+                        {record.leadRef && <CopyLeadRefButton leadRef={String(record.leadRef)} />}
                       </div>
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Patient</Label>
-                      <p className="font-medium">{record.patientName ?? '—'}</p>
+                      <Label className="text-xs text-muted-foreground">Lead source</Label>
+                      <p className="font-medium mt-1">{record.source ?? '—'}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Patient</Label>
+                    <p className="font-medium">{record.patientName ?? '—'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Hospital</Label>
+                    <p className="font-medium">{resolveLeadHospitalDoctor(record as unknown as Record<string, unknown>).hospital ?? '—'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Doctor</Label>
+                    <p className="font-medium">{resolveLeadHospitalDoctor(record as unknown as Record<string, unknown>).doctor ?? '—'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Treatment</Label>
+                    <p className="font-medium">{record.treatment ?? '—'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Admission</Label>
+                    <p className="font-medium">
+                      {record.admissionRecord?.admissionDate
+                        ? new Date(record.admissionRecord.admissionDate).toLocaleDateString()
+                        : '—'}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Surgery date</Label>
+                    <p className="font-medium">
+                      {(function () {
+                        const sDate =
+                          record.surgeryDate ||
+                          record.admissionRecord?.surgeryDate ||
+                          (record.dischargeSheet as Record<string, unknown> | null)?.surgeryDate
+                        return sDate
+                          ? new Date(sDate as string).toLocaleDateString()
+                          : '—'
+                      })()}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Discharge date</Label>
+                    <p className="font-medium">
+                      {(record.dischargeSheet as Record<string, unknown> | null)?.dischargeDate
+                        ? new Date((record.dischargeSheet as Record<string, unknown>).dischargeDate as string).toLocaleDateString()
+                        : '—'}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Reporting &amp; people</CardTitle>
+                    <CardDescription>Month is prefilled from surgery date when available</CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div>
+                      <Label>Reporting month</Label>
+                      <Input type="month" value={formData.month} onChange={(e) => update('month', e.target.value)} className="mt-1" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Hospital</Label>
-                      <p className="font-medium">{resolveLeadHospitalDoctor(record as unknown as Record<string, unknown>).hospital ?? '—'}</p>
+                      <Label>Admission date</Label>
+                      <Input type="date" value={formData.admissionDate} onChange={(e) => update('admissionDate', e.target.value)} className="mt-1" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Doctor</Label>
-                      <p className="font-medium">{resolveLeadHospitalDoctor(record as unknown as Record<string, unknown>).doctor ?? '—'}</p>
+                      <Label>Surgery date</Label>
+                      <Input type="date" value={formData.surgeryDate} onChange={(e) => update('surgeryDate', e.target.value)} className="mt-1" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Treatment</Label>
-                      <p className="font-medium">{record.treatment ?? '—'}</p>
+                      <Label>Manager name</Label>
+                      <Input value={formData.managerName} onChange={(e) => update('managerName', e.target.value)} className="mt-1" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Admission</Label>
-                      <p className="font-medium">
-                        {record.admissionRecord?.admissionDate
-                          ? new Date(record.admissionRecord.admissionDate).toLocaleDateString()
-                          : '—'}
-                      </p>
+                      <Label>BDM name</Label>
+                      <Input value={formData.bdmName} onChange={(e) => update('bdmName', e.target.value)} className="mt-1" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Surgery date</Label>
-                      <p className="font-medium">
-                        {(function () {
-                          const sDate =
-                            record.surgeryDate ||
-                            record.admissionRecord?.surgeryDate ||
-                            (record.dischargeSheet as Record<string, unknown> | null)?.surgeryDate
-                          return sDate
-                            ? new Date(sDate as string).toLocaleDateString()
-                            : '—'
-                        })()}
-                      </p>
+                      <Label>Payment type</Label>
+                      <Input value={formData.paymentType} onChange={(e) => update('paymentType', e.target.value)} placeholder="e.g. Cashless" className="mt-1" />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground">Discharge date</Label>
-                      <p className="font-medium">
-                        {(record.dischargeSheet as Record<string, unknown> | null)?.dischargeDate
-                          ? new Date((record.dischargeSheet as Record<string, unknown>).dischargeDate as string).toLocaleDateString()
-                          : '—'}
-                      </p>
+                      <Label>Status</Label>
+                      <Input value={formData.status} onChange={(e) => update('status', e.target.value)} placeholder="e.g. IPD Done" className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Payment collected at</Label>
+                      <Select value={formData.paymentCollectedAt || 'unset'} onValueChange={(v) => update('paymentCollectedAt', v === 'unset' ? '' : v)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Select…" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unset">—</SelectItem>
+                          <SelectItem value="Mediend">Mediend</SelectItem>
+                          <SelectItem value="Hospital">Hospital</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Cash collected by</Label>
+                      <Input value={formData.cashCollectedBy} onChange={(e) => update('cashCollectedBy', e.target.value)} placeholder="e.g. BD Name" className="mt-1" />
                     </div>
                   </CardContent>
                 </Card>
 
-                <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Reporting &amp; people</CardTitle>
-                      <CardDescription>Month is prefilled from surgery date when available</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      <div>
-                        <Label>Reporting month</Label>
-                        <Input type="month" value={formData.month} onChange={(e) => update('month', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Admission date</Label>
-                        <Input type="date" value={formData.admissionDate} onChange={(e) => update('admissionDate', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Surgery date</Label>
-                        <Input type="date" value={formData.surgeryDate} onChange={(e) => update('surgeryDate', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Manager name</Label>
-                        <Input value={formData.managerName} onChange={(e) => update('managerName', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>BDM name</Label>
-                        <Input value={formData.bdmName} onChange={(e) => update('bdmName', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Payment type</Label>
-                        <Input value={formData.paymentType} onChange={(e) => update('paymentType', e.target.value)} placeholder="e.g. Cashless" className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Status</Label>
-                        <Input value={formData.status} onChange={(e) => update('status', e.target.value)} placeholder="e.g. IPD Done" className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Payment collected at</Label>
-                        <Select value={formData.paymentCollectedAt || 'unset'} onValueChange={(v) => update('paymentCollectedAt', v === 'unset' ? '' : v)}>
-                          <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Select…" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="unset">—</SelectItem>
-                            <SelectItem value="Mediend">Mediend</SelectItem>
-                            <SelectItem value="Hospital">Hospital</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>Cash collected by</Label>
-                        <Input value={formData.cashCollectedBy} onChange={(e) => update('cashCollectedBy', e.target.value)} placeholder="e.g. BD Name" className="mt-1" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Bill Breakup (from discharge sheet)</CardTitle>
-                      <CardDescription>Tick fields to sum them into D&amp;C charges</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      {DC_FIELD_KEYS.map((key) => (
-                        <div key={key} className="flex items-center gap-3 py-1">
-                          <Checkbox
-                            id={`dc-${key}`}
-                            checked={dcChecked[key]}
-                            onCheckedChange={(checked) =>
-                              setDcChecked((prev) => ({ ...prev, [key]: checked === true }))
-                            }
-                          />
-                          <Label htmlFor={`dc-${key}`} className="flex-1 cursor-pointer">
-                            {DC_LABELS[key]}
-                          </Label>
-                          <span className="text-sm font-medium w-32 text-right">
-                            {dsBillAmounts[key] > 0 ? inr(dsBillAmounts[key]) : '—'}
-                          </span>
-                        </div>
-                      ))}
-                      <div className="flex items-center justify-between border-t pt-3 mt-2">
-                        <span className="text-sm font-semibold">D&amp;C Total (sum of ticked fields)</span>
-                        <span className="text-base font-bold">{inr(computedDcTotal)}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Deductions &amp; Settlement</CardTitle>
-                      <CardDescription>Autofilled from discharge sheet</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      <div>
-                        <Label>Copay Amount</Label>
-                        <Input type="number" step="0.01" value={formData.copayAmount} onChange={(e) => update('copayAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Other Deductions</Label>
-                        <Input type="number" step="0.01" value={formData.otherDeduction} onChange={(e) => update('otherDeduction', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Total Deductions</Label>
-                        <Input type="number" step="0.01" value={formData.deductionAmount} onChange={(e) => update('deductionAmount', e.target.value)} className="mt-1 bg-muted/40" />
-                      </div>
-                      <div>
-                        <Label>Collected by Hospital</Label>
-                        <Input type="number" step="0.01" value={formData.collectedByHospital} onChange={(e) => update('collectedByHospital', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Collected by Mediend</Label>
-                        <Input type="number" step="0.01" value={formData.collectedByMediend} onChange={(e) => update('collectedByMediend', e.target.value)} className="mt-1" />
-                      </div>
-                      <div className="flex items-center pt-4">
-                        <span className="text-sm font-medium">Deductions Paid Total: {inr(computedDedPaidTotal)}</span>
-                      </div>
-                      <div>
-                        <Label>Waived Off</Label>
-                        <Input type="number" step="0.01" value={computedWaivedOff.toFixed(2)} readOnly className="mt-1 bg-muted/40" />
-                      </div>
-                      <div>
-                        <Label>Hospital Discount</Label>
-                        <Input type="number" step="0.01" value={formData.discountAmount} onChange={(e) => update('discountAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Exxis Tariff Deduction</Label>
-                        <Input type="number" step="0.01" value={formData.axisTariffDeduction} onChange={(e) => update('axisTariffDeduction', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Exxis Tariff Paid</Label>
-                        <Input type="number" step="0.01" value={formData.axisTariffDeductionPaid} onChange={(e) => update('axisTariffDeductionPaid', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Final Approved Amount</Label>
-                        <Input type="number" step="0.01" value={formData.finalApprovedAmount} onChange={(e) => update('finalApprovedAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Actual Final Amount</Label>
-                        <Input type="number" step="0.01" value={formData.actualFinalAmount} onChange={(e) => update('actualFinalAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Net Settlement</Label>
-                        <Input type="number" step="0.01" value={formData.netSettlementAmount} onChange={(e) => update('netSettlementAmount', e.target.value)} className="mt-1" />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Amounts</CardTitle>
-                      <CardDescription>Total bill = hospital bill; approved amount = negotiated / case total</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      <div>
-                        <Label>Total bill</Label>
-                        <Input type="number" step="0.01" value={formData.billAmount} onChange={(e) => update('billAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Actual final amount</Label>
-                        <Input type="number" step="0.01" value={formData.actualFinalAmount} onChange={(e) => update('actualFinalAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Approved amount</Label>
-                        <Input type="number" step="0.01" value={formData.totalAmount} onChange={(e) => update('totalAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Total deduction</Label>
-                        <Input type="number" step="0.01" value={formData.deductionAmount} onChange={(e) => update('deductionAmount', e.target.value)} placeholder="0.00" className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Deduction paid by patient</Label>
-                        <Input type="number" step="0.01" value={formData.cashOrDedPaid} onChange={(e) => update('cashOrDedPaid', e.target.value)} placeholder="0.00" className="mt-1" />
-                      </div>
-                      <div className="sm:col-span-2">
-                        <Label>Waived off (auto = total − paid by patient)</Label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          readOnly
-                          value={computedWaivedOff.toFixed(2)}
-                          className="mt-1 bg-muted/40"
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Bill Breakup (from discharge sheet)</CardTitle>
+                    <CardDescription>Tick fields to sum them into D&amp;C charges</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    {DC_FIELD_KEYS.map((key) => (
+                      <div key={key} className="flex items-center gap-3 py-1">
+                        <Checkbox
+                          id={`dc-${key}`}
+                          checked={dcChecked[key]}
+                          onCheckedChange={(checked) =>
+                            setDcChecked((prev) => ({ ...prev, [key]: checked === true }))
+                          }
                         />
+                        <Label htmlFor={`dc-${key}`} className="flex-1 cursor-pointer">
+                          {DC_LABELS[key]}
+                        </Label>
+                        <span className="text-sm font-medium w-32 text-right">
+                          {dsBillAmounts[key] > 0 ? inr(dsBillAmounts[key]) : '—'}
+                        </span>
                       </div>
-                    </CardContent>
-                  </Card>
+                    ))}
+                    <div className="flex items-center justify-between border-t pt-3 mt-2">
+                      <span className="text-sm font-semibold">D&amp;C Total (sum of ticked fields)</span>
+                      <span className="text-base font-bold">{inr(computedDcTotal)}</span>
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Revenue split</CardTitle>
-                      <CardDescription>Hospital share, Mediend share, costs &amp; net profit</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      <div>
-                        <Label>Hospital %</Label>
-                        <Input type="number" step="0.01" value={formData.hospitalSharePct} onChange={(e) => update('hospitalSharePct', e.target.value)} className="mt-1" />
-                      </div>
-                       <div>
-                        <Label>Hospital Amount {computedHospitalShare && !hasManualOverrides.hospitalAmount && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
-                        <Input type="number" step="0.01" value={hospShareAmtDisplay} onChange={(e) => { setFormData(prev => ({ ...prev, hospitalShareAmount: e.target.value })); setHasManualOverrides(p => ({ ...p, hospitalAmount: true })) }} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Mediend %</Label>
-                        <Input type="number" step="0.01" value={formData.mediendSharePct} onChange={(e) => update('mediendSharePct', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Mediend Amount {computedHospitalShare && !hasManualOverrides.mediendAmount && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
-                        <Input type="number" step="0.01" value={medShareAmtDisplay} onChange={(e) => { setFormData(prev => ({ ...prev, mediendShareAmount: e.target.value })); setHasManualOverrides(p => ({ ...p, mediendAmount: true })) }} className="mt-1" />
-                      </div>
-                    </CardContent>
-                    <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-0 border-t mt-2 mx-6 px-0">
-                      <div className="sm:col-span-2 text-sm font-semibold text-muted-foreground pt-3">Costs</div>
-                      <div>
-                        <Label>D&amp;C charges</Label>
-                        <Input type="number" step="0.01" value={computedDcTotal.toFixed(2)} readOnly className="mt-1 bg-muted/40" />
-                        <p className="text-[11px] text-muted-foreground mt-1">Auto: sum of ticked breakup fields</p>
-                      </div>
-                      <div>
-                        <Label>Doctor charges</Label>
-                        <Input type="number" step="0.01" value={formData.doctorCharges} onChange={(e) => update('doctorCharges', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Referral amount</Label>
-                        <Input type="number" step="0.01" value={formData.referralAmount} onChange={(e) => update('referralAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Cab charges</Label>
-                        <Input type="number" step="0.01" value={formData.cabCharges} onChange={(e) => update('cabCharges', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Implant cost</Label>
-                        <Input type="number" step="0.01" value={formData.implantCost} onChange={(e) => update('implantCost', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Implant paid by</Label>
-                        <Select value={formData.implantPaidBy || 'unset'} onValueChange={(v) => update('implantPaidBy', v === 'unset' ? '' : v)}>
-                          <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Default: Mediend" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="unset">Not set (Mediend)</SelectItem>
-                            <SelectItem value="MEDIEND">Mediend</SelectItem>
-                            <SelectItem value="HOSPITAL">Hospital</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>Instrument cost</Label>
-                        <Input type="number" step="0.01" value={formData.instrumentsCost} onChange={(e) => update('instrumentsCost', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Instrument paid by</Label>
-                        <Select value={formData.instrumentsPaidBy || 'unset'} onValueChange={(v) => update('instrumentsPaidBy', v === 'unset' ? '' : v)}>
-                          <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Default: Mediend" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="unset">Not set (Mediend)</SelectItem>
-                            <SelectItem value="MEDIEND">Mediend</SelectItem>
-                            <SelectItem value="HOSPITAL">Hospital</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>Actual implant cost</Label>
-                        <Input type="number" step="0.01" value={formData.actualImplantCost} onChange={(e) => update('actualImplantCost', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Actual instrument cost</Label>
-                        <Input type="number" step="0.01" value={formData.actualInstrumentCost} onChange={(e) => update('actualInstrumentCost', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Hospital recover amount</Label>
-                        <Input type="number" step="0.01" value={formData.hospitalRecoverAmount} onChange={(e) => update('hospitalRecoverAmount', e.target.value)} className="mt-1" />
-                      </div>
-                      <div className="sm:col-span-2">
-                        <Label>Mediend net profit {computedMediendNetProfit !== null && !hasManualOverrides.mediendNetProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={netProfitDisplay}
-                          onChange={(e) => {
-                            setFormData(prev => ({ ...prev, mediendNetProfit: e.target.value }))
-                            setHasManualOverrides((p) => ({ ...p, mediendNetProfit: true }))
-                          }}
-                          className="mt-1 font-medium"
-                        />
-                        <p className="text-[11px] text-muted-foreground mt-1">= Mediend Share − (Doctor + Cab + Referral + Actual Implant/Instruments + Hospital Recovery). If actual is 0, then 0 is subtracted.</p>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <Label>Mediend profit {computedMediendProfit !== null && !hasManualOverrides.mediendProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          value={medProfitDisplay}
-                          onChange={(e) => {
-                            setFormData(prev => ({ ...prev, mediendProfit: e.target.value }))
-                            setHasManualOverrides((p) => ({ ...p, mediendProfit: true }))
-                          }}
-                          className="mt-1 font-medium"
-                        />
-                        <p className="text-[11px] text-muted-foreground mt-1">= Mediend Net Profit − (10% × Mediend Share)</p>
-                      </div>
-                    </CardContent>
-                    <CardContent className="pt-0 mx-6 px-0 border-0">
-                      <div className="sm:col-span-2">
-                        <Label>Doctor remarks</Label>
-                        <Textarea value={formData.doctorRemarks} onChange={(e) => update('doctorRemarks', e.target.value)} placeholder="Notes about the doctor / doctor charges for this case" className="mt-1 resize-none" rows={2} />
-                      </div>
-                      <div className="sm:col-span-2 mt-3">
-                        <Label>Cost breakdown remarks</Label>
-                        <Textarea value={formData.costBreakdownRemarks} onChange={(e) => update('costBreakdownRemarks', e.target.value)} placeholder="Notes about implants / instruments / D&C / referral / cab costs" className="mt-1 resize-none" rows={2} />
-                      </div>
-                    </CardContent>
-                  </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Deductions &amp; Settlement</CardTitle>
+                    <CardDescription>Autofilled from discharge sheet</CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div>
+                      <Label>Copay Amount</Label>
+                      <Input type="number" step="0.01" value={formData.copayAmount} onChange={(e) => update('copayAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Other Deductions</Label>
+                      <Input type="number" step="0.01" value={formData.otherDeduction} onChange={(e) => update('otherDeduction', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Total Deductions</Label>
+                      <Input type="number" step="0.01" value={formData.deductionAmount} onChange={(e) => update('deductionAmount', e.target.value)} className="mt-1 bg-muted/40" />
+                    </div>
+                    <div>
+                      <Label>Collected by Hospital</Label>
+                      <Input type="number" step="0.01" value={formData.collectedByHospital} onChange={(e) => update('collectedByHospital', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Collected by Mediend</Label>
+                      <Input type="number" step="0.01" value={formData.collectedByMediend} onChange={(e) => update('collectedByMediend', e.target.value)} className="mt-1" />
+                    </div>
+                    <div className="flex items-center pt-4">
+                      <span className="text-sm font-medium">Deductions Paid Total: {inr(computedDedPaidTotal)}</span>
+                    </div>
+                    <div>
+                      <Label>Waived Off</Label>
+                      <Input type="number" step="0.01" value={computedWaivedOff.toFixed(2)} readOnly className="mt-1 bg-muted/40" />
+                    </div>
+                    <div>
+                      <Label>Hospital Discount</Label>
+                      <Input type="number" step="0.01" value={formData.discountAmount} onChange={(e) => update('discountAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Exxis Tariff Deduction</Label>
+                      <Input type="number" step="0.01" value={formData.axisTariffDeduction} onChange={(e) => update('axisTariffDeduction', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Exxis Tariff Paid</Label>
+                      <Input type="number" step="0.01" value={formData.axisTariffDeductionPaid} onChange={(e) => update('axisTariffDeductionPaid', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Final Approved Amount</Label>
+                      <Input type="number" step="0.01" value={formData.finalApprovedAmount} onChange={(e) => update('finalApprovedAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Actual Final Amount</Label>
+                      <Input type="number" step="0.01" value={formData.actualFinalAmount} onChange={(e) => update('actualFinalAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Net Settlement</Label>
+                      <Input type="number" step="0.01" value={formData.netSettlementAmount} onChange={(e) => update('netSettlementAmount', e.target.value)} className="mt-1" />
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Payout &amp; invoice</CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div>
-                        <Label>MediEND payout</Label>
-                        <Select value={formData.hospitalPayoutStatus} onValueChange={(v) => update('hospitalPayoutStatus', v)}>
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="PENDING">PENDING</SelectItem>
-                            <SelectItem value="PARTIAL">PARTIAL</SelectItem>
-                            <SelectItem value="PAID">PAID</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>Doctor payout</Label>
-                        <Select value={formData.doctorPayoutStatus} onValueChange={(v) => update('doctorPayoutStatus', v)}>
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="PENDING">PENDING</SelectItem>
-                            <SelectItem value="PARTIAL">PARTIAL</SelectItem>
-                            <SelectItem value="PAID">PAID</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>Mediend invoice</Label>
-                        <Select value={formData.mediendInvoiceStatus} onValueChange={(v) => update('mediendInvoiceStatus', v)}>
-                          <SelectTrigger className="mt-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="PENDING">PENDING</SelectItem>
-                            <SelectItem value="SENT">SENT</SelectItem>
-                            <SelectItem value="PAID">PAID</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>MediEND amount pending</Label>
-                        <Input type="number" step="0.01" value={formData.hospitalAmountPending} onChange={(e) => update('hospitalAmountPending', e.target.value)} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Doctor amount pending</Label>
-                        <Input type="number" step="0.01" value={formData.doctorAmountPending} onChange={(e) => update('doctorAmountPending', e.target.value)} className="mt-1" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Amounts</CardTitle>
+                    <CardDescription>Total bill = hospital bill; approved amount = negotiated / case total</CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div>
+                      <Label>Total bill</Label>
+                      <Input type="number" step="0.01" value={formData.billAmount} onChange={(e) => update('billAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Actual final amount</Label>
+                      <Input type="number" step="0.01" value={formData.actualFinalAmount} onChange={(e) => update('actualFinalAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Approved amount</Label>
+                      <Input type="number" step="0.01" value={formData.totalAmount} onChange={(e) => update('totalAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Total deduction</Label>
+                      <Input type="number" step="0.01" value={formData.deductionAmount} onChange={(e) => update('deductionAmount', e.target.value)} placeholder="0.00" className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Deduction paid by patient</Label>
+                      <Input type="number" step="0.01" value={formData.cashOrDedPaid} onChange={(e) => update('cashOrDedPaid', e.target.value)} placeholder="0.00" className="mt-1" />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <Label>Waived off (auto = total − paid by patient)</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        readOnly
+                        value={computedWaivedOff.toFixed(2)}
+                        className="mt-1 bg-muted/40"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Remarks</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <Label>Remarks</Label>
-                        <Input value={formData.remarks} onChange={(e) => update('remarks', e.target.value)} className="mt-1" />
-                      </div>
-                    </CardContent>
-                  </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Revenue split</CardTitle>
+                    <CardDescription>Hospital share, Mediend share, costs &amp; net profit</CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div>
+                      <Label>Hospital %</Label>
+                      <Input type="number" step="0.01" value={formData.hospitalSharePct} onChange={(e) => update('hospitalSharePct', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Hospital Amount {computedHospitalShare && !hasManualOverrides.hospitalAmount && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
+                      <Input type="number" step="0.01" value={hospShareAmtDisplay} onChange={(e) => { setFormData(prev => ({ ...prev, hospitalShareAmount: e.target.value })); setHasManualOverrides(p => ({ ...p, hospitalAmount: true })) }} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Mediend %</Label>
+                      <Input type="number" step="0.01" value={formData.mediendSharePct} onChange={(e) => update('mediendSharePct', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Mediend Amount {computedHospitalShare && !hasManualOverrides.mediendAmount && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
+                      <Input type="number" step="0.01" value={medShareAmtDisplay} onChange={(e) => { setFormData(prev => ({ ...prev, mediendShareAmount: e.target.value })); setHasManualOverrides(p => ({ ...p, mediendAmount: true })) }} className="mt-1" />
+                    </div>
+                  </CardContent>
+                  <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-0 border-t mt-2 mx-6 px-0">
+                    <div className="sm:col-span-2 text-sm font-semibold text-muted-foreground pt-3">Costs</div>
+                    <div>
+                      <Label>D&amp;C charges</Label>
+                      <Input type="number" step="0.01" value={computedDcTotal.toFixed(2)} readOnly className="mt-1 bg-muted/40" />
+                      <p className="text-[11px] text-muted-foreground mt-1">Auto: sum of ticked breakup fields</p>
+                    </div>
+                    <div>
+                      <Label>Doctor charges</Label>
+                      <Input type="number" step="0.01" value={formData.doctorCharges} onChange={(e) => update('doctorCharges', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Referral amount</Label>
+                      <Input type="number" step="0.01" value={formData.referralAmount} onChange={(e) => update('referralAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Cab charges</Label>
+                      <Input type="number" step="0.01" value={formData.cabCharges} onChange={(e) => update('cabCharges', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Implant cost</Label>
+                      <Input type="number" step="0.01" value={formData.implantCost} onChange={(e) => update('implantCost', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Implant paid by</Label>
+                      <Select value={formData.implantPaidBy || 'unset'} onValueChange={(v) => update('implantPaidBy', v === 'unset' ? '' : v)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Default: Mediend" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unset">Not set (Mediend)</SelectItem>
+                          <SelectItem value="MEDIEND">Mediend</SelectItem>
+                          <SelectItem value="HOSPITAL">Hospital</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Instrument cost</Label>
+                      <Input type="number" step="0.01" value={formData.instrumentsCost} onChange={(e) => update('instrumentsCost', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Instrument paid by</Label>
+                      <Select value={formData.instrumentsPaidBy || 'unset'} onValueChange={(v) => update('instrumentsPaidBy', v === 'unset' ? '' : v)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Default: Mediend" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unset">Not set (Mediend)</SelectItem>
+                          <SelectItem value="MEDIEND">Mediend</SelectItem>
+                          <SelectItem value="HOSPITAL">Hospital</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Actual implant cost</Label>
+                      <Input type="number" step="0.01" value={formData.actualImplantCost} onChange={(e) => update('actualImplantCost', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Actual instrument cost</Label>
+                      <Input type="number" step="0.01" value={formData.actualInstrumentCost} onChange={(e) => update('actualInstrumentCost', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Hospital recover amount</Label>
+                      <Input type="number" step="0.01" value={formData.hospitalRecoverAmount} onChange={(e) => update('hospitalRecoverAmount', e.target.value)} className="mt-1" />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <Label>Mediend net profit {computedMediendNetProfit !== null && !hasManualOverrides.mediendNetProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={netProfitDisplay}
+                        onChange={(e) => {
+                          setFormData(prev => ({ ...prev, mediendNetProfit: e.target.value }))
+                          setHasManualOverrides((p) => ({ ...p, mediendNetProfit: true }))
+                        }}
+                        className="mt-1 font-medium"
+                      />
+                      <p className="text-[11px] text-muted-foreground mt-1">= Mediend Share − (Doctor + Cab + Referral + Actual Implant/Instruments + Hospital Recovery). If actual is 0, then 0 is subtracted.</p>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <Label>Mediend profit {computedMediendProfit !== null && !hasManualOverrides.mediendProfit && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={medProfitDisplay}
+                        onChange={(e) => {
+                          setFormData(prev => ({ ...prev, mediendProfit: e.target.value }))
+                          setHasManualOverrides((p) => ({ ...p, mediendProfit: true }))
+                        }}
+                        className="mt-1 font-medium"
+                      />
+                      <p className="text-[11px] text-muted-foreground mt-1">= Mediend Net Profit − (10% × Mediend Share)</p>
+                    </div>
+                  </CardContent>
+                  <CardContent className="pt-0 mx-6 px-0 border-0">
+                    <div className="sm:col-span-2">
+                      <Label>Doctor remarks</Label>
+                      <Textarea value={formData.doctorRemarks} onChange={(e) => update('doctorRemarks', e.target.value)} placeholder="Notes about the doctor / doctor charges for this case" className="mt-1 resize-none" rows={2} />
+                    </div>
+                    <div className="sm:col-span-2 mt-3">
+                      <Label>Cost breakdown remarks</Label>
+                      <Textarea value={formData.costBreakdownRemarks} onChange={(e) => update('costBreakdownRemarks', e.target.value)} placeholder="Notes about implants / instruments / D&C / referral / cab costs" className="mt-1 resize-none" rows={2} />
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  <div className="flex gap-3 pb-4">
-                    <Button type="button" disabled={updateMutation.isPending} onClick={(e) => handleSubmit(e as unknown as React.FormEvent, 'DRAFT')}>
-                      {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                      Save Draft
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="default"
-                      disabled={updateMutation.isPending}
-                      onClick={(e) => handleSubmit(e as unknown as React.FormEvent, 'OUTSTANDING')}
-                      className="bg-emerald-600 hover:bg-emerald-700"
-                    >
-                      {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                      Save & Move to Outstanding
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
-              </div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Payout &amp; invoice</CardTitle>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <Label>MediEND payout</Label>
+                      <Select value={formData.hospitalPayoutStatus} onValueChange={(v) => update('hospitalPayoutStatus', v)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="PENDING">PENDING</SelectItem>
+                          <SelectItem value="PARTIAL">PARTIAL</SelectItem>
+                          <SelectItem value="PAID">PAID</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Doctor payout</Label>
+                      <Select value={formData.doctorPayoutStatus} onValueChange={(v) => update('doctorPayoutStatus', v)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="PENDING">PENDING</SelectItem>
+                          <SelectItem value="PARTIAL">PARTIAL</SelectItem>
+                          <SelectItem value="PAID">PAID</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Mediend invoice</Label>
+                      <Select value={formData.mediendInvoiceStatus} onValueChange={(v) => update('mediendInvoiceStatus', v)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="PENDING">PENDING</SelectItem>
+                          <SelectItem value="SENT">SENT</SelectItem>
+                          <SelectItem value="PAID">PAID</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>MediEND amount pending</Label>
+                      <Input type="number" step="0.01" value={formData.hospitalAmountPending} onChange={(e) => update('hospitalAmountPending', e.target.value)} className="mt-1" />
+                    </div>
+                    <div>
+                      <Label>Doctor amount pending</Label>
+                      <Input type="number" step="0.01" value={formData.doctorAmountPending} onChange={(e) => update('doctorAmountPending', e.target.value)} className="mt-1" />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Remarks</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label>Remarks</Label>
+                      <Input value={formData.remarks} onChange={(e) => update('remarks', e.target.value)} className="mt-1" />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="flex gap-3 pb-4">
+                  <Button type="button" disabled={updateMutation.isPending} onClick={(e) => handleSubmit(e as unknown as React.FormEvent, 'DRAFT')}>
+                    {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Save Draft
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="default"
+                    disabled={updateMutation.isPending}
+                    onClick={(e) => handleSubmit(e as unknown as React.FormEvent, 'OUTSTANDING')}
+                    className="bg-emerald-600 hover:bg-emerald-700"
+                  >
+                    {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Save & Move to Outstanding
+                  </Button>
+                  <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
           </>
         )}
       </SheetContent>
