@@ -71,6 +71,8 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'sales.targets', label: 'Targets', type: 'SECTION', parentKey: 'sales', sortOrder: 5 },
   { key: 'sales.sales_pnl', label: 'Sales P&L', type: 'SECTION', parentKey: 'sales', sortOrder: 6 },
   { key: 'sales.campaign_cpl', label: 'Campaign CPL', type: 'SECTION', parentKey: 'sales', sortOrder: 7 },
+  { key: 'sales.sales_pipeline', label: 'Sales Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 8 },
+  { key: 'sales.team_lead_pipeline', label: 'Team Lead Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 9 },
 
   // Under insurance_pl
   { key: 'insurance_pl.insurance', label: 'Insurance', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 1 },

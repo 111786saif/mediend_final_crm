@@ -30,6 +30,7 @@ enum UserRole {
   ADMIN
   USER
   TESTER
+  ACCESS_MATRIX
 }
 
 enum ComplianceCallStatus {
