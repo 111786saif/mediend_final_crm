@@ -32,10 +32,12 @@ export async function GET(request: NextRequest) {
     const role = searchParams.get('role')
     const search = searchParams.get('search')
     const userId = searchParams.get('userId')
+    const page = searchParams.get('page') ? parseInt(searchParams.get('page')!) : null
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : null
 
     const where: Prisma.UserWhereInput = {}
     if (userId) where.id = userId
-    if (role && role in UserRole) where.role = role as (typeof UserRole)[keyof typeof UserRole]
+    if (role && Object.values(UserRole).includes(role as any)) where.role = role as (typeof UserRole)[keyof typeof UserRole]
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
@@ -43,7 +45,9 @@ export async function GET(request: NextRequest) {
       ]
     }
 
-    const users = await prisma.user.findMany({
+    const total = await prisma.user.count({ where })
+
+    const findOptions: Prisma.UserFindManyArgs = {
       where,
       select: {
         id: true,
@@ -57,7 +61,14 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { name: 'asc' },
-    })
+    }
+
+    if (page !== null && limit !== null) {
+      findOptions.skip = (page - 1) * limit
+      findOptions.take = limit
+    }
+
+    const users = await prisma.user.findMany(findOptions)
 
     const permissions = await prisma.userFeaturePermission.findMany({
       where: { userId: { in: users.map((u) => u.id) } },
@@ -80,6 +91,9 @@ export async function GET(request: NextRequest) {
         [FEATURE_KEYS.CPL_ACCESS]: permMap.get(u.id)?.[FEATURE_KEYS.CPL_ACCESS] ?? null,
       },
     }))
+    if (page !== null && limit !== null) {
+      return successResponse({ data: result, total })
+    }
 
     return successResponse(result)
   } catch (error) {

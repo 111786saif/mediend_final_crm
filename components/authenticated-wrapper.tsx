@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useBadgeCounts } from '@/hooks/use-badge-counts'
 import { ProtectedRoute } from '@/components/protected-route'
 import { AppSidebar } from '@/components/app-sidebar'
+import { RouteGuard } from '@/components/route-guard'
 import {
   SidebarProvider,
   SidebarInset,
@@ -304,9 +305,11 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
             <main
               className="flex flex-1 flex-col gap-4 p-4 pt-14 md:p-6 md:pt-6 bg-background pb-24 md:pb-6"
             >
-              <PageTransition>
-                {children}
-              </PageTransition>
+              <RouteGuard>
+                <PageTransition>
+                  {children}
+                </PageTransition>
+              </RouteGuard>
             </main>
 
             {/* Unified bottom nav - all roles */}

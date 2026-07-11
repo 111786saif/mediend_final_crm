@@ -20,3 +20,6 @@ tmp
 # Docs and local-only files
 *.md
 deploy.sh
+
+# Archived migrations are not used by migrate deploy (kept in git for history only)
+prisma/migrations_archive

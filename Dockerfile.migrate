@@ -1,12 +1,12 @@
 # Minimal Node-based migrate image for when Bun image cannot be pulled (e.g. Docker Hub timeout).
-# Usage: docker compose -f docker-compose.yml -f docker-compose.migrate-node.yml --profile tools run --rm migrate-deploy-node
-# Or: docker build -f Dockerfile.migrate -t mediend-migrate . && docker run --rm --env-file .env --network mediend-crm-v2_default mediend-migrate
+# Usage: docker compose --profile tools run --rm --build migrate-deploy-node
 FROM node:20-alpine
 
 RUN apk add --no-cache openssl
 
 WORKDIR /app
 COPY package.json ./
+COPY prisma.config.ts ./
 COPY prisma ./prisma/
 
 # Install only Prisma (enough for migrate deploy)

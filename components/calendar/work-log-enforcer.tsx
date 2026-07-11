@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useWorkLogCheck, useCreateWorkLog } from "@/hooks/use-work-logs"
+import { useAuth } from "@/hooks/use-auth"
 import { apiGet } from "@/lib/api-client"
 import { toast } from "sonner"
 import { Clock } from "lucide-react"
@@ -38,6 +39,7 @@ function formatDateOnly(d: Date): string {
 }
 
 export function WorkLogEnforcer() {
+  const { user } = useAuth()
   const [description, setDescription] = useState("")
   const { data: check, isLoading, refetch } = useWorkLogCheck({
     tzOffsetMinutes: -new Date().getTimezoneOffset(),
@@ -82,6 +84,7 @@ export function WorkLogEnforcer() {
     }
   }
 
+  if (user?.role === "SALES_HEAD") return null
   if (isLoading || !check) return null
   if (pendingNotice) return null
   if (!isBlocked) return null

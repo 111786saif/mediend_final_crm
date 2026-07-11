@@ -4,6 +4,8 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
+import { useTabPermissions } from '@/hooks/use-tab-permissions'
+import { PermissionsGuard } from '@/components/permissions-guard'
 import { canReadItPnl } from '@/lib/pnl/auth-it-pnl'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -50,13 +52,24 @@ function ItPnlPageInner() {
   const searchParams = useSearchParams()
   const tabParam = searchParams.get('tab')
 
-  const [tab, setTab] = useState<TabValue>(() =>
-    isTabValue(tabParam) ? tabParam : 'overview'
+  const [tab, setTab] = useState<TabValue>('overview')
+
+  const staticTabs = useMemo(
+    () => [
+      { value: 'overview', label: 'Overview', icon: LayoutDashboard, perm: 'main.it_pnl.overview' },
+      { value: 'projects', label: 'Projects', icon: Briefcase, perm: 'main.it_pnl.projects' },
+      { value: 'resources', label: 'Resources', icon: Users, perm: 'main.it_pnl.resources' },
+    ],
+    []
   )
 
+  const { allowedTabs, isLoading: isPermsLoading, hasAccess } = useTabPermissions(staticTabs, tab, setTab)
+
   useEffect(() => {
-    if (isTabValue(tabParam)) setTab(tabParam)
-  }, [tabParam])
+    if (isTabValue(tabParam) && allowedTabs.some((t) => t.value === tabParam)) {
+      setTab(tabParam)
+    }
+  }, [tabParam, allowedTabs])
 
   const setTabAndUrl = useCallback(
     (value: string) => {
@@ -85,7 +98,7 @@ function ItPnlPageInner() {
   const { data, isLoading } = useQuery({
     queryKey: ['it-pnl-summary', q],
     queryFn: () => apiGet<PnlSummary>(`/api/it/pnl-summary?${q}`),
-    enabled: !!can && tab === 'overview',
+    enabled: !!can && tab === 'overview' && allowedTabs.some((t) => t.value === 'overview'),
   })
 
   const stackData =
@@ -94,6 +107,7 @@ function ItPnlPageInner() {
       revenue: c.revenue,
       cost: c.cost,
     })) ?? []
+
 
   return (
     <ProtectedRoute>
@@ -109,43 +123,30 @@ function ItPnlPageInner() {
           </div>
         </div>
 
-        {!can ? (
-          <Card>
-            <CardContent className="pt-6">No access</CardContent>
-          </Card>
-        ) : (
+        <PermissionsGuard
+          isLoading={isPermsLoading}
+          hasAccess={!!can && allowedTabs.length > 0}
+          resourceName="IT P&L"
+          variant="card"
+        >
           <Tabs value={tab} onValueChange={setTabAndUrl} className="w-full space-y-6">
             <TabsList className="h-auto w-full flex flex-wrap justify-start gap-1 rounded-2xl bg-muted/50 p-1.5 md:inline-flex md:w-auto">
-              <TabsTrigger
-                value="overview"
-                className={cn(
-                  'rounded-xl gap-2 px-4 py-2.5 data-[state=active]:shadow-md',
-                  'data-[state=active]:bg-background data-[state=active]:text-foreground'
-                )}
-              >
-                <LayoutDashboard className="h-4 w-4 shrink-0" />
-                Overview
-              </TabsTrigger>
-              <TabsTrigger
-                value="projects"
-                className={cn(
-                  'rounded-xl gap-2 px-4 py-2.5 data-[state=active]:shadow-md',
-                  'data-[state=active]:bg-background data-[state=active]:text-foreground'
-                )}
-              >
-                <Briefcase className="h-4 w-4 shrink-0" />
-                Projects
-              </TabsTrigger>
-              <TabsTrigger
-                value="resources"
-                className={cn(
-                  'rounded-xl gap-2 px-4 py-2.5 data-[state=active]:shadow-md',
-                  'data-[state=active]:bg-background data-[state=active]:text-foreground'
-                )}
-              >
-                <Users className="h-4 w-4 shrink-0" />
-                Resources
-              </TabsTrigger>
+              {allowedTabs.map((t) => {
+                const Icon = t.icon
+                return (
+                  <TabsTrigger
+                    key={t.value}
+                    value={t.value}
+                    className={cn(
+                      'rounded-xl gap-2 px-4 py-2.5 data-[state=active]:shadow-md',
+                      'data-[state=active]:bg-background data-[state=active]:text-foreground'
+                    )}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {t.label}
+                  </TabsTrigger>
+                )
+              })}
             </TabsList>
 
             <TabsContent value="overview" className="mt-0 space-y-6 outline-none focus-visible:ring-0">
@@ -254,7 +255,7 @@ function ItPnlPageInner() {
                     <h3 className="text-sm font-semibold text-muted-foreground mb-3">Project snapshot</h3>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {data.projects.map((p) => {
-                        const net = Object.values(p.monthly).reduce((s, m) => s + m.net, 0)
+                        const net = Object.values(p.monthly).reduce((s, m: any) => s + (m?.net ?? 0), 0) as number
                         return (
                           <Card
                             key={p.projectId}
@@ -297,7 +298,7 @@ function ItPnlPageInner() {
               <ItPnlResourcesPanel />
             </TabsContent>
           </Tabs>
-        )}
+        </PermissionsGuard>
       </div>
     </ProtectedRoute>
   )

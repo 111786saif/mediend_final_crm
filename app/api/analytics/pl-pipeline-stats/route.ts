@@ -56,13 +56,16 @@ export async function GET(request: NextRequest) {
         surgeryScheduled: 0,
         ipdDone: 0,
         discharged: 0,
+        postponed: 0,
+        cancelled: 0,
+        posted: 0,
       })
     }
 
-    const [admitted, surgeryScheduled, ipdDone, discharged] = await Promise.all([
+    const [admitted, surgeryScheduled, ipdDone, discharged, postponed, cancelled, posted] = await Promise.all([
       prisma.lead.count({
         where: {
-          caseStage: { in: ['ADMITTED', 'INITIATED'] },
+          caseStage: 'ADMITTED',
           ...buildLeadDateWhere('admission', dateWhere),
         },
       }),
@@ -81,6 +84,28 @@ export async function GET(request: NextRequest) {
           ...buildLeadDateWhere('discharge', dateWhere),
         },
       }),
+      prisma.lead.count({
+        where: {
+          admissionRecord: {
+            ipdStatus: 'POSTPONED',
+          },
+          ...buildLeadDateWhere('surgery', dateWhere),
+        },
+      }),
+      prisma.lead.count({
+        where: {
+          admissionRecord: {
+            ipdStatus: 'CANCELLED',
+          },
+          ...buildLeadDateWhere('surgery', dateWhere),
+        },
+      }),
+      prisma.lead.count({
+        where: {
+          caseStage: 'INITIATED',
+          ...buildLeadDateWhere('surgery', dateWhere),
+        },
+      }),
     ])
 
     return successResponse({
@@ -88,6 +113,9 @@ export async function GET(request: NextRequest) {
       surgeryScheduled,
       ipdDone,
       discharged,
+      postponed,
+      cancelled,
+      posted,
     })
   } catch (error) {
     console.error('pl-pipeline-stats error:', error)
