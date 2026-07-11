@@ -327,7 +327,7 @@ export function BDDashboard() {
   if (!monthly && !weekly) return null
 
   const trackerLink =
-    user?.role === 'BD' ? 'bd/kyp'
+    user?.role === 'BD' ? '/bd/kyp'
     : user?.role === 'TEAM_LEAD' ? '/team-lead/pipeline'
     : '/sales/targets'
 
