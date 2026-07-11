@@ -1,6 +1,7 @@
 'use client'
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
@@ -431,6 +432,9 @@ function BdDetailSheet({
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent side="right" className="w-full sm:max-w-2xl p-0">
+        <VisuallyHidden>
+          <SheetTitle>BD Member Details</SheetTitle>
+        </VisuallyHidden>
         <ScrollArea className="h-full">
           <div className="p-6 space-y-6">
             {isLoading && <div className="text-center py-12 text-muted-foreground">Loading…</div>}
@@ -576,6 +580,9 @@ function TeamDetailSheet({
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent side="right" className="w-full sm:max-w-2xl p-0">
+        <VisuallyHidden>
+          <SheetTitle>Team Details</SheetTitle>
+        </VisuallyHidden>
         <ScrollArea className="h-full">
           <div className="p-6 space-y-6">
             {isLoading && <div className="text-center py-12 text-muted-foreground">Loading…</div>}
