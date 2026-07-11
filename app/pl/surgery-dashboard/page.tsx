@@ -19,6 +19,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
 import { ColumnFilter } from '@/components/ui/column-filter'
 import { usePermissions } from '@/hooks/use-permissions'
+import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 import {
   BarChart3,
   DollarSign,
@@ -312,7 +313,7 @@ export default function PLSurgeryDashboardPage() {
       if (colId === 'teamName') colId = 'team_leader'
       if (!colId) return true
       const resourceKey = `insurance_pl.pl_surgery.table.dischargeSheet.column.${colId}`
-      if (permissions && resourceKey in permissions) {
+      if (resourceKey in RESOURCE_MAP) {
         return hasAccess(resourceKey, 'READ')
       }
       return true

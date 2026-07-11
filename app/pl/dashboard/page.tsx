@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { usePermissions } from '@/hooks/use-permissions'
+import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   DropdownMenu,
@@ -1070,7 +1071,7 @@ export default function PLLedgerPage() {
       else if (colId === 'docPayout') colId = 'doc_payout'
       
       const resourceKey = `insurance_pl.pl_ledger.table.dischargeSheet.column.${colId}`
-      if (permissions && resourceKey in permissions) {
+      if (resourceKey in RESOURCE_MAP) {
         return hasAccess(resourceKey, 'READ')
       }
       return true

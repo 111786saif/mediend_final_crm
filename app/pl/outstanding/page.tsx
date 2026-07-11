@@ -32,6 +32,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
 import { usePermissions } from '@/hooks/use-permissions'
+import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 
 const PAGE_SIZE = 100
 
@@ -991,7 +992,7 @@ export default function PLOutstandingPage() {
       const colId = col.id
       if (!colId) return true
       const resourceKey = `insurance_pl.pl_outstanding.table.dischargeSheet.column.${colId}`
-      if (permissions && resourceKey in permissions) {
+      if (resourceKey in RESOURCE_MAP) {
         return hasAccess(resourceKey, 'READ')
       }
       return true

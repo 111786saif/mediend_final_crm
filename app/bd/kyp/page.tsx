@@ -11,6 +11,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { usePermissions } from '@/hooks/use-permissions'
+import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 import { apiGet } from '@/lib/api-client'
 import { getLatestActivityTime } from '@/lib/lead-activity'
 import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
@@ -499,7 +500,7 @@ export default function CaseTrackerPage() {
       const colId = col.id
       if (!colId) return true
       const resourceKey = `sales.case_tracker.table.lead.column.${colId}`
-      if (permissions && resourceKey in permissions) {
+      if (resourceKey in RESOURCE_MAP) {
         return hasAccess(resourceKey, 'READ')
       }
       return true
