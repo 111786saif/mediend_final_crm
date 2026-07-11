@@ -257,6 +257,7 @@ enum NotificationType {
   LEAVE_BALANCE_EDIT_REQUESTED
   LEAVE_BALANCE_EDIT_RESOLVED
   GRACE2_MONTHLY_LIMIT_EXCEEDED
+  RANK_IMPROVED
 }
 
 enum NoticeTargetType {
@@ -511,6 +512,8 @@ model User {
   tasksCompleted         Task[]                @relation("TaskCompletedBy")
   taskApprovalsRequested TaskDueDateApproval[]
   taskRatingsGiven       TaskRating[]          @relation("TaskRatingsGiven")
+  createdTierDefinitions TierDefinition[]                        @relation("TierDefinitionCreator")
+
   taskRatingsReceived    TaskRating[]          @relation("TaskRatingsReceived")
   taskProjectsCreated    TaskProject[]         @relation("TaskProjectCreator")
   taskComments           TaskComment[]
@@ -814,6 +817,21 @@ model BonusRule {
   updatedAt       DateTime      @updatedAt
 
   @@index([targetId])
+}
+
+model TierDefinition {
+  id             String       @id @default(cuid())
+  name           String
+  metric         TargetMetric
+  thresholdValue Float
+  order          Int
+  rewardAmount   Float?
+  createdById    String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  createdBy      User         @relation("TierDefinitionCreator", fields: [createdById], references: [id])
+
+  @@index([metric, order])
 }
 
 model InsuranceCase {
@@ -3205,6 +3223,19 @@ model CronJobLog {
 
   @@index([jobName, createdAt])
   @@index([createdAt])
+}
+
+model RankSnapshot {
+  id         String   @id @default(cuid())
+  entityType String // 'BD' | 'TEAM'
+  entityId   String // bdId (BD) or managerId (TEAM)
+  metric     String // e.g. 'IPD_DONE'
+  month      String // 'YYYY-MM'
+  rank       Int
+  updatedAt  DateTime @updatedAt
+
+  @@unique([entityType, entityId, metric, month])
+  @@index([entityType, month])
 }
 
 // CRM reference masters (BD / Insurance forms — dropdowns)

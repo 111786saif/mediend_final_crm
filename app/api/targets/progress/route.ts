@@ -4,7 +4,7 @@ import { Prisma, UserRole } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { canonicalSalesCompletedWhere } from '@/lib/analytics/ipd-filters'
+import { calculateActual } from '@/lib/analytics/target-progress'
 
 /**
  * GET /api/targets/progress
@@ -201,47 +201,5 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching target progress:', error)
     return errorResponse('Failed to fetch target progress', 500)
-  }
-}
-
-async function calculateActual(
-  bdId: string,
-  metric: string,
-  start: Date,
-  end: Date
-): Promise<number> {
-  // IPD_DONE / SURGERIES_DONE: count leads by surgeryDate using the canonical filter
-  if (metric === 'IPD_DONE' || metric === 'SURGERIES_DONE') {
-    const dateFilter: Prisma.DateTimeFilter = { gte: start, lte: end }
-    const completedWhere: Prisma.LeadWhereInput = {
-      bdId,
-      ...canonicalSalesCompletedWhere(dateFilter),
-    }
-    return prisma.lead.count({ where: completedWhere })
-  }
-
-  const baseWhere: Prisma.LeadWhereInput = {
-    bdId,
-    pipelineStage: 'COMPLETED',
-    OR: [
-      { conversionDate: { gte: start, lte: end } },
-      { AND: [{ conversionDate: null }, { surgeryDate: { gte: start, lte: end } }] },
-      { AND: [{ conversionDate: null }, { surgeryDate: null }, { leadEntryDate: { gte: start, lte: end } }] },
-    ],
-  }
-
-  switch (metric) {
-    case 'LEADS_CLOSED':
-      return prisma.lead.count({ where: baseWhere })
-    case 'NET_PROFIT': {
-      const agg = await prisma.lead.aggregate({ where: baseWhere, _sum: { netProfit: true } })
-      return agg._sum.netProfit || 0
-    }
-    case 'BILL_AMOUNT': {
-      const agg = await prisma.lead.aggregate({ where: baseWhere, _sum: { billAmount: true } })
-      return agg._sum.billAmount || 0
-    }
-    default:
-      return 0
   }
 }

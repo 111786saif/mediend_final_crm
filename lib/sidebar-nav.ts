@@ -14,7 +14,7 @@ import {
   DollarSign,
   FileText,
   FolderTree,
-  FileSpreadsheet,
+  GraduationCap,
   Heart,
   Home,
   IndianRupee,
@@ -36,9 +36,6 @@ import {
   Users,
   Megaphone,
   Wallet,
-  Award,
-  Armchair,
-  Layers,
 } from 'lucide-react'
 import { SessionUser } from '@/lib/auth'
 import { hasPermission, type Permission } from '@/lib/rbac'
@@ -74,6 +71,12 @@ export const navItems: NavItem[] = [
     icon: CalendarDays,
   },
   {
+    title: 'IPD Calendar',
+    url: '/ipd-calendar',
+    icon: Stethoscope,
+    roles: ['BD', 'TEAM_LEAD'],
+  },
+  {
     title: 'Meets',
     url: '/meets',
     icon: Calendar,
@@ -89,12 +92,6 @@ export const navItems: NavItem[] = [
     url: '/md/sales',
     icon: TrendingUp,
     roles: ['MD', 'ADMIN', 'SALES_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
-  },
-  {
-    title: 'Incentive',
-    url: '/incentives',
-    icon: Award,
-    permission: 'incentive:read',
   },
   {
     title: 'Finance Dashboard',
@@ -195,6 +192,12 @@ export const navItems: NavItem[] = [
     title: 'Chat',
     url: '/chat',
     icon: MessageSquare,
+    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+  },
+  {
+    title: 'Training',
+    url: '/training',
+    icon: GraduationCap,
     roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
   },
   {
@@ -372,24 +375,6 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
-    title: 'Sales Team Cost',
-    url: '/finance/sales-team-cost',
-    icon: DollarSign,
-    permission: 'finance:read',
-  },
-  {
-    title: 'Master Seating Cost',
-    url: '/finance/master-seating-cost',
-    icon: Armchair,
-    roles: ['FINANCE_HEAD', 'ADMIN'],
-  },
-  {
-    title: 'Seating & Misc Cost',
-    url: '/finance/seating-misc-cost',
-    icon: Layers,
-    permission: 'finance:read',
-  },
-  {
     title: 'Company P&L',
     url: '/finance/pnl',
     icon: PieChart,
@@ -429,12 +414,6 @@ export const navItems: NavItem[] = [
     title: 'Compliance',
     url: '/compliance/dashboard',
     icon: Stethoscope,
-    roles: ['COMPLIANCE_HEAD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
-  },
-  {
-    title: 'Cumulative Report',
-    url: '/cumulative-report',
-    icon: FileSpreadsheet,
     roles: ['COMPLIANCE_HEAD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
   {
