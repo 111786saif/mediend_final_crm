@@ -397,6 +397,9 @@ function TableHead({
     )
   }, [context, colIndex, headerText, props.children])
 
+  const isRight = className?.includes("text-right")
+  const isCenter = className?.includes("text-center")
+
   return (
     <th
       data-slot="table-head"
@@ -406,7 +409,10 @@ function TableHead({
       )}
       {...props}
     >
-      <div className="flex items-center justify-between gap-1">
+      <div className={cn(
+        "flex items-center gap-1",
+        isRight ? "justify-end" : isCenter ? "justify-center" : "justify-between"
+      )}>
         <span>{props.children}</span>
         {filterComponent}
       </div>

@@ -76,10 +76,10 @@ const variantStyles: Record<
     list: 'border-b border-border gap-0 bg-card',
   },
   sales: {
-    active: 'bg-blue-600 text-white border-blue-600',
+    active: '!bg-[#adc6ff] text-[#0f172a] !rounded-lg font-bold shadow-md shadow-[#adc6ff]/10 !border-none',
     inactive:
-      'border-border bg-card text-muted-foreground hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200',
-    list: 'border-b border-border gap-0 bg-card',
+      '!border-none text-[#c2c6d6]/60 hover:text-[#dae2fd] hover:!bg-[#1b253b]/50 !rounded-lg',
+    list: '!border-none gap-1 bg-[#131b2e] p-1 rounded-xl w-fit mb-4 border border-[#424754]/20 shadow-inner',
   },
   pnl: {
     active: 'bg-violet-600 text-white border-violet-600',

@@ -31,6 +31,8 @@ import { Building2, Calendar, CheckCircle, ChevronLeft, ChevronRight, CreditCard
 import { useEffect, useMemo, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
+import { usePermissions } from '@/hooks/use-permissions'
+import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 
 const PAGE_SIZE = 100
 
@@ -68,6 +70,7 @@ function isPendingPayout(r: Lead) {
 }
 
 export default function PLOutstandingPage() {
+  const { hasAccess, permissions } = usePermissions()
   const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
 
@@ -364,9 +367,10 @@ export default function PLOutstandingPage() {
       .slice(0, 5)
   }, [filteredRecords])
 
-  const columns = useMemo<ColumnDef<Lead>[]>(() => [
-    {
-      id: 'leadRef',
+  const columns = useMemo<ColumnDef<Lead>[]>(() => {
+    const cols: ColumnDef<Lead>[] = [
+      {
+        id: 'leadRef',
       header: () => (
         <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[130px]">
           <span>Lead Ref</span>
@@ -982,7 +986,18 @@ export default function PLOutstandingPage() {
         )
       }
     }
-  ], [
+    ];
+
+    return cols.filter((col) => {
+      const colId = col.id
+      if (!colId) return true
+      const resourceKey = `insurance_pl.pl_outstanding.table.dischargeSheet.column.${colId}`
+      if (resourceKey in RESOURCE_MAP) {
+        return hasAccess(resourceKey, 'READ')
+      }
+      return true
+    })
+  }, [
     filterOptions,
     leadRefFilter, leadReceivedFilter, managerFilter, bdmFilter, patientFilter,
     categoryFilter, treatmentFilter, doctorFilter, hospitalFilter,
@@ -990,7 +1005,8 @@ export default function PLOutstandingPage() {
     totalBillFilter, approvedAmountFilter, deductionTotalFilter, deductionPaidFilter,
     waivedOffFilter, netProfitFilter, hospitalTotalAmountFilter, hospitalOutstandingAmountFilter,
     doctorPayoutAmountFilter, doctorOutstandingAmountFilter, mediendPayoutFilter,
-    doctorPayoutFilter, invoiceStatusFilter, paymentReceivedFilter, setPage
+    doctorPayoutFilter, invoiceStatusFilter, paymentReceivedFilter, setPage,
+    hasAccess, permissions
   ]);
 
 

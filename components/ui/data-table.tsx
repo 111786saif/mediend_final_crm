@@ -50,6 +50,9 @@ interface DataTableProps<TData, TValue> {
   columnVisibility?: VisibilityState
   onColumnVisibilityChange?: OnChangeFn<VisibilityState>
   footer?: React.ReactNode
+  pageCount?: number
+  paginationState?: { pageIndex: number; pageSize: number }
+  onPaginationChange?: OnChangeFn<{ pageIndex: number; pageSize: number }>
 }
 
 export function DataTable<TData, TValue>({
@@ -67,21 +70,29 @@ export function DataTable<TData, TValue>({
   columnVisibility,
   onColumnVisibilityChange,
   footer,
+  pageCount,
+  paginationState,
+  onPaginationChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [localColumnVisibility, setLocalColumnVisibility] = useState<VisibilityState>({})
-  const [pagination, setPagination] = useState({
+  const [localPagination, setLocalPagination] = useState({
     pageIndex: 0,
     pageSize: initialPageSize,
   })
 
   const visibilityState = columnVisibility !== undefined ? columnVisibility : localColumnVisibility
   const onVisibilityChangeState = onColumnVisibilityChange !== undefined ? onColumnVisibilityChange : setLocalColumnVisibility
+  
+  const pagination = paginationState !== undefined ? paginationState : localPagination
+  const onPaginationChangeState = onPaginationChange !== undefined ? onPaginationChange : setLocalPagination
 
   const table = useReactTable({
     data,
     columns,
+    pageCount: pageCount,
+    manualPagination: pageCount !== undefined,
     state: {
       sorting,
       columnFilters,
@@ -91,11 +102,11 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: onVisibilityChangeState,
-    onPaginationChange: enablePagination ? setPagination : undefined,
+    onPaginationChange: enablePagination ? onPaginationChangeState : undefined,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: enablePagination ? getPaginationRowModel() : undefined,
+    getPaginationRowModel: pageCount !== undefined ? undefined : (enablePagination ? getPaginationRowModel() : undefined),
   })
 
   // Default CSV export handler

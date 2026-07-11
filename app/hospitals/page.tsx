@@ -251,7 +251,7 @@ export default function HospitalsListPage() {
               </div>
             </CardHeader>
             <CardContent className="overflow-x-auto p-0">
-              <Table>
+              <Table className="[&_td]:px-[20px] [&_th]:px-[20px]">
                 <TableHeader>
                   <TableRow className="bg-sky-50/40 hover:bg-sky-50/40 dark:bg-sky-950/20">
                     <TableHead className="w-[280px]">

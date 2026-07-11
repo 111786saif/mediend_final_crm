@@ -5,12 +5,12 @@ import { SubjectType, PermissionLevel } from '../generated/prisma/client'
 // Predefined allowed sections/pages for each role
 const roleAllowedSections: Record<string, string[]> = {
   MD: [
-    'main.home', 'main.md_home', 'main.tasks', 'main.calendar', 'main.meets', 
-    'main.dashboard', 'main.finance_dashboard', 'main.md_hr_dashboard', 'main.md_attendance', 
-    'main.md_leave_balances', 'main.master_data', 'main.dept_targets', 'main.chat', 
-    'main.md_messages', 'main.md_appointments', 'main.company_pnl', 'main.targeted_pnl', 
-    'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue', 'main.it_permissions', 
-    'main.compliance', 'main.md_compliance', 'main.md_outstanding',
+    'main.home', 'main.md_home', 'main.tasks', 'main.calendar', 'main.meets',
+    'main.dashboard', 'main.finance_dashboard', 'main.md_hr_dashboard', 'main.md_attendance',
+    'main.md_leave_balances', 'main.master_data', 'main.dept_targets', 'main.chat',
+    'main.md_messages', 'main.md_appointments', 'main.company_pnl', 'main.targeted_pnl',
+    'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue', 'main.it_permissions',
+    'main.compliance', 'main.md_compliance', 'main.md_outstanding', 'main.incentive',
     'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_dashboard', 'sales.dm_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl',
@@ -25,39 +25,40 @@ const roleAllowedSections: Record<string, string[]> = {
     'main', 'hrm', 'myhrms', 'sales', 'insurance_pl', 'finance', 'actions' // TESTER gets all
   ],
   EXECUTIVE_ASSISTANT: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 
-    'main.md_hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org', 
-    'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.master_data', 'main.chat', 'main.compliance',
+    'main.md_hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org',
+    'hrm.compensation_docs', 'hrm.engagement',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
-    'sales.sales_dashboard', 'sales.case_tracker'
+    'sales.sales_dashboard', 'sales.case_tracker', 'main.incentive'
   ],
   IT_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.it_permissions', 'main.it_pnl',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dept_targets', 'hrm.people_org', 'hrm.compensation_docs', 'hrm.engagement', 'main.it_permissions', 'main.it_pnl', 'sales.campaign_cpl',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   HR_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.md_hr_dashboard', 'main.md_attendance', 'main.md_leave_balances',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.md_hr_dashboard', 'main.md_attendance', 'main.md_leave_balances', 'sales.campaign_cpl',
     'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   FINANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.finance_dashboard', 'main.company_pnl', 'main.targeted_pnl', 'main.md_pnl', 'main.loan_demat_revenue',
     'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports',
-    'insurance_pl.pl_ledger',
+    'insurance_pl.pl_ledger', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.people_org',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   SALES_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets',
     'sales.sales_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl',
-    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
+    'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
+    'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval', 'main.incentive'
   ],
   INSURANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
-    'insurance_pl.insurance', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
+    'insurance_pl.insurance', 'insurance_pl.cash_cases', 'main.chat', 'sales.campaign_cpl',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   PL_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'sales.case_tracker', 'main.master_data', 'main.chat',
     'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.cash_cases', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_pnl'
@@ -68,8 +69,9 @@ const roleAllowedSections: Record<string, string[]> = {
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   DIGITAL_MARKETING_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
-    'sales.dm_dashboard', 'sales.campaign_cpl',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat', 'main.dept_targets',
+    'sales.dm_dashboard', 'sales.campaign_cpl', 'sales.sales_pnl', 'sales.sales_dashboard',
+    'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.cash_cases', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   CATEGORY_MANAGER: [
@@ -83,17 +85,17 @@ const roleAllowedSections: Record<string, string[]> = {
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   TEAM_LEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
-    'sales.case_tracker',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat',
+    'sales.case_tracker', 'sales.campaign_cpl', 'sales.pending_surgery', 'sales.targets',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   BD: [
-    'main.home', 'main.tasks', 'main.calendar',
-    'sales.case_tracker',
+    'main.home', 'main.tasks', 'main.calendar', 'main.chat',
+    'sales.case_tracker', 'sales.campaign_cpl',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   COMPLIANCE_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.compliance',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.compliance', 'sales.campaign_cpl',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   LOAN_DEMAT_HEAD: [
@@ -144,8 +146,8 @@ async function main() {
 
   for (const [role, allowedKeys] of Object.entries(roleAllowedSections)) {
     const allowedResources = allResources.filter((res) => {
-      return allowedKeys.some((allowedKey) => 
-        res.key === allowedKey || 
+      return allowedKeys.some((allowedKey) =>
+        res.key === allowedKey ||
         res.key.startsWith(allowedKey + '.') ||
         allowedKey.startsWith(res.key + '.')
       )
@@ -154,7 +156,7 @@ async function main() {
     const canGrant = role === 'ADMIN' || role === 'MD'
 
     console.log(`Setting up ${allowedResources.length} assignments for role: ${role}...`)
-    
+
     for (const res of allowedResources) {
       await prisma.permissionAssignment.create({
         data: {

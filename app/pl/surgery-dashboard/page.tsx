@@ -18,6 +18,8 @@ import { useState, useEffect, useMemo } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
 import { ColumnFilter } from '@/components/ui/column-filter'
+import { usePermissions } from '@/hooks/use-permissions'
+import { RESOURCE_MAP } from '@/lib/rbac/resourceMap'
 import {
   BarChart3,
   DollarSign,
@@ -92,6 +94,7 @@ export interface SurgeryDashboardData {
 }
 
 export default function PLSurgeryDashboardPage() {
+  const { hasAccess, permissions } = usePermissions()
   const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
   const [teamTab, setTeamTab] = useState('all')
@@ -202,106 +205,120 @@ export default function PLSurgeryDashboardPage() {
   }, [data, bdFilter, teamFilter, surgeriesFilter, revenueFilter, expensesFilter, netProfitFilter])
 
   // TanStack ColumnDef array — filters live inside each header renderer
-  const columns = useMemo<ColumnDef<SurgeryDashboardData['bdBreakdown'][number]>[]>(() => [
-    {
-      id: 'bdName',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span className="font-semibold text-slate-700 dark:text-slate-300">BD</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.bd}
-            value={bdFilter}
-            onChange={(val) => setBdFilter(val as string[])}
-          />
-        </div>
-      ),
-      cell: ({ row }) => <div className="font-medium">{row.original.bdName}</div>,
-    },
-    {
-      id: 'teamName',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
-          <span className="font-semibold text-slate-700 dark:text-slate-300">Team Leader</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.team}
-            value={teamFilter}
-            onChange={(val) => setTeamFilter(val as string[])}
-          />
-        </div>
-      ),
-      cell: ({ row }) => <div className="text-muted-foreground">{row.original.teamName ?? '—'}</div>,
-    },
-    {
-      id: 'surgeries',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[120px]">
-          <span className="font-semibold text-slate-700 dark:text-slate-300">Surgeries</span>
-          <ColumnFilter
-            type="numberRange"
-            value={surgeriesFilter}
-            onChange={(val) => setSurgeriesFilter(val as [number, number] | undefined)}
-            min={filterOptions.surgeriesBounds.min}
-            max={filterOptions.surgeriesBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => <div className="text-right">{row.original.surgeries}</div>,
-    },
-    {
-      id: 'revenue',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span className="font-semibold text-slate-700 dark:text-slate-300">Revenue</span>
-          <ColumnFilter
-            type="numberRange"
-            value={revenueFilter}
-            onChange={(val) => setRevenueFilter(val as [number, number] | undefined)}
-            min={filterOptions.revenueBounds.min}
-            max={filterOptions.revenueBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => <div className="text-right">₹{row.original.revenue.toLocaleString('en-IN')}</div>,
-    },
-    {
-      id: 'expenses',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span className="font-semibold text-slate-700 dark:text-slate-300">Expenses</span>
-          <ColumnFilter
-            type="numberRange"
-            value={expensesFilter}
-            onChange={(val) => setExpensesFilter(val as [number, number] | undefined)}
-            min={filterOptions.expensesBounds.min}
-            max={filterOptions.expensesBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => <div className="text-right">₹{row.original.expenses.toLocaleString('en-IN')}</div>,
-    },
-    {
-      id: 'netProfit',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span className="font-semibold text-slate-700 dark:text-slate-300">Net Profit</span>
-          <ColumnFilter
-            type="numberRange"
-            value={netProfitFilter}
-            onChange={(val) => setNetProfitFilter(val as [number, number] | undefined)}
-            min={filterOptions.netProfitBounds.min}
-            max={filterOptions.netProfitBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="text-right font-medium tabular-nums">
-          ₹{row.original.netProfit.toLocaleString('en-IN')}
-        </div>
-      ),
-    },
-  ], [
+  const columns = useMemo<ColumnDef<SurgeryDashboardData['bdBreakdown'][number]>[]>(() => {
+    const cols: ColumnDef<SurgeryDashboardData['bdBreakdown'][number]>[] = [
+      {
+        id: 'bdName',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">BD</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.bd}
+              value={bdFilter}
+              onChange={(val) => setBdFilter(val as string[])}
+            />
+          </div>
+        ),
+        cell: ({ row }) => <div className="font-medium">{row.original.bdName}</div>,
+      },
+      {
+        id: 'teamName',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Team Leader</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.team}
+              value={teamFilter}
+              onChange={(val) => setTeamFilter(val as string[])}
+            />
+          </div>
+        ),
+        cell: ({ row }) => <div className="text-muted-foreground">{row.original.teamName ?? '—'}</div>,
+      },
+      {
+        id: 'surgeries',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[120px]">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Surgeries</span>
+            <ColumnFilter
+              type="numberRange"
+              value={surgeriesFilter}
+              onChange={(val) => setSurgeriesFilter(val as [number, number] | undefined)}
+              min={filterOptions.surgeriesBounds.min}
+              max={filterOptions.surgeriesBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => <div className="text-right">{row.original.surgeries}</div>,
+      },
+      {
+        id: 'revenue',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Revenue</span>
+            <ColumnFilter
+              type="numberRange"
+              value={revenueFilter}
+              onChange={(val) => setRevenueFilter(val as [number, number] | undefined)}
+              min={filterOptions.revenueBounds.min}
+              max={filterOptions.revenueBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => <div className="text-right">₹{row.original.revenue.toLocaleString('en-IN')}</div>,
+      },
+      {
+        id: 'expenses',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Expenses</span>
+            <ColumnFilter
+              type="numberRange"
+              value={expensesFilter}
+              onChange={(val) => setExpensesFilter(val as [number, number] | undefined)}
+              min={filterOptions.expensesBounds.min}
+              max={filterOptions.expensesBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => <div className="text-right">₹{row.original.expenses.toLocaleString('en-IN')}</div>,
+      },
+      {
+        id: 'netProfit',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">Net Profit</span>
+            <ColumnFilter
+              type="numberRange"
+              value={netProfitFilter}
+              onChange={(val) => setNetProfitFilter(val as [number, number] | undefined)}
+              min={filterOptions.netProfitBounds.min}
+              max={filterOptions.netProfitBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => (
+          <div className="text-right font-medium tabular-nums">
+            ₹{row.original.netProfit.toLocaleString('en-IN')}
+          </div>
+        ),
+      },
+    ];
+
+    return cols.filter((col) => {
+      let colId = col.id
+      if (colId === 'bdName') colId = 'bd'
+      if (colId === 'teamName') colId = 'team_leader'
+      if (!colId) return true
+      const resourceKey = `insurance_pl.pl_surgery.table.dischargeSheet.column.${colId}`
+      if (resourceKey in RESOURCE_MAP) {
+        return hasAccess(resourceKey, 'READ')
+      }
+      return true
+    })
+  }, [
     filterOptions,
     bdFilter,
     teamFilter,
@@ -309,6 +326,8 @@ export default function PLSurgeryDashboardPage() {
     revenueFilter,
     expensesFilter,
     netProfitFilter,
+    hasAccess,
+    permissions
   ])
 
   return (

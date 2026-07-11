@@ -72,9 +72,11 @@ export async function GET(request: NextRequest) {
       // Individual overrides role
       const userAssignment = userAssignmentsMap.get(res.id)
       if (userAssignment) {
-        permissions[res.key] = {
-          level: userAssignment.permissionLevel,
-          canGrant: userAssignment.canGrant,
+        if (userAssignment.permissionLevel !== PermissionLevel.NONE) {
+          permissions[res.key] = {
+            level: userAssignment.permissionLevel,
+            canGrant: userAssignment.canGrant,
+          }
         }
       } else {
         // 2. Child override check (if a child of this resource has a user override with level > NONE)
@@ -99,15 +101,10 @@ export async function GET(request: NextRequest) {
         } else {
           // 3. Fallback to database role assignments
           const roleAssignment = roleAssignmentsMap.get(res.id)
-          if (roleAssignment) {
+          if (roleAssignment && roleAssignment.permissionLevel !== PermissionLevel.NONE) {
             permissions[res.key] = {
               level: roleAssignment.permissionLevel,
               canGrant: roleAssignment.canGrant,
-            }
-          } else {
-            permissions[res.key] = {
-              level: PermissionLevel.NONE,
-              canGrant: false,
             }
           }
         }

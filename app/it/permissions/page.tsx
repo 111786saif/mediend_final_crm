@@ -58,13 +58,15 @@ export default function ITPermissionsPage() {
   }, [search])
 
   // Fetch users matching search and filter
-  const { data: users, isLoading: isUsersLoading } = useQuery<UserInList[]>({
-    queryKey: ['it-permissions-users', debouncedSearch, roleFilter],
+  const { data: usersResponse, isLoading: isUsersLoading } = useQuery<{ data: UserInList[]; total: number } | UserInList[]>({
+    queryKey: ['it-permissions-users', debouncedSearch, roleFilter, currentPage],
     queryFn: () => {
       const params = new URLSearchParams()
       if (debouncedSearch) params.set('search', debouncedSearch)
       if (roleFilter && roleFilter !== 'all') params.set('role', roleFilter)
-      return apiGet<UserInList[]>(`/api/it/permissions?${params}`)
+      params.set('page', currentPage.toString())
+      params.set('limit', ITEMS_PER_PAGE.toString())
+      return apiGet<any>(`/api/it/permissions?${params}`)
     },
     enabled: !!canAccess,
   })
@@ -120,13 +122,22 @@ export default function ITPermissionsPage() {
   }, [selectedModuleKey])
 
   // Pagination helper
-  const totalUsers = users?.length ?? 0
+  const totalUsers = useMemo(() => {
+    if (!usersResponse) return 0
+    if (Array.isArray(usersResponse)) return usersResponse.length
+    return usersResponse.total
+  }, [usersResponse])
+
   const totalPages = Math.ceil(totalUsers / ITEMS_PER_PAGE)
+
   const paginatedUsers = useMemo(() => {
-    if (!users) return []
-    const start = (currentPage - 1) * ITEMS_PER_PAGE
-    return users.slice(start, start + ITEMS_PER_PAGE)
-  }, [users, currentPage])
+    if (!usersResponse) return []
+    if (Array.isArray(usersResponse)) {
+      const start = (currentPage - 1) * ITEMS_PER_PAGE
+      return usersResponse.slice(start, start + ITEMS_PER_PAGE)
+    }
+    return usersResponse.data
+  }, [usersResponse, currentPage])
 
   // Handle single row update
   const handleUpdatePermission = (resourceId: string, updates: { level: string; canGrant: boolean }) => {
