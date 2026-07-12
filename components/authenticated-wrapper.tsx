@@ -22,6 +22,7 @@ import { PageTransition } from '@/components/page-transition'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { hasPermission } from '@/lib/rbac'
+import { canAccessChat } from '@/lib/chat/access'
 import type { SessionUser } from '@/lib/auth'
 import { usePushSubscription } from '@/hooks/use-push-subscription'
 import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
@@ -140,7 +141,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
     const hasMessages =
       u.role === 'MD' ||
       u.role === 'ADMIN' ||
-      ['BD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
+      canAccessChat(u)
     const hasSupport = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
     const hasFinancial = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
 

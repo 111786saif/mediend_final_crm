@@ -9,6 +9,7 @@ import { PatientDetailsPanel } from '@/components/chat/patient-details-panel'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import { Loader2 } from 'lucide-react'
+import { canAccessChat } from '@/lib/chat/access'
 
 interface Lead {
   id: string
@@ -50,9 +51,7 @@ export default function ChatPage() {
     )
   }
 
-  // Role-based access check
-  const allowedRoles = ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER']
-  if (!allowedRoles.includes(user.role)) {
+  if (!canAccessChat(user)) {
     return (
       <AuthenticatedLayout>
         <div className="flex items-center justify-center min-h-[400px]">

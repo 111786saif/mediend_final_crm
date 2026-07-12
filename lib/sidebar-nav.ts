@@ -96,6 +96,12 @@ export const navItems: NavItem[] = [
     roles: ['MD', 'ADMIN', 'SALES_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
+    title: 'Incentive',
+    url: '/incentives',
+    icon: Award,
+    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
+  },
+  {
     title: 'Finance Dashboard',
     url: '/md/finance',
     icon: DollarSign,

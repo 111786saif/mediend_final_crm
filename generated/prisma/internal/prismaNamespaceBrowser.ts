@@ -2096,6 +2096,17 @@ export type HospitalMasterScalarFieldEnum = (typeof HospitalMasterScalarFieldEnu
 export const DoctorMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  category: 'category',
+  treatment: 'treatment',
+  age: 'age',
+  sex: 'sex',
+  aadharNumber: 'aadharNumber',
+  panNumber: 'panNumber',
+  agreementUrl: 'agreementUrl',
+  experience: 'experience',
+  feeStructure: 'feeStructure',
+  rating: 'rating',
+  documents: 'documents',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
