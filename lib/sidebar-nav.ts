@@ -1,11 +1,13 @@
 import * as React from 'react'
 import {
+  Armchair,
+  Award,
   BarChart3,
   BookOpen,
   Building2,
   Calendar,
-  CalendarDays,
   CalendarCheck,
+  CalendarDays,
   CheckCircle,
   ClipboardList,
   Clock,
@@ -18,8 +20,10 @@ import {
   Heart,
   Home,
   IndianRupee,
+  Layers,
   LayoutDashboard,
   Mail,
+  Megaphone,
   MessageSquare,
   Package,
   PieChart,
@@ -34,10 +38,7 @@ import {
   UserCheck,
   UserCircle,
   Users,
-  Megaphone,
   Wallet,
-  Armchair,
-  Layers,
 } from 'lucide-react'
 import { SessionUser } from '@/lib/auth'
 import { hasPermission, type Permission } from '@/lib/rbac'
