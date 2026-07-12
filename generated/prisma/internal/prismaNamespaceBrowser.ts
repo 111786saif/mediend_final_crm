@@ -110,6 +110,9 @@ export const ModelName = {
   NoticeRecipient: 'NoticeRecipient',
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
+  Resource: 'Resource',
+  PermissionAssignment: 'PermissionAssignment',
+  PermissionAuditLog: 'PermissionAuditLog',
   CampaignCPL: 'CampaignCPL',
   DailyCampaignSpend: 'DailyCampaignSpend',
   InsuranceQuery: 'InsuranceQuery',
@@ -1404,6 +1407,50 @@ export const UserFeaturePermissionScalarFieldEnum = {
 export type UserFeaturePermissionScalarFieldEnum = (typeof UserFeaturePermissionScalarFieldEnum)[keyof typeof UserFeaturePermissionScalarFieldEnum]
 
 
+export const ResourceScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  label: 'label',
+  type: 'type',
+  parentId: 'parentId',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive'
+} as const
+
+export type ResourceScalarFieldEnum = (typeof ResourceScalarFieldEnum)[keyof typeof ResourceScalarFieldEnum]
+
+
+export const PermissionAssignmentScalarFieldEnum = {
+  id: 'id',
+  subjectType: 'subjectType',
+  userId: 'userId',
+  role: 'role',
+  resourceId: 'resourceId',
+  permissionLevel: 'permissionLevel',
+  canGrant: 'canGrant',
+  grantedById: 'grantedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PermissionAssignmentScalarFieldEnum = (typeof PermissionAssignmentScalarFieldEnum)[keyof typeof PermissionAssignmentScalarFieldEnum]
+
+
+export const PermissionAuditLogScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  targetUserId: 'targetUserId',
+  resourceId: 'resourceId',
+  oldLevel: 'oldLevel',
+  newLevel: 'newLevel',
+  oldCanGrant: 'oldCanGrant',
+  newCanGrant: 'newCanGrant',
+  createdAt: 'createdAt'
+} as const
+
+export type PermissionAuditLogScalarFieldEnum = (typeof PermissionAuditLogScalarFieldEnum)[keyof typeof PermissionAuditLogScalarFieldEnum]
+
+
 export const CampaignCPLScalarFieldEnum = {
   id: 'id',
   campaignName: 'campaignName',
@@ -2019,6 +2066,17 @@ export type HospitalMasterScalarFieldEnum = (typeof HospitalMasterScalarFieldEnu
 export const DoctorMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  category: 'category',
+  treatment: 'treatment',
+  age: 'age',
+  sex: 'sex',
+  aadharNumber: 'aadharNumber',
+  panNumber: 'panNumber',
+  agreementUrl: 'agreementUrl',
+  experience: 'experience',
+  feeStructure: 'feeStructure',
+  rating: 'rating',
+  documents: 'documents',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

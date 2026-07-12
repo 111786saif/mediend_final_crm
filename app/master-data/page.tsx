@@ -24,7 +24,8 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/lib/api-client'
+import { Switch } from '@/components/ui/switch'
+import { apiGet, apiPost, apiPatch } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
 import { toast } from 'sonner'
@@ -41,6 +42,15 @@ const TAB_TO_TYPE: Record<TabKey, MasterType> = {
   anesthesia: 'anesthesia',
   insurance: 'insurance',
   treatments: 'treatments',
+}
+
+const TAB_LABEL: Record<TabKey, string> = {
+  hospitals: 'Hospital',
+  doctors: 'Doctor',
+  tpas: 'TPA',
+  insurance: 'Insurance Company',
+  anesthesia: 'Anesthesia Type',
+  treatments: 'Treatment',
 }
 
 const API_BASE: Record<MasterType, string> = {
@@ -83,6 +93,7 @@ export default function MasterDataPage() {
   const [formAtsPune, setFormAtsPune] = useState('')
   const [formAtsHyderabad, setFormAtsHyderabad] = useState('')
   const [formAtsBangalore, setFormAtsBangalore] = useState('')
+  const [formIsActive, setFormIsActive] = useState(true)
 
   const canAccess = !!(user && hasPermission(user, 'masters:read'))
   const canWrite = !!(user && hasPermission(user, 'masters:write'))
@@ -102,6 +113,7 @@ export default function MasterDataPage() {
     setFormAtsPune('')
     setFormAtsHyderabad('')
     setFormAtsBangalore('')
+    setFormIsActive(true)
     setDialogOpen(true)
   }
 
@@ -123,6 +135,7 @@ export default function MasterDataPage() {
     setFormAtsPune(row.atsPune?.toString() || '')
     setFormAtsHyderabad(row.atsHyderabad?.toString() || '')
     setFormAtsBangalore(row.atsBangalore?.toString() || '')
+    setFormIsActive(row.isActive)
     setDialogOpen(true)
   }
 
@@ -130,12 +143,14 @@ export default function MasterDataPage() {
     mutationFn: async () => {
       const type = TAB_TO_TYPE[tab]
       const base = API_BASE[type]
-      const buildPayload = () => {
+      const buildPayload = (forEdit: boolean) => {
+        const status = forEdit || type === 'hospitals' ? { isActive: formIsActive } : {}
         if (type === 'hospitals') {
           return {
             name: formName.trim(),
             address: formAddress.trim() || null,
             googleMapLink: formMap.trim() || null,
+            ...status,
           }
         }
         if (type === 'treatments') {
@@ -147,20 +162,16 @@ export default function MasterDataPage() {
             atsPune: formAtsPune ? Number(formAtsPune) : null,
             atsHyderabad: formAtsHyderabad ? Number(formAtsHyderabad) : null,
             atsBangalore: formAtsBangalore ? Number(formAtsBangalore) : null,
+            ...status,
           }
         }
-        return { name: formName.trim() }
+        return { name: formName.trim(), ...status }
       }
-      const payload = buildPayload()
       if (editing) {
-        if (type === 'treatments') {
-          return apiPatch<{ item: MasterItem }>(`${base}/${editing.id}`, payload)
-        }
+        const payload = buildPayload(true)
         return apiPatch<{ item: MasterItem }>(`${base}/${editing.id}`, payload)
       }
-      if (type === 'treatments') {
-        return apiPost<{ item: MasterItem }>(base, payload)
-      }
+      const payload = buildPayload(false)
       return apiPost<{ item: MasterItem }>(base, payload)
     },
     onSuccess: () => {
@@ -171,20 +182,6 @@ export default function MasterDataPage() {
       void refetch()
     },
     onError: (e: Error) => toast.error(e.message || 'Save failed'),
-  })
-
-  const deactivateMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const type = TAB_TO_TYPE[tab]
-      return apiDelete<{ item: MasterItem }>(`${API_BASE[type]}/${id}`)
-    },
-    onSuccess: () => {
-      toast.success('Marked inactive')
-      queryClient.invalidateQueries({ queryKey: ['masters-admin'] })
-      queryClient.invalidateQueries({ queryKey: ['masters'] })
-      void refetch()
-    },
-    onError: (e: Error) => toast.error(e.message || 'Failed'),
   })
 
   if (authLoading) {
@@ -224,7 +221,7 @@ export default function MasterDataPage() {
           {canWrite && (
             <Button onClick={openCreate}>
               <Plus className="mr-2 size-4" />
-              Add new
+              Add {TAB_LABEL[tab]}
             </Button>
           )}
         </div>
@@ -328,7 +325,7 @@ export default function MasterDataPage() {
                       </Badge>
                     </TableCell>
                     {canWrite && (
-                      <TableCell className="space-x-2">
+                      <TableCell>
                         <Button
                           type="button"
                           variant="outline"
@@ -338,21 +335,6 @@ export default function MasterDataPage() {
                           <Pencil className="size-3" />
                           Edit
                         </Button>
-                        {row.isActive && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="text-destructive"
-                            onClick={() => {
-                              if (confirm(`Deactivate "${row.name}"?`)) {
-                                deactivateMutation.mutate(row.id)
-                              }
-                            }}
-                          >
-                            Deactivate
-                          </Button>
-                        )}
                       </TableCell>
                     )}
                   </TableRow>
@@ -365,7 +347,9 @@ export default function MasterDataPage() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="max-w-3xl">
             <DialogHeader>
-              <DialogTitle>{editing ? 'Edit' : 'Add'} entry</DialogTitle>
+              <DialogTitle>
+                {editing ? 'Edit' : 'Add'} {TAB_LABEL[tab]}
+              </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div>
@@ -396,6 +380,21 @@ export default function MasterDataPage() {
                       value={formMap}
                       onChange={(e) => setFormMap(e.target.value)}
                       placeholder="https://maps.google.com/..."
+                    />
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="md-active">Status</Label>
+                      <p className="text-muted-foreground text-sm">
+                        {formIsActive
+                          ? 'Active — shown in dropdowns and forms'
+                          : 'Inactive — hidden from dropdowns'}
+                      </p>
+                    </div>
+                    <Switch
+                      id="md-active"
+                      checked={formIsActive}
+                      onCheckedChange={setFormIsActive}
                     />
                   </div>
                 </>
@@ -472,6 +471,23 @@ export default function MasterDataPage() {
                     </div>
                   </div>
                 </>
+              )}
+              {tab !== 'hospitals' && (
+                <div className="flex items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="md-active-other">Status</Label>
+                    <p className="text-muted-foreground text-sm">
+                      {formIsActive
+                        ? 'Active — shown in dropdowns and forms'
+                        : 'Inactive — hidden from dropdowns'}
+                    </p>
+                  </div>
+                  <Switch
+                    id="md-active-other"
+                    checked={formIsActive}
+                    onCheckedChange={setFormIsActive}
+                  />
+                </div>
               )}
             </div>
             <DialogFooter>

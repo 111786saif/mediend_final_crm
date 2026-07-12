@@ -10,6 +10,7 @@ const postBody = z.object({
   name: z.string().min(1).max(500),
   address: z.string().max(10000).optional().nullable(),
   googleMapLink: z.string().max(2000).optional().nullable().or(z.literal('')),
+  isActive: z.boolean().optional(),
 })
 
 export async function GET(request: NextRequest) {
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
     return errorResponse(parsed.error.flatten().formErrors.join(', ') || 'Invalid body', 400)
   }
 
-  const { name, address, googleMapLink } = parsed.data
+  const { name, address, googleMapLink, isActive } = parsed.data
   const link = googleMapLink === '' ? null : googleMapLink ?? null
 
   try {
@@ -64,6 +65,7 @@ export async function POST(request: NextRequest) {
         name: name.trim(),
         address: address?.trim() || null,
         googleMapLink: link,
+        isActive: isActive ?? true,
       },
     })
     return successResponse({ item: created })
