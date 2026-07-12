@@ -78,6 +78,7 @@ const ICON_COLOR_MAP: Record<string, string> = {
   Insurance: 'bg-sky-100 text-sky-600',
   'Cash Cases': 'bg-teal-100 text-teal-600',
   Chat: 'bg-pink-100 text-pink-600',
+  Incentive: 'bg-amber-100 text-amber-600',
   'P/L': 'bg-lime-100 text-lime-600',
   Outstanding: 'bg-red-100 text-red-600',
   Users: 'bg-slate-100 text-slate-600',

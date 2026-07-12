@@ -94,7 +94,7 @@ export const navItems: NavItem[] = [
     title: 'Incentive',
     url: '/incentives',
     icon: Award,
-    permission: 'incentive:read',
+    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Finance Dashboard',
