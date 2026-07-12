@@ -8,14 +8,36 @@ import { ArrowLeft, Building2, ExternalLink, FileText, Loader2 } from 'lucide-re
 import { toast } from 'sonner'
 import { ProtectedRoute } from '@/components/protected-route'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  ArrowLeft,
+  Building2,
+  Activity,
+  ReceiptText,
+  UserCheck,
+  TrendingUp,
+  AlertCircle,
+  Calendar,
+  ArrowRight,
+  Paperclip,
+  X,
+  FileText,
+  ChevronRight,
+} from 'lucide-react'
+import { ProtectedRoute } from '@/components/protected-route'
+import { RecentActivityLog } from '@/components/recent-activity-log'
+import { RecordPaymentForm } from '@/components/record-payment-form'
+import { ColumnFilter } from '@/components/ui/column-filter'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Dialog,
   DialogContent,
@@ -35,7 +57,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { apiGet } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { formatPlDate, formatPlMonth, formatPlRupee } from '@/lib/pl/resolve-pl-row'
 import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
@@ -100,12 +122,47 @@ export default function HospitalDetailPage() {
   const [invoiceAmount, setInvoiceAmount] = useState('')
 
   const { data, isLoading } = useQuery<HospitalDetail>({
-    queryKey: ['hospitals', name, startDate, endDate],
+    queryKey: [
+      'hospitals', name, startDate, endDate,
+      leadRefFilter, patientNameFilter, doctorFilter, monthFilter,
+      surgeryDateFilter, statusFilter, billAmountFilter, mediendShareAmountFilter,
+      mediendReceivedFilter, hospitalAmountPendingFilter, mediendInvoiceStatusFilter,
+    ],
     queryFn: () => {
+      const filters = []
+      if (leadRefFilter.trim()) filters.push({ field: 'leadRef', operator: 'contains', value: leadRefFilter })
+      if (patientNameFilter.trim()) filters.push({ field: 'patientName', operator: 'contains', value: patientNameFilter })
+      if (doctorFilter.length > 0) filters.push({ field: 'doctor', operator: 'in', value: doctorFilter })
+      if (statusFilter.length > 0) filters.push({ field: 'status', operator: 'in', value: statusFilter })
+      if (mediendInvoiceStatusFilter.length > 0) filters.push({ field: 'mediendInvoiceStatus', operator: 'in', value: mediendInvoiceStatusFilter })
+
+      if (monthFilter.length === 2 && monthFilter[0]) {
+        filters.push({ field: 'month', operator: 'between', value: monthFilter })
+      }
+      if (surgeryDateFilter.length === 2 && surgeryDateFilter[0]) {
+        filters.push({ field: 'surgeryDate', operator: 'between', value: surgeryDateFilter })
+      }
+
+      if (billAmountFilter && (billAmountFilter.min != null || billAmountFilter.max != null)) {
+        filters.push({ field: 'billAmount', operator: 'between', value: billAmountFilter })
+      }
+      if (mediendShareAmountFilter && (mediendShareAmountFilter.min != null || mediendShareAmountFilter.max != null)) {
+        filters.push({ field: 'mediendShareAmount', operator: 'between', value: mediendShareAmountFilter })
+      }
+      if (mediendReceivedFilter && (mediendReceivedFilter.min != null || mediendReceivedFilter.max != null)) {
+        filters.push({ field: 'mediendReceived', operator: 'between', value: mediendReceivedFilter })
+      }
+      if (hospitalAmountPendingFilter && (hospitalAmountPendingFilter.min != null || hospitalAmountPendingFilter.max != null)) {
+        filters.push({ field: 'hospitalAmountPending', operator: 'between', value: hospitalAmountPendingFilter })
+      }
+
       const qs = new URLSearchParams()
       if (startDate && endDate) {
         qs.set('startDate', startDate)
         qs.set('endDate', endDate)
+      }
+      if (filters.length > 0) {
+        qs.set('filters', JSON.stringify(filters))
       }
       const tail = qs.toString()
       return apiGet<HospitalDetail>(
@@ -177,39 +234,99 @@ export default function HospitalDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50/35 to-indigo-50/35 p-6 dark:from-slate-950 dark:via-sky-950/20 dark:to-slate-900">
+      <div className="min-h-screen bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
         <div className="mx-auto max-w-7xl space-y-6">
+          {/* Header & Navigation */}
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild className="text-sky-800 dark:text-sky-200">
+            <Button
+              variant="outline"
+              size="icon"
+              asChild
+              className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
+            >
               <Link href="/hospitals" aria-label="Back to hospital list">
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <div>
-              <nav className="text-sm text-muted-foreground">
-                <Link href="/hospitals" className="font-medium hover:text-foreground">
+              <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
+                <Link href="/hospitals" className="hover:text-[#22d3ee] transition-colors">
                   Hospital List
                 </Link>
-                <span className="mx-2">/</span>
-                <span className="text-foreground">{name}</span>
+                <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
+                <span className="text-[#dce1ff] font-semibold">{name}</span>
               </nav>
-              <h1 className="text-2xl font-bold mt-0.5 flex items-center gap-2 bg-gradient-to-r from-sky-800 to-indigo-800 bg-clip-text text-transparent dark:from-sky-200 dark:to-indigo-200">
-                <Building2 className="h-5 w-5 text-sky-700 dark:text-sky-300" />
-                {name}
-              </h1>
-              {startDate && endDate && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  Filtered: {startDate} → {endDate}
-                </p>
-              )}
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
+                  {name}
+                </h1>
+                {startDate && endDate && (
+                  <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
+                    <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
+                    Filtered: {startDate} → {endDate}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-            <KpiTile label="Cases" value={data?.kpis.totalCases ?? 0} />
-            <KpiTile label="Amount received" value={formatPlRupee(data?.kpis.amountReceived ?? null)} />
-            <KpiTile label="Pending outstanding" value={formatPlRupee(data?.kpis.pendingOutstanding ?? null)} />
-            <KpiTile label="Total MediEND share" value={formatPlRupee(data?.kpis.mediendShare ?? null)} />
+          {/* Summary Cards (Bento Grid) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {/* Tile 1: Cases */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-6 rounded-xl flex flex-col gap-4 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+              <div className="flex justify-between items-start">
+                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Cases</span>
+                <div className="p-1.5 bg-[#22d3ee]/10 text-[#22d3ee] rounded">
+                  <Activity className="h-4 w-4 animate-pulse" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-white">{data?.kpis.totalCases ?? 0}</h2>
+                <p className="text-xs text-[#c7c6cd]/60 mt-1">Active patient cases</p>
+              </div>
+            </div>
+
+            {/* Tile 2: Amount Received */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-6 rounded-xl flex flex-col gap-4 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+              <div className="flex justify-between items-start">
+                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Amount Received</span>
+                <div className="p-1.5 bg-emerald-500/10 text-emerald-400 rounded">
+                  <TrendingUp className="h-4 w-4" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-[#22d3ee]">{formatPlRupee(data?.kpis.amountReceived ?? null)}</h2>
+                <p className="text-xs text-[#c7c6cd]/60 mt-1">Directly reconciled payments</p>
+              </div>
+            </div>
+
+            {/* Tile 3: Pending Outstanding */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-6 rounded-xl flex flex-col gap-4 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+              <div className="flex justify-between items-start">
+                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Pending Outstanding</span>
+                <div className="p-1.5 bg-rose-500/10 text-rose-400 rounded">
+                  <AlertCircle className="h-4 w-4" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-rose-400">{formatPlRupee(data?.kpis.pendingOutstanding ?? null)}</h2>
+                <p className="text-xs text-[#c7c6cd]/60 mt-1">Awaiting collection</p>
+              </div>
+            </div>
+
+            {/* Tile 4: Total MediEND Share */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-6 rounded-xl flex flex-col gap-4 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+              <div className="flex justify-between items-start">
+                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Total MediEND Share</span>
+                <div className="p-1.5 bg-indigo-500/10 text-[#c7bfff] rounded">
+                  <ReceiptText className="h-4 w-4" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-white">{formatPlRupee(data?.kpis.mediendShare ?? null)}</h2>
+                <p className="text-xs text-[#c7c6cd]/60 mt-1">Projected contract share</p>
+              </div>
+            </div>
           </div>
 
           <Card className="overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
@@ -222,30 +339,158 @@ export default function HospitalDetailPage() {
             <CardContent className="overflow-x-auto p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-sky-50/40 hover:bg-sky-50/40 dark:bg-sky-950/20">
-                    <TableHead>Lead Ref</TableHead>
-                    <TableHead>Patient</TableHead>
-                    <TableHead>Doctor</TableHead>
-                    <TableHead>Month</TableHead>
-                    <TableHead>Surgery</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Bill</TableHead>
-                    <TableHead className="text-right">MediEND share</TableHead>
-                    <TableHead className="text-right">Received</TableHead>
-                    <TableHead className="text-right">Pending</TableHead>
-                    <TableHead>Invoice</TableHead>
+                  <TableRow className="bg-[#191D2E]/90 hover:bg-[#191D2E]/90 border-b border-[#283150]">
+                    <TableHead className="w-[50px] pl-4">
+                      <Checkbox
+                        className="border-[#283150] data-[state=checked]:bg-[#22d3ee] data-[state=checked]:text-[#07112f]"
+                        checked={
+                          !!data?.cases && data.cases.length > 0 && selectedLeads.length === data.cases.length
+                        }
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedLeads(data?.cases.map((c) => c.leadId) ?? [])
+                          } else {
+                            setSelectedLeads([])
+                          }
+                        }}
+                      />
+                    </TableHead>
+                    <TableHead className="w-[140px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                        <span className="font-semibold text-[#c7c6cd]">Lead Ref</span>
+                        <ColumnFilter
+                          type="search"
+                          value={leadRefFilter}
+                          onChange={setLeadRefFilter}
+                          placeholder="Search..."
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[180px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                        <span className="font-semibold text-[#c7c6cd]">Patient</span>
+                        <ColumnFilter
+                          type="search"
+                          value={patientNameFilter}
+                          onChange={setPatientNameFilter}
+                          placeholder="Search..."
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[180px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                        <span className="font-semibold text-[#c7c6cd]">Doctor</span>
+                        <ColumnFilter
+                          type="multiSelect"
+                          options={filterOptions.doctors}
+                          value={doctorFilter}
+                          onChange={setDoctorFilter}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[130px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                        <span className="font-semibold text-[#c7c6cd]">Month</span>
+                        <ColumnFilter
+                          type="dateRange"
+                          value={monthFilter}
+                          onChange={monthFilter => setMonthFilter(monthFilter)}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[130px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                        <span className="font-semibold text-[#c7c6cd]">Surgery</span>
+                        <ColumnFilter
+                          type="dateRange"
+                          value={surgeryDateFilter}
+                          onChange={setSurgeryDateFilter}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[140px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                        <span className="font-semibold text-[#c7c6cd]">Status</span>
+                        <ColumnFilter
+                          type="multiSelect"
+                          options={filterOptions.statuses}
+                          value={statusFilter}
+                          onChange={setStatusFilter}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[140px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                        <span className="font-semibold text-[#c7c6cd]">Bill</span>
+                        <ColumnFilter
+                          type="numberRange"
+                          value={billAmountFilter}
+                          onChange={setBillAmountFilter}
+                          min={filterOptions.billBounds.min}
+                          max={filterOptions.billBounds.max}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[150px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                        <span className="font-semibold text-[#c7c6cd]">MediEND share</span>
+                        <ColumnFilter
+                          type="numberRange"
+                          value={mediendShareAmountFilter}
+                          onChange={setMediendShareAmountFilter}
+                          min={filterOptions.shareBounds.min}
+                          max={filterOptions.shareBounds.max}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[140px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                        <span className="font-semibold text-[#c7c6cd]">Received</span>
+                        <ColumnFilter
+                          type="numberRange"
+                          value={mediendReceivedFilter}
+                          onChange={setMediendReceivedFilter}
+                          min={filterOptions.receivedBounds.min}
+                          max={filterOptions.receivedBounds.max}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[140px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap justify-end">
+                        <span className="font-semibold text-[#c7c6cd]">Outstanding</span>
+                        <ColumnFilter
+                          type="numberRange"
+                          value={hospitalAmountPendingFilter}
+                          onChange={setHospitalAmountPendingFilter}
+                          min={filterOptions.pendingBounds.min}
+                          max={filterOptions.pendingBounds.max}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[130px]">
+                      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                        <span className="font-semibold text-[#c7c6cd]">Invoice</span>
+                        <ColumnFilter
+                          type="multiSelect"
+                          options={filterOptions.mediendInvoiceStatuses}
+                          value={mediendInvoiceStatusFilter}
+                          onChange={setMediendInvoiceStatusFilter}
+                        />
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-right font-semibold text-[#c7c6cd] w-[180px] pr-4">Action</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody className="divide-y divide-[#283150]/30">
                   {isLoading ? (
-                    <TableRow>
-                      <TableCell colSpan={11} className="text-center py-8 text-muted-foreground">
+                    <TableRow className="border-b border-[#283150]/20">
+                      <TableCell colSpan={13} className="text-center py-8 text-[#c7c6cd]/50">
                         Loading…
                       </TableCell>
                     </TableRow>
                   ) : !data?.cases?.length ? (
-                    <TableRow>
-                      <TableCell colSpan={11} className="text-center py-8 text-muted-foreground">
+                    <TableRow className="border-b border-[#283150]/20">
+                      <TableCell colSpan={13} className="text-center py-8 text-[#c7c6cd]/50">
                         No cases yet
                       </TableCell>
                     </TableRow>
@@ -296,8 +541,34 @@ export default function HospitalDetailPage() {
                   )}
                 </TableBody>
               </Table>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          {/* Activity Log & Health Score Section */}
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+            <RecentActivityLog className="lg:col-span-2" />
+
+            {/* Right Side Widget: P&L Health */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-lg">
+              <div className="relative w-20 h-20 flex items-center justify-center">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle className="text-[#283150]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="4"></circle>
+                  <circle className="text-[#22d3ee] transition-all duration-1000" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="42.7" strokeWidth="4"></circle>
+                </svg>
+                <div className="absolute flex flex-col items-center">
+                  <span className="text-base font-bold text-white">80%</span>
+                  <span className="text-[7px] font-bold text-[#c7c6cd] uppercase tracking-wider">COLLECTION</span>
+                </div>
+              </div>
+              <div>
+                <h4 className="font-bold text-xs text-[#dce1ff]">Collection & Health Score</h4>
+                <p className="text-[11px] text-[#c7c6cd]/80 px-2 mt-0.5 leading-tight">Your hospital is performing above average for City General cluster.</p>
+                <button className="mt-1.5 border border-[#22d3ee]/40 text-[#22d3ee] px-3 py-0.5 rounded-full text-[10px] hover:bg-[#22d3ee]/10 transition-all font-semibold">
+                  Full Analysis
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
 

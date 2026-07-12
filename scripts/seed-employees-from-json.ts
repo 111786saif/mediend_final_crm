@@ -174,7 +174,6 @@ async function main() {
     await client.query('DELETE FROM "PreAuthorization"')
     await client.query('DELETE FROM "PLRecord"')
     await client.query('DELETE FROM "Employee"')
-    await client.query('DELETE FROM "Team"')
     await client.query('DELETE FROM "User" WHERE id != $1', [pid])
 
     await client.query('SET session_replication_role = DEFAULT')
@@ -340,6 +339,13 @@ async function main() {
     await prisma.lead.updateMany({ where: { createdById: pid }, data: { createdById: fallbackUserId } })
     await prisma.lead.updateMany({ where: { updatedById: pid }, data: { updatedById: fallbackUserId } })
     await prisma.target.updateMany({ where: { createdById: pid }, data: { createdById: fallbackUserId } })
+    const permReassign = await prisma.permissionAssignment.updateMany({
+      where: { grantedById: pid },
+      data: { grantedById: fallbackUserId },
+    })
+    if (permReassign.count > 0) {
+      console.log(`Reassigned grantedById on ${permReassign.count} permission row(s) to MD.`)
+    }
   }
   // Remove placeholder using a single connection with FK checks disabled
   const client2 = await pool.connect()

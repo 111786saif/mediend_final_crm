@@ -12,6 +12,8 @@ import {
   type MeetDetailsMeet,
 } from '@/components/meets/meet-details-drawer'
 import { useAuth } from '@/hooks/use-auth'
+import { useTabPermissions } from '@/hooks/use-tab-permissions'
+import { PermissionsGuard } from '@/components/permissions-guard'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -116,7 +118,19 @@ export default function MeetsPage() {
   const [createOpen, setCreateOpen] = useState(false)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [selectedMeet, setSelectedMeet] = useState<MeetRow | null>(null)
+
   const [activeTab, setActiveTab] = useState<'upcoming' | 'history'>('upcoming')
+
+  const staticTabs = useMemo(
+    () => [
+      { value: 'upcoming', label: 'Upcoming', perm: 'main.meets.upcoming' },
+      { value: 'history', label: 'History', perm: 'main.meets.history' },
+    ],
+    []
+  )
+
+  const { allowedTabs, isLoading: isPermsLoading } = useTabPermissions(staticTabs, activeTab, (v) => setActiveTab(v as 'upcoming' | 'history'))
+
   const [historySearch, setHistorySearch] = useState('')
   const [historyModuleFilter, setHistoryModuleFilter] = useState<string>('all')
   const [historyDateFrom, setHistoryDateFrom] = useState('')
@@ -194,9 +208,16 @@ export default function MeetsPage() {
     setDetailsOpen(true)
   }
 
+
   return (
     <AuthenticatedLayout>
-      <div className="space-y-4 w-full min-w-0 relative">
+      <PermissionsGuard
+        isLoading={isPermsLoading}
+        hasAccess={allowedTabs.length > 0}
+        resourceName="Meets"
+        variant="page"
+      >
+        <div className="space-y-4 w-full min-w-0 relative">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="shrink-0 rounded-full" asChild>
             <Link href="/home" aria-label="Back">
@@ -212,9 +233,10 @@ export default function MeetsPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'upcoming' | 'history')}>
-          <TabsList className="grid w-full max-w-xs grid-cols-2">
-            <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
+          <TabsList className={cn("grid w-full max-w-xs", allowedTabs.length === 1 ? "grid-cols-1" : "grid-cols-2")}>
+            {allowedTabs.map((t) => (
+              <TabsTrigger key={t.value} value={t.value}>{t.label}</TabsTrigger>
+            ))}
           </TabsList>
 
           <TabsContent value="upcoming" className="mt-4 space-y-4">
@@ -596,7 +618,8 @@ export default function MeetsPage() {
           meet={selectedMeet as MeetDetailsMeet | null}
           currentUserId={user?.id}
         />
-      </div>
+        </div>
+      </PermissionsGuard>
     </AuthenticatedLayout>
   )
 }
