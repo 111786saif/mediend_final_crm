@@ -114,7 +114,11 @@ export function ComplianceCallRow({ call, onEdit }: Props) {
         </div>
 
         <div className="flex flex-col items-end gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
-          <QRCodePopover phoneNumber={call.lead.phoneNumber} patientName={call.lead.patientName} />
+          <QRCodePopover
+            leadId={call.leadId}
+            phoneNumber={call.lead.phoneNumber}
+            patientName={call.lead.patientName}
+          />
           <Select
             value={call.status}
             onValueChange={(v) => handleStatusChange(v as ComplianceCallStatus)}

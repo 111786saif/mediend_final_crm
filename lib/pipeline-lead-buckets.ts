@@ -44,6 +44,7 @@ const STATUS_NORMALIZE: Record<string, string> = {
   'dnp exhausted': 'DNP (1-5, Exhausted)',
   'dnp (1-5, exhausted)': 'DNP (1-5, Exhausted)',
   junk: 'Junk',
+  churned: 'Lost',
   'invalid number': 'Invalid Number',
   'fund issues': 'Fund Issues',
   'not interested': 'Lost',
@@ -104,8 +105,9 @@ export function getLeadPipelineBucket(status: string | null | undefined): Exclud
     return 'closed'
   }
   if (
-    ['Lost', 'IPD Lost', 'Fund Issues', 'Not Interested', 'Duplicate lead', 'Already Insured', 'SX Not Suggested', 'Language Barrier'].includes(s) ||
+    ['Lost', 'Churned', 'IPD Lost', 'Fund Issues', 'Not Interested', 'Duplicate lead', 'Already Insured', 'SX Not Suggested', 'Language Barrier'].includes(s) ||
     lower.includes('lost') ||
+    lower.includes('churn') ||
     lower.includes('duplicate') ||
     lower.includes('not interested') ||
     lower.includes('fund issues') ||

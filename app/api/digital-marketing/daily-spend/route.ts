@@ -2,8 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { hasFeaturePermission } from '@/lib/permissions'
-import { FEATURE_KEYS } from '@/lib/feature-keys'
+import { hasEffectiveCrmPermission } from '@/lib/crm-permissions'
 
 function dayRange(dateStr: string) {
   const d = new Date(dateStr + 'T00:00:00.000Z')
@@ -16,7 +15,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!(await hasFeaturePermission(user.id, FEATURE_KEYS.CPL_ACCESS)))
+    if (!(await hasEffectiveCrmPermission(user.id, 'crm.cpl.view')))
       return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
@@ -145,7 +144,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!(await hasFeaturePermission(user.id, FEATURE_KEYS.CPL_ACCESS)))
+    if (!(await hasEffectiveCrmPermission(user.id, 'crm.cpl.manage')))
       return errorResponse('Forbidden', 403)
 
     const body = await request.json()

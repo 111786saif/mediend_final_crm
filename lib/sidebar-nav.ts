@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {
+  Activity,
   BarChart3,
   BookOpen,
   Building2,
@@ -14,7 +15,6 @@ import {
   DollarSign,
   FileText,
   FolderTree,
-  Heart,
   Home,
   IndianRupee,
   LayoutDashboard,
@@ -23,12 +23,12 @@ import {
   Package,
   PieChart,
   Plus,
+  Route,
   Shield,
   ShieldCheck,
   Star,
   Stethoscope,
   Target,
-  Ticket,
   TrendingUp,
   UserCheck,
   UserCircle,
@@ -122,6 +122,42 @@ export const navItems: NavItem[] = [
     icon: Megaphone,
     roles: ['DIGITAL_MARKETING_HEAD', 'MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
+  {
+    title: 'CRM Campaigns',
+    url: '/crm/campaigns',
+    icon: Megaphone,
+    roles: ['SUPER_ADMIN'],
+  },
+  {
+    title: 'CRM Activity',
+    url: '/crm/activity',
+    icon: Activity,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  },
+  {
+    title: 'CRM Masters',
+    url: '/crm/masters',
+    icon: Database,
+    roles: ['SUPER_ADMIN'],
+  },
+  {
+    title: 'CRM Access Matrix',
+    url: '/crm/access-matrix',
+    icon: ShieldCheck,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  },
+  {
+    title: 'CRM Churn Rules',
+    url: '/crm/churn-rules',
+    icon: Route,
+    roles: ['SUPER_ADMIN', 'ADMIN', 'SALES_HEAD', 'TEAM_LEAD'],
+  },
+  // {
+  //   title: 'CRM Assignment Rules',
+  //   url: '/crm/assignment-rules',
+  //   icon: FolderTree,
+  //   roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  // },
   {
     title: 'Dept Targets',
     url: '/md/targets',
@@ -531,6 +567,8 @@ export function getFirstNavUrl(user: SessionUser | null): string {
   // MD/ADMIN land on the MD Command Center; everyone else on the generic home page
   if (user) {
     if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
+    if (user.role === 'SUPER_ADMIN') return '/crm/campaigns'
+    if (user.role === 'CRM_ADMIN') return '/crm/access-matrix'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
     return '/home'
   }

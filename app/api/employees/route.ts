@@ -10,6 +10,7 @@ import { Prisma } from '@/generated/prisma/client'
 const createEmployeeSchema = z.object({
   userId: z.string(),
   employeeCode: z.string(),
+  circle: z.string().trim().max(100).optional().nullable(),
   joinDate: z.string().transform((str) => new Date(str)).optional().nullable(),
   salary: z.number().positive().optional().nullable(),
   departmentId: z.string().optional().nullable(),
@@ -64,6 +65,16 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    if (data.circle) {
+      const circle = await prisma.crmCampaignCircle.findFirst({
+        where: { name: data.circle.trim() },
+        select: { id: true },
+      })
+      if (!circle) {
+        return errorResponse('Selected circle was not found in CRM masters', 400)
+      }
+    }
+
     const targetUser = await prisma.user.findUnique({
       where: { id: data.userId },
       select: { role: true },
@@ -75,6 +86,7 @@ export async function POST(request: NextRequest) {
       data: {
         userId: data.userId,
         employeeCode: data.employeeCode,
+        circle: data.circle?.trim() || null,
         joinDate: data.joinDate || null,
         salary: data.salary || null,
         departmentId: data.departmentId || null,
@@ -190,4 +202,3 @@ export async function GET(request: NextRequest) {
 }
 
 // PATCH is handled in [id]/route.ts
-

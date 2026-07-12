@@ -10,44 +10,29 @@ import {
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
 import { useBadgeCounts } from '@/hooks/use-badge-counts'
-import { useNotifications } from '@/hooks/use-notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useSidebar } from '@/components/ui/sidebar'
 import { getCampaignCplNavItem, getFilteredNavItemsWithUrls } from '@/lib/sidebar-nav'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import {
-  BarChart3,
-  BookOpen,
-  Briefcase,
-  Building2,
-  Calendar,
-  CalendarCheck,
-  CheckCircle,
   ChevronDown,
-  ClipboardList,
-  Clock,
-  CreditCard,
+  Database,
   DollarSign,
-  FileText,
-  FolderTree,
-  Heart,
   LogOut,
-  MessageSquare,
-  Package,
   Shield,
   ShieldCheck,
   Sparkles,
-  Target,
-  Ticket,
   TrendingUp,
   User,
   UserCircle,
   Users,
-  Wallet,
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -116,19 +101,11 @@ export function AppSidebar() {
   const pathname = usePathname()
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
-  const { data: unreadNotifications = [] } = useNotifications(true)
-  const meetNotificationBadge = React.useMemo(
-    () =>
-      unreadNotifications.filter(
-        (n) => n.type === 'MEET_SCHEDULED' || n.type === 'MEET_REMINDER'
-      ).length,
-    [unreadNotifications]
-  )
   const isMdOrAdmin = user?.role === 'MD' || user?.role === 'ADMIN'
 
   const { data: cplAccessData } = useQuery({
     queryKey: ['sidebar-cpl-access', user?.id],
-    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=cpl_access'),
+    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=crm.cpl.view'),
     enabled: !!user,
     staleTime: 60_000,
   })
@@ -140,6 +117,7 @@ export function AppSidebar() {
     }
   }, [isMobile, setOpenMobile, navigatingRef])
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
+    crmMasters: pathname?.startsWith('/crm/masters') ?? false,
     services: false,
     finance: false,
     hr: false,
@@ -282,6 +260,15 @@ export function AppSidebar() {
   const showMyHrmsSection = myHrmsItems.length > 0
   const showSalesSection = isEa && salesItems.length > 0
   const showInsurancePlSection = isEa && insurancePlItems.length > 0
+  const crmMastersItem = mainItems.find((item) => item.title === 'CRM Masters') ?? null
+  const primaryMainItems = mainItems.filter((item) => item.title !== 'CRM Masters')
+  const showCrmMastersSection = user.role === 'SUPER_ADMIN' && crmMastersItem
+  const crmMasterLinks = [
+    { title: 'Sources', url: '/crm/masters/sources' },
+    { title: 'Lead Sources', url: '/crm/masters/lead-sources' },
+    { title: 'Circles', url: '/crm/masters/circles' },
+    { title: 'Cities', url: '/crm/masters/cities' },
+  ]
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
@@ -320,7 +307,7 @@ export function AppSidebar() {
         <SidebarGroup className="pb-1">
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainItems.map((item) => {
+              {primaryMainItems.map((item) => {
                 const Icon = item.icon
                 const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
                 const label = item.title.startsWith('MD ') ? item.title.replace('MD ', '') : item.title
@@ -347,6 +334,48 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        {showCrmMastersSection && (
+          <SidebarGroup className="pb-1">
+            <button
+              onClick={() => toggleSection('crmMasters')}
+              className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Database className="h-4 w-4" />
+                <span>CRM Masters</span>
+              </div>
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-200 ${
+                  openSections.crmMasters ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+            <div
+              className={`overflow-hidden transition-all duration-200 ease-in-out ${
+                openSections.crmMasters ? 'max-h-[320px] opacity-100' : 'max-h-0 opacity-0'
+              }`}
+            >
+              {openSections.crmMasters && (
+                <SidebarGroupContent>
+                  <SidebarMenuSub className="mx-0 mt-1">
+                    {crmMasterLinks.map((item) => {
+                      const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
+                      return (
+                        <SidebarMenuSubItem key={item.url}>
+                          <SidebarMenuSubButton asChild isActive={isActive}>
+                            <Link href={item.url} onClick={closeSidebarOnMobile}>
+                              <span>{item.title}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      )
+                    })}
+                  </SidebarMenuSub>
+                </SidebarGroupContent>
+              )}
+            </div>
+          </SidebarGroup>
+        )}
         {showHrSection && (
           <SidebarGroup className="pb-1">
             <button
@@ -674,6 +703,8 @@ export function AppSidebar() {
                   <option value="IT_HEAD">IT_HEAD</option>
                   <option value="EXECUTIVE_ASSISTANT">EXECUTIVE_ASSISTANT</option>
                   <option value="ADMIN">ADMIN</option>
+                  <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                  <option value="CRM_ADMIN">CRM_ADMIN</option>
                   <option value="USER">USER</option>
                 </select>
               </div>
@@ -706,4 +737,3 @@ export function AppSidebar() {
     </Sidebar>
   )
 }
-

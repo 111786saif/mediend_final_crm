@@ -1,13 +1,21 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { canAccessLead, hasPermission } from '@/lib/rbac'
-import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
+import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
+import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
+import {
+  buildLeadOwnershipTransferUpdate,
+  canUserEditLeadProfile,
+  canUserEditLeadRemarks,
+  canUserReassignLead,
+  canUserUpdateLeadStatus,
+  canUserViewLeadOwner,
+} from '@/lib/lead-ownership'
 
 export async function GET(
   request: NextRequest,
@@ -246,9 +254,7 @@ export async function GET(
 
     console.log('[DEBUG] Full lead with relations fetched successfully')
 
-    const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
-    if (!canAccessLead(user, fullLead.bdId, subordinateIds)) {
+    if (!(await canUserViewLeadOwner(user, fullLead.bdId))) {
       console.log('[DEBUG] Access denied by canAccessLead', {
         userId: user.id,
         userRole: user.role,
@@ -290,7 +296,7 @@ export async function PATCH(
       return unauthorizedResponse()
     }
 
-    if (!hasPermission(user, 'leads:write')) {
+    if (user.role !== 'SUPER_ADMIN' && !hasPermission(user, 'leads:write')) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -306,16 +312,62 @@ export async function PATCH(
       return errorResponse('Lead not found', 404)
     }
 
-    const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
-    if (!canAccessLead(user, lead.bdId, subordinateIds)) {
+    if (!(await canUserViewLeadOwner(user, lead.bdId))) {
       return errorResponse('Forbidden', 403)
     }
 
     const body = await request.json()
+    const requestedStatus =
+      typeof body.status === 'string' && body.status.trim().length > 0
+        ? body.status.trim()
+        : undefined
     const updateData: Prisma.LeadUpdateInput = {
       updatedBy: { connect: { id: user.id } },
       updatedDate: new Date(),
+    }
+    const statusChanged = requestedStatus !== undefined && requestedStatus !== lead.status
+    const assigneeChanged = body.bdId !== undefined && body.bdId !== lead.bdId
+    const leadProfileChanged =
+      (body.patientName !== undefined && body.patientName !== lead.patientName) ||
+      (body.treatment !== undefined && body.treatment !== lead.treatment) ||
+      (body.diseaseDetails !== undefined && body.diseaseDetails !== lead.diseaseDetails)
+    const remarksChanged = body.remarks !== undefined && body.remarks !== lead.remarks
+    const churnStatusTriggered = statusChanged && isChurnTriggerStatus(requestedStatus)
+
+    if (statusChanged && !(await canUserUpdateLeadStatus(user, lead.bdId))) {
+      return errorResponse('You do not have permission to update the lead status', 403)
+    }
+
+    if (leadProfileChanged && !(await canUserEditLeadProfile(user, lead.bdId))) {
+      return errorResponse(
+        'You do not have permission to edit patient name, disease, or treatment for this lead',
+        403
+      )
+    }
+
+    if (remarksChanged && !(await canUserEditLeadRemarks(user, lead.bdId))) {
+      return errorResponse('You do not have permission to edit remarks for this lead', 403)
+    }
+
+    if (body.patientName !== undefined && String(body.patientName).trim().length === 0) {
+      return errorResponse('Patient name is required', 400)
+    }
+
+    if (churnStatusTriggered && assigneeChanged) {
+      return errorResponse(
+        'Junk and Churned leads are reassigned automatically. Remove the manual assignee before saving.',
+        400
+      )
+    }
+
+    if (
+      assigneeChanged &&
+      !(await canUserReassignLead(user, lead.bdId, String(body.bdId)))
+    ) {
+      return errorResponse(
+        'You can only transfer this lead to an allowed owner for your role',
+        403
+      )
     }
 
     // Track stage changes
@@ -345,6 +397,7 @@ export async function PATCH(
       'circle',
       'category',
       'treatment',
+      'diseaseDetails',
       'anesthesia',
       'quantityGrade',
       'surgeonName',
@@ -387,24 +440,50 @@ export async function PATCH(
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
-         
-        (updateData as any)[field] = body[field]
+        if (
+          (field === 'patientName' ||
+            field === 'treatment' ||
+            field === 'diseaseDetails' ||
+            field === 'status' ||
+            field === 'remarks') &&
+          typeof body[field] === 'string'
+        ) {
+          const trimmed = body[field].trim()
+          ;(updateData as any)[field] = field === 'remarks' ? trimmed || null : trimmed
+        } else {
+          (updateData as any)[field] = body[field]
+        }
       }
     }
 
+    let churnAutomationResult:
+      | Awaited<ReturnType<typeof planChurnLeadReassignment>>
+      | null = null
+
+    if (churnStatusTriggered) {
+      try {
+      churnAutomationResult = await planChurnLeadReassignment(lead.bdId)
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'This lead could not be auto-reassigned for the selected status.'
+        return errorResponse(message, 409)
+      }
+      updateData.status = churnAutomationResult.nextStatus
+      updateData.followUpDate = churnAutomationResult.followUpDate
+      Object.assign(
+        updateData,
+        buildLeadOwnershipTransferUpdate(
+          churnAutomationResult.assignee.userId,
+          churnAutomationResult.assignedAt
+        )
+      )
+    }
+
     // Handle BD reassignment
-    if (body.bdId && body.bdId !== lead.bdId) {
-      if (user.role === 'BD' && body.bdId !== user.id) {
-        return errorResponse('You can only assign leads to yourself', 403)
-      }
-      if (user.role === 'TEAM_LEAD') {
-        const allowed =
-          body.bdId === user.id || (subordinateIds?.includes(body.bdId) ?? false)
-        if (!allowed) {
-          return errorResponse('Can only reassign to your subordinates or yourself', 403)
-        }
-      }
-      updateData.bd = { connect: { id: body.bdId } }
+    if (assigneeChanged && !churnAutomationResult) {
+      Object.assign(updateData, buildLeadOwnershipTransferUpdate(String(body.bdId)))
     }
 
     const updatedLead = await prisma.lead.update({
@@ -486,11 +565,28 @@ export async function PATCH(
       payload && payload.bd
         ? { ...payload, bd: toLegacyBdShape(payload.bd) }
         : payload
+    const responsePayload = churnAutomationResult
+      ? {
+          ...mapped,
+          churnAutomation: {
+            scopeType: churnAutomationResult.rule.scopeType,
+            behavior: churnAutomationResult.rule.behavior,
+            assignedTo: {
+              userId: churnAutomationResult.assignee.userId,
+              name: churnAutomationResult.assignee.name,
+              employeeCode: churnAutomationResult.assignee.employeeCode,
+            },
+            teamLead: churnAutomationResult.teamLead,
+            followUpDate: churnAutomationResult.followUpDate,
+            nextStatus: churnAutomationResult.nextStatus,
+          },
+        }
+      : mapped
 
-    return successResponse(mapped, 'Lead updated successfully')
+    return successResponse(responsePayload, 'Lead updated successfully')
   } catch (error) {
     console.error('Error updating lead:', error)
-    return errorResponse('Failed to update lead', 500)
+    const message = error instanceof Error ? error.message : 'Failed to update lead'
+    return errorResponse(message, 500)
   }
 }
-

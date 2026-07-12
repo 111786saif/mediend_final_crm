@@ -80,6 +80,17 @@ export async function apiPatch<T>(endpoint: string, data: unknown): Promise<T> {
   return response.data as T
 }
 
+export async function apiPut<T>(endpoint: string, data: unknown): Promise<T> {
+  const response = await apiRequest<T>(endpoint, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+  if (!response.success) {
+    throw new Error(response.error || 'Request failed')
+  }
+  return response.data as T
+}
+
 export async function apiDelete<T>(endpoint: string, data?: unknown): Promise<T> {
   const options: RequestInit = {
     method: 'DELETE',
@@ -93,4 +104,3 @@ export async function apiDelete<T>(endpoint: string, data?: unknown): Promise<T>
   }
   return response.data as T
 }
-

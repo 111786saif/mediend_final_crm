@@ -2,8 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
-import { hasFeaturePermission } from '@/lib/permissions'
-import { FEATURE_KEYS } from '@/lib/feature-keys'
+import { hasEffectiveCrmPermission } from '@/lib/crm-permissions'
 import { z } from 'zod'
 
 function monthDateRange(year: number, month: number) {
@@ -13,7 +12,13 @@ function monthDateRange(year: number, month: number) {
 }
 
 async function assertCplAccess(userId: string) {
-  const ok = await hasFeaturePermission(userId, FEATURE_KEYS.CPL_ACCESS)
+  const ok = await hasEffectiveCrmPermission(userId, 'crm.cpl.view')
+  if (!ok) return false
+  return true
+}
+
+async function assertCplManageAccess(userId: string) {
+  const ok = await hasEffectiveCrmPermission(userId, 'crm.cpl.manage')
   if (!ok) return false
   return true
 }
@@ -141,7 +146,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!(await assertCplAccess(user.id))) return errorResponse('Forbidden', 403)
+    if (!(await assertCplManageAccess(user.id))) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
     const parsed = postSchema.safeParse(body)
@@ -189,7 +194,7 @@ export async function PATCH(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!(await assertCplAccess(user.id))) return errorResponse('Forbidden', 403)
+    if (!(await assertCplManageAccess(user.id))) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
     const parsed = patchSchema.safeParse(body)

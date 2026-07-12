@@ -11,10 +11,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/hooks/use-auth'
-import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import { apiGet, apiPost } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Phone, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
@@ -33,7 +33,6 @@ import {
   canAddKYPDetails,
   canCompletePreAuth,
   canEditDischargeSheet,
-  canEditKYP,
   canFillCashDischarge,
   canFillInitiateForm,
   canFillIPDCashForm,
@@ -122,6 +121,7 @@ interface Lead {
   category: string | null
   quantityGrade?: string | null
   anesthesia?: string | null
+  diseaseDetails?: string | null
   surgeonName?: string | null
   surgeonType?: string | null
   status: string
@@ -548,7 +548,6 @@ export default function PatientDetailsPage() {
   const canRaise = !readOnly && user && canRaisePreAuth(user as any, lead)
   const canAddDetails = !readOnly && user && canAddKYPDetails(user as any, lead)
   const canComplete = !readOnly && user && canCompletePreAuth(user as any, lead)
-  const canEdit = !readOnly && user && canEditKYP(user as any, lead)
   const canInit = !readOnly && user && canInitiate(user as any, lead)
   const canEditIPD = !readOnly && user && canEditIPDDetails(user as any, lead)
   const canMarkIPDStatus = !readOnly && user && canMarkIPD(user as any, lead)
@@ -1262,7 +1261,7 @@ export default function PatientDetailsPage() {
                         })
                         toast.success('Switched to Cash Mode')
                         queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
-                      } catch (e) {
+                      } catch {
                         toast.error('Failed to switch mode')
                       } finally {
                         setSwitchingMode(false)
@@ -1295,7 +1294,7 @@ export default function PatientDetailsPage() {
                         })
                         toast.success('Reverted to Insurance Flow')
                         queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
-                      } catch (e) {
+                      } catch {
                         toast.error('Failed to revert mode')
                       } finally {
                         setSwitchingMode(false)
@@ -1870,7 +1869,7 @@ export default function PatientDetailsPage() {
                   </h3>
                   <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2">
                     {kypSubmission.preAuthData.suggestedHospitals && kypSubmission.preAuthData.suggestedHospitals.length > 0 ? (
-                      kypSubmission.preAuthData.suggestedHospitals.map((hosp, idx) => (
+                      kypSubmission.preAuthData.suggestedHospitals.map((hosp) => (
                         <div key={hosp.id} className={cn(
                           "p-2 rounded border text-xs space-y-1",
                           hosp.hospitalName === kypSubmission.preAuthData?.requestedHospitalName 

@@ -27,9 +27,9 @@ import { CaseStage } from '@/generated/prisma/enums'
 
 export interface Lead {
   id: string
-    patientName?: string
-    age?: number
-    sex?: string | null
+  patientName?: string
+  age?: number
+  sex?: string | null
   phoneNumber?: string
   city?: string
   circle?: string | null
@@ -52,6 +52,15 @@ export interface Lead {
   leadEntryDate?: string | Date | null
   assignedDate?: string | Date | null
   campaignName?: string | null
+  latestRemark?: {
+    id: string
+    content: string
+    createdAt: string | Date
+    createdBy?: {
+      id: string
+      name: string | null
+    } | null
+  } | null
   bd?: {
     id: string
     name: string
@@ -219,4 +228,3 @@ export function useLead(id: string | null) {
     isUpdating: updateMutation.isPending,
   }
 }
-

@@ -296,6 +296,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'compliance:write',
     'hierarchy:read',
   ],
+  SUPER_ADMIN: [],
+  CRM_ADMIN: [],
   ADMIN: [
     'leads:read',
     'leads:write',
@@ -472,6 +474,11 @@ export function canCreateRole(user: SessionUser | null, targetRole: UserRole): b
     return false
   }
 
+  // CRM-only roles are intentionally excluded from legacy HR/user-management flows.
+  if (targetRole === 'SUPER_ADMIN' || targetRole === 'CRM_ADMIN') {
+    return false
+  }
+
   // MD and ADMIN can create any role except MD
   if (user.role === 'MD' || user.role === 'ADMIN') {
     return true
@@ -562,4 +569,3 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
 
   return []
 }
-

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
+import { UserRole } from '@/generated/prisma/enums'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission, canCreateRole } from '@/lib/rbac'
 import { hashPassword } from '@/lib/auth'
@@ -11,11 +12,12 @@ const createUserSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   name: z.string().min(1),
-  role: z.enum(['MD', 'SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'ADMIN', 'USER']),
+  role: z.nativeEnum(UserRole),
   departmentId: z.string().optional().nullable(),
   employeeCode: z.string().min(1),
   managerId: z.string().nullable().optional(),
   bdNumber: z.number().int().positive().optional().nullable(),
+  circle: z.string().trim().max(100).optional().nullable(),
 })
 
 export async function GET(request: NextRequest) {
@@ -33,12 +35,27 @@ export async function GET(request: NextRequest) {
     const role = searchParams.get('role')
 
     const where: Prisma.UserWhereInput = {}
+    if (role && role in UserRole) {
+      where.role = role as UserRole
+    }
 
     const users = await prisma.user.findMany({
       where,
       include: {
         employee: {
-          include: {
+          select: {
+            id: true,
+            employeeCode: true,
+            bdNumber: true,
+            circle: true,
+            joinDate: true,
+            salary: true,
+            departmentId: true,
+            dateOfBirth: true,
+            aadharNumber: true,
+            panNumber: true,
+            aadharDocUrl: true,
+            panDocUrl: true,
             department: {
               select: {
                 id: true,
@@ -55,7 +72,11 @@ export async function GET(request: NextRequest) {
     })
 
     // Remove password hash from response
-    const safeUsers = users.map(({ passwordHash: _passwordHash, ...user }) => user)
+    const safeUsers = users.map((user) => {
+      const safeUser = { ...user }
+      delete (safeUser as { passwordHash?: string }).passwordHash
+      return safeUser
+    })
 
     return successResponse(safeUsers)
   } catch (error) {
@@ -146,6 +167,7 @@ export async function POST(request: NextRequest) {
         departmentId: data.departmentId || null,
         managerId: data.managerId ?? null,
         bdNumber: data.bdNumber ?? null,
+        circle: data.circle?.trim() || null,
       },
     })
     await initializeLeaveBalances(employee.id)
@@ -163,4 +185,3 @@ export async function POST(request: NextRequest) {
     return errorResponse('Failed to create user', 500)
   }
 }
-

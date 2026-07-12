@@ -16,13 +16,34 @@ import { Plus, Users, UserPlus, Edit, Hash, DollarSign, Building, CreditCard, Tr
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { useAuth } from '@/hooks/use-auth'
+import { type UserRole } from '@/generated/prisma/enums'
+import { getAvailableRolesForCreator } from '@/lib/rbac'
+import { getRoleLabel } from '@/lib/roles'
 
-type UserRole = 'MD' | 'SALES_HEAD' | 'TEAM_LEAD' | 'BD' | 'INSURANCE_HEAD' | 'PL_HEAD' | 'HR_HEAD' | 'FINANCE_HEAD' | 'ADMIN' | 'USER'
+const USER_MANAGEMENT_ROLE_ORDER: UserRole[] = [
+  'SALES_HEAD',
+  'TEAM_LEAD',
+  'BD',
+  'INSURANCE_HEAD',
+  'PL_HEAD',
+  'HR_HEAD',
+  'FINANCE_HEAD',
+  'ADMIN',
+  'USER',
+]
+
+function getUserManagementRoles(
+  currentUser: { id: string; email: string; name: string; role: UserRole } | null | undefined
+): UserRole[] {
+  const allowed = new Set(getAvailableRolesForCreator(currentUser ?? null))
+  return USER_MANAGEMENT_ROLE_ORDER.filter((role) => allowed.has(role))
+}
 
 interface Employee {
   id: string
   employeeCode: string
   bdNumber: number | null
+  circle: string | null
   joinDate: Date | null
   salary: number | null
   departmentId: string | null
@@ -55,6 +76,7 @@ interface CreateUserData {
   employeeCode: string
   managerId: string | null
   bdNumber: number | null
+  circle: string | null
 }
 
 export default function HRUsersPage() {
@@ -182,7 +204,7 @@ export default function HRUsersPage() {
                         <TableCell className="font-medium">{user.name}</TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>
-                          <Badge variant="secondary">{user.role.replace('_', ' ')}</Badge>
+                          <Badge variant="secondary">{getRoleLabel(user.role)}</Badge>
                         </TableCell>
                         <TableCell>
                           {user.employee ? (
@@ -279,26 +301,7 @@ function CreateUserForm({
   isLoading: boolean
 }) {
   const { user: currentUser } = useAuth()
-  
-  // Get available roles based on current user's permissions
-  const getAvailableRoles = (): UserRole[] => {
-    if (!currentUser) return []
-    
-    // MD and ADMIN can create all roles except MD
-    if (currentUser.role === 'MD' || currentUser.role === 'ADMIN') {
-      return ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER']
-    }
-    
-    // Department heads can create TL and USER/BD
-    const deptHeadRoles = ['INSURANCE_HEAD', 'PL_HEAD', 'SALES_HEAD', 'HR_HEAD', 'FINANCE_HEAD']
-    if (deptHeadRoles.includes(currentUser.role)) {
-      return ['TEAM_LEAD', 'USER', 'BD']
-    }
-    
-    return []
-  }
-
-  const availableRoles = getAvailableRoles()
+  const availableRoles = getUserManagementRoles(currentUser)
   const defaultRole = availableRoles[0] || 'USER'
 
   const [formData, setFormData] = useState({
@@ -310,6 +313,7 @@ function CreateUserForm({
     employeeCode: '',
     managerId: '',
     bdNumber: '',
+    circle: '',
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -331,6 +335,7 @@ function CreateUserForm({
       employeeCode: formData.employeeCode.trim(),
       managerId: formData.managerId || null,
       bdNumber: bdNum,
+      circle: formData.role === 'BD' ? formData.circle.trim() || null : null,
     })
     // Reset form
     setFormData({
@@ -342,6 +347,7 @@ function CreateUserForm({
       employeeCode: '',
       managerId: '',
       bdNumber: '',
+      circle: '',
     })
   }
 
@@ -412,14 +418,7 @@ function CreateUserForm({
               ) : (
                 availableRoles.map((role) => (
                   <SelectItem key={role} value={role}>
-                    {role === 'TEAM_LEAD' ? 'Team Lead' : 
-                     role === 'SALES_HEAD' ? 'Sales Head' :
-                     role === 'INSURANCE_HEAD' ? 'Insurance Head' :
-                     role === 'PL_HEAD' ? 'P/L Head' :
-                     role === 'HR_HEAD' ? 'HR Head' :
-                     role === 'FINANCE_HEAD' ? 'Finance Head' :
-                     role === 'USER' ? 'User (HRMS Only)' :
-                     role}
+                    {getRoleLabel(role)}
                   </SelectItem>
                 ))
               )}
@@ -482,19 +481,32 @@ function CreateUserForm({
       </div>
 
       {formData.role === 'BD' && (
-        <div>
-          <Label>CRM Number (optional)</Label>
-          <Input
-            type="number"
-            min={1}
-            step={1}
-            value={formData.bdNumber}
-            onChange={(e) => setFormData({ ...formData, bdNumber: e.target.value })}
-            placeholder="For lead sync"
-          />
-          <p className="text-xs text-muted-foreground mt-1">
-            If set, leads with this CRM number will be assigned to this employee when synced.
-          </p>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label>CRM Number (optional)</Label>
+            <Input
+              type="number"
+              min={1}
+              step={1}
+              value={formData.bdNumber}
+              onChange={(e) => setFormData({ ...formData, bdNumber: e.target.value })}
+              placeholder="For lead sync"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              If set, leads with this CRM number will be assigned to this employee when synced.
+            </p>
+          </div>
+          <div>
+            <Label>Circle</Label>
+            <Input
+              value={formData.circle}
+              onChange={(e) => setFormData({ ...formData, circle: e.target.value })}
+              placeholder="e.g. Mumbai"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              CRM assignment uses the employee circle to match lead city.
+            </p>
+          </div>
         </div>
       )}
 
@@ -516,26 +528,7 @@ function EditUserDialog({
 }) {
   const [isOpen, setIsOpen] = useState(false)
   const { user: currentUser } = useAuth()
-  
-  // Get available roles based on current user's permissions
-  const getAvailableRoles = (): UserRole[] => {
-    if (!currentUser) return []
-    
-    // MD and ADMIN can assign all roles except MD
-    if (currentUser.role === 'MD' || currentUser.role === 'ADMIN') {
-      return ['SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER']
-    }
-    
-    // Department heads can assign TL and USER/BD
-    const deptHeadRoles = ['INSURANCE_HEAD', 'PL_HEAD', 'SALES_HEAD', 'HR_HEAD', 'FINANCE_HEAD']
-    if (deptHeadRoles.includes(currentUser.role)) {
-      return ['TEAM_LEAD', 'USER', 'BD']
-    }
-    
-    return []
-  }
-
-  const availableRoles = getAvailableRoles()
+  const availableRoles = getUserManagementRoles(currentUser)
   
   // Initialize form data based on user prop
   const getInitialFormData = () => ({
@@ -619,26 +612,12 @@ function EditUserDialog({
               <SelectContent>
                 {availableRoles.length === 0 ? (
                   <SelectItem value={user.role} disabled>
-                    {user.role === 'TEAM_LEAD' ? 'Team Lead' : 
-                     user.role === 'SALES_HEAD' ? 'Sales Head' :
-                     user.role === 'INSURANCE_HEAD' ? 'Insurance Head' :
-                     user.role === 'PL_HEAD' ? 'P/L Head' :
-                     user.role === 'HR_HEAD' ? 'HR Head' :
-                     user.role === 'FINANCE_HEAD' ? 'Finance Head' :
-                     user.role === 'USER' ? 'User (HRMS Only)' :
-                     user.role}
+                    {getRoleLabel(user.role)}
                   </SelectItem>
                 ) : (
                   availableRoles.map((role) => (
                     <SelectItem key={role} value={role}>
-                      {role === 'TEAM_LEAD' ? 'Team Lead' : 
-                       role === 'SALES_HEAD' ? 'Sales Head' :
-                       role === 'INSURANCE_HEAD' ? 'Insurance Head' :
-                       role === 'PL_HEAD' ? 'P/L Head' :
-                       role === 'HR_HEAD' ? 'HR Head' :
-                       role === 'FINANCE_HEAD' ? 'Finance Head' :
-                       role === 'USER' ? 'User (HRMS Only)' :
-                       role}
+                      {getRoleLabel(role)}
                     </SelectItem>
                   ))
                 )}
@@ -684,6 +663,7 @@ function EditEmployeeDialog({
   const [formData, setFormData] = useState({
     employeeCode: user.employee?.employeeCode || '',
     bdNumber: user.employee?.bdNumber != null ? String(user.employee.bdNumber) : '',
+    circle: user.employee?.circle || '',
     joinDate: user.employee?.joinDate ? format(new Date(user.employee.joinDate), 'yyyy-MM-dd') : '',
     salary: user.employee?.salary?.toString() || '',
     departmentId: user.employee?.departmentId || 'none',
@@ -699,6 +679,7 @@ function EditEmployeeDialog({
       userId: string
       employeeCode: string
       bdNumber?: number | null
+      circle?: string | null
       joinDate?: string | null
       salary?: number | null
       departmentId?: string | null
@@ -722,6 +703,7 @@ function EditEmployeeDialog({
     mutationFn: async (data: {
       employeeCode?: string
       bdNumber?: number | null
+      circle?: string | null
       joinDate?: string | null
       salary?: number | null
       departmentId?: string | null
@@ -761,6 +743,7 @@ function EditEmployeeDialog({
       updateEmployeeMutation.mutate({
         employeeCode: formData.employeeCode || undefined,
         bdNumber: bdNum,
+        circle: user.role === 'BD' ? formData.circle.trim() || null : null,
         joinDate: formData.joinDate || null,
         salary: formData.salary ? parseFloat(formData.salary) : null,
         departmentId: formData.departmentId === 'none' ? null : formData.departmentId || null,
@@ -780,6 +763,7 @@ function EditEmployeeDialog({
         userId: user.id,
         employeeCode: formData.employeeCode,
         bdNumber: bdNum,
+        circle: user.role === 'BD' ? formData.circle.trim() || null : null,
         joinDate: formData.joinDate || null,
         salary: formData.salary ? parseFloat(formData.salary) : null,
         departmentId: formData.departmentId === 'none' ? null : formData.departmentId || null,
@@ -846,6 +830,16 @@ function EditEmployeeDialog({
                   value={formData.bdNumber}
                   onChange={(e) => setFormData({ ...formData, bdNumber: e.target.value })}
                   placeholder="For lead sync"
+                />
+              </div>
+            )}
+            {user.role === 'BD' && (
+              <div>
+                <Label>Circle</Label>
+                <Input
+                  value={formData.circle}
+                  onChange={(e) => setFormData({ ...formData, circle: e.target.value })}
+                  placeholder="e.g., Mumbai"
                 />
               </div>
             )}

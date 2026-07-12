@@ -13,27 +13,28 @@ import { useAuth } from '@/hooks/use-auth'
 import { toast } from 'sonner'
 import { Plus, Trash2, ArrowRight, ArrowLeft, Check, Users, UserPlus, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { type UserRole } from '@/generated/prisma/enums'
+import { getAvailableRolesForCreator } from '@/lib/rbac'
+import { getRoleLabel } from '@/lib/roles'
 
-type UserRole = 'SALES_HEAD' | 'CATEGORY_MANAGER' | 'ASSISTANT_CATEGORY_MANAGER' | 'TEAM_LEAD' | 'BD' | 'INSURANCE_HEAD' | 'PL_HEAD' | 'OUTSTANDING_HEAD' | 'HR_HEAD' | 'FINANCE_HEAD' | 'DIGITAL_MARKETING_HEAD' | 'IT_HEAD' | 'LOAN_DEMAT_HEAD' | 'EXECUTIVE_ASSISTANT' | 'ADMIN' | 'USER'
-
-const ROLE_LABELS: Record<string, string> = {
-  SALES_HEAD: 'Sales Head',
-  CATEGORY_MANAGER: 'Category Manager',
-  ASSISTANT_CATEGORY_MANAGER: 'Asst. Category Manager',
-  TEAM_LEAD: 'Team Lead',
-  BD: 'BD',
-  INSURANCE_HEAD: 'Insurance Head',
-  PL_HEAD: 'P/L Head',
-  OUTSTANDING_HEAD: 'Outstanding Head',
-  HR_HEAD: 'HR Head',
-  FINANCE_HEAD: 'Finance Head',
-  DIGITAL_MARKETING_HEAD: 'Digital Marketing Head',
-  IT_HEAD: 'IT Head',
-  LOAN_DEMAT_HEAD: 'Loan & Demat Head',
-  EXECUTIVE_ASSISTANT: 'Executive Assistant',
-  ADMIN: 'Admin',
-  USER: 'User (HRMS Only)',
-}
+const ADD_EMPLOYEE_ROLE_ORDER: UserRole[] = [
+  'SALES_HEAD',
+  'CATEGORY_MANAGER',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'TEAM_LEAD',
+  'BD',
+  'INSURANCE_HEAD',
+  'PL_HEAD',
+  'OUTSTANDING_HEAD',
+  'HR_HEAD',
+  'FINANCE_HEAD',
+  'DIGITAL_MARKETING_HEAD',
+  'IT_HEAD',
+  'LOAN_DEMAT_HEAD',
+  'EXECUTIVE_ASSISTANT',
+  'ADMIN',
+  'USER',
+]
 
 interface EmployeeFormData {
   id: string
@@ -43,10 +44,17 @@ interface EmployeeFormData {
   role: UserRole
   employeeCode: string
   bdNumber: string
+  circle: string
   departmentId: string
   managerId: string
   joinDate: string
   dateOfBirth: string
+}
+
+interface CircleOption {
+  id: string
+  name: string
+  isActive: boolean
 }
 
 function createEmptyEmployee(): EmployeeFormData {
@@ -58,6 +66,7 @@ function createEmptyEmployee(): EmployeeFormData {
     role: 'BD',
     employeeCode: '',
     bdNumber: '',
+    circle: '',
     departmentId: '',
     managerId: '',
     joinDate: '',
@@ -66,14 +75,12 @@ function createEmptyEmployee(): EmployeeFormData {
 }
 
 function getAvailableRoles(userRole: string): UserRole[] {
-  if (userRole === 'MD' || userRole === 'ADMIN') {
-    return ['SALES_HEAD', 'CATEGORY_MANAGER', 'ASSISTANT_CATEGORY_MANAGER', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'LOAN_DEMAT_HEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN', 'USER']
-  }
-  const deptHeadRoles = ['INSURANCE_HEAD', 'PL_HEAD', 'SALES_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'OUTSTANDING_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD', 'LOAN_DEMAT_HEAD']
-  if (deptHeadRoles.includes(userRole)) {
-    return ['TEAM_LEAD', 'BD', 'USER']
-  }
-  return []
+  const allowed = new Set(
+    getAvailableRolesForCreator(
+      userRole ? ({ id: '', email: '', name: '', role: userRole as UserRole }) : null
+    )
+  )
+  return ADD_EMPLOYEE_ROLE_ORDER.filter((role) => allowed.has(role))
 }
 
 export interface OnboardResult {
@@ -108,11 +115,18 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
     enabled: open,
   })
 
+  const { data: employeeMeta } = useQuery<{ circles: CircleOption[] }>({
+    queryKey: ['employee-meta'],
+    queryFn: () => apiGet<{ circles: CircleOption[] }>('/api/employees/meta'),
+    enabled: open,
+  })
+
   // Snapshot of form data at submission time — used to map sync config back after creation
   const [submittedEmployees, setSubmittedEmployees] = useState<EmployeeFormData[]>([])
+  const circleOptions = employeeMeta?.circles ?? []
 
   const onboardMutation = useMutation({
-    mutationFn: (data: { employees: Array<{ name: string; email: string; password: string; role: string; employeeCode: string; bdNumber?: number | null; departmentId?: string | null; managerId?: string | null; joinDate?: string | null; dateOfBirth?: string | null }> }) =>
+    mutationFn: (data: { employees: Array<{ name: string; email: string; password: string; role: string; employeeCode: string; bdNumber?: number | null; circle?: string | null; departmentId?: string | null; managerId?: string | null; joinDate?: string | null; dateOfBirth?: string | null }> }) =>
       apiPost<OnboardResult>('/api/employees/onboard', data),
     onSuccess: (result) => {
       if (result.errors?.length > 0) {
@@ -189,6 +203,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
       role: e.role,
       employeeCode: e.employeeCode.trim(),
       bdNumber: e.bdNumber.trim() ? parseInt(e.bdNumber, 10) : null,
+      circle: e.circle.trim() || null,
       departmentId: e.departmentId || null,
       managerId: e.managerId || null,
       joinDate: e.joinDate || null,
@@ -316,7 +331,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                         <SelectTrigger><SelectValue /></SelectTrigger>
                         <SelectContent>
                           {availableRoles.map((role) => (
-                            <SelectItem key={role} value={role}>{ROLE_LABELS[role] || role}</SelectItem>
+                            <SelectItem key={role} value={role}>{getRoleLabel(role)}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -332,6 +347,31 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                         placeholder="For lead sync"
                       />
                       <p className="text-xs text-muted-foreground">Required to sync historical leads</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                    <div className="space-y-1.5">
+                      <Label>Circle</Label>
+                      <Select
+                        value={emp.circle || 'none'}
+                        onValueChange={(value) =>
+                          updateEmployee(activeIdx, { circle: value === 'none' ? '' : value })
+                        }
+                      >
+                        <SelectTrigger><SelectValue placeholder="Select circle" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">No circle</SelectItem>
+                          {circleOptions.map((circle) => (
+                            <SelectItem key={circle.id} value={circle.name}>
+                              {circle.name}{!circle.isActive ? ' (Inactive)' : ''}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Used by CRM auto-assignment to match lead city for BD employees.
+                      </p>
                     </div>
                   </div>
 
@@ -402,7 +442,7 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                         <TableCell className="font-medium">{emp.name}</TableCell>
                         <TableCell className="text-sm text-muted-foreground">{emp.email}</TableCell>
                         <TableCell>
-                          <Badge variant="secondary" className="text-xs">{ROLE_LABELS[emp.role] || emp.role}</Badge>
+                          <Badge variant="secondary" className="text-xs">{getRoleLabel(emp.role)}</Badge>
                         </TableCell>
                         <TableCell className="font-mono text-sm">{emp.employeeCode}</TableCell>
                         <TableCell>{emp.bdNumber || <span className="text-muted-foreground">—</span>}</TableCell>

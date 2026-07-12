@@ -14,7 +14,6 @@ const toggleSchema = z.object({
     FEATURE_KEYS.CREATE_NOTICE,
     FEATURE_KEYS.WORKLOG_ENFORCEMENT,
     FEATURE_KEYS.CREATE_MEET,
-    FEATURE_KEYS.CPL_ACCESS,
   ]),
   enabled: z.boolean(),
 })
@@ -77,7 +76,6 @@ export async function GET(request: NextRequest) {
         [FEATURE_KEYS.CREATE_NOTICE]: permMap.get(u.id)?.[FEATURE_KEYS.CREATE_NOTICE] ?? null,
         [FEATURE_KEYS.WORKLOG_ENFORCEMENT]: permMap.get(u.id)?.[FEATURE_KEYS.WORKLOG_ENFORCEMENT] ?? null,
         [FEATURE_KEYS.CREATE_MEET]: permMap.get(u.id)?.[FEATURE_KEYS.CREATE_MEET] ?? null,
-        [FEATURE_KEYS.CPL_ACCESS]: permMap.get(u.id)?.[FEATURE_KEYS.CPL_ACCESS] ?? null,
       },
     }))
 

@@ -1,15 +1,16 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasPermission, canCreateRole } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { z } from 'zod'
 import { Prisma } from '@/generated/prisma/client'
+import { UserRole } from '@/generated/prisma/enums'
 
 const updateUserSchema = z.object({
   name: z.string().min(1).optional(),
   email: z.string().email().optional(),
-  role: z.enum(['MD', 'SALES_HEAD', 'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'USER']).optional(),
+  role: z.nativeEnum(UserRole).optional(),
 })
 
 export async function PATCH(
@@ -67,6 +68,9 @@ export async function PATCH(
       if (targetUser?.role === 'MD') {
         return errorResponse('Cannot change role of MD user', 400)
       }
+      if (!canCreateRole(user, data.role)) {
+        return errorResponse(`You do not have permission to assign role: ${data.role}`, 403)
+      }
       updateData.role = data.role
     }
 
@@ -94,7 +98,9 @@ export async function PATCH(
       },
     })
 
-    const { passwordHash: _passwordHash, employee, ...safeUser } = updated
+    const safeUser = { ...updated }
+    delete (safeUser as { passwordHash?: string }).passwordHash
+    const employee = safeUser.employee
 
     return successResponse(
       {

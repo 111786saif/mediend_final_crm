@@ -8,6 +8,8 @@ import {
   type SidebarGroupMode,
 } from '@/components/pipeline/campaign-sidebar'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
+import { LeadEditDrawer } from '@/components/pipeline/lead-edit-drawer'
+import { LeadRemarksDrawer } from '@/components/pipeline/lead-remarks-drawer'
 import { LeadAgeBadge } from '@/components/pipeline/lead-age-badge'
 import { PipelineStatusCards } from '@/components/pipeline/pipeline-status-cards'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +20,7 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useAuth } from '@/hooks/use-auth'
 import { useLeads, type Lead } from '@/hooks/use-leads'
 import { apiGet } from '@/lib/api-client'
@@ -36,7 +39,7 @@ import { parsePhoneSearchQuery } from '@/lib/phone-search'
 import { useQuery } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { format } from 'date-fns'
-import { CalendarIcon, ExternalLink, Search } from 'lucide-react'
+import { CalendarIcon, ExternalLink, FilePenLine, Pencil, Search } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState, memo, useDeferredValue } from 'react'
@@ -117,6 +120,8 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const [bdFilter, setBdFilter] = useState<string>('all')
   const [startDate, setStartDate] = useState<Date | undefined>(undefined)
   const [endDate, setEndDate] = useState<Date | undefined>(undefined)
+  const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
+  const [remarksLeadId, setRemarksLeadId] = useState<string | null>(null)
 
   const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
 
@@ -307,6 +312,26 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     (id: string) => router.push(`/patient/${id}`),
     [router]
   )
+
+  const handleEditLead = useCallback((id: string) => {
+    setEditingLeadId(id)
+  }, [])
+
+  const handleEditRemarks = useCallback((id: string) => {
+    setRemarksLeadId(id)
+  }, [])
+
+  const handleEditDrawerChange = useCallback((open: boolean) => {
+    if (!open) {
+      setEditingLeadId(null)
+    }
+  }, [])
+
+  const handleRemarksDrawerChange = useCallback((open: boolean) => {
+    if (!open) {
+      setRemarksLeadId(null)
+    }
+  }, [])
 
   const title = variant === 'bd' ? 'Pipeline' : 'Team pipeline'
   const subtitle =
@@ -541,7 +566,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
-                            <th className="h-10 w-[80px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
+                            <th className="h-10 w-[132px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
                           </tr>
                         ) : (
                           <tr className="border-b transition-colors hover:bg-muted/50">
@@ -557,7 +582,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
-                            <th className="h-10 w-[80px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
+                            <th className="h-10 w-[132px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
                           </tr>
                         )}
                       </thead>
@@ -577,6 +602,8 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                               variant={variant}
                               noteCount={noteCounts[lead.id]}
                               onClick={handleRowClick}
+                              onEdit={handleEditLead}
+                              onEditRemarks={handleEditRemarks}
                             />
                           )
                         })}
@@ -593,9 +620,32 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
             </Card>
           </main>
         </div>
+        <LeadEditDrawer
+          key={editingLeadId ?? 'lead-edit-drawer'}
+          leadId={editingLeadId}
+          open={editingLeadId !== null}
+          onOpenChange={handleEditDrawerChange}
+        />
+        <LeadRemarksDrawer
+          key={remarksLeadId ?? 'lead-remarks-drawer'}
+          leadId={remarksLeadId}
+          open={remarksLeadId !== null}
+          onOpenChange={handleRemarksDrawerChange}
+        />
       </div>
     </AuthenticatedLayout>
   )
+}
+
+function getLatestRemarkPreview(lead: Lead) {
+  const rawRemark =
+    typeof lead.latestRemark?.content === 'string'
+      ? lead.latestRemark.content
+      : typeof lead.remarks === 'string'
+        ? lead.remarks
+        : ''
+  const trimmed = rawRemark.trim()
+  return trimmed.length > 0 ? trimmed : 'No remarks yet.'
 }
 
 const PipelineRow = memo(function PipelineRow({
@@ -603,16 +653,22 @@ const PipelineRow = memo(function PipelineRow({
   variant,
   noteCount,
   onClick,
+  onEdit,
+  onEditRemarks,
 }: {
   lead: Lead
   variant: 'bd' | 'team-lead'
   noteCount?: number
   onClick: (id: string) => void
+  onEdit: (id: string) => void
+  onEditRemarks: (id: string) => void
 }) {
   const stage = lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage)) : null
   const st = normalizeLeadStatus(lead.status)
   const sc = getStatusColor(st)
   const statusClass = `${sc.bg} ${sc.text}`
+  const latestRemarkPreview = getLatestRemarkPreview(lead)
+  const patientName = typeof lead.patientName === 'string' ? lead.patientName : '—'
 
   if (variant === 'team-lead') {
     const receipt = getLeadReceiptDate(lead)
@@ -632,7 +688,16 @@ const PipelineRow = memo(function PipelineRow({
           </div>
         </td>
         <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">{dateStr}</td>
-        <td className="max-w-[140px] truncate px-3 py-2">{typeof lead.patientName === 'string' ? lead.patientName : '—'}</td>
+        <td className="max-w-[140px] truncate px-3 py-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-block max-w-[140px] truncate align-bottom">{patientName}</span>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+              {latestRemarkPreview}
+            </TooltipContent>
+          </Tooltip>
+        </td>
         <td className="whitespace-nowrap px-3 py-2 text-sm">{formatLeadAgeSex(lead)}</td>
         <td className="max-w-[100px] truncate px-3 py-2 text-sm">{normalizedText(lead.circle, '—')}</td>
         <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{typeof lead.treatment === 'string' ? lead.treatment : '—'}</td>
@@ -662,11 +727,38 @@ const PipelineRow = memo(function PipelineRow({
           </div>
         </td>
         <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <Link href={`/patient/${lead.id}`} aria-label="Open lead">
-              <ExternalLink className="h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="flex items-center justify-end gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onEditRemarks(lead.id)}
+                  aria-label="Edit remarks"
+                >
+                  <FilePenLine className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+                {latestRemarkPreview}
+              </TooltipContent>
+            </Tooltip>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 gap-1 px-2"
+              onClick={() => onEdit(lead.id)}
+            >
+              <Pencil className="h-4 w-4" />
+              Edit
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+              <Link href={`/patient/${lead.id}`} aria-label="Open lead">
+                <ExternalLink className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </td>
       </tr>
     )
@@ -685,7 +777,16 @@ const PipelineRow = memo(function PipelineRow({
           {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
         </div>
       </td>
-      <td className="max-w-[140px] truncate px-3 py-2">{typeof lead.patientName === 'string' ? lead.patientName : '—'}</td>
+      <td className="max-w-[140px] truncate px-3 py-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-block max-w-[140px] truncate align-bottom">{patientName}</span>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+            {latestRemarkPreview}
+          </TooltipContent>
+        </Tooltip>
+      </td>
       <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{typeof lead.treatment === 'string' ? lead.treatment : '—'}</td>
       <td className="px-3 py-2">{typeof lead.category === 'string' ? lead.category : '—'}</td>
       <td className="px-3 py-2">
@@ -709,13 +810,39 @@ const PipelineRow = memo(function PipelineRow({
         </div>
       </td>
       <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
-        <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-          <Link href={`/patient/${lead.id}`} aria-label="Open lead">
-            <ExternalLink className="h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="flex items-center justify-end gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onEditRemarks(lead.id)}
+                aria-label="Edit remarks"
+              >
+                <FilePenLine className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+              {latestRemarkPreview}
+            </TooltipContent>
+          </Tooltip>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 gap-1 px-2"
+            onClick={() => onEdit(lead.id)}
+          >
+            <Pencil className="h-4 w-4" />
+            Edit
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+            <Link href={`/patient/${lead.id}`} aria-label="Open lead">
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
       </td>
     </tr>
   )
 })
-

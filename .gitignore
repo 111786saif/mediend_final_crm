@@ -52,3 +52,7 @@ lib/sync/bd-number-to-user-id.json
 public/sw.js
 public/workbox-*.js
 public/swe-worker-*.js
+
+generated/prisma/*
+docs/
+public/
