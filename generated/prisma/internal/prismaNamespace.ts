@@ -391,6 +391,7 @@ export const ModelName = {
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
+  TierDefinition: 'TierDefinition',
   InsuranceCase: 'InsuranceCase',
   PLRecord: 'PLRecord',
   InvoiceRequest: 'InvoiceRequest',
@@ -478,6 +479,7 @@ export const ModelName = {
   WorkLog: 'WorkLog',
   PushSubscription: 'PushSubscription',
   CronJobLog: 'CronJobLog',
+  RankSnapshot: 'RankSnapshot',
   HospitalMaster: 'HospitalMaster',
   DoctorMaster: 'DoctorMaster',
   TPAMaster: 'TPAMaster',
@@ -511,7 +513,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1030,6 +1032,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.BonusRuleCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.BonusRuleCountAggregateOutputType> | number
+        }
+      }
+    }
+    TierDefinition: {
+      payload: Prisma.$TierDefinitionPayload<ExtArgs>
+      fields: Prisma.TierDefinitionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TierDefinitionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TierDefinitionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>
+        }
+        findFirst: {
+          args: Prisma.TierDefinitionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TierDefinitionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>
+        }
+        findMany: {
+          args: Prisma.TierDefinitionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>[]
+        }
+        create: {
+          args: Prisma.TierDefinitionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>
+        }
+        createMany: {
+          args: Prisma.TierDefinitionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TierDefinitionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>[]
+        }
+        delete: {
+          args: Prisma.TierDefinitionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>
+        }
+        update: {
+          args: Prisma.TierDefinitionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>
+        }
+        deleteMany: {
+          args: Prisma.TierDefinitionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TierDefinitionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TierDefinitionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>[]
+        }
+        upsert: {
+          args: Prisma.TierDefinitionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TierDefinitionPayload>
+        }
+        aggregate: {
+          args: Prisma.TierDefinitionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTierDefinition>
+        }
+        groupBy: {
+          args: Prisma.TierDefinitionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TierDefinitionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TierDefinitionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TierDefinitionCountAggregateOutputType> | number
         }
       }
     }
@@ -7471,6 +7547,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RankSnapshot: {
+      payload: Prisma.$RankSnapshotPayload<ExtArgs>
+      fields: Prisma.RankSnapshotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RankSnapshotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RankSnapshotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>
+        }
+        findFirst: {
+          args: Prisma.RankSnapshotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RankSnapshotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>
+        }
+        findMany: {
+          args: Prisma.RankSnapshotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>[]
+        }
+        create: {
+          args: Prisma.RankSnapshotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>
+        }
+        createMany: {
+          args: Prisma.RankSnapshotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RankSnapshotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>[]
+        }
+        delete: {
+          args: Prisma.RankSnapshotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>
+        }
+        update: {
+          args: Prisma.RankSnapshotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>
+        }
+        deleteMany: {
+          args: Prisma.RankSnapshotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RankSnapshotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RankSnapshotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>[]
+        }
+        upsert: {
+          args: Prisma.RankSnapshotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RankSnapshotPayload>
+        }
+        aggregate: {
+          args: Prisma.RankSnapshotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRankSnapshot>
+        }
+        groupBy: {
+          args: Prisma.RankSnapshotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RankSnapshotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RankSnapshotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RankSnapshotCountAggregateOutputType> | number
+        }
+      }
+    }
     HospitalMaster: {
       payload: Prisma.$HospitalMasterPayload<ExtArgs>
       fields: Prisma.HospitalMasterFieldRefs
@@ -9045,6 +9195,21 @@ export const BonusRuleScalarFieldEnum = {
 } as const
 
 export type BonusRuleScalarFieldEnum = (typeof BonusRuleScalarFieldEnum)[keyof typeof BonusRuleScalarFieldEnum]
+
+
+export const TierDefinitionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  metric: 'metric',
+  thresholdValue: 'thresholdValue',
+  order: 'order',
+  rewardAmount: 'rewardAmount',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TierDefinitionScalarFieldEnum = (typeof TierDefinitionScalarFieldEnum)[keyof typeof TierDefinitionScalarFieldEnum]
 
 
 export const InsuranceCaseScalarFieldEnum = {
@@ -10711,6 +10876,19 @@ export const CronJobLogScalarFieldEnum = {
 export type CronJobLogScalarFieldEnum = (typeof CronJobLogScalarFieldEnum)[keyof typeof CronJobLogScalarFieldEnum]
 
 
+export const RankSnapshotScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  metric: 'metric',
+  month: 'month',
+  rank: 'rank',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RankSnapshotScalarFieldEnum = (typeof RankSnapshotScalarFieldEnum)[keyof typeof RankSnapshotScalarFieldEnum]
+
+
 export const HospitalMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -10727,17 +10905,6 @@ export type HospitalMasterScalarFieldEnum = (typeof HospitalMasterScalarFieldEnu
 export const DoctorMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  category: 'category',
-  treatment: 'treatment',
-  age: 'age',
-  sex: 'sex',
-  aadharNumber: 'aadharNumber',
-  panNumber: 'panNumber',
-  agreementUrl: 'agreementUrl',
-  experience: 'experience',
-  feeStructure: 'feeStructure',
-  rating: 'rating',
-  documents: 'documents',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -12192,6 +12359,7 @@ export type GlobalOmitConfig = {
   leadStageEvent?: Prisma.LeadStageEventOmit
   target?: Prisma.TargetOmit
   bonusRule?: Prisma.BonusRuleOmit
+  tierDefinition?: Prisma.TierDefinitionOmit
   insuranceCase?: Prisma.InsuranceCaseOmit
   pLRecord?: Prisma.PLRecordOmit
   invoiceRequest?: Prisma.InvoiceRequestOmit
@@ -12279,6 +12447,7 @@ export type GlobalOmitConfig = {
   workLog?: Prisma.WorkLogOmit
   pushSubscription?: Prisma.PushSubscriptionOmit
   cronJobLog?: Prisma.CronJobLogOmit
+  rankSnapshot?: Prisma.RankSnapshotOmit
   hospitalMaster?: Prisma.HospitalMasterOmit
   doctorMaster?: Prisma.DoctorMasterOmit
   tPAMaster?: Prisma.TPAMasterOmit

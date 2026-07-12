@@ -17,6 +17,7 @@ export interface Notification {
     | 'DUE_DATE_CHANGE_REJECTED'
     | 'MEET_SCHEDULED'
     | 'MEET_REMINDER'
+    | 'RANK_IMPROVED'
   title: string
   message: string
   link: string | null

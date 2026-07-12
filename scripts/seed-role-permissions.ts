@@ -13,7 +13,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'main.compliance', 'main.md_compliance', 'main.md_outstanding', 'main.incentive',
     'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
-    'sales.sales_dashboard', 'sales.dm_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl',
+    'sales.sales_dashboard', 'sales.dm_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl', 'sales.sales_pipeline', 'sales.team_lead_pipeline',
     'insurance_pl.insurance', 'insurance_pl.cash_cases', 'insurance_pl.pl_ledger', 'insurance_pl.pl_surgery', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports',
     'actions'
@@ -48,7 +48,7 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
   SALES_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets',
-    'sales.sales_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl',
+    'sales.sales_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl', 'sales.sales_pipeline', 'sales.team_lead_pipeline',
     'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval', 'main.incentive'
   ],
@@ -59,7 +59,7 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
   PL_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'sales.case_tracker', 'main.master_data', 'main.chat',
-    'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.cash_cases', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
+    'insurance_pl.pl_surgery', 'insurance_pl.pl_ledger', 'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_pnl'
   ],
@@ -86,12 +86,12 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
   TEAM_LEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard', 'main.chat',
-    'sales.case_tracker', 'sales.campaign_cpl', 'sales.pending_surgery', 'sales.targets',
+    'sales.case_tracker', 'sales.campaign_cpl', 'sales.pending_surgery', 'sales.targets', 'sales.team_lead_pipeline',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   BD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.chat',
-    'sales.case_tracker', 'sales.campaign_cpl',
+    'sales.case_tracker', 'sales.campaign_cpl', 'sales.sales_pipeline',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   COMPLIANCE_HEAD: [
@@ -105,6 +105,9 @@ const roleAllowedSections: Record<string, string[]> = {
   USER: [
     'main.home', 'main.tasks', 'main.calendar',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
+  ],
+  ACCESS_MATRIX: [
+    'main.it_permissions'
   ]
 }
 

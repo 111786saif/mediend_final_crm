@@ -1,7 +1,7 @@
 import { UserRole } from '@/generated/prisma/enums'
 import { SessionUser } from './auth'
 
-export type Permission = 
+export type Permission =
   | 'leads:read'
   | 'leads:write'
   | 'leads:assign'
@@ -410,6 +410,9 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'compliance:read',
     'compliance:write',
   ],
+  ACCESS_MATRIX: [
+    'it:permissions',
+  ],
 }
 
 export function hasPermission(user: SessionUser | null, permission: Permission): boolean {
@@ -534,6 +537,7 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
     'ADMIN',
     'USER',
     'TESTER',
+    'ACCESS_MATRIX',
   ]
 
   if (user.role === 'MD' || user.role === 'ADMIN' || user.role === 'TESTER') {
@@ -564,6 +568,7 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
       'TEAM_LEAD',
       'USER',
       'BD',
+      'ACCESS_MATRIX',
     ]
   }
 

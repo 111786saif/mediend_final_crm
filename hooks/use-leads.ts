@@ -17,12 +17,10 @@ export interface LeadFilters {
   source?: string
   startDate?: string
   endDate?: string
+  dateField?: string
   caseStage?: string
   view?: string
-  /** Last 10 digits — server-only filter; omit from list responses */
   phoneSearch?: string
-  /** Server-side JSON-serialized filter configs */
-  filters?: string
 }
 
 import { CaseStage } from '@/generated/prisma/enums'
@@ -45,6 +43,7 @@ export interface Lead {
   insuranceName?: string
   tpa?: string
   sumInsured?: number
+  flowType?: 'INSURANCE' | 'CASH'
   netProfit?: number
   surgeryDate?: string | Date | null
   source?: string
@@ -63,7 +62,6 @@ export interface Lead {
     id: string
     status?: string
     updatedAt?: string | Date
-    location?: string | null
     preAuthData?: {
       updatedAt?: string | Date
       queries?: { updatedAt?: string | Date }[]
@@ -74,11 +72,7 @@ export interface Lead {
     ipdStatusUpdatedAt?: string | Date | null
     initiatedAt?: string | Date
   } | null
-  dischargeSheet?: {
-    updatedAt?: string | Date
-    hospitalShareAmount?: number
-    doctorCharges?: number
-  } | null
+  dischargeSheet?: { updatedAt?: string | Date } | null
   caseStageHistory?: { changedAt?: string | Date }[]
   caseChatMessages?: { createdAt?: string | Date }[]
   insuranceCase?: {
@@ -104,13 +98,12 @@ export interface Lead {
     bdmName?: string
     closedAt?: string | null
     updatedAt?: string | Date
-    hospitalShareAmount?: number
-    doctorCharges?: number
   }
   [key: string]: unknown
 }
 
-export function useLeads(filters: LeadFilters = {}) {
+export function useLeads(filters: LeadFilters = {}, options: { enabled?: boolean } = {}) {
+  const { enabled = true } = options
   const queryClient = useQueryClient()
   const [cachedData, setCachedData] = useState<Lead[] | null>(null)
 
@@ -124,7 +117,7 @@ export function useLeads(filters: LeadFilters = {}) {
     })
   }, [cacheKey])
 
-  const query = useQuery({
+const query = useQuery({
     queryKey: ['leads', filters],
     queryFn: async () => {
       const params = new URLSearchParams()
@@ -135,7 +128,7 @@ export function useLeads(filters: LeadFilters = {}) {
       await cacheLeads(cacheKey, data)
       return data
     },
-    enabled: true,
+    enabled,
     placeholderData: cachedData || undefined,
   })
 
@@ -228,4 +221,3 @@ export function useLead(id: string | null) {
     isUpdating: updateMutation.isPending,
   }
 }
-

@@ -35,6 +35,7 @@ const ROLES = [
   { value: 'ASSISTANT_CATEGORY_MANAGER', label: 'Assistant Category Manager' },
   { value: 'LOAN_DEMAT_HEAD', label: 'Loan Demat Head' },
   { value: 'COMPLIANCE_HEAD', label: 'Compliance Head' },
+  { value: 'ACCESS_MATRIX', label: 'Access Matrix' },
   { value: 'EXECUTIVE_ASSISTANT', label: 'Executive Assistant' },
   { value: 'TEAM_LEAD', label: 'Team Lead' },
   { value: 'BD', label: 'BD' },

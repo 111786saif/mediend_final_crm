@@ -77,6 +77,11 @@ export type Target = Prisma.TargetModel
  */
 export type BonusRule = Prisma.BonusRuleModel
 /**
+ * Model TierDefinition
+ * 
+ */
+export type TierDefinition = Prisma.TierDefinitionModel
+/**
  * Model InsuranceCase
  * 
  */
@@ -511,6 +516,11 @@ export type PushSubscription = Prisma.PushSubscriptionModel
  * 
  */
 export type CronJobLog = Prisma.CronJobLogModel
+/**
+ * Model RankSnapshot
+ * 
+ */
+export type RankSnapshot = Prisma.RankSnapshotModel
 /**
  * Model HospitalMaster
  * 

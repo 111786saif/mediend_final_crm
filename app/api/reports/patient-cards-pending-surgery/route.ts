@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { Prisma } from '@/generated/prisma/client'
+import { CaseStage } from '@/generated/prisma/enums'
 import {
   getTeamLeadLeadAccessBdUserIds,
   getManagerGroups,
@@ -18,6 +19,8 @@ const ALLOWED_ROLES = new Set([
 ])
 
 const HARD_CAP = 5000
+
+type DayBucketParam = 'all' | '30' | '60' | '90'
 
 type RowResponse = {
   id: string
@@ -40,6 +43,13 @@ type GroupResponse = {
   teamLeadId: string
   teamLeadName: string
   count: number
+}
+
+type BucketCounts = {
+  all: number
+  d30: number
+  d60: number
+  d90: number
 }
 
 type MonthRange = { key: string; start: Date; end: Date }
@@ -78,6 +88,25 @@ function parseMonths(raw: string | null): MonthRange[] {
   return ranges.length ? ranges : defaultMonths()
 }
 
+function parseBucket(raw: string | null): DayBucketParam {
+  if (raw === '30' || raw === '60' || raw === '90') return raw
+  return 'all'
+}
+
+function parseStage(raw: string | null): CaseStage | null {
+  if (!raw || raw === 'all') return null
+  return (Object.values(CaseStage) as string[]).includes(raw) ? (raw as CaseStage) : null
+}
+
+/** Returns the KYPSubmission.submittedAt condition for a given days-since-upload bucket. */
+function bucketDateWhere(bucket: DayBucketParam, now: Date): Prisma.KYPSubmissionWhereInput | null {
+  const daysAgo = (n: number) => new Date(now.getTime() - n * 24 * 60 * 60 * 1000)
+  if (bucket === '30') return { submittedAt: { lte: daysAgo(30), gt: daysAgo(60) } }
+  if (bucket === '60') return { submittedAt: { lte: daysAgo(60), gt: daysAgo(90) } }
+  if (bucket === '90') return { submittedAt: { lte: daysAgo(90) } }
+  return null
+}
+
 export async function GET(request: NextRequest) {
   const user = getSessionFromRequest(request)
   if (!user) return unauthorizedResponse()
@@ -88,6 +117,9 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const months = parseMonths(searchParams.get('months'))
   const teamLeadUserIdParam = searchParams.get('teamLeadUserId')?.trim() || null
+  const bucket = parseBucket(searchParams.get('bucket'))
+  const stage = parseStage(searchParams.get('caseStage'))
+  const now = new Date()
 
   // Build BD scope
   let bdScope: Prisma.LeadWhereInput = {}
@@ -106,7 +138,9 @@ export async function GET(request: NextRequest) {
 
   const monthRanges = months.map((m) => ({ submittedAt: { gte: m.start, lte: m.end } }))
 
-  const where: Prisma.LeadWhereInput = {
+  // Base scope shared by rows, bucket counts, and stage options: pending surgery + bd scope + month window.
+  // Does NOT include the stage or bucket filters, so it can be reused to compute those independently.
+  const pendingWhereBase: Prisma.LeadWhereInput = {
     surgeryDate: null,
     AND: [
       {
@@ -117,8 +151,39 @@ export async function GET(request: NextRequest) {
       },
       bdScope,
     ],
-    kypSubmission: { is: { OR: monthRanges } },
   }
+
+  function whereFor(opts: { bucket: DayBucketParam; stage: CaseStage | null }): Prisma.LeadWhereInput {
+    const kypConditions: Prisma.KYPSubmissionWhereInput[] = [{ OR: monthRanges }]
+    const bucketCond = bucketDateWhere(opts.bucket, now)
+    if (bucketCond) kypConditions.push(bucketCond)
+    return {
+      ...pendingWhereBase,
+      ...(opts.stage ? { caseStage: opts.stage } : {}),
+      kypSubmission: { is: { AND: kypConditions } },
+    }
+  }
+
+  // Distinct case stages available in the current month/team window (ignores stage & bucket filters
+  // themselves, so the dropdown options stay stable while narrowing by either).
+  const stageRows = await prisma.lead.findMany({
+    where: whereFor({ bucket: 'all', stage: null }),
+    select: { caseStage: true },
+    distinct: ['caseStage'],
+  })
+  const stageOptions = stageRows.map((r) => r.caseStage).sort()
+
+  // Bucket counts respect the stage filter (if any) but not the bucket itself, so all four cards
+  // stay accurate no matter which bucket is currently selected.
+  const [allCount, d30Count, d60Count, d90Count] = await Promise.all([
+    prisma.lead.count({ where: whereFor({ bucket: 'all', stage }) }),
+    prisma.lead.count({ where: whereFor({ bucket: '30', stage }) }),
+    prisma.lead.count({ where: whereFor({ bucket: '60', stage }) }),
+    prisma.lead.count({ where: whereFor({ bucket: '90', stage }) }),
+  ])
+  const bucketCounts: BucketCounts = { all: allCount, d30: d30Count, d60: d60Count, d90: d90Count }
+
+  const where = whereFor({ bucket, stage })
 
   const leads = await prisma.lead.findMany({
     where,
@@ -171,12 +236,12 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const now = Date.now()
+  const nowMs = now.getTime()
   const rows: RowResponse[] = limited.map((l) => {
     const uploadedAt = l.kypSubmission?.submittedAt ?? new Date(0)
     const daysSinceUpload = Math.max(
       0,
-      Math.floor((now - uploadedAt.getTime()) / (1000 * 60 * 60 * 24))
+      Math.floor((nowMs - uploadedAt.getTime()) / (1000 * 60 * 60 * 24))
     )
     // Prefer manager-group mapping (TEAM_LEAD only); fall back to direct manager join
     const tlFromGroup = tlByBdUserId.get(l.bdId)
@@ -224,5 +289,7 @@ export async function GET(request: NextRequest) {
     groups,
     months: months.map((m) => m.key),
     truncated,
+    bucketCounts,
+    stageOptions,
   })
 }

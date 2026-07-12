@@ -10,6 +10,7 @@ import { ProtectedRoute } from '@/components/protected-route'
 import { Badge } from '@/components/ui/badge'
 import { ColumnFilter } from '@/components/ui/column-filter'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 import { usePermissions } from '@/hooks/use-permissions'
@@ -156,6 +157,10 @@ function loadColVisibility(): Record<string, boolean> {
 export default function PLLedgerPage() {
   const { hasAccess, permissions } = usePermissions()
   const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
+  const [monthsMenuOpen, setMonthsMenuOpen] = useState(false)
+  const [tempSelectedMonths, setTempSelectedMonths] = useState<string[]>([currentMonthKey()])
+  const [monthsSearchQuery, setMonthsSearchQuery] = useState('')
+  const [tableMonthFilter, setTableMonthFilter] = useState<string[]>([])
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' })
   const [visibleCols, setVisibleCols] = useState<Record<string, boolean>>(DEFAULT_COLS)
 
@@ -175,6 +180,14 @@ export default function PLLedgerPage() {
     const end = endTemp.toISOString().split('T')[0]
     setDateRange({ startDate: start, endDate: end })
   }, [selectedMonths])
+
+  const handleMonthsMenuOpenChange = (open: boolean) => {
+    setMonthsMenuOpen(open)
+    if (open) {
+      setTempSelectedMonths(selectedMonths)
+      setMonthsSearchQuery('')
+    }
+  }
 
   const persistCols = useCallback((updaterOrValue: Record<string, boolean> | ((old: Record<string, boolean>) => Record<string, boolean>)) => {
     setVisibleCols((prev) => {
@@ -357,6 +370,7 @@ export default function PLLedgerPage() {
     bdFilter.length + hospitalFilter.length + doctorFilter.length + outstandingFilter.length +
     categoryFilter.length + circleFilter.length + paymentTypeFilter.length +
     hospPayoutFilter.length + docPayoutFilter.length + invoiceFilter.length +
+    tableMonthFilter.length +
     (treatmentFilter.trim() ? 1 : 0) + (patientFilter.trim() ? 1 : 0) +
     (admissionDateFilter.length > 0 ? 1 : 0) + (surgeryDateFilter.length > 0 ? 1 : 0) +
     (totalBillFilter ? 1 : 0) + (approvedAmountFilter ? 1 : 0) +
@@ -374,6 +388,7 @@ export default function PLLedgerPage() {
     setHospPayoutFilter([])
     setDocPayoutFilter([])
     setInvoiceFilter([])
+    setTableMonthFilter([])
     setTreatmentFilter('')
     setPatientFilter('')
     setAdmissionDateFilter([])
@@ -413,9 +428,19 @@ export default function PLLedgerPage() {
           if (!hasInsuranceDs && !(isCashCase && hasPlData)) return false
         }
 
+        if (tableMonthFilter.length > 0) {
+          const resolved = resolvePlRow(r as unknown as Record<string, unknown>)
+          const rowMonth = resolved.month
+          if (!rowMonth) return false
+          const y = rowMonth.getFullYear()
+          const m = String(rowMonth.getMonth() + 1).padStart(2, '0')
+          const rowMonthKey = `${y}-${m}`
+          if (!tableMonthFilter.includes(rowMonthKey)) return false
+        }
+
         return true
       }),
-    [records, selectedStage]
+    [records, selectedStage, tableMonthFilter]
   )
 
   const pendingPayoutRecords = useMemo(
@@ -612,7 +637,17 @@ export default function PLLedgerPage() {
       },
       {
         id: 'month',
-        header: 'Month',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+            <span>Month</span>
+            <ColumnFilter
+              options={MONTH_OPTIONS.map((m) => ({ label: m.label, value: m.key }))}
+              value={tableMonthFilter}
+              onChange={setTableMonthFilter}
+              type="multiSelect"
+            />
+          </div>
+        ),
         accessorFn: (row) => resolvePlRow(row as any).month,
         cell: ({ getValue }) => formatPlMonth(getValue() as any),
       },
@@ -1103,8 +1138,8 @@ export default function PLLedgerPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-slate-50 via-teal-50/35 to-indigo-50/45 p-6 dark:from-slate-950 dark:via-teal-950/20 dark:to-indigo-950/25">
-        <div className="mx-auto max-w-6xl w-full space-y-6">
+      <div className="min-h-screen w-full min-w-0 overflow-x-hidden bg-gradient-to-br from-slate-50 via-teal-50/35 to-indigo-50/45 p-6 dark:from-slate-950 dark:via-teal-950/20 dark:to-indigo-950/25">
+        <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
               <span
@@ -1130,7 +1165,7 @@ export default function PLLedgerPage() {
                   Surgery dashboard
                 </Link>
               </Button>
-              <DropdownMenu>
+              <DropdownMenu open={monthsMenuOpen} onOpenChange={handleMonthsMenuOpenChange}>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
@@ -1141,34 +1176,70 @@ export default function PLLedgerPage() {
                     Months {selectedMonths.length > 0 && `(${selectedMonths.length})`}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 max-h-[min(70vh,420px)] overflow-y-auto">
-                  <DropdownMenuLabel>Select months</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem
-                    checked={selectedMonths.length === MONTH_OPTIONS.length}
-                    onCheckedChange={(checked) => {
-                      if (checked) setSelectedMonths(MONTH_OPTIONS.map((m) => m.key))
-                      else setSelectedMonths([])
-                    }}
-                  >
-                    All
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuSeparator />
-                  {MONTH_OPTIONS.map((m) => (
-                    <DropdownMenuCheckboxItem
-                      key={m.key}
-                      checked={selectedMonths.includes(m.key)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedMonths((prev) => [...prev, m.key])
-                        } else {
-                          setSelectedMonths((prev) => prev.filter((k) => k !== m.key))
-                        }
-                      }}
-                    >
-                      {m.label}
-                    </DropdownMenuCheckboxItem>
-                  ))}
+                <DropdownMenuContent align="end" className="w-56 p-2 z-50">
+                  <div className="flex flex-col gap-2">
+                    <Input
+                      type="text"
+                      placeholder="Search months..."
+                      value={monthsSearchQuery}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMonthsSearchQuery(e.target.value)}
+                      className="h-8 text-xs px-2"
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.stopPropagation()}
+                    />
+                    <div className="max-h-48 overflow-y-auto border rounded-md">
+                      <DropdownMenuCheckboxItem
+                        checked={tempSelectedMonths.length === MONTH_OPTIONS.length}
+                        onCheckedChange={(checked) => {
+                          if (checked) setTempSelectedMonths(MONTH_OPTIONS.map((m) => m.key))
+                          else setTempSelectedMonths([])
+                        }}
+                        onSelect={(e: Event) => e.preventDefault()}
+                      >
+                        All
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuSeparator />
+                      {MONTH_OPTIONS.filter((m) =>
+                        m.label.toLowerCase().includes(monthsSearchQuery.toLowerCase())
+                      ).map((m) => (
+                        <DropdownMenuCheckboxItem
+                          key={m.key}
+                          checked={tempSelectedMonths.includes(m.key)}
+                          onCheckedChange={(checked) => {
+                            setTempSelectedMonths((prev) =>
+                              checked ? [...prev, m.key] : prev.filter((k) => k !== m.key)
+                            )
+                          }}
+                          onSelect={(e: Event) => e.preventDefault()}
+                        >
+                          {m.label}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          setTempSelectedMonths([])
+                          setSelectedMonths([])
+                          setMonthsMenuOpen(false)
+                        }}
+                        className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                      >
+                        Clear
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          setSelectedMonths(tempSelectedMonths)
+                          setMonthsMenuOpen(false)
+                        }}
+                        className="h-7 px-2.5 text-xs font-medium"
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
               {selectedMonths.length > 0 && selectedMonths.length < MONTH_OPTIONS.length && (
@@ -1599,7 +1670,7 @@ export default function PLLedgerPage() {
             </Card>
           </div>
 
-          <Card className="overflow-hidden border-teal-200/50 shadow-lg dark:border-teal-800/40">
+          <Card className="min-w-0 w-full overflow-hidden border-teal-200/50 shadow-lg dark:border-teal-800/40">
             <CardHeader className="flex flex-row items-center justify-between border-b bg-gradient-to-r from-teal-500/12 via-indigo-500/10 to-transparent pb-4">
               <div>
                 <CardTitle className="text-lg text-teal-950 dark:text-teal-100">P/L records</CardTitle>

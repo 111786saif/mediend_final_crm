@@ -302,6 +302,7 @@ export type UserWhereInput = {
   tasksCompleted?: Prisma.TaskListRelationFilter
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalListRelationFilter
   taskRatingsGiven?: Prisma.TaskRatingListRelationFilter
+  createdTierDefinitions?: Prisma.TierDefinitionListRelationFilter
   taskRatingsReceived?: Prisma.TaskRatingListRelationFilter
   taskProjectsCreated?: Prisma.TaskProjectListRelationFilter
   taskComments?: Prisma.TaskCommentListRelationFilter
@@ -413,6 +414,7 @@ export type UserOrderByWithRelationInput = {
   tasksCompleted?: Prisma.TaskOrderByRelationAggregateInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalOrderByRelationAggregateInput
   taskRatingsGiven?: Prisma.TaskRatingOrderByRelationAggregateInput
+  createdTierDefinitions?: Prisma.TierDefinitionOrderByRelationAggregateInput
   taskRatingsReceived?: Prisma.TaskRatingOrderByRelationAggregateInput
   taskProjectsCreated?: Prisma.TaskProjectOrderByRelationAggregateInput
   taskComments?: Prisma.TaskCommentOrderByRelationAggregateInput
@@ -527,6 +529,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   tasksCompleted?: Prisma.TaskListRelationFilter
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalListRelationFilter
   taskRatingsGiven?: Prisma.TaskRatingListRelationFilter
+  createdTierDefinitions?: Prisma.TierDefinitionListRelationFilter
   taskRatingsReceived?: Prisma.TaskRatingListRelationFilter
   taskProjectsCreated?: Prisma.TaskProjectListRelationFilter
   taskComments?: Prisma.TaskCommentListRelationFilter
@@ -680,6 +683,7 @@ export type UserCreateInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -791,6 +795,7 @@ export type UserUncheckedCreateInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -902,6 +907,7 @@ export type UserUpdateInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -1013,6 +1019,7 @@ export type UserUncheckedUpdateInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -1286,6 +1293,20 @@ export type UserUpdateOneRequiredWithoutCreatedTargetsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutCreatedTargetsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedTargetsInput, Prisma.UserUpdateWithoutCreatedTargetsInput>, Prisma.UserUncheckedUpdateWithoutCreatedTargetsInput>
+}
+
+export type UserCreateNestedOneWithoutCreatedTierDefinitionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedTierDefinitionsInput, Prisma.UserUncheckedCreateWithoutCreatedTierDefinitionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedTierDefinitionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedTierDefinitionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedTierDefinitionsInput, Prisma.UserUncheckedCreateWithoutCreatedTierDefinitionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedTierDefinitionsInput
+  upsert?: Prisma.UserUpsertWithoutCreatedTierDefinitionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedTierDefinitionsInput, Prisma.UserUpdateWithoutCreatedTierDefinitionsInput>, Prisma.UserUncheckedUpdateWithoutCreatedTierDefinitionsInput>
 }
 
 export type UserCreateNestedOneWithoutInsuranceCasesInput = {
@@ -2622,6 +2643,7 @@ export type UserCreateWithoutStatusesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -2732,6 +2754,7 @@ export type UserUncheckedCreateWithoutStatusesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -2858,6 +2881,7 @@ export type UserUpdateWithoutStatusesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -2968,6 +2992,7 @@ export type UserUncheckedUpdateWithoutStatusesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -3077,6 +3102,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -3187,6 +3213,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -3302,6 +3329,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -3412,6 +3440,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -3527,6 +3556,7 @@ export type UserCreateWithoutUpdatedLeadsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -3637,6 +3667,7 @@ export type UserUncheckedCreateWithoutUpdatedLeadsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -3763,6 +3794,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -3873,6 +3905,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -3994,6 +4027,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -4104,6 +4138,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -4225,6 +4260,7 @@ export type UserUpdateWithoutUpdatedLeadsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -4335,6 +4371,7 @@ export type UserUncheckedUpdateWithoutUpdatedLeadsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -4446,6 +4483,7 @@ export type UserCreateWithoutLeadCallNotesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -4556,6 +4594,7 @@ export type UserUncheckedCreateWithoutLeadCallNotesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -4682,6 +4721,7 @@ export type UserUpdateWithoutLeadCallNotesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -4792,6 +4832,7 @@ export type UserUncheckedUpdateWithoutLeadCallNotesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -4901,6 +4942,7 @@ export type UserCreateWithoutLeadStageEventsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -5011,6 +5053,7 @@ export type UserUncheckedCreateWithoutLeadStageEventsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -5137,6 +5180,7 @@ export type UserUpdateWithoutLeadStageEventsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -5247,6 +5291,7 @@ export type UserUncheckedUpdateWithoutLeadStageEventsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -5357,6 +5402,7 @@ export type UserCreateWithoutCreatedTargetsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -5467,6 +5513,7 @@ export type UserUncheckedCreateWithoutCreatedTargetsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -5593,6 +5640,7 @@ export type UserUpdateWithoutCreatedTargetsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -5660,6 +5708,467 @@ export type UserUncheckedUpdateWithoutCreatedTargetsInput = {
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
   updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
   leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUncheckedUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUncheckedUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUncheckedUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedUpdateManyWithoutGrantedByNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUncheckedUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  meetsCreated?: Prisma.MeetUncheckedUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCreatedTierDefinitionsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionCreateNestedManyWithoutGrantedByInput
+  permissionSubjects?: Prisma.PermissionAssignmentCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryCreateNestedManyWithoutChangedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestCreateNestedManyWithoutReviewedByInput
+  meetsCreated?: Prisma.MeetCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCreatedTierDefinitionsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  name: string
+  role: $Enums.UserRole
+  phoneNumber?: string | null
+  address?: string | null
+  profilePicture?: string | null
+  gender?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutBdInput
+  updatedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutUpdatedByInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedCreateNestedManyWithoutChangedByInput
+  createdTargets?: Prisma.TargetUncheckedCreateNestedManyWithoutCreatedByInput
+  insuranceCases?: Prisma.InsuranceCaseUncheckedCreateNestedManyWithoutHandledByInput
+  plRecords?: Prisma.PLRecordUncheckedCreateNestedManyWithoutHandledByInput
+  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
+  approvedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutApprovedByInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  createdLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutApprovedByInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeletedByInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditRequestedByInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutEditApprovedByInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteRequestedByInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutDeleteApprovedByInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  createdSalesEntries?: Prisma.SalesEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  stockMovementsCreated?: Prisma.StockMovementUncheckedCreateNestedManyWithoutCreatedByInput
+  purchasesCreated?: Prisma.PurchaseTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesCreated?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutCreatedByInput
+  issuesReceived?: Prisma.IssueTransactionUncheckedCreateNestedManyWithoutIssuedToInput
+  kypSubmissions?: Prisma.KYPSubmissionUncheckedCreateNestedManyWithoutSubmittedByInput
+  preAuthHandled?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHandledByInput
+  preAuthHeld?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutHeldByInput
+  queriesRaised?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutRaisedByInput
+  queriesAnswered?: Prisma.InsuranceQueryUncheckedCreateNestedManyWithoutAnsweredByInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutCreatedByInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutMarkedByInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUncheckedCreateNestedManyWithoutFinalizedByInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUncheckedCreateNestedManyWithoutCreatedByInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUncheckedCreateNestedManyWithoutHandledByInput
+  complianceCallsHandled?: Prisma.ComplianceCallUncheckedCreateNestedManyWithoutCalledByInput
+  departmentHeadOf?: Prisma.DepartmentUncheckedCreateNestedManyWithoutHeadInput
+  preAuthsRaised?: Prisma.PreAuthorizationUncheckedCreateNestedManyWithoutPreAuthRaisedByInput
+  pdfsCreated?: Prisma.PreAuthPDFUncheckedCreateNestedManyWithoutCreatedByInput
+  admissionsInitiated?: Prisma.AdmissionRecordUncheckedCreateNestedManyWithoutInitiatedByInput
+  caseStageChanges?: Prisma.CaseStageHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUncheckedCreateNestedManyWithoutSenderInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUncheckedCreateNestedManyWithoutUserInput
+  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
+  tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
+  taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
+  taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
+  workLogs?: Prisma.WorkLogUncheckedCreateNestedManyWithoutEmployeeInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUncheckedCreateNestedManyWithoutOwnerInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutOwnerInput
+  warningsReceived?: Prisma.WarningUncheckedCreateNestedManyWithoutEmployeeInput
+  warningsIssued?: Prisma.WarningUncheckedCreateNestedManyWithoutIssuedByInput
+  userTaskSeen?: Prisma.UserTaskSeenUncheckedCreateNestedManyWithoutUserInput
+  noticesCreated?: Prisma.NoticeUncheckedCreateNestedManyWithoutCreatedByInput
+  noticeRecipients?: Prisma.NoticeRecipientUncheckedCreateNestedManyWithoutUserInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutRespondedByInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUncheckedCreateNestedManyWithoutFinanceAcknowledgedByInput
+  featurePermissions?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutUserInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUncheckedCreateNestedManyWithoutGrantedByInput
+  permissionSubjects?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutUserInput
+  permissionsGranted?: Prisma.PermissionAssignmentUncheckedCreateNestedManyWithoutGrantedByInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput
+  leadCallNotes?: Prisma.CallNoteUncheckedCreateNestedManyWithoutCreatedByInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUncheckedCreateNestedManyWithoutRecordedByInput
+  itProjectsCreated?: Prisma.ITProjectUncheckedCreateNestedManyWithoutCreatedByInput
+  itFreelancersCreated?: Prisma.ITFreelancerUncheckedCreateNestedManyWithoutCreatedByInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUncheckedCreateNestedManyWithoutCreatedByInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUncheckedCreateNestedManyWithoutCreatedByInput
+  campaignCplsCreated?: Prisma.CampaignCPLUncheckedCreateNestedManyWithoutCreatedByInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUncheckedCreateNestedManyWithoutCreatedByInput
+  pnlEntriesCreated?: Prisma.PnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUncheckedCreateNestedManyWithoutCreatedByInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutAddedByInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutCreatedByInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutUpdatedByInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutCreatedByInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutCreatedByInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutUpdatedByInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  meetsCreated?: Prisma.MeetUncheckedCreateNestedManyWithoutCreatedByInput
+  meetParticipations?: Prisma.MeetParticipantUncheckedCreateNestedManyWithoutUserInput
+  statuses?: Prisma.UserStatusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCreatedTierDefinitionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedTierDefinitionsInput, Prisma.UserUncheckedCreateWithoutCreatedTierDefinitionsInput>
+}
+
+export type UserUpsertWithoutCreatedTierDefinitionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedTierDefinitionsInput, Prisma.UserUncheckedUpdateWithoutCreatedTierDefinitionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedTierDefinitionsInput, Prisma.UserUncheckedCreateWithoutCreatedTierDefinitionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedTierDefinitionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedTierDefinitionsInput, Prisma.UserUncheckedUpdateWithoutCreatedTierDefinitionsInput>
+}
+
+export type UserUpdateWithoutCreatedTierDefinitionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUpdateManyWithoutCreatedByNestedInput
+  insuranceCases?: Prisma.InsuranceCaseUpdateManyWithoutHandledByNestedInput
+  plRecords?: Prisma.PLRecordUpdateManyWithoutHandledByNestedInput
+  employee?: Prisma.EmployeeUpdateOneWithoutUserNestedInput
+  approvedLeaves?: Prisma.LeaveRequestUpdateManyWithoutApprovedByNestedInput
+  leaveBalanceEditRequestsRequested?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutRequestedByNestedInput
+  leaveBalanceEditRequestsReviewed?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutReviewedByNestedInput
+  createdLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutCreatedByNestedInput
+  approvedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutApprovedByNestedInput
+  deletedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeletedByNestedInput
+  editRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditRequestedByNestedInput
+  editApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutEditApprovedByNestedInput
+  deleteRequestedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteRequestedByNestedInput
+  deleteApprovedLedgerEntries?: Prisma.LedgerEntryUpdateManyWithoutDeleteApprovedByNestedInput
+  ledgerAuditLogs?: Prisma.LedgerAuditLogUpdateManyWithoutPerformedByNestedInput
+  createdSalesEntries?: Prisma.SalesEntryUpdateManyWithoutCreatedByNestedInput
+  stockMovementsCreated?: Prisma.StockMovementUpdateManyWithoutCreatedByNestedInput
+  purchasesCreated?: Prisma.PurchaseTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesCreated?: Prisma.IssueTransactionUpdateManyWithoutCreatedByNestedInput
+  issuesReceived?: Prisma.IssueTransactionUpdateManyWithoutIssuedToNestedInput
+  kypSubmissions?: Prisma.KYPSubmissionUpdateManyWithoutSubmittedByNestedInput
+  preAuthHandled?: Prisma.PreAuthorizationUpdateManyWithoutHandledByNestedInput
+  preAuthHeld?: Prisma.PreAuthorizationUpdateManyWithoutHeldByNestedInput
+  queriesRaised?: Prisma.InsuranceQueryUpdateManyWithoutRaisedByNestedInput
+  queriesAnswered?: Prisma.InsuranceQueryUpdateManyWithoutAnsweredByNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  dischargeSheetsCreated?: Prisma.DischargeSheetUpdateManyWithoutCreatedByNestedInput
+  dischargeSheetsMarked?: Prisma.DischargeSheetUpdateManyWithoutMarkedByNestedInput
+  dischargeSheetsFinalized?: Prisma.DischargeSheetUpdateManyWithoutFinalizedByNestedInput
+  insuranceInitiateFormsCreated?: Prisma.InsuranceInitiateFormUpdateManyWithoutCreatedByNestedInput
+  outstandingCasesHandled?: Prisma.OutstandingCaseUpdateManyWithoutHandledByNestedInput
+  complianceCallsHandled?: Prisma.ComplianceCallUpdateManyWithoutCalledByNestedInput
+  departmentHeadOf?: Prisma.DepartmentUpdateManyWithoutHeadNestedInput
+  preAuthsRaised?: Prisma.PreAuthorizationUpdateManyWithoutPreAuthRaisedByNestedInput
+  pdfsCreated?: Prisma.PreAuthPDFUpdateManyWithoutCreatedByNestedInput
+  admissionsInitiated?: Prisma.AdmissionRecordUpdateManyWithoutInitiatedByNestedInput
+  caseStageChanges?: Prisma.CaseStageHistoryUpdateManyWithoutChangedByNestedInput
+  caseChatMessagesSent?: Prisma.CaseChatMessageUpdateManyWithoutSenderNestedInput
+  chatReadReceipts?: Prisma.ChatReadReceiptUpdateManyWithoutUserNestedInput
+  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
+  tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
+  taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
+  taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
+  taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
+  taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
+  workLogs?: Prisma.WorkLogUpdateManyWithoutEmployeeNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  mdTaskTeamsOwned?: Prisma.MDTaskTeamUpdateManyWithoutOwnerNestedInput
+  mdWatchlistOwned?: Prisma.MDWatchlistEmployeeUpdateManyWithoutOwnerNestedInput
+  warningsReceived?: Prisma.WarningUpdateManyWithoutEmployeeNestedInput
+  warningsIssued?: Prisma.WarningUpdateManyWithoutIssuedByNestedInput
+  userTaskSeen?: Prisma.UserTaskSeenUpdateManyWithoutUserNestedInput
+  noticesCreated?: Prisma.NoticeUpdateManyWithoutCreatedByNestedInput
+  noticeRecipients?: Prisma.NoticeRecipientUpdateManyWithoutUserNestedInput
+  mdApprovalRequests?: Prisma.MDApprovalRequestUpdateManyWithoutRequestedByNestedInput
+  mdApprovalsResponded?: Prisma.MDApprovalRequestUpdateManyWithoutRespondedByNestedInput
+  mdApprovalsFinanceAcked?: Prisma.MDApprovalRequestUpdateManyWithoutFinanceAcknowledgedByNestedInput
+  featurePermissions?: Prisma.UserFeaturePermissionUpdateManyWithoutUserNestedInput
+  featurePermissionsGranted?: Prisma.UserFeaturePermissionUpdateManyWithoutGrantedByNestedInput
+  permissionSubjects?: Prisma.PermissionAssignmentUpdateManyWithoutUserNestedInput
+  permissionsGranted?: Prisma.PermissionAssignmentUpdateManyWithoutGrantedByNestedInput
+  fnfCompletedForEmployees?: Prisma.EmployeeUpdateManyWithoutFnfCompletedByNestedInput
+  leadCallNotes?: Prisma.CallNoteUpdateManyWithoutCreatedByNestedInput
+  paymentInstallmentsRecorded?: Prisma.PaymentInstallmentUpdateManyWithoutRecordedByNestedInput
+  itProjectsCreated?: Prisma.ITProjectUpdateManyWithoutCreatedByNestedInput
+  itFreelancersCreated?: Prisma.ITFreelancerUpdateManyWithoutCreatedByNestedInput
+  itProjectBookingsCreated?: Prisma.ITProjectBookingUpdateManyWithoutCreatedByNestedInput
+  departmentRevenuesCreated?: Prisma.DepartmentRevenueUpdateManyWithoutCreatedByNestedInput
+  campaignCplsCreated?: Prisma.CampaignCPLUpdateManyWithoutCreatedByNestedInput
+  dailyCampaignSpends?: Prisma.DailyCampaignSpendUpdateManyWithoutCreatedByNestedInput
+  pnlCategoriesCreated?: Prisma.PnLCategoryUpdateManyWithoutCreatedByNestedInput
+  pnlEntriesCreated?: Prisma.PnLEntryUpdateManyWithoutCreatedByNestedInput
+  targetPnlEntriesCreated?: Prisma.TargetPnLEntryUpdateManyWithoutCreatedByNestedInput
+  salesTeamCostEntriesAdded?: Prisma.SalesTeamCostEntryUpdateManyWithoutAddedByNestedInput
+  employeeIncentivesCreated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutCreatedByNestedInput
+  employeeIncentivesUpdated?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutUpdatedByNestedInput
+  masterSeatingCostsCreated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutCreatedByNestedInput
+  masterSeatingCostsUpdated?: Prisma.EmployeeMasterSeatingCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostsCreated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutCreatedByNestedInput
+  seatingMiscCostsUpdated?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutUpdatedByNestedInput
+  seatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryUpdateManyWithoutChangedByNestedInput
+  invoiceRequestsSubmitted?: Prisma.InvoiceRequestUpdateManyWithoutRequestedByNestedInput
+  invoiceRequestsReviewed?: Prisma.InvoiceRequestUpdateManyWithoutReviewedByNestedInput
+  meetsCreated?: Prisma.MeetUpdateManyWithoutCreatedByNestedInput
+  meetParticipations?: Prisma.MeetParticipantUpdateManyWithoutUserNestedInput
+  statuses?: Prisma.UserStatusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedTierDefinitionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  permanentAddress?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutBdNestedInput
+  updatedLeads?: Prisma.LeadUncheckedUpdateManyWithoutUpdatedByNestedInput
+  leadStageEvents?: Prisma.LeadStageEventUncheckedUpdateManyWithoutChangedByNestedInput
+  createdTargets?: Prisma.TargetUncheckedUpdateManyWithoutCreatedByNestedInput
   insuranceCases?: Prisma.InsuranceCaseUncheckedUpdateManyWithoutHandledByNestedInput
   plRecords?: Prisma.PLRecordUncheckedUpdateManyWithoutHandledByNestedInput
   employee?: Prisma.EmployeeUncheckedUpdateOneWithoutUserNestedInput
@@ -5813,6 +6322,7 @@ export type UserCreateWithoutInsuranceCasesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -5923,6 +6433,7 @@ export type UserUncheckedCreateWithoutInsuranceCasesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -6049,6 +6560,7 @@ export type UserUpdateWithoutInsuranceCasesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -6159,6 +6671,7 @@ export type UserUncheckedUpdateWithoutInsuranceCasesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -6269,6 +6782,7 @@ export type UserCreateWithoutPlRecordsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -6379,6 +6893,7 @@ export type UserUncheckedCreateWithoutPlRecordsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -6505,6 +7020,7 @@ export type UserUpdateWithoutPlRecordsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -6615,6 +7131,7 @@ export type UserUncheckedUpdateWithoutPlRecordsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -6726,6 +7243,7 @@ export type UserCreateWithoutInvoiceRequestsSubmittedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -6836,6 +7354,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsSubmittedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -6951,6 +7470,7 @@ export type UserCreateWithoutInvoiceRequestsReviewedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -7061,6 +7581,7 @@ export type UserUncheckedCreateWithoutInvoiceRequestsReviewedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -7187,6 +7708,7 @@ export type UserUpdateWithoutInvoiceRequestsSubmittedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -7297,6 +7819,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsSubmittedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -7418,6 +7941,7 @@ export type UserUpdateWithoutInvoiceRequestsReviewedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -7528,6 +8052,7 @@ export type UserUncheckedUpdateWithoutInvoiceRequestsReviewedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -7637,6 +8162,7 @@ export type UserCreateWithoutDepartmentHeadOfInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -7747,6 +8273,7 @@ export type UserUncheckedCreateWithoutDepartmentHeadOfInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -7873,6 +8400,7 @@ export type UserUpdateWithoutDepartmentHeadOfInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -7983,6 +8511,7 @@ export type UserUncheckedUpdateWithoutDepartmentHeadOfInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -8093,6 +8622,7 @@ export type UserCreateWithoutEmployeeInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -8203,6 +8733,7 @@ export type UserUncheckedCreateWithoutEmployeeInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -8319,6 +8850,7 @@ export type UserCreateWithoutFnfCompletedForEmployeesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -8429,6 +8961,7 @@ export type UserUncheckedCreateWithoutFnfCompletedForEmployeesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -8554,6 +9087,7 @@ export type UserUpdateWithoutEmployeeInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -8664,6 +9198,7 @@ export type UserUncheckedUpdateWithoutEmployeeInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -8786,6 +9321,7 @@ export type UserUpdateWithoutFnfCompletedForEmployeesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -8896,6 +9432,7 @@ export type UserUncheckedUpdateWithoutFnfCompletedForEmployeesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -9005,6 +9542,7 @@ export type UserCreateWithoutApprovedLeavesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -9115,6 +9653,7 @@ export type UserUncheckedCreateWithoutApprovedLeavesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -9241,6 +9780,7 @@ export type UserUpdateWithoutApprovedLeavesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -9351,6 +9891,7 @@ export type UserUncheckedUpdateWithoutApprovedLeavesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -9461,6 +10002,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -9571,6 +10113,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsRequestedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -9686,6 +10229,7 @@ export type UserCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -9796,6 +10340,7 @@ export type UserUncheckedCreateWithoutLeaveBalanceEditRequestsReviewedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -9922,6 +10467,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -10032,6 +10578,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsRequestedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -10153,6 +10700,7 @@ export type UserUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -10263,6 +10811,7 @@ export type UserUncheckedUpdateWithoutLeaveBalanceEditRequestsReviewedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -10374,6 +10923,7 @@ export type UserCreateWithoutMeetsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -10484,6 +11034,7 @@ export type UserUncheckedCreateWithoutMeetsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -10610,6 +11161,7 @@ export type UserUpdateWithoutMeetsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -10720,6 +11272,7 @@ export type UserUncheckedUpdateWithoutMeetsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -10830,6 +11383,7 @@ export type UserCreateWithoutMeetParticipationsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -10940,6 +11494,7 @@ export type UserUncheckedCreateWithoutMeetParticipationsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -11066,6 +11621,7 @@ export type UserUpdateWithoutMeetParticipationsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -11176,6 +11732,7 @@ export type UserUncheckedUpdateWithoutMeetParticipationsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -11285,6 +11842,7 @@ export type UserCreateWithoutDeletedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -11395,6 +11953,7 @@ export type UserUncheckedCreateWithoutDeletedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -11510,6 +12069,7 @@ export type UserCreateWithoutDeleteRequestedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -11620,6 +12180,7 @@ export type UserUncheckedCreateWithoutDeleteRequestedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -11735,6 +12296,7 @@ export type UserCreateWithoutDeleteApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -11845,6 +12407,7 @@ export type UserUncheckedCreateWithoutDeleteApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -11960,6 +12523,7 @@ export type UserCreateWithoutEditRequestedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -12070,6 +12634,7 @@ export type UserUncheckedCreateWithoutEditRequestedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -12185,6 +12750,7 @@ export type UserCreateWithoutEditApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -12295,6 +12861,7 @@ export type UserUncheckedCreateWithoutEditApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -12410,6 +12977,7 @@ export type UserCreateWithoutCreatedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -12520,6 +13088,7 @@ export type UserUncheckedCreateWithoutCreatedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -12635,6 +13204,7 @@ export type UserCreateWithoutApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -12745,6 +13315,7 @@ export type UserUncheckedCreateWithoutApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -12871,6 +13442,7 @@ export type UserUpdateWithoutDeletedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -12981,6 +13553,7 @@ export type UserUncheckedUpdateWithoutDeletedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -13102,6 +13675,7 @@ export type UserUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -13212,6 +13786,7 @@ export type UserUncheckedUpdateWithoutDeleteRequestedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -13333,6 +13908,7 @@ export type UserUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -13443,6 +14019,7 @@ export type UserUncheckedUpdateWithoutDeleteApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -13564,6 +14141,7 @@ export type UserUpdateWithoutEditRequestedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -13674,6 +14252,7 @@ export type UserUncheckedUpdateWithoutEditRequestedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -13795,6 +14374,7 @@ export type UserUpdateWithoutEditApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -13905,6 +14485,7 @@ export type UserUncheckedUpdateWithoutEditApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -14026,6 +14607,7 @@ export type UserUpdateWithoutCreatedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -14136,6 +14718,7 @@ export type UserUncheckedUpdateWithoutCreatedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -14257,6 +14840,7 @@ export type UserUpdateWithoutApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -14367,6 +14951,7 @@ export type UserUncheckedUpdateWithoutApprovedLedgerEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -14477,6 +15062,7 @@ export type UserCreateWithoutLedgerAuditLogsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -14587,6 +15173,7 @@ export type UserUncheckedCreateWithoutLedgerAuditLogsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -14713,6 +15300,7 @@ export type UserUpdateWithoutLedgerAuditLogsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -14823,6 +15411,7 @@ export type UserUncheckedUpdateWithoutLedgerAuditLogsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -14933,6 +15522,7 @@ export type UserCreateWithoutCreatedSalesEntriesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -15043,6 +15633,7 @@ export type UserUncheckedCreateWithoutCreatedSalesEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -15169,6 +15760,7 @@ export type UserUpdateWithoutCreatedSalesEntriesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -15279,6 +15871,7 @@ export type UserUncheckedUpdateWithoutCreatedSalesEntriesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -15389,6 +15982,7 @@ export type UserCreateWithoutStockMovementsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -15499,6 +16093,7 @@ export type UserUncheckedCreateWithoutStockMovementsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -15625,6 +16220,7 @@ export type UserUpdateWithoutStockMovementsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -15735,6 +16331,7 @@ export type UserUncheckedUpdateWithoutStockMovementsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -15845,6 +16442,7 @@ export type UserCreateWithoutPurchasesCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -15955,6 +16553,7 @@ export type UserUncheckedCreateWithoutPurchasesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -16081,6 +16680,7 @@ export type UserUpdateWithoutPurchasesCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -16191,6 +16791,7 @@ export type UserUncheckedUpdateWithoutPurchasesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -16301,6 +16902,7 @@ export type UserCreateWithoutIssuesReceivedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -16411,6 +17013,7 @@ export type UserUncheckedCreateWithoutIssuesReceivedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -16526,6 +17129,7 @@ export type UserCreateWithoutIssuesCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -16636,6 +17240,7 @@ export type UserUncheckedCreateWithoutIssuesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -16762,6 +17367,7 @@ export type UserUpdateWithoutIssuesReceivedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -16872,6 +17478,7 @@ export type UserUncheckedUpdateWithoutIssuesReceivedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -16993,6 +17600,7 @@ export type UserUpdateWithoutIssuesCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -17103,6 +17711,7 @@ export type UserUncheckedUpdateWithoutIssuesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -17213,6 +17822,7 @@ export type UserCreateWithoutKypSubmissionsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -17323,6 +17933,7 @@ export type UserUncheckedCreateWithoutKypSubmissionsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -17449,6 +18060,7 @@ export type UserUpdateWithoutKypSubmissionsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -17559,6 +18171,7 @@ export type UserUncheckedUpdateWithoutKypSubmissionsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -17669,6 +18282,7 @@ export type UserCreateWithoutPreAuthsRaisedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -17779,6 +18393,7 @@ export type UserUncheckedCreateWithoutPreAuthsRaisedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -17894,6 +18509,7 @@ export type UserCreateWithoutPreAuthHandledInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -18004,6 +18620,7 @@ export type UserUncheckedCreateWithoutPreAuthHandledInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -18119,6 +18736,7 @@ export type UserCreateWithoutPreAuthHeldInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -18229,6 +18847,7 @@ export type UserUncheckedCreateWithoutPreAuthHeldInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -18355,6 +18974,7 @@ export type UserUpdateWithoutPreAuthsRaisedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -18465,6 +19085,7 @@ export type UserUncheckedUpdateWithoutPreAuthsRaisedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -18586,6 +19207,7 @@ export type UserUpdateWithoutPreAuthHandledInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -18696,6 +19318,7 @@ export type UserUncheckedUpdateWithoutPreAuthHandledInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -18817,6 +19440,7 @@ export type UserUpdateWithoutPreAuthHeldInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -18927,6 +19551,7 @@ export type UserUncheckedUpdateWithoutPreAuthHeldInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -19037,6 +19662,7 @@ export type UserCreateWithoutNotificationsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -19147,6 +19773,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -19273,6 +19900,7 @@ export type UserUpdateWithoutNotificationsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -19383,6 +20011,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -19494,6 +20123,7 @@ export type UserCreateWithoutNoticesCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -19604,6 +20234,7 @@ export type UserUncheckedCreateWithoutNoticesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -19730,6 +20361,7 @@ export type UserUpdateWithoutNoticesCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -19840,6 +20472,7 @@ export type UserUncheckedUpdateWithoutNoticesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -19950,6 +20583,7 @@ export type UserCreateWithoutNoticeRecipientsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -20060,6 +20694,7 @@ export type UserUncheckedCreateWithoutNoticeRecipientsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -20186,6 +20821,7 @@ export type UserUpdateWithoutNoticeRecipientsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -20296,6 +20932,7 @@ export type UserUncheckedUpdateWithoutNoticeRecipientsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -20406,6 +21043,7 @@ export type UserCreateWithoutMdApprovalRequestsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -20516,6 +21154,7 @@ export type UserUncheckedCreateWithoutMdApprovalRequestsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -20631,6 +21270,7 @@ export type UserCreateWithoutMdApprovalsRespondedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -20741,6 +21381,7 @@ export type UserUncheckedCreateWithoutMdApprovalsRespondedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -20856,6 +21497,7 @@ export type UserCreateWithoutMdApprovalsFinanceAckedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -20966,6 +21608,7 @@ export type UserUncheckedCreateWithoutMdApprovalsFinanceAckedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -21092,6 +21735,7 @@ export type UserUpdateWithoutMdApprovalRequestsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -21202,6 +21846,7 @@ export type UserUncheckedUpdateWithoutMdApprovalRequestsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -21323,6 +21968,7 @@ export type UserUpdateWithoutMdApprovalsRespondedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -21433,6 +22079,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsRespondedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -21554,6 +22201,7 @@ export type UserUpdateWithoutMdApprovalsFinanceAckedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -21664,6 +22312,7 @@ export type UserUncheckedUpdateWithoutMdApprovalsFinanceAckedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -21774,6 +22423,7 @@ export type UserCreateWithoutFeaturePermissionsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -21884,6 +22534,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -21999,6 +22650,7 @@ export type UserCreateWithoutFeaturePermissionsGrantedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -22109,6 +22761,7 @@ export type UserUncheckedCreateWithoutFeaturePermissionsGrantedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -22235,6 +22888,7 @@ export type UserUpdateWithoutFeaturePermissionsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -22345,6 +22999,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -22466,6 +23121,7 @@ export type UserUpdateWithoutFeaturePermissionsGrantedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -22576,6 +23232,7 @@ export type UserUncheckedUpdateWithoutFeaturePermissionsGrantedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -22686,6 +23343,7 @@ export type UserCreateWithoutPermissionSubjectsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -22796,6 +23454,7 @@ export type UserUncheckedCreateWithoutPermissionSubjectsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -22911,6 +23570,7 @@ export type UserCreateWithoutPermissionsGrantedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -23021,6 +23681,7 @@ export type UserUncheckedCreateWithoutPermissionsGrantedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -23147,6 +23808,7 @@ export type UserUpdateWithoutPermissionSubjectsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -23257,6 +23919,7 @@ export type UserUncheckedUpdateWithoutPermissionSubjectsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -23378,6 +24041,7 @@ export type UserUpdateWithoutPermissionsGrantedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -23488,6 +24152,7 @@ export type UserUncheckedUpdateWithoutPermissionsGrantedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -23598,6 +24263,7 @@ export type UserCreateWithoutCampaignCplsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -23708,6 +24374,7 @@ export type UserUncheckedCreateWithoutCampaignCplsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -23834,6 +24501,7 @@ export type UserUpdateWithoutCampaignCplsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -23944,6 +24612,7 @@ export type UserUncheckedUpdateWithoutCampaignCplsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -24054,6 +24723,7 @@ export type UserCreateWithoutDailyCampaignSpendsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -24164,6 +24834,7 @@ export type UserUncheckedCreateWithoutDailyCampaignSpendsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -24290,6 +24961,7 @@ export type UserUpdateWithoutDailyCampaignSpendsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -24400,6 +25072,7 @@ export type UserUncheckedUpdateWithoutDailyCampaignSpendsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -24509,6 +25182,7 @@ export type UserCreateWithoutQueriesRaisedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -24619,6 +25293,7 @@ export type UserUncheckedCreateWithoutQueriesRaisedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -24734,6 +25409,7 @@ export type UserCreateWithoutQueriesAnsweredInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -24844,6 +25520,7 @@ export type UserUncheckedCreateWithoutQueriesAnsweredInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -24970,6 +25647,7 @@ export type UserUpdateWithoutQueriesRaisedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -25080,6 +25758,7 @@ export type UserUncheckedUpdateWithoutQueriesRaisedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -25201,6 +25880,7 @@ export type UserUpdateWithoutQueriesAnsweredInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -25311,6 +25991,7 @@ export type UserUncheckedUpdateWithoutQueriesAnsweredInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -25421,6 +26102,7 @@ export type UserCreateWithoutPdfsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -25531,6 +26213,7 @@ export type UserUncheckedCreateWithoutPdfsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -25657,6 +26340,7 @@ export type UserUpdateWithoutPdfsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -25767,6 +26451,7 @@ export type UserUncheckedUpdateWithoutPdfsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -25877,6 +26562,7 @@ export type UserCreateWithoutAdmissionsInitiatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -25987,6 +26673,7 @@ export type UserUncheckedCreateWithoutAdmissionsInitiatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -26113,6 +26800,7 @@ export type UserUpdateWithoutAdmissionsInitiatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -26223,6 +26911,7 @@ export type UserUncheckedUpdateWithoutAdmissionsInitiatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -26333,6 +27022,7 @@ export type UserCreateWithoutInsuranceInitiateFormsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -26443,6 +27133,7 @@ export type UserUncheckedCreateWithoutInsuranceInitiateFormsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -26569,6 +27260,7 @@ export type UserUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -26679,6 +27371,7 @@ export type UserUncheckedUpdateWithoutInsuranceInitiateFormsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -26789,6 +27482,7 @@ export type UserCreateWithoutCaseStageChangesInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -26899,6 +27593,7 @@ export type UserUncheckedCreateWithoutCaseStageChangesInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -27025,6 +27720,7 @@ export type UserUpdateWithoutCaseStageChangesInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -27135,6 +27831,7 @@ export type UserUncheckedUpdateWithoutCaseStageChangesInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -27245,6 +27942,7 @@ export type UserCreateWithoutCaseChatMessagesSentInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -27355,6 +28053,7 @@ export type UserUncheckedCreateWithoutCaseChatMessagesSentInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -27481,6 +28180,7 @@ export type UserUpdateWithoutCaseChatMessagesSentInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -27591,6 +28291,7 @@ export type UserUncheckedUpdateWithoutCaseChatMessagesSentInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -27701,6 +28402,7 @@ export type UserCreateWithoutChatReadReceiptsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -27811,6 +28513,7 @@ export type UserUncheckedCreateWithoutChatReadReceiptsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -27937,6 +28640,7 @@ export type UserUpdateWithoutChatReadReceiptsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -28047,6 +28751,7 @@ export type UserUncheckedUpdateWithoutChatReadReceiptsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -28157,6 +28862,7 @@ export type UserCreateWithoutDischargeSheetsMarkedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -28267,6 +28973,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsMarkedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -28382,6 +29089,7 @@ export type UserCreateWithoutDischargeSheetsFinalizedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -28492,6 +29200,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsFinalizedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -28607,6 +29316,7 @@ export type UserCreateWithoutDischargeSheetsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -28717,6 +29427,7 @@ export type UserUncheckedCreateWithoutDischargeSheetsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -28843,6 +29554,7 @@ export type UserUpdateWithoutDischargeSheetsMarkedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -28953,6 +29665,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsMarkedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -29074,6 +29787,7 @@ export type UserUpdateWithoutDischargeSheetsFinalizedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -29184,6 +29898,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsFinalizedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -29305,6 +30020,7 @@ export type UserUpdateWithoutDischargeSheetsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -29415,6 +30131,7 @@ export type UserUncheckedUpdateWithoutDischargeSheetsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -29525,6 +30242,7 @@ export type UserCreateWithoutOutstandingCasesHandledInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -29635,6 +30353,7 @@ export type UserUncheckedCreateWithoutOutstandingCasesHandledInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -29761,6 +30480,7 @@ export type UserUpdateWithoutOutstandingCasesHandledInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -29871,6 +30591,7 @@ export type UserUncheckedUpdateWithoutOutstandingCasesHandledInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -29982,6 +30703,7 @@ export type UserCreateWithoutPaymentInstallmentsRecordedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -30092,6 +30814,7 @@ export type UserUncheckedCreateWithoutPaymentInstallmentsRecordedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -30218,6 +30941,7 @@ export type UserUpdateWithoutPaymentInstallmentsRecordedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -30328,6 +31052,7 @@ export type UserUncheckedUpdateWithoutPaymentInstallmentsRecordedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -30437,6 +31162,7 @@ export type UserCreateWithoutComplianceCallsHandledInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -30547,6 +31273,7 @@ export type UserUncheckedCreateWithoutComplianceCallsHandledInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -30673,6 +31400,7 @@ export type UserUpdateWithoutComplianceCallsHandledInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -30783,6 +31511,7 @@ export type UserUncheckedUpdateWithoutComplianceCallsHandledInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -30894,6 +31623,7 @@ export type UserCreateWithoutSalesTeamCostEntriesAddedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -31004,6 +31734,7 @@ export type UserUncheckedCreateWithoutSalesTeamCostEntriesAddedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -31130,6 +31861,7 @@ export type UserUpdateWithoutSalesTeamCostEntriesAddedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -31240,6 +31972,7 @@ export type UserUncheckedUpdateWithoutSalesTeamCostEntriesAddedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -31350,6 +32083,7 @@ export type UserCreateWithoutEmployeeIncentivesCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -31460,6 +32194,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -31575,6 +32310,7 @@ export type UserCreateWithoutEmployeeIncentivesUpdatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -31685,6 +32421,7 @@ export type UserUncheckedCreateWithoutEmployeeIncentivesUpdatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -31811,6 +32548,7 @@ export type UserUpdateWithoutEmployeeIncentivesCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -31921,6 +32659,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -32042,6 +32781,7 @@ export type UserUpdateWithoutEmployeeIncentivesUpdatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -32152,6 +32892,7 @@ export type UserUncheckedUpdateWithoutEmployeeIncentivesUpdatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -32262,6 +33003,7 @@ export type UserCreateWithoutMasterSeatingCostsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -32372,6 +33114,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -32487,6 +33230,7 @@ export type UserCreateWithoutMasterSeatingCostsUpdatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -32597,6 +33341,7 @@ export type UserUncheckedCreateWithoutMasterSeatingCostsUpdatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -32723,6 +33468,7 @@ export type UserUpdateWithoutMasterSeatingCostsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -32833,6 +33579,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -32954,6 +33701,7 @@ export type UserUpdateWithoutMasterSeatingCostsUpdatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -33064,6 +33812,7 @@ export type UserUncheckedUpdateWithoutMasterSeatingCostsUpdatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -33174,6 +33923,7 @@ export type UserCreateWithoutSeatingMiscCostsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -33284,6 +34034,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -33399,6 +34150,7 @@ export type UserCreateWithoutSeatingMiscCostsUpdatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -33509,6 +34261,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostsUpdatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -33635,6 +34388,7 @@ export type UserUpdateWithoutSeatingMiscCostsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -33745,6 +34499,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -33866,6 +34621,7 @@ export type UserUpdateWithoutSeatingMiscCostsUpdatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -33976,6 +34732,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostsUpdatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -34086,6 +34843,7 @@ export type UserCreateWithoutSeatingMiscCostHistoryInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -34196,6 +34954,7 @@ export type UserUncheckedCreateWithoutSeatingMiscCostHistoryInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -34322,6 +35081,7 @@ export type UserUpdateWithoutSeatingMiscCostHistoryInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -34432,6 +35192,7 @@ export type UserUncheckedUpdateWithoutSeatingMiscCostHistoryInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -34541,6 +35302,7 @@ export type UserCreateWithoutTasksAssignedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -34651,6 +35413,7 @@ export type UserUncheckedCreateWithoutTasksAssignedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -34766,6 +35529,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -34876,6 +35640,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -34991,6 +35756,7 @@ export type UserCreateWithoutTasksCompletedInput = {
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -35101,6 +35867,7 @@ export type UserUncheckedCreateWithoutTasksCompletedInput = {
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -35227,6 +35994,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -35337,6 +36105,7 @@ export type UserUncheckedUpdateWithoutTasksAssignedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -35458,6 +36227,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -35568,6 +36338,7 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -35689,6 +36460,7 @@ export type UserUpdateWithoutTasksCompletedInput = {
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -35799,6 +36571,7 @@ export type UserUncheckedUpdateWithoutTasksCompletedInput = {
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -35909,6 +36682,7 @@ export type UserCreateWithoutTaskApprovalsRequestedInput = {
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -36019,6 +36793,7 @@ export type UserUncheckedCreateWithoutTaskApprovalsRequestedInput = {
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -36145,6 +36920,7 @@ export type UserUpdateWithoutTaskApprovalsRequestedInput = {
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -36255,6 +37031,7 @@ export type UserUncheckedUpdateWithoutTaskApprovalsRequestedInput = {
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -36366,6 +37143,7 @@ export type UserCreateWithoutUserTaskSeenInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -36476,6 +37254,7 @@ export type UserUncheckedCreateWithoutUserTaskSeenInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -36602,6 +37381,7 @@ export type UserUpdateWithoutUserTaskSeenInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -36712,6 +37492,7 @@ export type UserUncheckedUpdateWithoutUserTaskSeenInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -36821,6 +37602,7 @@ export type UserCreateWithoutTaskRatingsGivenInput = {
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatedByInput
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -36931,6 +37713,7 @@ export type UserUncheckedCreateWithoutTaskRatingsGivenInput = {
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatedByInput
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -37047,6 +37830,7 @@ export type UserCreateWithoutTaskRatingsReceivedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
   taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
@@ -37157,6 +37941,7 @@ export type UserUncheckedCreateWithoutTaskRatingsReceivedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
   taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -37282,6 +38067,7 @@ export type UserUpdateWithoutTaskRatingsGivenInput = {
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatedByNestedInput
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -37392,6 +38178,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsGivenInput = {
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatedByNestedInput
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -37514,6 +38301,7 @@ export type UserUpdateWithoutTaskRatingsReceivedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
   taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
@@ -37624,6 +38412,7 @@ export type UserUncheckedUpdateWithoutTaskRatingsReceivedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
   taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
@@ -37734,6 +38523,7 @@ export type UserCreateWithoutTaskProjectsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
   taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
@@ -37844,6 +38634,7 @@ export type UserUncheckedCreateWithoutTaskProjectsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
   taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -37970,6 +38761,7 @@ export type UserUpdateWithoutTaskProjectsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
   taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
@@ -38080,6 +38872,7 @@ export type UserUncheckedUpdateWithoutTaskProjectsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
   taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
@@ -38190,6 +38983,7 @@ export type UserCreateWithoutTaskCommentsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskActivityLogs?: Prisma.TaskActivityLogCreateNestedManyWithoutUserInput
@@ -38300,6 +39094,7 @@ export type UserUncheckedCreateWithoutTaskCommentsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskActivityLogs?: Prisma.TaskActivityLogUncheckedCreateNestedManyWithoutUserInput
@@ -38426,6 +39221,7 @@ export type UserUpdateWithoutTaskCommentsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskActivityLogs?: Prisma.TaskActivityLogUpdateManyWithoutUserNestedInput
@@ -38536,6 +39332,7 @@ export type UserUncheckedUpdateWithoutTaskCommentsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskActivityLogs?: Prisma.TaskActivityLogUncheckedUpdateManyWithoutUserNestedInput
@@ -38646,6 +39443,7 @@ export type UserCreateWithoutTaskActivityLogsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -38756,6 +39554,7 @@ export type UserUncheckedCreateWithoutTaskActivityLogsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -38882,6 +39681,7 @@ export type UserUpdateWithoutTaskActivityLogsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -38992,6 +39792,7 @@ export type UserUncheckedUpdateWithoutTaskActivityLogsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -39102,6 +39903,7 @@ export type UserCreateWithoutWarningsReceivedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -39212,6 +40014,7 @@ export type UserUncheckedCreateWithoutWarningsReceivedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -39327,6 +40130,7 @@ export type UserCreateWithoutWarningsIssuedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -39437,6 +40241,7 @@ export type UserUncheckedCreateWithoutWarningsIssuedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -39563,6 +40368,7 @@ export type UserUpdateWithoutWarningsReceivedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -39673,6 +40479,7 @@ export type UserUncheckedUpdateWithoutWarningsReceivedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -39794,6 +40601,7 @@ export type UserUpdateWithoutWarningsIssuedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -39904,6 +40712,7 @@ export type UserUncheckedUpdateWithoutWarningsIssuedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -40014,6 +40823,7 @@ export type UserCreateWithoutMdTaskTeamsOwnedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -40124,6 +40934,7 @@ export type UserUncheckedCreateWithoutMdTaskTeamsOwnedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -40250,6 +41061,7 @@ export type UserUpdateWithoutMdTaskTeamsOwnedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -40360,6 +41172,7 @@ export type UserUncheckedUpdateWithoutMdTaskTeamsOwnedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -40470,6 +41283,7 @@ export type UserCreateWithoutMdWatchlistOwnedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -40580,6 +41394,7 @@ export type UserUncheckedCreateWithoutMdWatchlistOwnedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -40706,6 +41521,7 @@ export type UserUpdateWithoutMdWatchlistOwnedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -40816,6 +41632,7 @@ export type UserUncheckedUpdateWithoutMdWatchlistOwnedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -40926,6 +41743,7 @@ export type UserCreateWithoutWorkLogsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -41036,6 +41854,7 @@ export type UserUncheckedCreateWithoutWorkLogsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -41162,6 +41981,7 @@ export type UserUpdateWithoutWorkLogsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -41272,6 +42092,7 @@ export type UserUncheckedUpdateWithoutWorkLogsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -41382,6 +42203,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -41492,6 +42314,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -41618,6 +42441,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -41728,6 +42552,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -41838,6 +42663,7 @@ export type UserCreateWithoutItProjectsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -41948,6 +42774,7 @@ export type UserUncheckedCreateWithoutItProjectsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -42074,6 +42901,7 @@ export type UserUpdateWithoutItProjectsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -42184,6 +43012,7 @@ export type UserUncheckedUpdateWithoutItProjectsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -42294,6 +43123,7 @@ export type UserCreateWithoutItFreelancersCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -42404,6 +43234,7 @@ export type UserUncheckedCreateWithoutItFreelancersCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -42530,6 +43361,7 @@ export type UserUpdateWithoutItFreelancersCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -42640,6 +43472,7 @@ export type UserUncheckedUpdateWithoutItFreelancersCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -42750,6 +43583,7 @@ export type UserCreateWithoutItProjectBookingsCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -42860,6 +43694,7 @@ export type UserUncheckedCreateWithoutItProjectBookingsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -42986,6 +43821,7 @@ export type UserUpdateWithoutItProjectBookingsCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -43096,6 +43932,7 @@ export type UserUncheckedUpdateWithoutItProjectBookingsCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -43206,6 +44043,7 @@ export type UserCreateWithoutDepartmentRevenuesCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -43316,6 +44154,7 @@ export type UserUncheckedCreateWithoutDepartmentRevenuesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -43442,6 +44281,7 @@ export type UserUpdateWithoutDepartmentRevenuesCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -43552,6 +44392,7 @@ export type UserUncheckedUpdateWithoutDepartmentRevenuesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -43662,6 +44503,7 @@ export type UserCreateWithoutPnlCategoriesCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -43772,6 +44614,7 @@ export type UserUncheckedCreateWithoutPnlCategoriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -43898,6 +44741,7 @@ export type UserUpdateWithoutPnlCategoriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -44008,6 +44852,7 @@ export type UserUncheckedUpdateWithoutPnlCategoriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -44118,6 +44963,7 @@ export type UserCreateWithoutPnlEntriesCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -44228,6 +45074,7 @@ export type UserUncheckedCreateWithoutPnlEntriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -44354,6 +45201,7 @@ export type UserUpdateWithoutPnlEntriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -44464,6 +45312,7 @@ export type UserUncheckedUpdateWithoutPnlEntriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -44574,6 +45423,7 @@ export type UserCreateWithoutTargetPnlEntriesCreatedInput = {
   tasksCompleted?: Prisma.TaskCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentCreateNestedManyWithoutUserInput
@@ -44684,6 +45534,7 @@ export type UserUncheckedCreateWithoutTargetPnlEntriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedCreateNestedManyWithoutCompletedByInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedCreateNestedManyWithoutRequestedByInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutRatedByInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedCreateNestedManyWithoutCreatedByInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedCreateNestedManyWithoutEmployeeInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedCreateNestedManyWithoutCreatedByInput
   taskComments?: Prisma.TaskCommentUncheckedCreateNestedManyWithoutUserInput
@@ -44810,6 +45661,7 @@ export type UserUpdateWithoutTargetPnlEntriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUpdateManyWithoutUserNestedInput
@@ -44920,6 +45772,7 @@ export type UserUncheckedUpdateWithoutTargetPnlEntriesCreatedInput = {
   tasksCompleted?: Prisma.TaskUncheckedUpdateManyWithoutCompletedByNestedInput
   taskApprovalsRequested?: Prisma.TaskDueDateApprovalUncheckedUpdateManyWithoutRequestedByNestedInput
   taskRatingsGiven?: Prisma.TaskRatingUncheckedUpdateManyWithoutRatedByNestedInput
+  createdTierDefinitions?: Prisma.TierDefinitionUncheckedUpdateManyWithoutCreatedByNestedInput
   taskRatingsReceived?: Prisma.TaskRatingUncheckedUpdateManyWithoutEmployeeNestedInput
   taskProjectsCreated?: Prisma.TaskProjectUncheckedUpdateManyWithoutCreatedByNestedInput
   taskComments?: Prisma.TaskCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -45019,6 +45872,7 @@ export type UserCountOutputType = {
   tasksCompleted: number
   taskApprovalsRequested: number
   taskRatingsGiven: number
+  createdTierDefinitions: number
   taskRatingsReceived: number
   taskProjectsCreated: number
   taskComments: number
@@ -45114,6 +45968,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   tasksCompleted?: boolean | UserCountOutputTypeCountTasksCompletedArgs
   taskApprovalsRequested?: boolean | UserCountOutputTypeCountTaskApprovalsRequestedArgs
   taskRatingsGiven?: boolean | UserCountOutputTypeCountTaskRatingsGivenArgs
+  createdTierDefinitions?: boolean | UserCountOutputTypeCountCreatedTierDefinitionsArgs
   taskRatingsReceived?: boolean | UserCountOutputTypeCountTaskRatingsReceivedArgs
   taskProjectsCreated?: boolean | UserCountOutputTypeCountTaskProjectsCreatedArgs
   taskComments?: boolean | UserCountOutputTypeCountTaskCommentsArgs
@@ -45503,6 +46358,13 @@ export type UserCountOutputTypeCountTaskRatingsGivenArgs<ExtArgs extends runtime
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountCreatedTierDefinitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TierDefinitionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountTaskRatingsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TaskRatingWhereInput
 }
@@ -45880,6 +46742,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   tasksCompleted?: boolean | Prisma.User$tasksCompletedArgs<ExtArgs>
   taskApprovalsRequested?: boolean | Prisma.User$taskApprovalsRequestedArgs<ExtArgs>
   taskRatingsGiven?: boolean | Prisma.User$taskRatingsGivenArgs<ExtArgs>
+  createdTierDefinitions?: boolean | Prisma.User$createdTierDefinitionsArgs<ExtArgs>
   taskRatingsReceived?: boolean | Prisma.User$taskRatingsReceivedArgs<ExtArgs>
   taskProjectsCreated?: boolean | Prisma.User$taskProjectsCreatedArgs<ExtArgs>
   taskComments?: boolean | Prisma.User$taskCommentsArgs<ExtArgs>
@@ -46032,6 +46895,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   tasksCompleted?: boolean | Prisma.User$tasksCompletedArgs<ExtArgs>
   taskApprovalsRequested?: boolean | Prisma.User$taskApprovalsRequestedArgs<ExtArgs>
   taskRatingsGiven?: boolean | Prisma.User$taskRatingsGivenArgs<ExtArgs>
+  createdTierDefinitions?: boolean | Prisma.User$createdTierDefinitionsArgs<ExtArgs>
   taskRatingsReceived?: boolean | Prisma.User$taskRatingsReceivedArgs<ExtArgs>
   taskProjectsCreated?: boolean | Prisma.User$taskProjectsCreatedArgs<ExtArgs>
   taskComments?: boolean | Prisma.User$taskCommentsArgs<ExtArgs>
@@ -46133,6 +46997,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     tasksCompleted: Prisma.$TaskPayload<ExtArgs>[]
     taskApprovalsRequested: Prisma.$TaskDueDateApprovalPayload<ExtArgs>[]
     taskRatingsGiven: Prisma.$TaskRatingPayload<ExtArgs>[]
+    createdTierDefinitions: Prisma.$TierDefinitionPayload<ExtArgs>[]
     taskRatingsReceived: Prisma.$TaskRatingPayload<ExtArgs>[]
     taskProjectsCreated: Prisma.$TaskProjectPayload<ExtArgs>[]
     taskComments: Prisma.$TaskCommentPayload<ExtArgs>[]
@@ -46637,6 +47502,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   tasksCompleted<T extends Prisma.User$tasksCompletedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksCompletedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskApprovalsRequested<T extends Prisma.User$taskApprovalsRequestedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskApprovalsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskDueDateApprovalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskRatingsGiven<T extends Prisma.User$taskRatingsGivenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskRatingsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskRatingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdTierDefinitions<T extends Prisma.User$createdTierDefinitionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdTierDefinitionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TierDefinitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskRatingsReceived<T extends Prisma.User$taskRatingsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskRatingsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskRatingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskProjectsCreated<T extends Prisma.User$taskProjectsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskProjectsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taskComments<T extends Prisma.User$taskCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -48263,6 +49129,30 @@ export type User$taskRatingsGivenArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.TaskRatingScalarFieldEnum | Prisma.TaskRatingScalarFieldEnum[]
+}
+
+/**
+ * User.createdTierDefinitions
+ */
+export type User$createdTierDefinitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TierDefinition
+   */
+  select?: Prisma.TierDefinitionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TierDefinition
+   */
+  omit?: Prisma.TierDefinitionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TierDefinitionInclude<ExtArgs> | null
+  where?: Prisma.TierDefinitionWhereInput
+  orderBy?: Prisma.TierDefinitionOrderByWithRelationInput | Prisma.TierDefinitionOrderByWithRelationInput[]
+  cursor?: Prisma.TierDefinitionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TierDefinitionScalarFieldEnum | Prisma.TierDefinitionScalarFieldEnum[]
 }
 
 /**

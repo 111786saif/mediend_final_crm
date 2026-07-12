@@ -303,10 +303,12 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     placeholderData: (prev) => prev,
   })
 
-  const handleRowClick = useCallback(
-    (id: string) => router.push(`/patient/${id}`),
-    [router]
-  )
+const handleRowClick = useCallback(
+  (id: string) => {
+    window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
+  },
+  []
+)
 
   const title = variant === 'bd' ? 'Pipeline' : 'Team pipeline'
   const subtitle =

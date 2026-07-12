@@ -13,7 +13,6 @@ import {
   TrendingUp,
   AlertCircle,
   Calendar,
-  ArrowRight,
   Paperclip,
   X,
   FileText,
@@ -335,8 +334,8 @@ export default function DoctorDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
-        <div className="mx-auto max-w-7xl space-y-6">
+      <div className="min-h-screen w-full min-w-0 bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
+        <div className="w-full min-w-0 space-y-6">
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
@@ -390,7 +389,7 @@ export default function DoctorDetailPage() {
           />
 
           {/* Cases Table Component Container (UI preserved as requested, wrapper styled) */}
-          <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl overflow-hidden shadow-lg">
+          <div className="min-w-0 w-full bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl overflow-hidden shadow-lg">
             <div className="px-6 py-4 border-b border-[#283150] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[#191D2E]/80">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/20 shadow-sm shrink-0">
@@ -638,29 +637,18 @@ export default function DoctorDetailPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right pr-4" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-2 text-xs border-[#283150] bg-[#07112f] text-[#22d3ee] hover:bg-[#283150] hover:text-[#22d3ee]"
-                              onClick={() => {
-                                setSelectedLeads([c.leadId])
-                                setRequestDialogOpen(true)
-                              }}
-                            >
-                              Request Invoice
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-[#c7c6cd] hover:text-[#22d3ee]"
-                              asChild
-                            >
-                              <Link href={`/pl/outstanding/${c.leadId}`}>
-                                <ArrowRight className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </div>
+                          <Button
+                            size="sm"
+                            className="h-7 px-2 text-xs bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/20"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedLeads([c.leadId])
+                              setRequestDialogOpen(true)
+                            }}
+                          >
+                            <FileText className="mr-1 h-3.5 w-3.5" />
+                            Request Invoice
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))

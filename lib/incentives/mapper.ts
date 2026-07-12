@@ -12,6 +12,7 @@ type IncentiveRow = {
   createdAt: Date
   updatedAt: Date
   employee: {
+    userId: string
     employeeCode: string
     designation: string | null
     user: { name: string }
@@ -23,6 +24,7 @@ export function mapIncentiveRecord(row: IncentiveRow): IncentiveRecord {
   return {
     id: row.id,
     employeeId: row.employeeId,
+    userId: row.employee.userId,
     employeeName: row.employee.user.name,
     employeeCode: row.employee.employeeCode,
     department: row.employee.department?.name ?? null,
@@ -39,6 +41,7 @@ export function mapIncentiveRecord(row: IncentiveRow): IncentiveRecord {
 
 export const incentiveEmployeeSelect = {
   id: true,
+  userId: true,
   employeeCode: true,
   designation: true,
   user: { select: { name: true } },

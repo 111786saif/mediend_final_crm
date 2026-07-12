@@ -170,8 +170,8 @@ export default function HospitalsListPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50/40 to-indigo-50/40 p-6 dark:from-slate-950 dark:via-sky-950/20 dark:to-slate-900">
-        <div className="mx-auto max-w-7xl space-y-6">
+      <div className="min-h-screen w-full min-w-0 bg-gradient-to-br from-slate-50 via-sky-50/40 to-indigo-50/40 p-6 dark:from-slate-950 dark:via-sky-950/20 dark:to-slate-900">
+        <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <span className="inline-flex h-10 w-1.5 rounded-full bg-gradient-to-b from-sky-500 to-indigo-600 shadow-sm" aria-hidden />
@@ -218,7 +218,7 @@ export default function HospitalsListPage() {
             </div>
           </div>
 
-          <Card className="overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
+          <Card className="min-w-0 w-full overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
             <CardHeader className="border-b bg-gradient-to-r from-sky-500/10 to-indigo-500/8">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>

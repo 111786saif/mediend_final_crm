@@ -332,8 +332,8 @@ export default function PLSurgeryDashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/40 to-violet-50/45 p-6 dark:from-slate-950 dark:via-indigo-950/25 dark:to-violet-950/20">
-        <div className="mx-auto max-w-7xl space-y-6">
+      <div className="min-h-screen w-full min-w-0 bg-gradient-to-br from-slate-50 via-indigo-50/40 to-violet-50/45 p-6 dark:from-slate-950 dark:via-indigo-950/25 dark:to-violet-950/20">
+        <div className="w-full min-w-0 space-y-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-3">
               <span
@@ -402,7 +402,7 @@ export default function PLSurgeryDashboardPage() {
                   All teams
                 </TabsTrigger>
                 {data?.teams?.map((t) => (
-                  <TabsTrigger key={t.id} value={t.id} className="max-w-[200px] truncate text-xs sm:text-sm data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-md">
+                  <TabsTrigger key={t.id} value={t.id} className="text-xs sm:text-sm whitespace-nowrap data-[state=active]:bg-violet-600 data-[state=active]:text-white data-[state=active]:shadow-md">
                     {t.name}
                   </TabsTrigger>
                 ))}
@@ -502,7 +502,7 @@ export default function PLSurgeryDashboardPage() {
                     </Card>
                   </div>
 
-                  <Card className="overflow-hidden border-violet-200/50 shadow-lg dark:border-violet-800/40">
+                  <Card className="min-w-0 w-full overflow-hidden border-violet-200/50 shadow-lg dark:border-violet-800/40">
                     <CardHeader className="border-b bg-gradient-to-r from-violet-500/12 via-indigo-500/8 to-transparent">
                       <CardTitle className="flex items-center gap-2 text-lg text-violet-950 dark:text-violet-100"><Table2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />BD Breakdown</CardTitle>
                       <CardDescription>Revenue = Mediend share; net = share − Mediend expenses</CardDescription>

@@ -304,7 +304,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
             </div>
 
             <main
-              className="flex flex-1 flex-col gap-4 p-4 pt-14 md:p-6 md:pt-6 bg-background pb-24 md:pb-6"
+              className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-14 md:p-6 md:pt-6 bg-background pb-24 md:pb-6"
             >
               <RouteGuard>
                 <PageTransition>

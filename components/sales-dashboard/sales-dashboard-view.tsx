@@ -1,11 +1,11 @@
 'use client'
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
-import { useEffect, useState } from 'react'
-import type { DateRange } from 'react-day-picker'
+import { useEffect, useMemo, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -17,7 +17,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Progress } from '@/components/ui/progress'
 import { TabNavigation } from '@/components/employee/tab-navigation'
-import { format, startOfMonth, endOfMonth } from 'date-fns'
+import { format } from 'date-fns'
 import { getAvatarColor } from '@/lib/avatar-colors'
 import {
   PieChart,
@@ -50,6 +50,10 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 import { cn } from '@/lib/utils'
 import { UntouchedLeadsTable } from '@/components/targets/untouched-leads-table'
+import type { DateRange } from 'react-day-picker'
+
+// FLAG TO CONTROL CAPSULE BEHAVIOR FOR BD MEMBERS WITHOUT INCENTIVE IN API
+const HIDE_MISSING_INCENTIVE_CAPSULE = true
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -132,17 +136,8 @@ interface IpdBreakdown {
   byHospital: Array<{ hospitalName: string; circle: string; count: number; revenue: number; profit: number }>
   bySource: Array<{ source: string; count: number; revenue: number; profit: number }>
   byCampaign: Array<{ campaign: string; count: number; revenue: number; profit: number }>
-  byInsurance: Array<{ insurance: string; count: number; revenue: number; profit: number }>
-  byTpa: Array<{ tpa: string; count: number; revenue: number; profit: number }>
   byMonth: Array<{ month: string; count: number; revenue: number; profit: number }>
   surgeonCrossAnalysis: Array<{ surgeonName: string; hospitalName: string; treatment: string; count: number; revenue: number; profit: number }>
-}
-
-interface TargetSummary {
-  ipdDone: number
-  assignedTarget: number
-  achievementPercentage: number | null
-  teamTargetCount: number
 }
 
 interface LeadsBreakdown {
@@ -222,16 +217,16 @@ function UserAvatar({ name, picture, size = 'sm' }: { name: string; picture?: st
 function StatCard({ label, value, sub, color }: { label: string; value: string | number; sub?: string; color: string }) {
   const labelLower = label.toLowerCase()
   const isAccent = labelLower.includes('ipd') || labelLower.includes('profit')
-  
+
   // Dynamic color accents
-  const accentBorder = 
+  const accentBorder =
     labelLower.includes('leads') ? 'border-l-4 border-l-blue-500' :
-    labelLower.includes('ipd') ? 'border-l-4 border-l-[#4edea3]' :
-    labelLower.includes('conversion') ? 'border-l-4 border-l-violet-500' :
-    labelLower.includes('profit') ? 'border-l-4 border-l-amber-500' :
-    labelLower.includes('bill') ? 'border-l-4 border-l-[#adc6ff]' :
-    labelLower.includes('ticket') ? 'border-l-4 border-l-rose-500' :
-    'border-l-4 border-l-slate-500'
+      labelLower.includes('ipd') ? 'border-l-4 border-l-[#4edea3]' :
+        labelLower.includes('conversion') ? 'border-l-4 border-l-violet-500' :
+          labelLower.includes('profit') ? 'border-l-4 border-l-amber-500' :
+            labelLower.includes('bill') ? 'border-l-4 border-l-[#adc6ff]' :
+              labelLower.includes('ticket') ? 'border-l-4 border-l-rose-500' :
+                'border-l-4 border-l-slate-500'
 
   return (
     <Card className={cn(
@@ -286,9 +281,9 @@ function TargetVsActualCard({
   const pct = typeof achievementPercentage === 'number' ? achievementPercentage : null
   const pctColor =
     pct == null ? 'text-[#c2c6d6]/60' :
-    pct >= 100 ? 'text-[#4edea3]' :
-    pct >= 60 ? 'text-[#adc6ff]' :
-    'text-[#ffb4ab]'
+      pct >= 100 ? 'text-[#4edea3]' :
+        pct >= 60 ? 'text-[#adc6ff]' :
+          'text-[#ffb4ab]'
 
   return (
     <Card className="bg-[#131b2e] border-y-[#424754]/30 border-r-[#424754]/30 border-l-4 border-l-violet-500 p-5 rounded-xl hover:bg-[#1b253b] hover:translate-y-[-4px] hover:shadow-lg hover:shadow-black/10 hover:border-r-[#adc6ff]/40 transition-all duration-300 shadow-md">
@@ -328,79 +323,37 @@ function formatDateRangeLabel(range: DateRange | undefined): string {
 // ─── Date Picker ─────────────────────────────────────────────────────────────
 
 function DateRangePicker({
-  value,
-  onChange,
+  value, onChange,
 }: {
   value: DateRange | undefined
   onChange: (range: DateRange | undefined) => void
 }) {
-  const [open, setOpen] = useState(false)
-  const [months, setMonths] = useState(1)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)')
-    const apply = () => setMonths(mq.matches ? 2 : 1)
-    apply()
-    mq.addEventListener('change', apply)
-    return () => mq.removeEventListener('change', apply)
-  }, [])
-
+  const [isOpen, setIsOpen] = useState(false)
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className={cn(
-            'justify-start text-left font-normal w-full sm:w-auto min-w-0 sm:min-w-[240px] md:min-w-[280px]',
-            !value?.from && 'text-muted-foreground'
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
-          <span className="truncate">{formatDateRangeLabel(value)}</span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto max-w-[calc(100vw-1rem)] p-0" align="end">
-        <Calendar
-          mode="range"
-          defaultMonth={value?.from ?? new Date()}
-          selected={value}
-          onSelect={(range) => {
-            onChange(range)
-            if (range?.from && range?.to) setOpen(false)
-          }}
-          numberOfMonths={months}
-        />
-        <div className="flex items-center justify-between gap-2 border-t p-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="text-xs"
-            onClick={() => {
-              onChange(undefined)
-              setOpen(false)
-            }}
-          >
-            Clear
+    <div className="flex flex-wrap items-center gap-2">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm" className="w-full justify-start sm:w-[240px]">
+            <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
+            {formatDateRangeLabel(value)}
           </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="text-xs"
-            onClick={() => {
-              const d = new Date()
-              onChange({ from: startOfMonth(d), to: endOfMonth(d) })
-              setOpen(false)
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start" sideOffset={6}>
+          <Calendar
+            mode="range"
+            selected={value}
+            onSelect={(range) => {
+              onChange(range)
+              if (range?.from && range?.to) setIsOpen(false)
             }}
-          >
-            This month
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
+            numberOfMonths={2}
+          />
+        </PopoverContent>
+      </Popover>
+      {(value?.from || value?.to) && (
+        <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => onChange(undefined)}>Clear</Button>
+      )}
+    </div>
   )
 }
 
@@ -428,6 +381,9 @@ function BdDetailSheet({
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent side="right" className="w-full sm:max-w-2xl p-0">
+        <VisuallyHidden>
+          <SheetTitle>BD Member Details</SheetTitle>
+        </VisuallyHidden>
         <ScrollArea className="h-full">
           <div className="p-6 space-y-6">
             {isLoading && <div className="text-center py-12 text-muted-foreground">Loading…</div>}
@@ -536,12 +492,14 @@ function TeamDetailSheet({
   onClose,
   dateParams,
   variant,
+  dateRange,
 }: {
   teamId: string | null
   open: boolean
   onClose: () => void
   dateParams: string
   variant: DashboardVariant
+  dateRange?: DateRange
 }) {
   const { data, isLoading } = useQuery<TeamDetail>({
     queryKey: ['sales-dashboard', variant, 'team-detail', teamId, dateParams],
@@ -549,9 +507,31 @@ function TeamDetailSheet({
     enabled: !!teamId && open,
   })
 
+  const dateFrom = dateRange?.from || new Date()
+  const incentiveMonth = dateFrom.getMonth() + 1
+  const incentiveYear = dateFrom.getFullYear()
+
+  const { data: incentivesData } = useQuery<{ records: any[] }>({
+    queryKey: ['incentives-list', incentiveMonth, incentiveYear],
+    queryFn: () => apiGet<{ records: any[] }>(`/api/incentives?month=${incentiveMonth}&year=${incentiveYear}`),
+    enabled: open,
+  })
+
+  const incentivesByUserId = new Map<string, number>()
+  const incentivesByName = new Map<string, number>()
+  if (incentivesData?.records) {
+    for (const rec of incentivesData.records) {
+      if (rec.userId) incentivesByUserId.set(rec.userId, rec.amount)
+      if (rec.employeeName) incentivesByName.set(rec.employeeName.toLowerCase().trim(), rec.amount)
+    }
+  }
+
   return (
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent side="right" className="w-full sm:max-w-2xl p-0">
+        <VisuallyHidden>
+          <SheetTitle>Team Details</SheetTitle>
+        </VisuallyHidden>
         <ScrollArea className="h-full">
           <div className="p-6 space-y-6">
             {isLoading && <div className="text-center py-12 text-muted-foreground">Loading…</div>}
@@ -610,9 +590,15 @@ function TeamDetailSheet({
                           <div className="flex items-center gap-2 mt-1">
                             <Progress value={Math.min(m.conversionRate, 100)} className="h-1.5 w-16" />
                             <span className="text-xs text-muted-foreground">{m.conversionRate.toFixed(0)}%</span>
-                            <span className="inline-flex items-center text-[11px] font-bold text-amber-500 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded-full border border-amber-500/20 shrink-0 ml-1">
-                              Incentive: ₹{((m.ipdDone * 1500) + (m.leads * 50)).toLocaleString()}
-                            </span>
+                            {(() => {
+                              const amount = incentivesByUserId.get(m.id) ?? incentivesByName.get(m.name.toLowerCase().trim())
+                              if (amount === undefined && HIDE_MISSING_INCENTIVE_CAPSULE) return null
+                              return (
+                                <span className="inline-flex items-center text-[11px] font-bold text-amber-500 dark:text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded-full border border-amber-500/20 shrink-0 ml-1">
+                                  Incentive: {amount !== undefined ? `₹${amount.toLocaleString()}` : '-'}
+                                </span>
+                              )
+                            })()}
                           </div>
                         </div>
                         <div className="text-right text-sm">
@@ -691,55 +677,105 @@ function TeamDetailSheet({
   )
 }
 
-// ─── Overview Breakdown Table ─────────────────────────────────────────────────
+// ─── Month Conversion Panel ───────────────────────────────────────────────────
 
-type OverviewRow = { category: string; name: string; count: number; revenue: number; profit: number }
+function monthLabel(key: string): string {
+  const [y, m] = key.split('-')
+  return format(new Date(Number(y), Number(m) - 1, 1), 'MMM yyyy')
+}
 
-function OverviewBreakdownTable({ rows }: { rows: OverviewRow[] }) {
-  if (rows.length === 0) {
-    return <p className="text-center text-muted-foreground py-6 text-sm">No data in selected range</p>
-  }
+function MonthConversionPanel({ variant }: { variant: DashboardVariant }) {
+  const currentYear = new Date().getFullYear()
+  const yearStart = format(new Date(currentYear, 0, 1), 'yyyy-MM-dd')
+  const today = format(new Date(), 'yyyy-MM-dd')
 
-  const categories = ['Insurance', 'TPA', 'Lead Sources'] as const
+  // Independent of the page-level date-range picker — always the current
+  // calendar year, so "this month" / "last 2 months" / "best month" stay
+  // meaningful regardless of whatever range is selected elsewhere on the page.
+  const { data: bdMonthly, isLoading } = useQuery<BdMonthly>({
+    queryKey: ['sales-dashboard', variant, 'month-conversion', currentYear],
+    queryFn: () =>
+      apiGet<BdMonthly>(`/api/analytics/sales-dashboard/bd-monthly?startDate=${yearStart}&endDate=${today}`),
+  })
+
+  const recentMonthKeys = useMemo(() => {
+    const out: string[] = []
+    const d = new Date()
+    for (let i = 0; i < 3; i++) {
+      out.push(format(new Date(d.getFullYear(), d.getMonth() - i, 1), 'yyyy-MM'))
+    }
+    return out
+  }, [])
+
+  const [selectedMonth, setSelectedMonth] = useState(recentMonthKeys[0])
+
+  const monthStats = useMemo(() => {
+    const leads = bdMonthly?.totals.leads ?? {}
+    const ipd = bdMonthly?.totals.ipd ?? {}
+    return recentMonthKeys.map((key) => {
+      const l = leads[key] ?? 0
+      const i = ipd[key] ?? 0
+      return { key, label: monthLabel(key), leads: l, ipd: i, conversion: l > 0 ? (i / l) * 100 : 0 }
+    })
+  }, [bdMonthly, recentMonthKeys])
+
+  const bestMonth = useMemo(() => {
+    const leads = bdMonthly?.totals.leads ?? {}
+    const ipd = bdMonthly?.totals.ipd ?? {}
+    const yearMonths = (bdMonthly?.months ?? []).filter((m) => m.startsWith(String(currentYear)))
+    let best: { key: string; leads: number; ipd: number; conversion: number } | null = null
+    for (const key of yearMonths) {
+      const l = leads[key] ?? 0
+      const i = ipd[key] ?? 0
+      if (l <= 0) continue
+      const conversion = (i / l) * 100
+      if (!best || conversion > best.conversion) best = { key, leads: l, ipd: i, conversion }
+    }
+    return best
+  }, [bdMonthly, currentYear])
+
+  const selected = monthStats.find((m) => m.key === selectedMonth) ?? monthStats[0]
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Category</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead className="text-center">IPD Done</TableHead>
-            <TableHead className="text-center">Revenue</TableHead>
-            <TableHead className="text-center">Net Profit</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {categories.map((category) => {
-            const categoryRows = rows.filter((r) => r.category === category)
-            if (categoryRows.length === 0) {
-              return (
-                <TableRow key={category}>
-                  <TableCell className="font-semibold text-sm">{category}</TableCell>
-                  <TableCell colSpan={4} className="text-muted-foreground text-sm">No data</TableCell>
-                </TableRow>
-              )
-            }
-            return categoryRows.map((row, idx) => (
-              <TableRow key={`${category}-${row.name}`}>
-                <TableCell className="font-semibold text-sm">
-                  {idx === 0 ? category : ''}
-                </TableCell>
-                <TableCell className="max-w-[180px] truncate">{row.name}</TableCell>
-                <TableCell className="text-center tabular-nums font-semibold text-emerald-600">{row.count}</TableCell>
-                <TableCell className="text-center tabular-nums">{fmtK(row.revenue)}</TableCell>
-                <TableCell className="text-center tabular-nums">{fmtK(row.profit)}</TableCell>
-              </TableRow>
-            ))
-          })}
-        </TableBody>
-      </Table>
-    </div>
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-semibold flex items-center gap-2">
+          <TrendingUp className="h-4 w-4 text-blue-500" />Month Conversion
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Month picker: current + last 2 months */}
+        <div className="flex flex-wrap gap-2">
+          {monthStats.map((m, i) => (
+            <Button
+              key={m.key}
+              size="sm"
+              variant={selectedMonth === m.key ? 'default' : 'outline'}
+              onClick={() => setSelectedMonth(m.key)}
+              className="h-7 text-xs"
+            >
+              {i === 0 ? `${m.label} (current)` : m.label}
+            </Button>
+          ))}
+        </div>
+
+        {isLoading ? (
+          <p className="text-sm text-muted-foreground py-4 text-center">Loading…</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <StatCard label={`Leads · ${selected?.label ?? ''}`} value={selected?.leads ?? 0} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
+            <StatCard label={`IPD · ${selected?.label ?? ''}`} value={selected?.ipd ?? 0} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
+            <StatCard label="Conversion" value={`${(selected?.conversion ?? 0).toFixed(1)}%`} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
+            <StatCard
+              label="Best month this year"
+              value={bestMonth ? `${bestMonth.conversion.toFixed(1)}%` : '–'}
+              sub={bestMonth ? monthLabel(bestMonth.key) : undefined}
+              color="bg-amber-500/10 text-amber-900 dark:text-amber-100"
+            />
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
@@ -770,11 +806,6 @@ function OverviewTab({
       apiGet<IpdComparison>(`/api/analytics/sales-dashboard/ipd-comparison${comparisonQs}`),
   })
 
-  const { data: targetSummary } = useQuery<TargetSummary>({
-    queryKey: ['sales-dashboard', variant, 'target-summary', qs],
-    queryFn: () => apiGet<TargetSummary>(`/api/analytics/sales-dashboard/target-summary${comparisonQs}`),
-  })
-
   const { data: bdLeaderboard } = useQuery<LeaderboardEntry[]>({
     queryKey: ['sales-dashboard', variant, 'leaderboard-bd', qs],
     queryFn: () => apiGet(`/api/analytics/leaderboard?type=bd&${qs}`),
@@ -803,30 +834,6 @@ function OverviewTab({
 
   const monthChartData = (ipdBreakdown?.byMonth ?? []).slice(-12)
 
-  const overviewRows: OverviewRow[] = [
-    ...(ipdBreakdown?.byInsurance ?? []).slice(0, 10).map((i) => ({
-      category: 'Insurance',
-      name: i.insurance,
-      count: i.count,
-      revenue: i.revenue,
-      profit: i.profit,
-    })),
-    ...(ipdBreakdown?.byTpa ?? []).slice(0, 10).map((t) => ({
-      category: 'TPA',
-      name: t.tpa,
-      count: t.count,
-      revenue: t.revenue,
-      profit: t.profit,
-    })),
-    ...(ipdBreakdown?.bySource ?? []).slice(0, 10).map((s) => ({
-      category: 'Lead Sources',
-      name: s.source,
-      count: s.count,
-      revenue: s.revenue,
-      profit: s.profit,
-    })),
-  ]
-
   return (
     <div className="space-y-6">
       {/* IPD Pulse */}
@@ -838,13 +845,12 @@ function OverviewTab({
           <StatCard label="IPD (selected range)" value={comparison?.ipdThisMonth ?? '–'} color="bg-emerald-500/10 text-emerald-900 dark:text-emerald-100" />
           <StatCard label="Prior period (vs same dates last month)" value={comparison?.ipdByThisDayLastMonth ?? '–'} color="bg-blue-500/10 text-blue-900 dark:text-blue-100" />
           <StatCard label={`Best month (by day ${comparison?.dayOfMonth ?? ''} in year)`} value={comparison?.ipdBestMonthByThisDay ?? '–'} color="bg-violet-500/10 text-violet-900 dark:text-violet-100" />
-          <TargetVsActualCard
-            ipdDone={targetSummary?.ipdDone ?? comparison?.ipdThisMonth ?? '–'}
-            assignedTarget={targetSummary?.assignedTarget ?? '–'}
-            achievementPercentage={targetSummary?.achievementPercentage ?? null}
-          />
+          <StatCard label="Best month this year" value={comparison?.bestMonthThisYear?.count ?? '–'} sub={comparison?.bestMonthThisYear?.monthLabel ?? undefined} color="bg-amber-500/10 text-amber-900 dark:text-amber-100" />
         </div>
       </div>
+
+      {/* Month Conversion */}
+      <MonthConversionPanel variant={variant} />
 
       {/* IPD by Month chart */}
       {monthChartData.length > 0 && (
@@ -864,18 +870,6 @@ function OverviewTab({
           </CardContent>
         </Card>
       )}
-
-      {/* Dashboard Overview */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" /> Dashboard Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="px-6 pb-2">
-          <OverviewBreakdownTable rows={overviewRows} />
-        </CardContent>
-      </Card>
 
       {/* Leaderboards side by side */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -1096,10 +1090,12 @@ function BdPerformanceTab({
   dateParams,
   onSelectBd,
   variant,
+  dateRange,
 }: {
   dateParams: string
   onSelectBd: (bdId: string) => void
   variant: DashboardVariant
+  dateRange?: DateRange
 }) {
   const [sortBy, setSortBy] = useState<'ipdDone' | 'totalLeads' | 'conversionRate'>('ipdDone')
   const { user } = useAuth()
@@ -1115,6 +1111,26 @@ function BdPerformanceTab({
     queryFn: () => apiGet<TargetSalaryData>(`/api/analytics/sales-dashboard/target-salary${dateParams ? '?' + dateParams : ''}`),
     enabled: isMdOrAdmin,
   })
+
+  const dateFrom = dateRange?.from || new Date()
+  const incentiveMonth = dateFrom.getMonth() + 1
+  const incentiveYear = dateFrom.getFullYear()
+
+  const { data: incentivesData } = useQuery<{ records: any[] }>({
+    queryKey: ['incentives-list', incentiveMonth, incentiveYear],
+    queryFn: () => apiGet<{ records: any[] }>(`/api/incentives?month=${incentiveMonth}&year=${incentiveYear}`),
+  })
+
+  const incentivesByUserId = new Map<string, number>()
+  const incentivesByEmployeeId = new Map<string, number>()
+  const incentivesByName = new Map<string, number>()
+  if (incentivesData?.records) {
+    for (const rec of incentivesData.records) {
+      if (rec.userId) incentivesByUserId.set(rec.userId, rec.amount)
+      if (rec.employeeId) incentivesByEmployeeId.set(rec.employeeId, rec.amount)
+      if (rec.employeeName) incentivesByName.set(rec.employeeName.toLowerCase().trim(), rec.amount)
+    }
+  }
 
   const salaryByBd = new Map((targetSalary?.bdSalaryTarget ?? []).map((b) => [b.bdId, b]))
 
@@ -1146,64 +1162,71 @@ function BdPerformanceTab({
         {bds.map((bd, i) => {
           const sal = salaryByBd.get(bd.bdId)
           return (
-          <button
-            key={bd.bdId}
-            onClick={() => onSelectBd(bd.bdId)}
-            className="w-full text-left rounded-xl border bg-card hover:bg-muted/30 transition-colors p-4"
-          >
-            <div className="flex items-center gap-3">
-              <RankBadge rank={i + 1} />
-              <UserAvatar name={bd.bdName} />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="font-semibold text-sm">{bd.bdName}</p>
-                  {bd.managerName && <Badge variant="secondary" className="text-[10px] h-4 px-1.5">{bd.managerName}</Badge>}
+            <button
+              key={bd.bdId}
+              onClick={() => onSelectBd(bd.bdId)}
+              className="w-full text-left rounded-xl border bg-card hover:bg-muted/30 transition-colors p-4"
+            >
+              <div className="flex items-center gap-3">
+                <RankBadge rank={i + 1} />
+                <UserAvatar name={bd.bdName} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="font-semibold text-sm">{bd.bdName}</p>
+                    {bd.managerName && <Badge variant="secondary" className="text-[10px] h-4 px-1.5">{bd.managerName}</Badge>}
+                  </div>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-xs text-muted-foreground">{bd.totalLeads} leads</span>
+                    <span className="text-xs text-violet-600">{bd.conversionRate.toFixed(1)}%</span>
+                    <Progress value={Math.min(bd.conversionRate, 100)} className="h-1 w-16" />
+                    {isMdOrAdmin && sal && sal.salary != null && sal.salary > 0 && (
+                      <span className="text-xs text-muted-foreground tabular-nums">
+                        ₹{fmtK(sal.salary)} · <span className={sal.revenueSalaryRatio != null && sal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{sal.revenueSalaryRatio != null ? `${(sal.revenueSalaryRatio).toFixed(1)}x` : '–'}</span>
+                      </span>
+                    )}
+                    {(() => {
+                      const amount = incentivesByUserId.get(bd.bdId) ?? (bd.bdEmployeeId ? incentivesByEmployeeId.get(bd.bdEmployeeId) : undefined) ?? incentivesByName.get(bd.bdName.toLowerCase().trim())
+                      if (amount === undefined && HIDE_MISSING_INCENTIVE_CAPSULE) return null
+                      return (
+                        <span className="inline-flex items-center text-xs font-bold text-amber-500 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 shrink-0">
+                          Incentive: {amount !== undefined ? `₹${amount.toLocaleString()}` : '-'}
+                        </span>
+                      )
+                    })()}
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="text-xs text-muted-foreground">{bd.totalLeads} leads</span>
-                  <span className="text-xs text-violet-600">{bd.conversionRate.toFixed(1)}%</span>
-                  <Progress value={Math.min(bd.conversionRate, 100)} className="h-1 w-16" />
-                  {isMdOrAdmin && sal && sal.salary != null && sal.salary > 0 && (
-                    <span className="text-xs text-muted-foreground tabular-nums">
-                      ₹{fmtK(sal.salary)} · <span className={sal.revenueSalaryRatio != null && sal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{sal.revenueSalaryRatio != null ? `${(sal.revenueSalaryRatio).toFixed(1)}x` : '–'}</span>
-                    </span>
-                  )}
-                  <span className="inline-flex items-center text-xs font-bold text-amber-500 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 shrink-0">
-                    Incentive: ₹{((bd.totalIpd * 1500) + (bd.totalLeads * 50)).toLocaleString()}
+                {/* Last 4 months mini bars */}
+                <div className="hidden sm:flex items-end gap-1 h-8">
+                  {recentMonths.map((m) => {
+                    const v = bd.ipd[m] ?? 0
+                    const maxV = Math.max(1, ...bds.map((b) => b.ipd[m] ?? 0))
+                    return (
+                      <div key={m} className="flex flex-col items-center gap-0.5">
+                        <div className="w-5 bg-emerald-500/20 rounded-sm relative" style={{ height: `${Math.max(4, (v / maxV) * 28)}px` }}>
+                          {v > 0 && <div className="absolute inset-0 bg-emerald-500 rounded-sm opacity-80" />}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-bold text-emerald-600 text-lg">{bd.totalIpd}</p>
+                  <p className="text-[10px] text-muted-foreground">IPD Done</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+              </div>
+              {/* Mobile: revenue/salary row */}
+              {isMdOrAdmin && sal && sal.salary != null && sal.salary > 0 && (
+                <div className="flex sm:hidden items-center justify-between mt-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
+                  <span>Salary: ₹{fmtK(sal.salary)}</span>
+                  <span>
+                    Rev/Sal: <span className={sal.revenueSalaryRatio != null && sal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{sal.revenueSalaryRatio != null ? `${sal.revenueSalaryRatio.toFixed(1)}x` : '–'}</span>
                   </span>
                 </div>
-              </div>
-              {/* Last 4 months mini bars */}
-              <div className="hidden sm:flex items-end gap-1 h-8">
-                {recentMonths.map((m) => {
-                  const v = bd.ipd[m] ?? 0
-                  const maxV = Math.max(1, ...bds.map((b) => b.ipd[m] ?? 0))
-                  return (
-                    <div key={m} className="flex flex-col items-center gap-0.5">
-                      <div className="w-5 bg-emerald-500/20 rounded-sm relative" style={{ height: `${Math.max(4, (v / maxV) * 28)}px` }}>
-                        {v > 0 && <div className="absolute inset-0 bg-emerald-500 rounded-sm opacity-80" />}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-              <div className="text-right shrink-0">
-                <p className="font-bold text-emerald-600 text-lg">{bd.totalIpd}</p>
-                <p className="text-[10px] text-muted-foreground">IPD Done</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-            </div>
-            {/* Mobile: revenue/salary row */}
-            {isMdOrAdmin && sal && sal.salary != null && sal.salary > 0 && (
-              <div className="flex sm:hidden items-center justify-between mt-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
-                <span>Salary: ₹{fmtK(sal.salary)}</span>
-                <span>
-                  Rev/Sal: <span className={sal.revenueSalaryRatio != null && sal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{sal.revenueSalaryRatio != null ? `${sal.revenueSalaryRatio.toFixed(1)}x` : '–'}</span>
-                </span>
-              </div>
-            )}
-          </button>
-        )})}
+              )}
+            </button>
+          )
+        })}
         {bds.length === 0 && <p className="text-center text-muted-foreground py-12 text-sm">No data for selected period</p>}
       </div>
     </div>
@@ -1517,7 +1540,7 @@ function MarketingInsightsTab({ dateRange }: { dateRange: DateRange | undefined 
         </CardHeader>
         <CardContent className="space-y-3 text-xs md:text-sm text-[#dae2fd]/95 leading-relaxed">
           <p className="font-medium text-[#c2c6d6]/80">{insights.summaryText}</p>
-          
+
           <div className="grid gap-4 md:grid-cols-2 mt-2 pt-2 border-t border-violet-500/10">
             <div className="space-y-1.5">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-[#c2c6d6]/60 uppercase">
@@ -1557,18 +1580,18 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
   const [activeTab, setActiveTab] = useState('overview')
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const t = new Date()
-    return { from: startOfMonth(t), to: endOfMonth(t) }
+    return {
+      from: new Date(t.getFullYear(), t.getMonth(), 1),
+      to: new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59, 999),
+    }
   })
 
   const [selectedBdId, setSelectedBdId] = useState<string | null>(null)
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)
 
-  const startDate = dateRange?.from
-  const endDate = dateRange?.to ?? dateRange?.from
-
   const dateParams = [
-    startDate ? `startDate=${format(startDate, 'yyyy-MM-dd')}` : '',
-    endDate ? `endDate=${format(endDate, 'yyyy-MM-dd')}` : '',
+    dateRange?.from ? `startDate=${format(dateRange.from, 'yyyy-MM-dd')}` : '',
+    dateRange?.to ? `endDate=${format(dateRange.to, 'yyyy-MM-dd')}` : '',
   ].filter(Boolean).join('&')
 
   useEffect(() => {
@@ -1602,9 +1625,9 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
                 <Link href="/team-lead/pipeline">View pipeline</Link>
               </Button>
             )}
-          <div className="flex w-full sm:w-auto shrink-0">
-            <DateRangePicker value={dateRange} onChange={setDateRange} />
-          </div>
+            <div className="flex w-full sm:w-auto shrink-0">
+              <DateRangePicker value={dateRange} onChange={setDateRange} />
+            </div>
           </div>
         </div>
 
@@ -1620,7 +1643,7 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
             <TeamPerformanceTab dateParams={dateParams} onSelectTeam={(id) => setSelectedTeamId(id)} variant={variant} />
           )}
           {activeTab === 'bd' && (
-            <BdPerformanceTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} variant={variant} />
+            <BdPerformanceTab dateParams={dateParams} onSelectBd={(id) => setSelectedBdId(id)} variant={variant} dateRange={dateRange} />
           )}
           {activeTab === 'sources' && (
             <SourceCampaignTab dateParams={dateParams} variant={variant} />
@@ -1648,6 +1671,7 @@ export function SalesDashboardView({ variant = 'org' }: { variant?: DashboardVar
         onClose={() => setSelectedTeamId(null)}
         dateParams={dateParams}
         variant={variant}
+        dateRange={dateRange}
       />
     </AuthenticatedLayout>
   )

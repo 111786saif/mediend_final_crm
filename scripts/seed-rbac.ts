@@ -71,6 +71,8 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'sales.targets', label: 'Targets', type: 'SECTION', parentKey: 'sales', sortOrder: 5 },
   { key: 'sales.sales_pnl', label: 'Sales P&L', type: 'SECTION', parentKey: 'sales', sortOrder: 6 },
   { key: 'sales.campaign_cpl', label: 'Campaign CPL', type: 'SECTION', parentKey: 'sales', sortOrder: 7 },
+  { key: 'sales.sales_pipeline', label: 'Sales Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 8 },
+  { key: 'sales.team_lead_pipeline', label: 'Team Lead Pipeline', type: 'SECTION', parentKey: 'sales', sortOrder: 9 },
 
   // Under insurance_pl
   { key: 'insurance_pl.insurance', label: 'Insurance', type: 'SECTION', parentKey: 'insurance_pl', sortOrder: 1 },
@@ -392,9 +394,33 @@ const resourcesToSeed: ResourceSeedItem[] = [
 ]
 
 async function main() {
-  console.log('Cleaning old RBAC resources & permissions assignments...')
-  await prisma.permissionAssignment.deleteMany({})
-  await prisma.resource.deleteMany({})
+  console.log('Cleaning obsolete resources and assignments...')
+  const seededKeys = resourcesToSeed.map((r) => r.key)
+  const obsoleteResources = await prisma.resource.findMany({
+    where: { NOT: { key: { in: seededKeys } } },
+    select: { id: true, key: true }
+  })
+  
+  if (obsoleteResources.length > 0) {
+    const obsoleteIds = obsoleteResources.map((r) => r.id)
+    
+    // 1. Delete assignments for obsolete resources
+    await prisma.permissionAssignment.deleteMany({
+      where: { resourceId: { in: obsoleteIds } }
+    })
+    
+    // 2. Delete obsolete resources hierarchically to prevent foreign key errors
+    await prisma.resource.deleteMany({
+      where: { id: { in: obsoleteIds }, type: 'ENTITY' }
+    })
+    await prisma.resource.deleteMany({
+      where: { id: { in: obsoleteIds }, type: 'SECTION' }
+    })
+    await prisma.resource.deleteMany({
+      where: { id: { in: obsoleteIds }, type: 'MODULE' }
+    })
+    console.log(`Deleted ${obsoleteResources.length} obsolete resources and their assignments.`)
+  }
 
   console.log('Seeding resources...')
 
