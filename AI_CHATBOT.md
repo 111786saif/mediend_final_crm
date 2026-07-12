@@ -120,6 +120,7 @@ model: google('gemini-1.5-flash') // Change to gemini-1.5-pro for better quality
 
 Edit `components/ai/quick-questions.tsx`:
 
+
 ```typescript
 const QUICK_QUESTIONS = [
   "Your question here",
