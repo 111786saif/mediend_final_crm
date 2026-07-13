@@ -182,6 +182,7 @@ export type InsuranceMasterWhereInput = {
   isActive?: Prisma.BoolFilter<"InsuranceMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"InsuranceMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InsuranceMaster"> | Date | string
+  hospitals?: Prisma.HospitalMasterInsuranceListRelationFilter
 }
 
 export type InsuranceMasterOrderByWithRelationInput = {
@@ -190,6 +191,7 @@ export type InsuranceMasterOrderByWithRelationInput = {
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  hospitals?: Prisma.HospitalMasterInsuranceOrderByRelationAggregateInput
 }
 
 export type InsuranceMasterWhereUniqueInput = Prisma.AtLeast<{
@@ -201,6 +203,7 @@ export type InsuranceMasterWhereUniqueInput = Prisma.AtLeast<{
   isActive?: Prisma.BoolFilter<"InsuranceMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"InsuranceMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"InsuranceMaster"> | Date | string
+  hospitals?: Prisma.HospitalMasterInsuranceListRelationFilter
 }, "id" | "name">
 
 export type InsuranceMasterOrderByWithAggregationInput = {
@@ -231,6 +234,7 @@ export type InsuranceMasterCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  hospitals?: Prisma.HospitalMasterInsuranceCreateNestedManyWithoutInsuranceInput
 }
 
 export type InsuranceMasterUncheckedCreateInput = {
@@ -239,6 +243,7 @@ export type InsuranceMasterUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  hospitals?: Prisma.HospitalMasterInsuranceUncheckedCreateNestedManyWithoutInsuranceInput
 }
 
 export type InsuranceMasterUpdateInput = {
@@ -247,6 +252,7 @@ export type InsuranceMasterUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hospitals?: Prisma.HospitalMasterInsuranceUpdateManyWithoutInsuranceNestedInput
 }
 
 export type InsuranceMasterUncheckedUpdateInput = {
@@ -255,6 +261,7 @@ export type InsuranceMasterUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hospitals?: Prisma.HospitalMasterInsuranceUncheckedUpdateManyWithoutInsuranceNestedInput
 }
 
 export type InsuranceMasterCreateManyInput = {
@@ -281,6 +288,11 @@ export type InsuranceMasterUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type InsuranceMasterScalarRelationFilter = {
+  is?: Prisma.InsuranceMasterWhereInput
+  isNot?: Prisma.InsuranceMasterWhereInput
+}
+
 export type InsuranceMasterCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -305,6 +317,97 @@ export type InsuranceMasterMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type InsuranceMasterCreateNestedOneWithoutHospitalsInput = {
+  create?: Prisma.XOR<Prisma.InsuranceMasterCreateWithoutHospitalsInput, Prisma.InsuranceMasterUncheckedCreateWithoutHospitalsInput>
+  connectOrCreate?: Prisma.InsuranceMasterCreateOrConnectWithoutHospitalsInput
+  connect?: Prisma.InsuranceMasterWhereUniqueInput
+}
+
+export type InsuranceMasterUpdateOneRequiredWithoutHospitalsNestedInput = {
+  create?: Prisma.XOR<Prisma.InsuranceMasterCreateWithoutHospitalsInput, Prisma.InsuranceMasterUncheckedCreateWithoutHospitalsInput>
+  connectOrCreate?: Prisma.InsuranceMasterCreateOrConnectWithoutHospitalsInput
+  upsert?: Prisma.InsuranceMasterUpsertWithoutHospitalsInput
+  connect?: Prisma.InsuranceMasterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InsuranceMasterUpdateToOneWithWhereWithoutHospitalsInput, Prisma.InsuranceMasterUpdateWithoutHospitalsInput>, Prisma.InsuranceMasterUncheckedUpdateWithoutHospitalsInput>
+}
+
+export type InsuranceMasterCreateWithoutHospitalsInput = {
+  id?: string
+  name: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type InsuranceMasterUncheckedCreateWithoutHospitalsInput = {
+  id?: string
+  name: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type InsuranceMasterCreateOrConnectWithoutHospitalsInput = {
+  where: Prisma.InsuranceMasterWhereUniqueInput
+  create: Prisma.XOR<Prisma.InsuranceMasterCreateWithoutHospitalsInput, Prisma.InsuranceMasterUncheckedCreateWithoutHospitalsInput>
+}
+
+export type InsuranceMasterUpsertWithoutHospitalsInput = {
+  update: Prisma.XOR<Prisma.InsuranceMasterUpdateWithoutHospitalsInput, Prisma.InsuranceMasterUncheckedUpdateWithoutHospitalsInput>
+  create: Prisma.XOR<Prisma.InsuranceMasterCreateWithoutHospitalsInput, Prisma.InsuranceMasterUncheckedCreateWithoutHospitalsInput>
+  where?: Prisma.InsuranceMasterWhereInput
+}
+
+export type InsuranceMasterUpdateToOneWithWhereWithoutHospitalsInput = {
+  where?: Prisma.InsuranceMasterWhereInput
+  data: Prisma.XOR<Prisma.InsuranceMasterUpdateWithoutHospitalsInput, Prisma.InsuranceMasterUncheckedUpdateWithoutHospitalsInput>
+}
+
+export type InsuranceMasterUpdateWithoutHospitalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type InsuranceMasterUncheckedUpdateWithoutHospitalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type InsuranceMasterCountOutputType
+ */
+
+export type InsuranceMasterCountOutputType = {
+  hospitals: number
+}
+
+export type InsuranceMasterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hospitals?: boolean | InsuranceMasterCountOutputTypeCountHospitalsArgs
+}
+
+/**
+ * InsuranceMasterCountOutputType without action
+ */
+export type InsuranceMasterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InsuranceMasterCountOutputType
+   */
+  select?: Prisma.InsuranceMasterCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * InsuranceMasterCountOutputType without action
+ */
+export type InsuranceMasterCountOutputTypeCountHospitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HospitalMasterInsuranceWhereInput
+}
 
 
 export type InsuranceMasterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -313,6 +416,8 @@ export type InsuranceMasterSelect<ExtArgs extends runtime.Types.Extensions.Inter
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  hospitals?: boolean | Prisma.InsuranceMaster$hospitalsArgs<ExtArgs>
+  _count?: boolean | Prisma.InsuranceMasterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["insuranceMaster"]>
 
 export type InsuranceMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -340,10 +445,18 @@ export type InsuranceMasterSelectScalar = {
 }
 
 export type InsuranceMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["insuranceMaster"]>
+export type InsuranceMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hospitals?: boolean | Prisma.InsuranceMaster$hospitalsArgs<ExtArgs>
+  _count?: boolean | Prisma.InsuranceMasterCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type InsuranceMasterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type InsuranceMasterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $InsuranceMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InsuranceMaster"
-  objects: {}
+  objects: {
+    hospitals: Prisma.$HospitalMasterInsurancePayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -744,6 +857,7 @@ readonly fields: InsuranceMasterFieldRefs;
  */
 export interface Prisma__InsuranceMasterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  hospitals<T extends Prisma.InsuranceMaster$hospitalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InsuranceMaster$hospitalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HospitalMasterInsurancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -795,6 +909,10 @@ export type InsuranceMasterFindUniqueArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
+  /**
    * Filter, which InsuranceMaster to fetch.
    */
   where: Prisma.InsuranceMasterWhereUniqueInput
@@ -813,6 +931,10 @@ export type InsuranceMasterFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.E
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
+  /**
    * Filter, which InsuranceMaster to fetch.
    */
   where: Prisma.InsuranceMasterWhereUniqueInput
@@ -830,6 +952,10 @@ export type InsuranceMasterFindFirstArgs<ExtArgs extends runtime.Types.Extension
    * Omit specific fields from the InsuranceMaster
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
   /**
    * Filter, which InsuranceMaster to fetch.
    */
@@ -879,6 +1005,10 @@ export type InsuranceMasterFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Ex
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
+  /**
    * Filter, which InsuranceMaster to fetch.
    */
   where?: Prisma.InsuranceMasterWhereInput
@@ -926,6 +1056,10 @@ export type InsuranceMasterFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the InsuranceMaster
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
   /**
    * Filter, which InsuranceMasters to fetch.
    */
@@ -975,6 +1109,10 @@ export type InsuranceMasterCreateArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
+  /**
    * The data needed to create a InsuranceMaster.
    */
   data: Prisma.XOR<Prisma.InsuranceMasterCreateInput, Prisma.InsuranceMasterUncheckedCreateInput>
@@ -1022,6 +1160,10 @@ export type InsuranceMasterUpdateArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the InsuranceMaster
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
   /**
    * The data needed to update a InsuranceMaster.
    */
@@ -1089,6 +1231,10 @@ export type InsuranceMasterUpsertArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
+  /**
    * The filter to search for the InsuranceMaster to update in case it exists.
    */
   where: Prisma.InsuranceMasterWhereUniqueInput
@@ -1115,6 +1261,10 @@ export type InsuranceMasterDeleteArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
+  /**
    * Filter which InsuranceMaster to delete.
    */
   where: Prisma.InsuranceMasterWhereUniqueInput
@@ -1135,6 +1285,30 @@ export type InsuranceMasterDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
 }
 
 /**
+ * InsuranceMaster.hospitals
+ */
+export type InsuranceMaster$hospitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HospitalMasterInsurance
+   */
+  select?: Prisma.HospitalMasterInsuranceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HospitalMasterInsurance
+   */
+  omit?: Prisma.HospitalMasterInsuranceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HospitalMasterInsuranceInclude<ExtArgs> | null
+  where?: Prisma.HospitalMasterInsuranceWhereInput
+  orderBy?: Prisma.HospitalMasterInsuranceOrderByWithRelationInput | Prisma.HospitalMasterInsuranceOrderByWithRelationInput[]
+  cursor?: Prisma.HospitalMasterInsuranceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HospitalMasterInsuranceScalarFieldEnum | Prisma.HospitalMasterInsuranceScalarFieldEnum[]
+}
+
+/**
  * InsuranceMaster without action
  */
 export type InsuranceMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1146,4 +1320,8 @@ export type InsuranceMasterDefaultArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the InsuranceMaster
    */
   omit?: Prisma.InsuranceMasterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InsuranceMasterInclude<ExtArgs> | null
 }

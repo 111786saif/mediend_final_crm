@@ -558,6 +558,11 @@ export type RankSnapshot = Prisma.RankSnapshotModel
  */
 export type HospitalMaster = Prisma.HospitalMasterModel
 /**
+ * Model HospitalMasterInsurance
+ * 
+ */
+export type HospitalMasterInsurance = Prisma.HospitalMasterInsuranceModel
+/**
  * Model DoctorMaster
  * 
  */

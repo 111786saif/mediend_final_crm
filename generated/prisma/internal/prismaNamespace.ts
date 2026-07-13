@@ -487,6 +487,7 @@ export const ModelName = {
   CronJobLog: 'CronJobLog',
   RankSnapshot: 'RankSnapshot',
   HospitalMaster: 'HospitalMaster',
+  HospitalMasterInsurance: 'HospitalMasterInsurance',
   DoctorMaster: 'DoctorMaster',
   TPAMaster: 'TPAMaster',
   AnesthesiaMaster: 'AnesthesiaMaster',
@@ -519,7 +520,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -8145,6 +8146,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HospitalMasterInsurance: {
+      payload: Prisma.$HospitalMasterInsurancePayload<ExtArgs>
+      fields: Prisma.HospitalMasterInsuranceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HospitalMasterInsuranceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HospitalMasterInsuranceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>
+        }
+        findFirst: {
+          args: Prisma.HospitalMasterInsuranceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HospitalMasterInsuranceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>
+        }
+        findMany: {
+          args: Prisma.HospitalMasterInsuranceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>[]
+        }
+        create: {
+          args: Prisma.HospitalMasterInsuranceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>
+        }
+        createMany: {
+          args: Prisma.HospitalMasterInsuranceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HospitalMasterInsuranceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>[]
+        }
+        delete: {
+          args: Prisma.HospitalMasterInsuranceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>
+        }
+        update: {
+          args: Prisma.HospitalMasterInsuranceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>
+        }
+        deleteMany: {
+          args: Prisma.HospitalMasterInsuranceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HospitalMasterInsuranceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HospitalMasterInsuranceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>[]
+        }
+        upsert: {
+          args: Prisma.HospitalMasterInsuranceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalMasterInsurancePayload>
+        }
+        aggregate: {
+          args: Prisma.HospitalMasterInsuranceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHospitalMasterInsurance>
+        }
+        groupBy: {
+          args: Prisma.HospitalMasterInsuranceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HospitalMasterInsuranceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HospitalMasterInsuranceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HospitalMasterInsuranceCountAggregateOutputType> | number
+        }
+      }
+    }
     DoctorMaster: {
       payload: Prisma.$DoctorMasterPayload<ExtArgs>
       fields: Prisma.DoctorMasterFieldRefs
@@ -11449,6 +11524,7 @@ export const HospitalMasterScalarFieldEnum = {
   name: 'name',
   address: 'address',
   googleMapLink: 'googleMapLink',
+  mouAgreementUrl: 'mouAgreementUrl',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -11457,9 +11533,32 @@ export const HospitalMasterScalarFieldEnum = {
 export type HospitalMasterScalarFieldEnum = (typeof HospitalMasterScalarFieldEnum)[keyof typeof HospitalMasterScalarFieldEnum]
 
 
+export const HospitalMasterInsuranceScalarFieldEnum = {
+  hospitalId: 'hospitalId',
+  insuranceId: 'insuranceId'
+} as const
+
+export type HospitalMasterInsuranceScalarFieldEnum = (typeof HospitalMasterInsuranceScalarFieldEnum)[keyof typeof HospitalMasterInsuranceScalarFieldEnum]
+
+
 export const DoctorMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  category: 'category',
+  treatment: 'treatment',
+  age: 'age',
+  sex: 'sex',
+  aadhaarNumber: 'aadhaarNumber',
+  aadhaarCardUrl: 'aadhaarCardUrl',
+  panNumber: 'panNumber',
+  panCardUrl: 'panCardUrl',
+  agreementUrl: 'agreementUrl',
+  experienceYears: 'experienceYears',
+  experienceNotes: 'experienceNotes',
+  feeStructure: 'feeStructure',
+  ratingAverage: 'ratingAverage',
+  ratingCount: 'ratingCount',
+  documents: 'documents',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -13024,6 +13123,7 @@ export type GlobalOmitConfig = {
   cronJobLog?: Prisma.CronJobLogOmit
   rankSnapshot?: Prisma.RankSnapshotOmit
   hospitalMaster?: Prisma.HospitalMasterOmit
+  hospitalMasterInsurance?: Prisma.HospitalMasterInsuranceOmit
   doctorMaster?: Prisma.DoctorMasterOmit
   tPAMaster?: Prisma.TPAMasterOmit
   anesthesiaMaster?: Prisma.AnesthesiaMasterOmit

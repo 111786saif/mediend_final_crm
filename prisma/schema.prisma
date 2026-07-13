@@ -3447,23 +3447,55 @@ model HospitalMaster {
   name          String   @unique
   address       String?  @db.Text
   googleMapLink String?
+  /// MOU / agreement document URL
+  mouAgreementUrl String?
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  insuranceProviders HospitalMasterInsurance[]
 
   @@index([name])
   @@index([isActive])
 }
 
+model HospitalMasterInsurance {
+  hospitalId  String
+  hospital    HospitalMaster  @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  insuranceId String
+  insurance   InsuranceMaster @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
+
+  @@id([hospitalId, insuranceId])
+  @@index([insuranceId])
+}
+
 model DoctorMaster {
   id        String   @id @default(cuid())
   name      String   @unique
+  category  String?
+  treatment String?
+  age       Int?
+  sex       String?
+  aadhaarNumber String?
+  aadhaarCardUrl String?
+  panNumber String?
+  panCardUrl String?
+  agreementUrl String?
+  experienceYears Int?
+  experienceNotes String? @db.Text
+  feeStructure String? @db.Text
+  /// Manual / aggregated rating from feedback (1–5)
+  ratingAverage Float?
+  ratingCount   Int     @default(0)
+  /// [{ name, url, type }] — Degrees, Documentation, MOU, Other
+  documents Json?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([name])
   @@index([isActive])
+  @@index([category])
 }
 
 model TPAMaster {
@@ -3494,6 +3526,8 @@ model InsuranceMaster {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  hospitals HospitalMasterInsurance[]
 
   @@index([name])
   @@index([isActive])
