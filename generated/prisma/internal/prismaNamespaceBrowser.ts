@@ -135,6 +135,8 @@ export const ModelName = {
   EmployeeMasterSeatingCost: 'EmployeeMasterSeatingCost',
   EmployeeMonthlySeatingMiscCost: 'EmployeeMonthlySeatingMiscCost',
   EmployeeMonthlySeatingMiscCostHistory: 'EmployeeMonthlySeatingMiscCostHistory',
+  EmployeeSalesTeamSalaryOverride: 'EmployeeSalesTeamSalaryOverride',
+  EmployeeSalesTeamSalaryOverrideHistory: 'EmployeeSalesTeamSalaryOverrideHistory',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
   UserTaskSeen: 'UserTaskSeen',
@@ -1913,6 +1915,7 @@ export const EmployeeMonthlySeatingMiscCostScalarFieldEnum = {
   seatingCost: 'seatingCost',
   masterSeatingCostId: 'masterSeatingCostId',
   miscCost: 'miscCost',
+  otherCost: 'otherCost',
   status: 'status',
   remarks: 'remarks',
   createdByUserId: 'createdByUserId',
@@ -1930,6 +1933,7 @@ export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
   action: 'action',
   seatingCost: 'seatingCost',
   miscCost: 'miscCost',
+  otherCost: 'otherCost',
   status: 'status',
   remarks: 'remarks',
   changedByUserId: 'changedByUserId',
@@ -1937,6 +1941,37 @@ export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
 } as const
 
 export type EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum]
+
+
+export const EmployeeSalesTeamSalaryOverrideScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  reason: 'reason',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeSalesTeamSalaryOverrideScalarFieldEnum = (typeof EmployeeSalesTeamSalaryOverrideScalarFieldEnum)[keyof typeof EmployeeSalesTeamSalaryOverrideScalarFieldEnum]
+
+
+export const EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  previousSalary: 'previousSalary',
+  updatedSalary: 'updatedSalary',
+  difference: 'difference',
+  reason: 'reason',
+  updatedByUserId: 'updatedByUserId',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum = (typeof EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum)[keyof typeof EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {

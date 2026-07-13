@@ -584,6 +584,8 @@ model User {
   seatingMiscCostsCreated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostCreatedBy")
   seatingMiscCostsUpdated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostUpdatedBy")
   seatingMiscCostHistory    EmployeeMonthlySeatingMiscCostHistory[] @relation("SeatingMiscCostHistoryBy")
+  salesTeamSalaryOverridesUpdated EmployeeSalesTeamSalaryOverride[] @relation("SalesTeamSalaryOverrideUpdatedBy")
+  salesTeamSalaryOverrideHistory  EmployeeSalesTeamSalaryOverrideHistory[] @relation("SalesTeamSalaryOverrideHistoryBy")
 
   invoiceRequestsSubmitted  InvoiceRequest[] @relation("InvoiceRequestRequestedBy")
   invoiceRequestsReviewed   InvoiceRequest[] @relation("InvoiceRequestReviewedBy")
@@ -1202,6 +1204,8 @@ model Employee {
   monthlyIncentives                       EmployeeMonthlyIncentive[]
   masterSeatingCost                       EmployeeMasterSeatingCost?
   monthlySeatingMiscCosts                 EmployeeMonthlySeatingMiscCost[]
+  salesTeamSalaryOverrides                EmployeeSalesTeamSalaryOverride[]
+  salesTeamSalaryOverrideHistory          EmployeeSalesTeamSalaryOverrideHistory[]
 
   @@index([userId])
   @@index([employeeCode])
@@ -3076,6 +3080,7 @@ model EmployeeMonthlySeatingMiscCost {
   masterSeatingCostId   String?
   masterSeatingCost     EmployeeMasterSeatingCost?    @relation(fields: [masterSeatingCostId], references: [id], onDelete: SetNull)
   miscCost              Float                         @default(0)
+  otherCost             Float                         @default(0)
   status                EmployeeSeatingMiscCostStatus @default(PENDING)
   remarks               String?                       @db.Text
   createdByUserId       String
@@ -3098,6 +3103,7 @@ model EmployeeMonthlySeatingMiscCostHistory {
   action          String
   seatingCost     Float
   miscCost        Float
+  otherCost       Float                         @default(0)
   status          EmployeeSeatingMiscCostStatus
   remarks         String?                       @db.Text
   changedByUserId String
@@ -3105,6 +3111,43 @@ model EmployeeMonthlySeatingMiscCostHistory {
   changedAt       DateTime                      @default(now())
 
   @@index([recordId, changedAt])
+}
+
+/// Sales Team Cost–only salary override for a given employee + month (does not change Payroll).
+model EmployeeSalesTeamSalaryOverride {
+  id              String   @id @default(cuid())
+  employeeId      String
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month           Int
+  year            Int
+  amount          Float
+  reason          String   @db.Text
+  updatedByUserId String
+  updatedBy       User     @relation("SalesTeamSalaryOverrideUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([employeeId, month, year])
+  @@index([month, year])
+}
+
+/// Immutable audit log of Sales Team Cost salary overrides.
+model EmployeeSalesTeamSalaryOverrideHistory {
+  id              String   @id @default(cuid())
+  employeeId      String
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month           Int
+  year            Int
+  previousSalary  Float
+  updatedSalary   Float
+  difference      Float
+  reason          String   @db.Text
+  updatedByUserId String
+  updatedBy       User     @relation("SalesTeamSalaryOverrideHistoryBy", fields: [updatedByUserId], references: [id])
+  updatedAt       DateTime @default(now())
+
+  @@index([employeeId, month, year, updatedAt])
+  @@index([updatedAt])
 }
 
 // ==========================================

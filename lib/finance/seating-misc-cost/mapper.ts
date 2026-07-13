@@ -1,5 +1,6 @@
 import type { EmployeeSeatingMiscCostStatus } from '@/generated/prisma/client'
 import type { SeatingMiscCostHistoryEntry, SeatingMiscCostRecord } from '@/lib/finance/seating-misc-cost/types'
+import { prisma } from '@/lib/prisma'
 
 export const seatingMiscInclude = {
   employee: {
@@ -21,6 +22,7 @@ type SeatingMiscRow = {
   year: number
   seatingCost: number
   miscCost: number
+  otherCost: number
   status: EmployeeSeatingMiscCostStatus
   remarks: string | null
   masterSeatingCostId: string | null
@@ -47,6 +49,7 @@ export function mapSeatingMiscRecord(row: SeatingMiscRow): SeatingMiscCostRecord
     designation: row.employee.designation,
     seatingCost: row.seatingCost,
     miscCost: row.miscCost,
+    otherCost: row.otherCost,
     month: row.month,
     year: row.year,
     status: row.status,
@@ -62,6 +65,7 @@ export function mapSeatingMiscHistoryEntry(row: {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost: number
   status: EmployeeSeatingMiscCostStatus
   remarks: string | null
   changedAt: Date
@@ -72,6 +76,7 @@ export function mapSeatingMiscHistoryEntry(row: {
     action: row.action,
     seatingCost: row.seatingCost,
     miscCost: row.miscCost,
+    otherCost: row.otherCost,
     status: row.status,
     remarks: row.remarks,
     changedBy: row.changedBy.name,
@@ -79,14 +84,13 @@ export function mapSeatingMiscHistoryEntry(row: {
   }
 }
 
-import { prisma } from '@/lib/prisma'
-
 export async function appendSeatingMiscHistory(
   recordId: string,
   action: string,
   data: {
     seatingCost: number
     miscCost: number
+    otherCost: number
     status: EmployeeSeatingMiscCostStatus
     remarks: string | null
   },
@@ -98,6 +102,7 @@ export async function appendSeatingMiscHistory(
       action,
       seatingCost: data.seatingCost,
       miscCost: data.miscCost,
+      otherCost: data.otherCost,
       status: data.status,
       remarks: data.remarks,
       changedByUserId,

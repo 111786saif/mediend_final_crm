@@ -38,7 +38,6 @@ import {
   Megaphone,
   Wallet,
   Armchair,
-  Layers,
 } from 'lucide-react'
 import { SessionUser } from '@/lib/auth'
 import { hasPermission, type Permission } from '@/lib/rbac'
@@ -424,12 +423,6 @@ export const navItems: NavItem[] = [
     url: '/finance/master-seating-cost',
     icon: Armchair,
     roles: ['FINANCE_HEAD', 'ADMIN'],
-  },
-  {
-    title: 'Seating & Misc Cost',
-    url: '/finance/seating-misc-cost',
-    icon: Layers,
-    permission: 'finance:read',
   },
   {
     title: 'Company P&L',

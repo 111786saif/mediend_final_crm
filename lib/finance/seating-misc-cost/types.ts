@@ -12,6 +12,7 @@ export interface SeatingMiscCostRecord {
   designation: string | null
   seatingCost: number
   miscCost: number
+  otherCost: number
   month: number
   year: number
   status: EmployeeSeatingMiscCostStatus
@@ -32,6 +33,7 @@ export interface SeatingMiscCostRow {
   recordId: string | null
   seatingCost: number | null
   miscCost: number | null
+  otherCost: number | null
   month: number
   year: number
   status: EmployeeSeatingMiscCostStatus | null
@@ -46,6 +48,7 @@ export interface SeatingMiscCostHistoryEntry {
   action: string
   seatingCost: number
   miscCost: number
+  otherCost: number
   status: EmployeeSeatingMiscCostStatus
   remarks: string | null
   changedBy: string

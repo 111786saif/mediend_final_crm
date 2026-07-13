@@ -12,13 +12,23 @@ import {
   computeNodeTotal,
 } from '@/lib/sales-team-cost/rollup'
 import { SALES_TEAM_COST_ROLE_LABEL, type SalesTeamCostRole } from '@/lib/sales-team-cost/types'
+import { SalaryActions } from '@/components/finance/sales-team-cost/salary-override-dialogs'
 
 interface RoleCostNodeProps {
   node: SalesTeamCostRole
   depth?: number
+  month: number
+  year: number
+  canWrite: boolean
 }
 
-export function RoleCostNode({ node, depth = 0 }: RoleCostNodeProps) {
+export function RoleCostNode({
+  node,
+  depth = 0,
+  month,
+  year,
+  canWrite,
+}: RoleCostNodeProps) {
   const [expanded, setExpanded] = useState(depth < 2)
 
   const direct = computeDirectRollup(node)
@@ -65,11 +75,16 @@ export function RoleCostNode({ node, depth = 0 }: RoleCostNodeProps) {
         </CardHeader>
 
         <CardContent className="space-y-3 p-4 pt-2">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <div className="rounded-md border p-3">
               <p className="text-xs font-medium text-muted-foreground">Salary</p>
               <p className="text-sm font-semibold">{formatCurrency(node.salaryPerHead)}</p>
-              <p className="mt-1 text-[10px] text-muted-foreground">(From Payroll)</p>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                {node.salaryIsOverride
+                  ? '(Sales Team Cost override · payroll unchanged)'
+                  : '(From Payroll)'}
+              </p>
+              <SalaryActions node={node} month={month} year={year} canWrite={canWrite} />
             </div>
 
             <div className="rounded-md border p-3">
@@ -87,7 +102,7 @@ export function RoleCostNode({ node, depth = 0 }: RoleCostNodeProps) {
               <p className="text-sm font-semibold">{formatCurrency(node.seatingAmount)}</p>
               <p className="mt-1 text-[10px] text-muted-foreground">
                 {node.seatingAmount > 0
-                  ? '(From Seating & Misc Cost · approved)'
+                  ? '(From Master / monthly seating)'
                   : 'No seating cost for selected month'}
               </p>
             </div>
@@ -97,8 +112,18 @@ export function RoleCostNode({ node, depth = 0 }: RoleCostNodeProps) {
               <p className="text-sm font-semibold">{formatCurrency(node.miscAmount)}</p>
               <p className="mt-1 text-[10px] text-muted-foreground">
                 {node.miscAmount > 0
-                  ? '(From Seating & Misc Cost · approved)'
+                  ? '(From Sales Team Cost · bulk entry)'
                   : 'No misc cost for selected month'}
+              </p>
+            </div>
+
+            <div className="rounded-md border p-3">
+              <p className="text-xs font-medium text-muted-foreground">Other cost</p>
+              <p className="text-sm font-semibold">{formatCurrency(node.otherAmount)}</p>
+              <p className="mt-1 text-[10px] text-muted-foreground">
+                {node.otherAmount > 0
+                  ? '(From Sales Team Cost · bulk entry)'
+                  : 'No other cost for selected month'}
               </p>
             </div>
 
@@ -124,6 +149,9 @@ export function RoleCostNode({ node, depth = 0 }: RoleCostNodeProps) {
             <span>
               Direct misc: <strong>{formatCurrency(direct.misc)}</strong>
             </span>
+            <span>
+              Direct other: <strong>{formatCurrency(direct.other)}</strong>
+            </span>
             {(node.type === 'bd' || node.type === 'tl' || node.type === 'salesHead') && (
               <span>
                 Direct marketing: <strong>{formatCurrency(direct.marketing)}</strong>
@@ -139,7 +167,14 @@ export function RoleCostNode({ node, depth = 0 }: RoleCostNodeProps) {
       {hasChildren && expanded && (
         <div className="space-y-2">
           {node.children.map((child) => (
-            <RoleCostNode key={child.id} node={child} depth={depth + 1} />
+            <RoleCostNode
+              key={child.id}
+              node={child}
+              depth={depth + 1}
+              month={month}
+              year={year}
+              canWrite={canWrite}
+            />
           ))}
         </div>
       )}

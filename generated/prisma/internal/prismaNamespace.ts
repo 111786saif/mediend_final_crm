@@ -468,6 +468,8 @@ export const ModelName = {
   EmployeeMasterSeatingCost: 'EmployeeMasterSeatingCost',
   EmployeeMonthlySeatingMiscCost: 'EmployeeMonthlySeatingMiscCost',
   EmployeeMonthlySeatingMiscCostHistory: 'EmployeeMonthlySeatingMiscCostHistory',
+  EmployeeSalesTeamSalaryOverride: 'EmployeeSalesTeamSalaryOverride',
+  EmployeeSalesTeamSalaryOverrideHistory: 'EmployeeSalesTeamSalaryOverrideHistory',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
   UserTaskSeen: 'UserTaskSeen',
@@ -516,7 +518,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6736,6 +6738,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EmployeeSalesTeamSalaryOverride: {
+      payload: Prisma.$EmployeeSalesTeamSalaryOverridePayload<ExtArgs>
+      fields: Prisma.EmployeeSalesTeamSalaryOverrideFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>[]
+        }
+        delete: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>
+        }
+        update: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>[]
+        }
+        upsert: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverridePayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeSalesTeamSalaryOverride>
+        }
+        groupBy: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeSalesTeamSalaryOverrideGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeSalesTeamSalaryOverrideCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmployeeSalesTeamSalaryOverrideHistory: {
+      payload: Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload<ExtArgs>
+      fields: Prisma.EmployeeSalesTeamSalaryOverrideHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>
+        }
+        update: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmployeeSalesTeamSalaryOverrideHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmployeeSalesTeamSalaryOverrideHistory>
+        }
+        groupBy: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeSalesTeamSalaryOverrideHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmployeeSalesTeamSalaryOverrideHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
     Task: {
       payload: Prisma.$TaskPayload<ExtArgs>
       fields: Prisma.TaskFieldRefs
@@ -10944,6 +11094,7 @@ export const EmployeeMonthlySeatingMiscCostScalarFieldEnum = {
   seatingCost: 'seatingCost',
   masterSeatingCostId: 'masterSeatingCostId',
   miscCost: 'miscCost',
+  otherCost: 'otherCost',
   status: 'status',
   remarks: 'remarks',
   createdByUserId: 'createdByUserId',
@@ -10961,6 +11112,7 @@ export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
   action: 'action',
   seatingCost: 'seatingCost',
   miscCost: 'miscCost',
+  otherCost: 'otherCost',
   status: 'status',
   remarks: 'remarks',
   changedByUserId: 'changedByUserId',
@@ -10968,6 +11120,37 @@ export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
 } as const
 
 export type EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum]
+
+
+export const EmployeeSalesTeamSalaryOverrideScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  reason: 'reason',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeSalesTeamSalaryOverrideScalarFieldEnum = (typeof EmployeeSalesTeamSalaryOverrideScalarFieldEnum)[keyof typeof EmployeeSalesTeamSalaryOverrideScalarFieldEnum]
+
+
+export const EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  previousSalary: 'previousSalary',
+  updatedSalary: 'updatedSalary',
+  difference: 'difference',
+  reason: 'reason',
+  updatedByUserId: 'updatedByUserId',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum = (typeof EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum)[keyof typeof EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {
@@ -12725,6 +12908,8 @@ export type GlobalOmitConfig = {
   employeeMasterSeatingCost?: Prisma.EmployeeMasterSeatingCostOmit
   employeeMonthlySeatingMiscCost?: Prisma.EmployeeMonthlySeatingMiscCostOmit
   employeeMonthlySeatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryOmit
+  employeeSalesTeamSalaryOverride?: Prisma.EmployeeSalesTeamSalaryOverrideOmit
+  employeeSalesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryOmit
   task?: Prisma.TaskOmit
   taskDueDateApproval?: Prisma.TaskDueDateApprovalOmit
   userTaskSeen?: Prisma.UserTaskSeenOmit

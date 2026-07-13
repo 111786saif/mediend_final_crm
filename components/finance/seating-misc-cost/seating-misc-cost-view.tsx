@@ -755,6 +755,7 @@ function HistoryDialog({
                 <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
                   <span>Seating: {formatCurrency(h.seatingCost)}</span>
                   <span>Misc: {formatCurrency(h.miscCost)}</span>
+                  <span>Other: {formatCurrency(h.otherCost)}</span>
                   <span>Status: {SEATING_MISC_STATUS_LABEL[h.status]}</span>
                   <span>By: {h.changedBy}</span>
                 </div>
