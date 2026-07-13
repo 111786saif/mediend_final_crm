@@ -271,6 +271,7 @@ enum NotificationType {
   LEAVE_BALANCE_EDIT_RESOLVED
   GRACE2_MONTHLY_LIMIT_EXCEEDED
   RANK_IMPROVED
+  WORKFLOW_RESET
 }
 
 enum NoticeTargetType {
@@ -516,6 +517,7 @@ model User {
   pdfsCreated          PreAuthPDF[]       @relation("PDFCreator")
   admissionsInitiated  AdmissionRecord[]  @relation("AdmissionInitiator")
   caseStageChanges     CaseStageHistory[] @relation("CaseStageChanger")
+  workflowResetsPerformed WorkflowResetLog[] @relation("WorkflowResetPerformer")
   caseChatMessagesSent CaseChatMessage[]  @relation("CaseChatSender")
   chatReadReceipts     ChatReadReceipt[]  @relation("ChatReadUser")
 
@@ -757,6 +759,7 @@ model Lead {
   admissionRecord       AdmissionRecord?
   insuranceInitiateForm InsuranceInitiateForm?
   caseStageHistory      CaseStageHistory[]
+  workflowResetLogs     WorkflowResetLog[]
   caseChatMessages      CaseChatMessage[]
   chatReadReceipts      ChatReadReceipt[]      @relation("ChatReadLead")
   callNotes             CallNote[]
@@ -2680,6 +2683,38 @@ model CaseStageHistory {
 
   @@index([leadId])
   @@index([changedAt])
+}
+
+/// Immutable audit trail for Executive Assistant workflow-step resets.
+/// Rows are append-only — there is no update/delete API for this model.
+model WorkflowResetLog {
+  id     String @id @default(cuid())
+  leadId String
+  lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  patientName String
+  leadRef     String
+
+  previousStepNumber Int
+  previousStepLabel  String
+  previousCaseStage  CaseStage
+  resetToStepNumber  Int
+  resetToStepLabel   String
+  resetToCaseStage   CaseStage
+  stepsReverted      Int
+
+  reason String @db.Text
+
+  resetById String
+  resetBy   User   @relation("WorkflowResetPerformer", fields: [resetById], references: [id])
+  resetAt   DateTime @default(now())
+
+  ipAddress   String?
+  userAgent   String? @db.Text
+
+  @@index([leadId])
+  @@index([resetAt])
+  @@index([resetById])
 }
 
 // ==========================================

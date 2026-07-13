@@ -383,6 +383,12 @@ export type InsuranceInitiateForm = Prisma.InsuranceInitiateFormModel
  */
 export type CaseStageHistory = Prisma.CaseStageHistoryModel
 /**
+ * Model WorkflowResetLog
+ * Immutable audit trail for Executive Assistant workflow-step resets.
+ * Rows are append-only — there is no update/delete API for this model.
+ */
+export type WorkflowResetLog = Prisma.WorkflowResetLogModel
+/**
  * Model CaseChatMessage
  * 
  */
