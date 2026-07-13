@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {
+  Award,
   BarChart3,
   BookOpen,
   Building2,
@@ -386,6 +387,24 @@ export const navItems: NavItem[] = [
     title: 'Fin Invoice Requests',
     url: '/finance/invoice-requests',
     icon: FileText,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Outstanding',
+    url: '/pl/outstanding',
+    icon: CreditCard,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Doctor List',
+    url: '/doctors',
+    icon: Stethoscope,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Hospital List',
+    url: '/hospitals',
+    icon: Building2,
     permission: 'finance:read',
   },
   {
