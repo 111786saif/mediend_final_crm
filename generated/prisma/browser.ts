@@ -73,6 +73,21 @@ export type PLRecord = Prisma.PLRecordModel
  */
 export type InvoiceRequest = Prisma.InvoiceRequestModel
 /**
+ * Model InvoiceRequestActivity
+ * 
+ */
+export type InvoiceRequestActivity = Prisma.InvoiceRequestActivityModel
+/**
+ * Model DoctorPayoffRequest
+ * 
+ */
+export type DoctorPayoffRequest = Prisma.DoctorPayoffRequestModel
+/**
+ * Model DoctorPayoffRequestActivity
+ * 
+ */
+export type DoctorPayoffRequestActivity = Prisma.DoctorPayoffRequestActivityModel
+/**
  * Model IncomingLead
  * 
  */

@@ -395,6 +395,9 @@ export const ModelName = {
   InsuranceCase: 'InsuranceCase',
   PLRecord: 'PLRecord',
   InvoiceRequest: 'InvoiceRequest',
+  InvoiceRequestActivity: 'InvoiceRequestActivity',
+  DoctorPayoffRequest: 'DoctorPayoffRequest',
+  DoctorPayoffRequestActivity: 'DoctorPayoffRequestActivity',
   IncomingLead: 'IncomingLead',
   Department: 'Department',
   DepartmentTeam: 'DepartmentTeam',
@@ -513,7 +516,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1328,6 +1331,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.InvoiceRequestCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.InvoiceRequestCountAggregateOutputType> | number
+        }
+      }
+    }
+    InvoiceRequestActivity: {
+      payload: Prisma.$InvoiceRequestActivityPayload<ExtArgs>
+      fields: Prisma.InvoiceRequestActivityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InvoiceRequestActivityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InvoiceRequestActivityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>
+        }
+        findFirst: {
+          args: Prisma.InvoiceRequestActivityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InvoiceRequestActivityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>
+        }
+        findMany: {
+          args: Prisma.InvoiceRequestActivityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>[]
+        }
+        create: {
+          args: Prisma.InvoiceRequestActivityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>
+        }
+        createMany: {
+          args: Prisma.InvoiceRequestActivityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InvoiceRequestActivityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>[]
+        }
+        delete: {
+          args: Prisma.InvoiceRequestActivityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>
+        }
+        update: {
+          args: Prisma.InvoiceRequestActivityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>
+        }
+        deleteMany: {
+          args: Prisma.InvoiceRequestActivityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InvoiceRequestActivityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InvoiceRequestActivityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>[]
+        }
+        upsert: {
+          args: Prisma.InvoiceRequestActivityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRequestActivityPayload>
+        }
+        aggregate: {
+          args: Prisma.InvoiceRequestActivityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInvoiceRequestActivity>
+        }
+        groupBy: {
+          args: Prisma.InvoiceRequestActivityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceRequestActivityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InvoiceRequestActivityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceRequestActivityCountAggregateOutputType> | number
+        }
+      }
+    }
+    DoctorPayoffRequest: {
+      payload: Prisma.$DoctorPayoffRequestPayload<ExtArgs>
+      fields: Prisma.DoctorPayoffRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DoctorPayoffRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DoctorPayoffRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.DoctorPayoffRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DoctorPayoffRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>
+        }
+        findMany: {
+          args: Prisma.DoctorPayoffRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>[]
+        }
+        create: {
+          args: Prisma.DoctorPayoffRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>
+        }
+        createMany: {
+          args: Prisma.DoctorPayoffRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DoctorPayoffRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.DoctorPayoffRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>
+        }
+        update: {
+          args: Prisma.DoctorPayoffRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.DoctorPayoffRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DoctorPayoffRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DoctorPayoffRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.DoctorPayoffRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.DoctorPayoffRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDoctorPayoffRequest>
+        }
+        groupBy: {
+          args: Prisma.DoctorPayoffRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DoctorPayoffRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DoctorPayoffRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DoctorPayoffRequestCountAggregateOutputType> | number
+        }
+      }
+    }
+    DoctorPayoffRequestActivity: {
+      payload: Prisma.$DoctorPayoffRequestActivityPayload<ExtArgs>
+      fields: Prisma.DoctorPayoffRequestActivityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DoctorPayoffRequestActivityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DoctorPayoffRequestActivityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>
+        }
+        findFirst: {
+          args: Prisma.DoctorPayoffRequestActivityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DoctorPayoffRequestActivityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>
+        }
+        findMany: {
+          args: Prisma.DoctorPayoffRequestActivityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>[]
+        }
+        create: {
+          args: Prisma.DoctorPayoffRequestActivityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>
+        }
+        createMany: {
+          args: Prisma.DoctorPayoffRequestActivityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DoctorPayoffRequestActivityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>[]
+        }
+        delete: {
+          args: Prisma.DoctorPayoffRequestActivityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>
+        }
+        update: {
+          args: Prisma.DoctorPayoffRequestActivityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>
+        }
+        deleteMany: {
+          args: Prisma.DoctorPayoffRequestActivityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DoctorPayoffRequestActivityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DoctorPayoffRequestActivityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>[]
+        }
+        upsert: {
+          args: Prisma.DoctorPayoffRequestActivityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DoctorPayoffRequestActivityPayload>
+        }
+        aggregate: {
+          args: Prisma.DoctorPayoffRequestActivityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDoctorPayoffRequestActivity>
+        }
+        groupBy: {
+          args: Prisma.DoctorPayoffRequestActivityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DoctorPayoffRequestActivityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DoctorPayoffRequestActivityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DoctorPayoffRequestActivityCountAggregateOutputType> | number
         }
       }
     }
@@ -9310,6 +9535,56 @@ export const InvoiceRequestScalarFieldEnum = {
 export type InvoiceRequestScalarFieldEnum = (typeof InvoiceRequestScalarFieldEnum)[keyof typeof InvoiceRequestScalarFieldEnum]
 
 
+export const InvoiceRequestActivityScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  action: 'action',
+  message: 'message',
+  remarks: 'remarks',
+  actorId: 'actorId',
+  createdAt: 'createdAt'
+} as const
+
+export type InvoiceRequestActivityScalarFieldEnum = (typeof InvoiceRequestActivityScalarFieldEnum)[keyof typeof InvoiceRequestActivityScalarFieldEnum]
+
+
+export const DoctorPayoffRequestScalarFieldEnum = {
+  id: 'id',
+  doctorName: 'doctorName',
+  hospitalName: 'hospitalName',
+  leadId: 'leadId',
+  leadIds: 'leadIds',
+  requestAmount: 'requestAmount',
+  requestRemarks: 'requestRemarks',
+  financeRemarks: 'financeRemarks',
+  rejectionRemarks: 'rejectionRemarks',
+  attachments: 'attachments',
+  verificationDocUrl: 'verificationDocUrl',
+  verificationDocName: 'verificationDocName',
+  status: 'status',
+  requestedById: 'requestedById',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DoctorPayoffRequestScalarFieldEnum = (typeof DoctorPayoffRequestScalarFieldEnum)[keyof typeof DoctorPayoffRequestScalarFieldEnum]
+
+
+export const DoctorPayoffRequestActivityScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  action: 'action',
+  message: 'message',
+  remarks: 'remarks',
+  actorId: 'actorId',
+  createdAt: 'createdAt'
+} as const
+
+export type DoctorPayoffRequestActivityScalarFieldEnum = (typeof DoctorPayoffRequestActivityScalarFieldEnum)[keyof typeof DoctorPayoffRequestActivityScalarFieldEnum]
+
+
 export const IncomingLeadScalarFieldEnum = {
   id: 'id',
   source: 'source',
@@ -11475,6 +11750,20 @@ export type ListEnumInvoiceRequestStatusFieldRefInput<$PrismaModel> = FieldRefIn
 
 
 /**
+ * Reference to a field of type 'DoctorPayoffRequestStatus'
+ */
+export type EnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DoctorPayoffRequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DoctorPayoffRequestStatus[]'
+ */
+export type ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DoctorPayoffRequestStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'EmployeeStatus'
  */
 export type EnumEmployeeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployeeStatus'>
@@ -12363,6 +12652,9 @@ export type GlobalOmitConfig = {
   insuranceCase?: Prisma.InsuranceCaseOmit
   pLRecord?: Prisma.PLRecordOmit
   invoiceRequest?: Prisma.InvoiceRequestOmit
+  invoiceRequestActivity?: Prisma.InvoiceRequestActivityOmit
+  doctorPayoffRequest?: Prisma.DoctorPayoffRequestOmit
+  doctorPayoffRequestActivity?: Prisma.DoctorPayoffRequestActivityOmit
   incomingLead?: Prisma.IncomingLeadOmit
   department?: Prisma.DepartmentOmit
   departmentTeam?: Prisma.DepartmentTeamOmit

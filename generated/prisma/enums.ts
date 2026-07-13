@@ -113,6 +113,15 @@ export const InvoiceRequestStatus = {
 export type InvoiceRequestStatus = (typeof InvoiceRequestStatus)[keyof typeof InvoiceRequestStatus]
 
 
+export const DoctorPayoffRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type DoctorPayoffRequestStatus = (typeof DoctorPayoffRequestStatus)[keyof typeof DoctorPayoffRequestStatus]
+
+
 export const FlowType = {
   INSURANCE: 'INSURANCE',
   CASH: 'CASH'

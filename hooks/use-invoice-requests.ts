@@ -68,6 +68,7 @@ export function useCreatePlInvoiceRequest() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pl-invoice-requests'] })
       queryClient.invalidateQueries({ queryKey: ['finance-invoice-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['invoice-request-activity'] })
     },
   })
 }
@@ -96,6 +97,7 @@ export function useApproveInvoiceRequest() {
       queryClient.invalidateQueries({ queryKey: ['finance-invoice-requests'] })
       queryClient.invalidateQueries({ queryKey: ['finance-invoice-request'] })
       queryClient.invalidateQueries({ queryKey: ['pl-invoice-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['invoice-request-activity'] })
     },
   })
 }
@@ -114,6 +116,7 @@ export function useRejectInvoiceRequest() {
       queryClient.invalidateQueries({ queryKey: ['finance-invoice-requests'] })
       queryClient.invalidateQueries({ queryKey: ['finance-invoice-request'] })
       queryClient.invalidateQueries({ queryKey: ['pl-invoice-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['invoice-request-activity'] })
     },
   })
 }

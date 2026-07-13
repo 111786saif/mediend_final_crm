@@ -52,6 +52,8 @@ import {
   isInvoiceImageUrl,
 } from '@/lib/finance/invoice-request/attachments'
 import { hasPermission } from '@/lib/rbac'
+import { useInvoiceRequestActivity } from '@/hooks/use-doctor-payoff-requests'
+import { RequestActivityLogPanel } from '@/components/recent-activity-log'
 
 function statusVariant(status: InvoiceRequestStatus): 'default' | 'secondary' | 'destructive' | 'outline' {
   if (status === 'VERIFIED') return 'default'
@@ -83,6 +85,7 @@ export function InvoiceRequestView() {
   )
 
   const { data, isLoading, isError, refetch } = useInvoiceRequests(filters)
+  const { data: activityData } = useInvoiceRequestActivity({ limit: 20 })
   const approveMutation = useApproveInvoiceRequest()
   const rejectMutation = useRejectInvoiceRequest()
 
@@ -257,6 +260,13 @@ export function InvoiceRequestView() {
           )}
         </CardContent>
       </Card>
+
+      <RequestActivityLogPanel
+        title="Invoice Request Activity Log"
+        items={activityData?.items ?? []}
+        emptyMessage="No invoice request activity yet"
+        variant="light"
+      />
 
       <Dialog open={!!reviewRequest} onOpenChange={(open) => !open && resetReviewDialog()}>
         <DialogContent className="max-w-lg">

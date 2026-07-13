@@ -390,6 +390,12 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
+    title: 'Fin Doctor Payoff',
+    url: '/finance/doctor-payoff-requests',
+    icon: Stethoscope,
+    permission: 'finance:read',
+  },
+  {
     title: 'Fin Outstanding',
     url: '/pl/outstanding',
     icon: CreditCard,

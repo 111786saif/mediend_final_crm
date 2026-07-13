@@ -87,6 +87,12 @@ enum InvoiceRequestStatus {
   REJECTED
 }
 
+enum DoctorPayoffRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum FlowType {
   INSURANCE
   CASH
@@ -581,6 +587,11 @@ model User {
 
   invoiceRequestsSubmitted  InvoiceRequest[] @relation("InvoiceRequestRequestedBy")
   invoiceRequestsReviewed   InvoiceRequest[] @relation("InvoiceRequestReviewedBy")
+  invoiceRequestActivities  InvoiceRequestActivity[] @relation("InvoiceRequestActivityActor")
+
+  doctorPayoffRequestsSubmitted DoctorPayoffRequest[] @relation("DoctorPayoffRequestedBy")
+  doctorPayoffRequestsReviewed  DoctorPayoffRequest[] @relation("DoctorPayoffReviewedBy")
+  doctorPayoffRequestActivities DoctorPayoffRequestActivity[] @relation("DoctorPayoffActivityActor")
 
   // Meets (calendar / interviews / MD appointments)
   meetsCreated       Meet[]            @relation("MeetsCreated")
@@ -749,6 +760,7 @@ model Lead {
   callNotes             CallNote[]
   paymentInstallments   PaymentInstallment[]
   invoiceRequests       InvoiceRequest[]
+  doctorPayoffRequests  DoctorPayoffRequest[]
 
   @@index([bdId])
   @@index([status])
@@ -978,10 +990,82 @@ model InvoiceRequest {
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
 
+  activityLogs     InvoiceRequestActivity[]
+
   @@index([leadId])
   @@index([status])
   @@index([requestedById])
   @@index([createdAt])
+}
+
+model InvoiceRequestActivity {
+  id        String         @id @default(cuid())
+  requestId String
+  request   InvoiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  action    String
+  message   String
+  remarks   String?        @db.Text
+  actorId   String
+  actor     User           @relation("InvoiceRequestActivityActor", fields: [actorId], references: [id])
+  createdAt DateTime       @default(now())
+
+  @@index([requestId])
+  @@index([createdAt])
+  @@index([actorId])
+}
+
+model DoctorPayoffRequest {
+  id               String                    @id @default(cuid())
+  doctorName       String
+  hospitalName     String?
+  leadId           String?
+  lead             Lead?                     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  /// string[] of related lead IDs (batch requests)
+  leadIds          Json?
+  requestAmount    Float
+  requestRemarks   String?                   @db.Text
+  financeRemarks   String?                   @db.Text
+  rejectionRemarks String?                   @db.Text
+  /// [{ name, url, type }]
+  attachments      Json?
+  /// Finance verification document uploaded on approval
+  verificationDocUrl  String?
+  verificationDocName String?
+  status           DoctorPayoffRequestStatus @default(PENDING)
+
+  requestedById    String
+  requestedBy      User                      @relation("DoctorPayoffRequestedBy", fields: [requestedById], references: [id])
+  reviewedById     String?
+  reviewedBy       User?                     @relation("DoctorPayoffReviewedBy", fields: [reviewedById], references: [id])
+  reviewedAt       DateTime?
+
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+
+  activityLogs     DoctorPayoffRequestActivity[]
+
+  @@index([doctorName])
+  @@index([hospitalName])
+  @@index([leadId])
+  @@index([status])
+  @@index([requestedById])
+  @@index([createdAt])
+}
+
+model DoctorPayoffRequestActivity {
+  id        String              @id @default(cuid())
+  requestId String
+  request   DoctorPayoffRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  action    String
+  message   String
+  remarks   String?             @db.Text
+  actorId   String
+  actor     User                @relation("DoctorPayoffActivityActor", fields: [actorId], references: [id])
+  createdAt DateTime            @default(now())
+
+  @@index([requestId])
+  @@index([createdAt])
+  @@index([actorId])
 }
 
 model IncomingLead {

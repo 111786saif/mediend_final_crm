@@ -6,6 +6,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { invoiceRequestInclude, mapInvoiceRequest } from '@/lib/finance/invoice-request/mapper'
+import { logInvoiceRequestActivity } from '@/lib/finance/invoice-request/activity'
 
 const rejectSchema = z.object({
   rejectionRemarks: z.string().min(1).max(5000),
@@ -45,6 +46,14 @@ export async function POST(
         reviewedAt: new Date(),
       },
       include: invoiceRequestInclude,
+    })
+
+    await logInvoiceRequestActivity(prisma, {
+      requestId: id,
+      action: 'REJECTED',
+      message: `Invoice request rejected for lead ${updated.lead.leadRef || updated.leadId}`,
+      remarks: updated.rejectionRemarks,
+      actorId: user.id,
     })
 
     return successResponse(mapInvoiceRequest(updated), 'Invoice request rejected')

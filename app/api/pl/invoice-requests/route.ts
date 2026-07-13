@@ -6,6 +6,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { invoiceRequestInclude, mapInvoiceRequest } from '@/lib/finance/invoice-request/mapper'
+import { logInvoiceRequestActivity } from '@/lib/finance/invoice-request/activity'
 
 const createSchema = z.object({
   leadId: z.string().min(1),
@@ -55,6 +56,14 @@ export async function POST(request: NextRequest) {
         requestedById: user.id,
       },
       include: invoiceRequestInclude,
+    })
+
+    await logInvoiceRequestActivity(prisma, {
+      requestId: created.id,
+      action: 'SUBMITTED',
+      message: `Invoice request submitted for lead ${created.lead.leadRef || created.leadId}`,
+      remarks: created.requestRemarks,
+      actorId: user.id,
     })
 
     return successResponse(mapInvoiceRequest(created), 'Invoice request submitted')
