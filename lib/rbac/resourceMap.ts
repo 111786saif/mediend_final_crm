@@ -106,6 +106,16 @@ export const RESOURCE_MAP = {
   "sales.case_tracker.table.lead.column.patientEmail": { label: "Patient Email Address", component: "PatientEmailAddress" },
   "sales.case_tracker.table.lead.column.netProfit": { label: "Net Profit Amount", component: "NetProfitAmount" },
 
+  "sales.sales_pipeline.table.lead.column.phoneNumber": { label: "Patient Phone Number", component: "PatientPhoneNumber" },
+  "sales.sales_pipeline.table.lead.column.alternateNumber": { label: "Alternate Phone Number", component: "AlternatePhoneNumber" },
+  "sales.sales_pipeline.table.lead.column.patientEmail": { label: "Patient Email Address", component: "PatientEmailAddress" },
+  "sales.sales_pipeline.table.lead.column.netProfit": { label: "Net Profit Amount", component: "NetProfitAmount" },
+
+  "sales.team_lead_pipeline.table.lead.column.phoneNumber": { label: "Patient Phone Number", component: "PatientPhoneNumber" },
+  "sales.team_lead_pipeline.table.lead.column.alternateNumber": { label: "Alternate Phone Number", component: "AlternatePhoneNumber" },
+  "sales.team_lead_pipeline.table.lead.column.patientEmail": { label: "Patient Email Address", component: "PatientEmailAddress" },
+  "sales.team_lead_pipeline.table.lead.column.netProfit": { label: "Net Profit Amount", component: "NetProfitAmount" },
+
   // ============================================
   // NESTED LEVEL 3/4 MATRIX EXTENSIONS (ALL TABLES)
   // ============================================
@@ -238,6 +248,34 @@ export const RESOURCE_MAP = {
   "sales.case_tracker.table.lead.column.doctor": { label: "Table Column: Doctor", component: "DoctorColumn" },
   "sales.case_tracker.table.lead.column.stage": { label: "Table Column: Stage", component: "StageColumn" },
   "sales.case_tracker.table.lead.column.actions": { label: "Table Column: Actions", component: "ActionsColumn" },
+
+  "sales.sales_pipeline.table": { label: "Sales Pipeline Table", component: "SalesPipelineTable" },
+  "sales.sales_pipeline.table.lead.column.lead_ref": { label: "Table Column: Lead Ref", component: "LeadRefColumn" },
+  "sales.sales_pipeline.table.lead.column.date": { label: "Table Column: Date", component: "DateColumn" },
+  "sales.sales_pipeline.table.lead.column.surgery_date": { label: "Table Column: Surgery Date", component: "SurgeryDateColumn" },
+  "sales.sales_pipeline.table.lead.column.patient_name": { label: "Table Column: Patient Name", component: "PatientNameColumn" },
+  "sales.sales_pipeline.table.lead.column.age_sex": { label: "Table Column: Age/Sex", component: "AgeSexColumn" },
+  "sales.sales_pipeline.table.lead.column.circle": { label: "Table Column: Circle", component: "CircleColumn" },
+  "sales.sales_pipeline.table.lead.column.treatment": { label: "Table Column: Treatment", component: "TreatmentColumn" },
+  "sales.sales_pipeline.table.lead.column.bdm": { label: "Table Column: BDM", component: "BdmColumn" },
+  "sales.sales_pipeline.table.lead.column.hospital": { label: "Table Column: Hospital", component: "HospitalColumn" },
+  "sales.sales_pipeline.table.lead.column.doctor": { label: "Table Column: Doctor", component: "DoctorColumn" },
+  "sales.sales_pipeline.table.lead.column.stage": { label: "Table Column: Stage", component: "StageColumn" },
+  "sales.sales_pipeline.table.lead.column.actions": { label: "Table Column: Actions", component: "ActionsColumn" },
+
+  "sales.team_lead_pipeline.table": { label: "Team Lead Pipeline Table", component: "TeamLeadPipelineTable" },
+  "sales.team_lead_pipeline.table.lead.column.lead_ref": { label: "Table Column: Lead Ref", component: "LeadRefColumn" },
+  "sales.team_lead_pipeline.table.lead.column.date": { label: "Table Column: Date", component: "DateColumn" },
+  "sales.team_lead_pipeline.table.lead.column.surgery_date": { label: "Table Column: Surgery Date", component: "SurgeryDateColumn" },
+  "sales.team_lead_pipeline.table.lead.column.patient_name": { label: "Table Column: Patient Name", component: "PatientNameColumn" },
+  "sales.team_lead_pipeline.table.lead.column.age_sex": { label: "Table Column: Age/Sex", component: "AgeSexColumn" },
+  "sales.team_lead_pipeline.table.lead.column.circle": { label: "Table Column: Circle", component: "CircleColumn" },
+  "sales.team_lead_pipeline.table.lead.column.treatment": { label: "Table Column: Treatment", component: "TreatmentColumn" },
+  "sales.team_lead_pipeline.table.lead.column.bdm": { label: "Table Column: BDM", component: "BdmColumn" },
+  "sales.team_lead_pipeline.table.lead.column.hospital": { label: "Table Column: Hospital", component: "HospitalColumn" },
+  "sales.team_lead_pipeline.table.lead.column.doctor": { label: "Table Column: Doctor", component: "DoctorColumn" },
+  "sales.team_lead_pipeline.table.lead.column.stage": { label: "Table Column: Stage", component: "StageColumn" },
+  "sales.team_lead_pipeline.table.lead.column.actions": { label: "Table Column: Actions", component: "ActionsColumn" },
 
   // --- MODULE 5: INSURANCE & P/L ---
   "insurance_pl.pl_surgery.analytics": { label: "PL Surgery Analytics Section", component: "PLSurgeryAnalytics" },
