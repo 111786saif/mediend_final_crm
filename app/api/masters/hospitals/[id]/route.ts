@@ -4,18 +4,45 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { successResponse, errorResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-utils'
-import { z } from 'zod'
+import { emptyToNull, hospitalMasterPatchSchema } from '@/lib/masters/schemas'
 
-const patchBody = z.object({
-  name: z.string().min(1).max(500).optional(),
-  address: z.string().max(10000).optional().nullable(),
-  googleMapLink: z.string().max(2000).optional().nullable().or(z.literal('')),
-  isActive: z.boolean().optional(),
-})
+function mapHospital(row: {
+  id: string
+  name: string
+  address: string | null
+  googleMapLink: string | null
+  mouAgreementUrl: string | null
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+  insuranceProviders: { insuranceId: string; insurance: { id: string; name: string } }[]
+}) {
+  return {
+    id: row.id,
+    name: row.name,
+    address: row.address,
+    googleMapLink: row.googleMapLink,
+    mouAgreementUrl: row.mouAgreementUrl,
+    isActive: row.isActive,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+    insuranceIds: row.insuranceProviders.map((p) => p.insuranceId),
+    insuranceProviders: row.insuranceProviders.map((p) => ({
+      id: p.insurance.id,
+      name: p.insurance.name,
+    })),
+  }
+}
+
+const hospitalInclude = {
+  insuranceProviders: {
+    include: { insurance: { select: { id: true, name: true } } },
+  },
+} as const
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> },
 ) {
   const user = getSessionFromRequest(request)
   if (!user) return unauthorizedResponse()
@@ -30,26 +57,39 @@ export async function PATCH(
     return errorResponse('Invalid JSON', 400)
   }
 
-  const parsed = patchBody.safeParse(body)
+  const parsed = hospitalMasterPatchSchema.safeParse(body)
   if (!parsed.success) {
     return errorResponse(parsed.error.flatten().formErrors.join(', ') || 'Invalid body', 400)
   }
 
+  const d = parsed.data
   const data: Prisma.HospitalMasterUpdateInput = {}
-  if (parsed.data.name !== undefined) data.name = parsed.data.name.trim()
-  if (parsed.data.address !== undefined) data.address = parsed.data.address?.trim() || null
-  if (parsed.data.googleMapLink !== undefined) {
-    data.googleMapLink =
-      parsed.data.googleMapLink === '' ? null : parsed.data.googleMapLink ?? null
-  }
-  if (parsed.data.isActive !== undefined) data.isActive = parsed.data.isActive
+  if (d.name !== undefined) data.name = d.name.trim()
+  if (d.address !== undefined) data.address = d.address?.trim() || null
+  if (d.googleMapLink !== undefined) data.googleMapLink = emptyToNull(d.googleMapLink)
+  if (d.mouAgreementUrl !== undefined) data.mouAgreementUrl = emptyToNull(d.mouAgreementUrl)
+  if (d.isActive !== undefined) data.isActive = d.isActive
 
   try {
-    const updated = await prisma.hospitalMaster.update({
-      where: { id },
-      data,
+    await prisma.$transaction(async (tx) => {
+      await tx.hospitalMaster.update({ where: { id }, data })
+      if (d.insuranceIds !== undefined) {
+        const ids = [...new Set(d.insuranceIds)]
+        await tx.hospitalMasterInsurance.deleteMany({ where: { hospitalId: id } })
+        if (ids.length > 0) {
+          await tx.hospitalMasterInsurance.createMany({
+            data: ids.map((insuranceId) => ({ hospitalId: id, insuranceId })),
+            skipDuplicates: true,
+          })
+        }
+      }
     })
-    return successResponse({ item: updated })
+
+    const updated = await prisma.hospitalMaster.findUniqueOrThrow({
+      where: { id },
+      include: hospitalInclude,
+    })
+    return successResponse({ item: mapHospital(updated) })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') {
       return errorResponse('Hospital not found', 404)
@@ -63,7 +103,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> },
 ) {
   const user = getSessionFromRequest(request)
   if (!user) return unauthorizedResponse()
@@ -75,8 +115,9 @@ export async function DELETE(
     const updated = await prisma.hospitalMaster.update({
       where: { id },
       data: { isActive: false },
+      include: hospitalInclude,
     })
-    return successResponse({ item: updated })
+    return successResponse({ item: mapHospital(updated) })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') {
       return errorResponse('Hospital not found', 404)

@@ -28,12 +28,16 @@ export type AggregateDoctorMaster = {
 
 export type DoctorMasterAvgAggregateOutputType = {
   age: number | null
-  rating: number | null
+  experienceYears: number | null
+  ratingAverage: number | null
+  ratingCount: number | null
 }
 
 export type DoctorMasterSumAggregateOutputType = {
   age: number | null
-  rating: number | null
+  experienceYears: number | null
+  ratingAverage: number | null
+  ratingCount: number | null
 }
 
 export type DoctorMasterMinAggregateOutputType = {
@@ -43,12 +47,16 @@ export type DoctorMasterMinAggregateOutputType = {
   treatment: string | null
   age: number | null
   sex: string | null
-  aadharNumber: string | null
+  aadhaarNumber: string | null
+  aadhaarCardUrl: string | null
   panNumber: string | null
+  panCardUrl: string | null
   agreementUrl: string | null
-  experience: string | null
+  experienceYears: number | null
+  experienceNotes: string | null
   feeStructure: string | null
-  rating: number | null
+  ratingAverage: number | null
+  ratingCount: number | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -61,12 +69,16 @@ export type DoctorMasterMaxAggregateOutputType = {
   treatment: string | null
   age: number | null
   sex: string | null
-  aadharNumber: string | null
+  aadhaarNumber: string | null
+  aadhaarCardUrl: string | null
   panNumber: string | null
+  panCardUrl: string | null
   agreementUrl: string | null
-  experience: string | null
+  experienceYears: number | null
+  experienceNotes: string | null
   feeStructure: string | null
-  rating: number | null
+  ratingAverage: number | null
+  ratingCount: number | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -79,12 +91,16 @@ export type DoctorMasterCountAggregateOutputType = {
   treatment: number
   age: number
   sex: number
-  aadharNumber: number
+  aadhaarNumber: number
+  aadhaarCardUrl: number
   panNumber: number
+  panCardUrl: number
   agreementUrl: number
-  experience: number
+  experienceYears: number
+  experienceNotes: number
   feeStructure: number
-  rating: number
+  ratingAverage: number
+  ratingCount: number
   documents: number
   isActive: number
   createdAt: number
@@ -95,12 +111,16 @@ export type DoctorMasterCountAggregateOutputType = {
 
 export type DoctorMasterAvgAggregateInputType = {
   age?: true
-  rating?: true
+  experienceYears?: true
+  ratingAverage?: true
+  ratingCount?: true
 }
 
 export type DoctorMasterSumAggregateInputType = {
   age?: true
-  rating?: true
+  experienceYears?: true
+  ratingAverage?: true
+  ratingCount?: true
 }
 
 export type DoctorMasterMinAggregateInputType = {
@@ -110,12 +130,16 @@ export type DoctorMasterMinAggregateInputType = {
   treatment?: true
   age?: true
   sex?: true
-  aadharNumber?: true
+  aadhaarNumber?: true
+  aadhaarCardUrl?: true
   panNumber?: true
+  panCardUrl?: true
   agreementUrl?: true
-  experience?: true
+  experienceYears?: true
+  experienceNotes?: true
   feeStructure?: true
-  rating?: true
+  ratingAverage?: true
+  ratingCount?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -128,12 +152,16 @@ export type DoctorMasterMaxAggregateInputType = {
   treatment?: true
   age?: true
   sex?: true
-  aadharNumber?: true
+  aadhaarNumber?: true
+  aadhaarCardUrl?: true
   panNumber?: true
+  panCardUrl?: true
   agreementUrl?: true
-  experience?: true
+  experienceYears?: true
+  experienceNotes?: true
   feeStructure?: true
-  rating?: true
+  ratingAverage?: true
+  ratingCount?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -146,12 +174,16 @@ export type DoctorMasterCountAggregateInputType = {
   treatment?: true
   age?: true
   sex?: true
-  aadharNumber?: true
+  aadhaarNumber?: true
+  aadhaarCardUrl?: true
   panNumber?: true
+  panCardUrl?: true
   agreementUrl?: true
-  experience?: true
+  experienceYears?: true
+  experienceNotes?: true
   feeStructure?: true
-  rating?: true
+  ratingAverage?: true
+  ratingCount?: true
   documents?: true
   isActive?: true
   createdAt?: true
@@ -252,12 +284,16 @@ export type DoctorMasterGroupByOutputType = {
   treatment: string | null
   age: number | null
   sex: string | null
-  aadharNumber: string | null
+  aadhaarNumber: string | null
+  aadhaarCardUrl: string | null
   panNumber: string | null
+  panCardUrl: string | null
   agreementUrl: string | null
-  experience: string | null
+  experienceYears: number | null
+  experienceNotes: string | null
   feeStructure: string | null
-  rating: number | null
+  ratingAverage: number | null
+  ratingCount: number
   documents: runtime.JsonValue | null
   isActive: boolean
   createdAt: Date
@@ -294,12 +330,16 @@ export type DoctorMasterWhereInput = {
   treatment?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   age?: Prisma.IntNullableFilter<"DoctorMaster"> | number | null
   sex?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
-  aadharNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
+  aadhaarNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
+  aadhaarCardUrl?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   panNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
+  panCardUrl?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   agreementUrl?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
-  experience?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
+  experienceYears?: Prisma.IntNullableFilter<"DoctorMaster"> | number | null
+  experienceNotes?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   feeStructure?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
-  rating?: Prisma.FloatNullableFilter<"DoctorMaster"> | number | null
+  ratingAverage?: Prisma.FloatNullableFilter<"DoctorMaster"> | number | null
+  ratingCount?: Prisma.IntFilter<"DoctorMaster"> | number
   documents?: Prisma.JsonNullableFilter<"DoctorMaster">
   isActive?: Prisma.BoolFilter<"DoctorMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"DoctorMaster"> | Date | string
@@ -313,12 +353,16 @@ export type DoctorMasterOrderByWithRelationInput = {
   treatment?: Prisma.SortOrderInput | Prisma.SortOrder
   age?: Prisma.SortOrderInput | Prisma.SortOrder
   sex?: Prisma.SortOrderInput | Prisma.SortOrder
-  aadharNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  aadhaarCardUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  panCardUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   agreementUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  experience?: Prisma.SortOrderInput | Prisma.SortOrder
+  experienceYears?: Prisma.SortOrderInput | Prisma.SortOrder
+  experienceNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   feeStructure?: Prisma.SortOrderInput | Prisma.SortOrder
-  rating?: Prisma.SortOrderInput | Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrderInput | Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
   documents?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -335,12 +379,16 @@ export type DoctorMasterWhereUniqueInput = Prisma.AtLeast<{
   treatment?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   age?: Prisma.IntNullableFilter<"DoctorMaster"> | number | null
   sex?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
-  aadharNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
+  aadhaarNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
+  aadhaarCardUrl?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   panNumber?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
+  panCardUrl?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   agreementUrl?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
-  experience?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
+  experienceYears?: Prisma.IntNullableFilter<"DoctorMaster"> | number | null
+  experienceNotes?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
   feeStructure?: Prisma.StringNullableFilter<"DoctorMaster"> | string | null
-  rating?: Prisma.FloatNullableFilter<"DoctorMaster"> | number | null
+  ratingAverage?: Prisma.FloatNullableFilter<"DoctorMaster"> | number | null
+  ratingCount?: Prisma.IntFilter<"DoctorMaster"> | number
   documents?: Prisma.JsonNullableFilter<"DoctorMaster">
   isActive?: Prisma.BoolFilter<"DoctorMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"DoctorMaster"> | Date | string
@@ -354,12 +402,16 @@ export type DoctorMasterOrderByWithAggregationInput = {
   treatment?: Prisma.SortOrderInput | Prisma.SortOrder
   age?: Prisma.SortOrderInput | Prisma.SortOrder
   sex?: Prisma.SortOrderInput | Prisma.SortOrder
-  aadharNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  aadhaarCardUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   panNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  panCardUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   agreementUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  experience?: Prisma.SortOrderInput | Prisma.SortOrder
+  experienceYears?: Prisma.SortOrderInput | Prisma.SortOrder
+  experienceNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   feeStructure?: Prisma.SortOrderInput | Prisma.SortOrder
-  rating?: Prisma.SortOrderInput | Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrderInput | Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
   documents?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -381,12 +433,16 @@ export type DoctorMasterScalarWhereWithAggregatesInput = {
   treatment?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
   age?: Prisma.IntNullableWithAggregatesFilter<"DoctorMaster"> | number | null
   sex?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
-  aadharNumber?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
+  aadhaarNumber?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
+  aadhaarCardUrl?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
   panNumber?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
+  panCardUrl?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
   agreementUrl?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
-  experience?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
+  experienceYears?: Prisma.IntNullableWithAggregatesFilter<"DoctorMaster"> | number | null
+  experienceNotes?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
   feeStructure?: Prisma.StringNullableWithAggregatesFilter<"DoctorMaster"> | string | null
-  rating?: Prisma.FloatNullableWithAggregatesFilter<"DoctorMaster"> | number | null
+  ratingAverage?: Prisma.FloatNullableWithAggregatesFilter<"DoctorMaster"> | number | null
+  ratingCount?: Prisma.IntWithAggregatesFilter<"DoctorMaster"> | number
   documents?: Prisma.JsonNullableWithAggregatesFilter<"DoctorMaster">
   isActive?: Prisma.BoolWithAggregatesFilter<"DoctorMaster"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DoctorMaster"> | Date | string
@@ -400,12 +456,16 @@ export type DoctorMasterCreateInput = {
   treatment?: string | null
   age?: number | null
   sex?: string | null
-  aadharNumber?: string | null
+  aadhaarNumber?: string | null
+  aadhaarCardUrl?: string | null
   panNumber?: string | null
+  panCardUrl?: string | null
   agreementUrl?: string | null
-  experience?: string | null
+  experienceYears?: number | null
+  experienceNotes?: string | null
   feeStructure?: string | null
-  rating?: number | null
+  ratingAverage?: number | null
+  ratingCount?: number
   documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
@@ -419,12 +479,16 @@ export type DoctorMasterUncheckedCreateInput = {
   treatment?: string | null
   age?: number | null
   sex?: string | null
-  aadharNumber?: string | null
+  aadhaarNumber?: string | null
+  aadhaarCardUrl?: string | null
   panNumber?: string | null
+  panCardUrl?: string | null
   agreementUrl?: string | null
-  experience?: string | null
+  experienceYears?: number | null
+  experienceNotes?: string | null
   feeStructure?: string | null
-  rating?: number | null
+  ratingAverage?: number | null
+  ratingCount?: number
   documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
@@ -438,12 +502,16 @@ export type DoctorMasterUpdateInput = {
   treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
   documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -457,12 +525,16 @@ export type DoctorMasterUncheckedUpdateInput = {
   treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
   documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,12 +548,16 @@ export type DoctorMasterCreateManyInput = {
   treatment?: string | null
   age?: number | null
   sex?: string | null
-  aadharNumber?: string | null
+  aadhaarNumber?: string | null
+  aadhaarCardUrl?: string | null
   panNumber?: string | null
+  panCardUrl?: string | null
   agreementUrl?: string | null
-  experience?: string | null
+  experienceYears?: number | null
+  experienceNotes?: string | null
   feeStructure?: string | null
-  rating?: number | null
+  ratingAverage?: number | null
+  ratingCount?: number
   documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
@@ -495,12 +571,16 @@ export type DoctorMasterUpdateManyMutationInput = {
   treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
   documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -514,12 +594,16 @@ export type DoctorMasterUncheckedUpdateManyInput = {
   treatment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadhaarCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panCardUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   agreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  experience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceYears?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  experienceNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   feeStructure?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rating?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ratingAverage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ratingCount?: Prisma.IntFieldUpdateOperationsInput | number
   documents?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -533,12 +617,16 @@ export type DoctorMasterCountOrderByAggregateInput = {
   treatment?: Prisma.SortOrder
   age?: Prisma.SortOrder
   sex?: Prisma.SortOrder
-  aadharNumber?: Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrder
+  aadhaarCardUrl?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
+  panCardUrl?: Prisma.SortOrder
   agreementUrl?: Prisma.SortOrder
-  experience?: Prisma.SortOrder
+  experienceYears?: Prisma.SortOrder
+  experienceNotes?: Prisma.SortOrder
   feeStructure?: Prisma.SortOrder
-  rating?: Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
   documents?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -547,7 +635,9 @@ export type DoctorMasterCountOrderByAggregateInput = {
 
 export type DoctorMasterAvgOrderByAggregateInput = {
   age?: Prisma.SortOrder
-  rating?: Prisma.SortOrder
+  experienceYears?: Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
 }
 
 export type DoctorMasterMaxOrderByAggregateInput = {
@@ -557,12 +647,16 @@ export type DoctorMasterMaxOrderByAggregateInput = {
   treatment?: Prisma.SortOrder
   age?: Prisma.SortOrder
   sex?: Prisma.SortOrder
-  aadharNumber?: Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrder
+  aadhaarCardUrl?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
+  panCardUrl?: Prisma.SortOrder
   agreementUrl?: Prisma.SortOrder
-  experience?: Prisma.SortOrder
+  experienceYears?: Prisma.SortOrder
+  experienceNotes?: Prisma.SortOrder
   feeStructure?: Prisma.SortOrder
-  rating?: Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -575,12 +669,16 @@ export type DoctorMasterMinOrderByAggregateInput = {
   treatment?: Prisma.SortOrder
   age?: Prisma.SortOrder
   sex?: Prisma.SortOrder
-  aadharNumber?: Prisma.SortOrder
+  aadhaarNumber?: Prisma.SortOrder
+  aadhaarCardUrl?: Prisma.SortOrder
   panNumber?: Prisma.SortOrder
+  panCardUrl?: Prisma.SortOrder
   agreementUrl?: Prisma.SortOrder
-  experience?: Prisma.SortOrder
+  experienceYears?: Prisma.SortOrder
+  experienceNotes?: Prisma.SortOrder
   feeStructure?: Prisma.SortOrder
-  rating?: Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -588,7 +686,9 @@ export type DoctorMasterMinOrderByAggregateInput = {
 
 export type DoctorMasterSumOrderByAggregateInput = {
   age?: Prisma.SortOrder
-  rating?: Prisma.SortOrder
+  experienceYears?: Prisma.SortOrder
+  ratingAverage?: Prisma.SortOrder
+  ratingCount?: Prisma.SortOrder
 }
 
 
@@ -600,12 +700,16 @@ export type DoctorMasterSelect<ExtArgs extends runtime.Types.Extensions.Internal
   treatment?: boolean
   age?: boolean
   sex?: boolean
-  aadharNumber?: boolean
+  aadhaarNumber?: boolean
+  aadhaarCardUrl?: boolean
   panNumber?: boolean
+  panCardUrl?: boolean
   agreementUrl?: boolean
-  experience?: boolean
+  experienceYears?: boolean
+  experienceNotes?: boolean
   feeStructure?: boolean
-  rating?: boolean
+  ratingAverage?: boolean
+  ratingCount?: boolean
   documents?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -619,12 +723,16 @@ export type DoctorMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   treatment?: boolean
   age?: boolean
   sex?: boolean
-  aadharNumber?: boolean
+  aadhaarNumber?: boolean
+  aadhaarCardUrl?: boolean
   panNumber?: boolean
+  panCardUrl?: boolean
   agreementUrl?: boolean
-  experience?: boolean
+  experienceYears?: boolean
+  experienceNotes?: boolean
   feeStructure?: boolean
-  rating?: boolean
+  ratingAverage?: boolean
+  ratingCount?: boolean
   documents?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -638,12 +746,16 @@ export type DoctorMasterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   treatment?: boolean
   age?: boolean
   sex?: boolean
-  aadharNumber?: boolean
+  aadhaarNumber?: boolean
+  aadhaarCardUrl?: boolean
   panNumber?: boolean
+  panCardUrl?: boolean
   agreementUrl?: boolean
-  experience?: boolean
+  experienceYears?: boolean
+  experienceNotes?: boolean
   feeStructure?: boolean
-  rating?: boolean
+  ratingAverage?: boolean
+  ratingCount?: boolean
   documents?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -657,19 +769,23 @@ export type DoctorMasterSelectScalar = {
   treatment?: boolean
   age?: boolean
   sex?: boolean
-  aadharNumber?: boolean
+  aadhaarNumber?: boolean
+  aadhaarCardUrl?: boolean
   panNumber?: boolean
+  panCardUrl?: boolean
   agreementUrl?: boolean
-  experience?: boolean
+  experienceYears?: boolean
+  experienceNotes?: boolean
   feeStructure?: boolean
-  rating?: boolean
+  ratingAverage?: boolean
+  ratingCount?: boolean
   documents?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DoctorMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "treatment" | "age" | "sex" | "aadharNumber" | "panNumber" | "agreementUrl" | "experience" | "feeStructure" | "rating" | "documents" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["doctorMaster"]>
+export type DoctorMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "category" | "treatment" | "age" | "sex" | "aadhaarNumber" | "aadhaarCardUrl" | "panNumber" | "panCardUrl" | "agreementUrl" | "experienceYears" | "experienceNotes" | "feeStructure" | "ratingAverage" | "ratingCount" | "documents" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["doctorMaster"]>
 
 export type $DoctorMasterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "DoctorMaster"
@@ -681,14 +797,21 @@ export type $DoctorMasterPayload<ExtArgs extends runtime.Types.Extensions.Intern
     treatment: string | null
     age: number | null
     sex: string | null
-    aadharNumber: string | null
+    aadhaarNumber: string | null
+    aadhaarCardUrl: string | null
     panNumber: string | null
+    panCardUrl: string | null
     agreementUrl: string | null
-    experience: string | null
+    experienceYears: number | null
+    experienceNotes: string | null
     feeStructure: string | null
-    rating: number | null
     /**
-     * [{ name, url, docType: "degree" | "mou" }]
+     * Manual / aggregated rating from feedback (1–5)
+     */
+    ratingAverage: number | null
+    ratingCount: number
+    /**
+     * [{ name, url, type }] — Degrees, Documentation, MOU, Other
      */
     documents: runtime.JsonValue | null
     isActive: boolean
@@ -1123,12 +1246,16 @@ export interface DoctorMasterFieldRefs {
   readonly treatment: Prisma.FieldRef<"DoctorMaster", 'String'>
   readonly age: Prisma.FieldRef<"DoctorMaster", 'Int'>
   readonly sex: Prisma.FieldRef<"DoctorMaster", 'String'>
-  readonly aadharNumber: Prisma.FieldRef<"DoctorMaster", 'String'>
+  readonly aadhaarNumber: Prisma.FieldRef<"DoctorMaster", 'String'>
+  readonly aadhaarCardUrl: Prisma.FieldRef<"DoctorMaster", 'String'>
   readonly panNumber: Prisma.FieldRef<"DoctorMaster", 'String'>
+  readonly panCardUrl: Prisma.FieldRef<"DoctorMaster", 'String'>
   readonly agreementUrl: Prisma.FieldRef<"DoctorMaster", 'String'>
-  readonly experience: Prisma.FieldRef<"DoctorMaster", 'String'>
+  readonly experienceYears: Prisma.FieldRef<"DoctorMaster", 'Int'>
+  readonly experienceNotes: Prisma.FieldRef<"DoctorMaster", 'String'>
   readonly feeStructure: Prisma.FieldRef<"DoctorMaster", 'String'>
-  readonly rating: Prisma.FieldRef<"DoctorMaster", 'Float'>
+  readonly ratingAverage: Prisma.FieldRef<"DoctorMaster", 'Float'>
+  readonly ratingCount: Prisma.FieldRef<"DoctorMaster", 'Int'>
   readonly documents: Prisma.FieldRef<"DoctorMaster", 'Json'>
   readonly isActive: Prisma.FieldRef<"DoctorMaster", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"DoctorMaster", 'DateTime'>

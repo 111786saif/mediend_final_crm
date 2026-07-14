@@ -545,6 +545,23 @@ export type EnumInvoiceRequestStatusWithAggregatesFilter<$PrismaModel = never> =
   _max?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel>
 }
 
+export type EnumDoctorPayoffRequestStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DoctorPayoffRequestStatus | Prisma.EnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DoctorPayoffRequestStatus[] | Prisma.ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DoctorPayoffRequestStatus[] | Prisma.ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDoctorPayoffRequestStatusFilter<$PrismaModel> | $Enums.DoctorPayoffRequestStatus
+}
+
+export type EnumDoctorPayoffRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DoctorPayoffRequestStatus | Prisma.EnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DoctorPayoffRequestStatus[] | Prisma.ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DoctorPayoffRequestStatus[] | Prisma.ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDoctorPayoffRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.DoctorPayoffRequestStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDoctorPayoffRequestStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDoctorPayoffRequestStatusFilter<$PrismaModel>
+}
+
 export type JsonFilter<$PrismaModel = never> =
 | Prisma.PatchUndefined<
     Prisma.Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -2088,6 +2105,23 @@ export type NestedEnumInvoiceRequestStatusWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumInvoiceRequestStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumDoctorPayoffRequestStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DoctorPayoffRequestStatus | Prisma.EnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DoctorPayoffRequestStatus[] | Prisma.ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DoctorPayoffRequestStatus[] | Prisma.ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDoctorPayoffRequestStatusFilter<$PrismaModel> | $Enums.DoctorPayoffRequestStatus
+}
+
+export type NestedEnumDoctorPayoffRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DoctorPayoffRequestStatus | Prisma.EnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DoctorPayoffRequestStatus[] | Prisma.ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DoctorPayoffRequestStatus[] | Prisma.ListEnumDoctorPayoffRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDoctorPayoffRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.DoctorPayoffRequestStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDoctorPayoffRequestStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDoctorPayoffRequestStatusFilter<$PrismaModel>
 }
 
 export type NestedJsonFilter<$PrismaModel = never> =

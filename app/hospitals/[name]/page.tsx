@@ -58,6 +58,7 @@ import {
   useCreatePlInvoiceRequest,
   usePlInvoiceRequests,
 } from '@/hooks/use-invoice-requests'
+import { useInvoiceRequestActivity } from '@/hooks/use-doctor-payoff-requests'
 import {
   INVOICE_REQUEST_STATUS_LABEL,
   type InvoiceRequestRecord,
@@ -246,6 +247,11 @@ export default function HospitalDetailPage() {
   }, [data?.cases, invoiceByLeadId])
 
   const createInvoice = useCreatePlInvoiceRequest()
+  const { data: invoiceActivityData, isLoading: invoiceActivityLoading } = useInvoiceRequestActivity({
+    hospitalName: name,
+    limit: 20,
+    enabled: !!name,
+  })
 
   // ── Filter-Config API (backend-driven options) ──────────────────────────
   const { data: filterConfig } = useQuery<FilterConfig>({
@@ -806,7 +812,14 @@ export default function HospitalDetailPage() {
 
           {/* Activity Log & Health Score Section */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-            <RecentActivityLog className="lg:col-span-2" />
+            <RecentActivityLog
+              className="lg:col-span-2"
+              title="Invoice Request Activity Log"
+              items={invoiceActivityData?.items ?? []}
+              isLoading={invoiceActivityLoading}
+              emptyMessage="No invoice request activity for this hospital yet"
+              viewAllHref="/finance/invoice-requests"
+            />
 
             {/* Right Side Widget: P&L Health */}
             <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-lg">

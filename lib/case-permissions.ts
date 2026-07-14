@@ -190,6 +190,12 @@ export function canResetPatient(user: User, lead: Lead): boolean {
   return isInsurance && allowedStages.includes(lead.caseStage)
 }
 
+/** Executive Assistant only — can reset the patient workflow stepper to a prior completed step. */
+export function canResetStepper(user: User, _lead?: Lead | null): boolean {
+  if (!user) return false
+  return user.role === UserRole.EXECUTIVE_ASSISTANT
+}
+
 // Insurance can suggest hospitals when BD has submitted KYP Basic (KYP_BASIC_COMPLETE)
 export function canSuggestHospitals(user: User, lead: Lead): boolean {
   if (!user || !lead) return false

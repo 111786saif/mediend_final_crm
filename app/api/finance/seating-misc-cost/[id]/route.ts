@@ -73,6 +73,7 @@ export async function PATCH(
       {
         seatingCost: updated.seatingCost,
         miscCost: updated.miscCost,
+        otherCost: updated.otherCost,
         status: updated.status,
         remarks: updated.remarks,
       },
@@ -105,6 +106,7 @@ export async function DELETE(
       {
         seatingCost: existing.seatingCost,
         miscCost: existing.miscCost,
+        otherCost: existing.otherCost,
         status: existing.status,
         remarks: existing.remarks,
       },

@@ -113,6 +113,15 @@ export const InvoiceRequestStatus = {
 export type InvoiceRequestStatus = (typeof InvoiceRequestStatus)[keyof typeof InvoiceRequestStatus]
 
 
+export const DoctorPayoffRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type DoctorPayoffRequestStatus = (typeof DoctorPayoffRequestStatus)[keyof typeof DoctorPayoffRequestStatus]
+
+
 export const FlowType = {
   INSURANCE: 'INSURANCE',
   CASH: 'CASH'
@@ -353,7 +362,8 @@ export const NotificationType = {
   LEAVE_BALANCE_EDIT_REQUESTED: 'LEAVE_BALANCE_EDIT_REQUESTED',
   LEAVE_BALANCE_EDIT_RESOLVED: 'LEAVE_BALANCE_EDIT_RESOLVED',
   GRACE2_MONTHLY_LIMIT_EXCEEDED: 'GRACE2_MONTHLY_LIMIT_EXCEEDED',
-  RANK_IMPROVED: 'RANK_IMPROVED'
+  RANK_IMPROVED: 'RANK_IMPROVED',
+  WORKFLOW_RESET: 'WORKFLOW_RESET'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

@@ -87,6 +87,12 @@ enum InvoiceRequestStatus {
   REJECTED
 }
 
+enum DoctorPayoffRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum FlowType {
   INSURANCE
   CASH
@@ -265,6 +271,7 @@ enum NotificationType {
   LEAVE_BALANCE_EDIT_RESOLVED
   GRACE2_MONTHLY_LIMIT_EXCEEDED
   RANK_IMPROVED
+  WORKFLOW_RESET
 }
 
 enum NoticeTargetType {
@@ -510,6 +517,7 @@ model User {
   pdfsCreated          PreAuthPDF[]       @relation("PDFCreator")
   admissionsInitiated  AdmissionRecord[]  @relation("AdmissionInitiator")
   caseStageChanges     CaseStageHistory[] @relation("CaseStageChanger")
+  workflowResetsPerformed WorkflowResetLog[] @relation("WorkflowResetPerformer")
   caseChatMessagesSent CaseChatMessage[]  @relation("CaseChatSender")
   chatReadReceipts     ChatReadReceipt[]  @relation("ChatReadUser")
 
@@ -578,9 +586,16 @@ model User {
   seatingMiscCostsCreated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostCreatedBy")
   seatingMiscCostsUpdated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostUpdatedBy")
   seatingMiscCostHistory    EmployeeMonthlySeatingMiscCostHistory[] @relation("SeatingMiscCostHistoryBy")
+  salesTeamSalaryOverridesUpdated EmployeeSalesTeamSalaryOverride[] @relation("SalesTeamSalaryOverrideUpdatedBy")
+  salesTeamSalaryOverrideHistory  EmployeeSalesTeamSalaryOverrideHistory[] @relation("SalesTeamSalaryOverrideHistoryBy")
 
   invoiceRequestsSubmitted  InvoiceRequest[] @relation("InvoiceRequestRequestedBy")
   invoiceRequestsReviewed   InvoiceRequest[] @relation("InvoiceRequestReviewedBy")
+  invoiceRequestActivities  InvoiceRequestActivity[] @relation("InvoiceRequestActivityActor")
+
+  doctorPayoffRequestsSubmitted DoctorPayoffRequest[] @relation("DoctorPayoffRequestedBy")
+  doctorPayoffRequestsReviewed  DoctorPayoffRequest[] @relation("DoctorPayoffReviewedBy")
+  doctorPayoffRequestActivities DoctorPayoffRequestActivity[] @relation("DoctorPayoffActivityActor")
 
   // Meets (calendar / interviews / MD appointments)
   meetsCreated       Meet[]            @relation("MeetsCreated")
@@ -744,11 +759,13 @@ model Lead {
   admissionRecord       AdmissionRecord?
   insuranceInitiateForm InsuranceInitiateForm?
   caseStageHistory      CaseStageHistory[]
+  workflowResetLogs     WorkflowResetLog[]
   caseChatMessages      CaseChatMessage[]
   chatReadReceipts      ChatReadReceipt[]      @relation("ChatReadLead")
   callNotes             CallNote[]
   paymentInstallments   PaymentInstallment[]
   invoiceRequests       InvoiceRequest[]
+  doctorPayoffRequests  DoctorPayoffRequest[]
 
   @@index([bdId])
   @@index([status])
@@ -978,10 +995,82 @@ model InvoiceRequest {
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
 
+  activityLogs     InvoiceRequestActivity[]
+
   @@index([leadId])
   @@index([status])
   @@index([requestedById])
   @@index([createdAt])
+}
+
+model InvoiceRequestActivity {
+  id        String         @id @default(cuid())
+  requestId String
+  request   InvoiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  action    String
+  message   String
+  remarks   String?        @db.Text
+  actorId   String
+  actor     User           @relation("InvoiceRequestActivityActor", fields: [actorId], references: [id])
+  createdAt DateTime       @default(now())
+
+  @@index([requestId])
+  @@index([createdAt])
+  @@index([actorId])
+}
+
+model DoctorPayoffRequest {
+  id               String                    @id @default(cuid())
+  doctorName       String
+  hospitalName     String?
+  leadId           String?
+  lead             Lead?                     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  /// string[] of related lead IDs (batch requests)
+  leadIds          Json?
+  requestAmount    Float
+  requestRemarks   String?                   @db.Text
+  financeRemarks   String?                   @db.Text
+  rejectionRemarks String?                   @db.Text
+  /// [{ name, url, type }]
+  attachments      Json?
+  /// Finance verification document uploaded on approval
+  verificationDocUrl  String?
+  verificationDocName String?
+  status           DoctorPayoffRequestStatus @default(PENDING)
+
+  requestedById    String
+  requestedBy      User                      @relation("DoctorPayoffRequestedBy", fields: [requestedById], references: [id])
+  reviewedById     String?
+  reviewedBy       User?                     @relation("DoctorPayoffReviewedBy", fields: [reviewedById], references: [id])
+  reviewedAt       DateTime?
+
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+
+  activityLogs     DoctorPayoffRequestActivity[]
+
+  @@index([doctorName])
+  @@index([hospitalName])
+  @@index([leadId])
+  @@index([status])
+  @@index([requestedById])
+  @@index([createdAt])
+}
+
+model DoctorPayoffRequestActivity {
+  id        String              @id @default(cuid())
+  requestId String
+  request   DoctorPayoffRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  action    String
+  message   String
+  remarks   String?             @db.Text
+  actorId   String
+  actor     User                @relation("DoctorPayoffActivityActor", fields: [actorId], references: [id])
+  createdAt DateTime            @default(now())
+
+  @@index([requestId])
+  @@index([createdAt])
+  @@index([actorId])
 }
 
 model IncomingLead {
@@ -1118,6 +1207,8 @@ model Employee {
   monthlyIncentives                       EmployeeMonthlyIncentive[]
   masterSeatingCost                       EmployeeMasterSeatingCost?
   monthlySeatingMiscCosts                 EmployeeMonthlySeatingMiscCost[]
+  salesTeamSalaryOverrides                EmployeeSalesTeamSalaryOverride[]
+  salesTeamSalaryOverrideHistory          EmployeeSalesTeamSalaryOverrideHistory[]
 
   @@index([userId])
   @@index([employeeCode])
@@ -2594,6 +2685,38 @@ model CaseStageHistory {
   @@index([changedAt])
 }
 
+/// Immutable audit trail for Executive Assistant workflow-step resets.
+/// Rows are append-only — there is no update/delete API for this model.
+model WorkflowResetLog {
+  id     String @id @default(cuid())
+  leadId String
+  lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  patientName String
+  leadRef     String
+
+  previousStepNumber Int
+  previousStepLabel  String
+  previousCaseStage  CaseStage
+  resetToStepNumber  Int
+  resetToStepLabel   String
+  resetToCaseStage   CaseStage
+  stepsReverted      Int
+
+  reason String @db.Text
+
+  resetById String
+  resetBy   User   @relation("WorkflowResetPerformer", fields: [resetById], references: [id])
+  resetAt   DateTime @default(now())
+
+  ipAddress   String?
+  userAgent   String? @db.Text
+
+  @@index([leadId])
+  @@index([resetAt])
+  @@index([resetById])
+}
+
 // ==========================================
 // Case Chat (BD <-> Insurance 2-way chat on patient page)
 // ==========================================
@@ -2992,6 +3115,7 @@ model EmployeeMonthlySeatingMiscCost {
   masterSeatingCostId   String?
   masterSeatingCost     EmployeeMasterSeatingCost?    @relation(fields: [masterSeatingCostId], references: [id], onDelete: SetNull)
   miscCost              Float                         @default(0)
+  otherCost             Float                         @default(0)
   status                EmployeeSeatingMiscCostStatus @default(PENDING)
   remarks               String?                       @db.Text
   createdByUserId       String
@@ -3014,6 +3138,7 @@ model EmployeeMonthlySeatingMiscCostHistory {
   action          String
   seatingCost     Float
   miscCost        Float
+  otherCost       Float                         @default(0)
   status          EmployeeSeatingMiscCostStatus
   remarks         String?                       @db.Text
   changedByUserId String
@@ -3021,6 +3146,43 @@ model EmployeeMonthlySeatingMiscCostHistory {
   changedAt       DateTime                      @default(now())
 
   @@index([recordId, changedAt])
+}
+
+/// Sales Team Cost–only salary override for a given employee + month (does not change Payroll).
+model EmployeeSalesTeamSalaryOverride {
+  id              String   @id @default(cuid())
+  employeeId      String
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month           Int
+  year            Int
+  amount          Float
+  reason          String   @db.Text
+  updatedByUserId String
+  updatedBy       User     @relation("SalesTeamSalaryOverrideUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([employeeId, month, year])
+  @@index([month, year])
+}
+
+/// Immutable audit log of Sales Team Cost salary overrides.
+model EmployeeSalesTeamSalaryOverrideHistory {
+  id              String   @id @default(cuid())
+  employeeId      String
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month           Int
+  year            Int
+  previousSalary  Float
+  updatedSalary   Float
+  difference      Float
+  reason          String   @db.Text
+  updatedByUserId String
+  updatedBy       User     @relation("SalesTeamSalaryOverrideHistoryBy", fields: [updatedByUserId], references: [id])
+  updatedAt       DateTime @default(now())
+
+  @@index([employeeId, month, year, updatedAt])
+  @@index([updatedAt])
 }
 
 // ==========================================
@@ -3285,23 +3447,55 @@ model HospitalMaster {
   name          String   @unique
   address       String?  @db.Text
   googleMapLink String?
+  /// MOU / agreement document URL
+  mouAgreementUrl String?
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  insuranceProviders HospitalMasterInsurance[]
 
   @@index([name])
   @@index([isActive])
 }
 
+model HospitalMasterInsurance {
+  hospitalId  String
+  hospital    HospitalMaster  @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  insuranceId String
+  insurance   InsuranceMaster @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
+
+  @@id([hospitalId, insuranceId])
+  @@index([insuranceId])
+}
+
 model DoctorMaster {
   id        String   @id @default(cuid())
   name      String   @unique
+  category  String?
+  treatment String?
+  age       Int?
+  sex       String?
+  aadhaarNumber String?
+  aadhaarCardUrl String?
+  panNumber String?
+  panCardUrl String?
+  agreementUrl String?
+  experienceYears Int?
+  experienceNotes String? @db.Text
+  feeStructure String? @db.Text
+  /// Manual / aggregated rating from feedback (1–5)
+  ratingAverage Float?
+  ratingCount   Int     @default(0)
+  /// [{ name, url, type }] — Degrees, Documentation, MOU, Other
+  documents Json?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([name])
   @@index([isActive])
+  @@index([category])
 }
 
 model TPAMaster {
@@ -3332,6 +3526,8 @@ model InsuranceMaster {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  hospitals HospitalMasterInsurance[]
 
   @@index([name])
   @@index([isActive])

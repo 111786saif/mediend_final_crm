@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasPlOrFinanceWrite } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { recomputeOutstandingFromInstallments } from '@/lib/pl/installments'
 
@@ -12,7 +12,7 @@ export async function DELETE(
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'pl:write')) return errorResponse('Forbidden', 403)
+    if (!hasPlOrFinanceWrite(user)) return errorResponse('Forbidden', 403)
 
     const { id } = await params
     const row = await prisma.paymentInstallment.findUnique({ where: { id }, select: { leadId: true } })

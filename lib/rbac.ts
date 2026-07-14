@@ -421,6 +421,15 @@ export function hasPermission(user: SessionUser | null, permission: Permission):
   return permissions.includes(permission)
 }
 
+/** Outstanding / doctor / hospital list: shared by P&L and Finance modules */
+export function hasPlOrFinanceRead(user: SessionUser | null): boolean {
+  return hasPermission(user, 'pl:read') || hasPermission(user, 'finance:read')
+}
+
+export function hasPlOrFinanceWrite(user: SessionUser | null): boolean {
+  return hasPermission(user, 'pl:write') || hasPermission(user, 'finance:write')
+}
+
 export function canAccessLead(
   user: SessionUser | null,
   leadBdId: string,

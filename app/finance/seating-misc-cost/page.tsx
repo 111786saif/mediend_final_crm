@@ -1,7 +1,6 @@
-'use client'
+import { redirect } from 'next/navigation'
 
-import SeatingMiscCostPageContent from '@/components/finance/seating-misc-cost/seating-misc-cost-view'
-
+/** Misc / Other cost entry now lives on Sales Team Cost. */
 export default function SeatingMiscCostPage() {
-  return <SeatingMiscCostPageContent />
+  redirect('/finance/sales-team-cost')
 }

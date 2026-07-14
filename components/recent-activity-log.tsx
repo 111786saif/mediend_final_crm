@@ -1,62 +1,130 @@
 'use client'
 
-import React from 'react'
+import { useRouter } from 'next/navigation'
+import { formatDistanceToNow } from 'date-fns'
+import type { RequestActivityItem } from '@/lib/finance/doctor-payoff/types'
+import { cn } from '@/lib/utils'
 
 interface RecentActivityLogProps {
   className?: string
+  title?: string
+  items?: RequestActivityItem[]
+  emptyMessage?: string
+  viewAllHref?: string
+  isLoading?: boolean
+  /** Use on light Finance pages; default matches doctor/hospital dark panels */
+  variant?: 'dark' | 'light'
 }
 
-export function RecentActivityLog({ className = '' }: RecentActivityLogProps) {
+function actionDotClass(action: string): string {
+  const a = action.toUpperCase()
+  if (a === 'APPROVED' || a === 'VERIFIED') return 'bg-emerald-500'
+  if (a === 'REJECTED') return 'bg-rose-500'
+  if (a === 'SUBMITTED') return 'bg-amber-500'
+  return 'bg-sky-500'
+}
+
+export function RequestActivityLogPanel({
+  className = '',
+  title = 'Recent Activity Log',
+  items = [],
+  emptyMessage = 'No activity yet',
+  viewAllHref,
+  isLoading,
+  variant = 'dark',
+}: RecentActivityLogProps) {
+  const router = useRouter()
+  const isLight = variant === 'light'
+
   return (
-    <div className={`bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl flex flex-col shadow-lg ${className}`}>
-      <div className="px-3.5 py-2 border-b border-[#283150] flex items-center justify-between">
-        <h3 className="font-bold text-xs text-white">Recent Activity Log</h3>
-        <span className="text-xs text-[#22d3ee] hover:underline cursor-pointer">View All</span>
+    <div
+      className={cn(
+        'rounded-xl flex flex-col shadow-lg border',
+        isLight
+          ? 'bg-card border-border'
+          : 'bg-[#191D2E]/60 backdrop-blur-md border-[#283150]',
+        className
+      )}
+    >
+      <div
+        className={cn(
+          'px-3.5 py-2 border-b flex items-center justify-between',
+          isLight ? 'border-border' : 'border-[#283150]'
+        )}
+      >
+        <h3 className={cn('font-bold text-xs', isLight ? 'text-foreground' : 'text-white')}>
+          {title}
+        </h3>
+        {viewAllHref ? (
+          <button
+            type="button"
+            className={cn(
+              'text-xs hover:underline',
+              isLight ? 'text-primary' : 'text-[#22d3ee]'
+            )}
+            onClick={() => router.push(viewAllHref)}
+          >
+            View All
+          </button>
+        ) : (
+          <span className="text-[10px] text-muted-foreground">{items.length} events</span>
+        )}
       </div>
-      <div className="p-3 space-y-2">
-        {/* Activity Item 1 */}
-        <div className="flex items-start gap-2">
-          <div className="mt-1.5 w-1 h-1 rounded-full bg-yellow-500 shrink-0"></div>
-          <div className="flex-1">
-            <div className="flex justify-between items-center">
-              <p className="text-xs text-[#dce1ff]">Payment of <span className="font-bold text-[#22d3ee]">₹5,000</span> received (TXN: 88291)</p>
-              <span className="text-[10px] text-[#c7c6cd]/55 font-mono">2h ago</span>
+      <div className="p-3 space-y-2 max-h-[280px] overflow-y-auto">
+        {isLoading ? (
+          <p className="text-xs text-muted-foreground py-4 text-center">Loading activity…</p>
+        ) : items.length === 0 ? (
+          <p className="text-xs text-muted-foreground py-4 text-center">{emptyMessage}</p>
+        ) : (
+          items.map((item, index) => (
+            <div key={item.id}>
+              {index > 0 && (
+                <div
+                  className={cn(
+                    'h-px mb-2',
+                    isLight ? 'bg-border/60' : 'bg-[#283150]/20'
+                  )}
+                />
+              )}
+              <div className="flex items-start gap-2">
+                <div
+                  className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 ${actionDotClass(item.action)}`}
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start gap-2">
+                    <p
+                      className={cn(
+                        'text-xs leading-snug',
+                        isLight ? 'text-foreground' : 'text-[#dce1ff]'
+                      )}
+                    >
+                      {item.message}
+                    </p>
+                    <span className="text-[10px] text-muted-foreground font-mono whitespace-nowrap">
+                      {formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1 mt-0.5 text-[11px] text-muted-foreground">
+                    <span>{item.actor.name}</span>
+                    <span>·</span>
+                    <span className="uppercase tracking-wide text-[10px]">{item.action}</span>
+                  </div>
+                  {item.remarks && (
+                    <p className="text-[11px] text-muted-foreground mt-0.5 italic truncate">
+                      {item.remarks}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-1 mt-0.5 text-[11px] text-[#c7c6cd] italic">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" />
-              Pending Verification
-            </div>
-          </div>
-        </div>
-        {/* Divider */}
-        <div className="h-px bg-[#283150]/20"></div>
-        {/* Activity Item 2 */}
-        <div className="flex items-start gap-2">
-          <div className="mt-1.5 w-1 h-1 rounded-full bg-green-500 shrink-0"></div>
-          <div className="flex-1">
-            <div className="flex justify-between items-center">
-              <p className="text-xs text-[#dce1ff]">Verified <span className="font-bold text-emerald-400">₹10,000</span> payment by Sarah Miller</p>
-              <span className="text-[10px] text-[#c7c6cd]/55 font-mono">5h ago</span>
-            </div>
-            <div className="flex items-center gap-1 mt-0.5 text-[11px] text-[#c7c6cd]">
-              <span className="text-emerald-400">✔</span> Auto-reconciled to Case #CASE-9844
-            </div>
-          </div>
-        </div>
-        {/* Divider */}
-        <div className="h-px bg-[#283150]/20"></div>
-        {/* Activity Item 3 */}
-        <div className="flex items-start gap-2">
-          <div className="mt-1.5 w-1 h-1 rounded-full bg-[#22d3ee] shrink-0"></div>
-          <div className="flex-1">
-            <div className="flex justify-between items-center">
-              <p className="text-xs text-[#dce1ff]">Quarterly Statement Generated</p>
-              <span className="text-[10px] text-[#c7c6cd]/55 font-mono">Yesterday</span>
-            </div>
-            <p className="text-[11px] text-[#c7c6cd] mt-0.5">Available for download in the archives</p>
-          </div>
-        </div>
+          ))
+        )}
       </div>
     </div>
   )
+}
+
+/** Backward-compatible export used by doctor/hospital pages before props were added. */
+export function RecentActivityLog(props: RecentActivityLogProps) {
+  return <RequestActivityLogPanel {...props} />
 }

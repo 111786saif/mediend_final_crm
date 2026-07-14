@@ -6,6 +6,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { invoiceRequestInclude, mapInvoiceRequest } from '@/lib/finance/invoice-request/mapper'
+import { logInvoiceRequestActivity } from '@/lib/finance/invoice-request/activity'
 
 const approveSchema = z.object({
   invoicePdfUrl: z.string().min(1),
@@ -47,6 +48,14 @@ export async function POST(
         reviewedAt: new Date(),
       },
       include: invoiceRequestInclude,
+    })
+
+    await logInvoiceRequestActivity(prisma, {
+      requestId: id,
+      action: 'VERIFIED',
+      message: `Invoice request verified for lead ${updated.lead.leadRef || updated.leadId}`,
+      remarks: updated.financeRemarks,
+      actorId: user.id,
     })
 
     return successResponse(mapInvoiceRequest(updated), 'Invoice request verified')
