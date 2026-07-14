@@ -21,6 +21,7 @@ import { ActivityTimeline } from '@/components/case/activity-timeline'
 import { CashStageProgress } from '@/components/case/cash-stage-progress'
 import { ResetStepperDialog } from '@/components/case/reset-stepper-dialog'
 import { StageProgress } from '@/components/case/stage-progress'
+import { Field, Section } from '@/components/patient/details-section'
 import {
   Dialog,
   DialogContent,
@@ -1760,206 +1761,150 @@ export default function PatientDetailsPage() {
         )}
 
         {/* Insurance & Pre-Auth Details Section */}
-        {kypSubmission?.preAuthData && (
-          <Card className="border-2 shadow-sm">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-b">
-              <div className="flex items-center justify-between flex-wrap gap-2">
+        {kypSubmission?.preAuthData && (() => {
+          const pre = kypSubmission.preAuthData
+          const requestedName = pre.requestedHospitalName?.trim()
+          const requestedRoom = (pre.requestedRoomType || '').toLowerCase().replace(/\s+/g, ' ')
+          const selectedHosp = requestedName && pre.suggestedHospitals?.length
+            ? pre.suggestedHospitals.find((h) => h.hospitalName?.trim() === requestedName)
+            : null
+          const selectedRoomRent = selectedHosp
+            ? (requestedRoom.includes('single') && selectedHosp.roomRentSingle != null ? selectedHosp.roomRentSingle
+              : (requestedRoom.includes('semi') || requestedRoom.includes('private')) && selectedHosp.roomRentSemiPrivate != null ? selectedHosp.roomRentSemiPrivate
+                : requestedRoom.includes('deluxe') && selectedHosp.roomRentDeluxe != null ? selectedHosp.roomRentDeluxe
+                  : requestedRoom.includes('general') && selectedHosp.roomRentGeneral != null ? selectedHosp.roomRentGeneral
+                    : selectedHosp.roomRentSingle ?? selectedHosp.roomRentSemiPrivate ?? selectedHosp.roomRentDeluxe ?? selectedHosp.roomRentGeneral ?? null)
+            : null
+          const disaseCapping =
+            pre.capping != null && pre.capping !== ''
+              ? typeof pre.capping === 'string' && !Number.isNaN(Number(pre.capping))
+                ? `₹${Number(pre.capping).toLocaleString('en-IN')}`
+                : String(pre.capping)
+              : null
+
+          const approvalBadge = pre.approvalStatus ? (
+            <Badge className={cn(
+              "border-0 ml-1",
+              pre.approvalStatus === 'APPROVED' ? "bg-green-100 text-green-700" :
+                pre.approvalStatus === 'REJECTED' ? "bg-red-100 text-red-700" :
+                  "bg-amber-100 text-amber-700"
+            )}>
+              {pre.approvalStatus}
+            </Badge>
+          ) : null
+
+          const processedMeta = pre.handledAt ? (
+            <>Processed by <span className="font-semibold text-foreground">{pre.handledBy?.name || 'Insurance Team'}</span> on {format(new Date(pre.handledAt), 'PPp')}</>
+          ) : null
+
+          return (
+            <Card className="border-2 shadow-sm">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-b">
                 <div className="flex items-center gap-2">
                   <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   <CardTitle>Insurance & Pre-Auth Details</CardTitle>
-                  {kypSubmission.preAuthData.approvalStatus && (
-                    <Badge className={cn(
-                      "border-0",
-                      kypSubmission.preAuthData.approvalStatus === 'APPROVED' ? "bg-green-100 text-green-700" :
-                        kypSubmission.preAuthData.approvalStatus === 'REJECTED' ? "bg-red-100 text-red-700" :
-                          "bg-amber-100 text-amber-700"
-                    )}>
-                      {kypSubmission.preAuthData.approvalStatus}
-                    </Badge>
+                  {approvalBadge}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-4">
+                <Section
+                  icon={FileText}
+                  iconClassName="text-blue-600"
+                  title="Policy Information"
+                  meta={processedMeta}
+                  hasContent
+                >
+                  <Field label="Insurance Co." value={pre.insurance || lead.insuranceName || kypSubmission.insuranceCard} />
+                  <Field label="TPA" value={pre.tpa} />
+                  <Field label="Sum Insured" value={pre.sumInsured != null ? `₹${Number(pre.sumInsured || 0).toLocaleString('en-IN')}` : null} truncate />
+                  <Field label="Balance Insured" value={pre.balanceInsured != null ? `₹${Number(pre.balanceInsured || 0).toLocaleString('en-IN')}` : null} truncate />
+                  <Field label="Co-pay %" value={pre.copay ? `${pre.copay}%` : null} />
+                  <Field label="Disease Capping" value={disaseCapping} truncate />
+                  {kypSubmission.insuranceCardFileUrl && (
+                    <div className="col-span-2 sm:col-span-3 md:col-span-4">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold">Insurance Card (file)</p>
+                      <a href={kypSubmission.insuranceCardFileUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate block mt-0.5">
+                        {kypSubmission.insuranceCardFileUrl}
+                      </a>
+                    </div>
                   )}
-                </div>
-                {kypSubmission.preAuthData.handledAt && (
-                  <div className="text-xs text-muted-foreground">
-                    Processed by <span className="font-semibold">{kypSubmission.preAuthData.handledBy?.name || 'Insurance Team'}</span> on {format(new Date(kypSubmission.preAuthData.handledAt), 'PPp')}
-                  </div>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {/* Policy Information */}
-                <div className="space-y-4">
-                  <h3 className="text-sm font-bold flex items-center gap-2 text-gray-700 dark:text-gray-300 border-b pb-2">
-                    <FileText className="w-4 h-4 text-blue-600" />
-                    Policy Information
-                  </h3>
-                  <div className="grid grid-cols-1 gap-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Insurance Co.</Label>
-                        <p className="text-sm font-semibold">{kypSubmission.preAuthData.insurance || lead.insuranceName || kypSubmission.insuranceCard || '-'}</p>
-                      </div>
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">TPA</Label>
-                        <p className="text-sm font-semibold">{kypSubmission.preAuthData.tpa || '-'}</p>
-                      </div>
-                      {kypSubmission.insuranceCardFileUrl && (
-                        <div className="col-span-2">
-                          <Label className="text-[10px] uppercase text-gray-500 font-bold">Insurance Card (file)</Label>
-                          <p className="text-sm font-semibold">
-                            <a href={kypSubmission.insuranceCardFileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline truncate block">
-                              {kypSubmission.insuranceCardFileUrl}
-                            </a>
-                          </p>
+                </Section>
+
+                <Section icon={CheckCircle2} iconClassName="text-green-600" title="Selected Request" hasContent>
+                  <Field label="Selected Hospital" value={pre.requestedHospitalName && <span className="text-blue-700 dark:text-blue-400">{pre.requestedHospitalName}</span>} />
+                  <Field label="Room Category" value={pre.requestedRoomType} />
+                  <Field label="Room Rent (selected)" value={selectedRoomRent != null ? `₹${Number(selectedRoomRent).toLocaleString('en-IN')}` : null} truncate />
+                  {pre.preAuthRaisedAt && (
+                    <div className="col-span-2 sm:col-span-3 md:col-span-4">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold">Raised On</p>
+                      <p className="text-sm font-semibold mt-0.5">{format(new Date(pre.preAuthRaisedAt), 'PPp')}</p>
+                      <p className="text-xs text-muted-foreground">By {pre.preAuthRaisedBy?.name}</p>
+                    </div>
+                  )}
+                </Section>
+
+                <Section
+                  icon={Building2}
+                  iconClassName="text-amber-600"
+                  title="All Suggestions"
+                  hasContent={!!(pre.suggestedHospitals && pre.suggestedHospitals.length > 0)}
+                >
+                  <div className="col-span-2 sm:col-span-3 md:col-span-4 space-y-2 max-h-[280px] overflow-y-auto pr-1">
+                    {(pre.suggestedHospitals ?? []).map((hosp) => (
+                      <div key={hosp.id} className={cn(
+                        "p-2.5 rounded-lg border text-xs space-y-1 bg-card",
+                        hosp.hospitalName === pre.requestedHospitalName
+                          ? "border-blue-300 ring-1 ring-blue-400 dark:border-blue-700"
+                          : "border-border"
+                      )}>
+                        <div className="flex justify-between font-bold">
+                          <span className="truncate pr-2">{hosp.hospitalName}</span>
+                          <span className="text-blue-600 dark:text-blue-400 shrink-0">₹{Number(hosp.tentativeBill || 0).toLocaleString('en-IN')}</span>
                         </div>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Sum Insured</Label>
-                        <p className="text-sm font-semibold">₹{Number(kypSubmission.preAuthData.sumInsured || 0).toLocaleString('en-IN')}</p>
-                      </div>
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Balance Insured</Label>
-                        <p className="text-sm font-semibold">₹{Number(kypSubmission.preAuthData.balanceInsured || 0).toLocaleString('en-IN')}</p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Co-pay %</Label>
-                        <p className="text-sm font-semibold">{kypSubmission.preAuthData.copay || '0'}%</p>
-                      </div>
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Disease Capping</Label>
-                        <p className="text-sm font-semibold">
-                          {kypSubmission.preAuthData.capping != null && kypSubmission.preAuthData.capping !== ''
-                            ? (typeof kypSubmission.preAuthData.capping === 'string' && !Number.isNaN(Number(kypSubmission.preAuthData.capping))
-                              ? `₹${Number(kypSubmission.preAuthData.capping).toLocaleString('en-IN')}`
-                              : String(kypSubmission.preAuthData.capping))
-                            : 'No'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Selection & Request */}
-                <div className="space-y-4">
-                  <h3 className="text-sm font-bold flex items-center gap-2 text-gray-700 dark:text-gray-300 border-b pb-2">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    Selected Request
-                  </h3>
-                  <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <Label className="text-[10px] uppercase text-gray-500 font-bold">Selected Hospital</Label>
-                      <p className="text-sm font-bold text-blue-700 dark:text-blue-400">{kypSubmission.preAuthData.requestedHospitalName || '-'}</p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Room Category</Label>
-                        <p className="text-sm font-semibold">{kypSubmission.preAuthData.requestedRoomType || '-'}</p>
-                      </div>
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Room Rent (selected)</Label>
-                        <p className="text-sm font-semibold">
-                          {(() => {
-                            const requestedName = kypSubmission.preAuthData.requestedHospitalName?.trim()
-                            const requestedRoom = (kypSubmission.preAuthData.requestedRoomType || '').toLowerCase().replace(/\s+/g, ' ')
-                            const selectedHosp = requestedName && kypSubmission.preAuthData.suggestedHospitals?.length
-                              ? kypSubmission.preAuthData.suggestedHospitals.find((h) => h.hospitalName?.trim() === requestedName)
-                              : null
-                            const rent = selectedHosp
-                              ? (requestedRoom.includes('single') && selectedHosp.roomRentSingle != null ? selectedHosp.roomRentSingle
-                                : (requestedRoom.includes('semi') || requestedRoom.includes('private')) && selectedHosp.roomRentSemiPrivate != null ? selectedHosp.roomRentSemiPrivate
-                                  : requestedRoom.includes('deluxe') && selectedHosp.roomRentDeluxe != null ? selectedHosp.roomRentDeluxe
-                                    : requestedRoom.includes('general') && selectedHosp.roomRentGeneral != null ? selectedHosp.roomRentGeneral
-                                      : selectedHosp.roomRentSingle ?? selectedHosp.roomRentSemiPrivate ?? selectedHosp.roomRentDeluxe ?? selectedHosp.roomRentGeneral ?? null)
-                              : null
-                            return rent != null ? `₹${Number(rent).toLocaleString('en-IN')}` : '-'
-                          })()}
-                        </p>
-                      </div>
-                    </div>
-                    {kypSubmission.preAuthData.preAuthRaisedAt && (
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Raised On</Label>
-                        <p className="text-sm font-semibold">{format(new Date(kypSubmission.preAuthData.preAuthRaisedAt), 'PPp')}</p>
-                        <p className="text-[10px] text-muted-foreground">By {kypSubmission.preAuthData.preAuthRaisedBy?.name}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Hospital Suggestions */}
-                <div className="space-y-4">
-                  <h3 className="text-sm font-bold flex items-center gap-2 text-gray-700 dark:text-gray-300 border-b pb-2">
-                    <Building2 className="w-4 h-4 text-amber-600" />
-                    All Suggestions
-                  </h3>
-                  <div className="space-y-3 max-h-[250px] overflow-y-auto pr-2">
-                    {kypSubmission.preAuthData.suggestedHospitals && kypSubmission.preAuthData.suggestedHospitals.length > 0 ? (
-                      kypSubmission.preAuthData.suggestedHospitals.map((hosp, idx) => (
-                        <div key={hosp.id} className={cn(
-                          "p-2 rounded border text-xs space-y-1",
-                          hosp.hospitalName === kypSubmission.preAuthData?.requestedHospitalName
-                            ? "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 ring-1 ring-blue-500"
-                            : "bg-gray-50 border-gray-100 dark:bg-gray-900 dark:border-gray-800"
-                        )}>
-                          <div className="flex justify-between font-bold">
-                            <span className="truncate pr-2">{hosp.hospitalName}</span>
-                            <span className="text-blue-600 dark:text-blue-400 shrink-0">₹{Number(hosp.tentativeBill || 0).toLocaleString('en-IN')}</span>
-                          </div>
-                          {hosp.suggestedDoctor && (
-                            <div className="text-muted-foreground">{hosp.suggestedDoctor}</div>
-                          )}
-                          <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px] pt-1 border-t border-gray-200 dark:border-gray-700 mt-1">
-                            {hosp.roomRentSingle && <span>Sgl: ₹{hosp.roomRentSingle}</span>}
-                            {hosp.roomRentSemiPrivate && <span>Semi: ₹{hosp.roomRentSemiPrivate}</span>}
-                            {hosp.roomRentDeluxe && <span>Dlx: ₹{hosp.roomRentDeluxe}</span>}
-                            {hosp.roomRentGeneral && <span>Gen: ₹{hosp.roomRentGeneral}</span>}
-                          </div>
+                        {hosp.suggestedDoctor && <div className="text-muted-foreground">{hosp.suggestedDoctor}</div>}
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px] pt-1 border-t border-border mt-1">
+                          {hosp.roomRentSingle != null && <span>Sgl: ₹{hosp.roomRentSingle}</span>}
+                          {hosp.roomRentSemiPrivate != null && <span>Semi: ₹{hosp.roomRentSemiPrivate}</span>}
+                          {hosp.roomRentDeluxe != null && <span>Dlx: ₹{hosp.roomRentDeluxe}</span>}
+                          {hosp.roomRentGeneral != null && <span>Gen: ₹{hosp.roomRentGeneral}</span>}
                         </div>
-                      ))
-                    ) : (
-                      <p className="text-xs text-muted-foreground italic">No suggestions provided yet.</p>
-                    )}
+                      </div>
+                    ))}
                   </div>
-                </div>
-              </div>
+                </Section>
 
-              {/* Remarks & Notes */}
-              {(kypSubmission.preAuthData.approvalNotes || kypSubmission.preAuthData.rejectionReason || kypSubmission.preAuthData.diseaseDescription) && (
-                <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {kypSubmission.preAuthData.diseaseDescription && (
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">Disease Description (from BD)</Label>
-                        <p className="text-sm mt-1 bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-100 dark:border-gray-800">
-                          {kypSubmission.preAuthData.diseaseDescription}
-                        </p>
-                      </div>
-                    )}
-                    {(kypSubmission.preAuthData.approvalNotes || kypSubmission.preAuthData.rejectionReason) && (
-                      <div>
-                        <Label className="text-[10px] uppercase text-gray-500 font-bold">
-                          {kypSubmission.preAuthData.approvalStatus === 'REJECTED' ? 'Rejection Reason' : 'Insurance Remarks'}
-                        </Label>
-                        <p className={cn(
-                          "text-sm mt-1 p-3 rounded-lg border italic",
-                          kypSubmission.preAuthData.approvalStatus === 'REJECTED'
-                            ? "bg-red-50 border-red-100 text-red-700 dark:bg-red-950/10 dark:border-red-900/20"
-                            : "bg-amber-50 border-amber-100 text-amber-700 dark:bg-amber-950/10 dark:border-amber-900/20"
-                        )}>
-                          &quot;{kypSubmission.preAuthData.rejectionReason || kypSubmission.preAuthData.approvalNotes}&quot;
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
+                <Section
+                  icon={FileText}
+                  iconClassName="text-gray-600"
+                  title="Remarks & Notes"
+                  hasContent={!!(pre.diseaseDescription || pre.approvalNotes || pre.rejectionReason)}
+                >
+                  {pre.diseaseDescription && (
+                    <div className="col-span-2 sm:col-span-3 md:col-span-4">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold mb-1">Disease Description (from BD)</p>
+                      <p className="text-sm bg-card p-3 rounded-lg border">{pre.diseaseDescription}</p>
+                    </div>
+                  )}
+                  {(pre.approvalNotes || pre.rejectionReason) && (
+                    <div className="col-span-2 sm:col-span-3 md:col-span-4">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-semibold mb-1">
+                        {pre.approvalStatus === 'REJECTED' ? 'Rejection Reason' : 'Insurance Remarks'}
+                      </p>
+                      <p className={cn(
+                        "text-sm p-3 rounded-lg border italic",
+                        pre.approvalStatus === 'REJECTED'
+                          ? "bg-red-50 border-red-100 text-red-700 dark:bg-red-950/10 dark:border-red-900/20"
+                          : "bg-amber-50 border-amber-100 text-amber-700 dark:bg-amber-950/10 dark:border-amber-900/20"
+                      )}>
+                        &quot;{pre.rejectionReason || pre.approvalNotes}&quot;
+                      </p>
+                    </div>
+                  )}
+                </Section>
+              </CardContent>
+            </Card>
+          )
+        })()}
 
         {/* Initiate Form Details */}
         {initiateFormData?.initiateForm && canViewInitiateForm(user as any, lead) && (

@@ -93,12 +93,14 @@ export function canEditIPDDetails(user: User, lead: Lead): boolean {
   return isBDOrTL && editableStages.includes(lead.caseStage)
 }
 
-// BD / TL / EA can mark IPD when initiated (insurance) or approved/submitted (cash)
+// BD / TL / EA can mark IPD when initiated (insurance) or approved/submitted (cash).
+// Also allowed while ADMITTED - Admitted/Postponed/Cancelled never lock the case;
+// only Surgery Done (IPD_DONE) advances the case stage past this point.
 export function canMarkIPD(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
 
   const isBDOrTL = ['BD', 'TEAM_LEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN'].includes(user.role)
-  const isInitiated = lead.caseStage === CaseStage.INITIATED
+  const isInitiated = lead.caseStage === CaseStage.INITIATED || lead.caseStage === CaseStage.ADMITTED
   const isCashReady = lead.caseStage === CaseStage.CASH_APPROVED || lead.caseStage === CaseStage.CASH_IPD_SUBMITTED
 
   return isBDOrTL && (isInitiated || isCashReady)
@@ -262,7 +264,7 @@ export function canFillInitiateForm(user: User, lead: Lead): boolean {
   if (!user || !lead) return false
   
   const isInsurance = ['INSURANCE', 'INSURANCE_HEAD', 'ADMIN', 'TESTER'].includes(user.role)
-  const isValidStage = [CaseStage.PREAUTH_RAISED, CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED, CaseStage.DISCHARGED, CaseStage.IPD_DONE].includes(lead.caseStage)
+  const isValidStage: boolean = ([CaseStage.PREAUTH_RAISED, CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED, CaseStage.DISCHARGED, CaseStage.IPD_DONE] as CaseStage[]).includes(lead.caseStage)
   
   return isInsurance && isValidStage
 }
