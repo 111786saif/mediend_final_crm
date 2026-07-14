@@ -1,11 +1,15 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { MasterFileField } from '@/components/master-data/master-file-field'
+import {
+  HospitalMasterForm,
+  type HospitalFormState,
+} from '@/components/master-data/hospital-master-form'
+import { emptyHospitalDetails, parseHospitalDetails } from '@/lib/masters/hospital'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -39,7 +43,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { hasPermission } from '@/lib/rbac'
 import { toast } from 'sonner'
-import { ExternalLink, Loader2, Pencil, Plus, Database, Trash2, Upload } from 'lucide-react'
+import { ExternalLink, Eye, Loader2, Pencil, Plus, Database, Trash2, Upload } from 'lucide-react'
 import type { MasterItem, MasterType } from '@/components/ui/master-combobox'
 import type { DoctorDocument } from '@/lib/masters/schemas'
 import Link from 'next/link'
@@ -116,6 +120,20 @@ function emptyDoctorForm() {
   }
 }
 
+function emptyHospitalForm(): HospitalFormState {
+  return {
+    name: '',
+    address: '',
+    googleMapLink: '',
+    mouAgreementUrl: '',
+    hospitalShare: '',
+    mediendShare: '',
+    details: emptyHospitalDetails(),
+    insuranceIds: [],
+    isActive: true,
+  }
+}
+
 export default function MasterDataPage() {
   const { user, isLoading: authLoading } = useAuth()
   const queryClient = useQueryClient()
@@ -125,10 +143,6 @@ export default function MasterDataPage() {
   const [editing, setEditing] = useState<MasterItem | null>(null)
 
   const [formName, setFormName] = useState('')
-  const [formAddress, setFormAddress] = useState('')
-  const [formMap, setFormMap] = useState('')
-  const [formMouUrl, setFormMouUrl] = useState('')
-  const [formInsuranceIds, setFormInsuranceIds] = useState<string[]>([])
   const [formCategory, setFormCategory] = useState('')
   const [formAtsNewDelhi, setFormAtsNewDelhi] = useState('')
   const [formAtsMumbai, setFormAtsMumbai] = useState('')
@@ -137,6 +151,7 @@ export default function MasterDataPage() {
   const [formAtsBangalore, setFormAtsBangalore] = useState('')
   const [formIsActive, setFormIsActive] = useState(true)
   const [doctorForm, setDoctorForm] = useState(emptyDoctorForm())
+  const [hospitalForm, setHospitalForm] = useState<HospitalFormState>(emptyHospitalForm)
   const [docType, setDocType] = useState<DoctorDocument['type']>('DEGREE')
 
   const { uploadFile, uploading: docUploading } = useFileUpload({
@@ -159,18 +174,8 @@ export default function MasterDataPage() {
   const insuranceOptions = insuranceData?.items ?? []
   const items = data?.items ?? []
 
-  const insuranceNameById = useMemo(() => {
-    const map = new Map<string, string>()
-    for (const i of insuranceOptions) map.set(i.id, i.name)
-    return map
-  }, [insuranceOptions])
-
   const resetCommon = () => {
     setFormName('')
-    setFormAddress('')
-    setFormMap('')
-    setFormMouUrl('')
-    setFormInsuranceIds([])
     setFormCategory('')
     setFormAtsNewDelhi('')
     setFormAtsMumbai('')
@@ -179,6 +184,7 @@ export default function MasterDataPage() {
     setFormAtsBangalore('')
     setFormIsActive(true)
     setDoctorForm(emptyDoctorForm())
+    setHospitalForm(emptyHospitalForm())
     setDocType('DEGREE')
   }
 
@@ -191,10 +197,6 @@ export default function MasterDataPage() {
   const openEdit = (row: MasterItem) => {
     setEditing(row)
     setFormName(row.name)
-    setFormAddress(row.address || '')
-    setFormMap(row.googleMapLink || '')
-    setFormMouUrl(row.mouAgreementUrl || '')
-    setFormInsuranceIds(row.insuranceIds || row.insuranceProviders?.map((p) => p.id) || [])
     setFormCategory(row.category || '')
     setFormAtsNewDelhi(row.atsNewDelhi?.toString() || '')
     setFormAtsMumbai(row.atsMumbai?.toString() || '')
@@ -202,6 +204,17 @@ export default function MasterDataPage() {
     setFormAtsHyderabad(row.atsHyderabad?.toString() || '')
     setFormAtsBangalore(row.atsBangalore?.toString() || '')
     setFormIsActive(row.isActive)
+    setHospitalForm({
+      name: row.name,
+      address: row.address || '',
+      googleMapLink: row.googleMapLink || '',
+      mouAgreementUrl: row.mouAgreementUrl || '',
+      hospitalShare: row.hospitalShare != null ? String(row.hospitalShare) : '',
+      mediendShare: row.mediendShare != null ? String(row.mediendShare) : '',
+      details: parseHospitalDetails(row.details),
+      insuranceIds: row.insuranceIds || row.insuranceProviders?.map((p) => p.id) || [],
+      isActive: row.isActive,
+    })
     setDoctorForm({
       name: row.name,
       category: row.category || '',
@@ -224,12 +237,6 @@ export default function MasterDataPage() {
     setDialogOpen(true)
   }
 
-  const toggleInsurance = (id: string, checked: boolean) => {
-    setFormInsuranceIds((prev) =>
-      checked ? [...prev, id] : prev.filter((x) => x !== id),
-    )
-  }
-
   const saveMutation = useMutation({
     mutationFn: async () => {
       const type = TAB_TO_TYPE[tab]
@@ -237,12 +244,22 @@ export default function MasterDataPage() {
       const buildPayload = (forEdit: boolean) => {
         const status = forEdit || type === 'hospitals' || type === 'doctors' ? { isActive: formIsActive } : {}
         if (type === 'hospitals') {
+          const parseShare = (raw: string) => {
+            const t = raw.trim()
+            if (t === '') return null
+            const n = Number(t)
+            return Number.isFinite(n) ? n : null
+          }
           return {
-            name: formName.trim(),
-            address: formAddress.trim() || null,
-            googleMapLink: formMap.trim() || null,
-            mouAgreementUrl: formMouUrl.trim() || null,
-            insuranceIds: formInsuranceIds,
+            name: formName.trim() || hospitalForm.name.trim(),
+            address: hospitalForm.address.trim() || null,
+            googleMapLink: hospitalForm.googleMapLink.trim() || null,
+            mouAgreementUrl: hospitalForm.mouAgreementUrl.trim() || null,
+            hospitalShare: parseShare(hospitalForm.hospitalShare),
+            mediendShare: parseShare(hospitalForm.mediendShare),
+            details: hospitalForm.details,
+            insuranceIds: hospitalForm.insuranceIds,
+            isActive: hospitalForm.isActive,
             ...status,
           }
         }
@@ -370,6 +387,8 @@ export default function MasterDataPage() {
                   {tab === 'hospitals' && (
                     <>
                       <TableHead>Address</TableHead>
+                      <TableHead className="w-[100px]">Hosp. %</TableHead>
+                      <TableHead className="w-[100px]">Med. %</TableHead>
                       <TableHead>Insurance</TableHead>
                       <TableHead className="w-[80px]">MOU</TableHead>
                       <TableHead className="w-[100px]">Map</TableHead>
@@ -393,7 +412,9 @@ export default function MasterDataPage() {
                     </>
                   )}
                   <TableHead className="w-[100px]">Status</TableHead>
-                  {canWrite && <TableHead className="w-[140px]">Actions</TableHead>}
+                  {(canWrite || tab === 'hospitals') && (
+                    <TableHead className="w-[180px]">Actions</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -417,6 +438,12 @@ export default function MasterDataPage() {
                         <>
                           <TableCell className="max-w-md truncate text-sm text-muted-foreground">
                             {row.address || '—'}
+                          </TableCell>
+                          <TableCell className="text-sm tabular-nums">
+                            {row.hospitalShare != null ? `${row.hospitalShare}%` : '—'}
+                          </TableCell>
+                          <TableCell className="text-sm tabular-nums">
+                            {row.mediendShare != null ? `${row.mediendShare}%` : '—'}
                           </TableCell>
                           <TableCell className="max-w-[220px] text-sm text-muted-foreground">
                             {row.insuranceProviders?.length
@@ -505,17 +532,29 @@ export default function MasterDataPage() {
                           {row.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                       </TableCell>
-                      {canWrite && (
+                      {(canWrite || tab === 'hospitals') && (
                         <TableCell>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => openEdit(row)}
-                          >
-                            <Pencil className="size-3" />
-                            Edit
-                          </Button>
+                          <div className="flex flex-wrap gap-1.5">
+                            {tab === 'hospitals' && (
+                              <Button type="button" variant="outline" size="sm" asChild>
+                                <Link href={`/hospitals/${encodeURIComponent(row.name)}`}>
+                                  <Eye className="size-3" />
+                                  View
+                                </Link>
+                              </Button>
+                            )}
+                            {canWrite && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openEdit(row)}
+                              >
+                                <Pencil className="size-3" />
+                                Edit
+                              </Button>
+                            )}
+                          </div>
                         </TableCell>
                       )}
                     </TableRow>
@@ -526,14 +565,14 @@ export default function MasterDataPage() {
         </Tabs>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
+          <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto sm:max-w-4xl">
             <DialogHeader>
               <DialogTitle>
                 {editing ? 'Edit' : 'Add'} {TAB_LABEL[tab]}
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-2">
-              {tab !== 'doctors' && (
+              {tab !== 'doctors' && tab !== 'hospitals' && (
                 <div>
                   <Label htmlFor="md-name">Name *</Label>
                   <Input
@@ -834,85 +873,16 @@ export default function MasterDataPage() {
               )}
 
               {tab === 'hospitals' && (
-                <>
-                  <div>
-                    <Label htmlFor="md-addr">Address</Label>
-                    <Textarea
-                      id="md-addr"
-                      value={formAddress}
-                      onChange={(e) => setFormAddress(e.target.value)}
-                      placeholder="Hospital address"
-                      rows={3}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="md-map">Google Maps link</Label>
-                    <Input
-                      id="md-map"
-                      value={formMap}
-                      onChange={(e) => setFormMap(e.target.value)}
-                      placeholder="https://maps.google.com/..."
-                    />
-                  </div>
-                  <MasterFileField
-                    label="MOU Agreement"
-                    value={formMouUrl}
-                    folder="masters/hospitals/mou"
-                    onChange={setFormMouUrl}
-                  />
-                  <div className="space-y-2">
-                    <Label>Insurance providers</Label>
-                    <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg border p-3">
-                      {insuranceOptions.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">
-                          No insurance masters yet. Add them under the Insurance tab.
-                        </p>
-                      ) : (
-                        insuranceOptions.map((ins) => {
-                          const checked = formInsuranceIds.includes(ins.id)
-                          return (
-                            <label
-                              key={ins.id}
-                              className="flex cursor-pointer items-center gap-2 text-sm"
-                            >
-                              <Checkbox
-                                checked={checked}
-                                onCheckedChange={(v) => toggleInsurance(ins.id, v === true)}
-                              />
-                              <span className={!ins.isActive ? 'text-muted-foreground' : ''}>
-                                {ins.name}
-                                {!ins.isActive ? ' (inactive)' : ''}
-                              </span>
-                            </label>
-                          )
-                        })
-                      )}
-                    </div>
-                    {formInsuranceIds.length > 0 && (
-                      <p className="text-xs text-muted-foreground">
-                        Selected:{' '}
-                        {formInsuranceIds
-                          .map((id) => insuranceNameById.get(id) || id)
-                          .join(', ')}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="md-active">Status</Label>
-                      <p className="text-sm text-muted-foreground">
-                        {formIsActive
-                          ? 'Active — shown in dropdowns and forms'
-                          : 'Inactive — hidden from dropdowns'}
-                      </p>
-                    </div>
-                    <Switch
-                      id="md-active"
-                      checked={formIsActive}
-                      onCheckedChange={setFormIsActive}
-                    />
-                  </div>
-                </>
+                <HospitalMasterForm
+                  form={{ ...hospitalForm, name: formName || hospitalForm.name }}
+                  onChange={(next) => {
+                    setHospitalForm(next)
+                    setFormName(next.name)
+                    setFormIsActive(next.isActive)
+                  }}
+                  insuranceOptions={insuranceOptions}
+                  showNameField
+                />
               )}
 
               {tab === 'treatments' && (

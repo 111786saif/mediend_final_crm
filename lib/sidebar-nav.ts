@@ -41,7 +41,7 @@ import {
   Wallet,
 } from 'lucide-react'
 import { SessionUser } from '@/lib/auth'
-import { hasPermission, type Permission } from '@/lib/rbac'
+import { hasPermission, hasPlOrFinanceRead, type Permission } from '@/lib/rbac'
 
 export interface NavItem {
   title: string
@@ -228,6 +228,12 @@ export const navItems: NavItem[] = [
     permission: 'pl:read',
   },
   {
+    title: 'Outstanding List',
+    url: '/pl/outstanding',
+    icon: CreditCard,
+    permission: 'finance:read',
+  },
+  {
     title: 'Doctor List',
     url: '/doctors',
     icon: Stethoscope,
@@ -396,24 +402,6 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
-    title: 'Fin Outstanding',
-    url: '/pl/outstanding',
-    icon: CreditCard,
-    permission: 'finance:read',
-  },
-  {
-    title: 'Fin Doctor List',
-    url: '/doctors',
-    icon: Stethoscope,
-    permission: 'finance:read',
-  },
-  {
-    title: 'Fin Hospital List',
-    url: '/hospitals',
-    icon: Building2,
-    permission: 'finance:read',
-  },
-  {
     title: 'Sales Team Cost',
     url: '/finance/sales-team-cost',
     icon: DollarSign,
@@ -549,6 +537,14 @@ function filterNavItems(user: SessionUser | null): NavItem[] {
         item.title.startsWith('MD ') ||
         (item.title === 'Master Data' && item.roles?.includes('MD'))
       )
+    }
+    // Doctor / Hospital lists: main nav for PL or Finance (not nested under Finance)
+    if (item.title === 'Doctor List' || item.title === 'Hospital List') {
+      return hasPlOrFinanceRead(user)
+    }
+    // Outstanding List is Finance Head main-nav label for /pl/outstanding (PL roles use P/L Outstanding)
+    if (item.title === 'Outstanding List') {
+      return user.role === 'FINANCE_HEAD' || user.role === 'ADMIN' || user.role === 'TESTER'
     }
     // USER role can only see Tasks + "My " prefixed pages (MyHRMS)
     if (user.role === 'USER') {

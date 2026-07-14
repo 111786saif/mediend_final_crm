@@ -1,39 +1,34 @@
 import { prisma } from '@/lib/prisma'
 
 /**
- * Marketing spend attributed to a BD's team (stub — extend with campaign/team tagging).
+ * Marketing spend attributed to a BD's team (stub — equal split across active BDs).
  */
 export async function getMarketingCostForBD(
   bdUserId: string,
   bdEmployeeId?: string,
 ): Promise<number> {
-  let teamId: string | null = null
-  if (bdEmployeeId) {
-    const emp = await prisma.employee.findUnique({
-      where: { id: bdEmployeeId },
-      select: { teamId: true },
-    })
-    teamId = emp?.teamId ?? null
-  }
+  void bdUserId
+  void bdEmployeeId
+  return loadSharedBdMarketingCost()
+}
 
-  const recentSpend = await prisma.dailyCampaignSpend.aggregate({
-    _sum: { spend: true },
-    where: {
-      date: {
-        gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+/** Single aggregate + BD count — reuse for every BD node in the hierarchy. */
+export async function loadSharedBdMarketingCost(): Promise<number> {
+  const [recentSpend, bdCount] = await Promise.all([
+    prisma.dailyCampaignSpend.aggregate({
+      _sum: { spend: true },
+      where: {
+        date: {
+          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        },
       },
-    },
-  })
+    }),
+    prisma.employee.count({
+      where: { user: { role: 'BD' }, status: 'ACTIVE' },
+    }),
+  ])
 
   const totalSpend = recentSpend._sum.spend ?? 0
-  if (totalSpend <= 0) return 0
-
-  const bdCount = await prisma.employee.count({
-    where: { user: { role: 'BD' }, status: 'ACTIVE' },
-  })
-  if (bdCount <= 0) return 0
-
-  void teamId
-  void bdUserId
+  if (totalSpend <= 0 || bdCount <= 0) return 0
   return Math.round((totalSpend / bdCount) * 100) / 100
 }

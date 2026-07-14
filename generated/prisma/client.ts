@@ -468,6 +468,16 @@ export type EmployeeMonthlySeatingMiscCost = Prisma.EmployeeMonthlySeatingMiscCo
  */
 export type EmployeeMonthlySeatingMiscCostHistory = Prisma.EmployeeMonthlySeatingMiscCostHistoryModel
 /**
+ * Model SalesTeamBulkCostEntry
+ * Line-item Misc / Other cost on Sales Team Cost (employee optional; remark required).
+ */
+export type SalesTeamBulkCostEntry = Prisma.SalesTeamBulkCostEntryModel
+/**
+ * Model SalesTeamBulkCostEntryHistory
+ * 
+ */
+export type SalesTeamBulkCostEntryHistory = Prisma.SalesTeamBulkCostEntryHistoryModel
+/**
  * Model EmployeeSalesTeamSalaryOverride
  * Sales Team Cost–only salary override for a given employee + month (does not change Payroll).
  */

@@ -1,9 +1,13 @@
 import { UserRole } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { loadApprovedIncentiveTotalsByEmployee, type SalesTeamCostPeriod } from '@/lib/sales-team-cost/incentives'
-import { getMarketingCostForBD } from '@/lib/sales-team-cost/marketing'
-import { getSalaryForRole } from '@/lib/sales-team-cost/payroll'
+import { loadSharedBdMarketingCost } from '@/lib/sales-team-cost/marketing'
+import { loadSalariesByEmployeeIds } from '@/lib/sales-team-cost/payroll'
 import { loadSalaryOverridesByEmployee, type SalaryOverrideEntry } from '@/lib/sales-team-cost/salary-override'
+import {
+  loadBulkCostTotalsByEmployee,
+  loadUnallocatedBulkCostTotals,
+} from '@/lib/sales-team-cost/bulk-cost-entries'
 import { loadApprovedSeatingMiscByEmployee } from '@/lib/sales-team-cost/seating-misc'
 import { buildSummary } from '@/lib/sales-team-cost/rollup'
 import type {
@@ -49,14 +53,19 @@ function toRoleType(role: UserRole): SalesTeamCostRoleType {
   }
 }
 
-async function buildRoleNode(
+function buildRoleNode(
   employee: EmployeeRow,
   employeesByManager: Map<string, EmployeeRow[]>,
   incentiveTotals: Map<string, number>,
   seatingMiscTotals: Map<string, { seating: number; misc: number; other: number }>,
+  bulkCostTotals: Map<string, { misc: number; other: number }>,
   salaryOverrides: Map<string, SalaryOverrideEntry>,
-): Promise<SalesTeamCostRole | null> {
+  salaries: Map<string, number>,
+  sharedMarketingCost: number,
+  hierarchyEmployeeIds: Set<string>,
+): SalesTeamCostRole | null {
   if (!SALES_ROLES.includes(employee.user.role)) return null
+  hierarchyEmployeeIds.add(employee.id)
 
   const roleType = toRoleType(employee.user.role)
   const allowedChildRoles = new Set(CHILD_ROLES[roleType])
@@ -66,26 +75,26 @@ async function buildRoleNode(
 
   const children: SalesTeamCostRole[] = []
   for (const child of childEmployees) {
-    const node = await buildRoleNode(
+    const node = buildRoleNode(
       child,
       employeesByManager,
       incentiveTotals,
       seatingMiscTotals,
+      bulkCostTotals,
       salaryOverrides,
+      salaries,
+      sharedMarketingCost,
+      hierarchyEmployeeIds,
     )
     if (node) children.push(node)
   }
 
-  const payrollSalary = await getSalaryForRole(employee.id)
+  const payrollSalary = salaries.get(employee.id) ?? 0
   const override = salaryOverrides.get(employee.id)
   const salaryIsOverride = override != null
   const salaryPerHead = salaryIsOverride ? override.amount : payrollSalary
   const costs = seatingMiscTotals.get(employee.id)
-
-  let marketingCost: number | undefined
-  if (roleType === 'bd') {
-    marketingCost = await getMarketingCostForBD(employee.userId, employee.id)
-  }
+  const bulk = bulkCostTotals.get(employee.id)
 
   return {
     id: employee.id,
@@ -98,9 +107,9 @@ async function buildRoleNode(
     salaryIsOverride,
     incentiveAmount: incentiveTotals.get(employee.id) ?? 0,
     seatingAmount: costs?.seating ?? 0,
-    miscAmount: costs?.misc ?? 0,
-    otherAmount: costs?.other ?? 0,
-    marketingCost,
+    miscAmount: (costs?.misc ?? 0) + (bulk?.misc ?? 0),
+    otherAmount: (costs?.other ?? 0) + (bulk?.other ?? 0),
+    marketingCost: roleType === 'bd' ? sharedMarketingCost : undefined,
     children,
   }
 }
@@ -108,24 +117,28 @@ async function buildRoleNode(
 export async function buildSalesTeamCostHierarchy(
   period: SalesTeamCostPeriod,
 ): Promise<SalesTeamCostResponse> {
-  const [employees, incentiveTotals, seatingMiscTotals, salaryOverrides] = await Promise.all([
-    prisma.employee.findMany({
-      where: {
-        status: 'ACTIVE',
-        user: { role: { in: SALES_ROLES } },
-      },
-      select: {
-        id: true,
-        userId: true,
-        managerId: true,
-        user: { select: { id: true, name: true, role: true } },
-      },
-      orderBy: { user: { name: 'asc' } },
-    }),
-    loadApprovedIncentiveTotalsByEmployee(period),
-    loadApprovedSeatingMiscByEmployee(period),
-    loadSalaryOverridesByEmployee(period),
-  ])
+  // Sequential loads: Supabase session pooler is tiny (often max 15 across all apps),
+  // and this process uses a single pooled connection — avoid request stampedes.
+  const employees = await prisma.employee.findMany({
+    where: {
+      status: 'ACTIVE',
+      user: { role: { in: SALES_ROLES } },
+    },
+    select: {
+      id: true,
+      userId: true,
+      managerId: true,
+      user: { select: { id: true, name: true, role: true } },
+    },
+    orderBy: { user: { name: 'asc' } },
+  })
+  const incentiveTotals = await loadApprovedIncentiveTotalsByEmployee(period)
+  const seatingMiscTotals = await loadApprovedSeatingMiscByEmployee(period)
+  const bulkCostTotals = await loadBulkCostTotalsByEmployee(period)
+  const unallocatedBulk = await loadUnallocatedBulkCostTotals(period)
+  const salaryOverrides = await loadSalaryOverridesByEmployee(period)
+  const salaries = await loadSalariesByEmployeeIds(employees.map((e) => e.id))
+  const sharedMarketingCost = await loadSharedBdMarketingCost()
 
   const employeesByManager = new Map<string, EmployeeRow[]>()
   for (const employee of employees) {
@@ -144,21 +157,40 @@ export async function buildSalesTeamCostHierarchy(
     )
   }
 
+  const hierarchyEmployeeIds = new Set<string>()
   const roots: SalesTeamCostRole[] = []
   for (const root of rootEmployees) {
-    const node = await buildRoleNode(
+    const node = buildRoleNode(
       root,
       employeesByManager,
       incentiveTotals,
       seatingMiscTotals,
+      bulkCostTotals,
       salaryOverrides,
+      salaries,
+      sharedMarketingCost,
+      hierarchyEmployeeIds,
     )
     if (node) roots.push(node)
   }
 
+  // Costs assigned to employees outside the sales hierarchy still count in totals.
+  let outsideMisc = 0
+  let outsideOther = 0
+  for (const [employeeId, totals] of bulkCostTotals) {
+    if (hierarchyEmployeeIds.has(employeeId)) continue
+    outsideMisc += totals.misc
+    outsideOther += totals.other
+  }
+
+  const unallocated = {
+    misc: unallocatedBulk.misc + outsideMisc,
+    other: unallocatedBulk.other + outsideOther,
+  }
+
   return {
     roots,
-    summary: buildSummary(roots),
+    summary: buildSummary(roots, unallocated),
     month: period.month,
     year: period.year,
   }

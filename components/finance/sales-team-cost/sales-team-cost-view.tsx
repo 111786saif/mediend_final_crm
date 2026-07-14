@@ -18,6 +18,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
 import { RoleCostNode } from '@/components/finance/sales-team-cost/role-cost-node'
 import { BulkCostDialog } from '@/components/finance/sales-team-cost/bulk-cost-dialog'
+import { BulkCostActivityDrawer } from '@/components/finance/sales-team-cost/bulk-cost-activity-drawer'
 import type { BulkCostType } from '@/hooks/use-sales-team-bulk-costs'
 
 const YEAR_OPTIONS = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - 2 + i)
@@ -30,6 +31,7 @@ export function SalesTeamCostView() {
   const [filterMonth, setFilterMonth] = useState(String(now.getMonth() + 1))
   const [filterYear, setFilterYear] = useState(String(now.getFullYear()))
   const [bulkDialog, setBulkDialog] = useState<BulkCostType | null>(null)
+  const [activityType, setActivityType] = useState<BulkCostType | null>(null)
 
   const filters = useMemo(
     () => ({
@@ -184,14 +186,40 @@ export function SalesTeamCostView() {
                 <p className="text-xs text-muted-foreground">Seating</p>
                 <p className="font-semibold">{formatCurrency(summary.rollup.seating)}</p>
               </div>
-              <div>
+              <button
+                type="button"
+                className="rounded-md text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring -m-1.5 p-1.5"
+                onClick={() => setActivityType('MISC')}
+                title="View Misc Cost activity"
+              >
                 <p className="text-xs text-muted-foreground">Misc</p>
-                <p className="font-semibold">{formatCurrency(summary.rollup.misc)}</p>
-              </div>
-              <div>
+                <p className="font-semibold underline decoration-dotted underline-offset-4">
+                  {formatCurrency(summary.rollup.misc)}
+                </p>
+                {(summary.unallocated?.misc ?? 0) > 0 && (
+                  <p className="text-[10px] text-muted-foreground">
+                    incl. {formatCurrency(summary.unallocated.misc)} unassigned
+                  </p>
+                )}
+                <p className="text-[10px] text-primary">View activity</p>
+              </button>
+              <button
+                type="button"
+                className="rounded-md text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring -m-1.5 p-1.5"
+                onClick={() => setActivityType('OTHER')}
+                title="View Other Cost activity"
+              >
                 <p className="text-xs text-muted-foreground">Other</p>
-                <p className="font-semibold">{formatCurrency(summary.rollup.other)}</p>
-              </div>
+                <p className="font-semibold underline decoration-dotted underline-offset-4">
+                  {formatCurrency(summary.rollup.other)}
+                </p>
+                {(summary.unallocated?.other ?? 0) > 0 && (
+                  <p className="text-[10px] text-muted-foreground">
+                    incl. {formatCurrency(summary.unallocated.other)} unassigned
+                  </p>
+                )}
+                <p className="text-[10px] text-primary">View activity</p>
+              </button>
               <div>
                 <p className="text-xs text-muted-foreground">Marketing (BD)</p>
                 <p className="font-semibold">{formatCurrency(summary.rollup.marketing)}</p>
@@ -233,6 +261,16 @@ export function SalesTeamCostView() {
             setFilterMonth(String(month))
             setFilterYear(String(year))
           }}
+        />
+      )}
+
+      {activityType && (
+        <BulkCostActivityDrawer
+          open={!!activityType}
+          onOpenChange={(open) => !open && setActivityType(null)}
+          costType={activityType}
+          month={filters.month}
+          year={filters.year}
         />
       )}
     </div>

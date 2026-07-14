@@ -469,6 +469,8 @@ export const ModelName = {
   EmployeeMasterSeatingCost: 'EmployeeMasterSeatingCost',
   EmployeeMonthlySeatingMiscCost: 'EmployeeMonthlySeatingMiscCost',
   EmployeeMonthlySeatingMiscCostHistory: 'EmployeeMonthlySeatingMiscCostHistory',
+  SalesTeamBulkCostEntry: 'SalesTeamBulkCostEntry',
+  SalesTeamBulkCostEntryHistory: 'SalesTeamBulkCostEntryHistory',
   EmployeeSalesTeamSalaryOverride: 'EmployeeSalesTeamSalaryOverride',
   EmployeeSalesTeamSalaryOverrideHistory: 'EmployeeSalesTeamSalaryOverrideHistory',
   Task: 'Task',
@@ -520,7 +522,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -6814,6 +6816,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SalesTeamBulkCostEntry: {
+      payload: Prisma.$SalesTeamBulkCostEntryPayload<ExtArgs>
+      fields: Prisma.SalesTeamBulkCostEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SalesTeamBulkCostEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SalesTeamBulkCostEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.SalesTeamBulkCostEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SalesTeamBulkCostEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>
+        }
+        findMany: {
+          args: Prisma.SalesTeamBulkCostEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>[]
+        }
+        create: {
+          args: Prisma.SalesTeamBulkCostEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>
+        }
+        createMany: {
+          args: Prisma.SalesTeamBulkCostEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SalesTeamBulkCostEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.SalesTeamBulkCostEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>
+        }
+        update: {
+          args: Prisma.SalesTeamBulkCostEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.SalesTeamBulkCostEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SalesTeamBulkCostEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SalesTeamBulkCostEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.SalesTeamBulkCostEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.SalesTeamBulkCostEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSalesTeamBulkCostEntry>
+        }
+        groupBy: {
+          args: Prisma.SalesTeamBulkCostEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SalesTeamBulkCostEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SalesTeamBulkCostEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SalesTeamBulkCostEntryCountAggregateOutputType> | number
+        }
+      }
+    }
+    SalesTeamBulkCostEntryHistory: {
+      payload: Prisma.$SalesTeamBulkCostEntryHistoryPayload<ExtArgs>
+      fields: Prisma.SalesTeamBulkCostEntryHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>[]
+        }
+        delete: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>
+        }
+        update: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SalesTeamBulkCostEntryHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSalesTeamBulkCostEntryHistory>
+        }
+        groupBy: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SalesTeamBulkCostEntryHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SalesTeamBulkCostEntryHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SalesTeamBulkCostEntryHistoryCountAggregateOutputType> | number
+        }
+      }
+    }
     EmployeeSalesTeamSalaryOverride: {
       payload: Prisma.$EmployeeSalesTeamSalaryOverridePayload<ExtArgs>
       fields: Prisma.EmployeeSalesTeamSalaryOverrideFieldRefs
@@ -11294,6 +11444,45 @@ export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
 export type EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum]
 
 
+export const SalesTeamBulkCostEntryScalarFieldEnum = {
+  id: 'id',
+  costType: 'costType',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  remark: 'remark',
+  employeeId: 'employeeId',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SalesTeamBulkCostEntryScalarFieldEnum = (typeof SalesTeamBulkCostEntryScalarFieldEnum)[keyof typeof SalesTeamBulkCostEntryScalarFieldEnum]
+
+
+export const SalesTeamBulkCostEntryHistoryScalarFieldEnum = {
+  id: 'id',
+  entryId: 'entryId',
+  costType: 'costType',
+  month: 'month',
+  year: 'year',
+  action: 'action',
+  amount: 'amount',
+  remark: 'remark',
+  employeeId: 'employeeId',
+  employeeName: 'employeeName',
+  previousAmount: 'previousAmount',
+  previousRemark: 'previousRemark',
+  previousEmployeeId: 'previousEmployeeId',
+  previousEmployeeName: 'previousEmployeeName',
+  changedByUserId: 'changedByUserId',
+  changedAt: 'changedAt'
+} as const
+
+export type SalesTeamBulkCostEntryHistoryScalarFieldEnum = (typeof SalesTeamBulkCostEntryHistoryScalarFieldEnum)[keyof typeof SalesTeamBulkCostEntryHistoryScalarFieldEnum]
+
+
 export const EmployeeSalesTeamSalaryOverrideScalarFieldEnum = {
   id: 'id',
   employeeId: 'employeeId',
@@ -11525,6 +11714,9 @@ export const HospitalMasterScalarFieldEnum = {
   address: 'address',
   googleMapLink: 'googleMapLink',
   mouAgreementUrl: 'mouAgreementUrl',
+  hospitalShare: 'hospitalShare',
+  mediendShare: 'mediendShare',
+  details: 'details',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -12787,6 +12979,20 @@ export type ListEnumEmployeeSeatingMiscCostStatusFieldRefInput<$PrismaModel> = F
 
 
 /**
+ * Reference to a field of type 'SalesTeamBulkCostType'
+ */
+export type EnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SalesTeamBulkCostType'>
+    
+
+
+/**
+ * Reference to a field of type 'SalesTeamBulkCostType[]'
+ */
+export type ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SalesTeamBulkCostType[]'>
+    
+
+
+/**
  * Reference to a field of type 'TaskPriority'
  */
 export type EnumTaskPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskPriority'>
@@ -13105,6 +13311,8 @@ export type GlobalOmitConfig = {
   employeeMasterSeatingCost?: Prisma.EmployeeMasterSeatingCostOmit
   employeeMonthlySeatingMiscCost?: Prisma.EmployeeMonthlySeatingMiscCostOmit
   employeeMonthlySeatingMiscCostHistory?: Prisma.EmployeeMonthlySeatingMiscCostHistoryOmit
+  salesTeamBulkCostEntry?: Prisma.SalesTeamBulkCostEntryOmit
+  salesTeamBulkCostEntryHistory?: Prisma.SalesTeamBulkCostEntryHistoryOmit
   employeeSalesTeamSalaryOverride?: Prisma.EmployeeSalesTeamSalaryOverrideOmit
   employeeSalesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryOmit
   task?: Prisma.TaskOmit

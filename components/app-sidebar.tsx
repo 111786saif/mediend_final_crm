@@ -198,7 +198,11 @@ export function AppSidebar() {
               item.title === 'Attendance & Normalizations' ||
               item.title === 'People & Org' ||
               item.title === 'Compensation & Docs' ||
-              item.title === 'Engagement'
+              item.title === 'Engagement' ||
+              item.title === 'Doctor List' ||
+              item.title === 'Hospital List' ||
+              item.title === 'Outstanding List' ||
+              item.title === 'P/L Outstanding'
           )
         : user.role === 'EXECUTIVE_ASSISTANT'
           ? itemsWithUrls.filter(
