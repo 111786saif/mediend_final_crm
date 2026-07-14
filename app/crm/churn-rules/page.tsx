@@ -79,9 +79,14 @@ type ChurnRulesResponse = {
     id: string
     role: string
     canManageGlobal: boolean
+    canManageRemarkSettings: boolean
   }
   scopes: ScopeOption[]
   rules: RuleRecord[]
+  remarkSettings: {
+    allowAddRemarks: boolean
+    allowRemoveRemarks: boolean
+  }
   precedence: string[]
 }
 
@@ -139,6 +144,7 @@ export default function CrmChurnRulesPage() {
 
   const hasAccess =
     user?.role === 'SUPER_ADMIN' ||
+    user?.role === 'CRM_ADMIN' ||
     user?.role === 'ADMIN' ||
     user?.role === 'SALES_HEAD' ||
     user?.role === 'TEAM_LEAD'
@@ -176,7 +182,18 @@ export default function CrmChurnRulesPage() {
     onError: (err: Error) => toast.error(err.message || 'Failed to update churn rule'),
   })
 
-  const isSaving = createMutation.isPending || updateMutation.isPending
+  const updateRemarkSettingsMutation = useMutation({
+    mutationFn: (payload: { allowAddRemarks: boolean; allowRemoveRemarks: boolean }) =>
+      apiPatch('/api/crm/churn-rules/settings', payload),
+    onSuccess: () => {
+      toast.success('CRM remark settings updated')
+      void queryClient.invalidateQueries({ queryKey: ['crm-churn-rules'] })
+    },
+    onError: (err: Error) => toast.error(err.message || 'Failed to update CRM remark settings'),
+  })
+
+  const isSaving =
+    createMutation.isPending || updateMutation.isPending || updateRemarkSettingsMutation.isPending
   const selectedScope =
     scopes.find((scope) => scope.key === form.scopeKey) ??
     availableCreateScopes.find((scope) => scope.key === form.scopeKey) ??
@@ -191,6 +208,20 @@ export default function CrmChurnRulesPage() {
   const openEditDrawer = (rule: RuleRecord) => {
     setForm(buildForm(rule))
     setDrawer({ mode: 'edit', rule })
+  }
+
+  const handleRemarkSettingChange = (
+    field: 'allowAddRemarks' | 'allowRemoveRemarks',
+    checked: boolean
+  ) => {
+    if (!data?.remarkSettings) return
+
+    updateRemarkSettingsMutation.mutate({
+      allowAddRemarks:
+        field === 'allowAddRemarks' ? checked : data.remarkSettings.allowAddRemarks,
+      allowRemoveRemarks:
+        field === 'allowRemoveRemarks' ? checked : data.remarkSettings.allowRemoveRemarks,
+    })
   }
 
   const handleSave = () => {
@@ -249,7 +280,7 @@ export default function CrmChurnRulesPage() {
             <CardHeader>
               <CardTitle>No access</CardTitle>
               <CardDescription>
-                Only Super Admin, Admin, Sales Head, and Team Lead roles can manage churn reassignment rules.
+                Only Super Admin, CRM Admin, Sales Head, and Team Lead roles can manage churn reassignment rules.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -284,6 +315,50 @@ export default function CrmChurnRulesPage() {
             </Button>
           </div>
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Global Remark Settings</CardTitle>
+            <CardDescription>
+              Control whether CRM lead remarks can be added or removed across the CRM lead workflows.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3 md:grid-cols-2">
+            <div className="rounded-xl border p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium">Allow adding remarks</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Applies to the CRM lead remark drawer and direct CRM lead remark edits.
+                  </p>
+                </div>
+                <Switch
+                  checked={data?.remarkSettings.allowAddRemarks ?? true}
+                  disabled={!data?.currentUser.canManageRemarkSettings || isSaving}
+                  onCheckedChange={(checked) => handleRemarkSettingChange('allowAddRemarks', checked)}
+                />
+              </div>
+            </div>
+
+            <div className="rounded-xl border p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium">Allow removing remarks</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Lets authorized CRM lead users remove remark history entries and cleared lead remarks.
+                  </p>
+                </div>
+                <Switch
+                  checked={data?.remarkSettings.allowRemoveRemarks ?? true}
+                  disabled={!data?.currentUser.canManageRemarkSettings || isSaving}
+                  onCheckedChange={(checked) =>
+                    handleRemarkSettingChange('allowRemoveRemarks', checked)
+                  }
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>

@@ -31,7 +31,7 @@ function canEditScope(
     return true
   }
 
-  if (actor.role === 'ADMIN') {
+  if (actor.role === 'ADMIN' || actor.role === 'CRM_ADMIN') {
     return scopeType === 'ADMIN'
   }
 

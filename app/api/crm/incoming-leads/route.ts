@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { getBusinessMonthRange, getBusinessMonthYear, getCampaignManagementPageData } from '@/lib/crm-campaigns'
 import { hasCrmPermission } from '@/lib/crm-permissions'
+import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 
@@ -51,10 +52,21 @@ export async function GET(request: NextRequest) {
     const currentUser = await getSessionWithFreshUser()
     if (!currentUser) return unauthorizedResponse()
 
+    const hierarchyRoles = new Set([
+      'BD',
+      'TEAM_LEAD',
+      'CATEGORY_MANAGER',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'SALES_HEAD',
+    ])
+    const hierarchyScopedUserIds = hierarchyRoles.has(String(currentUser.role))
+      ? await getLeadVisibilityScopeUserIds(currentUser)
+      : null
     const canView =
       String(currentUser.role) === 'SUPER_ADMIN' ||
       String(currentUser.role) === 'CRM_ADMIN' ||
-      (await hasCrmPermission(currentUser.id, 'crm.campaigns.manage'))
+      (await hasCrmPermission(currentUser.id, 'crm.campaigns.manage')) ||
+      hierarchyRoles.has(String(currentUser.role))
 
     if (!canView) {
       return errorResponse('Forbidden', 403)
@@ -106,9 +118,14 @@ export async function GET(request: NextRequest) {
             where: { id: { in: processedLeadIds } },
             select: {
               id: true,
+              bdId: true,
               leadRef: true,
               patientName: true,
               phoneNumber: true,
+              assignedDate: true,
+              leadEntryDate: true,
+              followUpDate: true,
+              surgeryDate: true,
             },
           })
         : Promise.resolve([]),
@@ -129,13 +146,35 @@ export async function GET(request: NextRequest) {
     )
     const processedLeadById = new Map(processedLeads.map((lead) => [lead.id, lead]))
     const userById = new Map(relatedUsers.map((user) => [user.id, user]))
+    const visibleScopeUserIds =
+      Array.isArray(hierarchyScopedUserIds) && hierarchyScopedUserIds.length > 0
+        ? new Set(hierarchyScopedUserIds)
+        : null
+    const filteredIncomingLeads =
+      visibleScopeUserIds === null
+        ? incomingLeads
+        : incomingLeads.filter((incomingLead) => {
+            const processedLead = incomingLead.processedLeadId
+              ? processedLeadById.get(incomingLead.processedLeadId)
+              : undefined
+
+            return (
+              (processedLead?.bdId ? visibleScopeUserIds.has(processedLead.bdId) : false) ||
+              (incomingLead.selectedBdUserId
+                ? visibleScopeUserIds.has(incomingLead.selectedBdUserId)
+                : false) ||
+              (incomingLead.selectedTeamLeadUserId
+                ? visibleScopeUserIds.has(incomingLead.selectedTeamLeadUserId)
+                : false)
+            )
+          })
 
     return successResponse({
       month,
       year,
       masters: campaignData.masters,
       campaigns: campaignData.campaigns,
-      incomingLeads: incomingLeads.map((incomingLead) => {
+      incomingLeads: filteredIncomingLeads.map((incomingLead) => {
         const summary = extractIncomingLeadSummary(incomingLead.payload)
         const campaign = incomingLead.externalCampaignId
           ? campaignByExternalId.get(incomingLead.externalCampaignId)
@@ -174,6 +213,10 @@ export async function GET(request: NextRequest) {
                 leadRef: processedLead.leadRef,
                 patientName: processedLead.patientName,
                 phoneNumber: processedLead.phoneNumber,
+                assignedDate: processedLead.assignedDate,
+                leadEntryDate: processedLead.leadEntryDate,
+                followUpDate: processedLead.followUpDate,
+                surgeryDate: processedLead.surgeryDate,
               }
             : null,
           teamLead: teamLead

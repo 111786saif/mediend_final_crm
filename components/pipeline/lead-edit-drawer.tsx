@@ -8,8 +8,10 @@ import { getRoleLabel } from '@/lib/roles'
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -19,16 +21,72 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useAuth } from '@/hooks/use-auth'
-import { Loader2 } from 'lucide-react'
+import { format } from 'date-fns'
+import { CalendarIcon, Loader2, X } from 'lucide-react'
 import { toast } from 'sonner'
+
+const CRM_ADDITIONAL_LEAD_STATUS_OPTIONS = [
+  'Not Interested',
+  'Nurture',
+  'Nurture1',
+  'Nurture2',
+  'Nurture3',
+  'Nurture4',
+  'Nurture5',
+  'OPD Done',
+  'OPD Schedule',
+  'Order Booked',
+  'Out of Station',
+  'Out of station follow-up',
+  'Policy Booked',
+  'Policy Issued',
+  'Scan Done',
+  'Supply Gap',
+  'SX Not Suggested',
+  'WA Done',
+  'IPD Lost',
+  'Language Barrier',
+  'Duplicate lead',
+  'Already Insured',
+  'DNP-1',
+  'DNP-2',
+  'DNP-3',
+  'DNP-4',
+  'DNP-5',
+  'DNP Exhausted',
+] as const
+
+const CRM_EDIT_LEAD_STATUS_OPTIONS = [
+  ...new Set([...LEAD_STATUS_OPTIONS, ...CRM_ADDITIONAL_LEAD_STATUS_OPTIONS]),
+]
+
+const CRM_LEAD_SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
+
+function isStatusRequiringFollowUpDate(status: string | null | undefined) {
+  const normalized = String(status ?? '').trim().toLowerCase()
+  return normalized.includes('follow-up') || normalized.startsWith('dnp')
+}
+
+function isFollowUpStatus(status: string | null | undefined) {
+  return String(status ?? '').trim().toLowerCase().includes('follow-up')
+}
+
+function parseFollowUpDate(value: string | null | undefined) {
+  if (!value) return undefined
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed
+}
 
 type LeadEditLead = {
   id: string
   leadRef: string
   patientName: string
+  age?: number | null
+  sex?: string | null
   treatment?: string | null
   diseaseDetails?: string | null
   status?: string | null
+  followUpDate?: string | null
   bd?: {
     id: string
     name: string
@@ -62,9 +120,12 @@ export function LeadEditDrawer({
   const queryClient = useQueryClient()
   const { user } = useAuth()
   const [patientNameDraft, setPatientNameDraft] = useState<string | null>(null)
+  const [ageDraft, setAgeDraft] = useState<string | null>(null)
+  const [sexDraft, setSexDraft] = useState<string | null>(null)
   const [treatmentDraft, setTreatmentDraft] = useState<string | null>(null)
   const [diseaseDraft, setDiseaseDraft] = useState<string | null>(null)
   const [leadStatusDraft, setLeadStatusDraft] = useState<string | null>(null)
+  const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
   const [leadAssigneeDraft, setLeadAssigneeDraft] = useState('')
   const [saving, setSaving] = useState(false)
 
@@ -83,12 +144,21 @@ export function LeadEditDrawer({
   })
 
   const effectivePatientName = patientNameDraft ?? lead?.patientName ?? ''
+  const effectiveAge = ageDraft ?? (lead?.age == null ? '' : String(lead.age))
+  const effectiveSex = sexDraft ?? (lead?.sex ?? '')
   const effectiveTreatment = treatmentDraft ?? (lead?.treatment ?? '')
   const effectiveDisease = diseaseDraft ?? (lead?.diseaseDetails ?? '')
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
+  const effectiveFollowUpDate = followUpDateDraft ?? (lead?.followUpDate ?? '')
   const willAutoReassign =
     effectiveLeadStatus.trim().toLowerCase() === 'junk' ||
     effectiveLeadStatus.trim().toLowerCase() === 'churned'
+  const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
+  const statusRequiresAgeSex = isFollowUpStatus(effectiveLeadStatus)
+  const statusChanged = effectiveLeadStatus !== (lead?.status ?? 'New')
+  const shouldRequireFollowUpDate = statusChanged && statusRequiresFollowUpDate
+  const shouldRequireAgeSex = statusChanged && statusRequiresAgeSex
+  const parsedEffectiveFollowUpDate = parseFollowUpDate(effectiveFollowUpDate)
 
   const canEditLeadProfile = leadOwnershipMeta?.canEditLeadProfile ?? false
   const canUpdateLeadStatus = leadOwnershipMeta?.canUpdateStatus ?? false
@@ -98,18 +168,30 @@ export function LeadEditDrawer({
 
   const isDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
+    effectiveAge !== (lead?.age == null ? '' : String(lead.age)) ||
+    effectiveSex !== (lead?.sex ?? '') ||
     effectiveTreatment !== (lead?.treatment ?? '') ||
     effectiveDisease !== (lead?.diseaseDetails ?? '') ||
     effectiveLeadStatus !== (lead?.status ?? 'New') ||
+    effectiveFollowUpDate !== (lead?.followUpDate ?? '') ||
     leadAssigneeDraft.length > 0
 
   async function handleSave() {
     if (!leadId || !lead) return
 
-    const payload: Record<string, string | null> = {}
+    const payload: Record<string, string | number | null> = {}
 
     if (effectivePatientName !== lead.patientName) {
       payload.patientName = effectivePatientName.trim()
+    }
+
+    if (effectiveAge !== (lead.age == null ? '' : String(lead.age))) {
+      const trimmedAge = effectiveAge.trim()
+      payload.age = trimmedAge ? Number.parseInt(trimmedAge, 10) : null
+    }
+
+    if (effectiveSex !== (lead.sex ?? '')) {
+      payload.sex = effectiveSex.trim() || null
     }
 
     if (effectiveTreatment !== (lead.treatment ?? '')) {
@@ -124,6 +206,10 @@ export function LeadEditDrawer({
       payload.status = effectiveLeadStatus
     }
 
+    if (effectiveFollowUpDate !== (lead.followUpDate ?? '')) {
+      payload.followUpDate = effectiveFollowUpDate || null
+    }
+
     if (leadAssigneeDraft) {
       payload.bdId = leadAssigneeDraft
     }
@@ -136,6 +222,26 @@ export function LeadEditDrawer({
       toast.error('Patient name is required')
       return
     }
+
+    if (effectiveAge.trim().length > 0) {
+      const parsedAge = Number.parseInt(effectiveAge.trim(), 10)
+      if (!Number.isFinite(parsedAge) || parsedAge <= 0) {
+        toast.error('Age must be a valid positive number')
+        return
+      }
+    }
+
+    if (shouldRequireFollowUpDate && !effectiveFollowUpDate) {
+      toast.error('Follow-up date is required for DNP and follow-up statuses')
+      return
+    }
+
+    if (shouldRequireAgeSex && (effectiveAge.trim().length === 0 || effectiveSex.trim().length === 0)) {
+      toast.error('Age and sex are required for follow-up statuses')
+      return
+    }
+
+    payload.crmEditFollowUpValidation = 'true'
 
     setSaving(true)
     try {
@@ -206,6 +312,44 @@ export function LeadEditDrawer({
                     </div>
                   </div>
 
+                  {statusRequiresAgeSex && (
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="drawer-age">Age</Label>
+                        <Input
+                          id="drawer-age"
+                          type="number"
+                          min={1}
+                          value={effectiveAge}
+                          onChange={(e) => setAgeDraft(e.target.value)}
+                          disabled={!canEditLeadProfile || saving}
+                          placeholder="Enter age"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="drawer-sex">Sex</Label>
+                        <Select
+                          value={effectiveSex || '__none__'}
+                          onValueChange={(value) => setSexDraft(value === '__none__' ? '' : value)}
+                          disabled={!canEditLeadProfile || saving}
+                        >
+                          <SelectTrigger id="drawer-sex">
+                            <SelectValue placeholder="Select sex" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="__none__">Select sex</SelectItem>
+                            {CRM_LEAD_SEX_OPTIONS.map((sexOption) => (
+                              <SelectItem key={sexOption} value={sexOption}>
+                                {sexOption}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <Label htmlFor="drawer-disease">Disease</Label>
                     <Textarea
@@ -220,8 +364,10 @@ export function LeadEditDrawer({
 
                   <p className="text-xs text-muted-foreground">
                     {canEditLeadProfile
-                      ? 'Edits are limited to the leads you own or manage within your hierarchy scope.'
-                      : 'Your role cannot edit patient name, disease, or treatment for this lead.'}
+                      ? statusRequiresAgeSex
+                        ? 'Follow-up statuses require age and sex in this CRM edit flow.'
+                        : 'Edits are limited to the leads you own or manage within your hierarchy scope.'
+                      : 'Your role cannot edit patient name, disease, age, sex, or treatment for this lead.'}
                   </p>
                 </CardContent>
               </Card>
@@ -248,6 +394,13 @@ export function LeadEditDrawer({
                           if (value.trim().toLowerCase() === 'junk' || value.trim().toLowerCase() === 'churned') {
                             setLeadAssigneeDraft('')
                           }
+                          if (!isFollowUpStatus(value)) {
+                            setAgeDraft(null)
+                            setSexDraft(null)
+                          }
+                          if (!isStatusRequiringFollowUpDate(value)) {
+                            setFollowUpDateDraft('')
+                          }
                         }}
                         disabled={!canUpdateLeadStatus || saving}
                       >
@@ -255,7 +408,7 @@ export function LeadEditDrawer({
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          {LEAD_STATUS_OPTIONS.map((statusOption) => (
+                          {CRM_EDIT_LEAD_STATUS_OPTIONS.map((statusOption) => (
                             <SelectItem key={statusOption} value={statusOption}>
                               {statusOption}
                             </SelectItem>
@@ -268,6 +421,56 @@ export function LeadEditDrawer({
                           : 'Your role cannot change the lead status for this record.'}
                       </p>
                     </div>
+
+                    {statusRequiresFollowUpDate && (
+                      <div className="space-y-2">
+                        <Label>Follow-up date</Label>
+                        <div className="flex items-center gap-2">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className="flex-1 justify-start text-left font-normal"
+                                disabled={!canUpdateLeadStatus || saving}
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
+                                {parsedEffectiveFollowUpDate
+                                  ? format(parsedEffectiveFollowUpDate, 'PPP')
+                                  : 'Pick follow-up date'}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={parsedEffectiveFollowUpDate}
+                                onSelect={(date) =>
+                                  setFollowUpDateDraft(date ? format(date, 'yyyy-MM-dd') : '')
+                                }
+                                defaultMonth={parsedEffectiveFollowUpDate ?? new Date()}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          {effectiveFollowUpDate ? (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              disabled={!canUpdateLeadStatus || saving}
+                              onClick={() => setFollowUpDateDraft('')}
+                              aria-label="Clear follow-up date"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          ) : null}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {shouldRequireFollowUpDate
+                            ? 'A follow-up date is required when you move this lead into a DNP or follow-up status.'
+                            : 'This status family carries a follow-up date in the CRM edit flow.'}
+                        </p>
+                      </div>
+                    )}
 
                     {!isBdRole && (
                       <div className="space-y-2">
@@ -328,6 +531,11 @@ export function LeadEditDrawer({
               isLoadingMeta ||
               !lead ||
               !isDirty ||
+              (shouldRequireAgeSex &&
+                (!canEditLeadProfile ||
+                  effectiveAge.trim().length === 0 ||
+                  effectiveSex.trim().length === 0)) ||
+              (shouldRequireFollowUpDate && !effectiveFollowUpDate) ||
               effectivePatientName.trim().length === 0
             }
           >

@@ -6,6 +6,7 @@ export const CRM_CHURN_RULES_SETTING_KEY = 'crm_churn_reassignment_rules_v1'
 
 export const CHURN_MANAGEABLE_ROLES = new Set<UserRole>([
   'SUPER_ADMIN',
+  'CRM_ADMIN',
   'ADMIN',
   'SALES_HEAD',
   'TEAM_LEAD',
@@ -258,7 +259,7 @@ export async function getAvailableChurnRuleScopes(currentUser: {
         key: getChurnScopeKey('ADMIN', null),
         scopeType: 'ADMIN',
         scopeUserId: null,
-        label: 'Admin default',
+        label: 'CRM Admin default',
         description: 'Fallback used when no team-level or sales-head rule matches.',
         user: null,
       },
@@ -281,13 +282,13 @@ export async function getAvailableChurnRuleScopes(currentUser: {
     ]
   }
 
-  if (currentUser.role === 'ADMIN') {
+  if (currentUser.role === 'ADMIN' || currentUser.role === 'CRM_ADMIN') {
     return [
       {
         key: getChurnScopeKey('ADMIN', null),
         scopeType: 'ADMIN',
         scopeUserId: null,
-        label: 'Admin default',
+        label: 'CRM Admin default',
         description: 'Fallback used when no team-level rule or global override is active.',
         user: null,
       },

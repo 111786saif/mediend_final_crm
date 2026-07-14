@@ -11,12 +11,41 @@ import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
 import {
   buildLeadOwnershipTransferUpdate,
+  canUserAddLeadRemarks,
   canUserEditLeadProfile,
-  canUserEditLeadRemarks,
+  canUserRemoveLeadRemarks,
   canUserReassignLead,
   canUserUpdateLeadStatus,
   canUserViewLeadOwner,
 } from '@/lib/lead-ownership'
+
+function isStatusRequiringFollowUpDate(status: string | null | undefined) {
+  const normalized = String(status ?? '').trim().toLowerCase()
+  return normalized.includes('follow-up') || normalized.startsWith('dnp')
+}
+
+function isFollowUpStatus(status: string | null | undefined) {
+  return String(status ?? '').trim().toLowerCase().includes('follow-up')
+}
+
+function parseFollowUpDateInput(value: unknown) {
+  if (value === undefined) return { provided: false, value: undefined as Date | null | undefined }
+  if (value === null) return { provided: true, value: null as Date | null }
+  if (typeof value !== 'string') return { provided: true, value: 'invalid' as const }
+
+  const trimmed = value.trim()
+  if (!trimmed) return { provided: true, value: null as Date | null }
+
+  const parsed = /^\d{4}-\d{2}-\d{2}$/.test(trimmed)
+    ? new Date(`${trimmed}T00:00:00`)
+    : new Date(trimmed)
+
+  if (Number.isNaN(parsed.getTime())) {
+    return { provided: true, value: 'invalid' as const }
+  }
+
+  return { provided: true, value: parsed as Date }
+}
 
 export async function GET(
   request: NextRequest,
@@ -322,6 +351,18 @@ export async function PATCH(
       typeof body.status === 'string' && body.status.trim().length > 0
         ? body.status.trim()
         : undefined
+    const requestedRemarks =
+      body.remarks === undefined
+        ? undefined
+        : typeof body.remarks === 'string'
+          ? body.remarks.trim() || null
+          : body.remarks === null
+            ? null
+            : body.remarks
+    const currentRemarks =
+      typeof lead.remarks === 'string' ? lead.remarks.trim() || null : lead.remarks ?? null
+    const crmEditFollowUpValidation = body.crmEditFollowUpValidation === 'true'
+    const parsedFollowUpDateInput = parseFollowUpDateInput(body.followUpDate)
     const updateData: Prisma.LeadUpdateInput = {
       updatedBy: { connect: { id: user.id } },
       updatedDate: new Date(),
@@ -332,7 +373,8 @@ export async function PATCH(
       (body.patientName !== undefined && body.patientName !== lead.patientName) ||
       (body.treatment !== undefined && body.treatment !== lead.treatment) ||
       (body.diseaseDetails !== undefined && body.diseaseDetails !== lead.diseaseDetails)
-    const remarksChanged = body.remarks !== undefined && body.remarks !== lead.remarks
+    const remarksChanged = requestedRemarks !== undefined && requestedRemarks !== currentRemarks
+    const remarksRemoved = remarksChanged && requestedRemarks === null && currentRemarks !== null
     const churnStatusTriggered = statusChanged && isChurnTriggerStatus(requestedStatus)
 
     if (statusChanged && !(await canUserUpdateLeadStatus(user, lead.bdId))) {
@@ -346,12 +388,60 @@ export async function PATCH(
       )
     }
 
-    if (remarksChanged && !(await canUserEditLeadRemarks(user, lead.bdId))) {
-      return errorResponse('You do not have permission to edit remarks for this lead', 403)
+    if (
+      remarksChanged &&
+      !(
+        await (remarksRemoved
+          ? canUserRemoveLeadRemarks(user, lead.bdId)
+          : canUserAddLeadRemarks(user, lead.bdId))
+      )
+    ) {
+      return errorResponse(
+        remarksRemoved
+          ? 'You do not have permission to remove remarks for this lead'
+          : 'You do not have permission to edit remarks for this lead',
+        403
+      )
     }
 
     if (body.patientName !== undefined && String(body.patientName).trim().length === 0) {
       return errorResponse('Patient name is required', 400)
+    }
+
+    if (parsedFollowUpDateInput.value === 'invalid') {
+      return errorResponse('Follow-up date is invalid', 400)
+    }
+
+    if (
+      crmEditFollowUpValidation &&
+      statusChanged &&
+      isStatusRequiringFollowUpDate(requestedStatus) &&
+      !parsedFollowUpDateInput.value
+    ) {
+      return errorResponse('Follow-up date is required for DNP and follow-up statuses', 400)
+    }
+
+    if (crmEditFollowUpValidation && statusChanged && isFollowUpStatus(requestedStatus)) {
+      const nextAge =
+        body.age !== undefined
+          ? body.age === null || body.age === ''
+            ? null
+            : Number(body.age)
+          : lead.age
+      const nextSex =
+        body.sex !== undefined
+          ? typeof body.sex === 'string'
+            ? body.sex.trim() || null
+            : body.sex
+          : lead.sex
+
+      if (!Number.isFinite(nextAge) || Number(nextAge) <= 0) {
+        return errorResponse('Age is required for follow-up statuses', 400)
+      }
+
+      if (typeof nextSex !== 'string' || nextSex.trim().length === 0) {
+        return errorResponse('Sex is required for follow-up statuses', 400)
+      }
     }
 
     if (churnStatusTriggered && assigneeChanged) {
@@ -455,6 +545,10 @@ export async function PATCH(
           (updateData as any)[field] = body[field]
         }
       }
+    }
+
+    if (parsedFollowUpDateInput.provided) {
+      updateData.followUpDate = parsedFollowUpDateInput.value
     }
 
     let churnAutomationResult:

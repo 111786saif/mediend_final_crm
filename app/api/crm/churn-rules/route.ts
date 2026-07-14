@@ -3,6 +3,10 @@ import { z } from 'zod'
 import { UserRole } from '@/generated/prisma/client'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import {
+  canManageCrmLeadRemarkSettingsRole,
+  getCrmLeadRemarkSettings,
+} from '@/lib/crm-lead-remarks'
+import {
   canManageChurnRulesRole,
   getAvailableChurnRuleScopes,
   getChurnRuleRecords,
@@ -36,7 +40,7 @@ function canEditScope(
     return true
   }
 
-  if (actor.role === 'ADMIN') {
+  if (actor.role === 'ADMIN' || actor.role === 'CRM_ADMIN') {
     return scopeType === 'ADMIN'
   }
 
@@ -56,21 +60,26 @@ export async function GET() {
       return errorResponse('Forbidden', 403)
     }
 
-    const { rules, scopes } = await getChurnRuleRecords(currentUser)
+    const [{ rules, scopes }, remarkSettings] = await Promise.all([
+      getChurnRuleRecords(currentUser),
+      getCrmLeadRemarkSettings(),
+    ])
 
     return successResponse({
       currentUser: {
         id: currentUser.id,
         role: currentUser.role,
         canManageGlobal: currentUser.role === 'SUPER_ADMIN',
+        canManageRemarkSettings: canManageCrmLeadRemarkSettingsRole(currentUser.role),
       },
       scopes,
       rules,
+      remarkSettings,
       precedence: [
         'Super Admin global override',
         'Team Lead rule',
         'Sales Head rule',
-        'Admin default',
+        'CRM Admin default',
       ],
     })
   } catch (error) {

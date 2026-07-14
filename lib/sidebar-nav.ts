@@ -133,7 +133,15 @@ export const navItems: NavItem[] = [
     title: 'CRM Incoming Leads',
     url: '/crm/incoming-leads',
     icon: Inbox,
-    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+    roles: [
+      'SUPER_ADMIN',
+      'CRM_ADMIN',
+      'BD',
+      'TEAM_LEAD',
+      'CATEGORY_MANAGER',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'SALES_HEAD',
+    ],
   },
   {
     title: 'CRM KPIs',
@@ -163,7 +171,7 @@ export const navItems: NavItem[] = [
     title: 'CRM Churn Rules',
     url: '/crm/churn-rules',
     icon: Route,
-    roles: ['SUPER_ADMIN', 'ADMIN', 'SALES_HEAD', 'TEAM_LEAD'],
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN', 'ADMIN', 'SALES_HEAD', 'TEAM_LEAD'],
   },
   // {
   //   title: 'CRM Assignment Rules',

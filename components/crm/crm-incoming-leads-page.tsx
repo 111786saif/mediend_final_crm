@@ -125,6 +125,10 @@ type IncomingLeadRecord = {
     leadRef: string
     patientName: string
     phoneNumber: string
+    assignedDate: string | null
+    leadEntryDate: string | null
+    followUpDate: string | null
+    surgeryDate: string | null
   } | null
   teamLead: {
     id: string
@@ -164,6 +168,10 @@ type IncomingLeadTableRow = {
   patientName: string
   email: string
   normalizedPhone: string
+  assignedDate: string
+  leadDate: string
+  followUpDate: string
+  surgeryDate: string
   processedLeadRef: string
   processedLeadPatientName: string
   processedLeadPhoneNumber: string
@@ -186,7 +194,15 @@ type IncomingLeadColumn = {
   cell?: (row: IncomingLeadTableRow) => ReactNode
 }
 
-const INCOMING_LEAD_VIEW_ROLES = new Set(['SUPER_ADMIN', 'CRM_ADMIN'])
+const INCOMING_LEAD_VIEW_ROLES = new Set([
+  'SUPER_ADMIN',
+  'CRM_ADMIN',
+  'BD',
+  'TEAM_LEAD',
+  'CATEGORY_MANAGER',
+  'ASSISTANT_CATEGORY_MANAGER',
+  'SALES_HEAD',
+])
 const ALL_FILTER_VALUE = '__all__'
 const INCOMING_LEAD_HEADER_FILTERS = [
   'Received',
@@ -235,6 +251,10 @@ const INCOMING_LEAD_COLUMNS: IncomingLeadColumn[] = [
   { id: 'patientName', label: 'Patient', type: 'string' },
   { id: 'email', label: 'Email', type: 'string' },
   { id: 'normalizedPhone', label: 'Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.normalizedPhone}</span> },
+  { id: 'assignedDate', label: 'Assign Date', type: 'date', cell: (row) => formatDateOnly(row.assignedDate) },
+  { id: 'leadDate', label: 'Lead Date', type: 'date', cell: (row) => formatDateOnly(row.leadDate) },
+  { id: 'followUpDate', label: 'Follow up Date', type: 'date', cell: (row) => formatDateOnly(row.followUpDate) },
+  { id: 'surgeryDate', label: 'Surgery Date', type: 'date', cell: (row) => formatDateOnly(row.surgeryDate) },
   { id: 'processedLeadRef', label: 'Lead Ref', type: 'string' },
   { id: 'processedLeadPatientName', label: 'Lead Patient', type: 'string' },
   { id: 'processedLeadPhoneNumber', label: 'Lead Phone', type: 'string', cell: (row) => <span className="font-mono text-sm">{row.processedLeadPhoneNumber}</span> },
@@ -318,6 +338,86 @@ function compareValues(left: string, right: string, type: ColumnType) {
   return left.localeCompare(right, undefined, { numeric: true, sensitivity: 'base' })
 }
 
+function isWithinDateRange(value: string, from: string, to: string) {
+  const dateOnlyValue = getDateOnlyValue(value)
+  if (!dateOnlyValue) return false
+  if (from && dateOnlyValue < from) return false
+  if (to && dateOnlyValue > to) return false
+  return true
+}
+
+function DateRangeFilter({
+  label,
+  fromValue,
+  toValue,
+  onFromChange,
+  onToChange,
+}: {
+  label: string
+  fromValue: string
+  toValue: string
+  onFromChange: (value: string) => void
+  onToChange: (value: string) => void
+}) {
+  const fromDate = fromValue ? parseDateOnlyValue(fromValue) : undefined
+  const toDate = toValue ? parseDateOnlyValue(toValue) : undefined
+
+  return (
+    <div className="space-y-2">
+      <Label>{label} between</Label>
+      <div className="grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+        <div className="flex items-center gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button type="button" variant="outline" className="flex-1 justify-start text-left font-normal">
+                <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
+                {fromDate ? format(fromDate, 'PPP') : label}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={fromDate}
+                onSelect={(date) => onFromChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                defaultMonth={fromDate ?? new Date()}
+              />
+            </PopoverContent>
+          </Popover>
+          {fromValue ? (
+            <Button type="button" variant="outline" size="icon" onClick={() => onFromChange('')} aria-label={`Clear ${label} from date`}>
+              <X className="h-4 w-4" />
+            </Button>
+          ) : null}
+        </div>
+        <span className="hidden text-center text-sm text-muted-foreground sm:block">and</span>
+        <div className="flex items-center gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button type="button" variant="outline" className="flex-1 justify-start text-left font-normal">
+                <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
+                {toDate ? format(toDate, 'PPP') : label}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={toDate}
+                onSelect={(date) => onToChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                defaultMonth={toDate ?? fromDate ?? new Date()}
+              />
+            </PopoverContent>
+          </Popover>
+          {toValue ? (
+            <Button type="button" variant="outline" size="icon" onClick={() => onToChange('')} aria-label={`Clear ${label} to date`}>
+              <X className="h-4 w-4" />
+            </Button>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function CrmIncomingLeadsPage() {
   const { user, isLoading: isAuthLoading } = useAuth()
   const initialMonthYear = getInitialMonthYear()
@@ -329,6 +429,14 @@ export function CrmIncomingLeadsPage() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [visibleColumns, setVisibleColumns] = useState(createInitialVisibleColumns)
   const [selectedIncomingLead, setSelectedIncomingLead] = useState<IncomingLeadRecord | null>(null)
+  const [assignDateFrom, setAssignDateFrom] = useState('')
+  const [assignDateTo, setAssignDateTo] = useState('')
+  const [leadDateFrom, setLeadDateFrom] = useState('')
+  const [leadDateTo, setLeadDateTo] = useState('')
+  const [followUpDateFrom, setFollowUpDateFrom] = useState('')
+  const [followUpDateTo, setFollowUpDateTo] = useState('')
+  const [surgeryDateFrom, setSurgeryDateFrom] = useState('')
+  const [surgeryDateTo, setSurgeryDateTo] = useState('')
 
   const hasAccess = Boolean(user?.role && INCOMING_LEAD_VIEW_ROLES.has(user.role))
   const selectedMonth = Number.parseInt(month, 10) || initialMonthYear.month
@@ -369,6 +477,10 @@ export function CrmIncomingLeadsPage() {
         patientName: incomingLead.summary.patientName ?? '—',
         email: incomingLead.summary.email ?? '—',
         normalizedPhone: incomingLead.normalizedPhone ?? '—',
+        assignedDate: incomingLead.processedLead?.assignedDate ?? '',
+        leadDate: incomingLead.processedLead?.leadEntryDate ?? '',
+        followUpDate: incomingLead.processedLead?.followUpDate ?? '',
+        surgeryDate: incomingLead.processedLead?.surgeryDate ?? '',
         processedLeadRef: incomingLead.processedLead?.leadRef ?? '—',
         processedLeadPatientName: incomingLead.processedLead?.patientName ?? '—',
         processedLeadPhoneNumber: incomingLead.processedLead?.phoneNumber ?? '—',
@@ -384,11 +496,27 @@ export function CrmIncomingLeadsPage() {
 
   const filteredRows = useMemo(() => {
     const normalizedSearch = searchValue.trim().toLowerCase()
-    if (!normalizedSearch) return rows
-
     const selectedSearchColumn = INCOMING_LEAD_COLUMNS.find((column) => column.id === searchColumn)
 
     return rows.filter((row) => {
+      if (assignDateFrom || assignDateTo) {
+        if (!isWithinDateRange(row.assignedDate, assignDateFrom, assignDateTo)) return false
+      }
+
+      if (leadDateFrom || leadDateTo) {
+        if (!isWithinDateRange(row.leadDate, leadDateFrom, leadDateTo)) return false
+      }
+
+      if (followUpDateFrom || followUpDateTo) {
+        if (!isWithinDateRange(row.followUpDate, followUpDateFrom, followUpDateTo)) return false
+      }
+
+      if (surgeryDateFrom || surgeryDateTo) {
+        if (!isWithinDateRange(row.surgeryDate, surgeryDateFrom, surgeryDateTo)) return false
+      }
+
+      if (!normalizedSearch) return true
+
       const rawValue = String(row[searchColumn] ?? '')
       if (selectedSearchColumn?.type === 'date') {
         const dateOnlyValue = getDateOnlyValue(rawValue)
@@ -400,7 +528,19 @@ export function CrmIncomingLeadsPage() {
       }
       return rawValue.toLowerCase().includes(normalizedSearch)
     })
-  }, [rows, searchColumn, searchValue])
+  }, [
+    rows,
+    searchColumn,
+    searchValue,
+    assignDateFrom,
+    assignDateTo,
+    leadDateFrom,
+    leadDateTo,
+    followUpDateFrom,
+    followUpDateTo,
+    surgeryDateFrom,
+    surgeryDateTo,
+  ])
 
   const sortedRows = useMemo(() => {
     const selectedSortColumn = INCOMING_LEAD_COLUMNS.find((column) => column.id === sortColumn)
@@ -544,156 +684,189 @@ export function CrmIncomingLeadsPage() {
               <CardHeader>
                 <CardTitle>View controls</CardTitle>
               </CardHeader>
-              <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-                <div className="space-y-2">
-                  <Label>Search column</Label>
-                  <Select
-                    value={searchColumn}
-                    onValueChange={(value) => {
-                      setSearchColumn(value as IncomingLeadColumn['id'])
-                      setSearchValue('')
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose column" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {INCOMING_LEAD_COLUMNS.map((column) => (
-                        <SelectItem key={column.id} value={column.id}>
-                          {column.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Search value</Label>
-                  {selectedSearchColumnDefinition?.type === 'date' ? (
-                    <div className="flex items-center gap-2">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button type="button" variant="outline" className="flex-1 justify-start text-left font-normal">
-                            <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
-                            {searchValue ? format(parseDateOnlyValue(searchValue) ?? new Date(), 'PPP') : 'Pick date'}
+              <CardContent className="space-y-5">
+                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+                  <div className="space-y-2">
+                    <Label>Search column</Label>
+                    <Select
+                      value={searchColumn}
+                      onValueChange={(value) => {
+                        setSearchColumn(value as IncomingLeadColumn['id'])
+                        setSearchValue('')
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose column" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {INCOMING_LEAD_COLUMNS.map((column) => (
+                          <SelectItem key={column.id} value={column.id}>
+                            {column.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Search value</Label>
+                    {selectedSearchColumnDefinition?.type === 'date' ? (
+                      <div className="flex items-center gap-2">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button type="button" variant="outline" className="flex-1 justify-start text-left font-normal">
+                              <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
+                              {searchValue ? format(parseDateOnlyValue(searchValue) ?? new Date(), 'PPP') : 'Pick date'}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={searchValue ? parseDateOnlyValue(searchValue) : undefined}
+                              onSelect={(date) => setSearchValue(date ? format(date, 'yyyy-MM-dd') : '')}
+                              defaultMonth={searchValue ? parseDateOnlyValue(searchValue) : new Date()}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        {searchValue ? (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setSearchValue('')}
+                            aria-label="Clear date filter"
+                          >
+                            <X className="h-4 w-4" />
                           </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={searchValue ? parseDateOnlyValue(searchValue) : undefined}
-                            onSelect={(date) => setSearchValue(date ? format(date, 'yyyy-MM-dd') : '')}
-                            defaultMonth={searchValue ? parseDateOnlyValue(searchValue) : new Date()}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      {searchValue ? (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          onClick={() => setSearchValue('')}
-                          aria-label="Clear date filter"
+                        ) : null}
+                      </div>
+                    ) : selectedSearchColumnDefinition?.masterKey ? (
+                      <div className="flex items-center gap-2">
+                        <Select
+                          value={searchValue || ALL_FILTER_VALUE}
+                          onValueChange={(value) => setSearchValue(value === ALL_FILTER_VALUE ? '' : value)}
                         >
-                          <X className="h-4 w-4" />
+                          <SelectTrigger className="flex-1">
+                            <SelectValue placeholder={`Select ${selectedSearchColumnDefinition.label.toLowerCase()}`} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={ALL_FILTER_VALUE}>All values</SelectItem>
+                            {masterFilterOptions.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {searchValue ? (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setSearchValue('')}
+                            aria-label="Clear selected filter"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <Input
+                        value={searchValue}
+                        onChange={(event) => setSearchValue(event.target.value)}
+                        placeholder={`Search ${selectedSearchColumnDefinition?.label.toLowerCase() ?? 'column'}...`}
+                      />
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Sort by</Label>
+                    <Select value={sortColumn} onValueChange={(value) => setSortColumn(value as IncomingLeadColumn['id'])}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose column" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {INCOMING_LEAD_COLUMNS.map((column) => (
+                          <SelectItem key={column.id} value={column.id}>
+                            {column.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Direction</Label>
+                    <Select value={sortDirection} onValueChange={(value) => setSortDirection(value as 'asc' | 'desc')}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Direction" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="asc">Ascending</SelectItem>
+                        <SelectItem value="desc">Descending</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Columns</Label>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button type="button" variant="outline" className="w-full justify-between">
+                          <span className="inline-flex items-center gap-2">
+                            <Settings2 className="h-4 w-4" />
+                            Select columns
+                          </span>
                         </Button>
-                      ) : null}
-                    </div>
-                  ) : selectedSearchColumnDefinition?.masterKey ? (
-                    <div className="flex items-center gap-2">
-                      <Select
-                        value={searchValue || ALL_FILTER_VALUE}
-                        onValueChange={(value) => setSearchValue(value === ALL_FILTER_VALUE ? '' : value)}
-                      >
-                        <SelectTrigger className="flex-1">
-                          <SelectValue placeholder={`Select ${selectedSearchColumnDefinition.label.toLowerCase()}`} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value={ALL_FILTER_VALUE}>All values</SelectItem>
-                          {masterFilterOptions.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {searchValue ? (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          onClick={() => setSearchValue('')}
-                          aria-label="Clear selected filter"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      ) : null}
-                    </div>
-                  ) : (
-                    <Input
-                      value={searchValue}
-                      onChange={(event) => setSearchValue(event.target.value)}
-                      placeholder={`Search ${selectedSearchColumnDefinition?.label.toLowerCase() ?? 'column'}...`}
-                    />
-                  )}
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="max-h-[360px] w-64 overflow-y-auto">
+                        <DropdownMenuLabel>Visible columns</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {INCOMING_LEAD_COLUMNS.map((column) => (
+                          <DropdownMenuCheckboxItem
+                            key={column.id}
+                            checked={visibleColumns[column.id]}
+                            onSelect={(event) => event.preventDefault()}
+                            onCheckedChange={(checked) =>
+                              setVisibleColumns((current) => ({
+                                ...current,
+                                [column.id]: checked === true,
+                              }))
+                            }
+                          >
+                            {column.label}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Sort by</Label>
-                  <Select value={sortColumn} onValueChange={(value) => setSortColumn(value as IncomingLeadColumn['id'])}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose column" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {INCOMING_LEAD_COLUMNS.map((column) => (
-                        <SelectItem key={column.id} value={column.id}>
-                          {column.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Direction</Label>
-                  <Select value={sortDirection} onValueChange={(value) => setSortDirection(value as 'asc' | 'desc')}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Direction" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="asc">Ascending</SelectItem>
-                      <SelectItem value="desc">Descending</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Columns</Label>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button type="button" variant="outline" className="w-full justify-between">
-                        <span className="inline-flex items-center gap-2">
-                          <Settings2 className="h-4 w-4" />
-                          Select columns
-                        </span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="max-h-[360px] w-64 overflow-y-auto">
-                      <DropdownMenuLabel>Visible columns</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {INCOMING_LEAD_COLUMNS.map((column) => (
-                        <DropdownMenuCheckboxItem
-                          key={column.id}
-                          checked={visibleColumns[column.id]}
-                          onSelect={(event) => event.preventDefault()}
-                          onCheckedChange={(checked) =>
-                            setVisibleColumns((current) => ({
-                              ...current,
-                              [column.id]: checked === true,
-                            }))
-                          }
-                        >
-                          {column.label}
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+
+                <div className="grid gap-4 border-t pt-5 md:grid-cols-2">
+                  <DateRangeFilter
+                    label="Assign Date"
+                    fromValue={assignDateFrom}
+                    toValue={assignDateTo}
+                    onFromChange={setAssignDateFrom}
+                    onToChange={setAssignDateTo}
+                  />
+                  <DateRangeFilter
+                    label="Lead Date"
+                    fromValue={leadDateFrom}
+                    toValue={leadDateTo}
+                    onFromChange={setLeadDateFrom}
+                    onToChange={setLeadDateTo}
+                  />
+                  <DateRangeFilter
+                    label="Follow up Date"
+                    fromValue={followUpDateFrom}
+                    toValue={followUpDateTo}
+                    onFromChange={setFollowUpDateFrom}
+                    onToChange={setFollowUpDateTo}
+                  />
+                  <DateRangeFilter
+                    label="Surgery Date"
+                    fromValue={surgeryDateFrom}
+                    toValue={surgeryDateTo}
+                    onFromChange={setSurgeryDateFrom}
+                    onToChange={setSurgeryDateTo}
+                  />
                 </div>
               </CardContent>
             </Card>

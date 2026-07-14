@@ -4,7 +4,11 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
-import { canUserEditLeadRemarks, canUserViewLeadOwner } from '@/lib/lead-ownership'
+import {
+  canUserAddLeadRemarks,
+  canUserRemoveLeadRemarks,
+  canUserViewLeadOwner,
+} from '@/lib/lead-ownership'
 
 export async function GET(
   request: NextRequest,
@@ -50,13 +54,20 @@ export async function GET(
       return errorResponse('Forbidden', 403)
     }
 
+    const [canAddRemarks, canRemoveRemarks] = await Promise.all([
+      canUserAddLeadRemarks(user, lead.bdId),
+      canUserRemoveLeadRemarks(user, lead.bdId),
+    ])
+
     return successResponse({
       lead: {
         id: lead.id,
         leadRef: lead.leadRef,
         patientName: lead.patientName,
       },
-      canEditRemarks: await canUserEditLeadRemarks(user, lead.bdId),
+      canEditRemarks: canAddRemarks,
+      canAddRemarks,
+      canRemoveRemarks,
       latestRemark: lead.leadRemarkEntries[0] ?? null,
       remarks: lead.leadRemarkEntries,
     })
@@ -86,6 +97,8 @@ export async function POST(
       select: {
         id: true,
         bdId: true,
+        leadRef: true,
+        patientName: true,
       },
     })
 
@@ -97,7 +110,7 @@ export async function POST(
       return errorResponse('Forbidden', 403)
     }
 
-    if (!(await canUserEditLeadRemarks(user, lead.bdId))) {
+    if (!(await canUserAddLeadRemarks(user, lead.bdId))) {
       return errorResponse('You do not have permission to add remarks for this lead', 403)
     }
 

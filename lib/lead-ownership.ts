@@ -1,5 +1,6 @@
 import { EmployeeStatus, UserRole } from '@/generated/prisma/client'
 import type { SessionUser } from '@/lib/auth'
+import { getCrmLeadRemarkSettings } from '@/lib/crm-lead-remarks'
 import { getEmployeeByUserId, getSubordinates } from '@/lib/hierarchy'
 import { prisma } from '@/lib/prisma'
 
@@ -148,6 +149,30 @@ export async function canUserEditLeadRemarks(
   user: SessionUser,
   leadOwnerUserId: string
 ): Promise<boolean> {
+  return canUserAddLeadRemarks(user, leadOwnerUserId)
+}
+
+export async function canUserAddLeadRemarks(
+  user: SessionUser,
+  leadOwnerUserId: string
+): Promise<boolean> {
+  const settings = await getCrmLeadRemarkSettings()
+  if (!settings.allowAddRemarks) {
+    return false
+  }
+
+  return canUserEditLeadProfile(user, leadOwnerUserId)
+}
+
+export async function canUserRemoveLeadRemarks(
+  user: SessionUser,
+  leadOwnerUserId: string
+): Promise<boolean> {
+  const settings = await getCrmLeadRemarkSettings()
+  if (!settings.allowRemoveRemarks) {
+    return false
+  }
+
   return canUserEditLeadProfile(user, leadOwnerUserId)
 }
 
