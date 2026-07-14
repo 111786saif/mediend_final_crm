@@ -299,7 +299,7 @@ export default function CrmCampaignsPage() {
   const [drawer, setDrawer] = useState<DrawerState>(null)
   const [campaignForm, setCampaignForm] = useState<CampaignFormState>(createEmptyCampaignForm())
   const [assignmentDrafts, setAssignmentDrafts] = useState<AssignmentDraft[]>([])
-  const hasAccess = user?.role === 'SUPER_ADMIN'
+  const hasAccess = String(user?.role) === 'SUPER_ADMIN' || String(user?.role) === 'CRM_ADMIN'
 
   const selectedMonth = Number.parseInt(month, 10) || initialMonthYear.month
   const selectedYear = Number.parseInt(year, 10) || initialMonthYear.year

@@ -7,6 +7,7 @@ import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
+import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
 import {
   buildLeadOwnershipTransferUpdate,
@@ -494,6 +495,139 @@ export async function PATCH(
         plRecord: true,
       },
     })
+
+    const leadEntityLabel = `${updatedLead.leadRef || lead.leadRef || lead.id} · ${updatedLead.patientName || lead.patientName || 'Lead'}`
+    const leadActivityMetadata = {
+      leadId: updatedLead.id,
+      leadRef: updatedLead.leadRef,
+      patientName: updatedLead.patientName,
+      previousBdId: lead.bdId,
+      nextBdId: updatedLead.bdId,
+      previousBdName: lead.bd?.name ?? null,
+      nextBdName: updatedLead.bd?.name ?? null,
+    }
+
+    const activityLogs: Promise<unknown>[] = []
+
+    if (statusChanged) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_STATUS_CHANGED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Changed lead status for ${leadEntityLabel} from ${lead.status || '—'} to ${updatedLead.status || '—'}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousStatus: lead.status,
+            nextStatus: updatedLead.status,
+            churnAutomation: churnAutomationResult
+              ? {
+                  scopeType: churnAutomationResult.rule.scopeType,
+                  behavior: churnAutomationResult.rule.behavior,
+                  assignedToUserId: churnAutomationResult.assignee.userId,
+                  assignedToName: churnAutomationResult.assignee.name,
+                  followUpDate: churnAutomationResult.followUpDate,
+                }
+              : null,
+          },
+        })
+      )
+    }
+
+    if (assigneeChanged || churnAutomationResult) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_REASSIGNED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Reassigned lead ${leadEntityLabel} from ${lead.bd?.name ?? 'Unassigned'} to ${updatedLead.bd?.name ?? 'Unassigned'}`,
+          metadata: {
+            ...leadActivityMetadata,
+            automatic: Boolean(churnAutomationResult),
+            previousAssignedDate: lead.assignedDate,
+            nextAssignedDate: updatedLead.assignedDate,
+          },
+        })
+      )
+    }
+
+    if (leadProfileChanged) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_PROFILE_UPDATED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Updated lead profile details for ${leadEntityLabel}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousPatientName: lead.patientName,
+            nextPatientName: updatedLead.patientName,
+            previousTreatment: lead.treatment,
+            nextTreatment: updatedLead.treatment,
+            previousDiseaseDetails: lead.diseaseDetails,
+            nextDiseaseDetails: updatedLead.diseaseDetails,
+          },
+        })
+      )
+    }
+
+    if (remarksChanged) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_REMARK_UPDATED',
+          entityType: 'CRM_LEAD_REMARK',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Updated lead remarks for ${leadEntityLabel}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousRemarks: lead.remarks,
+            nextRemarks: updatedLead.remarks,
+          },
+        })
+      )
+    }
+
+    if (body.pipelineStage && body.pipelineStage !== lead.pipelineStage) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_STAGE_CHANGED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Moved lead ${leadEntityLabel} from ${lead.pipelineStage} to ${updatedLead.pipelineStage}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousPipelineStage: lead.pipelineStage,
+            nextPipelineStage: updatedLead.pipelineStage,
+            stageChangeNote:
+              typeof body.stageChangeNote === 'string' ? body.stageChangeNote.trim() || null : null,
+          },
+        })
+      )
+    }
+
+    if (activityLogs.length > 0) {
+      await Promise.all(activityLogs)
+    }
 
     if (body.plRecord && typeof body.plRecord === 'object') {
       const raw = body.plRecord as Record<string, unknown>

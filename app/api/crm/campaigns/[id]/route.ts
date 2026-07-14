@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isSuperAdmin, validateCampaignReferences } from '@/lib/crm-campaigns'
+import { hasCrmPermission } from '@/lib/crm-permissions'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 
@@ -25,7 +26,11 @@ export async function PATCH(
   try {
     const currentUser = await getSessionWithFreshUser()
     if (!currentUser) return unauthorizedResponse()
-    if (!isSuperAdmin(currentUser)) return errorResponse('Forbidden', 403)
+    const canManage =
+      isSuperAdmin(currentUser) ||
+      String(currentUser.role) === 'CRM_ADMIN' ||
+      (await hasCrmPermission(currentUser.id, 'crm.campaigns.manage'))
+    if (!canManage) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
     const parsed = campaignSchema.safeParse(body)

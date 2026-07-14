@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { logCrmActivity } from '@/lib/crm-activity'
 import { canUserEditLeadRemarks, canUserViewLeadOwner } from '@/lib/lead-ownership'
 
 export async function GET(
@@ -124,6 +125,24 @@ export async function POST(
             name: true,
           },
         },
+      },
+    })
+
+    await logCrmActivity({
+      action: 'CRM_LEAD_REMARK_ADDED',
+      entityType: 'CRM_LEAD_REMARK',
+      entityId: lead.id,
+      entityLabel: `${lead.leadRef} · ${lead.patientName}`,
+      actorUserId: user.id,
+      actorRole: user.role,
+      request,
+      summary: `Added a lead remark for ${lead.leadRef} · ${lead.patientName}`,
+      metadata: {
+        leadId: lead.id,
+        leadRef: lead.leadRef,
+        patientName: lead.patientName,
+        remarkId: remark.id,
+        remarkContent: remark.content,
       },
     })
 

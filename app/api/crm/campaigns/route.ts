@@ -8,6 +8,7 @@ import {
   validateCampaignReferences,
 } from '@/lib/crm-campaigns'
 import { logCrmActivity } from '@/lib/crm-activity'
+import { hasCrmPermission } from '@/lib/crm-permissions'
 import { prisma } from '@/lib/prisma'
 import { getSessionWithFreshUser } from '@/lib/session'
 
@@ -32,7 +33,11 @@ export async function GET(request: Request) {
   try {
     const currentUser = await getSessionWithFreshUser()
     if (!currentUser) return unauthorizedResponse()
-    if (!isSuperAdmin(currentUser)) return errorResponse('Forbidden', 403)
+    const canView =
+      isSuperAdmin(currentUser) ||
+      String(currentUser.role) === 'CRM_ADMIN' ||
+      (await hasCrmPermission(currentUser.id, 'crm.campaigns.manage'))
+    if (!canView) return errorResponse('Forbidden', 403)
 
     const { searchParams } = new URL(request.url)
     const parsed = monthYearSchema.safeParse({
@@ -59,7 +64,11 @@ export async function POST(request: Request) {
   try {
     const currentUser = await getSessionWithFreshUser()
     if (!currentUser) return unauthorizedResponse()
-    if (!isSuperAdmin(currentUser)) return errorResponse('Forbidden', 403)
+    const canManage =
+      isSuperAdmin(currentUser) ||
+      String(currentUser.role) === 'CRM_ADMIN' ||
+      (await hasCrmPermission(currentUser.id, 'crm.campaigns.manage'))
+    if (!canManage) return errorResponse('Forbidden', 403)
 
     const body = await request.json()
     const parsed = campaignSchema.safeParse(body)

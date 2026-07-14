@@ -7,6 +7,7 @@ import { IPDDetailsForm } from '@/components/admission/ipd-details-form'
 import { IPDMarkComponent } from '@/components/admission/ipd-mark-component'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { InitiateFormCard } from '@/components/insurance/initiate-form-card'
+import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -830,6 +831,14 @@ export default function PatientDetailsPage() {
                     </div>
                   </div>
                   <div className="flex shrink-0 flex-wrap items-center gap-2">
+                    <LeadQrPopover
+                      leadId={leadId}
+                      phoneNumber={lead.phoneNumber ?? ''}
+                      patientName={lead.patientName}
+                      triggerVariant="button"
+                      buttonLabel="Lead QR"
+                      allowServerSidePhoneLookup
+                    />
                     <Button asChild size="sm" variant="outline" className="gap-2">
                       <Link href={`/chat/${leadId}`}>
                         <MessageCircle className="h-4 w-4" />

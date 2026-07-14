@@ -16,6 +16,7 @@ import {
   FileText,
   FolderTree,
   Home,
+  Inbox,
   IndianRupee,
   LayoutDashboard,
   Mail,
@@ -126,7 +127,19 @@ export const navItems: NavItem[] = [
     title: 'CRM Campaigns',
     url: '/crm/campaigns',
     icon: Megaphone,
-    roles: ['SUPER_ADMIN'],
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  },
+  {
+    title: 'CRM Incoming Leads',
+    url: '/crm/incoming-leads',
+    icon: Inbox,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  },
+  {
+    title: 'CRM KPIs',
+    url: '/crm/kpis',
+    icon: BarChart3,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
   },
   {
     title: 'CRM Activity',
@@ -567,8 +580,8 @@ export function getFirstNavUrl(user: SessionUser | null): string {
   // MD/ADMIN land on the MD Command Center; everyone else on the generic home page
   if (user) {
     if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
-    if (user.role === 'SUPER_ADMIN') return '/crm/campaigns'
-    if (user.role === 'CRM_ADMIN') return '/crm/access-matrix'
+    if (String(user.role) === 'SUPER_ADMIN') return '/crm/campaigns'
+    if (String(user.role) === 'CRM_ADMIN') return '/crm/access-matrix'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
     return '/home'
   }

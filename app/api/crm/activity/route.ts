@@ -5,6 +5,8 @@ import { getSessionWithFreshUser } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { hasCrmPermission } from '@/lib/crm-permissions'
 
+const LEAD_ACTIVITY_ENTITY_TYPES = ['CRM_LEAD', 'CRM_LEAD_REMARK', 'CRM_LEAD_QR'] as const
+
 const querySchema = z.object({
   status: z.string().trim().optional(),
   entityType: z.string().trim().optional(),
@@ -19,8 +21,8 @@ export async function GET(request: NextRequest) {
     if (!currentUser) return unauthorizedResponse()
 
     const canView =
-      currentUser.role === 'SUPER_ADMIN' ||
-      currentUser.role === 'CRM_ADMIN' ||
+      String(currentUser.role) === 'SUPER_ADMIN' ||
+      String(currentUser.role) === 'CRM_ADMIN' ||
       (await hasCrmPermission(currentUser.id, 'crm.access_matrix.view'))
 
     if (!canView) {
@@ -44,6 +46,9 @@ export async function GET(request: NextRequest) {
 
     const logs = await prisma.crmActivityLog.findMany({
       where: {
+        entityType: {
+          in: [...LEAD_ACTIVITY_ENTITY_TYPES],
+        },
         ...(status && status !== 'all' ? { status } : {}),
         ...(entityType && entityType !== 'all' ? { entityType } : {}),
         ...(action && action !== 'all' ? { action } : {}),
@@ -74,11 +79,21 @@ export async function GET(request: NextRequest) {
 
     const [entityTypes, actions] = await Promise.all([
       prisma.crmActivityLog.findMany({
+        where: {
+          entityType: {
+            in: [...LEAD_ACTIVITY_ENTITY_TYPES],
+          },
+        },
         distinct: ['entityType'],
         select: { entityType: true },
         orderBy: { entityType: 'asc' },
       }),
       prisma.crmActivityLog.findMany({
+        where: {
+          entityType: {
+            in: [...LEAD_ACTIVITY_ENTITY_TYPES],
+          },
+        },
         distinct: ['action'],
         select: { action: true },
         orderBy: { action: 'asc' },

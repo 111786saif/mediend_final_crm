@@ -91,10 +91,10 @@ export default function CrmActivityPage() {
           <div>
             <h1 className="flex items-center gap-2 text-3xl font-bold">
               <Activity className="h-8 w-8" />
-              CRM Activity
+              Lead Activity Trail
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Audit trail for CRM configuration, permissions, routing rules, campaign setup, and SaveMyLeads processing.
+              Chronological lead audit for status changes, reassignments, remark updates, and QR usage.
             </p>
           </div>
 
@@ -107,7 +107,7 @@ export default function CrmActivityPage() {
         <Card>
           <CardHeader>
             <CardTitle>Filters</CardTitle>
-            <CardDescription>Review recent CRM operations across the admin surfaces and webhook flow.</CardDescription>
+            <CardDescription>Review lead-related actions across the CRM admin surfaces.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Input
@@ -162,9 +162,9 @@ export default function CrmActivityPage() {
             <CardHeader className="flex flex-row items-start gap-3 space-y-0">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" />
               <div className="space-y-1">
-                <CardTitle>Unable to load CRM activity</CardTitle>
+                <CardTitle>Unable to load lead activity</CardTitle>
                 <CardDescription className="text-amber-900/80">
-                  {error.message || 'We could not load the CRM activity trail right now.'}
+                  {error.message || 'We could not load the lead activity trail right now.'}
                 </CardDescription>
               </div>
             </CardHeader>
@@ -173,7 +173,7 @@ export default function CrmActivityPage() {
           <Card>
             <CardHeader>
               <CardTitle>Recent activity</CardTitle>
-              <CardDescription>Showing the latest 100 CRM events.</CardDescription>
+              <CardDescription>Showing the latest 100 lead-related CRM events.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="rounded-xl border">
@@ -198,7 +198,7 @@ export default function CrmActivityPage() {
                     ) : logs.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
-                          No CRM activity found for the selected filters.
+                          No lead activity found for the selected filters.
                         </TableCell>
                       </TableRow>
                     ) : (

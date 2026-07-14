@@ -12,6 +12,7 @@ import { LeadEditDrawer } from '@/components/pipeline/lead-edit-drawer'
 import { LeadRemarksDrawer } from '@/components/pipeline/lead-remarks-drawer'
 import { LeadAgeBadge } from '@/components/pipeline/lead-age-badge'
 import { PipelineStatusCards } from '@/components/pipeline/pipeline-status-cards'
+import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -102,6 +103,32 @@ function filterByCampaign(leads: Lead[], sel: CampaignSelection): Lead[] {
 
 const ROW_HEIGHT = 48
 const OVERSCAN = 30
+const OPENED_PIPELINE_LEADS_STORAGE_KEY = 'crm-pipeline-opened-leads'
+
+function readOpenedPipelineLeadIds() {
+  if (typeof window === 'undefined') return []
+
+  try {
+    const stored = window.localStorage.getItem(OPENED_PIPELINE_LEADS_STORAGE_KEY)
+    if (!stored) return []
+    const parsed = JSON.parse(stored)
+    return Array.isArray(parsed)
+      ? parsed.filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      : []
+  } catch {
+    return []
+  }
+}
+
+function writeOpenedPipelineLeadIds(nextIds: string[]) {
+  if (typeof window === 'undefined') return
+
+  try {
+    window.localStorage.setItem(OPENED_PIPELINE_LEADS_STORAGE_KEY, JSON.stringify(nextIds))
+  } catch {
+    // Ignore storage write failures. The UI highlight is best-effort only.
+  }
+}
 
 export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) {
   const { user } = useAuth()
@@ -122,6 +149,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const [endDate, setEndDate] = useState<Date | undefined>(undefined)
   const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
   const [remarksLeadId, setRemarksLeadId] = useState<string | null>(null)
+  const [openedLeadIds, setOpenedLeadIds] = useState<string[]>([])
 
   const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
 
@@ -137,6 +165,10 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   }, [variant, user?.id, phoneParsed])
 
   const { leads, isLoading } = useLeads(leadFilters)
+
+  useEffect(() => {
+    setOpenedLeadIds(readOpenedPipelineLeadIds())
+  }, [])
 
   useEffect(() => {
     setCampaignSelection({ type: 'all' })
@@ -308,18 +340,32 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     placeholderData: (prev) => prev,
   })
 
+  const markLeadOpened = useCallback((id: string) => {
+    setOpenedLeadIds((current) => {
+      if (current.includes(id)) return current
+      const next = [id, ...current].slice(0, 500)
+      writeOpenedPipelineLeadIds(next)
+      return next
+    })
+  }, [])
+
   const handleRowClick = useCallback(
-    (id: string) => router.push(`/patient/${id}`),
-    [router]
+    (id: string) => {
+      markLeadOpened(id)
+      router.push(`/patient/${id}`)
+    },
+    [markLeadOpened, router]
   )
 
   const handleEditLead = useCallback((id: string) => {
+    markLeadOpened(id)
     setEditingLeadId(id)
-  }, [])
+  }, [markLeadOpened])
 
   const handleEditRemarks = useCallback((id: string) => {
+    markLeadOpened(id)
     setRemarksLeadId(id)
-  }, [])
+  }, [markLeadOpened])
 
   const handleEditDrawerChange = useCallback((open: boolean) => {
     if (!open) {
@@ -604,6 +650,8 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                               onClick={handleRowClick}
                               onEdit={handleEditLead}
                               onEditRemarks={handleEditRemarks}
+                              onMarkOpened={markLeadOpened}
+                              isOpened={openedLeadIds.includes(lead.id)}
                             />
                           )
                         })}
@@ -662,11 +710,15 @@ const PipelineRow = memo(function PipelineRow({
   onClick: (id: string) => void
   onEdit: (id: string) => void
   onEditRemarks: (id: string) => void
+  onMarkOpened: (id: string) => void
+  isOpened: boolean
 }) {
   const stage = lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage)) : null
   const st = normalizeLeadStatus(lead.status)
   const sc = getStatusColor(st)
-  const statusClass = `${sc.bg} ${sc.text}`
+  const statusClass = isOpened
+    ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-950/60 dark:text-cyan-200'
+    : `${sc.bg} ${sc.text}`
   const latestRemarkPreview = getLatestRemarkPreview(lead)
   const patientName = typeof lead.patientName === 'string' ? lead.patientName : '—'
 
@@ -676,7 +728,12 @@ const PipelineRow = memo(function PipelineRow({
     const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
     return (
       <tr
-        className="cursor-pointer border-b border-border/60 transition-colors hover:bg-muted/50"
+        className={cn(
+          'cursor-pointer border-b border-border/60 transition-colors',
+          isOpened
+            ? 'bg-cyan-50/80 hover:bg-cyan-100/70 dark:bg-cyan-950/20 dark:hover:bg-cyan-950/30'
+            : 'hover:bg-muted/50'
+        )}
         onClick={() => onClick(lead.id)}
       >
         <td className="px-3 py-2 font-medium">
@@ -753,8 +810,18 @@ const PipelineRow = memo(function PipelineRow({
               <Pencil className="h-4 w-4" />
               Edit
             </Button>
+            <LeadQrPopover
+              leadId={lead.id}
+              phoneNumber={lead.phoneNumber ?? ''}
+              patientName={patientName}
+              allowServerSidePhoneLookup
+            />
             <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-              <Link href={`/patient/${lead.id}`} aria-label="Open lead">
+              <Link
+                href={`/patient/${lead.id}`}
+                aria-label="Open lead"
+                onClick={() => onMarkOpened(lead.id)}
+              >
                 <ExternalLink className="h-4 w-4" />
               </Link>
             </Button>
@@ -766,7 +833,12 @@ const PipelineRow = memo(function PipelineRow({
 
   return (
     <tr
-      className="cursor-pointer border-b border-border/60 transition-colors hover:bg-muted/50"
+      className={cn(
+        'cursor-pointer border-b border-border/60 transition-colors',
+        isOpened
+          ? 'bg-cyan-50/80 hover:bg-cyan-100/70 dark:bg-cyan-950/20 dark:hover:bg-cyan-950/30'
+          : 'hover:bg-muted/50'
+      )}
       onClick={() => onClick(lead.id)}
     >
       <td className="px-3 py-2 font-medium">
@@ -816,9 +888,9 @@ const PipelineRow = memo(function PipelineRow({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
-                onClick={() => onEditRemarks(lead.id)}
-                aria-label="Edit remarks"
+              className="h-8 w-8"
+              onClick={() => onEditRemarks(lead.id)}
+              aria-label="Edit remarks"
               >
                 <FilePenLine className="h-4 w-4" />
               </Button>
@@ -836,8 +908,18 @@ const PipelineRow = memo(function PipelineRow({
             <Pencil className="h-4 w-4" />
             Edit
           </Button>
+          <LeadQrPopover
+            leadId={lead.id}
+            phoneNumber={lead.phoneNumber ?? ''}
+            patientName={patientName}
+            allowServerSidePhoneLookup
+          />
           <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <Link href={`/patient/${lead.id}`} aria-label="Open lead">
+            <Link
+              href={`/patient/${lead.id}`}
+              aria-label="Open lead"
+              onClick={() => onMarkOpened(lead.id)}
+            >
               <ExternalLink className="h-4 w-4" />
             </Link>
           </Button>

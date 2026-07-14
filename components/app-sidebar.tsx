@@ -23,7 +23,6 @@ import { useQuery } from '@tanstack/react-query'
 import { apiGet } from '@/lib/api-client'
 import {
   ChevronDown,
-  Database,
   DollarSign,
   LogOut,
   Shield,
@@ -117,7 +116,7 @@ export function AppSidebar() {
     }
   }, [isMobile, setOpenMobile, navigatingRef])
   const [openSections, setOpenSections] = React.useState<Record<string, boolean>>({
-    crmMasters: pathname?.startsWith('/crm/masters') ?? false,
+    crm: pathname?.startsWith('/crm') ?? false,
     services: false,
     finance: false,
     hr: false,
@@ -144,6 +143,15 @@ export function AppSidebar() {
   const INSURANCE_PL_TITLES = ['Insurance', 'Cash Cases', 'P/L Ledger', 'P/L Surgery', 'P/L Outstanding', 'Doctor List', 'Hospital List']
   const EA_HRM_TITLES = ['MD HR Dashboard', 'HR Dashboard', 'Recruitment', ...HRM_TITLES]
   const EA_MYHRMS_EXTRA = ['Ask MD Approval']
+  const CRM_TITLES = [
+    'CRM Campaigns',
+    'CRM Incoming Leads',
+    'CRM KPIs',
+    'CRM Activity',
+    'CRM Masters',
+    'CRM Access Matrix',
+    'CRM Churn Rules',
+  ]
 
   const navigationItems =
     user.role === 'MD'
@@ -252,6 +260,7 @@ export function AppSidebar() {
   const hrItems = navigationItemsWithCpl.filter((item) =>
     isEa ? EA_HRM_TITLES.includes(item.title) : HRM_TITLES.includes(item.title)
   )
+  const crmItems = navigationItemsWithCpl.filter((item) => CRM_TITLES.includes(item.title))
   const myHrmsItems = navigationItemsWithCpl.filter((item) =>
     isEa ? (item.title.startsWith('My ') || EA_MYHRMS_EXTRA.includes(item.title)) : item.title.startsWith('My ')
   )
@@ -260,15 +269,8 @@ export function AppSidebar() {
   const showMyHrmsSection = myHrmsItems.length > 0
   const showSalesSection = isEa && salesItems.length > 0
   const showInsurancePlSection = isEa && insurancePlItems.length > 0
-  const crmMastersItem = mainItems.find((item) => item.title === 'CRM Masters') ?? null
-  const primaryMainItems = mainItems.filter((item) => item.title !== 'CRM Masters')
-  const showCrmMastersSection = user.role === 'SUPER_ADMIN' && crmMastersItem
-  const crmMasterLinks = [
-    { title: 'Sources', url: '/crm/masters/sources' },
-    { title: 'Lead Sources', url: '/crm/masters/lead-sources' },
-    { title: 'Circles', url: '/crm/masters/circles' },
-    { title: 'Cities', url: '/crm/masters/cities' },
-  ]
+  const primaryMainItems = mainItems.filter((item) => !CRM_TITLES.includes(item.title))
+  const showCrmSection = crmItems.length > 0
 
   const hrSectionBadge = showHrSection
     ? hrItems.reduce(
@@ -334,37 +336,37 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        {showCrmMastersSection && (
+        {showCrmSection && (
           <SidebarGroup className="pb-1">
             <button
-              onClick={() => toggleSection('crmMasters')}
+              onClick={() => toggleSection('crm')}
               className="text-sidebar-foreground ring-sidebar-ring flex h-9 w-full shrink-0 items-center justify-between rounded-md px-2.5 text-sm font-semibold outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 cursor-pointer"
             >
               <div className="flex items-center gap-2">
-                <Database className="h-4 w-4" />
-                <span>CRM Masters</span>
+                <Sparkles className="h-4 w-4" />
+                <span>CRM</span>
               </div>
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-200 ${
-                  openSections.crmMasters ? 'rotate-180' : ''
+                  openSections.crm ? 'rotate-180' : ''
                 }`}
               />
             </button>
             <div
               className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                openSections.crmMasters ? 'max-h-[320px] opacity-100' : 'max-h-0 opacity-0'
+                openSections.crm ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
-              {openSections.crmMasters && (
+              {openSections.crm && (
                 <SidebarGroupContent>
                   <SidebarMenuSub className="mx-0 mt-1">
-                    {crmMasterLinks.map((item) => {
+                    {crmItems.map((item) => {
                       const isActive = pathname === item.url || pathname.startsWith(item.url + '/')
                       return (
                         <SidebarMenuSubItem key={item.url}>
                           <SidebarMenuSubButton asChild isActive={isActive}>
                             <Link href={item.url} onClick={closeSidebarOnMobile}>
-                              <span>{item.title}</span>
+                              <span>{item.title.replace('CRM ', '')}</span>
                             </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
