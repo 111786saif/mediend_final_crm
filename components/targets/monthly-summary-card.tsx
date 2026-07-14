@@ -97,7 +97,7 @@ export function MonthlySummaryCard() {
     <div className="rounded-2xl border bg-card p-4 shadow-sm">
       <div className="flex items-center gap-2 mb-3">
         <Trophy className="h-4 w-4 text-teal-600" />
-        <h2 className="text-sm font-semibold">This Month</h2>
+        <h2 className="text-sm font-semibold">Score Card</h2>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
