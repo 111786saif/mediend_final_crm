@@ -91,11 +91,12 @@ type DoctorDetail = {
 
 export default function DoctorDetailPage() {
   const params = useParams()
-  const search = useSearchParams()
-  const rawName = params.name as string
-  const name = decodeURIComponent(rawName)
-  const startDate = search.get('startDate')
-  const endDate = search.get('endDate')
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const rawName = Array.isArray(params.name) ? params.name[0] : params.name
+  const name = decodeURIComponent(rawName || '')
+  const startDate = searchParams.get('startDate') || ''
+  const endDate = searchParams.get('endDate') || ''
 
   const [selectedLeads, setSelectedLeads] = useState<string[]>([])
   const [requestDialogOpen, setRequestDialogOpen] = useState(false)
@@ -386,36 +387,64 @@ export default function DoctorDetailPage() {
     <ProtectedRoute>
       <div className="min-h-screen w-full min-w-0 bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
         <div className="w-full min-w-0 space-y-6">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              asChild
-              className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
-            >
-              <Link href="/doctors" aria-label="Back to doctor list">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <div>
-              <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
-                <Link href="/doctors" className="hover:text-[#22d3ee] transition-colors">
-                  Doctor List
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="icon"
+                asChild
+                className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
+              >
+                <Link href="/doctors" aria-label="Back to doctor list">
+                  <ArrowLeft className="h-4 w-4" />
                 </Link>
-                <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
-                <span className="text-[#dce1ff] font-semibold">{name}</span>
-              </nav>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
-                  {name}
-                </h1>
-                {startDate && endDate && (
-                  <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
-                    <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
-                    Filtered: {startDate} → {endDate}
-                  </div>
-                )}
+              </Button>
+              <div>
+                <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
+                  <Link href="/doctors" className="hover:text-[#22d3ee] transition-colors">
+                    Doctor List
+                  </Link>
+                  <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
+                  <span className="text-[#dce1ff] font-semibold">{name}</span>
+                </nav>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
+                    {name}
+                  </h1>
+                  {startDate && endDate && (
+                    <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
+                      <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
+                      Filtered: {startDate} → {endDate}
+                    </div>
+                  )}
+                </div>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <ColumnFilter
+                type="dateRange"
+                value={startDate && endDate ? [startDate, endDate] : undefined}
+                onChange={(val: any) => {
+                  const urlParams = new URLSearchParams(searchParams.toString())
+                  if (val && val.length === 2 && val[0]) {
+                    urlParams.set('startDate', val[0].split('T')[0])
+                    urlParams.set('endDate', val[1].split('T')[0])
+                  } else {
+                    urlParams.delete('startDate')
+                    urlParams.delete('endDate')
+                  }
+                  router.push(`?${urlParams.toString()}`)
+                }}
+                trigger={
+                  <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
+                    <Calendar className="mr-2 h-3.5 w-3.5" />
+                    Date Range
+                  </Button>
+                }
+              />
+              <Button className="bg-[#25E8FF] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#25E8FF]/20">
+                Add Document
+              </Button>
             </div>
           </div>
 
@@ -680,10 +709,10 @@ export default function DoctorDetailPage() {
                         <TableCell>
                           <Badge
                             className={`border ${c.doctorPayoutStatus === 'PAID'
-                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/10'
-                                : c.doctorPayoutStatus === 'PARTIAL'
-                                  ? 'bg-amber-500/10 text-amber-400 border-amber-500/25 hover:bg-amber-500/10'
-                                  : 'bg-rose-500/10 text-rose-400 border-rose-500/25 hover:bg-rose-500/10'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/10'
+                              : c.doctorPayoutStatus === 'PARTIAL'
+                                ? 'bg-amber-500/10 text-amber-400 border-amber-500/25 hover:bg-amber-500/10'
+                                : 'bg-rose-500/10 text-rose-400 border-rose-500/25 hover:bg-rose-500/10'
                               }`}
                           >
                             {c.doctorPayoutStatus ?? 'PENDING'}
@@ -967,26 +996,26 @@ function KpiTile({
   return (
     <div
       className={`bg-[#191D2E]/60 backdrop-blur-md border ${isPending
-          ? 'border-rose-500/30 shadow-lg shadow-rose-950/5'
-          : 'border-[#283150]'
+        ? 'border-rose-500/30 shadow-lg shadow-rose-950/5'
+        : 'border-[#283150]'
         } p-3.5 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200 ${className}`}
     >
       <div className="flex items-center justify-between gap-1.5">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-[#c7c6cd]/75">{label}</span>
         <div className={`p-1 rounded shrink-0 ${isPending
-            ? 'bg-rose-500/10 text-rose-400'
-            : isPaid
-              ? 'bg-emerald-500/10 text-emerald-400'
-              : 'bg-[#22d3ee]/10 text-[#22d3ee]'
+          ? 'bg-rose-500/10 text-rose-400'
+          : isPaid
+            ? 'bg-emerald-500/10 text-emerald-400'
+            : 'bg-[#22d3ee]/10 text-[#22d3ee]'
           }`}>
           <Icon className="h-3.5 w-3.5" />
         </div>
       </div>
       <div className={`text-base font-bold tabular-nums leading-none ${isPending
-          ? 'text-rose-400'
-          : isPaid
-            ? 'text-emerald-400'
-            : 'text-white'
+        ? 'text-rose-400'
+        : isPaid
+          ? 'text-emerald-400'
+          : 'text-white'
         }`}>
         {value ?? '—'}
       </div>
