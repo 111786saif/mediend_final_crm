@@ -476,27 +476,17 @@ export function KYPBasicForm({
             />
             <ComboboxContent>
               <ComboboxList>
-                {(() => {
-                  const trimmed = insuranceSearchText.trim()
-                  const hasExactMatch = insuranceSuggestions.some(
-                    (item) => item.name.toLowerCase() === trimmed.toLowerCase()
-                  )
-                  if (insuranceSuggestions.length === 0 && !trimmed) {
-                    return <ComboboxEmpty>Type to search insurance companies.</ComboboxEmpty>
-                  }
-                  return (
-                    <>
-                      {insuranceSuggestions.map((item) => (
-                        <ComboboxItem key={item.id} value={item.name}>
-                          {item.name}
-                        </ComboboxItem>
-                      ))}
-                      {trimmed && !hasExactMatch && (
-                        <ComboboxItem value={trimmed}>Use &quot;{trimmed}&quot;</ComboboxItem>
-                      )}
-                    </>
-                  )
-                })()}
+                {insuranceSuggestions.length > 0 ? (
+                  insuranceSuggestions.map((item) => (
+                    <ComboboxItem key={item.id} value={item.name}>
+                      {item.name}
+                    </ComboboxItem>
+                  ))
+                ) : (
+                  <ComboboxEmpty>
+                    {insuranceSearchText.trim() ? 'No insurance matches found.' : 'Type to search insurance companies.'}
+                  </ComboboxEmpty>
+                )}
               </ComboboxList>
             </ComboboxContent>
           </Combobox>
@@ -533,27 +523,17 @@ export function KYPBasicForm({
             />
             <ComboboxContent>
               <ComboboxList>
-                {(() => {
-                  const trimmed = doctorSearchText.trim()
-                  const hasExactMatch = doctorSuggestions.some(
-                    (item) => item.name.toLowerCase() === trimmed.toLowerCase()
-                  )
-                  if (doctorSuggestions.length === 0 && !trimmed) {
-                    return <ComboboxEmpty>Type to search doctors.</ComboboxEmpty>
-                  }
-                  return (
-                    <>
-                      {doctorSuggestions.map((item) => (
-                        <ComboboxItem key={item.id} value={item.name}>
-                          {item.name}
-                        </ComboboxItem>
-                      ))}
-                      {trimmed && !hasExactMatch && (
-                        <ComboboxItem value={trimmed}>Use &quot;{trimmed}&quot;</ComboboxItem>
-                      )}
-                    </>
-                  )
-                })()}
+                {doctorSuggestions.length > 0 ? (
+                  doctorSuggestions.map((item) => (
+                    <ComboboxItem key={item.id} value={item.name}>
+                      {item.name}
+                    </ComboboxItem>
+                  ))
+                ) : (
+                  <ComboboxEmpty>
+                    {doctorSearchText.trim() ? 'No doctor matches found.' : 'Type to search doctors.'}
+                  </ComboboxEmpty>
+                )}
               </ComboboxList>
             </ComboboxContent>
           </Combobox>

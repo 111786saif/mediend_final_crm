@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Card } from '@/components/ui/card'
+import { ColumnFilter } from '@/components/ui/column-filter'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
@@ -76,6 +77,15 @@ async function fetchNoteCountsForLeads(leadIds: string[]): Promise<Record<string
   return out
 }
 
+function uniqueSorted(values: (string | null | undefined)[]): string[] {
+  const set = new Set<string>()
+  for (const v of values) {
+    const s = (v ?? '').trim()
+    if (s) set.add(s)
+  }
+  return Array.from(set).sort((a, b) => a.localeCompare(b))
+}
+
 function normalizedText(value: unknown, fallback: string): string {
   if (typeof value !== 'string') return fallback
   const trimmed = value.trim()
@@ -117,6 +127,17 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const [bdFilter, setBdFilter] = useState<string>('all')
   const [startDate, setStartDate] = useState<Date | undefined>(undefined)
   const [endDate, setEndDate] = useState<Date | undefined>(undefined)
+
+  // Per-column header filters (dropdown-in-header), same pattern as Case Tracker
+  const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
+  const handleColumnFilterChange = useCallback((key: string, selected: string[]) => {
+    setColumnFilters((prev) => ({ ...prev, [key]: selected }))
+  }, [])
+  const activeColumnFilterCount = useMemo(
+    () => Object.values(columnFilters).filter((v) => v && v.length > 0).length,
+    [columnFilters]
+  )
+  const clearColumnFilters = useCallback(() => setColumnFilters({}), [])
 
   const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
 
@@ -198,6 +219,24 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     return [...m.entries()].sort((a, b) => a[1].localeCompare(b[1]))
   }, [campaignFiltered])
 
+  // Column header filter options — built from the full campaign-filtered set
+  const leadRefOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => String(l.leadRef ?? ''))), [campaignFiltered])
+  const patientOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => (typeof l.patientName === 'string' ? l.patientName : ''))), [campaignFiltered])
+  const treatmentOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => (typeof l.treatment === 'string' ? l.treatment : ''))), [campaignFiltered])
+  const statusOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => normalizeLeadStatus(l.status))), [campaignFiltered])
+  const stageOptions = useMemo(
+    () => uniqueSorted(campaignFiltered.map((l) => (l.caseStage ? getCaseStageBadgeConfig(String(l.caseStage))?.label ?? '' : ''))),
+    [campaignFiltered]
+  )
+  const categoryColOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => (typeof l.category === 'string' ? l.category : ''))), [campaignFiltered])
+  // Team-lead only columns
+  const ageSexOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => formatLeadAgeSex(l))), [campaignFiltered])
+  const circleColOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => normalizedText(l.circle, 'Unknown'))), [campaignFiltered])
+  const bdmOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => l.plRecord?.bdmName ?? '')), [campaignFiltered])
+  const hospitalOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => resolveLeadHospitalDoctor(l).hospital ?? '')), [campaignFiltered])
+  const doctorOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => resolveLeadHospitalDoctor(l).doctor ?? '')), [campaignFiltered])
+  const bdNameOptions = useMemo(() => uniqueSorted(campaignFiltered.map((l) => l.bd?.name ?? '')), [campaignFiltered])
+
   const tableFilters = useMemo(
     () => ({
       statusBucket,
@@ -207,8 +246,9 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
       leadAgeFilter,
       startDate: startDate?.getTime() ?? null,
       endDate: endDate?.getTime() ?? null,
+      columnFilters,
     }),
-    [statusBucket, bdFilter, categoryBar, circleBar, leadAgeFilter, startDate, endDate]
+    [statusBucket, bdFilter, categoryBar, circleBar, leadAgeFilter, startDate, endDate, columnFilters]
   )
 
   const deferredFilters = useDeferredValue(tableFilters)
@@ -252,6 +292,26 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
       result = result.filter((l) => matchesLeadAgeFilter(l, deferredFilters.leadAgeFilter))
     }
 
+    const cf = deferredFilters.columnFilters
+    if (cf.leadRef?.length) result = result.filter((l) => cf.leadRef.includes(String(l.leadRef ?? '')))
+    if (cf.patient?.length) result = result.filter((l) => cf.patient.includes(typeof l.patientName === 'string' ? l.patientName : ''))
+    if (cf.treatment?.length) result = result.filter((l) => cf.treatment.includes(typeof l.treatment === 'string' ? l.treatment : ''))
+    if (cf.category?.length) result = result.filter((l) => cf.category.includes(typeof l.category === 'string' ? l.category : ''))
+    if (cf.status?.length) result = result.filter((l) => cf.status.includes(normalizeLeadStatus(l.status)))
+    if (cf.stage?.length) {
+      result = result.filter((l) =>
+        cf.stage.includes(l.caseStage ? getCaseStageBadgeConfig(String(l.caseStage))?.label ?? '' : '')
+      )
+    }
+    if (variant === 'team-lead') {
+      if (cf.ageSex?.length) result = result.filter((l) => cf.ageSex.includes(formatLeadAgeSex(l)))
+      if (cf.circle?.length) result = result.filter((l) => cf.circle.includes(normalizedText(l.circle, 'Unknown')))
+      if (cf.bdm?.length) result = result.filter((l) => cf.bdm.includes(l.plRecord?.bdmName ?? ''))
+      if (cf.hospital?.length) result = result.filter((l) => cf.hospital.includes(resolveLeadHospitalDoctor(l).hospital ?? ''))
+      if (cf.doctor?.length) result = result.filter((l) => cf.doctor.includes(resolveLeadHospitalDoctor(l).doctor ?? ''))
+      if (cf.bd?.length) result = result.filter((l) => cf.bd.includes(l.bd?.name ?? ''))
+    }
+
     if (deferredFilters.startDate || deferredFilters.endDate) {
       result = result.filter((lead) => {
         const receiptDate = getLeadReceiptDate(lead)
@@ -276,6 +336,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
     deferredFilters,
     debouncedSearch,
     phoneParsed,
+    variant,
   ])
 
   const virtualizer = useVirtualizer({
@@ -505,7 +566,20 @@ const handleRowClick = useCallback(
               <div className="rounded-xl border border-border/80 bg-card overflow-hidden">
                 <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
                   <div>
-                    <h3 className="text-sm font-semibold">Leads</h3>
+                    <h3 className="flex items-center gap-2 text-sm font-semibold">
+                      Leads
+                      {activeColumnFilterCount > 0 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 py-0 text-[10px] font-medium text-rose-600 hover:text-rose-700 dark:text-rose-400"
+                          onClick={clearColumnFilters}
+                        >
+                          Clear column filters ({activeColumnFilterCount})
+                        </Button>
+                      )}
+                    </h3>
                     <p className="text-xs text-muted-foreground">
                       {tableRows.length} shown &middot; filters apply on top of campaign + status card
                     </p>
@@ -523,23 +597,81 @@ const handleRowClick = useCallback(
                         {variant === 'team-lead' ? (
                           <tr className="border-b transition-colors hover:bg-muted/50">
                             <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                              Lead ref
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Lead ref</span>
+                                <ColumnFilter value={columnFilters.leadRef} options={leadRefOptions} onChange={(v) => handleColumnFilterChange('leadRef', v as string[])} />
+                              </div>
                             </th>
                             <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Date
                             </th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Patient</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Age/Sex</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Circle</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Treatment</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">BDM</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Hospital</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Doctor</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stage</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Patient</span>
+                                <ColumnFilter value={columnFilters.patient} options={patientOptions} onChange={(v) => handleColumnFilterChange('patient', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Age/Sex</span>
+                                <ColumnFilter value={columnFilters.ageSex} options={ageSexOptions} onChange={(v) => handleColumnFilterChange('ageSex', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Circle</span>
+                                <ColumnFilter value={columnFilters.circle} options={circleColOptions} onChange={(v) => handleColumnFilterChange('circle', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Treatment</span>
+                                <ColumnFilter value={columnFilters.treatment} options={treatmentOptions} onChange={(v) => handleColumnFilterChange('treatment', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>BDM</span>
+                                <ColumnFilter value={columnFilters.bdm} options={bdmOptions} onChange={(v) => handleColumnFilterChange('bdm', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Hospital</span>
+                                <ColumnFilter value={columnFilters.hospital} options={hospitalOptions} onChange={(v) => handleColumnFilterChange('hospital', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Doctor</span>
+                                <ColumnFilter value={columnFilters.doctor} options={doctorOptions} onChange={(v) => handleColumnFilterChange('doctor', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Category</span>
+                                <ColumnFilter value={columnFilters.category} options={categoryColOptions} onChange={(v) => handleColumnFilterChange('category', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Status</span>
+                                <ColumnFilter value={columnFilters.status} options={statusOptions} onChange={(v) => handleColumnFilterChange('status', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Stage</span>
+                                <ColumnFilter value={columnFilters.stage} options={stageOptions} onChange={(v) => handleColumnFilterChange('stage', v as string[])} />
+                              </div>
+                            </th>
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Recency</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">BD</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>BD</span>
+                                <ColumnFilter value={columnFilters.bd} options={bdNameOptions} onChange={(v) => handleColumnFilterChange('bd', v as string[])} />
+                              </div>
+                            </th>
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
@@ -548,14 +680,42 @@ const handleRowClick = useCallback(
                         ) : (
                           <tr className="border-b transition-colors hover:bg-muted/50">
                             <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                              Lead ref
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Lead ref</span>
+                                <ColumnFilter value={columnFilters.leadRef} options={leadRefOptions} onChange={(v) => handleColumnFilterChange('leadRef', v as string[])} />
+                              </div>
                             </th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Patient</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Treatment</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Patient</span>
+                                <ColumnFilter value={columnFilters.patient} options={patientOptions} onChange={(v) => handleColumnFilterChange('patient', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Treatment</span>
+                                <ColumnFilter value={columnFilters.treatment} options={treatmentOptions} onChange={(v) => handleColumnFilterChange('treatment', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Category</span>
+                                <ColumnFilter value={columnFilters.category} options={categoryColOptions} onChange={(v) => handleColumnFilterChange('category', v as string[])} />
+                              </div>
+                            </th>
                             <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Age</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stage</th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Status</span>
+                                <ColumnFilter value={columnFilters.status} options={statusOptions} onChange={(v) => handleColumnFilterChange('status', v as string[])} />
+                              </div>
+                            </th>
+                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+                                <span>Stage</span>
+                                <ColumnFilter value={columnFilters.stage} options={stageOptions} onChange={(v) => handleColumnFilterChange('stage', v as string[])} />
+                              </div>
+                            </th>
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
@@ -720,4 +880,3 @@ const PipelineRow = memo(function PipelineRow({
     </tr>
   )
 })
-
