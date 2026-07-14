@@ -60,6 +60,7 @@ interface Lead {
   dischargeSheet?: ({
     id: string
   } & Record<string, unknown>) | null
+  hospitalShare?: number | null
   [key: string]: unknown
 }
 
@@ -232,9 +233,9 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
               ? (record.bd?.name || '')
               : ((pl?.managerName as string) || (ds?.managerName as string) || (record.bd as any)?.employee?.team?.teamLead?.user?.name || (record.bd as any)?.employee?.team?.department?.head?.name || ''),
           bdmName: (pl?.bdmName as string) || record.bd?.name || '',
-          paymentType: (pl?.paymentType as string) || '',
+          paymentType: (pl?.paymentType as string) || (ds?.paymentType as string) || (record.flowType as string) || '',
           cashCollectedBy: (pl?.cashCollectedBy as string) || (ds?.cashCollectedBy as string) || '',
-          status: (pl?.status as string) || '',
+          status: (pl?.status as string) || (ds?.status as string) || (record.caseStage as string) || '',
           paymentCollectedAt: (pl?.paymentCollectedAt as string) ||
             (() => {
               const hosp = numVal(ds?.collectedByHospital)
@@ -243,7 +244,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
               if (med > hosp) return 'Mediend'
               return ''
             })(),
-          totalAmount: pl?.totalAmount != null ? String(pl.totalAmount) : '',
+          totalAmount: pl?.totalAmount != null ? String(pl.totalAmount) : (ds?.finalApprovedAmount != null ? String(ds.finalApprovedAmount) : (record.settledTotal != null ? String(record.settledTotal) : (record.billAmount != null ? String(record.billAmount) : ''))),
           billAmount: pl?.billAmount != null ? String(pl.billAmount) : (record.billAmount != null ? String(record.billAmount) : ''),
           deductionAmount: dedTotal,
           cashOrDedPaid: dedPatient,
@@ -259,9 +260,9 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           hospitalRecoverAmount: pl?.hospitalRecoverAmount != null ? String(pl.hospitalRecoverAmount) : '',
           implantPaidBy: ((pl?.implantPaidBy as string) || (ds?.implantPaidBy as string) || '') as PaidBy,
           instrumentsPaidBy: ((pl?.instrumentsPaidBy as string) || (ds?.instrumentsPaidBy as string) || '') as PaidBy,
-          hospitalSharePct: pl?.hospitalSharePct != null ? String(pl.hospitalSharePct) : '',
+          hospitalSharePct: pl?.hospitalSharePct != null ? String(pl.hospitalSharePct) : (record.hospitalShare != null ? String(record.hospitalShare) : ''),
           hospitalShareAmount: pl?.hospitalShareAmount != null ? String(pl.hospitalShareAmount) : '',
-          mediendSharePct: pl?.mediendSharePct != null ? String(pl.mediendSharePct) : '',
+          mediendSharePct: pl?.mediendSharePct != null ? String(pl.mediendSharePct) : (record.hospitalShare != null ? String(100 - record.hospitalShare) : ''),
           mediendShareAmount: pl?.mediendShareAmount != null ? String(pl.mediendShareAmount) : '',
           mediendNetProfit:
             pl?.mediendNetProfit != null
@@ -294,7 +295,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
           axisTariffDeduction: ds?.axisTariffDeduction != null ? String(ds.axisTariffDeduction) : '',
           axisTariffDeductionPaid: ds?.axisTariffDeductionPaid != null ? String(ds.axisTariffDeductionPaid) : '',
           finalApprovedAmount: ds?.finalApprovedAmount != null ? String(ds.finalApprovedAmount) : '',
-          actualFinalAmount: ds?.actualFinalAmount != null ? String(ds.actualFinalAmount) : '',
+          actualFinalAmount: ds?.actualFinalAmount != null ? String(ds.actualFinalAmount) : (pl?.billAmount != null ? String(pl.billAmount) : (record.billAmount != null ? String(record.billAmount) : '')),
           netSettlementAmount: ds?.netSettlementAmount != null ? String(ds.netSettlementAmount) : '',
         }
         if (JSON.stringify(prev) === JSON.stringify(next)) return prev
@@ -494,6 +495,8 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       cashPaidByPatient: 0,
       cashOrDedPaid: parseFloat(formData.cashOrDedPaid) || 0,
       deductionAmount: parseFloat(formData.deductionAmount) || 0,
+      collectedByHospital: parseFloat(formData.collectedByHospital) || 0,
+      collectedByMediend: parseFloat(formData.collectedByMediend) || 0,
       waivedOffAmount: computedWaivedOff,
       referralAmount: referral,
       cabCharges: cab,
@@ -521,6 +524,7 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
       mediendInvoiceStatus: formData.mediendInvoiceStatus,
       hospitalAmountPending: parseFloat(formData.hospitalAmountPending) || 0,
       doctorAmountPending: parseFloat(formData.doctorAmountPending) || 0,
+      actualFinalAmount: actualFinal,
       closedAt:
         formData.hospitalPayoutStatus === 'PAID' && formData.doctorPayoutStatus === 'PAID'
           ? new Date().toISOString()
@@ -885,7 +889,39 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                   <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div>
                       <Label>Hospital %</Label>
-                      <Input type="number" step="0.01" value={formData.hospitalSharePct} onChange={(e) => update('hospitalSharePct', e.target.value)} className="mt-1" />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={formData.hospitalSharePct}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          setFormData((prev) => {
+                            const num = parseFloat(val)
+                            const nextHospPct = val
+                            const nextMedPct = val === '' ? '' : (!isNaN(num) ? String(Math.round((100 - num) * 100) / 100) : prev.mediendSharePct)
+
+                            const actualFinal = parseFloat(prev.actualFinalAmount) || 0
+                            const dc = computedDcTotal
+                            const implant = parseFloat(prev.implantCost) || 0
+                            const instruments = parseFloat(prev.instrumentsCost) || 0
+                            const base = actualFinal - dc - implant - instruments
+                            const medPctNum = parseFloat(nextMedPct) || 0
+                            const mediendShare = (base * medPctNum) / 100 +
+                              (prev.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
+                              (prev.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
+
+                            const shareStr = !isNaN(mediendShare) && base > 0 ? mediendShare.toFixed(2) : ''
+
+                            return {
+                              ...prev,
+                              hospitalSharePct: nextHospPct,
+                              mediendSharePct: nextMedPct,
+                              hospitalAmountPending: shareStr || prev.hospitalAmountPending,
+                            }
+                          })
+                        }}
+                        className="mt-1"
+                      />
                     </div>
                     <div>
                       <Label>Hospital Amount {computedHospitalShare && !hasManualOverrides.hospitalAmount && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
@@ -893,11 +929,57 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                     </div>
                     <div>
                       <Label>Mediend %</Label>
-                      <Input type="number" step="0.01" value={formData.mediendSharePct} onChange={(e) => update('mediendSharePct', e.target.value)} className="mt-1" />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={formData.mediendSharePct}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          setFormData((prev) => {
+                            const num = parseFloat(val)
+                            const nextMedPct = val
+                            const nextHospPct = val === '' ? '' : (!isNaN(num) ? String(Math.round((100 - num) * 100) / 100) : prev.hospitalSharePct)
+
+                            const actualFinal = parseFloat(prev.actualFinalAmount) || 0
+                            const dc = computedDcTotal
+                            const implant = parseFloat(prev.implantCost) || 0
+                            const instruments = parseFloat(prev.instrumentsCost) || 0
+                            const base = actualFinal - dc - implant - instruments
+                            const medPctNum = parseFloat(nextMedPct) || 0
+                            const mediendShare = (base * medPctNum) / 100 +
+                              (prev.implantPaidBy !== 'HOSPITAL' ? implant : 0) +
+                              (prev.instrumentsPaidBy !== 'HOSPITAL' ? instruments : 0)
+
+                            const shareStr = !isNaN(mediendShare) && base > 0 ? mediendShare.toFixed(2) : ''
+
+                            return {
+                              ...prev,
+                              mediendSharePct: nextMedPct,
+                              hospitalSharePct: nextHospPct,
+                              hospitalAmountPending: shareStr || prev.hospitalAmountPending,
+                            }
+                          })
+                        }}
+                        className="mt-1"
+                      />
                     </div>
                     <div>
                       <Label>Mediend Amount {computedHospitalShare && !hasManualOverrides.mediendAmount && <span className="text-[11px] text-muted-foreground">(auto)</span>}</Label>
-                      <Input type="number" step="0.01" value={medShareAmtDisplay} onChange={(e) => { setFormData(prev => ({ ...prev, mediendShareAmount: e.target.value })); setHasManualOverrides(p => ({ ...p, mediendAmount: true })) }} className="mt-1" />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={medShareAmtDisplay}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          setFormData(prev => ({
+                            ...prev,
+                            mediendShareAmount: val,
+                            hospitalAmountPending: val,
+                          }))
+                          setHasManualOverrides(p => ({ ...p, mediendAmount: true }))
+                        }}
+                        className="mt-1"
+                      />
                     </div>
                   </CardContent>
                   <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-0 border-t mt-2 mx-6 px-0">
@@ -909,7 +991,20 @@ export function PlRecordSheet({ open, onOpenChange, leadId }: PlRecordSheetProps
                     </div>
                     <div>
                       <Label>Doctor charges</Label>
-                      <Input type="number" step="0.01" value={formData.doctorCharges} onChange={(e) => update('doctorCharges', e.target.value)} className="mt-1" />
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={formData.doctorCharges}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          setFormData((prev) => ({
+                            ...prev,
+                            doctorCharges: val,
+                            doctorAmountPending: val,
+                          }))
+                        }}
+                        className="mt-1"
+                      />
                     </div>
                     <div>
                       <Label>Referral amount</Label>

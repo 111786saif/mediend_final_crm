@@ -479,6 +479,12 @@ export const navItems: NavItem[] = [
     icon: CreditCard,
     roles: ['MD', 'ADMIN'],
   },
+  {
+    title: 'Cumulative Report',
+    url: '/cumulative-report',
+    icon: BarChart3,
+    permission: 'main.cumulative_report',
+  },
 ]
 
 /** Merged in app-sidebar when user has `cpl_access` (IT Permissions). Not in `navItems`. */

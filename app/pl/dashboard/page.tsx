@@ -7,6 +7,7 @@ import { PendingPayoutsDrawer } from '@/components/pl/pending-payouts-drawer'
 import { PlPatientDrawer } from '@/components/pl/pl-patient-drawer'
 import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 import { ProtectedRoute } from '@/components/protected-route'
+import { useAuth } from '@/hooks/use-auth'
 import { Badge } from '@/components/ui/badge'
 import { ColumnFilter } from '@/components/ui/column-filter'
 import { Button } from '@/components/ui/button'
@@ -35,6 +36,7 @@ import {
   formatPlRupee,
   resolvePlRow,
 } from '@/lib/pl/resolve-pl-row'
+import { getStatusBadgeClass } from '@/lib/pl/status-colors'
 import { useQuery } from '@tanstack/react-query'
 import {
   Activity,
@@ -79,6 +81,8 @@ function currentMonthKey() {
   const d = new Date()
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
 }
+
+
 
 type PipelineStats = {
   admitted: number
@@ -155,6 +159,7 @@ function loadColVisibility(): Record<string, boolean> {
 }
 
 export default function PLLedgerPage() {
+  const { user } = useAuth()
   const { hasAccess, permissions } = usePermissions()
   const [selectedMonths, setSelectedMonths] = useState<string[]>([currentMonthKey()])
   const [monthsMenuOpen, setMonthsMenuOpen] = useState(false)
@@ -806,26 +811,35 @@ export default function PLLedgerPage() {
           </div>
         ),
         accessorFn: (row) => row.plRecord?.outstandingStatus || 'NEW',
-        cell: ({ getValue }) => (
-          <Badge
-            variant={
-              getValue() === 'OUTSTANDING'
-                ? 'default'
-                : getValue() === 'DRAFT'
-                  ? 'secondary'
-                  : 'outline'
-            }
-            className="text-xs"
-          >
-            {getValue() as string}
-          </Badge>
-        ),
+        cell: ({ getValue }) => {
+          const val = getValue() as string
+          if (!val) return '—'
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'case'))}
+            >
+              {val}
+            </Badge>
+          )
+        },
       },
       {
         id: 'status',
         header: 'Status',
         accessorFn: (row) => resolvePlRow(row as any).status,
-        cell: ({ getValue }) => (getValue() as string) || '—',
+        cell: ({ getValue }) => {
+          const val = getValue() as string
+          if (!val) return '—'
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'case'))}
+            >
+              {val}
+            </Badge>
+          )
+        },
       },
       {
         id: 'totalBill',
@@ -1012,19 +1026,17 @@ export default function PLLedgerPage() {
           </div>
         ),
         accessorFn: (row) => row.plRecord?.hospitalPayoutStatus || 'PENDING',
-        cell: ({ getValue }) => (
-          <Badge
-            variant={
-              getValue() === 'PAID'
-                ? 'default'
-                : getValue() === 'PARTIAL'
-                  ? 'secondary'
-                  : 'outline'
-            }
-          >
-            {getValue() as string}
-          </Badge>
-        ),
+        cell: ({ getValue }) => {
+          const val = getValue() as string
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'payout'))}
+            >
+              {val}
+            </Badge>
+          )
+        },
       },
       {
         id: 'docPayout',
@@ -1035,19 +1047,17 @@ export default function PLLedgerPage() {
           </div>
         ),
         accessorFn: (row) => row.plRecord?.doctorPayoutStatus || 'PENDING',
-        cell: ({ getValue }) => (
-          <Badge
-            variant={
-              getValue() === 'PAID'
-                ? 'default'
-                : getValue() === 'PARTIAL'
-                  ? 'secondary'
-                  : 'outline'
-            }
-          >
-            {getValue() as string}
-          </Badge>
-        ),
+        cell: ({ getValue }) => {
+          const val = getValue() as string
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'payout'))}
+            >
+              {val}
+            </Badge>
+          )
+        },
       },
       {
         id: 'invoice',
@@ -1058,26 +1068,24 @@ export default function PLLedgerPage() {
           </div>
         ),
         accessorFn: (row) => row.plRecord?.mediendInvoiceStatus || 'PENDING',
-        cell: ({ getValue }) => (
-          <Badge
-            variant={
-              getValue() === 'PAID'
-                ? 'default'
-                : getValue() === 'SENT'
-                  ? 'secondary'
-                  : 'outline'
-            }
-          >
-            {getValue() as string}
-          </Badge>
-        ),
+        cell: ({ getValue }) => {
+          const val = getValue() as string
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'payout'))}
+            >
+              {val}
+            </Badge>
+          )
+        },
       },
     ]
 
     return cols.filter((col) => {
       let colId = col.id || (col as any).accessorKey
       if (!colId) return true
-      
+
       // Handle special mappings to match resourceMap.ts
       if (colId === 'leadReceived') colId = 'lead_received'
       else if (colId === 'admissionDate') colId = 'admission_date'
@@ -1104,7 +1112,7 @@ export default function PLLedgerPage() {
       else if (colId === 'mediendProfit') colId = 'mediend_profit'
       else if (colId === 'hospPayout') colId = 'hosp_payout'
       else if (colId === 'docPayout') colId = 'doc_payout'
-      
+
       const resourceKey = `insurance_pl.pl_ledger.table.dischargeSheet.column.${colId}`
       if (resourceKey in RESOURCE_MAP) {
         return hasAccess(resourceKey, 'READ')
@@ -1242,16 +1250,19 @@ export default function PLLedgerPage() {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
-              {selectedMonths.length > 0 && selectedMonths.length < MONTH_OPTIONS.length && (
+              {(selectedMonths.length !== 1 || selectedMonths[0] !== currentMonthKey() || activeFilterCount > 0) && (
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 gap-1"
-                  onClick={() => setSelectedMonths([currentMonthKey()])}
+                  className="h-8 gap-1 text-rose-600 dark:text-rose-400 hover:text-rose-700 hover:bg-rose-500/10"
+                  onClick={() => {
+                    setSelectedMonths([currentMonthKey()])
+                    clearFilters()
+                  }}
                 >
                   <X className="h-3 w-3" />
-                  Reset
+                  Reset {activeFilterCount > 0 && `(${activeFilterCount})`}
                 </Button>
               )}
               <DropdownMenu>
@@ -1329,12 +1340,7 @@ export default function PLLedgerPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {activeFilterCount > 0 && (
-              <Button type="button" variant="ghost" size="sm" className="h-9 text-rose-600 dark:text-rose-400 hover:text-rose-700 hover:bg-rose-500/10" onClick={clearFilters}>
-                Clear filters ({activeFilterCount})
-              </Button>
-            )}
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <span className="text-xs text-muted-foreground ml-auto">
               {tableRecords?.length ?? 0} of {records?.length ?? 0} rows
             </span>
@@ -1706,6 +1712,11 @@ export default function PLLedgerPage() {
                 isLoading={isLoading}
                 emptyMessage="No P/L records found"
                 onRowClick={(record) => {
+                  const plStatus = record.plRecord?.outstandingStatus || 'NEW'
+                  if (plStatus === 'OUTSTANDING' && user?.role === 'PL_HEAD') {
+                    toast.error('Outstanding records can only be edited by Project Head / Executive Assistant')
+                    return
+                  }
                   setSheetLeadId(record.id)
                   setSheetOpen(true)
                 }}
