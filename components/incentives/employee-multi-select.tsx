@@ -118,16 +118,25 @@ export function EmployeeMultiSelect({
             <p className="py-6 text-center text-xs text-muted-foreground">No employees found</p>
           ) : (
             filtered.map((emp) => (
-              <button
+              <div
                 key={emp.id}
-                type="button"
-                className="flex w-full items-start gap-2 rounded-sm px-2 py-1.5 text-left hover:bg-muted/60"
+                role="option"
+                aria-selected={selectedSet.has(emp.id)}
+                className="flex w-full cursor-pointer items-start gap-2 rounded-sm px-2 py-1.5 text-left hover:bg-muted/60"
                 onClick={() => toggle(emp.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    toggle(emp.id)
+                  }
+                }}
+                tabIndex={0}
               >
                 <Checkbox
                   checked={selectedSet.has(emp.id)}
-                  className="mt-0.5"
-                  onCheckedChange={() => toggle(emp.id)}
+                  className="pointer-events-none mt-0.5"
+                  tabIndex={-1}
+                  aria-hidden
                 />
                 <span className="min-w-0 text-sm leading-snug">
                   <span className="font-medium">{emp.name}</span>
@@ -136,7 +145,7 @@ export function EmployeeMultiSelect({
                     <span className="block truncate text-xs text-muted-foreground">{emp.department}</span>
                   )}
                 </span>
-              </button>
+              </div>
             ))
           )}
         </div>

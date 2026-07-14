@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { format, formatDistanceToNow } from 'date-fns'
 import { CaseStage } from '@/generated/prisma/enums'
-import { CheckCircle2, FileText, Clock, Activity, Receipt, Shield } from 'lucide-react'
+import { CheckCircle2, FileText, Clock, Activity, Receipt, Shield, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface StageHistoryEntry {
@@ -53,8 +53,16 @@ const STAGE_LABELS: Record<CaseStage, string> = {
   [CaseStage.CASH_DISCHARGED]: 'Cash Discharged',
 }
 
+function isWorkflowResetEntry(entry: StageHistoryEntry): boolean {
+  const note = entry.note?.toLowerCase() ?? ''
+  return note.startsWith('workflow reset') || note.includes('workflow reset\n')
+}
+
 function getTimelineBadgeLabel(entry: StageHistoryEntry): string {
   const note = entry.note?.toLowerCase() ?? ''
+  if (isWorkflowResetEntry(entry)) {
+    return 'Workflow Reset'
+  }
   if (
     entry.fromStage != null &&
     entry.fromStage === entry.toStage &&
@@ -275,7 +283,16 @@ export function ActivityTimeline({ history, className }: ActivityTimelineProps) 
       <div className="mt-4">
         <div className="space-y-0">
           {history.map((entry, index) => {
-            const stageColor = getStageColor(entry.toStage)
+            const workflowReset = isWorkflowResetEntry(entry)
+            const stageColor = workflowReset
+              ? {
+                  bg: 'bg-amber-50 dark:bg-amber-950/30',
+                  border: 'border-amber-300 dark:border-amber-800',
+                  text: 'text-amber-800 dark:text-amber-300',
+                  connector: 'bg-amber-300 dark:bg-amber-700',
+                  icon: <RotateCcw className="w-3 h-3" />,
+                }
+              : getStageColor(entry.toStage)
             const changedByName = entry.changedBy?.name || 'System'
             const changedByRole = entry.changedBy?.role || 'SYSTEM'
             return (
@@ -310,10 +327,16 @@ export function ActivityTimeline({ history, className }: ActivityTimelineProps) 
                           ({formatDistanceToNow(new Date(entry.changedAt), { addSuffix: true })})
                         </span>
                       </div>
-                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{changedByName}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{changedByRole}</p>
+                      {!workflowReset && (
+                        <>
+                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{changedByName}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">{changedByRole}</p>
+                        </>
+                      )}
                       {entry.note && (
-                        <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">{entry.note}</p>
+                        <p className="text-sm mt-2 whitespace-pre-line text-gray-600 dark:text-gray-400">
+                          {entry.note}
+                        </p>
                       )}
                     </div>
                   </div>

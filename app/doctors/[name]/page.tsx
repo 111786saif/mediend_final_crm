@@ -1,22 +1,22 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft,
-  Stethoscope,
   Activity,
   ReceiptText,
   UserCheck,
   TrendingUp,
   AlertCircle,
-  Calendar,
   Paperclip,
   X,
   FileText,
   ChevronRight,
+  ExternalLink,
+  Loader2,
 } from 'lucide-react'
 import { ProtectedRoute } from '@/components/protected-route'
 import { RecentActivityLog } from '@/components/recent-activity-log'
@@ -42,9 +42,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { apiGet, apiPost } from '@/lib/api-client'
+import { apiGet } from '@/lib/api-client'
 import { formatPlDate, formatPlMonth, formatPlRupee } from '@/lib/pl/resolve-pl-row'
 import { toast } from 'sonner'
+import {
+  useCreateDoctorPayoffRequest,
+  useDoctorPayoffActivity,
+  useDoctorPayoffRequests,
+} from '@/hooks/use-doctor-payoff-requests'
+import {
+  DOCTOR_PAYOFF_STATUS_LABEL,
+  type DoctorPayoffRequestRecord,
+} from '@/lib/finance/doctor-payoff/types'
 
 type Attachment = {
   name: string
@@ -82,11 +91,12 @@ type DoctorDetail = {
 
 export default function DoctorDetailPage() {
   const params = useParams()
-  const search = useSearchParams()
-  const rawName = params.name as string
-  const name = decodeURIComponent(rawName)
-  const startDate = search.get('startDate')
-  const endDate = search.get('endDate')
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const rawName = Array.isArray(params.name) ? params.name[0] : params.name
+  const name = decodeURIComponent(rawName || '')
+  const startDate = searchParams.get('startDate') || ''
+  const endDate = searchParams.get('endDate') || ''
 
   const [selectedLeads, setSelectedLeads] = useState<string[]>([])
   const [requestDialogOpen, setRequestDialogOpen] = useState(false)
@@ -226,10 +236,10 @@ export default function DoctorDetailPage() {
 
     if (selectedCases.length === 1) {
       const c = selectedCases[0]
-      setTitle(`Invoice Request: ${name} - ${c.patientName ?? 'Patient'} (${c.leadRef ?? ''})`)
-      setAmount(c.doctorCharges ? String(c.doctorCharges) : '')
+      setTitle(`Doctor Payoff: ${name} - ${c.patientName ?? 'Patient'} (${c.leadRef ?? ''})`)
+      setAmount(c.doctorAmountPending ? String(c.doctorAmountPending) : c.doctorCharges ? String(c.doctorCharges) : '')
       setDescription(
-        `Requesting invoice for Doctor: ${name}\n` +
+        `Requesting doctor payoff for: ${name}\n` +
         `Patient Name: ${c.patientName ?? '—'}\n` +
         `Hospital: ${c.hospitalName ?? '—'}\n` +
         `Lead Ref: ${c.leadRef ?? '—'}\n` +
@@ -239,21 +249,24 @@ export default function DoctorDetailPage() {
         `Pending Amount: ${formatPlRupee(c.doctorAmountPending)}`
       )
     } else {
-      const totalDoctorCharges = selectedCases.reduce((sum, c) => sum + (c.doctorCharges ?? 0), 0)
-      setTitle(`Invoice Request: ${name} - ${selectedCases.length} Cases`)
-      setAmount(String(totalDoctorCharges))
+      const totalPending = selectedCases.reduce(
+        (sum, c) => sum + (c.doctorAmountPending ?? c.doctorCharges ?? 0),
+        0
+      )
+      setTitle(`Doctor Payoff: ${name} - ${selectedCases.length} Cases`)
+      setAmount(String(totalPending))
       const casesDetails = selectedCases
         .map(
           (c) =>
-            `- Lead Ref: ${c.leadRef ?? '—'}, Patient: ${c.patientName ?? '—'}, Charges: ${formatPlRupee(
-              c.doctorCharges
+            `- Lead Ref: ${c.leadRef ?? '—'}, Patient: ${c.patientName ?? '—'}, Pending: ${formatPlRupee(
+              c.doctorAmountPending ?? c.doctorCharges
             )}`
         )
         .join('\n')
       setDescription(
-        `Requesting batch invoice for Doctor: ${name} (${selectedCases.length} cases).\n\n` +
+        `Requesting batch doctor payoff for: ${name} (${selectedCases.length} cases).\n\n` +
         `Cases Summary:\n${casesDetails}\n\n` +
-        `Total Doctor Charges: ${formatPlRupee(totalDoctorCharges)}`
+        `Total Request Amount: ${formatPlRupee(totalPending)}`
       )
     }
   }, [requestDialogOpen, selectedLeads, data, name])
@@ -294,35 +307,73 @@ export default function DoctorDetailPage() {
     setAttachments((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const queryClient = useQueryClient()
-  const createMutation = useMutation({
-    mutationFn: (payload: { title: string; description?: string; amount?: number; attachments?: Attachment[] }) =>
-      apiPost('/api/md-approvals', payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['md-approvals'] })
-      queryClient.invalidateQueries({ queryKey: ['badge-counts'] })
-      setRequestDialogOpen(false)
-      setTitle('')
-      setDescription('')
-      setAmount('')
-      setAttachments([])
-      setSelectedLeads([])
-      toast.success('Invoice request submitted successfully to MD')
-    },
-    onError: (err: Error) => toast.error(err.message),
+  const createMutation = useCreateDoctorPayoffRequest()
+  const { data: activityData, isLoading: activityLoading } = useDoctorPayoffActivity({
+    doctorName: name,
+    limit: 20,
   })
+  const { data: payoffData, isLoading: payoffLoading } = useDoctorPayoffRequests(
+    {
+      doctorName: name,
+      status: 'ALL',
+      latestPerLead: true,
+    },
+    !!name
+  )
+
+  const payoffByLeadId = useMemo(() => {
+    const map = new Map<string, DoctorPayoffRequestRecord>()
+    for (const req of payoffData?.requests ?? []) {
+      if (req.leadId) map.set(req.leadId, req)
+    }
+    return map
+  }, [payoffData?.requests])
 
   const handleCreateRequest = () => {
     if (!title.trim()) {
-      toast.error('Title is required')
+      toast.error('Title / remarks are required')
       return
     }
-    createMutation.mutate({
-      title: title.trim(),
-      description: description.trim() || undefined,
-      amount: amount ? parseFloat(amount) : undefined,
-      attachments: attachments.length > 0 ? attachments : undefined,
-    })
+    const parsedAmount = amount ? parseFloat(amount) : NaN
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      toast.error('Request amount must be greater than 0')
+      return
+    }
+    if (selectedLeads.length === 0) {
+      toast.error('Select at least one case')
+      return
+    }
+
+    const selectedCases = data?.cases.filter((c) => selectedLeads.includes(c.leadId)) ?? []
+    const hospitals = Array.from(
+      new Set(selectedCases.map((c) => c.hospitalName).filter((h): h is string => !!h))
+    )
+    const hospitalName =
+      hospitals.length === 1 ? hospitals[0] : hospitals.length > 1 ? hospitals.join(', ') : null
+
+    createMutation.mutate(
+      {
+        doctorName: name,
+        hospitalName,
+        leadId: selectedLeads[0],
+        leadIds: selectedLeads,
+        requestAmount: parsedAmount,
+        requestRemarks: [title.trim(), description.trim()].filter(Boolean).join('\n\n'),
+        attachments: attachments.length > 0 ? attachments : undefined,
+      },
+      {
+        onSuccess: () => {
+          setRequestDialogOpen(false)
+          setTitle('')
+          setDescription('')
+          setAmount('')
+          setAttachments([])
+          setSelectedLeads([])
+          toast.success('Doctor payoff request submitted to Finance')
+        },
+        onError: (err: Error) => toast.error(err.message),
+      }
+    )
   }
 
   const renderCellAmount = (value: number | null, colorClass?: string) => {
@@ -336,36 +387,64 @@ export default function DoctorDetailPage() {
     <ProtectedRoute>
       <div className="min-h-screen w-full min-w-0 bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
         <div className="w-full min-w-0 space-y-6">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              asChild
-              className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
-            >
-              <Link href="/doctors" aria-label="Back to doctor list">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <div>
-              <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
-                <Link href="/doctors" className="hover:text-[#22d3ee] transition-colors">
-                  Doctor List
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="icon"
+                asChild
+                className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
+              >
+                <Link href="/doctors" aria-label="Back to doctor list">
+                  <ArrowLeft className="h-4 w-4" />
                 </Link>
-                <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
-                <span className="text-[#dce1ff] font-semibold">{name}</span>
-              </nav>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
-                  {name}
-                </h1>
-                {startDate && endDate && (
-                  <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
-                    <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
-                    Filtered: {startDate} → {endDate}
-                  </div>
-                )}
+              </Button>
+              <div>
+                <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
+                  <Link href="/doctors" className="hover:text-[#22d3ee] transition-colors">
+                    Doctor List
+                  </Link>
+                  <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
+                  <span className="text-[#dce1ff] font-semibold">{name}</span>
+                </nav>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
+                    {name}
+                  </h1>
+                  {startDate && endDate && (
+                    <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
+                      <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
+                      Filtered: {startDate} → {endDate}
+                    </div>
+                  )}
+                </div>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <ColumnFilter
+                type="dateRange"
+                value={startDate && endDate ? [startDate, endDate] : undefined}
+                onChange={(val: any) => {
+                  const urlParams = new URLSearchParams(searchParams.toString())
+                  if (val && val.length === 2 && val[0]) {
+                    urlParams.set('startDate', val[0].split('T')[0])
+                    urlParams.set('endDate', val[1].split('T')[0])
+                  } else {
+                    urlParams.delete('startDate')
+                    urlParams.delete('endDate')
+                  }
+                  router.push(`?${urlParams.toString()}`)
+                }}
+                trigger={
+                  <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
+                    <Calendar className="mr-2 h-3.5 w-3.5" />
+                    Date Range
+                  </Button>
+                }
+              />
+              <Button className="bg-[#25E8FF] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#25E8FF]/20">
+                Add Document
+              </Button>
             </div>
           </div>
 
@@ -428,7 +507,7 @@ export default function DoctorDetailPage() {
                   className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
                 >
                   <FileText className="h-4 w-4" />
-                  Request Invoice {selectedLeads.length > 0 && `(${selectedLeads.length})`}
+                  Request Payoff {selectedLeads.length > 0 && `(${selectedLeads.length})`}
                 </Button>
               </div>
             </div>
@@ -574,19 +653,22 @@ export default function DoctorDetailPage() {
                         />
                       </div>
                     </TableHead>
+                    <TableHead className="w-[140px]">
+                      <span className="font-semibold text-[#c7c6cd]">Payoff Request</span>
+                    </TableHead>
                     <TableHead className="text-right font-semibold text-[#c7c6cd] w-[180px] pr-4">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="divide-y divide-[#283150]/30">
                   {isLoading ? (
                     <TableRow className="border-b border-[#283150]/20">
-                      <TableCell colSpan={13} className="text-center py-8 text-[#c7c6cd]/55">
+                      <TableCell colSpan={14} className="text-center py-8 text-[#c7c6cd]/55">
                         Loading…
                       </TableCell>
                     </TableRow>
                   ) : !data?.cases?.length ? (
                     <TableRow className="border-b border-[#283150]/20">
-                      <TableCell colSpan={13} className="text-center py-8 text-[#c7c6cd]/55">
+                      <TableCell colSpan={14} className="text-center py-8 text-[#c7c6cd]/55">
                         No cases yet
                       </TableCell>
                     </TableRow>
@@ -627,28 +709,30 @@ export default function DoctorDetailPage() {
                         <TableCell>
                           <Badge
                             className={`border ${c.doctorPayoutStatus === 'PAID'
-                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/10'
-                                : c.doctorPayoutStatus === 'PARTIAL'
-                                  ? 'bg-amber-500/10 text-amber-400 border-amber-500/25 hover:bg-amber-500/10'
-                                  : 'bg-rose-500/10 text-rose-400 border-rose-500/25 hover:bg-rose-500/10'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25 hover:bg-emerald-500/10'
+                              : c.doctorPayoutStatus === 'PARTIAL'
+                                ? 'bg-amber-500/10 text-amber-400 border-amber-500/25 hover:bg-amber-500/10'
+                                : 'bg-rose-500/10 text-rose-400 border-rose-500/25 hover:bg-rose-500/10'
                               }`}
                           >
                             {c.doctorPayoutStatus ?? 'PENDING'}
                           </Badge>
                         </TableCell>
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <PayoffStatusCell
+                            payoffReq={payoffByLeadId.get(c.leadId)}
+                            loading={payoffLoading}
+                          />
+                        </TableCell>
                         <TableCell className="text-right pr-4" onClick={(e) => e.stopPropagation()}>
-                          <Button
-                            size="sm"
-                            className="h-7 px-2 text-xs bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/20"
-                            variant="outline"
-                            onClick={() => {
+                          <PayoffActionCell
+                            payoffReq={payoffByLeadId.get(c.leadId)}
+                            loading={payoffLoading}
+                            onRequest={() => {
                               setSelectedLeads([c.leadId])
                               setRequestDialogOpen(true)
                             }}
-                          >
-                            <FileText className="mr-1 h-3.5 w-3.5" />
-                            Request Invoice
-                          </Button>
+                          />
                         </TableCell>
                       </TableRow>
                     ))
@@ -660,7 +744,14 @@ export default function DoctorDetailPage() {
 
           {/* Activity Log & Health Score Section */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-            <RecentActivityLog className="lg:col-span-2" />
+            <RecentActivityLog
+              className="lg:col-span-2"
+              title="Doctor Payoff Activity Log"
+              items={activityData?.items ?? []}
+              isLoading={activityLoading}
+              emptyMessage="No payoff request activity for this doctor yet"
+              viewAllHref="/finance/doctor-payoff-requests"
+            />
 
             {/* Right Side Widget: P&L Health */}
             <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-lg">
@@ -691,7 +782,7 @@ export default function DoctorDetailPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-white">
               <FileText className="h-5 w-5 text-[#22d3ee]" />
-              Request MD Approval for Invoice
+              Request Doctor Payoff (Finance)
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
@@ -781,6 +872,113 @@ export default function DoctorDetailPage() {
   )
 }
 
+function PayoffStatusCell({
+  payoffReq,
+  loading,
+}: {
+  payoffReq?: DoctorPayoffRequestRecord
+  loading: boolean
+}) {
+  if (loading) {
+    return <Loader2 className="h-4 w-4 animate-spin text-[#c7c6cd]/55" />
+  }
+  if (!payoffReq) {
+    return (
+      <Badge variant="outline" className="text-[#c7c6cd]/60 border-[#283150]">
+        Not requested
+      </Badge>
+    )
+  }
+
+  const variant =
+    payoffReq.status === 'APPROVED'
+      ? 'default'
+      : payoffReq.status === 'REJECTED'
+        ? 'destructive'
+        : 'secondary'
+
+  return (
+    <div className="flex flex-col gap-0.5">
+      <Badge variant={variant}>{DOCTOR_PAYOFF_STATUS_LABEL[payoffReq.status]}</Badge>
+      {payoffReq.status === 'APPROVED' && (
+        <span className="text-[10px] text-emerald-400 tabular-nums">
+          {formatPlRupee(payoffReq.requestAmount)}
+        </span>
+      )}
+      {payoffReq.status === 'PENDING' && (
+        <span className="text-[10px] text-amber-400 tabular-nums">
+          {formatPlRupee(payoffReq.requestAmount)}
+        </span>
+      )}
+    </div>
+  )
+}
+
+function PayoffActionCell({
+  payoffReq,
+  loading,
+  onRequest,
+}: {
+  payoffReq?: DoctorPayoffRequestRecord
+  loading: boolean
+  onRequest: () => void
+}) {
+  if (loading) return null
+
+  if (payoffReq?.status === 'APPROVED' && payoffReq.verificationDocUrl) {
+    return (
+      <a
+        href={payoffReq.verificationDocUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex items-center gap-1 text-xs font-medium text-[#22d3ee] hover:underline"
+      >
+        <FileText className="h-3.5 w-3.5" />
+        View Doc
+        <ExternalLink className="h-3 w-3" />
+      </a>
+    )
+  }
+
+  if (payoffReq?.status === 'APPROVED') {
+    return <span className="text-xs text-emerald-400 font-medium">Approved</span>
+  }
+
+  if (payoffReq?.status === 'PENDING') {
+    return <span className="text-xs text-amber-400 font-medium">Awaiting Finance</span>
+  }
+
+  if (payoffReq?.status === 'REJECTED') {
+    return (
+      <div className="flex flex-col items-end gap-1">
+        <span className="text-[10px] text-rose-400 max-w-[140px] truncate" title={payoffReq.rejectionRemarks ?? ''}>
+          {payoffReq.rejectionRemarks || 'Rejected'}
+        </span>
+        <Button
+          size="sm"
+          className="h-7 px-2 text-xs bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/20"
+          variant="outline"
+          onClick={onRequest}
+        >
+          Re-request
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <Button
+      size="sm"
+      className="h-7 px-2 text-xs bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/20"
+      variant="outline"
+      onClick={onRequest}
+    >
+      <FileText className="mr-1 h-3.5 w-3.5" />
+      Request Payoff
+    </Button>
+  )
+}
+
 function KpiTile({
   label,
   value,
@@ -798,26 +996,26 @@ function KpiTile({
   return (
     <div
       className={`bg-[#191D2E]/60 backdrop-blur-md border ${isPending
-          ? 'border-rose-500/30 shadow-lg shadow-rose-950/5'
-          : 'border-[#283150]'
+        ? 'border-rose-500/30 shadow-lg shadow-rose-950/5'
+        : 'border-[#283150]'
         } p-3.5 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200 ${className}`}
     >
       <div className="flex items-center justify-between gap-1.5">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-[#c7c6cd]/75">{label}</span>
         <div className={`p-1 rounded shrink-0 ${isPending
-            ? 'bg-rose-500/10 text-rose-400'
-            : isPaid
-              ? 'bg-emerald-500/10 text-emerald-400'
-              : 'bg-[#22d3ee]/10 text-[#22d3ee]'
+          ? 'bg-rose-500/10 text-rose-400'
+          : isPaid
+            ? 'bg-emerald-500/10 text-emerald-400'
+            : 'bg-[#22d3ee]/10 text-[#22d3ee]'
           }`}>
           <Icon className="h-3.5 w-3.5" />
         </div>
       </div>
       <div className={`text-base font-bold tabular-nums leading-none ${isPending
-          ? 'text-rose-400'
-          : isPaid
-            ? 'text-emerald-400'
-            : 'text-white'
+        ? 'text-rose-400'
+        : isPaid
+          ? 'text-emerald-400'
+          : 'text-white'
         }`}>
         {value ?? '—'}
       </div>

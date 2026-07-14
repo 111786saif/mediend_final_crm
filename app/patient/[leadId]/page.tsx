@@ -14,11 +14,12 @@ import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
+import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
 import { CashStageProgress } from '@/components/case/cash-stage-progress'
+import { ResetStepperDialog } from '@/components/case/reset-stepper-dialog'
 import { StageProgress } from '@/components/case/stage-progress'
 import { Field, Section } from '@/components/patient/details-section'
 import {
@@ -46,6 +47,7 @@ import {
   canMarkLost,
   canModifyHospitals,
   canRaisePreAuth,
+  canResetStepper,
   canRevertCashMode,
   canStartCashMode,
   canSuggestHospitals,
@@ -470,6 +472,7 @@ export default function PatientDetailsPage() {
   const [markLostDetail, setMarkLostDetail] = useState('')
   const [markLostSubmitting, setMarkLostSubmitting] = useState(false)
   const [switchingMode, setSwitchingMode] = useState(false)
+  const [showResetStepperDialog, setShowResetStepperDialog] = useState(false)
 
   if (isLoading || isLoadingKYP) {
     return (
@@ -1105,15 +1108,32 @@ export default function PatientDetailsPage() {
 
           {/* Compact Stage Progress */}
           <div className="border-t border-gray-200 dark:border-gray-800 pt-4">
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-3 flex items-center justify-between gap-2">
               <p className="text-gray-700 dark:text-gray-300 text-sm font-semibold">
                 {lead.flowType === FlowType.CASH ? 'Cash Flow Progress' : 'Case Progress'}
               </p>
-              {lead.flowType === FlowType.CASH && (
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                  Cash Mode
-                </Badge>
-              )}
+              <div className="flex items-center gap-2">
+                {lead.flowType === FlowType.CASH && (
+                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    Cash Mode
+                  </Badge>
+                )}
+                {user &&
+                  canResetStepper(user, lead) &&
+                  lead.caseStage !== CaseStage.NEW_LEAD &&
+                  lead.caseStage !== CaseStage.CASH_IPD_PENDING && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="border-amber-300 text-amber-800 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-300 dark:hover:bg-amber-950/40"
+                    onClick={() => setShowResetStepperDialog(true)}
+                  >
+                    <RotateCcw className="mr-1.5 h-3.5 w-3.5" />
+                    Reset Step
+                  </Button>
+                )}
+              </div>
             </div>
             {lead.flowType === FlowType.CASH ? (
               <CashStageProgress currentStage={lead.caseStage} />
@@ -1917,6 +1937,14 @@ export default function PatientDetailsPage() {
 
         {/* Activity Timeline */}
         {stageHistory && <ActivityTimeline history={stageHistory} />}
+
+        {user && canResetStepper(user, lead) && (
+          <ResetStepperDialog
+            leadId={leadId}
+            open={showResetStepperDialog}
+            onOpenChange={setShowResetStepperDialog}
+          />
+        )}
 
         {/* Mark Admitted Modal — Full IPD Details Form */}
         <Dialog open={showAdmitModal} onOpenChange={setShowAdmitModal}>

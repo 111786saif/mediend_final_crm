@@ -26,6 +26,12 @@ export async function GET(request: NextRequest) {
     return successResponse(data)
   } catch (error) {
     console.error('Error fetching sales team cost hierarchy:', error)
-    return errorResponse('Failed to fetch sales team cost data', 500)
+    const errMsg = error instanceof Error ? error.message : String(error)
+    return errorResponse(
+      errMsg.includes('otherCost') || errMsg.includes('Unknown field')
+        ? 'Sales Team Cost schema out of sync. Restart the dev server after prisma generate.'
+        : `Failed to fetch sales team cost data: ${errMsg}`,
+      500,
+    )
   }
 }

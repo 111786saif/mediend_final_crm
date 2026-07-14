@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { loadApprovedIncentiveTotalsByEmployee, type SalesTeamCostPeriod } from '@/lib/sales-team-cost/incentives'
 import { getMarketingCostForBD } from '@/lib/sales-team-cost/marketing'
 import { getSalaryForRole } from '@/lib/sales-team-cost/payroll'
+import { loadSalaryOverridesByEmployee, type SalaryOverrideEntry } from '@/lib/sales-team-cost/salary-override'
 import { loadApprovedSeatingMiscByEmployee } from '@/lib/sales-team-cost/seating-misc'
 import { buildSummary } from '@/lib/sales-team-cost/rollup'
 import type {
@@ -52,7 +53,8 @@ async function buildRoleNode(
   employee: EmployeeRow,
   employeesByManager: Map<string, EmployeeRow[]>,
   incentiveTotals: Map<string, number>,
-  seatingMiscTotals: Map<string, { seating: number; misc: number }>,
+  seatingMiscTotals: Map<string, { seating: number; misc: number; other: number }>,
+  salaryOverrides: Map<string, SalaryOverrideEntry>,
 ): Promise<SalesTeamCostRole | null> {
   if (!SALES_ROLES.includes(employee.user.role)) return null
 
@@ -64,11 +66,20 @@ async function buildRoleNode(
 
   const children: SalesTeamCostRole[] = []
   for (const child of childEmployees) {
-    const node = await buildRoleNode(child, employeesByManager, incentiveTotals, seatingMiscTotals)
+    const node = await buildRoleNode(
+      child,
+      employeesByManager,
+      incentiveTotals,
+      seatingMiscTotals,
+      salaryOverrides,
+    )
     if (node) children.push(node)
   }
 
-  const salaryPerHead = await getSalaryForRole(employee.id)
+  const payrollSalary = await getSalaryForRole(employee.id)
+  const override = salaryOverrides.get(employee.id)
+  const salaryIsOverride = override != null
+  const salaryPerHead = salaryIsOverride ? override.amount : payrollSalary
   const costs = seatingMiscTotals.get(employee.id)
 
   let marketingCost: number | undefined
@@ -83,9 +94,12 @@ async function buildRoleNode(
     type: roleType,
     count: 1,
     salaryPerHead,
+    payrollSalary,
+    salaryIsOverride,
     incentiveAmount: incentiveTotals.get(employee.id) ?? 0,
     seatingAmount: costs?.seating ?? 0,
     miscAmount: costs?.misc ?? 0,
+    otherAmount: costs?.other ?? 0,
     marketingCost,
     children,
   }
@@ -94,7 +108,7 @@ async function buildRoleNode(
 export async function buildSalesTeamCostHierarchy(
   period: SalesTeamCostPeriod,
 ): Promise<SalesTeamCostResponse> {
-  const [employees, incentiveTotals, seatingMiscTotals] = await Promise.all([
+  const [employees, incentiveTotals, seatingMiscTotals, salaryOverrides] = await Promise.all([
     prisma.employee.findMany({
       where: {
         status: 'ACTIVE',
@@ -110,6 +124,7 @@ export async function buildSalesTeamCostHierarchy(
     }),
     loadApprovedIncentiveTotalsByEmployee(period),
     loadApprovedSeatingMiscByEmployee(period),
+    loadSalaryOverridesByEmployee(period),
   ])
 
   const employeesByManager = new Map<string, EmployeeRow[]>()
@@ -131,7 +146,13 @@ export async function buildSalesTeamCostHierarchy(
 
   const roots: SalesTeamCostRole[] = []
   for (const root of rootEmployees) {
-    const node = await buildRoleNode(root, employeesByManager, incentiveTotals, seatingMiscTotals)
+    const node = await buildRoleNode(
+      root,
+      employeesByManager,
+      incentiveTotals,
+      seatingMiscTotals,
+      salaryOverrides,
+    )
     if (node) roots.push(node)
   }
 

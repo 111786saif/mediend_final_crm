@@ -1,0 +1,360 @@
+import { Prisma } from '@/generated/prisma/client'
+import type { SessionUser } from '@/lib/auth'
+import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
+import {
+  getLeadPipelineBucket,
+  type LeadAgeFilter,
+  type PipelineStatusBucket,
+} from '@/lib/pipeline-lead-buckets'
+import { parsePhoneSearchQuery } from '@/lib/phone-search'
+
+export type PipelineSortField = 'date' | 'patient' | 'status' | 'leadRef' | 'bd'
+export type PipelineSortDir = 'asc' | 'desc'
+
+export interface PipelineQueryParams {
+  page: number
+  pageSize: number
+  search: string
+  statusBucket: PipelineStatusBucket
+  bdId: string | null
+  category: string | null
+  circle: string | null
+  treatment: string | null
+  campaignName: string | null
+  groupBy: 'circle' | 'disease'
+  leadAge: LeadAgeFilter
+  startDate: string | null
+  endDate: string | null
+  sortBy: PipelineSortField
+  sortDir: PipelineSortDir
+}
+
+export function parsePipelineQueryParams(searchParams: URLSearchParams): PipelineQueryParams {
+  const page = Math.max(1, Number(searchParams.get('page') || 1) || 1)
+  const pageSize = Math.min(100, Math.max(10, Number(searchParams.get('pageSize') || 50) || 50))
+  const statusRaw = searchParams.get('status') || 'all'
+  const allowedStatus: PipelineStatusBucket[] = [
+    'all',
+    'new_hot',
+    'follow_up',
+    'ipd_done',
+    'dnp',
+    'junk',
+    'lost',
+    'closed',
+  ]
+  const statusBucket = allowedStatus.includes(statusRaw as PipelineStatusBucket)
+    ? (statusRaw as PipelineStatusBucket)
+    : 'all'
+
+  const ageRaw = searchParams.get('age') || 'all'
+  const allowedAge: LeadAgeFilter[] = ['all', 'new', 'lt1m', '1to2m', '2to3m', '3plus']
+  const leadAge = allowedAge.includes(ageRaw as LeadAgeFilter) ? (ageRaw as LeadAgeFilter) : 'all'
+
+  const sortRaw = searchParams.get('sort') || 'date'
+  const allowedSort: PipelineSortField[] = ['date', 'patient', 'status', 'leadRef', 'bd']
+  const sortBy = allowedSort.includes(sortRaw as PipelineSortField)
+    ? (sortRaw as PipelineSortField)
+    : 'date'
+
+  const sortDir: PipelineSortDir = searchParams.get('dir') === 'asc' ? 'asc' : 'desc'
+  const groupBy = searchParams.get('groupBy') === 'disease' ? 'disease' : 'circle'
+
+  return {
+    page,
+    pageSize,
+    search: (searchParams.get('q') || searchParams.get('search') || '').trim(),
+    statusBucket,
+    bdId: emptyToNull(searchParams.get('bdId')),
+    category: emptyToNull(searchParams.get('category')),
+    circle: emptyToNull(searchParams.get('circle')),
+    treatment: emptyToNull(searchParams.get('treatment')),
+    campaignName: emptyToNull(searchParams.get('campaign')),
+    groupBy,
+    leadAge,
+    startDate: emptyToNull(searchParams.get('from')),
+    endDate: emptyToNull(searchParams.get('to')),
+    sortBy,
+    sortDir,
+  }
+}
+
+function emptyToNull(v: string | null): string | null {
+  if (!v || v === 'all') return null
+  return v
+}
+
+export async function buildPipelineRoleWhere(
+  user: SessionUser,
+): Promise<{ where: Prisma.LeadWhereInput; subordinateUserIds?: string[] }> {
+  if (user.role === 'BD') {
+    return { where: { bdId: user.id } }
+  }
+  if (user.role === 'TEAM_LEAD') {
+    const subordinateUserIds = await getTeamLeadLeadAccessBdUserIds(user.id)
+    return {
+      where: { bdId: { in: [user.id, ...subordinateUserIds] } },
+      subordinateUserIds,
+    }
+  }
+  return { where: {} }
+}
+
+export function statusBucketWhere(
+  bucket: PipelineStatusBucket,
+): Prisma.LeadWhereInput | undefined {
+  if (bucket === 'all') return undefined
+
+  const contains = (term: string): Prisma.LeadWhereInput => ({
+    status: { contains: term, mode: 'insensitive' },
+  })
+
+  switch (bucket) {
+    case 'new_hot':
+      return {
+        OR: [contains('new'), contains('hot'), contains('interested'), contains('nurture')],
+      }
+    case 'follow_up':
+      return {
+        AND: [
+          {
+            OR: [
+              contains('follow'),
+              contains('call back'),
+              contains('callback'),
+              contains('schedule'),
+              contains('out of station'),
+            ],
+          },
+          { NOT: contains('ipd done') },
+        ],
+      }
+    case 'ipd_done':
+      return contains('ipd done')
+    case 'dnp':
+      return contains('dnp')
+    case 'junk':
+      return { OR: [contains('junk'), contains('invalid number')] }
+    case 'lost':
+      return {
+        OR: [
+          contains('lost'),
+          contains('not interested'),
+          contains('duplicate'),
+          contains('fund issues'),
+          contains('already insured'),
+          contains('language barrier'),
+          contains('sx not suggested'),
+        ],
+      }
+    case 'closed':
+      return {
+        AND: [
+          {
+            OR: [
+              contains('closed'),
+              contains('call done'),
+              contains('c/w done'),
+              contains('wa done'),
+              contains('scan done'),
+              contains('opd done'),
+              contains('booked'),
+              contains('policy'),
+            ],
+          },
+          { NOT: contains('ipd done') },
+        ],
+      }
+    default:
+      return undefined
+  }
+}
+
+export function leadAgeWhere(age: LeadAgeFilter): Prisma.LeadWhereInput | undefined {
+  if (age === 'all') return undefined
+  const now = new Date()
+  const daysAgo = (n: number) => {
+    const d = new Date(now)
+    d.setDate(d.getDate() - n)
+    return d
+  }
+
+  const receiptField = (range: Prisma.DateTimeFilter): Prisma.LeadWhereInput => ({
+    OR: [{ leadEntryDate: range }, { AND: [{ leadEntryDate: null }, { createdDate: range }] }],
+  })
+
+  switch (age) {
+    case 'new':
+      return receiptField({ gte: daysAgo(7) })
+    case 'lt1m':
+      return receiptField({ gte: daysAgo(30), lt: daysAgo(7) })
+    case '1to2m':
+      return receiptField({ gte: daysAgo(60), lt: daysAgo(30) })
+    case '2to3m':
+      return receiptField({ gte: daysAgo(90), lt: daysAgo(60) })
+    case '3plus':
+      return receiptField({ lt: daysAgo(90) })
+    default:
+      return undefined
+  }
+}
+
+export function buildPipelineFiltersWhere(
+  params: PipelineQueryParams,
+  roleWhere: Prisma.LeadWhereInput,
+  options?: { includeStatusBucket?: boolean },
+): Prisma.LeadWhereInput {
+  const includeStatus = options?.includeStatusBucket !== false
+  const and: Prisma.LeadWhereInput[] = [roleWhere]
+
+  if (includeStatus) {
+    const statusWhere = statusBucketWhere(params.statusBucket)
+    if (statusWhere) and.push(statusWhere)
+  }
+
+  if (params.bdId) and.push({ bdId: params.bdId })
+  if (params.category) and.push({ category: params.category })
+  if (params.circle) {
+    if (params.circle === 'Unknown') {
+      and.push({
+        OR: [{ circle: null }, { circle: '' }, { circle: { equals: 'Unknown', mode: 'insensitive' } }],
+      })
+    } else {
+      and.push({ circle: { equals: params.circle, mode: 'insensitive' } })
+    }
+  }
+  if (params.treatment) {
+    if (params.treatment === 'Unknown disease') {
+      and.push({ OR: [{ treatment: null }, { treatment: '' }] })
+    } else {
+      and.push({ treatment: { equals: params.treatment, mode: 'insensitive' } })
+    }
+  }
+  if (params.campaignName) {
+    if (params.campaignName === 'No campaign') {
+      and.push({ OR: [{ campaignName: null }, { campaignName: '' }] })
+    } else {
+      and.push({ campaignName: { equals: params.campaignName, mode: 'insensitive' } })
+    }
+  }
+
+  const ageWhere = leadAgeWhere(params.leadAge)
+  if (ageWhere) and.push(ageWhere)
+
+  if (params.startDate || params.endDate) {
+    const range: Prisma.DateTimeFilter = {}
+    if (params.startDate) {
+      const from = new Date(params.startDate)
+      from.setHours(0, 0, 0, 0)
+      range.gte = from
+    }
+    if (params.endDate) {
+      const to = new Date(params.endDate)
+      to.setHours(23, 59, 59, 999)
+      range.lte = to
+    }
+    and.push({
+      OR: [{ leadEntryDate: range }, { AND: [{ leadEntryDate: null }, { createdDate: range }] }],
+    })
+  }
+
+  if (params.search) {
+    const phone = parsePhoneSearchQuery(params.search)
+    if (phone) {
+      and.push({
+        OR: [
+          { phoneNumber: { contains: phone.last10 } },
+          { alternateNumber: { contains: phone.last10 } },
+        ],
+      })
+    } else {
+      const q = params.search
+      and.push({
+        OR: [
+          { patientName: { contains: q, mode: 'insensitive' } },
+          { leadRef: { contains: q, mode: 'insensitive' } },
+          { circle: { contains: q, mode: 'insensitive' } },
+          { hospitalName: { contains: q, mode: 'insensitive' } },
+          { treatment: { contains: q, mode: 'insensitive' } },
+          { category: { contains: q, mode: 'insensitive' } },
+          { campaignName: { contains: q, mode: 'insensitive' } },
+          { bd: { name: { contains: q, mode: 'insensitive' } } },
+          { status: { contains: q, mode: 'insensitive' } },
+        ],
+      })
+    }
+  }
+
+  return and.length === 1 ? and[0]! : { AND: and }
+}
+
+export function pipelineOrderBy(
+  sortBy: PipelineSortField,
+  sortDir: PipelineSortDir,
+): Prisma.LeadOrderByWithRelationInput[] {
+  const dir = sortDir
+  switch (sortBy) {
+    case 'patient':
+      return [{ patientName: dir }, { id: dir }]
+    case 'status':
+      return [{ status: dir }, { id: dir }]
+    case 'leadRef':
+      return [{ leadRef: dir }, { id: dir }]
+    case 'bd':
+      return [{ bd: { name: dir } }, { id: dir }]
+    case 'date':
+    default:
+      return [{ leadEntryDate: { sort: dir, nulls: 'last' } }, { createdDate: dir }, { id: dir }]
+  }
+}
+
+export function bucketsFromStatusGroups(
+  rows: { status: string | null; _count: { _all: number } }[],
+): Record<Exclude<PipelineStatusBucket, 'all'>, number> {
+  const counts: Record<Exclude<PipelineStatusBucket, 'all'>, number> = {
+    new_hot: 0,
+    follow_up: 0,
+    ipd_done: 0,
+    dnp: 0,
+    junk: 0,
+    lost: 0,
+    closed: 0,
+  }
+  for (const row of rows) {
+    counts[getLeadPipelineBucket(row.status)] += row._count._all
+  }
+  return counts
+}
+
+export const pipelineTableSelect = {
+  id: true,
+  leadRef: true,
+  patientName: true,
+  age: true,
+  sex: true,
+  treatment: true,
+  category: true,
+  status: true,
+  caseStage: true,
+  bdId: true,
+  circle: true,
+  campaignName: true,
+  leadEntryDate: true,
+  createdDate: true,
+  hospitalName: true,
+  ipdDrName: true,
+  surgeonName: true,
+  bd: { select: { id: true, name: true } },
+  plRecord: { select: { bdmName: true, doctorName: true, hospitalName: true } },
+  dischargeSheet: { select: { doctorName: true, hospitalName: true } },
+  kypSubmission: {
+    select: {
+      preAuthData: {
+        select: {
+          requestedHospitalName: true,
+          hospitalNameSuggestion: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.LeadSelect

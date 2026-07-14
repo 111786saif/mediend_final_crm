@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -14,6 +14,7 @@ import {
   ChevronRight,
   ExternalLink,
   Loader2,
+  Calendar,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { ProtectedRoute } from '@/components/protected-route'
@@ -57,6 +58,7 @@ import {
   useCreatePlInvoiceRequest,
   usePlInvoiceRequests,
 } from '@/hooks/use-invoice-requests'
+import { useInvoiceRequestActivity } from '@/hooks/use-doctor-payoff-requests'
 import {
   INVOICE_REQUEST_STATUS_LABEL,
   type InvoiceRequestRecord,
@@ -108,6 +110,7 @@ export default function HospitalDetailPage() {
   const queryClient = useQueryClient()
   const params = useParams()
   const search = useSearchParams()
+  const router = useRouter()
   const { user } = useAuth()
   const canRequestInvoice = user ? hasPermission(user, 'pl:write') : false
 
@@ -204,7 +207,51 @@ export default function HospitalDetailPage() {
     return map
   }, [invoiceData?.requests])
 
+  const { totalBillAmount, unsettledReceived, totalPendingOutstanding, amountReceivedDisplay } = useMemo(() => {
+    if (!data?.cases) {
+      return {
+        totalBillAmount: 0,
+        unsettledReceived: 0,
+        totalPendingOutstanding: 0,
+        amountReceivedDisplay: 0,
+      }
+    }
+
+    let billSum = 0
+    let pendingSum = 0
+    let totalReceivedSum = 0
+    let verifiedReceivedSum = 0
+
+    data.cases.forEach((c) => {
+      billSum += c.billAmount || 0
+      pendingSum += c.hospitalAmountPending || 0
+      totalReceivedSum += c.mediendReceived || 0
+
+      const invoiceReq = invoiceByLeadId.get(c.leadId)
+      const isVerified = invoiceReq?.status === 'VERIFIED'
+
+      if (isVerified) {
+        verifiedReceivedSum += c.mediendReceived || 0
+      }
+    })
+
+    const unsettled = totalReceivedSum - verifiedReceivedSum
+    const amtReceivedDisplay = verifiedReceivedSum > 0 ? verifiedReceivedSum : totalReceivedSum
+
+    return {
+      totalBillAmount: billSum,
+      unsettledReceived: verifiedReceivedSum > 0 ? unsettled : totalReceivedSum,
+      totalPendingOutstanding: pendingSum,
+      amountReceivedDisplay: amtReceivedDisplay,
+    }
+  }, [data?.cases, invoiceByLeadId])
+
   const createInvoice = useCreatePlInvoiceRequest()
+  const { data: invoiceActivityData, isLoading: invoiceActivityLoading } = useInvoiceRequestActivity({
+    hospitalName: name,
+    limit: 20,
+    enabled: !!name,
+  })
 
   // ── Filter-Config API (backend-driven options) ──────────────────────────
   const { data: filterConfig } = useQuery<FilterConfig>({
@@ -218,13 +265,13 @@ export default function HospitalDetailPage() {
     const filters = filterConfig?.filters ?? []
     const find = (field: string) => filters.find(f => f.field === field)
     return {
-      doctors:               find('doctor')?.options               ?? [],
-      statuses:              find('status')?.options               ?? [],
+      doctors: find('doctor')?.options ?? [],
+      statuses: find('status')?.options ?? [],
       mediendInvoiceStatuses: find('mediendInvoiceStatus')?.options ?? [],
-      billBounds:     { min: find('billAmount')?.min          ?? 0, max: find('billAmount')?.max          ?? 0 },
-      shareBounds:    { min: find('mediendShareAmount')?.min  ?? 0, max: find('mediendShareAmount')?.max  ?? 0 },
-      receivedBounds: { min: find('mediendReceived')?.min     ?? 0, max: find('mediendReceived')?.max     ?? 0 },
-      pendingBounds:  { min: find('hospitalAmountPending')?.min ?? 0, max: find('hospitalAmountPending')?.max ?? 0 },
+      billBounds: { min: find('billAmount')?.min ?? 0, max: find('billAmount')?.max ?? 0 },
+      shareBounds: { min: find('mediendShareAmount')?.min ?? 0, max: find('mediendShareAmount')?.max ?? 0 },
+      receivedBounds: { min: find('mediendReceived')?.min ?? 0, max: find('mediendReceived')?.max ?? 0 },
+      pendingBounds: { min: find('hospitalAmountPending')?.min ?? 0, max: find('hospitalAmountPending')?.max ?? 0 },
     }
   }, [filterConfig])
 
@@ -247,11 +294,10 @@ export default function HospitalDetailPage() {
           paidOn: new Date().toISOString(),
           mode: payload.mode,
           reference: payload.reference || null,
-          notes: `Recorded via Hospital Detail Page for ${name}. Attachments:\n${
-            payload.attachments && payload.attachments.length > 0
+          notes: `Recorded via Hospital Detail Page for ${name}. Attachments:\n${payload.attachments && payload.attachments.length > 0
               ? payload.attachments.map((a) => `- [${a.name}](${a.url})`).join('\n')
               : 'None'
-          }`,
+            }`,
         })
       )
       return Promise.all(promises)
@@ -335,94 +381,153 @@ export default function HospitalDetailPage() {
       <div className="min-h-screen w-full min-w-0 bg-[#07112f] text-[#dce1ff] p-6 font-sans selection:bg-[#22d3ee]/30 selection:text-white">
         <div className="w-full min-w-0 space-y-6">
           {/* Header & Navigation */}
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              asChild
-              className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
-            >
-              <Link href="/hospitals" aria-label="Back to hospital list">
-                <ArrowLeft className="h-4 w-4" />
-              </Link>
-            </Button>
-            <div>
-              <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
-                <Link href="/hospitals" className="hover:text-[#22d3ee] transition-colors">
-                  Hospital List
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="icon"
+                asChild
+                className="h-9 w-9 rounded-full border-[#283150] bg-[#191D2E]/80 text-[#22d3ee] shadow-sm transition-all duration-200 hover:bg-[#283150] hover:text-[#22d3ee] shrink-0"
+              >
+                <Link href="/hospitals" aria-label="Back to hospital list">
+                  <ArrowLeft className="h-4 w-4" />
                 </Link>
-                <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
-                <span className="text-[#dce1ff] font-semibold">{name}</span>
-              </nav>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
-                  {name}
-                </h1>
-                {startDate && endDate && (
-                  <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
-                    <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
-                    Filtered: {startDate} → {endDate}
-                  </div>
-                )}
+              </Button>
+              <div>
+                <nav className="flex items-center gap-1.5 text-[11px] font-medium text-[#c7c6cd]/60 mb-1 leading-none">
+                  <Link href="/hospitals" className="hover:text-[#22d3ee] transition-colors">
+                    Hospital List
+                  </Link>
+                  <ChevronRight className="h-3 w-3 opacity-60 shrink-0" />
+                  <span className="text-[#dce1ff] font-semibold">{name}</span>
+                </nav>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-bold tracking-tight text-[#dce1ff] leading-none">
+                    {name}
+                  </h1>
+                  {startDate && endDate && (
+                    <div className="inline-flex items-center gap-1 rounded-full bg-[#22d3ee]/10 px-2 py-0.5 text-[10px] font-medium text-[#22d3ee] border border-[#22d3ee]/20 shrink-0 ml-1">
+                      <span className="h-1 w-1 rounded-full bg-[#22d3ee] animate-pulse" />
+                      Filtered: {startDate} → {endDate}
+                    </div>
+                  )}
+                </div>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <ColumnFilter
+                type="dateRange"
+                value={startDate && endDate ? [startDate, endDate] : undefined}
+                onChange={(val: any) => {
+                  const urlParams = new URLSearchParams(search.toString())
+                  if (val && val.length === 2 && val[0]) {
+                    urlParams.set('startDate', val[0].split('T')[0])
+                    urlParams.set('endDate', val[1].split('T')[0])
+                  } else {
+                    urlParams.delete('startDate')
+                    urlParams.delete('endDate')
+                  }
+                  router.push(`?${urlParams.toString()}`)
+                }}
+                trigger={
+                  <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
+                    <Calendar className="mr-2 h-3.5 w-3.5" />
+                    Date Range
+                  </Button>
+                }
+              />
+              <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
+                Add Document
+              </Button>
+              <Button className="bg-[#22d3ee] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#22d3ee]/20">
+                Request Invoice
+              </Button>
             </div>
           </div>
 
           {/* Summary Cards (Bento Grid) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Tile 1: Cases */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-6 rounded-xl flex flex-col gap-4 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
               <div className="flex justify-between items-start">
                 <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Cases</span>
-                <div className="p-1.5 bg-[#22d3ee]/10 text-[#22d3ee] rounded">
-                  <Activity className="h-4 w-4 animate-pulse" />
+                <div className="p-1 bg-[#22d3ee]/10 text-[#22d3ee] rounded">
+                  <Activity className="h-3.5 w-3.5 animate-pulse" />
                 </div>
               </div>
               <div>
-                <h2 className="text-3xl font-bold tracking-tight text-white">{data?.kpis.totalCases ?? 0}</h2>
-                <p className="text-xs text-[#c7c6cd]/60 mt-1">Active patient cases</p>
+                <h2 className="text-2xl font-bold tracking-tight text-white">{data?.kpis.totalCases ?? 0}</h2>
+                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Active patient cases</p>
               </div>
             </div>
 
-            {/* Tile 2: Amount Received */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-6 rounded-xl flex flex-col gap-4 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+            {/* Tile 2: Total Bill Amount */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-cyan-500/5 transition-all duration-200">
               <div className="flex justify-between items-start">
-                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Amount Received</span>
-                <div className="p-1.5 bg-emerald-500/10 text-emerald-400 rounded">
-                  <TrendingUp className="h-4 w-4" />
+                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Total Bill Amount</span>
+                <div className="p-1 bg-cyan-500/10 text-cyan-400 rounded">
+                  <FileText className="h-3.5 w-3.5" />
                 </div>
               </div>
               <div>
-                <h2 className="text-3xl font-bold tracking-tight text-[#22d3ee]">{formatPlRupee(data?.kpis.amountReceived ?? null)}</h2>
-                <p className="text-xs text-[#c7c6cd]/60 mt-1">Directly reconciled payments</p>
+                <h2 className="text-2xl font-bold tracking-tight text-white">{formatPlRupee(totalBillAmount)}</h2>
+                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Total billing across cases</p>
               </div>
             </div>
 
             {/* Tile 3: Pending Outstanding */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-6 rounded-xl flex flex-col gap-4 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
               <div className="flex justify-between items-start">
                 <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Pending Outstanding</span>
-                <div className="p-1.5 bg-rose-500/10 text-rose-400 rounded">
-                  <AlertCircle className="h-4 w-4" />
+                <div className="p-1 bg-rose-500/10 text-rose-400 rounded">
+                  <AlertCircle className="h-3.5 w-3.5" />
                 </div>
               </div>
               <div>
-                <h2 className="text-3xl font-bold tracking-tight text-rose-400">{formatPlRupee(data?.kpis.pendingOutstanding ?? null)}</h2>
-                <p className="text-xs text-[#c7c6cd]/60 mt-1">Awaiting collection</p>
+                <h2 className="text-2xl font-bold tracking-tight text-rose-400">{formatPlRupee(totalPendingOutstanding)}</h2>
+                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Awaiting collection</p>
               </div>
             </div>
 
             {/* Tile 4: Total MediEND Share */}
-            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-6 rounded-xl flex flex-col gap-4 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
               <div className="flex justify-between items-start">
                 <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Total MediEND Share</span>
-                <div className="p-1.5 bg-indigo-500/10 text-[#c7bfff] rounded">
-                  <ReceiptText className="h-4 w-4" />
+                <div className="p-1 bg-indigo-500/10 text-[#c7bfff] rounded">
+                  <ReceiptText className="h-3.5 w-3.5" />
                 </div>
               </div>
               <div>
-                <h2 className="text-3xl font-bold tracking-tight text-white">{formatPlRupee(data?.kpis.mediendShare ?? null)}</h2>
-                <p className="text-xs text-[#c7c6cd]/60 mt-1">Projected contract share</p>
+                <h2 className="text-2xl font-bold tracking-tight text-white">{formatPlRupee(data?.kpis.mediendShare ?? null)}</h2>
+                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Projected contract share</p>
+              </div>
+            </div>
+
+            {/* Tile 5: Amount Received */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-[#22d3ee]/5 transition-all duration-200">
+              <div className="flex justify-between items-start">
+                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Amount Received</span>
+                <div className="p-1 bg-emerald-500/10 text-emerald-400 rounded">
+                  <TrendingUp className="h-3.5 w-3.5" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight text-[#22d3ee]">{formatPlRupee(amountReceivedDisplay)}</h2>
+                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Reconciled payments</p>
+              </div>
+            </div>
+
+            {/* Tile 6: Unsettled Received */}
+            <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] p-4 rounded-xl flex flex-col gap-2 shadow-lg hover:shadow-orange-500/5 transition-all duration-200">
+              <div className="flex justify-between items-start">
+                <span className="font-semibold text-xs tracking-wider text-[#c7c6cd] uppercase">Unsettled Received</span>
+                <div className="p-1 bg-orange-500/10 text-orange-400 rounded">
+                  <TrendingUp className="h-3.5 w-3.5" />
+                </div>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight text-orange-400">{formatPlRupee(unsettledReceived)}</h2>
+                <p className="text-[10px] text-[#c7c6cd]/60 mt-0.5">Payments on unverified cases</p>
               </div>
             </div>
           </div>
@@ -431,7 +536,7 @@ export default function HospitalDetailPage() {
           <RecordPaymentForm
             title="Record Hospital Payment"
             amountLabel="Amount Paid"
-            onSubmit={async (amount, mode, txnId, attachments) => {
+            onSubmit={async (amount, mode, txnId) => {
               const amt = parseFloat(amount)
               if (!amt || amt <= 0) {
                 toast.error('Please enter a valid payment amount')
@@ -444,15 +549,14 @@ export default function HospitalDetailPage() {
 
               const mappedMode =
                 mode === 'Bank Transfer' ? 'NEFT' :
-                mode === 'Cheque' ? 'CHEQUE' :
-                mode === 'UPI' ? 'UPI' : 'OTHER'
+                  mode === 'Cheque' ? 'CHEQUE' :
+                    mode === 'UPI' ? 'UPI' : 'OTHER'
 
               recordPaymentMutation.mutate({
                 leadIds: selectedLeads,
                 amount: amt,
                 mode: mappedMode,
                 reference: txnId,
-                attachments,
               })
             }}
           />
@@ -708,7 +812,14 @@ export default function HospitalDetailPage() {
 
           {/* Activity Log & Health Score Section */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-            <RecentActivityLog className="lg:col-span-2" />
+            <RecentActivityLog
+              className="lg:col-span-2"
+              title="Invoice Request Activity Log"
+              items={invoiceActivityData?.items ?? []}
+              isLoading={invoiceActivityLoading}
+              emptyMessage="No invoice request activity for this hospital yet"
+              viewAllHref="/finance/invoice-requests"
+            />
 
             {/* Right Side Widget: P&L Health */}
             <div className="bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl p-3 flex flex-col items-center justify-center text-center gap-2 relative overflow-hidden shadow-lg">

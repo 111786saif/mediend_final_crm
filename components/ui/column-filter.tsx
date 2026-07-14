@@ -26,6 +26,7 @@ interface ColumnFilterProps {
   min?: number
   max?: number
   placeholder?: string
+  trigger?: React.ReactNode
 }
 
 export function ColumnFilter({
@@ -36,6 +37,7 @@ export function ColumnFilter({
   min,
   max,
   placeholder,
+  trigger,
 }: ColumnFilterProps) {
   // Normalize options to FilterOption[]
   const normalizedOptions = useMemo(() => {
@@ -238,16 +240,20 @@ export function ColumnFilter({
   return (
     <DropdownMenu open={open} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          className="inline-flex items-center justify-center p-1 ml-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0"
-        >
-          <ChevronDown
-            className={`h-3.5 w-3.5 ${
-              hasActiveFilters ? 'text-primary font-bold' : 'opacity-60'
-            }`}
-          />
-        </button>
+        {trigger ? (
+          trigger
+        ) : (
+          <button
+            type="button"
+            className="inline-flex items-center justify-center p-1 ml-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0"
+          >
+            <ChevronDown
+              className={`h-3.5 w-3.5 ${
+                hasActiveFilters ? 'text-primary font-bold' : 'opacity-60'
+              }`}
+            />
+          </button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-auto p-2 z-50">
         {resolvedType === 'dateRange' && (
@@ -292,6 +298,12 @@ export function ColumnFilter({
               selected={tempRange}
               onSelect={setTempRange}
               numberOfMonths={1}
+              classNames={{
+                day: "h-8 w-8 text-center text-sm p-0 relative focus-within:relative focus-within:z-20 data-[range-middle=true]:bg-[#95CCDD]/20 data-[range-middle=true]:text-[#95CCDD] data-[range-start=true]:bg-[#95CCDD] data-[range-start=true]:text-[#07112f] data-[range-end=true]:bg-[#95CCDD] data-[range-end=true]:text-[#07112f] data-[selected-single=true]:bg-[#95CCDD] data-[selected-single=true]:text-[#07112f]",
+                today: "bg-accent text-accent-foreground",
+                outside: "text-muted-foreground opacity-50",
+                disabled: "text-muted-foreground opacity-50",
+              }}
             />
           </div>
         )}

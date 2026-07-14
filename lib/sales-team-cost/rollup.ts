@@ -13,19 +13,21 @@ export function computeOwnDirectRollup(node: SalesTeamCostRole): SalesTeamCostRo
   const incentives = node.incentiveAmount
   const seating = node.seatingAmount
   const misc = node.miscAmount
+  const other = node.otherAmount
   const marketing = node.type === 'bd' ? (node.marketingCost ?? 0) : 0
   return {
     salary,
     incentives,
     seating,
     misc,
+    other,
     marketing,
-    total: salary + incentives + seating + misc + marketing,
+    total: salary + incentives + seating + misc + other + marketing,
   }
 }
 
 function emptyRollup(): SalesTeamCostRollup {
-  return { salary: 0, incentives: 0, seating: 0, misc: 0, marketing: 0, total: 0 }
+  return { salary: 0, incentives: 0, seating: 0, misc: 0, other: 0, marketing: 0, total: 0 }
 }
 
 function addRollup(acc: SalesTeamCostRollup, rollup: SalesTeamCostRollup): SalesTeamCostRollup {
@@ -34,6 +36,7 @@ function addRollup(acc: SalesTeamCostRollup, rollup: SalesTeamCostRollup): Sales
     incentives: acc.incentives + rollup.incentives,
     seating: acc.seating + rollup.seating,
     misc: acc.misc + rollup.misc,
+    other: acc.other + rollup.other,
     marketing: acc.marketing + rollup.marketing,
     total: acc.total + rollup.total,
   }
@@ -82,9 +85,16 @@ export function computeDirectRollupTree(node: SalesTeamCostRole): SalesTeamCostR
     direct.incentives += childRollup.incentives
     direct.seating += childRollup.seating
     direct.misc += childRollup.misc
+    direct.other += childRollup.other
     direct.marketing += childRollup.marketing
   }
-  direct.total = direct.salary + direct.incentives + direct.seating + direct.misc + direct.marketing
+  direct.total =
+    direct.salary +
+    direct.incentives +
+    direct.seating +
+    direct.misc +
+    direct.other +
+    direct.marketing
   return direct
 }
 
@@ -107,11 +117,12 @@ export function buildSummary(roots: SalesTeamCostRole[]): SalesTeamCostSummary {
         incentives: acc.incentives + r.incentives,
         seating: acc.seating + r.seating,
         misc: acc.misc + r.misc,
+        other: acc.other + r.other,
         marketing: acc.marketing + r.marketing,
         total: acc.total + r.total,
       }
     },
-    { salary: 0, incentives: 0, seating: 0, misc: 0, marketing: 0, total: 0 },
+    { salary: 0, incentives: 0, seating: 0, misc: 0, other: 0, marketing: 0, total: 0 },
   )
 
   return {

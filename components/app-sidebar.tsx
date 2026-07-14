@@ -172,7 +172,7 @@ export function AppSidebar() {
   const itemsWithUrls = getFilteredNavItemsWithUrls(user)
 
   const HRM_TITLES = ['Attendance & Normalizations', 'People & Org', 'Compensation & Docs', 'Engagement']
-  const SALES_TITLES = ['Sales Dashboard', 'DM Dashboard', 'Case Tracker', 'Pending Surgery', 'Targets', 'Sales P&L', 'Incentive']
+  const SALES_TITLES = ['Sales Dashboard', 'DM Dashboard', 'Pipeline', 'Case Tracker', 'Pending Surgery', 'Targets', 'Sales P&L', 'Incentive']
   const INSURANCE_PL_TITLES = ['Insurance', 'Cash Cases', 'P/L Ledger', 'P/L Surgery', 'P/L Outstanding', 'Doctor List', 'Hospital List']
   const EA_HRM_TITLES = ['MD HR Dashboard', 'HR Dashboard', 'Recruitment', ...HRM_TITLES]
   const EA_MYHRMS_EXTRA = ['Ask MD Approval']

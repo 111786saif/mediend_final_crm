@@ -160,7 +160,7 @@ export const navItems: NavItem[] = [
     title: 'Pipeline',
     url: '/pipeline',
     icon: ClipboardList,
-    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD'],
+    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Case Tracker',
@@ -390,6 +390,30 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
+    title: 'Fin Doctor Payoff',
+    url: '/finance/doctor-payoff-requests',
+    icon: Stethoscope,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Outstanding',
+    url: '/pl/outstanding',
+    icon: CreditCard,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Doctor List',
+    url: '/doctors',
+    icon: Stethoscope,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Hospital List',
+    url: '/hospitals',
+    icon: Building2,
+    permission: 'finance:read',
+  },
+  {
     title: 'Sales Team Cost',
     url: '/finance/sales-team-cost',
     icon: DollarSign,
@@ -400,12 +424,6 @@ export const navItems: NavItem[] = [
     url: '/finance/master-seating-cost',
     icon: Armchair,
     roles: ['FINANCE_HEAD', 'ADMIN'],
-  },
-  {
-    title: 'Seating & Misc Cost',
-    url: '/finance/seating-misc-cost',
-    icon: Layers,
-    permission: 'finance:read',
   },
   {
     title: 'Company P&L',
@@ -566,6 +584,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }
       if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/pipeline' }
       if (role === 'SALES_HEAD') return { ...item, url: '/team-lead/pipeline' }
+      if (role === 'EXECUTIVE_ASSISTANT') return { ...item, url: '/executive-assistant/pipeline' }
       if (role === 'ADMIN') return { ...item, url: '/bd/pipeline' }
     }
     if (item.title === 'Targets') {

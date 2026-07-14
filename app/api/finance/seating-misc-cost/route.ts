@@ -97,6 +97,7 @@ export async function GET(request: NextRequest) {
         recordId: record?.id ?? null,
         seatingCost: record?.seatingCost ?? null,
         miscCost: record?.miscCost ?? null,
+        otherCost: record?.otherCost ?? null,
         month: period.month,
         year: period.year,
         status: record?.status ?? null,
@@ -165,6 +166,7 @@ export async function POST(request: NextRequest) {
             seatingCost: master?.amount ?? 0,
             masterSeatingCostId: master?.id ?? null,
             miscCost,
+            otherCost: 0,
             status: recordStatus,
             remarks: remarks?.trim() || null,
             createdByUserId: user.id,
@@ -181,6 +183,7 @@ export async function POST(request: NextRequest) {
         {
           seatingCost: record.seatingCost,
           miscCost: record.miscCost,
+          otherCost: record.otherCost,
           status: record.status,
           remarks: record.remarks,
         },

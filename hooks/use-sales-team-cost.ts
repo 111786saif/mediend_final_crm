@@ -21,5 +21,6 @@ export function useSalesTeamCost(filters: SalesTeamCostFilters) {
   return useQuery({
     queryKey: ['sales-team-cost', filters],
     queryFn: () => apiGet<SalesTeamCostResponse>(buildQuery(filters)),
+    placeholderData: (previousData) => previousData,
   })
 }

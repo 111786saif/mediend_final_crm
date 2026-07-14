@@ -43,6 +43,7 @@ const roleAllowedSections: Record<string, string[]> = {
   FINANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.finance_dashboard', 'main.company_pnl', 'main.targeted_pnl', 'main.md_pnl', 'main.loan_demat_revenue',
     'finance.fin_payroll', 'finance.fin_ledger', 'finance.fin_new_ledger_entry', 'finance.fin_sales', 'finance.fin_parties', 'finance.fin_heads', 'finance.fin_projects', 'finance.fin_payment_modes', 'finance.fin_inventory', 'finance.fin_approvals', 'finance.fin_team_approvals', 'finance.md_team_approvals', 'finance.fin_reports',
+    'insurance_pl.pl_outstanding', 'insurance_pl.doctor_list', 'insurance_pl.hospital_list',
     'insurance_pl.pl_ledger', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.people_org',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],

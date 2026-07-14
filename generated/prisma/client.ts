@@ -97,6 +97,21 @@ export type PLRecord = Prisma.PLRecordModel
  */
 export type InvoiceRequest = Prisma.InvoiceRequestModel
 /**
+ * Model InvoiceRequestActivity
+ * 
+ */
+export type InvoiceRequestActivity = Prisma.InvoiceRequestActivityModel
+/**
+ * Model DoctorPayoffRequest
+ * 
+ */
+export type DoctorPayoffRequest = Prisma.DoctorPayoffRequestModel
+/**
+ * Model DoctorPayoffRequestActivity
+ * 
+ */
+export type DoctorPayoffRequestActivity = Prisma.DoctorPayoffRequestActivityModel
+/**
  * Model IncomingLead
  * 
  */
@@ -392,6 +407,12 @@ export type InsuranceInitiateForm = Prisma.InsuranceInitiateFormModel
  */
 export type CaseStageHistory = Prisma.CaseStageHistoryModel
 /**
+ * Model WorkflowResetLog
+ * Immutable audit trail for Executive Assistant workflow-step resets.
+ * Rows are append-only — there is no update/delete API for this model.
+ */
+export type WorkflowResetLog = Prisma.WorkflowResetLogModel
+/**
  * Model CaseChatMessage
  * 
  */
@@ -446,6 +467,16 @@ export type EmployeeMonthlySeatingMiscCost = Prisma.EmployeeMonthlySeatingMiscCo
  * 
  */
 export type EmployeeMonthlySeatingMiscCostHistory = Prisma.EmployeeMonthlySeatingMiscCostHistoryModel
+/**
+ * Model EmployeeSalesTeamSalaryOverride
+ * Sales Team Cost–only salary override for a given employee + month (does not change Payroll).
+ */
+export type EmployeeSalesTeamSalaryOverride = Prisma.EmployeeSalesTeamSalaryOverrideModel
+/**
+ * Model EmployeeSalesTeamSalaryOverrideHistory
+ * Immutable audit log of Sales Team Cost salary overrides.
+ */
+export type EmployeeSalesTeamSalaryOverrideHistory = Prisma.EmployeeSalesTeamSalaryOverrideHistoryModel
 /**
  * Model Task
  * 
@@ -526,6 +557,11 @@ export type RankSnapshot = Prisma.RankSnapshotModel
  * 
  */
 export type HospitalMaster = Prisma.HospitalMasterModel
+/**
+ * Model HospitalMasterInsurance
+ * 
+ */
+export type HospitalMasterInsurance = Prisma.HospitalMasterInsuranceModel
 /**
  * Model DoctorMaster
  * 

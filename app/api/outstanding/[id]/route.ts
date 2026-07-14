@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasPlOrFinanceWrite } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -11,7 +11,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return unauthorizedResponse()
     }
 
-    if (!hasPermission(user, 'pl:write')) {
+    if (!hasPlOrFinanceWrite(user)) {
       return errorResponse('Forbidden', 403)
     }
 

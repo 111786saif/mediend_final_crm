@@ -25,8 +25,25 @@ export interface MasterItem {
   id: string
   name: string
   category?: string | null
+  treatment?: string | null
+  age?: number | null
+  sex?: string | null
+  aadhaarNumber?: string | null
+  aadhaarCardUrl?: string | null
+  panNumber?: string | null
+  panCardUrl?: string | null
+  agreementUrl?: string | null
+  experienceYears?: number | null
+  experienceNotes?: string | null
+  feeStructure?: string | null
+  ratingAverage?: number | null
+  ratingCount?: number | null
+  documents?: { name: string; url: string; type: string }[] | null
   address?: string | null
   googleMapLink?: string | null
+  mouAgreementUrl?: string | null
+  insuranceIds?: string[]
+  insuranceProviders?: { id: string; name: string }[]
   atsNewDelhi?: number | null
   atsMumbai?: number | null
   atsPune?: number | null
