@@ -10,9 +10,12 @@ import { useBackClose } from "@/providers/back-close-provider"
 function Dialog({
   open,
   onOpenChange,
+  skipBackOnCloseRef,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  useBackClose(open, onOpenChange)
+}: React.ComponentProps<typeof DialogPrimitive.Root> & {
+  skipBackOnCloseRef?: React.RefObject<boolean>
+}) {
+  useBackClose(open, onOpenChange, skipBackOnCloseRef)
   return (
     <DialogPrimitive.Root
       data-slot="dialog"

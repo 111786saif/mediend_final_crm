@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Star, X } from "lucide-react"
+import { Star, X, ImagePlus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { format } from "date-fns"
 import {
@@ -26,12 +26,15 @@ import { PatientDischargeInfo } from "@/components/discharge/patient-discharge-i
 import {
   CONCERN_CATEGORIES,
   CONCERN_CATEGORY_LABEL,
+  REVIEW_STATUS_LABEL,
   useUpdateComplianceCall,
   type ComplianceCall,
   type ComplianceCallStatus,
   type ConcernCategory,
+  type ReviewStatus,
   type SatisfactionLevel,
 } from "@/hooks/use-compliance-calls"
+import { useFileUpload } from "@/hooks/use-file-upload"
 
 const RATINGS = [1, 2, 3, 4, 5] as const
 
@@ -94,6 +97,8 @@ interface FormState {
   notes: string
 
   concernCategories: ConcernCategory[]
+  reviewStatus: ReviewStatus | null
+  reviewScreenshot: string | null
 }
 
 function emptyState(): FormState {
@@ -120,6 +125,8 @@ function emptyState(): FormState {
     additionalRemark: "",
     notes: "",
     concernCategories: [],
+    reviewStatus: null,
+    reviewScreenshot: null,
   }
 }
 
@@ -147,6 +154,8 @@ function fromCall(call: ComplianceCall): FormState {
     additionalRemark: call.additionalRemark ?? "",
     notes: call.notes ?? "",
     concernCategories: call.concernCategories ?? [],
+    reviewStatus: call.reviewStatus ?? null,
+    reviewScreenshot: call.reviewScreenshot ?? null,
   }
 }
 
@@ -158,6 +167,9 @@ interface Props {
 
 export function ComplianceFeedbackDrawer({ call, open, onOpenChange }: Props) {
   const update = useUpdateComplianceCall()
+  const { uploadFile, uploading: screenshotUploading } = useFileUpload({
+    endpoint: "/api/compliance/upload",
+  })
   const [state, setState] = useState<FormState>(emptyState)
   const [hover, setHover] = useState<number | null>(null)
 
@@ -219,6 +231,8 @@ export function ComplianceFeedbackDrawer({ call, open, onOpenChange }: Props) {
         additionalRemark: state.additionalRemark.trim() || null,
         notes: state.notes.trim() || null,
         concernCategories: state.concernCategories,
+        reviewStatus: state.reviewStatus,
+        reviewScreenshot: state.reviewScreenshot,
       })
       toast.success("Feedback saved")
       onOpenChange(false)
@@ -496,6 +510,94 @@ export function ComplianceFeedbackDrawer({ call, open, onOpenChange }: Props) {
                   <option value="online" />
                 </datalist>
               </Field>
+            </div>
+          </Section>
+
+          <Section title="Review">
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div>
+                <Label className="text-xs">Review status</Label>
+                <Select
+                  value={state.reviewStatus ?? "none"}
+                  onValueChange={(v) =>
+                    set("reviewStatus", v === "none" ? null : (v as ReviewStatus))
+                  }
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Not set</SelectItem>
+                    {(Object.keys(REVIEW_STATUS_LABEL) as ReviewStatus[]).map((key) => (
+                      <SelectItem key={key} value={key}>
+                        {REVIEW_STATUS_LABEL[key]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <Label className="text-xs">Review screenshot</Label>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Optional. JPG, JPEG, or PNG only.
+              </p>
+              {state.reviewScreenshot ? (
+                <div className="mt-2 space-y-2">
+                  <div className="relative overflow-hidden rounded-lg border bg-muted/30">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={state.reviewScreenshot}
+                      alt="Review screenshot"
+                      className="max-h-56 w-full object-contain"
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={screenshotUploading}
+                      onClick={() => document.getElementById("review-screenshot-input")?.click()}
+                    >
+                      Replace image
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => set("reviewScreenshot", null)}
+                    >
+                      <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  disabled={screenshotUploading}
+                  onClick={() => document.getElementById("review-screenshot-input")?.click()}
+                  className="mt-2 flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed px-4 py-8 text-sm text-muted-foreground transition hover:border-emerald-300 hover:bg-emerald-50/50 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/20"
+                >
+                  <ImagePlus className="h-6 w-6" />
+                  {screenshotUploading ? "Uploading..." : "Upload screenshot"}
+                </button>
+              )}
+              <input
+                id="review-screenshot-input"
+                type="file"
+                accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  const result = await uploadFile(file)
+                  if (result?.url) set("reviewScreenshot", result.url)
+                  e.target.value = ""
+                }}
+              />
             </div>
           </Section>
 

@@ -10,8 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
-import { useState } from 'react'
-import { TrendingUp, Clock, CheckCircle, XCircle, User, Building, FileText, ExternalLink } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { TrendingUp, Clock, CheckCircle, XCircle, User, Building, FileText, ExternalLink, Settings, Plus, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { toast } from 'sonner'
 
@@ -270,7 +270,222 @@ export default function HRIncrementsPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* ── Increment Policy Configuration ── */}
+      <IncrementPolicyCard />
     </div>
+  )
+}
+
+// ── Increment Policy Configuration Card ──────────────────────────────────────
+
+interface TierRow { minPct: number; maxPct: number | null; incrementPct: number }
+
+const DEFAULT_TIERS: TierRow[] = [
+  { minPct: 0,   maxPct: 59,  incrementPct: 0  },
+  { minPct: 60,  maxPct: 79,  incrementPct: 5  },
+  { minPct: 80,  maxPct: 99,  incrementPct: 10 },
+  { minPct: 100, maxPct: 119, incrementPct: 15 },
+  { minPct: 120, maxPct: null, incrementPct: 20 },
+]
+
+function IncrementPolicyCard() {
+  const queryClient = useQueryClient()
+  const [editing, setEditing] = useState(false)
+  const [localTiers, setLocalTiers] = useState<TierRow[]>([])
+
+  const { data: settingsData } = useQuery<Record<string, string>>({
+    queryKey: ['app-settings', 'increment_tiers'],
+    queryFn: () => apiGet('/api/settings?keys=increment_tiers'),
+  })
+
+  const savedTiers = useMemo<TierRow[]>(() => {
+    try {
+      const raw = settingsData?.increment_tiers
+      if (!raw) return DEFAULT_TIERS
+      const parsed = JSON.parse(raw)
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_TIERS
+    } catch { return DEFAULT_TIERS }
+  }, [settingsData])
+
+  const saveMutation = useMutation({
+    mutationFn: (tiers: TierRow[]) =>
+      fetch('/api/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'increment_tiers', value: JSON.stringify(tiers) }),
+      }).then((r) => r.json()),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['app-settings', 'increment_tiers'] })
+      toast.success('Increment policy saved')
+      setEditing(false)
+    },
+    onError: () => toast.error('Failed to save policy'),
+  })
+
+  const startEdit = () => {
+    setLocalTiers(savedTiers.map((t) => ({ ...t })))
+    setEditing(true)
+  }
+
+  const updateTier = (i: number, field: keyof TierRow, val: string) => {
+    setLocalTiers((prev) => {
+      const next = [...prev]
+      if (field === 'maxPct') {
+        next[i] = { ...next[i], maxPct: val === '' ? null : Number(val) }
+      } else {
+        next[i] = { ...next[i], [field]: Number(val) }
+      }
+      return next
+    })
+  }
+
+  const addTier = () => {
+    setLocalTiers((prev) => [...prev, { minPct: 0, maxPct: null, incrementPct: 0 }])
+  }
+
+  const removeTier = (i: number) => {
+    setLocalTiers((prev) => prev.filter((_, idx) => idx !== i))
+  }
+
+  const handleSave = () => {
+    // Validate: no empty incrementPct, minPct must be ascending
+    for (const t of localTiers) {
+      if (t.incrementPct < 0 || t.minPct < 0) {
+        toast.error('Percentages must be 0 or greater')
+        return
+      }
+    }
+    saveMutation.mutate(localTiers)
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Settings className="h-5 w-5 text-muted-foreground" />
+            <div>
+              <CardTitle className="text-lg">Increment Policy</CardTitle>
+              <CardDescription>
+                Configure the achievement-to-increment % mapping shown to employees
+              </CardDescription>
+            </div>
+          </div>
+          {!editing && (
+            <Button variant="outline" size="sm" onClick={startEdit}>
+              Edit policy
+            </Button>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent>
+        {!editing ? (
+          // View mode
+          <div className="overflow-x-auto rounded-lg border">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-muted/50">
+                  <th className="text-left px-4 py-2 font-medium text-muted-foreground">Achievement range</th>
+                  <th className="text-left px-4 py-2 font-medium text-muted-foreground">Increment %</th>
+                  <th className="text-left px-4 py-2 font-medium text-muted-foreground">Eligibility</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {savedTiers.map((tier, i) => {
+                  const rangeLabel = tier.maxPct === null
+                    ? `≥ ${tier.minPct}%`
+                    : tier.minPct === 0
+                    ? `Below ${tier.maxPct + 1}%`
+                    : `${tier.minPct}% – ${tier.maxPct}%`
+                  return (
+                    <tr key={i} className="hover:bg-muted/30">
+                      <td className="px-4 py-2.5 font-medium">{rangeLabel}</td>
+                      <td className="px-4 py-2.5">
+                        {tier.incrementPct === 0 ? (
+                          <Badge variant="secondary">Not eligible</Badge>
+                        ) : (
+                          <Badge className="bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-400">
+                            +{tier.incrementPct}%
+                          </Badge>
+                        )}
+                      </td>
+                      <td className="px-4 py-2.5 text-muted-foreground">
+                        {tier.incrementPct === 0 ? 'No increment awarded' : 'Increment suggested automatically'}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          // Edit mode
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Define each tier: the minimum achievement %, maximum achievement % (leave blank for "and above"), and the increment % to suggest.
+            </p>
+            <div className="space-y-2">
+              {/* Header */}
+              <div className="grid grid-cols-[1fr_1fr_1fr_40px] gap-2 px-1">
+                <span className="text-xs font-medium text-muted-foreground uppercase">Min achievement %</span>
+                <span className="text-xs font-medium text-muted-foreground uppercase">Max achievement %</span>
+                <span className="text-xs font-medium text-muted-foreground uppercase">Increment %</span>
+                <span />
+              </div>
+              {localTiers.map((tier, i) => (
+                <div key={i} className="grid grid-cols-[1fr_1fr_1fr_40px] gap-2 items-center">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={999}
+                    value={tier.minPct}
+                    onChange={(e) => updateTier(i, 'minPct', e.target.value)}
+                    placeholder="e.g. 60"
+                  />
+                  <Input
+                    type="number"
+                    min={0}
+                    max={999}
+                    value={tier.maxPct ?? ''}
+                    onChange={(e) => updateTier(i, 'maxPct', e.target.value)}
+                    placeholder="blank = and above"
+                  />
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    value={tier.incrementPct}
+                    onChange={(e) => updateTier(i, 'incrementPct', e.target.value)}
+                    placeholder="e.g. 10"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeTier(i)}
+                    disabled={localTiers.length <= 1}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Button variant="outline" size="sm" onClick={addTier} className="gap-1.5">
+              <Plus className="h-4 w-4" /> Add tier
+            </Button>
+            <div className="flex gap-2 pt-2 border-t">
+              <Button onClick={handleSave} disabled={saveMutation.isPending}>
+                {saveMutation.isPending ? 'Saving…' : 'Save policy'}
+              </Button>
+              <Button variant="outline" onClick={() => setEditing(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
@@ -418,4 +633,3 @@ function RejectDialog({
     </Dialog>
   )
 }
-

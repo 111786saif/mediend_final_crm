@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasPlOrFinanceRead } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 type DoctorSummary = {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'pl:read')) return errorResponse('Forbidden', 403)
+    if (!hasPlOrFinanceRead(user)) return errorResponse('Forbidden', 403)
 
     const url = new URL(request.url)
     const startDate = url.searchParams.get('startDate')
@@ -108,7 +108,47 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const list = Array.from(byDoctor.values()).sort((a, b) =>
+    let list = Array.from(byDoctor.values())
+
+    // Apply filters query parameter in JS
+    const filtersParam = url.searchParams.get('filters')
+    if (filtersParam) {
+      try {
+        const parsedFilters = JSON.parse(filtersParam)
+        if (Array.isArray(parsedFilters)) {
+          for (const f of parsedFilters) {
+            const { field, operator, value } = f
+            if (!field || value === undefined || value === null) continue
+
+            if (field === 'doctor') {
+              if (Array.isArray(value) && value.length > 0) {
+                list = list.filter(d => value.includes(d.name))
+              }
+            } else if (
+              field === 'totalCases' ||
+              field === 'totalBill' ||
+              field === 'totalPayable' ||
+              field === 'amountPaid' ||
+              field === 'amountPending' ||
+              field === 'doctorShare' ||
+              field === 'mediendShare'
+            ) {
+              const { min, max } = value as { min: number | null; max: number | null }
+              list = list.filter(d => {
+                const val = d[field as keyof DoctorSummary] as number
+                if (min != null && val < min) return false
+                if (max != null && val > max) return false
+                return true
+              })
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error parsing doctors list filters:', err)
+      }
+    }
+
+    list.sort((a, b) =>
       b.totalCases - a.totalCases || a.name.localeCompare(b.name)
     )
 

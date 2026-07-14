@@ -18,6 +18,13 @@ export type ComplianceCallSort = "recent" | "highest" | "lowest" | "pending" | "
 
 export type SatisfactionLevel = "SATISFIED" | "NEUTRAL" | "NOT_SATISFIED"
 
+export type ReviewStatus = "DONE" | "NOT_DONE"
+
+export const REVIEW_STATUS_LABEL: Record<ReviewStatus, string> = {
+  DONE: "Done",
+  NOT_DONE: "Not Done",
+}
+
 export type ConcernCategory =
   | "HOSPITAL_STAFF"
   | "PAYMENT"
@@ -113,6 +120,9 @@ export interface ComplianceCall {
 
   satisfaction: SatisfactionLevel | null
   concernCategories: ConcernCategory[]
+
+  reviewStatus: ReviewStatus | null
+  reviewScreenshot: string | null
 }
 
 export interface ComplianceCallsFilters {
@@ -141,9 +151,18 @@ export interface ComplianceFilterOptions {
 
 export interface ComplianceStats {
   byRating: Record<"1" | "2" | "3" | "4" | "5", number>
+  totalSurgeries: number
+  pendingCount: number
+  completedCount: number
+  dnpCount: number
+  reviewDoneCount: number
+  reviewNotDoneCount: number
+  /** @deprecated use pendingCount */
   pending: number
+  /** @deprecated use completedCount */
   totalCompleted: number
   averageRating: number | null
+  /** @deprecated use totalSurgeries with month filter */
   dischargesThisMonth: number
   dischargesToday: number
 }
@@ -191,10 +210,19 @@ export function useComplianceCalls(filters: ComplianceCallsFilters = {}) {
   })
 }
 
-export function useComplianceStats(range: { startDate?: string; endDate?: string } = {}) {
+export function useComplianceStats(
+  range: {
+    startDate?: string
+    endDate?: string
+    dischargeStart?: string | null
+    dischargeEnd?: string | null
+  } = {},
+) {
   const params = new URLSearchParams()
   if (range.startDate) params.set("startDate", range.startDate)
   if (range.endDate) params.set("endDate", range.endDate)
+  if (range.dischargeStart) params.set("dischargeStart", range.dischargeStart)
+  if (range.dischargeEnd) params.set("dischargeEnd", range.dischargeEnd)
   const qs = params.toString()
   return useQuery<ComplianceStats>({
     queryKey: ["compliance", "stats", range],
@@ -228,6 +256,9 @@ export interface UpdateComplianceCallInput {
 
   satisfaction?: SatisfactionLevel | null
   concernCategories?: ConcernCategory[]
+
+  reviewStatus?: ReviewStatus | null
+  reviewScreenshot?: string | null
 }
 
 export function useUpdateComplianceCall() {

@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useMemo } from "react"
 import { Plus } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { useAuth } from "@/hooks/use-auth"
+import { useTabPermissions } from "@/hooks/use-tab-permissions"
+import { PermissionsGuard } from "@/components/permissions-guard"
 import { TabNavigation, type TabItem } from "@/components/employee/tab-navigation"
 import { TaskInput } from "@/components/tasks/task-input"
 import { MobileTaskDrawer } from "@/components/tasks/mobile-task-drawer"
@@ -46,56 +48,45 @@ export default function MDTasksPage() {
     }
   }, [])
 
-  useEffect(() => {
-    if (isManager === false && activeTab === "team") {
-      setActiveTab("overview")
-      if (typeof window !== "undefined") window.location.hash = "overview"
-    }
-  }, [isManager, activeTab])
-
-  useEffect(() => {
-    if (user?.role !== "MD" && activeTab === "performance") {
-      setActiveTab("overview")
-      if (typeof window !== "undefined") window.location.hash = "overview"
-    }
-  }, [user?.role, activeTab])
-
-  const tabs: TabItem[] = useMemo(
+  const tabs = useMemo(
     () => [
       {
         value: "overview",
         label: "Overview",
         badge: (badges?.taskOverdueCount || 0) + (badges?.taskApprovalCount || 0) || undefined,
+        perm: "main.tasks.overview",
       },
-      ...(isManager !== false ? [{ value: "team", label: "Team" as const }] : []),
-      { value: "mytasks", label: "My Tasks" },
-      ...(user?.role === "MD" ? [{ value: "performance", label: "Performance" as const }] : []),
+      ...(isManager !== false ? [{ value: "team", label: "Team" as const, perm: "main.tasks.overview" }] : []),
+      { value: "mytasks", label: "My Tasks", perm: "main.tasks.my_tasks" },
+      ...(user?.role === "MD" ? [{ value: "performance", label: "Performance" as const, perm: "main.tasks.my_tasks" }] : []),
     ],
     [isManager, user?.role, badges]
   )
 
-  const validTabValues = useMemo(() => new Set(tabs.map((t) => t.value)), [tabs])
+  const { allowedTabs, isLoading: isPermsLoading } = useTabPermissions(tabs, activeTab, setActiveTab)
+
+  const validTabValues = useMemo(() => new Set(allowedTabs.map((t) => t.value)), [allowedTabs])
 
   const syncFromHash = useCallback(() => {
     if (typeof window === "undefined") return
     const hash = window.location.hash.slice(1)
-    const defaultTab = "overview"
+    const defaultTab = allowedTabs.length > 0 ? allowedTabs[0].value : "overview"
     const effectiveHash = hash || defaultTab
     if (effectiveHash === "all" || effectiveHash === "approval") {
-      setActiveTab("overview")
-      if (typeof window !== "undefined") window.location.hash = "overview"
+      setActiveTab(defaultTab)
+      if (typeof window !== "undefined") window.location.hash = defaultTab
       return
     }
     if (effectiveHash === "team" && isManager === false) {
-      setActiveTab("overview")
+      setActiveTab(defaultTab)
       return
     }
     if (effectiveHash === "performance" && user?.role !== "MD") {
-      setActiveTab("overview")
+      setActiveTab(defaultTab)
       return
     }
     setActiveTab(validTabValues.has(effectiveHash) ? effectiveHash : defaultTab)
-  }, [isManager, user?.role, validTabValues])
+  }, [isManager, user?.role, validTabValues, allowedTabs])
 
   useEffect(() => {
     syncFromHash()
@@ -107,18 +98,24 @@ export default function MDTasksPage() {
     (value: string) => {
       if (!validTabValues.has(value)) return
       if (value === "team" && !isManager) {
-        value = "overview"
+        value = allowedTabs.length > 0 ? allowedTabs[0].value : "overview"
       }
       if (typeof window !== "undefined") {
         window.location.hash = value
       }
       setActiveTab(value)
     },
-    [isManager, validTabValues]
+    [isManager, validTabValues, allowedTabs]
   )
 
   return (
-    <div className="flex flex-col min-h-0 w-full max-w-5xl mx-auto px-2 md:px-0">
+    <PermissionsGuard
+      isLoading={isPermsLoading}
+      hasAccess={allowedTabs.length > 0}
+      resourceName="MD Tasks"
+      variant="page"
+    >
+      <div className="flex flex-col min-h-0 w-full max-w-5xl mx-auto px-2 md:px-0">
       <div className="shrink-0 space-y-3 md:space-y-4 pb-3 md:pb-4">
         {!isMobile && (
           <TaskInput
@@ -130,7 +127,7 @@ export default function MDTasksPage() {
       </div>
 
       <TabNavigation
-        tabs={tabs}
+        tabs={allowedTabs}
         value={activeTab}
         onValueChange={handleTabChange}
         variant="tasks"
@@ -163,5 +160,6 @@ export default function MDTasksPage() {
         </>
       )}
     </div>
+    </PermissionsGuard>
   )
 }

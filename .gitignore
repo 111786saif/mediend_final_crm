@@ -53,6 +53,9 @@ public/sw.js
 public/workbox-*.js
 public/swe-worker-*.js
 
-generated/prisma/*
-docs/
-public/
+# Local dev file uploads (when S3 is not configured)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+/generated
+/docs/

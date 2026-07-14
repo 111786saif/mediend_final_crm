@@ -4,6 +4,8 @@ import { FEATURE_KEYS } from '@/lib/feature-keys'
 
 export { FEATURE_KEYS } from '@/lib/feature-keys'
 export type { FeatureKey } from '@/lib/feature-keys'
+import { resolvePermission, levelSatisfies } from '@/lib/rbac-new'
+import { PermissionLevel } from '@/generated/prisma/client'
 
 /**
  * Check if user is in MD's task team or watchlist (any MD).
@@ -20,13 +22,21 @@ async function isUserInMDTeamOrWatchlist(userId: string): Promise<boolean> {
 
 /**
  * Check if a user has a specific feature permission.
- * First checks UserFeaturePermission table for explicit toggle.
+ * First checks new PermissionAssignment table, then falls back to legacy UserFeaturePermission table.
  * Falls back to role-based defaults (e.g. MD team members get md_approval_request by default).
  */
 export async function hasFeaturePermission(
   userId: string,
   featureKey: string
 ): Promise<boolean> {
+  // Check database-backed PermissionAssignment table first
+  const resourceKey = `sidebar.actions.${featureKey}`
+  const effective = await resolvePermission(userId, resourceKey)
+  if (effective.level !== PermissionLevel.NONE) {
+    return levelSatisfies(effective.level, PermissionLevel.FULL_ACCESS)
+  }
+
+  // Fallback to legacy UserFeaturePermission table
   const explicit = await prisma.userFeaturePermission.findUnique({
     where: { userId_featureKey: { userId, featureKey } },
     select: { enabled: true },

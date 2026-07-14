@@ -18,6 +18,12 @@ import {
   CreditCard,
   FileText,
   Info,
+  Briefcase,
+  Upload,
+  Eye,
+  CheckCircle2,
+  Clock,
+  File,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { BirthdayCard } from '@/components/birthday-card'
@@ -25,6 +31,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import { ChangePasswordDialog } from './change-password-dialog'
 import { EditProfileDialog, type ProfileData } from './edit-profile-dialog'
+import { Badge } from '@/components/ui/badge'
 
 function maskPan(pan: string) {
   if (pan.length < 5) return pan
@@ -48,7 +55,7 @@ function maskUan(uan: string) {
   return '••••••••' + cleaned.slice(-4)
 }
 
-// ── Field row (mobile-friendly tap target) ───────────────────────────────────
+// ── Field row ─────────────────────────────────────────────────────────────────
 function FieldRow({
   icon: Icon,
   label,
@@ -83,6 +90,54 @@ function FieldRow({
   )
 }
 
+// ── Document card ─────────────────────────────────────────────────────────────
+type DocStatus = 'verified' | 'pending' | 'not_uploaded'
+
+function DocumentCard({
+  label,
+  docUrl,
+  status,
+}: {
+  label: string
+  docUrl: string | null
+  status: DocStatus
+}) {
+  return (
+    <div className="rounded-xl border bg-muted/30 p-3 flex flex-col gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+            <File className="size-4 text-muted-foreground" />
+          </div>
+          <span className="text-sm font-medium truncate">{label}</span>
+        </div>
+        {status === 'verified' && (
+          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 rounded-full px-2 py-0.5 shrink-0">
+            <CheckCircle2 className="size-3" /> Verified
+          </span>
+        )}
+        {status === 'pending' && (
+          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-600 bg-amber-50 dark:bg-amber-950/40 rounded-full px-2 py-0.5 shrink-0">
+            <Clock className="size-3" /> Pending
+          </span>
+        )}
+      </div>
+      {docUrl ? (
+        <a
+          href={docUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+        >
+          <Eye className="size-3" /> View document
+        </a>
+      ) : (
+        <p className="text-xs text-muted-foreground">No document uploaded yet</p>
+      )}
+    </div>
+  )
+}
+
 // ── Section block ─────────────────────────────────────────────────────────────
 function Section({
   title,
@@ -103,6 +158,35 @@ function Section({
   )
 }
 
+// ── Dummy data (remove when API is ready) ─────────────────────────────────────
+const DUMMY_PAST_EMPLOYERS = [
+  {
+    id: '1',
+    companyName: 'Acme Corp Pvt Ltd',
+    designation: 'Sales Executive',
+    fromDate: '2021-06-01',
+    toDate: '2023-03-31',
+    reasonForLeaving: 'Better opportunity',
+    referenceContact: '+91 98765 00001',
+  },
+  {
+    id: '2',
+    companyName: 'Zenith Solutions',
+    designation: 'Business Associate',
+    fromDate: '2019-09-01',
+    toDate: '2021-05-31',
+    reasonForLeaving: 'Career growth',
+    referenceContact: null,
+  },
+]
+
+const DUMMY_OTHER_DOCS = [
+  { id: '1', label: 'Offer Letter', docUrl: null, status: 'not_uploaded' as DocStatus },
+  { id: '2', label: 'Relieving Letter', docUrl: null, status: 'not_uploaded' as DocStatus },
+  { id: '3', label: 'Experience Certificate', docUrl: null, status: 'not_uploaded' as DocStatus },
+  { id: '4', label: 'Educational Certificate', docUrl: null, status: 'pending' as DocStatus },
+]
+
 export default function ProfilePage() {
   const queryClient = useQueryClient()
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -116,6 +200,13 @@ export default function ProfilePage() {
 
   const user = profile?.user
   const employee = profile?.employee
+
+  // Dummy doc statuses — replace with real fields when API has them
+  const aadharDocUrl = employee?.aadharDocUrl ?? null
+  const panDocUrl = employee?.panDocUrl ?? null
+  const aadharDocStatus: DocStatus = aadharDocUrl ? 'verified' : 'not_uploaded'
+  const panDocStatus: DocStatus = panDocUrl ? 'verified' : 'not_uploaded'
+  const uanDocStatus: DocStatus = employee?.uanNumber ? 'pending' : 'not_uploaded'
 
   if (isLoading) {
     return (
@@ -144,11 +235,10 @@ export default function ProfilePage() {
     <div className="pb-8">
       {employee && <BirthdayCard />}
 
-      {/* Profile card - photo left, info & buttons right */}
+      {/* Profile card */}
       <div className="px-4 sm:px-6 max-w-2xl mx-auto">
         <div className="rounded-2xl border bg-card p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start">
-            {/* Photo - left */}
             <Avatar className="size-20 sm:size-24 border-2 border-border shrink-0">
               <AvatarImage src={user.profilePicture ?? undefined} alt={user.name} />
               <AvatarFallback className="text-xl bg-primary/10 text-primary font-semibold">
@@ -156,7 +246,6 @@ export default function ProfilePage() {
               </AvatarFallback>
             </Avatar>
 
-            {/* Info & buttons - right */}
             <div className="flex-1 min-w-0 w-full text-center sm:text-left">
               <h1 className="text-xl font-semibold truncate">{user.name}</h1>
               <span className="mt-1 inline-flex rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium">
@@ -213,8 +302,9 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Content - single column, stacked sections */}
-      <div className="space-y-4 px-4 sm:px-6 max-w-2xl mx-auto">
+      {/* Content sections */}
+      <div className="space-y-4 px-4 sm:px-6 max-w-2xl mx-auto mt-4">
+
         {/* Personal */}
         <Section title="Personal">
           <div className="divide-y divide-border/60 -mx-4 sm:-mx-5">
@@ -342,6 +432,110 @@ export default function ProfilePage() {
             </p>
           </Section>
         )}
+
+        {/* Identity Documents */}
+        {employee && (
+          <Section title="Identity documents">
+            <p className="text-xs text-muted-foreground px-1 mb-3">
+              Upload clear copies of your identity documents. Documents are reviewed by HR.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <DocumentCard
+                label="PAN Card"
+                docUrl={panDocUrl}
+                status={panDocStatus}
+              />
+              <DocumentCard
+                label="Aadhar Card"
+                docUrl={aadharDocUrl}
+                status={aadharDocStatus}
+              />
+              <DocumentCard
+                label="UAN / PF"
+                docUrl={null}
+                status={uanDocStatus}
+              />
+            </div>
+            <p className="mt-3 pt-3 border-t border-border/60 text-xs text-muted-foreground flex items-center gap-1.5">
+              <Info className="size-3.5 shrink-0" />
+              Contact HR to update or replace uploaded documents
+            </p>
+          </Section>
+        )}
+
+        {/* Past Employment */}
+        <Section title="Past employment">
+          {DUMMY_PAST_EMPLOYERS.length === 0 ? (
+            <div className="py-6 text-center text-sm text-muted-foreground">
+              No past employment records added
+            </div>
+          ) : (
+            <div className="space-y-3 mt-2">
+              {DUMMY_PAST_EMPLOYERS.map((emp, idx) => (
+                <div
+                  key={emp.id}
+                  className="rounded-xl border bg-muted/30 p-3 sm:p-4 space-y-2"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center shrink-0 mt-0.5">
+                      <Briefcase className="size-4 text-muted-foreground" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold truncate">{emp.companyName}</p>
+                      <p className="text-xs text-muted-foreground">{emp.designation}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {format(new Date(emp.fromDate), 'MMM yyyy')} —{' '}
+                        {emp.toDate ? format(new Date(emp.toDate), 'MMM yyyy') : 'Present'}
+                      </p>
+                    </div>
+                  </div>
+                  {(emp.reasonForLeaving || emp.referenceContact) && (
+                    <div className="pl-12 space-y-1">
+                      {emp.reasonForLeaving && (
+                        <p className="text-xs text-muted-foreground">
+                          <span className="font-medium text-foreground/70">Reason: </span>
+                          {emp.reasonForLeaving}
+                        </p>
+                      )}
+                      {emp.referenceContact && (
+                        <p className="text-xs text-muted-foreground">
+                          <span className="font-medium text-foreground/70">Reference: </span>
+                          {emp.referenceContact}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          <p className="mt-3 pt-3 border-t border-border/60 text-xs text-muted-foreground flex items-center gap-1.5">
+            <Info className="size-3.5 shrink-0" />
+            Past employment details can be added or updated via Edit profile
+          </p>
+        </Section>
+
+        {/* Other Documents */}
+        <Section title="Other documents">
+          <p className="text-xs text-muted-foreground px-1 mb-3">
+            Supporting documents such as offer letters, relieving letters, and certificates.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {DUMMY_OTHER_DOCS.map((doc) => (
+              <DocumentCard
+                key={doc.id}
+                label={doc.label}
+                docUrl={doc.docUrl}
+                status={doc.status}
+              />
+            ))}
+          </div>
+          <p className="mt-3 pt-3 border-t border-border/60 text-xs text-muted-foreground flex items-center gap-1.5">
+            <Info className="size-3.5 shrink-0" />
+            Contact HR to upload or update supporting documents
+          </p>
+        </Section>
+
       </div>
 
       <ChangePasswordDialog

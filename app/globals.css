@@ -68,46 +68,46 @@
 .dark {
   --radius: 0.85rem;
 
-  --sidebar: 6 45 76;
-  --sidebar-foreground: 230 236 242;
+  --sidebar: 9 14 23;
+  --sidebar-foreground: 226 232 240;
 
-  --background: 13 18 24;
-  --foreground: 230 236 242;
+  --background: 9 14 23;
+  --foreground: 226 232 240;
 
-  --card: 22 27 34;
-  --card-foreground: 230 236 242;
+  --card: 21 29 48;
+  --card-foreground: 226 232 240;
 
-  --popover: 22 27 34;
-  --popover-foreground: 230 236 242;
+  --popover: 21 29 48;
+  --popover-foreground: 226 232 240;
 
-  --input: 31 36 43;
+  --input: 30 40 62;
 
-  --border: 41 46 53;
+  --border: 38 50 76;
 
-  --primary: 0 149 143;
-  --primary-foreground: 3 7 6;
+  --primary: 99 102 241;
+  --primary-foreground: 255 255 255;
 
-  --secondary: 29 34 41;
-  --secondary-foreground: 217 223 229;
+  --secondary: 26 36 58;
+  --secondary-foreground: 203 213 225;
 
-  --muted: 29 34 41;
-  --muted-foreground: 152 159 168;
+  --muted: 26 36 58;
+  --muted-foreground: 148 163 184;
 
-  --accent: 27 51 49;
-  --accent-foreground: 230 236 242;
+  --accent: 36 49 78;
+  --accent-foreground: 226 232 240;
 
-  --destructive: 232 88 84;
+  --destructive: 239 68 68;
 
-  --ring: 0 149 143;
+  --ring: 99 102 241;
 
-  --sidebar-primary: 30 197 183;
-  --sidebar-primary-foreground: 6 45 76;
+  --sidebar-primary: 99 102 241;
+  --sidebar-primary-foreground: 255 255 255;
 
-  --sidebar-accent: 30 197 183;
-  --sidebar-accent-foreground: 6 45 76;
+  --sidebar-accent: 30 41 64;
+  --sidebar-accent-foreground: 226 232 240;
 
-  --sidebar-border: 52 59 69;
-  --sidebar-ring: 30 197 183;
+  --sidebar-border: 32 42 60;
+  --sidebar-ring: 99 102 241;
 }
 
 @layer base {
@@ -136,9 +136,9 @@
   font-family: var(--font-inter), system-ui, sans-serif;
 }
 .dark .fc-calendar-modern .fc {
-  --fc-border-color: rgba(255, 255, 255, 0.15);
-  --fc-today-bg-color: #212d47;
-  --fc-neutral-bg-color: #27272a;
+  --fc-border-color: rgba(255, 255, 255, 0.12);
+  --fc-today-bg-color: #1b2540;
+  --fc-neutral-bg-color: #161e2e;
 }
 .fc-calendar-modern .fc-toolbar-title {
   font-size: 1.25rem;
@@ -159,7 +159,7 @@
   padding: 0.5rem 0;
 }
 .dark .fc-calendar-modern .fc-col-header-cell {
-  background: #27272a;
+  background: #161e2e;
 }
 .fc-calendar-modern .fc-daygrid-day-number {
   border-radius: 9999px;
@@ -200,3 +200,21 @@
     display: none !important;
   }
 }
+
+.dark .fc-calendar-modern .fc {
+  --fc-border-color: rgba(255, 255, 255, 0.12);
+  --fc-today-bg-color: #1b2540;
+  --fc-neutral-bg-color: #161e2e;
+}
+
+.dark .fc-calendar-modern .fc-col-header-cell {
+  background: #161e2e;
+}
+
+/* Make native date/month picker indicator white/visible in dark mode */
+.dark input[type="date"]::-webkit-calendar-picker-indicator,
+.dark input[type="month"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+

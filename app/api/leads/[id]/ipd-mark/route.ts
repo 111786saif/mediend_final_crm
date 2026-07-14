@@ -14,7 +14,50 @@ const ipdMarkSchema = z.object({
   newSurgeryDate: z.string().optional(),
   surgeryDate: z.string().optional(),
   notes: z.string().optional(),
+  patientName: z.string().optional(),
+  aadharDocumentUrl: z.string().optional(),
+  aadharFiles: z
+    .array(z.object({ name: z.string(), url: z.string() }))
+    .optional(),
 })
+
+const IPD_PATIENT_DETAIL_STATUSES = new Set(['ADMITTED_DONE', 'IPD_DONE'])
+
+async function persistIpdMarkPatientDetails(
+  leadId: string,
+  userId: string,
+  patientName: string,
+  aadharDocumentUrl: string,
+  aadharFiles: { name: string; url: string }[]
+) {
+  await prisma.lead.update({
+    where: { id: leadId },
+    data: { patientName: patientName.trim() },
+  })
+
+  const aadharPayload = {
+    aadharFileUrl: aadharDocumentUrl,
+    aadharFiles,
+  }
+
+  const existing = await prisma.kYPSubmission.findUnique({ where: { leadId } })
+  if (existing) {
+    await prisma.kYPSubmission.update({
+      where: { leadId },
+      data: aadharPayload,
+    })
+    return
+  }
+
+  await prisma.kYPSubmission.create({
+    data: {
+      leadId,
+      submittedById: userId,
+      status: 'PENDING',
+      ...aadharPayload,
+    },
+  })
+}
 
 export async function POST(
   request: NextRequest,
@@ -53,7 +96,7 @@ export async function POST(
     const isCashFlow = lead.flowType === 'CASH'
     const allowedStages: CaseStage[] = isCashFlow
       ? [CaseStage.CASH_APPROVED, CaseStage.CASH_IPD_SUBMITTED]
-      : [CaseStage.INITIATED]
+      : [CaseStage.INITIATED, CaseStage.ADMITTED]
 
     if (!allowedStages.includes(lead.caseStage)) {
       return errorResponse(`Cannot mark IPD status. Current stage: ${lead.caseStage}.`, 400)
@@ -64,6 +107,18 @@ export async function POST(
     }
 
     // Validate conditional fields based on status
+    if (IPD_PATIENT_DETAIL_STATUSES.has(data.status)) {
+      if (!data.patientName?.trim()) {
+        return errorResponse('Patient name is required when marking IPD', 400)
+      }
+      const primaryUrl =
+        data.aadharDocumentUrl?.trim() ||
+        data.aadharFiles?.find((f) => f.url.trim())?.url.trim()
+      if (!primaryUrl) {
+        return errorResponse('Aadhaar document upload is required when marking IPD', 400)
+      }
+    }
+
     if (data.status === 'IPD_DONE') {
       if (!data.surgeryDate?.trim()) {
         return errorResponse('Surgery date is required when marking surgery done', 400)
@@ -82,6 +137,27 @@ export async function POST(
     if (data.status === 'CANCELLED') {
       if (!data.reason?.trim()) {
         return errorResponse('Reason is required for cancelled status', 400)
+      }
+    }
+
+    if (IPD_PATIENT_DETAIL_STATUSES.has(data.status)) {
+      const primaryUrl =
+        data.aadharDocumentUrl?.trim() ||
+        data.aadharFiles?.find((f) => f.url.trim())?.url.trim()
+      const files =
+        data.aadharFiles && data.aadharFiles.length > 0
+          ? data.aadharFiles
+          : primaryUrl
+            ? [{ name: 'Aadhaar', url: primaryUrl }]
+            : []
+      if (primaryUrl && data.patientName?.trim()) {
+        await persistIpdMarkPatientDetails(
+          leadId,
+          user.id,
+          data.patientName.trim(),
+          primaryUrl,
+          files
+        )
       }
     }
 
@@ -110,15 +186,13 @@ export async function POST(
     let toStage: CaseStage = lead.caseStage
 
     if (isCashFlow) {
-      if (data.status === 'IPD_DONE' || data.status === 'ADMITTED_DONE') {
+      if (data.status === 'IPD_DONE') {
         toStage = CaseStage.CASH_IPD_DONE
         leadUpdateData.caseStage = CaseStage.CASH_IPD_DONE
-        if (data.status === 'IPD_DONE') {
-          const surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : new Date()
-          leadUpdateData.surgeryDate = surgeryDate
-          leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
-          leadUpdateData.conversionDate = surgeryDate
-        }
+        const surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : new Date()
+        leadUpdateData.surgeryDate = surgeryDate
+        leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
+        leadUpdateData.conversionDate = surgeryDate
       }
     } else {
       if (data.status === 'IPD_DONE') {
@@ -128,6 +202,9 @@ export async function POST(
         leadUpdateData.surgeryDate = surgeryDate
         leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
         leadUpdateData.conversionDate = surgeryDate
+      } else if (data.status === 'ADMITTED_DONE') {
+        toStage = CaseStage.ADMITTED
+        leadUpdateData.caseStage = CaseStage.ADMITTED
       }
     }
 

@@ -6,7 +6,7 @@ set -e
 # Run this on your VPS server to configure cron jobs
 # ============================================================
 
-APP_DIR="/opt/mediend-crm/mediend-crm2"
+APP_DIR="/root/mediend.workspace"
 ENV_FILE="${APP_DIR}/.env"
 
 echo "===> Setting up cron jobs for Mediend CRM..."
@@ -17,13 +17,13 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
-# Check if .env.production exists
+# Check if .env exists
 if [ ! -f "$ENV_FILE" ]; then
-  echo "Error: .env.production not found at $ENV_FILE"
+  echo "Error: .env not found at $ENV_FILE"
   exit 1
 fi
 
-# Extract CRON_SECRET from .env.production
+# Extract CRON_SECRET from .env
 CRON_SECRET=$(grep "^CRON_SECRET=" "$ENV_FILE" | cut -d '=' -f2- | tr -d '"' | tr -d "'" | xargs)
 
 if [ -z "$CRON_SECRET" ]; then

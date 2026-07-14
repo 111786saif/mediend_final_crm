@@ -17,9 +17,9 @@ export interface LeadFilters {
   source?: string
   startDate?: string
   endDate?: string
+  dateField?: string
   caseStage?: string
   view?: string
-  /** Last 10 digits — server-only filter; omit from list responses */
   phoneSearch?: string
 }
 
@@ -43,6 +43,7 @@ export interface Lead {
   insuranceName?: string
   tpa?: string
   sumInsured?: number
+  flowType?: 'INSURANCE' | 'CASH'
   netProfit?: number
   surgeryDate?: string | Date | null
   source?: string
@@ -110,7 +111,8 @@ export interface Lead {
   [key: string]: unknown
 }
 
-export function useLeads(filters: LeadFilters = {}) {
+export function useLeads(filters: LeadFilters = {}, options: { enabled?: boolean } = {}) {
+  const { enabled = true } = options
   const queryClient = useQueryClient()
   const [cachedData, setCachedData] = useState<Lead[] | null>(null)
 
@@ -124,7 +126,7 @@ export function useLeads(filters: LeadFilters = {}) {
     })
   }, [cacheKey])
 
-  const query = useQuery({
+const query = useQuery({
     queryKey: ['leads', filters],
     queryFn: async () => {
       const params = new URLSearchParams()
@@ -135,7 +137,7 @@ export function useLeads(filters: LeadFilters = {}) {
       await cacheLeads(cacheKey, data)
       return data
     },
-    enabled: true,
+    enabled,
     placeholderData: cachedData || undefined,
   })
 

@@ -4,13 +4,41 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { successResponse, errorResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-utils'
-import { z } from 'zod'
+import { emptyToNull, hospitalMasterFieldsSchema } from '@/lib/masters/schemas'
 
-const postBody = z.object({
-  name: z.string().min(1).max(500),
-  address: z.string().max(10000).optional().nullable(),
-  googleMapLink: z.string().max(2000).optional().nullable().or(z.literal('')),
-})
+function mapHospital(row: {
+  id: string
+  name: string
+  address: string | null
+  googleMapLink: string | null
+  mouAgreementUrl: string | null
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+  insuranceProviders: { insuranceId: string; insurance: { id: string; name: string } }[]
+}) {
+  return {
+    id: row.id,
+    name: row.name,
+    address: row.address,
+    googleMapLink: row.googleMapLink,
+    mouAgreementUrl: row.mouAgreementUrl,
+    isActive: row.isActive,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+    insuranceIds: row.insuranceProviders.map((p) => p.insuranceId),
+    insuranceProviders: row.insuranceProviders.map((p) => ({
+      id: p.insurance.id,
+      name: p.insurance.name,
+    })),
+  }
+}
+
+const hospitalInclude = {
+  insuranceProviders: {
+    include: { insurance: { select: { id: true, name: true } } },
+  },
+} as const
 
 export async function GET(request: NextRequest) {
   const user = getSessionFromRequest(request)
@@ -29,13 +57,14 @@ export async function GET(request: NextRequest) {
     where.name = { contains: search, mode: 'insensitive' }
   }
 
-  const items = await prisma.hospitalMaster.findMany({
+  const rows = await prisma.hospitalMaster.findMany({
     where,
+    include: hospitalInclude,
     orderBy: { name: 'asc' },
     take: 500,
   })
 
-  return successResponse({ items })
+  return successResponse({ items: rows.map(mapHospital) })
 }
 
 export async function POST(request: NextRequest) {
@@ -50,13 +79,15 @@ export async function POST(request: NextRequest) {
     return errorResponse('Invalid JSON', 400)
   }
 
-  const parsed = postBody.safeParse(body)
+  const parsed = hospitalMasterFieldsSchema.safeParse(body)
   if (!parsed.success) {
     return errorResponse(parsed.error.flatten().formErrors.join(', ') || 'Invalid body', 400)
   }
 
-  const { name, address, googleMapLink } = parsed.data
-  const link = googleMapLink === '' ? null : googleMapLink ?? null
+  const { name, address, googleMapLink, mouAgreementUrl, isActive, insuranceIds } = parsed.data
+  const link = emptyToNull(googleMapLink ?? null)
+  const mou = emptyToNull(mouAgreementUrl ?? null)
+  const ids = [...new Set(insuranceIds ?? [])]
 
   try {
     const created = await prisma.hospitalMaster.create({
@@ -64,9 +95,16 @@ export async function POST(request: NextRequest) {
         name: name.trim(),
         address: address?.trim() || null,
         googleMapLink: link,
+        mouAgreementUrl: mou,
+        isActive: isActive ?? true,
+        insuranceProviders:
+          ids.length > 0
+            ? { create: ids.map((insuranceId) => ({ insuranceId })) }
+            : undefined,
       },
+      include: hospitalInclude,
     })
-    return successResponse({ item: created })
+    return successResponse({ item: mapHospital(created) })
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
       return errorResponse('A hospital with this name already exists', 409)

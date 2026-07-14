@@ -1,0 +1,21 @@
+-- User profile fields
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "gender" TEXT;
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "emergencyContactName" TEXT;
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "emergencyContactPhone" TEXT;
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "currentAddress" JSONB;
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "permanentAddress" JSONB;
+
+-- Employee profile fields
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "bloodGroup" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "employmentType" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "workLocation" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "bankName" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "bankBranch" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "upiId" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "passportDocUrl" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "drivingLicenseDocUrl" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "resumeDocUrl" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "educationalCertDocUrl" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "experienceCertDocUrl" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "appointmentLetterDocUrl" TEXT;
+ALTER TABLE "Employee" ADD COLUMN IF NOT EXISTS "otherDocuments" JSONB;

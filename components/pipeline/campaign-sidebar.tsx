@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { ChevronDown, ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
@@ -82,32 +83,43 @@ function buildTreeFingerprint(
 }
 
 export const CampaignSidebar = memo(function CampaignSidebar({
-  leads,
+  leads = [],
+  tree: treeProp,
+  totalLeads: totalLeadsProp,
   groupBy,
   onGroupByChange,
   selection,
   onSelect,
   collapsed,
   onCollapsedChange,
+  isLoading = false,
   className,
 }: {
-  leads: { circle?: string | null; campaignName?: string | null; treatment?: string | null }[]
+  leads?: { circle?: string | null; campaignName?: string | null; treatment?: string | null }[]
+  /** Prefetched server-side campaign tree (preferred for large datasets). */
+  tree?: ReturnType<typeof buildCampaignTree>
+  totalLeads?: number
   groupBy: SidebarGroupMode
   onGroupByChange: (value: SidebarGroupMode) => void
   selection: CampaignSelection
   onSelect: (s: CampaignSelection) => void
   collapsed: boolean
   onCollapsedChange: (next: boolean) => void
+  isLoading?: boolean
   className?: string
 }) {
-  const fingerprint = useMemo(() => buildTreeFingerprint(leads, groupBy), [leads, groupBy])
+  const fingerprint = useMemo(
+    () => (treeProp ? '' : buildTreeFingerprint(leads, groupBy)),
+    [leads, groupBy, treeProp],
+  )
   const prevRef = useRef<{ fp: string; tree: ReturnType<typeof buildCampaignTree> }>({ fp: '', tree: [] })
   const tree = useMemo(() => {
+    if (treeProp) return treeProp
     if (prevRef.current.fp === fingerprint) return prevRef.current.tree
     const built = buildCampaignTree(leads, groupBy)
     prevRef.current = { fp: fingerprint, tree: built }
     return built
-  }, [fingerprint, groupBy, leads])
+  }, [fingerprint, groupBy, leads, treeProp])
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
 
@@ -119,7 +131,7 @@ export const CampaignSidebar = memo(function CampaignSidebar({
     })
   }, [tree])
 
-  const totalLeads = leads.length
+  const totalLeads = totalLeadsProp ?? leads.length
   const groupLabel = groupLabelForMode(groupBy)
 
   return (
@@ -197,6 +209,13 @@ export const CampaignSidebar = memo(function CampaignSidebar({
           </button>
 
           <div className="flex-1 overflow-y-auto pr-1">
+            {isLoading && tree.length === 0 ? (
+              <div className="space-y-2 px-1 py-1">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <Skeleton key={i} className="h-8 w-full rounded-lg" />
+                ))}
+              </div>
+            ) : null}
             {tree.map(({ groupValue, total, campaigns }) => {
               const open = openGroups[groupValue] ?? true
               const isCircleMode = groupBy === 'circle'

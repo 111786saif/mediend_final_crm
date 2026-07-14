@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useBadgeCounts } from '@/hooks/use-badge-counts'
 import { ProtectedRoute } from '@/components/protected-route'
 import { AppSidebar } from '@/components/app-sidebar'
+import { RouteGuard } from '@/components/route-guard'
 import {
   SidebarProvider,
   SidebarInset,
@@ -21,6 +22,7 @@ import { PageTransition } from '@/components/page-transition'
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import { hasPermission } from '@/lib/rbac'
+import { canAccessChat } from '@/lib/chat/access'
 import type { SessionUser } from '@/lib/auth'
 import { usePushSubscription } from '@/hooks/use-push-subscription'
 import { WorkLogEnforcer } from '@/components/calendar/work-log-enforcer'
@@ -139,7 +141,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
     const hasMessages =
       u.role === 'MD' ||
       u.role === 'ADMIN' ||
-      ['BD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
+      canAccessChat(u)
     const hasSupport = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
     const hasFinancial = ['USER', 'BD', 'SALES_HEAD', 'TEAM_LEAD', 'INSURANCE_HEAD', 'PL_HEAD', 'HR_HEAD', 'FINANCE_HEAD', 'ADMIN', 'DIGITAL_MARKETING_HEAD'].includes(u.role)
 
@@ -302,11 +304,13 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
             </div>
 
             <main
-              className="flex flex-1 flex-col gap-4 p-4 pt-14 md:p-6 md:pt-6 bg-background pb-24 md:pb-6"
+              className="flex min-w-0 flex-1 flex-col gap-4 p-4 pt-14 md:p-6 md:pt-6 bg-background pb-24 md:pb-6"
             >
-              <PageTransition>
-                {children}
-              </PageTransition>
+              <RouteGuard>
+                <PageTransition>
+                  {children}
+                </PageTransition>
+              </RouteGuard>
             </main>
 
             {/* Unified bottom nav - all roles */}

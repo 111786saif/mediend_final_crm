@@ -12,6 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPost, apiPatch } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
+import { useTabPermissions } from '@/hooks/use-tab-permissions'
+import { PermissionsGuard } from '@/components/permissions-guard'
+import { cn } from '@/lib/utils'
 import { useQuery as usePermissionQuery } from '@tanstack/react-query'
 import { Check, X, ChevronLeft, ChevronRight, Plus, CheckCircle, Clock, Paperclip, LayoutGrid, LayoutList, Filter, Search } from 'lucide-react'
 import { format } from 'date-fns'
@@ -251,6 +254,17 @@ export default function MDApprovalsPage() {
   const queryClient = useQueryClient()
   const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('pending')
+
+  const staticTabs = useMemo(
+    () => [
+      { value: 'pending', label: 'Pending', perm: 'myhrms.ask_md_approval.pending' },
+      { value: 'history', label: 'History', perm: 'myhrms.ask_md_approval.history' },
+    ],
+    []
+  )
+
+  const { allowedTabs, isLoading: isPermsLoading } = useTabPermissions(staticTabs, activeTab, setActiveTab)
+
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid')
   const [requestOpen, setRequestOpen] = useState(false)
   const [title, setTitle] = useState('')
@@ -457,7 +471,13 @@ export default function MDApprovalsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PermissionsGuard
+      isLoading={isPermsLoading}
+      hasAccess={allowedTabs.length > 0}
+      resourceName="MD Team Approvals"
+      variant="page"
+    >
+      <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-bold">MD Team Approvals</h1>
         <div className="flex items-center gap-2">
@@ -547,21 +567,29 @@ export default function MDApprovalsPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="pending" className="relative">
-            Pending
-            {pending.length > 0 && (
-              <Badge variant="secondary" className="ml-2 h-5 min-w-5 px-1.5 bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200">
-                {pending.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="history">
-            History
-            {history.length > 0 && (
-              <span className="ml-2 text-muted-foreground text-sm">({history.length})</span>
-            )}
-          </TabsTrigger>
+        <TabsList className={cn("grid w-full max-w-md", allowedTabs.length === 1 ? "grid-cols-1" : "grid-cols-2")}>
+          {allowedTabs.map((t) => {
+            if (t.value === 'pending') {
+              return (
+                <TabsTrigger key={t.value} value="pending" className="relative">
+                  Pending
+                  {pending.length > 0 && (
+                    <Badge variant="secondary" className="ml-2 h-5 min-w-5 px-1.5 bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200">
+                      {pending.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+              )
+            }
+            return (
+              <TabsTrigger key={t.value} value="history">
+                History
+                {history.length > 0 && (
+                  <span className="ml-2 text-muted-foreground text-sm">({history.length})</span>
+                )}
+              </TabsTrigger>
+            )
+          })}
         </TabsList>
 
         <TabsContent value="pending" className="mt-6">
@@ -907,5 +935,6 @@ export default function MDApprovalsPage() {
         </DialogContent>
       </Dialog>
     </div>
+    </PermissionsGuard>
   )
 }

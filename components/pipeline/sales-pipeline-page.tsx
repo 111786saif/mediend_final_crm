@@ -4,7 +4,6 @@ import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { CallNotesPopover } from '@/components/pipeline/call-notes-popover'
 import {
   CampaignSidebar,
-  type CampaignSelection,
   type SidebarGroupMode,
 } from '@/components/pipeline/campaign-sidebar'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
@@ -22,28 +21,33 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useAuth } from '@/hooks/use-auth'
-import { useLeads, type Lead } from '@/hooks/use-leads'
+import { usePipelinePage, usePipelineUrlState } from '@/hooks/use-pipeline'
+import type { Lead } from '@/hooks/use-leads'
 import { apiGet } from '@/lib/api-client'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
 import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { getStatusColor } from '@/lib/lead-status-colors'
-import {
-  getLeadReceiptDate,
-  getLeadPipelineBucket,
-  matchesLeadAgeFilter,
-  normalizeLeadStatus,
-  type LeadAgeFilter,
-  type PipelineStatusBucket,
-} from '@/lib/pipeline-lead-buckets'
-import { parsePhoneSearchQuery } from '@/lib/phone-search'
+import { getLeadReceiptDate, normalizeLeadStatus, type LeadAgeFilter } from '@/lib/pipeline-lead-buckets'
+import type { PipelineSortDir, PipelineSortField } from '@/lib/pipeline/server-query'
 import { useQuery } from '@tanstack/react-query'
-import { useVirtualizer } from '@tanstack/react-virtual'
 import { format } from 'date-fns'
-import { CalendarIcon, ExternalLink, FilePenLine, Pencil, Search } from 'lucide-react'
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Search,
+  FilePenLine,
+  Pencil,
+} from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useRef, useState, memo, useDeferredValue } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState, memo } from 'react'
 import { cn } from '@/lib/utils'
 
 interface Target {
@@ -86,23 +90,6 @@ function normalizedText(value: unknown, fallback: string): string {
   return (trimmed || fallback).replace(/\s+/g, ' ')
 }
 
-function groupValueForLead(lead: Lead, groupBy: SidebarGroupMode): string {
-  return groupBy === 'circle'
-    ? normalizedText(lead.circle, 'Unknown')
-    : normalizedText(lead.treatment, 'Unknown disease')
-}
-
-function filterByCampaign(leads: Lead[], sel: CampaignSelection): Lead[] {
-  if (sel.type === 'all') return leads
-  return leads.filter((l) => {
-    const groupValue = groupValueForLead(l, sel.groupBy)
-    const camp = normalizedText(l.campaignName, 'No campaign')
-    return groupValue === sel.groupValue && camp === sel.campaignLabel
-  })
-}
-
-const ROW_HEIGHT = 48
-const OVERSCAN = 30
 const OPENED_PIPELINE_LEADS_STORAGE_KEY = 'crm-pipeline-opened-leads'
 
 function readOpenedPipelineLeadIds() {
@@ -130,49 +117,77 @@ function writeOpenedPipelineLeadIds(nextIds: string[]) {
   }
 }
 
-export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) {
-  const { user } = useAuth()
-  const router = useRouter()
-  const scrollRef = useRef<HTMLDivElement>(null)
+const PAGE_SIZE_OPTIONS = [20, 50, 100]
 
-  const [campaignSelection, setCampaignSelection] = useState<CampaignSelection>({ type: 'all' })
-  const [sidebarGroupBy, setSidebarGroupBy] = useState<SidebarGroupMode>('circle')
+export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) {
+  return (
+    <Suspense fallback={<PipelinePageFallback variant={variant} />}>
+      <SalesPipelinePageInner variant={variant} />
+    </Suspense>
+  )
+}
+
+function PipelinePageFallback({ variant }: { variant: 'bd' | 'team-lead' }) {
+  const title = variant === 'bd' ? 'Pipeline' : 'Team pipeline'
+  return (
+    <AuthenticatedLayout>
+      <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-[#F2F2F7] dark:bg-background">
+        <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur-md dark:bg-background/90 md:px-6">
+          <h1 className="text-lg font-bold tracking-tight md:text-xl">{title}</h1>
+        </header>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          <PipelineStatusCards selected="all" onSelect={() => {}} isLoading />
+        </main>
+      </div>
+    </AuthenticatedLayout>
+  )
+}
+
+function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
+  const { user } = useAuth()
+  useRouter()
+
+  const { state, setState, campaignSelection, setCampaignSelection } = usePipelineUrlState()
+  const { data, isLoading, isFetching } = usePipelinePage()
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [statusBucket, setStatusBucket] = useState<PipelineStatusBucket>('all')
-  const [searchQuery, setSearchQuery] = useState('')
-  const debouncedSearch = useDebouncedValue(searchQuery, 250)
-  const [categoryBar, setCategoryBar] = useState<string>('all')
-  const [circleBar, setCircleBar] = useState<string>('all')
-  const [leadAgeFilter, setLeadAgeFilter] = useState<LeadAgeFilter>('all')
-  const [bdFilter, setBdFilter] = useState<string>('all')
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined)
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined)
   const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
   const [remarksLeadId, setRemarksLeadId] = useState<string | null>(null)
-  const [openedLeadIds, setOpenedLeadIds] = useState<string[]>([])
+  const [openedLeadIds, setOpenedLeadIds] = useState<string[]>(() => readOpenedPipelineLeadIds())
 
-  const phoneParsed = parsePhoneSearchQuery(debouncedSearch)
-
-  const leadFilters = useMemo(() => {
-    const f: Record<string, string> = { view: 'pipeline' }
-    if (variant === 'bd' && user?.id) f.bdId = user.id
-    // `teamId` is ignored by /api/leads today, but including a user-scoped value here
-    // keeps the client/query cache isolated per team lead instead of sharing one
-    // generic "pipeline" cache across all team-lead sessions.
-    if (variant === 'team-lead' && user?.id) f.teamId = user.id
-    if (phoneParsed) f.phoneSearch = phoneParsed.last10
-    return f
-  }, [variant, user?.id, phoneParsed])
-
-  const { leads, isLoading } = useLeads(leadFilters)
+  const [searchInput, setSearchInput] = useState(state.q)
+  const debouncedSearch = useDebouncedValue(searchInput, 300)
 
   useEffect(() => {
-    setOpenedLeadIds(readOpenedPipelineLeadIds())
-  }, [])
+    const id = window.setTimeout(() => {
+      setSearchInput(state.q)
+    }, 0)
+
+    return () => window.clearTimeout(id)
+  }, [state.q])
 
   useEffect(() => {
-    setCampaignSelection({ type: 'all' })
-  }, [sidebarGroupBy])
+    if (debouncedSearch !== state.q) {
+      setState({ q: debouncedSearch })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch])
+
+  const handleGroupByChange = useCallback(
+    (mode: SidebarGroupMode) => {
+      setState({ groupBy: mode, campaign: '', groupValue: '' })
+    },
+    [setState]
+  )
+
+  const handleSort = useCallback(
+    (field: PipelineSortField) => {
+      const nextDir: PipelineSortDir =
+        state.sort === field ? (state.dir === 'asc' ? 'desc' : 'asc') : field === 'date' ? 'desc' : 'asc'
+      setState({ sort: field, dir: nextDir })
+    },
+    [state.sort, state.dir, setState]
+  )
 
   const { data: targets } = useQuery<Target[]>({
     queryKey: ['targets', 'BD', user?.id],
@@ -181,7 +196,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   })
 
   const targetProgress = useMemo(() => {
-    if (variant !== 'bd' || !targets?.length || !leads.length) return null
+    if (variant !== 'bd' || !targets?.length || !data) return null
     const now = new Date()
     const activeTarget = targets
       .filter((t) => {
@@ -191,151 +206,22 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
       })
       .sort((a, b) => new Date(b.periodStartDate).getTime() - new Date(a.periodStartDate).getTime())[0]
     if (!activeTarget) return null
-    let actual = 0
-    switch (activeTarget.metric) {
-      case 'LEADS_CLOSED':
-        actual = leads.filter((lead) => {
-          const st = normalizeLeadStatus(lead.status).toLowerCase()
-          return ['ipd done', 'closed', 'call done', 'c/w done', 'wa done', 'scan done'].some((x) => st.includes(x))
-        }).length
-        break
-      case 'NET_PROFIT':
-        actual = leads.reduce((sum, lead) => sum + (lead.netProfit || 0), 0)
-        break
-      case 'BILL_AMOUNT':
-        actual = leads.reduce((sum, lead) => sum + (Number((lead as { billAmount?: number }).billAmount) || 0), 0)
-        break
-      case 'SURGERIES_DONE':
-        actual = leads.filter((lead) => (lead as { surgeryDate?: unknown }).surgeryDate != null).length
-        break
+
+    if (activeTarget.metric === 'LEADS_CLOSED') {
+      const actual = (data.statusCounts.closed ?? 0) + (data.statusCounts.ipd_done ?? 0)
+      const pct = activeTarget.targetValue > 0 ? Math.min(100, (actual / activeTarget.targetValue) * 100) : 0
+      return { target: activeTarget, actual, pct, showActual: true as const }
     }
-    const pct = activeTarget.targetValue > 0 ? Math.min(100, (actual / activeTarget.targetValue) * 100) : 0
-    return { target: activeTarget, actual, pct }
-  }, [variant, targets, leads])
+    return { target: activeTarget, actual: null, pct: null, showActual: false as const }
+  }, [variant, targets, data])
 
-  const campaignFiltered = useMemo(() => filterByCampaign(leads, campaignSelection), [leads, campaignSelection])
-
-  const uniqueCategories = useMemo(() => {
-    const s = new Set(campaignFiltered.map((l) => l.category).filter(Boolean) as string[])
-    return [...s].sort()
-  }, [campaignFiltered])
-
-  const uniqueCirclesBar = useMemo(() => {
-    const s = new Set(campaignFiltered.map((l) => normalizedText(l.circle, 'Unknown')))
-    return [...s].sort()
-  }, [campaignFiltered])
-
-  const bdOptions = useMemo(() => {
-    const m = new Map<string, string>()
-    for (const l of campaignFiltered) {
-      const id = l.bdId || l.bd?.id
-      const name = l.bd?.name
-      if (id && name) m.set(id, name)
-    }
-    return [...m.entries()].sort((a, b) => a[1].localeCompare(b[1]))
-  }, [campaignFiltered])
-
-  const tableFilters = useMemo(
-    () => ({
-      statusBucket,
-      bdFilter,
-      categoryBar,
-      circleBar,
-      leadAgeFilter,
-      startDate: startDate?.getTime() ?? null,
-      endDate: endDate?.getTime() ?? null,
-    }),
-    [statusBucket, bdFilter, categoryBar, circleBar, leadAgeFilter, startDate, endDate]
-  )
-
-  const deferredFilters = useDeferredValue(tableFilters)
-
-  const isFiltering = deferredFilters !== tableFilters
-
-  const tableRows = useMemo(() => {
-    let result = campaignFiltered
-
-    if (deferredFilters.statusBucket !== 'all') {
-      result = result.filter((l) => getLeadPipelineBucket(l.status) === deferredFilters.statusBucket)
-    }
-
-    if (deferredFilters.bdFilter !== 'all') {
-      result = result.filter((l) => (l.bdId || l.bd?.id) === deferredFilters.bdFilter)
-    }
-
-    if (debouncedSearch.trim() && !phoneParsed) {
-      const q = debouncedSearch.toLowerCase()
-      result = result.filter(
-        (lead) =>
-          String(lead.patientName ?? '').toLowerCase().includes(q) ||
-          String(lead.leadRef ?? '').toLowerCase().includes(q) ||
-          String(lead.circle ?? '').toLowerCase().includes(q) ||
-          String(lead.hospitalName ?? '').toLowerCase().includes(q) ||
-          String(lead.treatment ?? '').toLowerCase().includes(q) ||
-          String(lead.category ?? '').toLowerCase().includes(q) ||
-          String(lead.bd?.name ?? '').toLowerCase().includes(q)
-      )
-    }
-
-    if (deferredFilters.categoryBar !== 'all') {
-      result = result.filter((l) => (l.category ?? '') === deferredFilters.categoryBar)
-    }
-
-    if (deferredFilters.circleBar !== 'all') {
-      result = result.filter((l) => normalizedText(l.circle, 'Unknown') === deferredFilters.circleBar)
-    }
-
-    if (deferredFilters.leadAgeFilter !== 'all') {
-      result = result.filter((l) => matchesLeadAgeFilter(l, deferredFilters.leadAgeFilter))
-    }
-
-    if (deferredFilters.startDate || deferredFilters.endDate) {
-      result = result.filter((lead) => {
-        const receiptDate = getLeadReceiptDate(lead)
-        if (!receiptDate) return false
-        const leadOnly = new Date(receiptDate.getFullYear(), receiptDate.getMonth(), receiptDate.getDate())
-        const startOnly = deferredFilters.startDate
-        const endOnly = deferredFilters.endDate
-        if (startOnly && endOnly) return leadOnly >= new Date(startOnly) && leadOnly <= new Date(endOnly)
-        if (startOnly) return leadOnly >= new Date(startOnly)
-        if (endOnly) return leadOnly <= new Date(endOnly)
-        return true
-      })
-    }
-
-    return [...result].sort((a, b) => {
-      const ta = getLeadReceiptDate(a)?.getTime() ?? 0
-      const tb = getLeadReceiptDate(b)?.getTime() ?? 0
-      return tb - ta
-    })
-  }, [
-    campaignFiltered,
-    deferredFilters,
-    debouncedSearch,
-    phoneParsed,
-  ])
-
-  const virtualizer = useVirtualizer({
-    count: tableRows.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => ROW_HEIGHT,
-    overscan: OVERSCAN,
-  })
-
-  const visibleLeadIds = useMemo(() => {
-    const items = virtualizer.getVirtualItems()
-    return items.map((vi) => tableRows[vi.index]?.id).filter(Boolean) as string[]
-  }, [virtualizer.getVirtualItems(), tableRows])
-
-  const noteCountKey = useMemo(() => {
-    const sorted = [...visibleLeadIds].sort()
-    return sorted.join(',')
-  }, [visibleLeadIds])
+  const pageLeadIds = useMemo(() => (data?.leads ?? []).map((l) => l.id).filter(Boolean), [data?.leads])
+  const noteCountKey = useMemo(() => [...pageLeadIds].sort().join(','), [pageLeadIds])
 
   const { data: noteCounts = {} } = useQuery({
     queryKey: ['call-note-counts', noteCountKey],
-    queryFn: () => fetchNoteCountsForLeads(visibleLeadIds),
-    enabled: visibleLeadIds.length > 0 && !!user?.id,
+    queryFn: () => fetchNoteCountsForLeads(pageLeadIds),
+    enabled: pageLeadIds.length > 0 && !!user?.id,
     staleTime: 60_000,
     placeholderData: (prev) => prev,
   })
@@ -352,10 +238,16 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const handleRowClick = useCallback(
     (id: string) => {
       markLeadOpened(id)
-      router.push(`/patient/${id}`)
+      // router.push(`/patient/${id}`)
+      window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
     },
-    [markLeadOpened, router]
+    [markLeadOpened]
   )
+
+
+  // const handleRowClick = useCallback((id: string) => {
+  //   window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
+  // }, [])
 
   const handleEditLead = useCallback((id: string) => {
     markLeadOpened(id)
@@ -383,11 +275,19 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
   const subtitle =
     variant === 'bd' ? 'Campaigns, status breakdown, and all your leads' : 'Your team\u2019s leads by campaign and status'
 
-  const virtualItems = virtualizer.getVirtualItems()
-  const padTop = virtualItems.length > 0 ? virtualItems[0].start : 0
-  const padBottom = virtualItems.length > 0 ? virtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end : 0
-
   const colCount = variant === 'team-lead' ? 16 : 9
+
+  const tableRows: Lead[] = data?.leads ?? []
+  const total = data?.total ?? 0
+  const page = data?.page ?? state.page
+  const pageSize = data?.pageSize ?? state.pageSize
+  const totalPages = data?.totalPages ?? 1
+  const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1
+  const rangeEnd = Math.min(page * pageSize, total)
+  const isBackgroundRefetching = isFetching && !isLoading
+
+  const startDate = state.from ? new Date(state.from) : undefined
+  const endDate = state.to ? new Date(state.to) : undefined
 
   return (
     <AuthenticatedLayout>
@@ -400,7 +300,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
             </div>
             <div className="flex flex-wrap items-center gap-3 text-right">
               <div>
-                <p className="text-xl font-bold text-primary tabular-nums">{leads.length}</p>
+                <p className="text-xl font-bold text-primary tabular-nums">{data ? total : '—'}</p>
                 <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">Total leads</p>
               </div>
               {variant === 'bd' && (
@@ -414,13 +314,15 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
 
         <div className="flex flex-1 overflow-hidden">
           <CampaignSidebar
-            leads={leads}
-            groupBy={sidebarGroupBy}
-            onGroupByChange={setSidebarGroupBy}
+            tree={data?.campaignTree ?? []}
+            totalLeads={data?.facetTotal ?? 0}
+            groupBy={state.groupBy}
+            onGroupByChange={handleGroupByChange}
             selection={campaignSelection}
             onSelect={setCampaignSelection}
             collapsed={sidebarCollapsed}
             onCollapsedChange={setSidebarCollapsed}
+            isLoading={isLoading && !data}
           />
 
           <main className="flex-1 overflow-y-auto p-4 md:p-6">
@@ -434,11 +336,19 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                     </p>
                   </div>
                   <div className="w-full max-w-md space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span>Actual: {targetProgress.actual}</span>
-                      <span>Goal: {targetProgress.target.targetValue}</span>
-                    </div>
-                    <Progress value={targetProgress.pct} className="h-2" />
+                    {targetProgress.showActual ? (
+                      <>
+                        <div className="flex justify-between text-xs">
+                          <span>Actual: {targetProgress.actual}</span>
+                          <span>Goal: {targetProgress.target.targetValue}</span>
+                        </div>
+                        <Progress value={targetProgress.pct ?? 0} className="h-2" />
+                      </>
+                    ) : (
+                      <div className="flex justify-end text-xs">
+                        <span>Goal: {targetProgress.target.targetValue}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </Card>
@@ -454,7 +364,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                     <h2 className="text-lg font-bold tracking-tight">{campaignSelection.campaignLabel}</h2>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <Badge variant="secondary" className="text-xs">
-                        {campaignFiltered.length} in campaign
+                        {data?.facetTotal ?? 0} in campaign
                       </Badge>
                       <Badge variant="outline" className="text-xs capitalize">
                         {campaignSelection.groupBy}
@@ -462,7 +372,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-bold tabular-nums text-primary">{campaignFiltered.length}</p>
+                    <p className="text-3xl font-bold tabular-nums text-primary">{data?.facetTotal ?? 0}</p>
                     <p className="text-xs text-muted-foreground">Leads</p>
                   </div>
                 </div>
@@ -471,9 +381,11 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
 
             <div className="mb-4">
               <PipelineStatusCards
-                leads={campaignFiltered}
-                selected={statusBucket}
-                onSelect={setStatusBucket}
+                counts={data?.statusCounts}
+                total={data?.facetTotal}
+                selected={state.status}
+                onSelect={(b) => setState({ status: b })}
+                isLoading={isLoading}
               />
             </div>
 
@@ -484,18 +396,18 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                   <Input
                     placeholder="Name, ref, hospital… — or full mobile (10 digits or 91…)"
                     className="pl-9"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                   />
                 </div>
-                {variant === 'team-lead' && bdOptions.length > 0 && (
-                  <Select value={bdFilter} onValueChange={setBdFilter}>
+                {variant === 'team-lead' && (data?.facets.bds.length ?? 0) > 0 && (
+                  <Select value={state.bdId} onValueChange={(v) => setState({ bdId: v })}>
                     <SelectTrigger className="w-full lg:w-[200px]">
                       <SelectValue placeholder="BD" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All BDs</SelectItem>
-                      {bdOptions.map(([id, name]) => (
+                      {data?.facets.bds.map(({ id, name }) => (
                         <SelectItem key={id} value={id}>
                           {name}
                         </SelectItem>
@@ -503,7 +415,7 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                     </SelectContent>
                   </Select>
                 )}
-                <Select value={leadAgeFilter} onValueChange={(v) => setLeadAgeFilter(v as LeadAgeFilter)}>
+                <Select value={state.age} onValueChange={(v) => setState({ age: v as LeadAgeFilter })}>
                   <SelectTrigger className="w-full lg:w-[160px]">
                     <SelectValue placeholder="Lead age" />
                   </SelectTrigger>
@@ -511,31 +423,31 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                     <SelectItem value="all">All ages</SelectItem>
                     <SelectItem value="new">New (&lt; 1 week)</SelectItem>
                     <SelectItem value="lt1m">&lt; 1 month</SelectItem>
-                    <SelectItem value="1to2m">1â€“2 months</SelectItem>
-                    <SelectItem value="2to3m">2â€“3 months</SelectItem>
+                    <SelectItem value="1to2m">1–2 months</SelectItem>
+                    <SelectItem value="2to3m">2–3 months</SelectItem>
                     <SelectItem value="3plus">3+ months</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={categoryBar} onValueChange={setCategoryBar}>
+                <Select value={state.category} onValueChange={(v) => setState({ category: v })}>
                   <SelectTrigger className="w-full lg:w-[160px]">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All categories</SelectItem>
-                    {uniqueCategories.map((c) => (
+                    {data?.facets.categories.map((c) => (
                       <SelectItem key={c} value={c}>
                         {c}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <Select value={circleBar} onValueChange={setCircleBar}>
+                <Select value={state.circle} onValueChange={(v) => setState({ circle: v })}>
                   <SelectTrigger className="w-full lg:w-[160px]">
                     <SelectValue placeholder="Circle" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All circles</SelectItem>
-                    {uniqueCirclesBar.map((c) => (
+                    {data?.facets.circles.map((c) => (
                       <SelectItem key={c} value={c}>
                         {c}
                       </SelectItem>
@@ -550,7 +462,11 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={startDate} onSelect={setStartDate} />
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={(d) => setState({ from: d ? format(d, 'yyyy-MM-dd') : '' })}
+                    />
                   </PopoverContent>
                 </Popover>
                 <Popover>
@@ -561,11 +477,15 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar mode="single" selected={endDate} onSelect={setEndDate} />
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={(d) => setState({ to: d ? format(d, 'yyyy-MM-dd') : '' })}
+                    />
                   </PopoverContent>
                 </Popover>
-                {(startDate || endDate) && (
-                  <Button variant="ghost" size="sm" onClick={() => { setStartDate(undefined); setEndDate(undefined) }}>
+                {(state.from || state.to) && (
+                  <Button variant="ghost" size="sm" onClick={() => setState({ from: '', to: '' })}>
                     Clear dates
                   </Button>
                 )}
@@ -576,14 +496,34 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                   <div>
                     <h3 className="text-sm font-semibold">Leads</h3>
                     <p className="text-xs text-muted-foreground">
-                      {tableRows.length} shown &middot; filters apply on top of campaign + status card
+                      {data
+                        ? `${rangeStart}–${rangeEnd} of ${total} shown`
+                        : 'Loading…'}{' '}
+                      &middot; filters apply on top of campaign + status card
                     </p>
                   </div>
                 </div>
 
-                <div ref={scrollRef} className={cn('max-h-[min(70vh,900px)] overflow-auto transition-opacity duration-200', isFiltering && 'opacity-50 pointer-events-none')}>
+                <div
+                  className={cn(
+                    'max-h-[min(70vh,900px)] overflow-auto transition-opacity duration-200',
+                    isBackgroundRefetching && 'opacity-60 pointer-events-none'
+                  )}
+                >
                   {isLoading ? (
-                    <p className="p-8 text-center text-sm text-muted-foreground">Loading leadsâ€¦</p>
+                    <table className="w-full caption-bottom text-sm">
+                      <tbody>
+                        {Array.from({ length: 10 }).map((_, i) => (
+                          <tr key={i} className="border-b border-border/60">
+                            {Array.from({ length: colCount }).map((__, j) => (
+                              <td key={j} className="px-3 py-2.5">
+                                <Skeleton className="h-4 w-full" />
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   ) : tableRows.length === 0 ? (
                     <p className="p-8 text-center text-sm text-muted-foreground">No leads match filters</p>
                   ) : (
@@ -591,24 +531,30 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                       <thead className="sticky top-0 z-10 bg-muted/50 [&_tr]:border-b">
                         {variant === 'team-lead' ? (
                           <tr className="border-b transition-colors hover:bg-muted/50">
-                            <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            <SortableTh field="leadRef" state={state} onSort={handleSort}>
                               Lead ref
-                            </th>
-                            <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            </SortableTh>
+                            <SortableTh field="date" state={state} onSort={handleSort}>
                               Date
-                            </th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Patient</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Age/Sex</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Circle</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Treatment</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">BDM</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Hospital</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Doctor</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stage</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Recency</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">BD</th>
+                            </SortableTh>
+                            <SortableTh field="patient" state={state} onSort={handleSort}>
+                              Patient
+                            </SortableTh>
+                            <Th>Age/Sex</Th>
+                            <Th>Circle</Th>
+                            <Th>Treatment</Th>
+                            <Th>BDM</Th>
+                            <Th>Hospital</Th>
+                            <Th>Doctor</Th>
+                            <Th>Category</Th>
+                            <SortableTh field="status" state={state} onSort={handleSort}>
+                              Status
+                            </SortableTh>
+                            <Th>Stage</Th>
+                            <Th>Recency</Th>
+                            <SortableTh field="bd" state={state} onSort={handleSort}>
+                              BD
+                            </SortableTh>
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
@@ -616,15 +562,19 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                           </tr>
                         ) : (
                           <tr className="border-b transition-colors hover:bg-muted/50">
-                            <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            <SortableTh field="leadRef" state={state} onSort={handleSort}>
                               Lead ref
-                            </th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Patient</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Treatment</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Category</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Age</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
-                            <th className="h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Stage</th>
+                            </SortableTh>
+                            <SortableTh field="patient" state={state} onSort={handleSort}>
+                              Patient
+                            </SortableTh>
+                            <Th>Treatment</Th>
+                            <Th>Category</Th>
+                            <Th>Age</Th>
+                            <SortableTh field="status" state={state} onSort={handleSort}>
+                              Status
+                            </SortableTh>
+                            <Th>Stage</Th>
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
@@ -633,36 +583,67 @@ export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) 
                         )}
                       </thead>
                       <tbody>
-                        {padTop > 0 && (
-                          <tr>
-                            <td colSpan={colCount} style={{ height: padTop, padding: 0 }} />
-                          </tr>
-                        )}
-                        {virtualItems.map((vi) => {
-                          const lead = tableRows[vi.index]
-                          if (!lead) return null
-                          return (
-                            <PipelineRow
-                              key={lead.id}
-                              lead={lead}
-                              variant={variant}
-                              noteCount={noteCounts[lead.id]}
-                              onClick={handleRowClick}
-                              onEdit={handleEditLead}
-                              onEditRemarks={handleEditRemarks}
-                              onMarkOpened={markLeadOpened}
-                              isOpened={openedLeadIds.includes(lead.id)}
-                            />
-                          )
-                        })}
-                        {padBottom > 0 && (
-                          <tr>
-                            <td colSpan={colCount} style={{ height: padBottom, padding: 0 }} />
-                          </tr>
-                        )}
+                        {tableRows.map((lead) => (
+                          <PipelineRow
+                            key={lead.id}
+                            lead={lead}
+                            variant={variant}
+                            noteCount={noteCounts[lead.id]}
+                            onClick={handleRowClick}
+                            onEdit={handleEditLead}
+                            onEditRemarks={handleEditRemarks}
+                            onMarkOpened={markLeadOpened}
+                            isOpened={openedLeadIds.includes(lead.id)}
+
+                          />
+                        ))}
                       </tbody>
                     </table>
                   )}
+                </div>
+
+                <div className="flex flex-col gap-2 border-t border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-xs text-muted-foreground">
+                    {total > 0 ? `Showing ${rangeStart}–${rangeEnd} of ${total}` : 'No results'}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Select
+                      value={String(pageSize)}
+                      onValueChange={(v) => setState({ pageSize: Number(v), page: 1 })}
+                    >
+                      <SelectTrigger className="h-8 w-[110px] text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PAGE_SIZE_OPTIONS.map((n) => (
+                          <SelectItem key={n} value={String(n)}>
+                            {n} / page
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={page <= 1}
+                      onClick={() => setState({ page: page - 1 })}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Prev
+                    </Button>
+                    <span className="whitespace-nowrap text-xs text-muted-foreground tabular-nums">
+                      Page {page} of {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={page >= totalPages}
+                      onClick={() => setState({ page: page + 1 })}
+                    >
+                      Next
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </Card>
@@ -696,6 +677,56 @@ function getLatestRemarkPreview(lead: Lead) {
   return trimmed.length > 0 ? trimmed : 'No remarks yet.'
 }
 
+function Th({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <th
+      className={cn(
+        'h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground',
+        className
+      )}
+    >
+      {children}
+    </th>
+  )
+}
+
+function SortableTh({
+  field,
+  state,
+  onSort,
+  children,
+}: {
+  field: PipelineSortField
+  state: { sort: PipelineSortField; dir: PipelineSortDir }
+  onSort: (field: PipelineSortField) => void
+  children: React.ReactNode
+}) {
+  const active = state.sort === field
+  return (
+    <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+      <button
+        type="button"
+        onClick={() => onSort(field)}
+        className={cn(
+          'inline-flex items-center gap-1 transition-colors hover:text-foreground',
+          active && 'text-foreground'
+        )}
+      >
+        {children}
+        {active ? (
+          state.dir === 'asc' ? (
+            <ArrowUp className="h-3 w-3" />
+          ) : (
+            <ArrowDown className="h-3 w-3" />
+          )
+        ) : (
+          <ArrowUpDown className="h-3 w-3 text-muted-foreground/50" />
+        )}
+      </button>
+    </th>
+  )
+}
+
 const PipelineRow = memo(function PipelineRow({
   lead,
   variant,
@@ -703,6 +734,8 @@ const PipelineRow = memo(function PipelineRow({
   onClick,
   onEdit,
   onEditRemarks,
+  onMarkOpened,
+  isOpened,
 }: {
   lead: Lead
   variant: 'bd' | 'team-lead'

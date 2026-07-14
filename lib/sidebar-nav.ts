@@ -1,12 +1,14 @@
 import * as React from 'react'
 import {
   Activity,
+  Armchair,
+  Award,
   BarChart3,
   BookOpen,
   Building2,
   Calendar,
-  CalendarDays,
   CalendarCheck,
+  CalendarDays,
   CheckCircle,
   ClipboardList,
   Clock,
@@ -15,11 +17,15 @@ import {
   DollarSign,
   FileText,
   FolderTree,
+  GraduationCap,
+  Heart,
   Home,
   Inbox,
   IndianRupee,
+  Layers,
   LayoutDashboard,
   Mail,
+  Megaphone,
   MessageSquare,
   Package,
   PieChart,
@@ -34,7 +40,6 @@ import {
   UserCheck,
   UserCircle,
   Users,
-  Megaphone,
   Wallet,
 } from 'lucide-react'
 import { SessionUser } from '@/lib/auth'
@@ -71,6 +76,12 @@ export const navItems: NavItem[] = [
     icon: CalendarDays,
   },
   {
+    title: 'IPD Calendar',
+    url: '/ipd-calendar',
+    icon: Stethoscope,
+    roles: ['BD', 'TEAM_LEAD'],
+  },
+  {
     title: 'Meets',
     url: '/meets',
     icon: Calendar,
@@ -86,6 +97,12 @@ export const navItems: NavItem[] = [
     url: '/md/sales',
     icon: TrendingUp,
     roles: ['MD', 'ADMIN', 'SALES_HEAD', 'DIGITAL_MARKETING_HEAD', 'EXECUTIVE_ASSISTANT'],
+  },
+  {
+    title: 'Incentive',
+    url: '/incentives',
+    icon: Award,
+    roles: ['MD', 'ADMIN', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Finance Dashboard',
@@ -201,7 +218,7 @@ export const navItems: NavItem[] = [
     title: 'Pipeline',
     url: '/pipeline',
     icon: ClipboardList,
-    roles: ['BD', 'TEAM_LEAD'],
+    roles: ['BD', 'TEAM_LEAD', 'SALES_HEAD', 'EXECUTIVE_ASSISTANT'],
   },
   {
     title: 'Case Tracker',
@@ -242,6 +259,12 @@ export const navItems: NavItem[] = [
     title: 'Chat',
     url: '/chat',
     icon: MessageSquare,
+    roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
+  },
+  {
+    title: 'Training',
+    url: '/training',
+    icon: GraduationCap,
     roles: ['BD', 'TEAM_LEAD', 'INSURANCE', 'INSURANCE_HEAD', 'PL_HEAD', 'PL_ENTRY', 'PL_VIEWER', 'ACCOUNTS', 'ADMIN', 'TESTER', 'EXECUTIVE_ASSISTANT', 'COMPLIANCE_HEAD', 'DIGITAL_MARKETING_HEAD'],
   },
   {
@@ -419,6 +442,48 @@ export const navItems: NavItem[] = [
     permission: 'finance:read',
   },
   {
+    title: 'Fin Invoice Requests',
+    url: '/finance/invoice-requests',
+    icon: FileText,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Doctor Payoff',
+    url: '/finance/doctor-payoff-requests',
+    icon: Stethoscope,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Outstanding',
+    url: '/pl/outstanding',
+    icon: CreditCard,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Doctor List',
+    url: '/doctors',
+    icon: Stethoscope,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Fin Hospital List',
+    url: '/hospitals',
+    icon: Building2,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Sales Team Cost',
+    url: '/finance/sales-team-cost',
+    icon: DollarSign,
+    permission: 'finance:read',
+  },
+  {
+    title: 'Master Seating Cost',
+    url: '/finance/master-seating-cost',
+    icon: Armchair,
+    roles: ['FINANCE_HEAD', 'ADMIN'],
+  },
+  {
     title: 'Company P&L',
     url: '/finance/pnl',
     icon: PieChart,
@@ -488,11 +553,26 @@ export function getDashboardUrl(role: string): string {
   if (role === 'TEAM_LEAD') return '/team-lead/dashboard'
   if (role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
   if (role === 'DIGITAL_MARKETING_HEAD') return '/pl/dashboard'
+  if (role === 'PL_HEAD') return '/pl/surgery-dashboard'
+  if (role === 'INSURANCE_HEAD') return '/insurance/dashboard'
+  if (role === 'OUTSTANDING_HEAD') return '/pl/outstanding'
   return '/md/tasks'
+}
+
+function dedupeNavItemsByUrl(items: (NavItem & { url: string })[]): (NavItem & { url: string })[] {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    if (seen.has(item.url)) return false
+    seen.add(item.url)
+    return true
+  })
 }
 
 function filterNavItems(user: SessionUser | null): NavItem[] {
   if (!user) return []
+  if (user.role === 'ACCESS_MATRIX') {
+    return navItems.filter((item) => item.title === 'IT Permissions')
+  }
   return navItems.filter((item) => {
     if (item.title === 'Home' || item.title === 'Tasks' || item.title === 'Calendar') return true
     if (item.title === 'Meets') return user.role !== 'BD'
@@ -561,6 +641,8 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
     if (item.title === 'Pipeline') {
       if (role === 'BD') return { ...item, url: '/bd/pipeline' }
       if (role === 'TEAM_LEAD') return { ...item, url: '/team-lead/pipeline' }
+      if (role === 'SALES_HEAD') return { ...item, url: '/team-lead/pipeline' }
+      if (role === 'EXECUTIVE_ASSISTANT') return { ...item, url: '/executive-assistant/pipeline' }
       if (role === 'ADMIN') return { ...item, url: '/bd/pipeline' }
     }
     if (item.title === 'Targets') {
@@ -577,7 +659,7 @@ function mapItemUrls(items: NavItem[], role: string): (NavItem & { url: string }
  */
 export function getFilteredNavItemsWithUrls(user: SessionUser | null): (NavItem & { url: string })[] {
   const filtered = filterNavItems(user)
-  return mapItemUrls(filtered, user?.role ?? '')
+  return dedupeNavItemsByUrl(mapItemUrls(filtered, user?.role ?? ''))
 }
 
 /**
@@ -591,6 +673,7 @@ export function getFirstNavUrl(user: SessionUser | null): string {
     if (String(user.role) === 'SUPER_ADMIN') return '/crm/campaigns'
     if (String(user.role) === 'CRM_ADMIN') return '/crm/access-matrix'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
+    if (user.role === 'ACCESS_MATRIX') return '/it/permissions'
     return '/home'
   }
   const items = getFilteredNavItemsWithUrls(user)

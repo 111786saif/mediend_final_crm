@@ -38,6 +38,7 @@ export function useAuth() {
     }
     setActiveRoleState(role)
     queryClient.invalidateQueries({ queryKey: ['auth', 'me'] })
+    queryClient.invalidateQueries({ queryKey: ['me', 'permissions'] })
   }
 
   const loginMutation = useMutation({
@@ -49,6 +50,7 @@ export function useAuth() {
       // Clear TESTER role on login
       localStorage.removeItem(TESTER_ROLE_KEY)
       setActiveRoleState(null)
+      queryClient.invalidateQueries({ queryKey: ['me', 'permissions'] })
       router.push(getFirstNavUrl(data.user))
     },
   })

@@ -77,6 +77,11 @@ export type Target = Prisma.TargetModel
  */
 export type BonusRule = Prisma.BonusRuleModel
 /**
+ * Model TierDefinition
+ * 
+ */
+export type TierDefinition = Prisma.TierDefinitionModel
+/**
  * Model InsuranceCase
  * 
  */
@@ -86,6 +91,26 @@ export type InsuranceCase = Prisma.InsuranceCaseModel
  * 
  */
 export type PLRecord = Prisma.PLRecordModel
+/**
+ * Model InvoiceRequest
+ * 
+ */
+export type InvoiceRequest = Prisma.InvoiceRequestModel
+/**
+ * Model InvoiceRequestActivity
+ * 
+ */
+export type InvoiceRequestActivity = Prisma.InvoiceRequestActivityModel
+/**
+ * Model DoctorPayoffRequest
+ * 
+ */
+export type DoctorPayoffRequest = Prisma.DoctorPayoffRequestModel
+/**
+ * Model DoctorPayoffRequestActivity
+ * 
+ */
+export type DoctorPayoffRequestActivity = Prisma.DoctorPayoffRequestActivityModel
 /**
  * Model IncomingLead
  * 
@@ -332,6 +357,21 @@ export type MDApprovalRequest = Prisma.MDApprovalRequestModel
  */
 export type UserFeaturePermission = Prisma.UserFeaturePermissionModel
 /**
+ * Model Resource
+ * 
+ */
+export type Resource = Prisma.ResourceModel
+/**
+ * Model PermissionAssignment
+ * 
+ */
+export type PermissionAssignment = Prisma.PermissionAssignmentModel
+/**
+ * Model PermissionAuditLog
+ * 
+ */
+export type PermissionAuditLog = Prisma.PermissionAuditLogModel
+/**
  * Model CampaignCPL
  * Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + month-of-leadEntryDate
  */
@@ -367,6 +407,12 @@ export type InsuranceInitiateForm = Prisma.InsuranceInitiateFormModel
  */
 export type CaseStageHistory = Prisma.CaseStageHistoryModel
 /**
+ * Model WorkflowResetLog
+ * Immutable audit trail for Executive Assistant workflow-step resets.
+ * Rows are append-only — there is no update/delete API for this model.
+ */
+export type WorkflowResetLog = Prisma.WorkflowResetLogModel
+/**
  * Model CaseChatMessage
  * 
  */
@@ -396,6 +442,41 @@ export type PaymentInstallment = Prisma.PaymentInstallmentModel
  * 
  */
 export type ComplianceCall = Prisma.ComplianceCallModel
+/**
+ * Model SalesTeamCostEntry
+ * 
+ */
+export type SalesTeamCostEntry = Prisma.SalesTeamCostEntryModel
+/**
+ * Model EmployeeMonthlyIncentive
+ * 
+ */
+export type EmployeeMonthlyIncentive = Prisma.EmployeeMonthlyIncentiveModel
+/**
+ * Model EmployeeMasterSeatingCost
+ * 
+ */
+export type EmployeeMasterSeatingCost = Prisma.EmployeeMasterSeatingCostModel
+/**
+ * Model EmployeeMonthlySeatingMiscCost
+ * 
+ */
+export type EmployeeMonthlySeatingMiscCost = Prisma.EmployeeMonthlySeatingMiscCostModel
+/**
+ * Model EmployeeMonthlySeatingMiscCostHistory
+ * 
+ */
+export type EmployeeMonthlySeatingMiscCostHistory = Prisma.EmployeeMonthlySeatingMiscCostHistoryModel
+/**
+ * Model EmployeeSalesTeamSalaryOverride
+ * Sales Team Cost–only salary override for a given employee + month (does not change Payroll).
+ */
+export type EmployeeSalesTeamSalaryOverride = Prisma.EmployeeSalesTeamSalaryOverrideModel
+/**
+ * Model EmployeeSalesTeamSalaryOverrideHistory
+ * Immutable audit log of Sales Team Cost salary overrides.
+ */
+export type EmployeeSalesTeamSalaryOverrideHistory = Prisma.EmployeeSalesTeamSalaryOverrideHistoryModel
 /**
  * Model Task
  * 
@@ -467,10 +548,20 @@ export type PushSubscription = Prisma.PushSubscriptionModel
  */
 export type CronJobLog = Prisma.CronJobLogModel
 /**
+ * Model RankSnapshot
+ * 
+ */
+export type RankSnapshot = Prisma.RankSnapshotModel
+/**
  * Model HospitalMaster
  * 
  */
 export type HospitalMaster = Prisma.HospitalMasterModel
+/**
+ * Model HospitalMasterInsurance
+ * 
+ */
+export type HospitalMasterInsurance = Prisma.HospitalMasterInsuranceModel
 /**
  * Model DoctorMaster
  * 

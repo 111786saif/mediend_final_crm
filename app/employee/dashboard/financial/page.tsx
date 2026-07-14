@@ -162,7 +162,7 @@ export default function FinancialPage() {
 }
 
 function PayrollTab() {
-  const { data: payrollData, isLoading } = useQuery<PayrollMyResponse>({
+  const { data: payrollData, isLoading, error } = useQuery<PayrollMyResponse>({
     queryKey: ['payroll', 'my'],
     queryFn: () => apiGet<PayrollMyResponse>('/api/payroll/my'),
   })
@@ -178,7 +178,12 @@ function PayrollTab() {
   return (
     <div className="space-y-6">
       <SectionContainer title="Salary slips">
-        {isLoading ? (
+        {error ? (
+          <div className="flex items-center gap-2 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-900 dark:border-red-700 dark:bg-red-950/40 dark:text-red-100">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            Couldn&apos;t load payroll records: {(error as Error).message || 'Unknown error'}
+          </div>
+        ) : isLoading ? (
           <div className="text-center py-8 text-muted-foreground">Loading...</div>
         ) : (
           <Table>
@@ -272,10 +277,69 @@ function IncrementTab() {
   const [newDocUrl, setNewDocUrl] = useState('')
   const queryClient = useQueryClient()
 
+  const now = new Date()
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+
   const { data: requests, isLoading } = useQuery<IncrementRequest[]>({
     queryKey: ['my-increments'],
     queryFn: () => apiGet<IncrementRequest[]>('/api/employee/increment'),
   })
+
+  // Fetch current salary from employee record
+  const { data: employeeData } = useQuery<{ salary: number | null }>({
+    queryKey: ['employee-my-salary'],
+    queryFn: () => apiGet('/api/employees/my'),
+  })
+
+  // Fetch monthly target achievement
+  const { data: progress } = useQuery<Array<{ periodType: string; metric: string; targetValue: number; actual: number; percentage: number }>>({
+    queryKey: ['target-progress-increment', monthKey],
+    queryFn: () => apiGet(`/api/targets/progress?month=${monthKey}`),
+  })
+
+  // Fetch increment tiers from AppSetting (configured by HR Head)
+  const DEFAULT_TIERS = useMemo(() => [
+    { minPct: 0,   maxPct: 59,  incrementPct: 0  },
+    { minPct: 60,  maxPct: 79,  incrementPct: 5  },
+    { minPct: 80,  maxPct: 99,  incrementPct: 10 },
+    { minPct: 100, maxPct: 119, incrementPct: 15 },
+    { minPct: 120, maxPct: null, incrementPct: 20 },
+  ], [])
+
+  const { data: settingsData } = useQuery<Record<string, string>>({
+    queryKey: ['app-settings', 'increment_tiers'],
+    queryFn: () => apiGet('/api/settings?keys=increment_tiers'),
+  })
+
+  const tiers = useMemo(() => {
+    try {
+      const raw = settingsData?.increment_tiers
+      if (!raw) return DEFAULT_TIERS
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      return DEFAULT_TIERS
+    } catch { return DEFAULT_TIERS }
+  }, [settingsData, DEFAULT_TIERS])
+
+  // Compute suggested increment from dynamic tiers
+  const monthlyProgress = (progress ?? []).find((p) => p.periodType === 'MONTH')
+  const achievementPct = monthlyProgress?.percentage ?? 0
+  const suggestedPct = useMemo(() => {
+    const match = [...tiers].sort((a, b) => b.minPct - a.minPct).find((t) => achievementPct >= t.minPct)
+    return match?.incrementPct ?? 0
+  }, [tiers, achievementPct])
+
+  const currentSalary = employeeData?.salary ?? 0
+  const suggestedAmount = currentSalary > 0 && suggestedPct > 0
+    ? Math.round(currentSalary * suggestedPct / 100)
+    : null
+
+  // Auto-fill requestedAmount when suggestion is available (only once)
+  useEffect(() => {
+    if (suggestedAmount && !requestedAmount) {
+      setRequestedAmount(String(suggestedAmount))
+    }
+  }, [suggestedAmount])
 
   const submitMutation = useMutation({
     mutationFn: (data: {
@@ -331,6 +395,117 @@ function IncrementTab() {
 
   return (
     <div className="space-y-6">
+
+      {/* ── Achievement Summary (auto-calculated) ── */}
+      {monthlyProgress && (
+        <SectionContainer title="Your achievement this month">
+          <div className="space-y-4">
+            {/* Stats row */}
+            <div className="flex flex-wrap gap-4">
+              <div>
+                <p className="text-xs text-muted-foreground">Target</p>
+                <p className="text-lg font-bold">
+                  {monthlyProgress.targetValue} {monthlyProgress.metric.replace(/_/g, ' ')}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Achieved</p>
+                <p className="text-lg font-bold text-teal-600">{monthlyProgress.actual}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Achievement %</p>
+                <p className="text-lg font-bold">{Math.round(achievementPct)}%</p>
+              </div>
+            </div>
+
+            {/* Tier ladder — dynamic from HR settings */}
+            <div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                Increment eligibility tiers — based on monthly target achievement
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+                {tiers.map((tier, i) => {
+                  const COLORS = [
+                    { border: 'border-rose-300 bg-rose-50 dark:bg-rose-950/30 dark:border-rose-800', text: 'text-rose-600 dark:text-rose-400' },
+                    { border: 'border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800', text: 'text-amber-600 dark:text-amber-400' },
+                    { border: 'border-blue-300 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800', text: 'text-blue-600 dark:text-blue-400' },
+                    { border: 'border-teal-300 bg-teal-50 dark:bg-teal-950/30 dark:border-teal-800', text: 'text-teal-600 dark:text-teal-400' },
+                    { border: 'border-emerald-300 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800', text: 'text-emerald-600 dark:text-emerald-400' },
+                  ]
+                  const DESCS = ['Target not sufficiently met', 'Satisfactory performance', 'Good performance', 'Target achieved', 'Exceptional — exceeded target']
+                  const color = COLORS[Math.min(i, COLORS.length - 1)]
+                  const desc = DESCS[Math.min(i, DESCS.length - 1)]
+                  const isActive = tier.maxPct === null
+                    ? achievementPct >= tier.minPct
+                    : achievementPct >= tier.minPct && achievementPct <= tier.maxPct
+                  const rangeLabel = tier.maxPct === null
+                    ? `≥ ${tier.minPct}%`
+                    : tier.minPct === 0
+                    ? `Below ${tier.maxPct + 1}%`
+                    : `${tier.minPct} – ${tier.maxPct}%`
+                  const amount = currentSalary > 0 && tier.incrementPct > 0
+                    ? Math.round(currentSalary * tier.incrementPct / 100)
+                    : null
+
+                  return (
+                    <div
+                      key={i}
+                      className={`relative rounded-xl border-2 p-3 transition-all ${
+                        isActive ? `${color.border} shadow-sm` : 'border-border bg-muted/10 opacity-60'
+                      }`}
+                    >
+                      {isActive && (
+                        <span className={`absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap bg-white dark:bg-card border ${color.border} ${color.text}`}>
+                          ← You are here
+                        </span>
+                      )}
+                      <p className="text-[11px] font-medium text-muted-foreground mt-1">Achievement</p>
+                      <p className="text-sm font-bold">{rangeLabel}</p>
+                      <p className={`text-lg font-extrabold mt-1 ${isActive ? color.text : ''}`}>
+                        {tier.incrementPct === 0 ? '—' : `+${tier.incrementPct}%`}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{desc}</p>
+                      {amount && currentSalary > 0 ? (
+                        <p className={`text-[11px] font-semibold mt-1.5 ${isActive ? color.text : 'text-muted-foreground'}`}>
+                          +₹{amount.toLocaleString('en-IN')}/mo
+                        </p>
+                      ) : tier.incrementPct === 0 ? (
+                        <p className="text-[11px] text-muted-foreground mt-1.5">No increment</p>
+                      ) : null}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Suggested banner */}
+            {suggestedPct > 0 ? (
+              <div className="rounded-lg border border-teal-300 bg-teal-50 dark:bg-teal-900/20 dark:border-teal-800 p-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold text-teal-800 dark:text-teal-200">
+                    Suggested increment: +{suggestedPct}%
+                  </p>
+                  {suggestedAmount && currentSalary > 0 && (
+                    <p className="text-xs text-teal-600 dark:text-teal-400 mt-0.5">
+                      ₹{currentSalary.toLocaleString('en-IN')} → ₹{(currentSalary + suggestedAmount).toLocaleString('en-IN')}
+                      {' '}(+₹{suggestedAmount.toLocaleString('en-IN')}/mo)
+                    </p>
+                  )}
+                </div>
+                <Badge className="bg-teal-600 text-white shrink-0">+{suggestedPct}%</Badge>
+              </div>
+            ) : (
+              <div className="rounded-lg border bg-muted/30 p-3">
+                <p className="text-sm text-muted-foreground">
+                  Achievement below 60% — not eligible for a suggested increment this month.
+                  You can still submit a manual request.
+                </p>
+              </div>
+            )}
+          </div>
+        </SectionContainer>
+      )}
+
       <SectionContainer title="Increment application">
         {hasPendingRequest ? (
           <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
@@ -367,16 +542,22 @@ function IncrementTab() {
               />
             </div>
             <div>
-              <Label htmlFor="requestedAmount">Requested amount (optional)</Label>
+              <Label htmlFor="requestedAmount">
+                Requested amount (monthly){suggestedAmount ? ' — auto-filled from your achievement' : ' (optional)'}
+              </Label>
               <Input
                 id="requestedAmount"
                 type="number"
                 value={requestedAmount}
                 onChange={(e) => setRequestedAmount(e.target.value)}
-                placeholder="Expected increment (annual)"
+                placeholder="Expected increment per month"
                 className="mt-2"
               />
-              <p className="text-xs text-muted-foreground mt-1">Leave empty if you prefer HR to decide</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {suggestedAmount
+                  ? `Auto-suggested based on ${Math.round(achievementPct)}% achievement. You can edit this.`
+                  : 'Leave empty if you prefer HR to decide'}
+              </p>
             </div>
             <div>
               <Label>Supporting documents (optional, max 5)</Label>

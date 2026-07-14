@@ -46,6 +46,8 @@ export async function GET(request: NextRequest) {
       byHospital,
       bySource,
       byCampaign,
+      byInsurance,
+      byTpa,
       surgeonHospitalDisease,
       completedForMonth,
     ] = await Promise.all([
@@ -76,6 +78,18 @@ export async function GET(request: NextRequest) {
       prisma.lead.groupBy({
         by: ['campaignName'],
         where: { ...completedWhere, campaignName: { not: null } },
+        _count: { id: true },
+        _sum: { billAmount: true, netProfit: true },
+      }),
+      prisma.lead.groupBy({
+        by: ['insuranceName'],
+        where: { ...completedWhere, insuranceName: { not: null } },
+        _count: { id: true },
+        _sum: { billAmount: true, netProfit: true },
+      }),
+      prisma.lead.groupBy({
+        by: ['tpa'],
+        where: { ...completedWhere, tpa: { not: null } },
         _count: { id: true },
         _sum: { billAmount: true, netProfit: true },
       }),
@@ -131,6 +145,20 @@ export async function GET(request: NextRequest) {
       profit: s._sum.netProfit ?? 0,
     })).sort((a, b) => b.revenue - a.revenue)
 
+    const insuranceBreakdown = byInsurance.map((i) => ({
+      insurance: i.insuranceName ?? 'Unknown',
+      count: i._count.id,
+      revenue: i._sum.billAmount ?? 0,
+      profit: i._sum.netProfit ?? 0,
+    })).sort((a, b) => b.count - a.count)
+
+    const tpaBreakdown = byTpa.map((t) => ({
+      tpa: t.tpa ?? 'Unknown',
+      count: t._count.id,
+      revenue: t._sum.billAmount ?? 0,
+      profit: t._sum.netProfit ?? 0,
+    })).sort((a, b) => b.count - a.count)
+
     const monthMap = new Map<string, { count: number; revenue: number; profit: number }>()
     completedForMonth.forEach((lead) => {
       const d = resolveIpdDate({ surgeryDate: lead.surgeryDate, admissionSurgeryDate: lead.admissionRecord?.surgeryDate })
@@ -161,6 +189,8 @@ export async function GET(request: NextRequest) {
       byHospital: hospitalBreakdown,
       bySource: sourceBreakdown,
       byCampaign: campaignBreakdown,
+      byInsurance: insuranceBreakdown,
+      byTpa: tpaBreakdown,
       byMonth: monthBreakdown,
       surgeonCrossAnalysis,
     })

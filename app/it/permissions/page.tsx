@@ -1,33 +1,21 @@
 'use client'
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiGet, apiPatch } from '@/lib/api-client'
+import { useState, useEffect, useMemo } from 'react'
+import { Button } from '@/components/ui/button'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { apiGet, apiPatch, apiDelete } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { hasPermission } from '@/lib/rbac'
-import { FEATURE_KEYS } from '@/lib/feature-keys'
-import { Shield, Search, Building2 } from 'lucide-react'
+import { Shield, ArrowLeft, Lock, Building2 } from 'lucide-react'
 import { toast } from 'sonner'
 
-interface UserWithPermissions {
+// Import modular sub-components
+import { UserDirectoryTable } from '@/components/it/UserDirectoryTable'
+import { ModuleSidebar } from '@/components/it/ModuleSidebar'
+import { PermissionsMatrix } from '@/components/it/PermissionsMatrix'
+import { StickyActionFooter } from '@/components/it/StickyActionFooter'
+
+interface UserInList {
   id: string
   name: string
   email: string
@@ -35,231 +23,390 @@ interface UserWithPermissions {
   employee?: {
     department?: { id: string; name: string } | null
   } | null
-  permissions: {
-    [FEATURE_KEYS.MD_APPROVAL_REQUEST]: boolean | null
-    [FEATURE_KEYS.CREATE_NOTICE]: boolean | null
-    [FEATURE_KEYS.WORKLOG_ENFORCEMENT]: boolean | null
-    [FEATURE_KEYS.CREATE_MEET]: boolean | null
-  }
-}
-
-const FEATURE_LABELS: Record<string, string> = {
-  [FEATURE_KEYS.MD_APPROVAL_REQUEST]: 'Ask MD Approval',
-  [FEATURE_KEYS.CREATE_NOTICE]: 'Create Notice',
-  [FEATURE_KEYS.WORKLOG_ENFORCEMENT]: 'Work Log Enforcement',
-  [FEATURE_KEYS.CREATE_MEET]: 'Create Meet',
 }
 
 export default function ITPermissionsPage() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
-  const [search, setSearch] = useState('')
-  const [roleFilter, setRoleFilter] = useState<string>('all')
 
+  // 1. Directory list state
+  const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [roleFilter, setRoleFilter] = useState<string>('all')
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 10
+
+  // 2. Editor state
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
+  const [selectedModuleKey, setSelectedModuleKey] = useState<string | null>(null)
+  const [openSectionKey, setOpenSectionKey] = useState<string | null>(null)
+  const [editedPermissions, setEditedPermissions] = useState<Record<string, { level: string; canGrant: boolean }>>({})
+  const [originalPermissions, setOriginalPermissions] = useState<Record<string, { level: string; canGrant: boolean }>>({})
+  const [roleDefaults, setRoleDefaults] = useState<Record<string, { level: string; canGrant: boolean }>>({})
+  const [isSaving, setIsSaving] = useState(false)
+
+  // Gate administrative access
   const canAccess = user && hasPermission(user, 'it:permissions')
 
-  const { data: users, isLoading } = useQuery<UserWithPermissions[]>({
-    queryKey: ['it-permissions', search, roleFilter],
+  // Debouncing search field to avoid unnecessary query requests
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search)
+      setCurrentPage(1)
+    }, 300)
+    return () => clearTimeout(handler)
+  }, [search])
+
+  // Fetch users matching search and filter
+  const { data: usersResponse, isLoading: isUsersLoading } = useQuery<{ data: UserInList[]; total: number } | UserInList[]>({
+    queryKey: ['it-permissions-users', debouncedSearch, roleFilter, currentPage],
     queryFn: () => {
       const params = new URLSearchParams()
-      if (search) params.set('search', search)
+      if (debouncedSearch) params.set('search', debouncedSearch)
       if (roleFilter && roleFilter !== 'all') params.set('role', roleFilter)
-      return apiGet<UserWithPermissions[]>(`/api/it/permissions?${params}`)
+      params.set('page', currentPage.toString())
+      params.set('limit', ITEMS_PER_PAGE.toString())
+      return apiGet<any>(`/api/it/permissions?${params}`)
     },
     enabled: !!canAccess,
   })
 
-  const toggleMutation = useMutation({
-    mutationFn: ({
-      userId,
-      featureKey,
-      enabled,
-    }: {
-      userId: string
-      featureKey: string
-      enabled: boolean
-    }) => apiPatch('/api/it/permissions', { userId, featureKey, enabled }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['it-permissions'] })
-      toast.success('Permission updated')
-    },
-    onError: (err: Error) => {
-      toast.error(err.message || 'Failed to update permission')
-    },
+  // Fetch specific user permission tree when selected
+  const { data: permissionTreeData, isLoading: isTreeLoading } = useQuery({
+    queryKey: ['admin-permissions', selectedUserId],
+    queryFn: () => apiGet<{ user: any; resourceTree: any[] }>(`/api/admin/users/${selectedUserId}/permissions`),
+    enabled: !!selectedUserId && !!canAccess,
   })
 
-  const handleToggle = (userId: string, featureKey: string, current: boolean | null) => {
-    const enabled = current === true ? false : true
-    toggleMutation.mutate({ userId, featureKey, enabled })
+  // Initialize permissions state when target user tree loads
+  useEffect(() => {
+    if (permissionTreeData?.resourceTree) {
+      const flat: Record<string, { level: string; canGrant: boolean }> = {}
+      const defaults: Record<string, { level: string; canGrant: boolean }> = {}
+
+      const traverse = (nodes: any[]) => {
+        for (const node of nodes) {
+          const roleLevel = node.roleAssignment?.permissionLevel ?? 'NONE'
+          const roleCanGrant = node.roleAssignment?.canGrant ?? false
+
+          defaults[node.id] = {
+            level: roleLevel,
+            canGrant: roleCanGrant,
+          }
+
+          flat[node.id] = {
+            level: node.assignment?.permissionLevel ?? roleLevel,
+            canGrant: node.assignment?.canGrant ?? roleCanGrant,
+          }
+          if (node.children && node.children.length > 0) {
+            traverse(node.children)
+          }
+        }
+      }
+
+      traverse(permissionTreeData.resourceTree)
+      setEditedPermissions(flat)
+      setOriginalPermissions(flat)
+      setRoleDefaults(defaults)
+
+      // Select first module automatically
+      if (permissionTreeData.resourceTree.length > 0) {
+        setSelectedModuleKey(permissionTreeData.resourceTree[0].key)
+      }
+    }
+  }, [permissionTreeData])
+
+  // Reset open accordion section when module switches
+  useEffect(() => {
+    setOpenSectionKey(null)
+  }, [selectedModuleKey])
+
+  // Pagination helper
+  const totalUsers = useMemo(() => {
+    if (!usersResponse) return 0
+    if (Array.isArray(usersResponse)) return usersResponse.length
+    return usersResponse.total
+  }, [usersResponse])
+
+  const totalPages = Math.ceil(totalUsers / ITEMS_PER_PAGE)
+
+  const paginatedUsers = useMemo(() => {
+    if (!usersResponse) return []
+    if (Array.isArray(usersResponse)) {
+      const start = (currentPage - 1) * ITEMS_PER_PAGE
+      return usersResponse.slice(start, start + ITEMS_PER_PAGE)
+    }
+    return usersResponse.data
+  }, [usersResponse, currentPage])
+
+  // Handle single row update
+  const handleUpdatePermission = (resourceId: string, updates: { level: string; canGrant: boolean }) => {
+    setEditedPermissions((prev) => ({
+      ...prev,
+      [resourceId]: updates,
+    }))
+  }
+
+  // Bulk Section toggle logic
+  const handleToggleSection = (sectionNode: any, checked: boolean) => {
+    const newLevel = checked ? 'READ' : 'NONE'
+    const updates = { ...editedPermissions }
+
+    const traverse = (node: any) => {
+      updates[node.id] = {
+        level: newLevel,
+        canGrant: false,
+      }
+      if (node.children) {
+        for (const child of node.children) {
+          traverse(child)
+        }
+      }
+    }
+    traverse(sectionNode)
+    setEditedPermissions(updates)
+  }
+
+  // Bulk Module toggle logic
+  const handleToggleModule = (moduleNode: any, checked: boolean) => {
+    const newLevel = checked ? 'FULL_ACCESS' : 'NONE'
+    const newCanGrant = checked
+    const updates = { ...editedPermissions }
+
+    const traverse = (node: any) => {
+      updates[node.id] = {
+        level: newLevel,
+        canGrant: newCanGrant,
+      }
+      if (node.children) {
+        for (const child of node.children) {
+          traverse(child)
+        }
+      }
+    }
+    traverse(moduleNode)
+    setEditedPermissions(updates)
+  }
+
+  // Dirty check: check if any permissions have changed
+  const isDirty = useMemo(() => {
+    const keys = Object.keys(editedPermissions)
+    if (keys.length === 0) return false
+    return keys.some((key) => {
+      const cur = editedPermissions[key]
+      const orig = originalPermissions[key]
+      return !orig || cur.level !== orig.level || cur.canGrant !== orig.canGrant
+    })
+  }, [editedPermissions, originalPermissions])
+
+  // Save changes via single batch PATCH call
+  const handleSaveChanges = async () => {
+    if (!selectedUserId) return
+    setIsSaving(true)
+
+    try {
+      const resourceIds = Object.keys(editedPermissions)
+
+      if (resourceIds.length === 0) {
+        toast.info('No resources loaded to save.')
+        setIsSaving(false)
+        return
+      }
+
+      // Build batch assignments array
+      const assignments = resourceIds.map((id) => ({
+        resourceId: id,
+        permissionLevel: editedPermissions[id].level,
+        canGrant: editedPermissions[id].canGrant,
+      }))
+
+      // Single batch request instead of hundreds of individual PATCH calls
+      await apiPatch(`/api/admin/users/${selectedUserId}/permissions`, {
+        assignments,
+      })
+
+      toast.success('Permissions updated successfully!')
+
+      // Refresh cache
+      queryClient.invalidateQueries({ queryKey: ['admin-permissions', selectedUserId] })
+      queryClient.invalidateQueries({ queryKey: ['it-permissions-users'] })
+
+      setOriginalPermissions({ ...editedPermissions })
+    } catch (err: any) {
+      console.error('Error saving permissions:', err)
+      toast.error(err.message || 'Failed to save changes.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleDiscardChanges = () => {
+    setEditedPermissions({ ...originalPermissions })
+    toast.info('All pending edits discarded.')
+  }
+
+  // Get initials for profile picture fallback
+  const getInitials = (name: string) => {
+    if (!name) return ''
+    return name
+      .split(' ')
+      .map((w) => w[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2)
+  }
+
+  // Get vibrant theme-matching gradient based on userId hash
+  const getAvatarGradient = (userId: string) => {
+    const gradients = [
+      { bg: 'from-cyan-500/20 to-blue-600/30 border-cyan-500/30 text-cyan-300', border: 'border-[#2fd9f4]' },
+      { bg: 'from-indigo-500/20 to-purple-600/30 border-indigo-500/30 text-indigo-300', border: 'border-indigo-400' },
+      { bg: 'from-teal-500/20 to-emerald-600/30 border-teal-500/30 text-teal-300', border: 'border-emerald-400' },
+      { bg: 'from-blue-500/20 to-violet-600/30 border-blue-500/30 text-blue-300', border: 'border-blue-400' },
+      { bg: 'from-violet-500/20 to-fuchsia-600/30 border-violet-500/30 text-violet-300', border: 'border-fuchsia-400' },
+    ]
+    if (!userId) return gradients[0]
+    let hash = 0
+    for (let i = 0; i < userId.length; i++) {
+      hash = userId.charCodeAt(i) + ((hash << 5) - hash)
+    }
+    const index = Math.abs(hash) % gradients.length
+    return gradients[index]
   }
 
   if (!canAccess) {
     return (
-      <div className="flex items-center justify-center py-16 text-muted-foreground">
-        You do not have permission to view this page.
+      <div className="flex h-[60vh] flex-col items-center justify-center text-center">
+        <Lock className="h-16 w-16 text-destructive mb-4" />
+        <h2 className="text-2xl font-bold">Unauthorized Access</h2>
+        <p className="text-muted-foreground mt-2 max-w-sm">
+          You do not have administrative privileges to access this portal.
+        </p>
       </div>
     )
   }
 
+  // Find active module in loaded tree
+  const activeModule = permissionTreeData?.resourceTree?.find(
+    (m: any) => m.key === selectedModuleKey
+  )
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Shield className="h-8 w-8" />
-          IT Permissions
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Manage feature access for users. Toggle permissions to grant or revoke access.
-        </p>
-      </div>
+    <div className="space-y-4 pb-24 relative">
+      {/* -------------------- VIEW 1: USER DIRECTORY LIST -------------------- */}
+      {!selectedUserId ? (
+        <>
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              <Shield className="h-8 w-8 text-[#2fd9f4]" />
+              IT Access Directory
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Audit institutional access permissions and manage security matrices across all profiles.
+            </p>
+          </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>User Permissions</CardTitle>
-          <CardDescription>
-            Search and filter users, then toggle their feature access. Gray (null) means default
-            (role-based). Green = enabled, Gray off = disabled.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name or email..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
+          <UserDirectoryTable
+            search={search}
+            setSearch={setSearch}
+            roleFilter={roleFilter}
+            setRoleFilter={setRoleFilter}
+            isLoading={isUsersLoading}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+            paginatedUsers={paginatedUsers}
+            onManagePermissions={setSelectedUserId}
+            getInitials={getInitials}
+            getAvatarGradient={getAvatarGradient}
+            totalUsers={totalUsers}
+            itemsPerPage={ITEMS_PER_PAGE}
+          />
+        </>
+      ) : (
+        /* -------------------- VIEW 2: PERMISSIONS ACCESS MATRIX EDITOR -------------------- */
+        <>
+          {isTreeLoading ? (
+            <div className="flex h-[50vh] flex-col items-center justify-center text-center">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#2fd9f4] border-r-transparent"></div>
+              <p className="mt-4 text-sm text-[#c7c6cd]">Retrieving access configuration tree...</p>
             </div>
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Filter by role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All roles</SelectItem>
-                <SelectItem value="MD">MD</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-                <SelectItem value="IT_HEAD">IT Head</SelectItem>
-                <SelectItem value="HR_HEAD">HR Head</SelectItem>
-                <SelectItem value="FINANCE_HEAD">Finance Head</SelectItem>
-                <SelectItem value="SALES_HEAD">Sales Head</SelectItem>
-                <SelectItem value="INSURANCE_HEAD">Insurance Head</SelectItem>
-                <SelectItem value="PL_HEAD">PL Head</SelectItem>
-                <SelectItem value="OUTSTANDING_HEAD">Outstanding Head</SelectItem>
-                <SelectItem value="DIGITAL_MARKETING_HEAD">Digital Marketing Head</SelectItem>
-                <SelectItem value="EXECUTIVE_ASSISTANT">Executive Assistant</SelectItem>
-                <SelectItem value="TEAM_LEAD">Team Lead</SelectItem>
-                <SelectItem value="BD">BD</SelectItem>
-                <SelectItem value="USER">User</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Sticky Top Bar containing back button and user card */}
+              <div className="sticky top-0 z-20 bg-[#07112f] pt-2 pb-4 px-4 space-y-4 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedUserId(null)}
+                    className="text-[#c7c6cd] hover:text-white"
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Access Directory
+                  </Button>
+                </div>
 
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Department</TableHead>
-                  <TableHead>{FEATURE_LABELS[FEATURE_KEYS.MD_APPROVAL_REQUEST]}</TableHead>
-                  <TableHead>{FEATURE_LABELS[FEATURE_KEYS.CREATE_NOTICE]}</TableHead>
-                  <TableHead>{FEATURE_LABELS[FEATURE_KEYS.WORKLOG_ENFORCEMENT]}</TableHead>
-                  <TableHead>{FEATURE_LABELS[FEATURE_KEYS.CREATE_MEET]}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  users?.map((u) => (
-                    <TableRow key={u.id}>
-                      <TableCell>
-                        <div>
-                          <div className="font-medium">{u.name}</div>
-                          <div className="text-sm text-muted-foreground">{u.email}</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-sm">{u.role}</span>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-sm flex items-center gap-1">
-                          {u.employee?.department?.name ? (
-                            <>
-                              <Building2 className="h-3 w-3" />
-                              {u.employee.department.name}
-                            </>
-                          ) : (
-                            '-'
-                          )}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Switch
-                          checked={u.permissions[FEATURE_KEYS.MD_APPROVAL_REQUEST] ?? false}
-                          onCheckedChange={() =>
-                            handleToggle(
-                              u.id,
-                              FEATURE_KEYS.MD_APPROVAL_REQUEST,
-                              u.permissions[FEATURE_KEYS.MD_APPROVAL_REQUEST]
-                            )
-                          }
-                          disabled={toggleMutation.isPending}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Switch
-                          checked={u.permissions[FEATURE_KEYS.CREATE_NOTICE] ?? false}
-                          onCheckedChange={() =>
-                            handleToggle(
-                              u.id,
-                              FEATURE_KEYS.CREATE_NOTICE,
-                              u.permissions[FEATURE_KEYS.CREATE_NOTICE]
-                            )
-                          }
-                          disabled={toggleMutation.isPending}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Switch
-                          checked={u.permissions[FEATURE_KEYS.WORKLOG_ENFORCEMENT] ?? false}
-                          onCheckedChange={() =>
-                            handleToggle(
-                              u.id,
-                              FEATURE_KEYS.WORKLOG_ENFORCEMENT,
-                              u.permissions[FEATURE_KEYS.WORKLOG_ENFORCEMENT]
-                            )
-                          }
-                          disabled={toggleMutation.isPending}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Switch
-                          checked={u.permissions[FEATURE_KEYS.CREATE_MEET] ?? false}
-                          onCheckedChange={() =>
-                            handleToggle(
-                              u.id,
-                              FEATURE_KEYS.CREATE_MEET,
-                              u.permissions[FEATURE_KEYS.CREATE_MEET]
-                            )
-                          }
-                          disabled={toggleMutation.isPending}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))
+                {/* User summary header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#151e3c] border border-[#283150] p-5 rounded-xl gap-4 shadow-md">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-14 h-14 rounded-full border-2 ${getAvatarGradient(permissionTreeData?.user?.id ?? '').border} flex items-center justify-center bg-gradient-to-br ${getAvatarGradient(permissionTreeData?.user?.id ?? '').bg} font-bold text-white text-base`}>
+                      {getInitials(permissionTreeData?.user?.name ?? '')}
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-white">{permissionTreeData?.user?.name}</h2>
+                      <p className="text-sm text-[#c7c6cd] flex items-center gap-1 mt-0.5">
+                        <Building2 className="h-4 w-4 text-indigo-400" />
+                        Role: {permissionTreeData?.user?.role}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="sm:text-right">
+                    <span className="text-xs text-[#c7c6cd] block">User CUID</span>
+                    <code className="text-xs text-[#2fd9f4] bg-[#2fd9f4]/10 px-2.5 py-1 rounded font-mono mt-1 inline-block border border-[#2fd9f4]/20">
+                      {permissionTreeData?.user?.id}
+                    </code>
+                  </div>
+                </div>
+              </div>
+
+              {/* Master Split Grid */}
+              <div className="flex flex-col lg:flex-row gap-6 items-start">
+
+                {/* Left Sidebar: Modules list */}
+                {permissionTreeData?.resourceTree && (
+                  <ModuleSidebar
+                    modules={permissionTreeData.resourceTree}
+                    selectedModuleKey={selectedModuleKey}
+                    onSelectModule={setSelectedModuleKey}
+                  />
                 )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+
+                {/* Right Panel: Sections & Entities */}
+                {activeModule && (
+                  <PermissionsMatrix
+                    activeModule={activeModule}
+                    editedPermissions={editedPermissions}
+                    onToggleModule={handleToggleModule}
+                    onToggleSection={handleToggleSection}
+                    onUpdatePermission={handleUpdatePermission}
+                    openSectionKey={openSectionKey}
+                    setOpenSectionKey={setOpenSectionKey}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Sticky Bottom Action Footer */}
+          <StickyActionFooter
+            isDirty={isDirty}
+            isSaving={isSaving}
+            onDiscard={handleDiscardChanges}
+            onSave={handleSaveChanges}
+          />
+        </>
+      )}
     </div>
   )
 }

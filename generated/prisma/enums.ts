@@ -28,7 +28,8 @@ export const UserRole = {
   COMPLIANCE_HEAD: 'COMPLIANCE_HEAD',
   ADMIN: 'ADMIN',
   USER: 'USER',
-  TESTER: 'TESTER'
+  TESTER: 'TESTER',
+  ACCESS_MATRIX: 'ACCESS_MATRIX'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -66,6 +67,59 @@ export const ConcernCategory = {
 } as const
 
 export type ConcernCategory = (typeof ConcernCategory)[keyof typeof ConcernCategory]
+
+
+export const ReviewStatus = {
+  DONE: 'DONE',
+  NOT_DONE: 'NOT_DONE'
+} as const
+
+export type ReviewStatus = (typeof ReviewStatus)[keyof typeof ReviewStatus]
+
+
+export const SalesTeamCostEntryType = {
+  INCENTIVE: 'INCENTIVE',
+  SEATING: 'SEATING',
+  MISC: 'MISC'
+} as const
+
+export type SalesTeamCostEntryType = (typeof SalesTeamCostEntryType)[keyof typeof SalesTeamCostEntryType]
+
+
+export const EmployeeIncentiveStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID'
+} as const
+
+export type EmployeeIncentiveStatus = (typeof EmployeeIncentiveStatus)[keyof typeof EmployeeIncentiveStatus]
+
+
+export const EmployeeSeatingMiscCostStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID'
+} as const
+
+export type EmployeeSeatingMiscCostStatus = (typeof EmployeeSeatingMiscCostStatus)[keyof typeof EmployeeSeatingMiscCostStatus]
+
+
+export const InvoiceRequestStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type InvoiceRequestStatus = (typeof InvoiceRequestStatus)[keyof typeof InvoiceRequestStatus]
+
+
+export const DoctorPayoffRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type DoctorPayoffRequestStatus = (typeof DoctorPayoffRequestStatus)[keyof typeof DoctorPayoffRequestStatus]
 
 
 export const FlowType = {
@@ -307,7 +361,9 @@ export const NotificationType = {
   EMPLOYEE_ONBOARDED: 'EMPLOYEE_ONBOARDED',
   LEAVE_BALANCE_EDIT_REQUESTED: 'LEAVE_BALANCE_EDIT_REQUESTED',
   LEAVE_BALANCE_EDIT_RESOLVED: 'LEAVE_BALANCE_EDIT_RESOLVED',
-  GRACE2_MONTHLY_LIMIT_EXCEEDED: 'GRACE2_MONTHLY_LIMIT_EXCEEDED'
+  GRACE2_MONTHLY_LIMIT_EXCEEDED: 'GRACE2_MONTHLY_LIMIT_EXCEEDED',
+  RANK_IMPROVED: 'RANK_IMPROVED',
+  WORKFLOW_RESET: 'WORKFLOW_RESET'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -657,6 +713,34 @@ export const InventoryTransactionStatus = {
 } as const
 
 export type InventoryTransactionStatus = (typeof InventoryTransactionStatus)[keyof typeof InventoryTransactionStatus]
+
+
+export const ResourceType = {
+  MODULE: 'MODULE',
+  SECTION: 'SECTION',
+  ENTITY: 'ENTITY'
+} as const
+
+export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType]
+
+
+export const PermissionLevel = {
+  NONE: 'NONE',
+  READ: 'READ',
+  READ_WRITE: 'READ_WRITE',
+  READ_WRITE_DELETE: 'READ_WRITE_DELETE',
+  FULL_ACCESS: 'FULL_ACCESS'
+} as const
+
+export type PermissionLevel = (typeof PermissionLevel)[keyof typeof PermissionLevel]
+
+
+export const SubjectType = {
+  USER: 'USER',
+  ROLE: 'ROLE'
+} as const
+
+export type SubjectType = (typeof SubjectType)[keyof typeof SubjectType]
 
 
 export const InstallmentRecipient = {

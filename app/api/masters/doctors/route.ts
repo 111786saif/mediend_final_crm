@@ -4,11 +4,7 @@ import { Prisma } from '@/generated/prisma/client'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { successResponse, errorResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-utils'
-import { z } from 'zod'
-
-const postBody = z.object({
-  name: z.string().min(1).max(500),
-})
+import { doctorMasterFieldsSchema, emptyToNull } from '@/lib/masters/schemas'
 
 export async function GET(request: NextRequest) {
   const user = getSessionFromRequest(request)
@@ -24,7 +20,11 @@ export async function GET(request: NextRequest) {
     where.isActive = true
   }
   if (search) {
-    where.name = { contains: search, mode: 'insensitive' }
+    where.OR = [
+      { name: { contains: search, mode: 'insensitive' } },
+      { category: { contains: search, mode: 'insensitive' } },
+      { treatment: { contains: search, mode: 'insensitive' } },
+    ]
   }
 
   const items = await prisma.doctorMaster.findMany({
@@ -48,14 +48,33 @@ export async function POST(request: NextRequest) {
     return errorResponse('Invalid JSON', 400)
   }
 
-  const parsed = postBody.safeParse(body)
+  const parsed = doctorMasterFieldsSchema.safeParse(body)
   if (!parsed.success) {
     return errorResponse(parsed.error.flatten().formErrors.join(', ') || 'Invalid body', 400)
   }
 
+  const d = parsed.data
   try {
     const created = await prisma.doctorMaster.create({
-      data: { name: parsed.data.name.trim() },
+      data: {
+        name: d.name.trim(),
+        category: emptyToNull(d.category ?? null),
+        treatment: emptyToNull(d.treatment ?? null),
+        age: d.age ?? null,
+        sex: emptyToNull((d.sex as string | null | undefined) ?? null),
+        aadhaarNumber: emptyToNull(d.aadhaarNumber ?? null),
+        aadhaarCardUrl: emptyToNull(d.aadhaarCardUrl ?? null),
+        panNumber: emptyToNull(d.panNumber ?? null),
+        panCardUrl: emptyToNull(d.panCardUrl ?? null),
+        agreementUrl: emptyToNull(d.agreementUrl ?? null),
+        experienceYears: d.experienceYears ?? null,
+        experienceNotes: emptyToNull(d.experienceNotes ?? null),
+        feeStructure: emptyToNull(d.feeStructure ?? null),
+        ratingAverage: d.ratingAverage ?? null,
+        ratingCount: d.ratingCount ?? 0,
+        documents: d.documents ?? undefined,
+        isActive: d.isActive ?? true,
+      },
     })
     return successResponse({ item: created })
   } catch (e) {

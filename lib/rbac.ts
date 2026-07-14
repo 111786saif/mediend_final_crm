@@ -1,7 +1,7 @@
 import { UserRole } from '@/generated/prisma/enums'
 import { SessionUser } from './auth'
 
-export type Permission = 
+export type Permission =
   | 'leads:read'
   | 'leads:write'
   | 'leads:assign'
@@ -32,6 +32,8 @@ export type Permission =
   | 'finance:approve'
   | 'finance:payroll:read'
   | 'finance:payroll:write'
+  | 'incentive:read'
+  | 'incentive:write'
   | 'departments:create'
   | 'departments:assign_head'
   | 'users:create_tl'
@@ -49,6 +51,7 @@ export type Permission =
   | 'pnl:write'
   /** Surgery / sales P&L slice only (no full company P&L) */
   | 'sales:pnl:read'
+  | 'sales:read'
   | 'masters:read'
   | 'masters:write'
   | 'compliance:read'
@@ -59,6 +62,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'leads:read',
     'leads:write',
     'analytics:read',
+    'targets:read',
     'users:read',
     'insurance:read',
     'pl:read',
@@ -122,6 +126,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'sales:pnl:read',
     'compliance:read',
     'compliance:write',
+    'incentive:read',
+    'incentive:write',
   ],
   SALES_HEAD: [
     'leads:read',
@@ -141,6 +147,9 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hrms:employees:read',
     'hrms:employees:write',
     'sales:pnl:read',
+    'incentive:read',
+    'incentive:write',
+    'pl:read',
   ],
   CATEGORY_MANAGER: [
     'leads:read',
@@ -348,6 +357,8 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'loan-demat:write',
     'compliance:read',
     'compliance:write',
+    'incentive:read',
+    'incentive:write',
   ],
   USER: [
     'hrms:read',
@@ -401,12 +412,24 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'compliance:read',
     'compliance:write',
   ],
+  ACCESS_MATRIX: [
+    'it:permissions',
+  ],
 }
 
 export function hasPermission(user: SessionUser | null, permission: Permission): boolean {
   if (!user) return false
   const permissions = rolePermissions[user.role] || []
   return permissions.includes(permission)
+}
+
+/** Outstanding / doctor / hospital list: shared by P&L and Finance modules */
+export function hasPlOrFinanceRead(user: SessionUser | null): boolean {
+  return hasPermission(user, 'pl:read') || hasPermission(user, 'finance:read')
+}
+
+export function hasPlOrFinanceWrite(user: SessionUser | null): boolean {
+  return hasPermission(user, 'pl:write') || hasPermission(user, 'finance:write')
 }
 
 export function canAccessLead(
@@ -530,6 +553,7 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
     'ADMIN',
     'USER',
     'TESTER',
+    'ACCESS_MATRIX',
   ]
 
   if (user.role === 'MD' || user.role === 'ADMIN' || user.role === 'TESTER') {
@@ -560,6 +584,7 @@ export function getAvailableRolesForCreator(user: SessionUser | null): UserRole[
       'TEAM_LEAD',
       'USER',
       'BD',
+      'ACCESS_MATRIX',
     ]
   }
 

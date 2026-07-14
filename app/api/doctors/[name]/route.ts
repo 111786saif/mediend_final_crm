@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission } from '@/lib/rbac'
+import { hasPlOrFinanceRead } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 
 export async function GET(
@@ -11,7 +11,7 @@ export async function GET(
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPermission(user, 'pl:read')) return errorResponse('Forbidden', 403)
+    if (!hasPlOrFinanceRead(user)) return errorResponse('Forbidden', 403)
 
     const { name: rawName } = await params
     const name = decodeURIComponent(rawName)
@@ -29,8 +29,108 @@ export async function GET(
           }
         : {}
 
+    let finalWhere: any = { doctorName: name, ...surgeryRange }
+
+    const filtersParam = url.searchParams.get('filters')
+    let doctorPaidFilter: any = null
+
+    if (filtersParam) {
+      try {
+        const parsedFilters = JSON.parse(filtersParam)
+        if (Array.isArray(parsedFilters)) {
+          const filterConditions: any[] = []
+
+          for (const f of parsedFilters) {
+            const { field, operator, value } = f
+            if (!field || value === undefined || value === null) continue
+
+            // ── multiSelect / in ─────────────────────────────────────────
+            if (field === 'hospital') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({ hospitalName: { in: value } })
+              }
+            } else if (field === 'status') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({ status: { in: value } })
+              }
+            } else if (field === 'doctorPayoutStatus') {
+              if (Array.isArray(value) && value.length > 0) {
+                filterConditions.push({ doctorPayoutStatus: { in: value } })
+              }
+
+            // ── search / contains ────────────────────────────────────────
+            } else if (field === 'leadRef') {
+              if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({
+                  lead: { leadRef: { contains: value.trim(), mode: 'insensitive' } }
+                })
+              }
+            } else if (field === 'patientName') {
+              if (typeof value === 'string' && value.trim()) {
+                filterConditions.push({
+                  lead: { patientName: { contains: value.trim(), mode: 'insensitive' } }
+                })
+              }
+
+            // ── dateRange / between ──────────────────────────────────────
+            } else if (field === 'month') {
+              if (Array.isArray(value) && value.length === 2 && value[0]) {
+                const from = new Date(value[0])
+                const to = new Date(value[1] || value[0])
+                to.setHours(23, 59, 59, 999)
+                filterConditions.push({ month: { gte: from, lte: to } })
+              }
+            } else if (field === 'surgeryDate') {
+              if (Array.isArray(value) && value.length === 2 && value[0]) {
+                const from = new Date(value[0])
+                const to = new Date(value[1] || value[0])
+                to.setHours(23, 59, 59, 999)
+                filterConditions.push({ surgeryDate: { gte: from, lte: to } })
+              }
+
+            // ── numberRange / between ────────────────────────────────────
+            } else if (field === 'billAmount') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: any = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ billAmount: range })
+              }
+            } else if (field === 'doctorCharges') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: any = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ doctorCharges: range })
+              }
+            } else if (field === 'doctorAmountPending') {
+              const { min, max } = value as { min: number | null; max: number | null }
+              const range: any = {}
+              if (min != null) range.gte = min
+              if (max != null) range.lte = max
+              if (Object.keys(range).length > 0) {
+                filterConditions.push({ doctorAmountPending: range })
+              }
+            } else if (field === 'doctorPaid') {
+              doctorPaidFilter = value
+            }
+          }
+
+          if (filterConditions.length > 0) {
+            finalWhere = {
+              AND: [finalWhere, ...filterConditions],
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error parsing doctor details filters:', err)
+      }
+    }
+
     const records = await prisma.pLRecord.findMany({
-      where: { doctorName: name, ...surgeryRange },
+      where: finalWhere,
       select: {
         leadId: true,
         doctorName: true,
@@ -73,7 +173,7 @@ export async function GET(
       paidByLead.set(i.leadId, e)
     }
 
-    const cases = records.map((r) => ({
+    let cases = records.map((r) => ({
       leadId: r.leadId,
       leadRef: r.lead?.leadRef ?? null,
       patientName: r.lead?.patientName ?? null,
@@ -88,6 +188,16 @@ export async function GET(
       doctorPaid: paidByLead.get(r.leadId)?.DOCTOR ?? 0,
       mediendShareAmount: r.mediendShareAmount,
     }))
+
+    // JavaScript post-filtering for Computed Paid amount bounds
+    if (doctorPaidFilter) {
+      const { min, max } = doctorPaidFilter as { min: number | null; max: number | null }
+      cases = cases.filter(c => {
+        if (min != null && c.doctorPaid < min) return false
+        if (max != null && c.doctorPaid > max) return false
+        return true
+      })
+    }
 
     const kpis = cases.reduce(
       (acc, c) => {

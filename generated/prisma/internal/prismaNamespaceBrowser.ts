@@ -58,8 +58,13 @@ export const ModelName = {
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
+  TierDefinition: 'TierDefinition',
   InsuranceCase: 'InsuranceCase',
   PLRecord: 'PLRecord',
+  InvoiceRequest: 'InvoiceRequest',
+  InvoiceRequestActivity: 'InvoiceRequestActivity',
+  DoctorPayoffRequest: 'DoctorPayoffRequest',
+  DoctorPayoffRequestActivity: 'DoctorPayoffRequestActivity',
   IncomingLead: 'IncomingLead',
   Department: 'Department',
   DepartmentTeam: 'DepartmentTeam',
@@ -109,6 +114,9 @@ export const ModelName = {
   NoticeRecipient: 'NoticeRecipient',
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
+  Resource: 'Resource',
+  PermissionAssignment: 'PermissionAssignment',
+  PermissionAuditLog: 'PermissionAuditLog',
   CampaignCPL: 'CampaignCPL',
   DailyCampaignSpend: 'DailyCampaignSpend',
   InsuranceQuery: 'InsuranceQuery',
@@ -116,12 +124,20 @@ export const ModelName = {
   AdmissionRecord: 'AdmissionRecord',
   InsuranceInitiateForm: 'InsuranceInitiateForm',
   CaseStageHistory: 'CaseStageHistory',
+  WorkflowResetLog: 'WorkflowResetLog',
   CaseChatMessage: 'CaseChatMessage',
   ChatReadReceipt: 'ChatReadReceipt',
   DischargeSheet: 'DischargeSheet',
   OutstandingCase: 'OutstandingCase',
   PaymentInstallment: 'PaymentInstallment',
   ComplianceCall: 'ComplianceCall',
+  SalesTeamCostEntry: 'SalesTeamCostEntry',
+  EmployeeMonthlyIncentive: 'EmployeeMonthlyIncentive',
+  EmployeeMasterSeatingCost: 'EmployeeMasterSeatingCost',
+  EmployeeMonthlySeatingMiscCost: 'EmployeeMonthlySeatingMiscCost',
+  EmployeeMonthlySeatingMiscCostHistory: 'EmployeeMonthlySeatingMiscCostHistory',
+  EmployeeSalesTeamSalaryOverride: 'EmployeeSalesTeamSalaryOverride',
+  EmployeeSalesTeamSalaryOverrideHistory: 'EmployeeSalesTeamSalaryOverrideHistory',
   Task: 'Task',
   TaskDueDateApproval: 'TaskDueDateApproval',
   UserTaskSeen: 'UserTaskSeen',
@@ -136,7 +152,9 @@ export const ModelName = {
   WorkLog: 'WorkLog',
   PushSubscription: 'PushSubscription',
   CronJobLog: 'CronJobLog',
+  RankSnapshot: 'RankSnapshot',
   HospitalMaster: 'HospitalMaster',
+  HospitalMasterInsurance: 'HospitalMasterInsurance',
   DoctorMaster: 'DoctorMaster',
   TPAMaster: 'TPAMaster',
   AnesthesiaMaster: 'AnesthesiaMaster',
@@ -181,6 +199,11 @@ export const UserScalarFieldEnum = {
   phoneNumber: 'phoneNumber',
   address: 'address',
   profilePicture: 'profilePicture',
+  gender: 'gender',
+  emergencyContactName: 'emergencyContactName',
+  emergencyContactPhone: 'emergencyContactPhone',
+  currentAddress: 'currentAddress',
+  permanentAddress: 'permanentAddress',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -372,6 +395,21 @@ export const BonusRuleScalarFieldEnum = {
 export type BonusRuleScalarFieldEnum = (typeof BonusRuleScalarFieldEnum)[keyof typeof BonusRuleScalarFieldEnum]
 
 
+export const TierDefinitionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  metric: 'metric',
+  thresholdValue: 'thresholdValue',
+  order: 'order',
+  rewardAmount: 'rewardAmount',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TierDefinitionScalarFieldEnum = (typeof TierDefinitionScalarFieldEnum)[keyof typeof TierDefinitionScalarFieldEnum]
+
+
 export const InsuranceCaseScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
@@ -449,6 +487,77 @@ export const PLRecordScalarFieldEnum = {
 export type PLRecordScalarFieldEnum = (typeof PLRecordScalarFieldEnum)[keyof typeof PLRecordScalarFieldEnum]
 
 
+export const InvoiceRequestScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  status: 'status',
+  requestRemarks: 'requestRemarks',
+  invoiceNumber: 'invoiceNumber',
+  invoiceAmount: 'invoiceAmount',
+  invoicePdfUrl: 'invoicePdfUrl',
+  invoicePdfName: 'invoicePdfName',
+  financeRemarks: 'financeRemarks',
+  rejectionRemarks: 'rejectionRemarks',
+  requestedById: 'requestedById',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InvoiceRequestScalarFieldEnum = (typeof InvoiceRequestScalarFieldEnum)[keyof typeof InvoiceRequestScalarFieldEnum]
+
+
+export const InvoiceRequestActivityScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  action: 'action',
+  message: 'message',
+  remarks: 'remarks',
+  actorId: 'actorId',
+  createdAt: 'createdAt'
+} as const
+
+export type InvoiceRequestActivityScalarFieldEnum = (typeof InvoiceRequestActivityScalarFieldEnum)[keyof typeof InvoiceRequestActivityScalarFieldEnum]
+
+
+export const DoctorPayoffRequestScalarFieldEnum = {
+  id: 'id',
+  doctorName: 'doctorName',
+  hospitalName: 'hospitalName',
+  leadId: 'leadId',
+  leadIds: 'leadIds',
+  requestAmount: 'requestAmount',
+  requestRemarks: 'requestRemarks',
+  financeRemarks: 'financeRemarks',
+  rejectionRemarks: 'rejectionRemarks',
+  attachments: 'attachments',
+  verificationDocUrl: 'verificationDocUrl',
+  verificationDocName: 'verificationDocName',
+  status: 'status',
+  requestedById: 'requestedById',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DoctorPayoffRequestScalarFieldEnum = (typeof DoctorPayoffRequestScalarFieldEnum)[keyof typeof DoctorPayoffRequestScalarFieldEnum]
+
+
+export const DoctorPayoffRequestActivityScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  action: 'action',
+  message: 'message',
+  remarks: 'remarks',
+  actorId: 'actorId',
+  createdAt: 'createdAt'
+} as const
+
+export type DoctorPayoffRequestActivityScalarFieldEnum = (typeof DoctorPayoffRequestActivityScalarFieldEnum)[keyof typeof DoctorPayoffRequestActivityScalarFieldEnum]
+
+
 export const IncomingLeadScalarFieldEnum = {
   id: 'id',
   source: 'source',
@@ -509,6 +618,19 @@ export const EmployeeScalarFieldEnum = {
   bankAccountName: 'bankAccountName',
   bankAccountNumber: 'bankAccountNumber',
   ifscCode: 'ifscCode',
+  bankName: 'bankName',
+  bankBranch: 'bankBranch',
+  upiId: 'upiId',
+  bloodGroup: 'bloodGroup',
+  employmentType: 'employmentType',
+  workLocation: 'workLocation',
+  passportDocUrl: 'passportDocUrl',
+  drivingLicenseDocUrl: 'drivingLicenseDocUrl',
+  resumeDocUrl: 'resumeDocUrl',
+  educationalCertDocUrl: 'educationalCertDocUrl',
+  experienceCertDocUrl: 'experienceCertDocUrl',
+  appointmentLetterDocUrl: 'appointmentLetterDocUrl',
+  otherDocuments: 'otherDocuments',
   uanNumber: 'uanNumber',
   status: 'status',
   pipStartDate: 'pipStartDate',
@@ -1359,6 +1481,50 @@ export const UserFeaturePermissionScalarFieldEnum = {
 export type UserFeaturePermissionScalarFieldEnum = (typeof UserFeaturePermissionScalarFieldEnum)[keyof typeof UserFeaturePermissionScalarFieldEnum]
 
 
+export const ResourceScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  label: 'label',
+  type: 'type',
+  parentId: 'parentId',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive'
+} as const
+
+export type ResourceScalarFieldEnum = (typeof ResourceScalarFieldEnum)[keyof typeof ResourceScalarFieldEnum]
+
+
+export const PermissionAssignmentScalarFieldEnum = {
+  id: 'id',
+  subjectType: 'subjectType',
+  userId: 'userId',
+  role: 'role',
+  resourceId: 'resourceId',
+  permissionLevel: 'permissionLevel',
+  canGrant: 'canGrant',
+  grantedById: 'grantedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PermissionAssignmentScalarFieldEnum = (typeof PermissionAssignmentScalarFieldEnum)[keyof typeof PermissionAssignmentScalarFieldEnum]
+
+
+export const PermissionAuditLogScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  targetUserId: 'targetUserId',
+  resourceId: 'resourceId',
+  oldLevel: 'oldLevel',
+  newLevel: 'newLevel',
+  oldCanGrant: 'oldCanGrant',
+  newCanGrant: 'newCanGrant',
+  createdAt: 'createdAt'
+} as const
+
+export type PermissionAuditLogScalarFieldEnum = (typeof PermissionAuditLogScalarFieldEnum)[keyof typeof PermissionAuditLogScalarFieldEnum]
+
+
 export const CampaignCPLScalarFieldEnum = {
   id: 'id',
   campaignName: 'campaignName',
@@ -1489,6 +1655,28 @@ export const CaseStageHistoryScalarFieldEnum = {
 } as const
 
 export type CaseStageHistoryScalarFieldEnum = (typeof CaseStageHistoryScalarFieldEnum)[keyof typeof CaseStageHistoryScalarFieldEnum]
+
+
+export const WorkflowResetLogScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  patientName: 'patientName',
+  leadRef: 'leadRef',
+  previousStepNumber: 'previousStepNumber',
+  previousStepLabel: 'previousStepLabel',
+  previousCaseStage: 'previousCaseStage',
+  resetToStepNumber: 'resetToStepNumber',
+  resetToStepLabel: 'resetToStepLabel',
+  resetToCaseStage: 'resetToCaseStage',
+  stepsReverted: 'stepsReverted',
+  reason: 'reason',
+  resetById: 'resetById',
+  resetAt: 'resetAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
+} as const
+
+export type WorkflowResetLogScalarFieldEnum = (typeof WorkflowResetLogScalarFieldEnum)[keyof typeof WorkflowResetLogScalarFieldEnum]
 
 
 export const CaseChatMessageScalarFieldEnum = {
@@ -1689,11 +1877,125 @@ export const ComplianceCallScalarFieldEnum = {
   additionalRemark: 'additionalRemark',
   satisfaction: 'satisfaction',
   concernCategories: 'concernCategories',
+  reviewStatus: 'reviewStatus',
+  reviewScreenshot: 'reviewScreenshot',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type ComplianceCallScalarFieldEnum = (typeof ComplianceCallScalarFieldEnum)[keyof typeof ComplianceCallScalarFieldEnum]
+
+
+export const SalesTeamCostEntryScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  entryType: 'entryType',
+  amount: 'amount',
+  entryDate: 'entryDate',
+  note: 'note',
+  addedByUserId: 'addedByUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type SalesTeamCostEntryScalarFieldEnum = (typeof SalesTeamCostEntryScalarFieldEnum)[keyof typeof SalesTeamCostEntryScalarFieldEnum]
+
+
+export const EmployeeMonthlyIncentiveScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  status: 'status',
+  note: 'note',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeMonthlyIncentiveScalarFieldEnum = (typeof EmployeeMonthlyIncentiveScalarFieldEnum)[keyof typeof EmployeeMonthlyIncentiveScalarFieldEnum]
+
+
+export const EmployeeMasterSeatingCostScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  amount: 'amount',
+  note: 'note',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeMasterSeatingCostScalarFieldEnum = (typeof EmployeeMasterSeatingCostScalarFieldEnum)[keyof typeof EmployeeMasterSeatingCostScalarFieldEnum]
+
+
+export const EmployeeMonthlySeatingMiscCostScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  seatingCost: 'seatingCost',
+  masterSeatingCostId: 'masterSeatingCostId',
+  miscCost: 'miscCost',
+  otherCost: 'otherCost',
+  status: 'status',
+  remarks: 'remarks',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeMonthlySeatingMiscCostScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostScalarFieldEnum]
+
+
+export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
+  id: 'id',
+  recordId: 'recordId',
+  action: 'action',
+  seatingCost: 'seatingCost',
+  miscCost: 'miscCost',
+  otherCost: 'otherCost',
+  status: 'status',
+  remarks: 'remarks',
+  changedByUserId: 'changedByUserId',
+  changedAt: 'changedAt'
+} as const
+
+export type EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum]
+
+
+export const EmployeeSalesTeamSalaryOverrideScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  reason: 'reason',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeSalesTeamSalaryOverrideScalarFieldEnum = (typeof EmployeeSalesTeamSalaryOverrideScalarFieldEnum)[keyof typeof EmployeeSalesTeamSalaryOverrideScalarFieldEnum]
+
+
+export const EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  month: 'month',
+  year: 'year',
+  previousSalary: 'previousSalary',
+  updatedSalary: 'updatedSalary',
+  difference: 'difference',
+  reason: 'reason',
+  updatedByUserId: 'updatedByUserId',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum = (typeof EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum)[keyof typeof EmployeeSalesTeamSalaryOverrideHistoryScalarFieldEnum]
 
 
 export const TaskScalarFieldEnum = {
@@ -1877,11 +2179,25 @@ export const CronJobLogScalarFieldEnum = {
 export type CronJobLogScalarFieldEnum = (typeof CronJobLogScalarFieldEnum)[keyof typeof CronJobLogScalarFieldEnum]
 
 
+export const RankSnapshotScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  metric: 'metric',
+  month: 'month',
+  rank: 'rank',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RankSnapshotScalarFieldEnum = (typeof RankSnapshotScalarFieldEnum)[keyof typeof RankSnapshotScalarFieldEnum]
+
+
 export const HospitalMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
   address: 'address',
   googleMapLink: 'googleMapLink',
+  mouAgreementUrl: 'mouAgreementUrl',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1890,9 +2206,32 @@ export const HospitalMasterScalarFieldEnum = {
 export type HospitalMasterScalarFieldEnum = (typeof HospitalMasterScalarFieldEnum)[keyof typeof HospitalMasterScalarFieldEnum]
 
 
+export const HospitalMasterInsuranceScalarFieldEnum = {
+  hospitalId: 'hospitalId',
+  insuranceId: 'insuranceId'
+} as const
+
+export type HospitalMasterInsuranceScalarFieldEnum = (typeof HospitalMasterInsuranceScalarFieldEnum)[keyof typeof HospitalMasterInsuranceScalarFieldEnum]
+
+
 export const DoctorMasterScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  category: 'category',
+  treatment: 'treatment',
+  age: 'age',
+  sex: 'sex',
+  aadhaarNumber: 'aadhaarNumber',
+  aadhaarCardUrl: 'aadhaarCardUrl',
+  panNumber: 'panNumber',
+  panCardUrl: 'panCardUrl',
+  agreementUrl: 'agreementUrl',
+  experienceYears: 'experienceYears',
+  experienceNotes: 'experienceNotes',
+  feeStructure: 'feeStructure',
+  ratingAverage: 'ratingAverage',
+  ratingCount: 'ratingCount',
+  documents: 'documents',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2166,14 +2505,6 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -2181,4 +2512,12 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

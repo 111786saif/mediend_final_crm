@@ -32,6 +32,7 @@ enum UserRole {
   ADMIN
   USER
   TESTER
+  ACCESS_MATRIX
 }
 
 enum ComplianceCallStatus {
@@ -57,6 +58,41 @@ enum ConcernCategory {
   SURGERY_RELATED
   CAB_PAYMENT
   OTHERS
+}
+
+enum ReviewStatus {
+  DONE
+  NOT_DONE
+}
+
+enum SalesTeamCostEntryType {
+  INCENTIVE
+  SEATING
+  MISC
+}
+
+enum EmployeeIncentiveStatus {
+  PENDING
+  APPROVED
+  PAID
+}
+
+enum EmployeeSeatingMiscCostStatus {
+  PENDING
+  APPROVED
+  PAID
+}
+
+enum InvoiceRequestStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum DoctorPayoffRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum FlowType {
@@ -236,6 +272,8 @@ enum NotificationType {
   LEAVE_BALANCE_EDIT_REQUESTED
   LEAVE_BALANCE_EDIT_RESOLVED
   GRACE2_MONTHLY_LIMIT_EXCEEDED
+  RANK_IMPROVED
+  WORKFLOW_RESET
 }
 
 enum NoticeTargetType {
@@ -408,10 +446,15 @@ model User {
   passwordHash   String
   name           String
   role           UserRole
-  phoneNumber    String?
-  address        String?  @db.Text
-  profilePicture String?
-  createdAt      DateTime @default(now())
+  phoneNumber            String?
+  address                String?  @db.Text
+  profilePicture         String?
+  gender                 String?
+  emergencyContactName   String?
+  emergencyContactPhone  String?
+  currentAddress         Json?
+  permanentAddress       Json?
+  createdAt              DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   // Relations
@@ -476,6 +519,7 @@ model User {
   pdfsCreated          PreAuthPDF[]       @relation("PDFCreator")
   admissionsInitiated  AdmissionRecord[]  @relation("AdmissionInitiator")
   caseStageChanges     CaseStageHistory[] @relation("CaseStageChanger")
+  workflowResetsPerformed WorkflowResetLog[] @relation("WorkflowResetPerformer")
   caseChatMessagesSent CaseChatMessage[]  @relation("CaseChatSender")
   chatReadReceipts     ChatReadReceipt[]  @relation("ChatReadUser")
 
@@ -485,6 +529,8 @@ model User {
   tasksCompleted         Task[]                @relation("TaskCompletedBy")
   taskApprovalsRequested TaskDueDateApproval[]
   taskRatingsGiven       TaskRating[]          @relation("TaskRatingsGiven")
+  createdTierDefinitions TierDefinition[]                        @relation("TierDefinitionCreator")
+
   taskRatingsReceived    TaskRating[]          @relation("TaskRatingsReceived")
   taskProjectsCreated    TaskProject[]         @relation("TaskProjectCreator")
   taskComments           TaskComment[]
@@ -515,6 +561,10 @@ model User {
   crmAssignmentRulesUpdated CrmAssignmentRule[]     @relation("CrmAssignmentRuleUpdater")
   crmActivityLogs           CrmActivityLog[]        @relation("CrmActivityActor")
 
+  // RBAC Access Matrix relations
+  permissionSubjects        PermissionAssignment[]  @relation("PermissionSubject")
+  permissionsGranted        PermissionAssignment[]  @relation("GrantedBy")
+
   // FnF completed by (HR marking Full and Final settlement done)
   fnfCompletedForEmployees Employee[] @relation("FnFCompletedBy")
 
@@ -536,6 +586,26 @@ model User {
   pnlCategoriesCreated      PnLCategory[]        @relation("PnLCategoryCreator")
   pnlEntriesCreated         PnLEntry[]           @relation("PnLEntryCreator")
   targetPnlEntriesCreated   TargetPnLEntry[]     @relation("TargetPnLEntryCreator")
+
+  // Finance: sales team cost entries added by this user
+  salesTeamCostEntriesAdded SalesTeamCostEntry[] @relation("SalesTeamCostEntryAddedBy")
+  employeeIncentivesCreated EmployeeMonthlyIncentive[] @relation("EmployeeIncentiveCreatedBy")
+  employeeIncentivesUpdated EmployeeMonthlyIncentive[] @relation("EmployeeIncentiveUpdatedBy")
+  masterSeatingCostsCreated EmployeeMasterSeatingCost[] @relation("MasterSeatingCostCreatedBy")
+  masterSeatingCostsUpdated EmployeeMasterSeatingCost[] @relation("MasterSeatingCostUpdatedBy")
+  seatingMiscCostsCreated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostCreatedBy")
+  seatingMiscCostsUpdated   EmployeeMonthlySeatingMiscCost[] @relation("SeatingMiscCostUpdatedBy")
+  seatingMiscCostHistory    EmployeeMonthlySeatingMiscCostHistory[] @relation("SeatingMiscCostHistoryBy")
+  salesTeamSalaryOverridesUpdated EmployeeSalesTeamSalaryOverride[] @relation("SalesTeamSalaryOverrideUpdatedBy")
+  salesTeamSalaryOverrideHistory  EmployeeSalesTeamSalaryOverrideHistory[] @relation("SalesTeamSalaryOverrideHistoryBy")
+
+  invoiceRequestsSubmitted  InvoiceRequest[] @relation("InvoiceRequestRequestedBy")
+  invoiceRequestsReviewed   InvoiceRequest[] @relation("InvoiceRequestReviewedBy")
+  invoiceRequestActivities  InvoiceRequestActivity[] @relation("InvoiceRequestActivityActor")
+
+  doctorPayoffRequestsSubmitted DoctorPayoffRequest[] @relation("DoctorPayoffRequestedBy")
+  doctorPayoffRequestsReviewed  DoctorPayoffRequest[] @relation("DoctorPayoffReviewedBy")
+  doctorPayoffRequestActivities DoctorPayoffRequestActivity[] @relation("DoctorPayoffActivityActor")
 
   // Meets (calendar / interviews / MD appointments)
   meetsCreated       Meet[]            @relation("MeetsCreated")
@@ -689,23 +759,27 @@ model Lead {
   lostReason String?   @db.Text
   lostAt     DateTime?
 
-  stageEvents              LeadStageEvent[]
-  insuranceCase            InsuranceCase?
-  plRecord                 PLRecord?
-  kypSubmission            KYPSubmission?
-  dischargeSheet           DischargeSheet?
-  outstandingCase          OutstandingCase?
-  complianceCall           ComplianceCall?
-  admissionRecord          AdmissionRecord?
-  insuranceInitiateForm    InsuranceInitiateForm?
-  caseStageHistory         CaseStageHistory[]
-  caseChatMessages         CaseChatMessage[]
-  chatReadReceipts         ChatReadReceipt[]         @relation("ChatReadLead")
-  callNotes                CallNote[]
-  leadRemarkEntries        LeadRemarkEntry[]
-  qrCallAuditLogs          LeadQrCallAuditLog[]
-  paymentInstallments      PaymentInstallment[]
+  stageEvents           LeadStageEvent[]
+  insuranceCase         InsuranceCase?
+  plRecord              PLRecord?
+  kypSubmission         KYPSubmission?
+  dischargeSheet        DischargeSheet?
+  outstandingCase       OutstandingCase?
+  complianceCall        ComplianceCall?
+  admissionRecord       AdmissionRecord?
+  insuranceInitiateForm InsuranceInitiateForm?
+  caseStageHistory      CaseStageHistory[]
+  workflowResetLogs     WorkflowResetLog[]
+  caseChatMessages      CaseChatMessage[]
+  chatReadReceipts      ChatReadReceipt[]      @relation("ChatReadLead")
+  callNotes             CallNote[]
+  paymentInstallments   PaymentInstallment[]
+  invoiceRequests       InvoiceRequest[]
+  doctorPayoffRequests  DoctorPayoffRequest[]
+  leadRemarkEntries     LeadRemarkEntry[]
+  qrCallAuditLogs       LeadQrCallAuditLog[]
   crmAssignmentPreviewLogs CrmAssignmentPreviewLog[]
+
 
   @@index([bdId])
   @@index([status])
@@ -819,6 +893,21 @@ model BonusRule {
   @@index([targetId])
 }
 
+model TierDefinition {
+  id             String       @id @default(cuid())
+  name           String
+  metric         TargetMetric
+  thresholdValue Float
+  order          Int
+  rewardAmount   Float?
+  createdById    String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  createdBy      User         @relation("TierDefinitionCreator", fields: [createdById], references: [id])
+
+  @@index([metric, order])
+}
+
 model InsuranceCase {
   id             String              @id @default(cuid())
   leadId         String              @unique
@@ -928,6 +1017,108 @@ model PLRecord {
   @@index([status])
 }
 
+model InvoiceRequest {
+  id               String               @id @default(cuid())
+  leadId           String
+  lead             Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  status           InvoiceRequestStatus @default(PENDING)
+
+  requestRemarks   String?              @db.Text
+  invoiceNumber    String?
+  invoiceAmount    Float?
+
+  invoicePdfUrl    String?
+  invoicePdfName   String?
+  financeRemarks   String?              @db.Text
+  rejectionRemarks String?              @db.Text
+
+  requestedById    String
+  requestedBy      User                 @relation("InvoiceRequestRequestedBy", fields: [requestedById], references: [id])
+  reviewedById     String?
+  reviewedBy       User?                @relation("InvoiceRequestReviewedBy", fields: [reviewedById], references: [id])
+  reviewedAt       DateTime?
+
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  activityLogs     InvoiceRequestActivity[]
+
+  @@index([leadId])
+  @@index([status])
+  @@index([requestedById])
+  @@index([createdAt])
+}
+
+model InvoiceRequestActivity {
+  id        String         @id @default(cuid())
+  requestId String
+  request   InvoiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  action    String
+  message   String
+  remarks   String?        @db.Text
+  actorId   String
+  actor     User           @relation("InvoiceRequestActivityActor", fields: [actorId], references: [id])
+  createdAt DateTime       @default(now())
+
+  @@index([requestId])
+  @@index([createdAt])
+  @@index([actorId])
+}
+
+model DoctorPayoffRequest {
+  id               String                    @id @default(cuid())
+  doctorName       String
+  hospitalName     String?
+  leadId           String?
+  lead             Lead?                     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  /// string[] of related lead IDs (batch requests)
+  leadIds          Json?
+  requestAmount    Float
+  requestRemarks   String?                   @db.Text
+  financeRemarks   String?                   @db.Text
+  rejectionRemarks String?                   @db.Text
+  /// [{ name, url, type }]
+  attachments      Json?
+  /// Finance verification document uploaded on approval
+  verificationDocUrl  String?
+  verificationDocName String?
+  status           DoctorPayoffRequestStatus @default(PENDING)
+
+  requestedById    String
+  requestedBy      User                      @relation("DoctorPayoffRequestedBy", fields: [requestedById], references: [id])
+  reviewedById     String?
+  reviewedBy       User?                     @relation("DoctorPayoffReviewedBy", fields: [reviewedById], references: [id])
+  reviewedAt       DateTime?
+
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+
+  activityLogs     DoctorPayoffRequestActivity[]
+
+  @@index([doctorName])
+  @@index([hospitalName])
+  @@index([leadId])
+  @@index([status])
+  @@index([requestedById])
+  @@index([createdAt])
+}
+
+model DoctorPayoffRequestActivity {
+  id        String              @id @default(cuid())
+  requestId String
+  request   DoctorPayoffRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  action    String
+  message   String
+  remarks   String?             @db.Text
+  actorId   String
+  actor     User                @relation("DoctorPayoffActivityActor", fields: [actorId], references: [id])
+  createdAt DateTime            @default(now())
+
+  @@index([requestId])
+  @@index([createdAt])
+  @@index([actorId])
+}
+
 model IncomingLead {
   id                       String   @id @default(cuid())
   source                   String?
@@ -1021,6 +1212,19 @@ model Employee {
   bankAccountName       String?
   bankAccountNumber     String?
   ifscCode              String?
+  bankName              String?
+  bankBranch            String?
+  upiId                 String?
+  bloodGroup            String?
+  employmentType        String?
+  workLocation          String?
+  passportDocUrl        String?
+  drivingLicenseDocUrl  String?
+  resumeDocUrl          String?
+  educationalCertDocUrl String?
+  experienceCertDocUrl  String?
+  appointmentLetterDocUrl String?
+  otherDocuments        Json?
   uanNumber             String?
   status                EmployeeStatus  @default(ACTIVE)
   pipStartDate          DateTime?
@@ -1062,6 +1266,12 @@ model Employee {
   itProjectResources                      ITProjectResource[]
   crmAssignmentRuleMemberships            CrmAssignmentRuleMember[]
   campaignTeamLeadAssignments             CrmCampaignTeamLeadAssignment[] @relation("CampaignTeamLeadEmployee")
+  salesTeamCostEntries                    SalesTeamCostEntry[]
+  monthlyIncentives                       EmployeeMonthlyIncentive[]
+  masterSeatingCost                       EmployeeMasterSeatingCost?
+  monthlySeatingMiscCosts                 EmployeeMonthlySeatingMiscCost[]
+  salesTeamSalaryOverrides                EmployeeSalesTeamSalaryOverride[]
+  salesTeamSalaryOverrideHistory          EmployeeSalesTeamSalaryOverrideHistory[]
 
   @@index([userId])
   @@index([employeeCode])
@@ -2518,6 +2728,79 @@ model CrmActivityLog {
   @@index([action, createdAt])
 }
 
+// ==========================================
+// RBAC / Access Matrix Models & Enums
+// ==========================================
+
+enum ResourceType {
+  MODULE
+  SECTION
+  ENTITY
+}
+
+enum PermissionLevel {
+  NONE
+  READ
+  READ_WRITE
+  READ_WRITE_DELETE
+  FULL_ACCESS
+}
+
+enum SubjectType {
+  USER
+  ROLE
+}
+
+model Resource {
+  id        String        @id @default(cuid())
+  key       String        @unique
+  label     String
+  type      ResourceType
+  parentId  String?
+  parent    Resource?     @relation("Tree", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Resource[]    @relation("Tree")
+  sortOrder Int           @default(0)
+  isActive  Boolean       @default(true)
+
+  assignments PermissionAssignment[]
+}
+
+model PermissionAssignment {
+  id              String          @id @default(cuid())
+  subjectType     SubjectType     @default(USER)
+  userId          String?
+  user            User?           @relation("PermissionSubject", fields: [userId], references: [id], onDelete: Cascade)
+  role            String?
+
+  resourceId      String
+  resource        Resource        @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  permissionLevel PermissionLevel @default(NONE)
+  canGrant        Boolean         @default(false)
+
+  grantedById     String
+  grantedBy       User            @relation("GrantedBy", fields: [grantedById], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([userId, resourceId])
+  @@index([resourceId])
+  @@index([role])
+}
+
+model PermissionAuditLog {
+  id            String   @id @default(cuid())
+  actorId       String
+  targetUserId  String
+  resourceId    String
+  oldLevel      PermissionLevel?
+  newLevel      PermissionLevel?
+  oldCanGrant   Boolean?
+  newCanGrant   Boolean?
+  createdAt     DateTime @default(now())
+}
+
 /// Cost per lead (INR) per campaign name per calendar month — joins to Lead.campaignName + month-of-leadEntryDate
 model CampaignCPL {
   id           String   @id @default(cuid())
@@ -2702,6 +2985,38 @@ model CaseStageHistory {
 
   @@index([leadId])
   @@index([changedAt])
+}
+
+/// Immutable audit trail for Executive Assistant workflow-step resets.
+/// Rows are append-only — there is no update/delete API for this model.
+model WorkflowResetLog {
+  id     String @id @default(cuid())
+  leadId String
+  lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  patientName String
+  leadRef     String
+
+  previousStepNumber Int
+  previousStepLabel  String
+  previousCaseStage  CaseStage
+  resetToStepNumber  Int
+  resetToStepLabel   String
+  resetToCaseStage   CaseStage
+  stepsReverted      Int
+
+  reason String @db.Text
+
+  resetById String
+  resetBy   User   @relation("WorkflowResetPerformer", fields: [resetById], references: [id])
+  resetAt   DateTime @default(now())
+
+  ipAddress   String?
+  userAgent   String? @db.Text
+
+  @@index([leadId])
+  @@index([resetAt])
+  @@index([resetById])
 }
 
 // ==========================================
@@ -3022,6 +3337,10 @@ model ComplianceCall {
   satisfaction      SatisfactionLevel?
   concernCategories ConcernCategory[]  @default([])
 
+  // Google review tracking
+  reviewStatus      ReviewStatus?
+  reviewScreenshot  String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -3030,6 +3349,142 @@ model ComplianceCall {
   @@index([rating])
   @@index([completedAt])
   @@index([satisfaction])
+  @@index([reviewStatus])
+}
+
+// Finance: append-only incentive / seating / misc cost entries per sales org employee
+model SalesTeamCostEntry {
+  id            String                   @id @default(cuid())
+  employeeId    String
+  employee      Employee                 @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  entryType     SalesTeamCostEntryType
+  amount        Float
+  entryDate     DateTime
+  note          String?                  @db.Text
+  addedByUserId String
+  addedBy       User                     @relation("SalesTeamCostEntryAddedBy", fields: [addedByUserId], references: [id])
+  createdAt     DateTime                 @default(now())
+
+  @@index([employeeId, entryType])
+  @@index([entryDate])
+}
+
+model EmployeeMonthlyIncentive {
+  id              String                  @id @default(cuid())
+  employeeId      String
+  employee        Employee                @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month           Int
+  year            Int
+  amount          Float
+  status          EmployeeIncentiveStatus @default(PENDING)
+  note            String?                 @db.Text
+  createdByUserId String
+  createdBy       User                    @relation("EmployeeIncentiveCreatedBy", fields: [createdByUserId], references: [id])
+  updatedByUserId String?
+  updatedBy       User?                   @relation("EmployeeIncentiveUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  @@unique([employeeId, month, year])
+  @@index([month, year])
+  @@index([status])
+}
+
+model EmployeeMasterSeatingCost {
+  id              String   @id @default(cuid())
+  employeeId      String   @unique
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  amount          Float
+  note            String?  @db.Text
+  createdByUserId String
+  createdBy       User     @relation("MasterSeatingCostCreatedBy", fields: [createdByUserId], references: [id])
+  updatedByUserId String?
+  updatedBy       User?    @relation("MasterSeatingCostUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  monthlyCosts    EmployeeMonthlySeatingMiscCost[]
+
+  @@index([updatedAt])
+}
+
+model EmployeeMonthlySeatingMiscCost {
+  id                    String                        @id @default(cuid())
+  employeeId            String
+  employee              Employee                      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month                 Int
+  year                  Int
+  seatingCost           Float
+  masterSeatingCostId   String?
+  masterSeatingCost     EmployeeMasterSeatingCost?    @relation(fields: [masterSeatingCostId], references: [id], onDelete: SetNull)
+  miscCost              Float                         @default(0)
+  otherCost             Float                         @default(0)
+  status                EmployeeSeatingMiscCostStatus @default(PENDING)
+  remarks               String?                       @db.Text
+  createdByUserId       String
+  createdBy             User                          @relation("SeatingMiscCostCreatedBy", fields: [createdByUserId], references: [id])
+  updatedByUserId       String?
+  updatedBy             User?                         @relation("SeatingMiscCostUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt             DateTime                      @default(now())
+  updatedAt             DateTime                      @updatedAt
+  history               EmployeeMonthlySeatingMiscCostHistory[]
+
+  @@unique([employeeId, month, year])
+  @@index([month, year])
+  @@index([status])
+}
+
+model EmployeeMonthlySeatingMiscCostHistory {
+  id              String                        @id @default(cuid())
+  recordId        String
+  record          EmployeeMonthlySeatingMiscCost  @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  action          String
+  seatingCost     Float
+  miscCost        Float
+  otherCost       Float                         @default(0)
+  status          EmployeeSeatingMiscCostStatus
+  remarks         String?                       @db.Text
+  changedByUserId String
+  changedBy       User                          @relation("SeatingMiscCostHistoryBy", fields: [changedByUserId], references: [id])
+  changedAt       DateTime                      @default(now())
+
+  @@index([recordId, changedAt])
+}
+
+/// Sales Team Cost–only salary override for a given employee + month (does not change Payroll).
+model EmployeeSalesTeamSalaryOverride {
+  id              String   @id @default(cuid())
+  employeeId      String
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month           Int
+  year            Int
+  amount          Float
+  reason          String   @db.Text
+  updatedByUserId String
+  updatedBy       User     @relation("SalesTeamSalaryOverrideUpdatedBy", fields: [updatedByUserId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([employeeId, month, year])
+  @@index([month, year])
+}
+
+/// Immutable audit log of Sales Team Cost salary overrides.
+model EmployeeSalesTeamSalaryOverrideHistory {
+  id              String   @id @default(cuid())
+  employeeId      String
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month           Int
+  year            Int
+  previousSalary  Float
+  updatedSalary   Float
+  difference      Float
+  reason          String   @db.Text
+  updatedByUserId String
+  updatedBy       User     @relation("SalesTeamSalaryOverrideHistoryBy", fields: [updatedByUserId], references: [id])
+  updatedAt       DateTime @default(now())
+
+  @@index([employeeId, month, year, updatedAt])
+  @@index([updatedAt])
 }
 
 // ==========================================
@@ -3275,29 +3730,74 @@ model CronJobLog {
   @@index([createdAt])
 }
 
+model RankSnapshot {
+  id         String   @id @default(cuid())
+  entityType String // 'BD' | 'TEAM'
+  entityId   String // bdId (BD) or managerId (TEAM)
+  metric     String // e.g. 'IPD_DONE'
+  month      String // 'YYYY-MM'
+  rank       Int
+  updatedAt  DateTime @updatedAt
+
+  @@unique([entityType, entityId, metric, month])
+  @@index([entityType, month])
+}
+
 // CRM reference masters (BD / Insurance forms — dropdowns)
 model HospitalMaster {
   id            String   @id @default(cuid())
   name          String   @unique
   address       String?  @db.Text
   googleMapLink String?
+  /// MOU / agreement document URL
+  mouAgreementUrl String?
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  insuranceProviders HospitalMasterInsurance[]
 
   @@index([name])
   @@index([isActive])
 }
 
+model HospitalMasterInsurance {
+  hospitalId  String
+  hospital    HospitalMaster  @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  insuranceId String
+  insurance   InsuranceMaster @relation(fields: [insuranceId], references: [id], onDelete: Cascade)
+
+  @@id([hospitalId, insuranceId])
+  @@index([insuranceId])
+}
+
 model DoctorMaster {
   id        String   @id @default(cuid())
   name      String   @unique
+  category  String?
+  treatment String?
+  age       Int?
+  sex       String?
+  aadhaarNumber String?
+  aadhaarCardUrl String?
+  panNumber String?
+  panCardUrl String?
+  agreementUrl String?
+  experienceYears Int?
+  experienceNotes String? @db.Text
+  feeStructure String? @db.Text
+  /// Manual / aggregated rating from feedback (1–5)
+  ratingAverage Float?
+  ratingCount   Int     @default(0)
+  /// [{ name, url, type }] — Degrees, Documentation, MOU, Other
+  documents Json?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([name])
   @@index([isActive])
+  @@index([category])
 }
 
 model TPAMaster {
@@ -3328,6 +3828,8 @@ model InsuranceMaster {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  hospitals HospitalMasterInsurance[]
 
   @@index([name])
   @@index([isActive])
