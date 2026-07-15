@@ -45,8 +45,6 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { DischargeSummaryDialog } from '@/components/discharge/discharge-summary-dialog'
-import { PlRecordSheet } from '@/components/pl/pl-record-sheet'
 
 interface LeadWithStage {
   id: string
@@ -238,21 +236,21 @@ export default function InsuranceCashCasesPage() {
 
   const bdOptions = useMemo(() => {
     const map = new Map<string, string>()
-    ;(universeLeads || []).forEach(l => {
-      if (l.bdId && l.bd?.name) map.set(l.bdId, l.bd.name)
-    })
+      ; (universeLeads || []).forEach(l => {
+        if (l.bdId && l.bd?.name) map.set(l.bdId, l.bd.name)
+      })
     return Array.from(map.entries()).map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name))
   }, [universeLeads])
 
   const circleOptions = useMemo(() => {
     const set = new Set<string>()
-    ;(universeLeads || []).forEach(l => { if (l.circle) set.add(l.circle) })
+      ; (universeLeads || []).forEach(l => { if (l.circle) set.add(l.circle) })
     return Array.from(set).sort()
   }, [universeLeads])
 
   const treatmentOptions = useMemo(() => {
     const set = new Set<string>()
-    ;(universeLeads || []).forEach(l => { if (l.treatment) set.add(l.treatment) })
+      ; (universeLeads || []).forEach(l => { if (l.treatment) set.add(l.treatment) })
     return Array.from(set).sort()
   }, [universeLeads])
 
@@ -594,9 +592,8 @@ export default function InsuranceCashCasesPage() {
               return (
                 <Card
                   key={card.id}
-                  className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl border-2 ${
-                    isActive ? card.borderColor + ' shadow-lg ring-2 ring-offset-2' : 'border-transparent'
-                  } bg-gradient-to-br ${card.bgGradient}`}
+                  className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl border-2 ${isActive ? card.borderColor + ' shadow-lg ring-2 ring-offset-2' : 'border-transparent'
+                    } bg-gradient-to-br ${card.bgGradient}`}
                   onClick={() => setActiveTab(card.id)}
                 >
                   <CardHeader className="pb-1 pt-3 px-3">
@@ -710,16 +707,16 @@ export default function InsuranceCashCasesPage() {
                         const rowBg = isDischargeUrgent
                           ? 'bg-orange-50/60 dark:bg-orange-950/20'
                           : isReviewUrgent
-                          ? 'bg-amber-50/60 dark:bg-amber-950/20'
-                          : index % 2 === 0
-                          ? 'bg-white dark:bg-gray-950'
-                          : 'bg-gray-50/50 dark:bg-gray-900/50'
+                            ? 'bg-amber-50/60 dark:bg-amber-950/20'
+                            : index % 2 === 0
+                              ? 'bg-white dark:bg-gray-950'
+                              : 'bg-gray-50/50 dark:bg-gray-900/50'
 
                         const borderLeft = isDischargeUrgent
                           ? 'border-l-4 border-l-orange-500'
                           : isReviewUrgent
-                          ? 'border-l-4 border-l-amber-500'
-                          : 'border-l-4 border-l-transparent'
+                            ? 'border-l-4 border-l-amber-500'
+                            : 'border-l-4 border-l-transparent'
 
                         return (
                           <TableRow
@@ -747,7 +744,7 @@ export default function InsuranceCashCasesPage() {
                                     </span>
                                   )}
                                 </div>
-                                {canViewPhoneNumber(user) && <div className="text-sm text-gray-600 dark:text-gray-400">{getPhoneDisplay(lead)}</div>}
+                                {canViewPhoneNumber(user) && <div className="text-sm text-gray-600 dark:text-gray-400">{getPhoneDisplay(lead.phoneNumber, canViewPhoneNumber(user))}</div>}
                               </div>
                             </TableCell>
                             <TableCell className="text-gray-700 dark:text-gray-300">{lead.hospitalName || <span className="text-gray-400">-</span>}</TableCell>

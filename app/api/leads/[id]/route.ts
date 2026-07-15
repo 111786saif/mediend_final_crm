@@ -8,6 +8,7 @@ import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
+import { recomputeOutstandingFromInstallments } from '@/lib/pl/installments'
 
 export async function GET(
   request: NextRequest,
@@ -224,6 +225,41 @@ export async function GET(
       console.error('[DEBUG] Error fetching admissionRecord relation:', e);
     }
 
+    // Resolve hospital name to fetch hospitalShare if the column exists in HospitalMaster
+    const pl = (plRecord as Record<string, unknown> | null) ?? {}
+    const ds = (dischargeSheet as Record<string, unknown> | null) ?? {}
+    const kyp = (kypSubmission as Record<string, unknown> | null) ?? {}
+    const preAuth = (kyp.preAuthData as Record<string, unknown> | null) ?? {}
+    const preAuthHospital = preAuth.requestedHospitalName as string | null | undefined
+    const admission = (admissionRecord as Record<string, unknown> | null) ?? {}
+
+    const resolvedHospitalName =
+      pl.hospitalName as string ||
+      ds.hospitalName as string ||
+      preAuthHospital ||
+      admission.admittingHospital as string ||
+      lead.hospitalName;
+
+    let hospitalShare = null;
+    if (resolvedHospitalName) {
+      try {
+        const columns: any[] = await prisma.$queryRawUnsafe(
+          `SELECT column_name FROM information_schema.columns WHERE LOWER(table_name) = 'hospitalmaster' AND LOWER(column_name) = 'hospitalshare'`
+        )
+        if (columns.length > 0) {
+          const result: any[] = await prisma.$queryRawUnsafe(
+            `SELECT "hospitalShare" FROM "HospitalMaster" WHERE name = $1 LIMIT 1`,
+            resolvedHospitalName
+          )
+          if (result.length > 0) {
+            hospitalShare = result[0].hospitalShare ?? null
+          }
+        }
+      } catch (e) {
+        console.error('[DEBUG] Error querying hospitalShare raw:', e)
+      }
+    }
+
     const fullLead = {
       ...lead,
       bd,
@@ -266,6 +302,7 @@ export async function GET(
       source: fullLead.source ? mapSourceCode(fullLead.source) : fullLead.source,
       phoneNumber: canViewPhone ? fullLead.phoneNumber : (fullLead.phoneNumber ? maskPhoneNumber(fullLead.phoneNumber) : null),
       caseStage: fullLead.caseStage,
+      hospitalShare,
     }
     console.log('[DEBUG] Mapping successful')
 
@@ -436,6 +473,7 @@ export async function PATCH(
         'finalProfit', 'hospitalPayoutStatus', 'doctorPayoutStatus', 'mediendInvoiceStatus',
         'hospitalAmountPending', 'doctorAmountPending',
         'remarks', 'doctorRemarks', 'costBreakdownRemarks', 'closedAt',
+        'outstandingStatus',
       ]
       const plUpdate: Record<string, unknown> = {}
       for (const key of plAllowed) {
@@ -457,6 +495,7 @@ export async function PATCH(
           },
           update: plUpdate as any,
         })
+        await recomputeOutstandingFromInstallments(id)
       }
 
       // Mirror deduction + remarks fields onto DischargeSheet so the read-time
@@ -472,10 +511,33 @@ export async function PATCH(
       }
       if (plData.deductionAmount !== undefined) dsMirror.deductionAmount = plData.deductionAmount
       if (plData.waivedOffAmount !== undefined) dsMirror.waivedOffAmount = plData.waivedOffAmount
+      if (plData.actualFinalAmount !== undefined) {
+        dsMirror.actualFinalAmount = parseFloat(plData.actualFinalAmount as string) || 0
+      }
+      if (plData.collectedByHospital !== undefined) {
+        dsMirror.collectedByHospital = parseFloat(plData.collectedByHospital as string) || 0
+      }
+      if (plData.collectedByMediend !== undefined) {
+        dsMirror.collectedByMediend = parseFloat(plData.collectedByMediend as string) || 0
+      }
       if (Object.keys(dsMirror).length > 0) {
         await prisma.dischargeSheet.updateMany({
           where: { leadId: id },
           data: dsMirror as any,
+        })
+      }
+
+      const leadMirror: Record<string, unknown> = {}
+      if (plData.collectedByHospital !== undefined) {
+        leadMirror.collectedByHospital = parseFloat(plData.collectedByHospital as string) || 0
+      }
+      if (plData.collectedByMediend !== undefined) {
+        leadMirror.collectedByMediend = parseFloat(plData.collectedByMediend as string) || 0
+      }
+      if (Object.keys(leadMirror).length > 0) {
+        await prisma.lead.update({
+          where: { id: id },
+          data: leadMirror as any,
         })
       }
     }

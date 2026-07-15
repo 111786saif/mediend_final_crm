@@ -892,7 +892,7 @@ export default function PatientDetailsPage() {
                     <DossierField icon={Tag} label="Category" value={lead.category} />
                     <DossierField icon={User} label="Surgeon" value={surgeonLine || null} />
                     <DossierField icon={Activity} label="Anesthesia" value={lead.anesthesia} />
-                    {lead.category?.toLowerCase() === 'lipoma' && (
+                    {(lead.treatment?.toLowerCase().includes('lipoma') || lead.category?.toLowerCase() === 'lipoma') && (
                       <DossierField icon={Tag} label="Count" value={lead.quantityGrade} />
                     )}
                     {(lead.treatment?.toLowerCase().includes('gynecomastia') || lead.category?.toLowerCase() === 'gynecomastia') && (

@@ -56,6 +56,8 @@ export type Permission =
   | 'masters:write'
   | 'compliance:read'
   | 'compliance:write'
+  | 'main.cumulative_report'
+
 
 const rolePermissions: Record<UserRole, Permission[]> = {
   MD: [
@@ -92,6 +94,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'masters:read',
     'masters:write',
     'compliance:read',
+    'main.cumulative_report',
   ],
   EXECUTIVE_ASSISTANT: [
     'analytics:read',
@@ -128,6 +131,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'compliance:write',
     'incentive:read',
     'incentive:write',
+    'main.cumulative_report',
   ],
   SALES_HEAD: [
     'leads:read',
@@ -202,6 +206,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'hierarchy:read',
     'hierarchy:team:read',
     'hierarchy:leave:approve',
+    'main.cumulative_report',
   ],
   PL_HEAD: [
     'leads:read',
@@ -304,6 +309,7 @@ const rolePermissions: Record<UserRole, Permission[]> = {
     'compliance:read',
     'compliance:write',
     'hierarchy:read',
+    'main.cumulative_report',
   ],
   ADMIN: [
     'leads:read',

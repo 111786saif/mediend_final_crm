@@ -51,6 +51,7 @@ interface Lead {
     costBreakdownRemarks?: string
   }
   dischargeSheet?: ({ id: string } & Record<string, unknown>) | null
+  hospitalShare?: number | null
   [key: string]: unknown
 }
 
@@ -210,10 +211,10 @@ export default function PLRecordEditPage() {
           surgeryDate: surgeryDate ? new Date(surgeryDate as string).toISOString().slice(0, 10) : '',
           managerName: (pl?.managerName as string) || '',
           bdmName: (pl?.bdmName as string) || record.bd?.name || '',
-          paymentType: (pl?.paymentType as string) || '',
-          status: (pl?.status as string) || '',
+          paymentType: (pl?.paymentType as string) || (ds?.paymentType as string) || (record.flowType as string) || '',
+          status: (pl?.status as string) || (ds?.status as string) || (record.caseStage as string) || '',
           paymentCollectedAt: (pl?.paymentCollectedAt as string) || '',
-          totalAmount: pl?.totalAmount != null ? String(pl.totalAmount) : '',
+          totalAmount: pl?.totalAmount != null ? String(pl.totalAmount) : (ds?.finalApprovedAmount != null ? String(ds.finalApprovedAmount) : (record.settledTotal != null ? String(record.settledTotal) : (record.billAmount != null ? String(record.billAmount) : ''))),
           billAmount: pl?.billAmount != null ? String(pl.billAmount) : (record.billAmount != null ? String(record.billAmount) : ''),
           deductionAmount: dedTotal,
           cashOrDedPaid: dedPatient,
@@ -227,9 +228,9 @@ export default function PLRecordEditPage() {
           actualInstrumentCost: pl?.actualInstrumentCost != null ? String(pl.actualInstrumentCost) : (pl?.instrumentsCost != null ? String(pl.instrumentsCost) : (ds?.instrumentsCost != null ? String(ds.instrumentsCost) : '')),
           implantPaidBy: ((pl?.implantPaidBy as string) || (ds?.implantPaidBy as string) || '') as PaidBy,
           instrumentsPaidBy: ((pl?.instrumentsPaidBy as string) || (ds?.instrumentsPaidBy as string) || '') as PaidBy,
-          hospitalSharePct: pl?.hospitalSharePct != null ? String(pl.hospitalSharePct) : '',
+          hospitalSharePct: pl?.hospitalSharePct != null ? String(pl.hospitalSharePct) : (record.hospitalShare != null ? String(record.hospitalShare) : ''),
           hospitalShareAmount: pl?.hospitalShareAmount != null ? String(pl.hospitalShareAmount) : '',
-          mediendSharePct: pl?.mediendSharePct != null ? String(pl.mediendSharePct) : '',
+          mediendSharePct: pl?.mediendSharePct != null ? String(pl.mediendSharePct) : (record.hospitalShare != null ? String(100 - record.hospitalShare) : ''),
           mediendShareAmount: pl?.mediendShareAmount != null ? String(pl.mediendShareAmount) : '',
           mediendNetProfit:
             pl?.mediendNetProfit != null
@@ -260,7 +261,7 @@ export default function PLRecordEditPage() {
           axisTariffDeduction: ds?.axisTariffDeduction != null ? String(ds.axisTariffDeduction) : '',
           axisTariffDeductionPaid: ds?.axisTariffDeductionPaid != null ? String(ds.axisTariffDeductionPaid) : '',
           finalApprovedAmount: ds?.finalApprovedAmount != null ? String(ds.finalApprovedAmount) : '',
-          actualFinalAmount: ds?.actualFinalAmount != null ? String(ds.actualFinalAmount) : '',
+          actualFinalAmount: ds?.actualFinalAmount != null ? String(ds.actualFinalAmount) : (pl?.billAmount != null ? String(pl.billAmount) : (record.billAmount != null ? String(record.billAmount) : '')),
           netSettlementAmount: ds?.netSettlementAmount != null ? String(ds.netSettlementAmount) : '',
         }
         if (JSON.stringify(prev) === JSON.stringify(next)) return prev
@@ -803,7 +804,23 @@ export default function PLRecordEditPage() {
               <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                   <Label>Hospital %</Label>
-                  <Input type="number" step="0.01" value={formData.hospitalSharePct} onChange={(e) => update('hospitalSharePct', e.target.value)} className="mt-1" />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.hospitalSharePct}
+                    onChange={(e) => {
+                      const val = e.target.value
+                      setFormData((prev) => {
+                        const num = parseFloat(val)
+                        return {
+                          ...prev,
+                          hospitalSharePct: val,
+                          mediendSharePct: val === '' ? '' : (!isNaN(num) ? String(Math.round((100 - num) * 100) / 100) : prev.mediendSharePct),
+                        }
+                      })
+                    }}
+                    className="mt-1"
+                  />
                 </div>
                 <div>
                   <Label>Hospital Amount</Label>
@@ -811,7 +828,23 @@ export default function PLRecordEditPage() {
                 </div>
                 <div>
                   <Label>Mediend %</Label>
-                  <Input type="number" step="0.01" value={formData.mediendSharePct} onChange={(e) => update('mediendSharePct', e.target.value)} className="mt-1" />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={formData.mediendSharePct}
+                    onChange={(e) => {
+                      const val = e.target.value
+                      setFormData((prev) => {
+                        const num = parseFloat(val)
+                        return {
+                          ...prev,
+                          mediendSharePct: val,
+                          hospitalSharePct: val === '' ? '' : (!isNaN(num) ? String(Math.round((100 - num) * 100) / 100) : prev.hospitalSharePct),
+                        }
+                      })
+                    }}
+                    className="mt-1"
+                  />
                 </div>
                 <div>
                   <Label>Mediend Amount</Label>
