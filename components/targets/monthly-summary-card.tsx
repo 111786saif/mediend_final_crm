@@ -6,6 +6,7 @@ import { apiGet } from '@/lib/api-client'
 import { useAuth } from '@/hooks/use-auth'
 import { useMyTargetProgress } from '@/app/bd/dashboard/BDDashboard'
 import { calculateIncentive } from '@/lib/analytics/incentives'
+import { useMyIncentive } from '@/hooks/use-incentives'
 import { Target, Trophy, Percent, Gift } from 'lucide-react'
 
 interface TrendPoint {
@@ -88,6 +89,28 @@ export function MonthlySummaryCard() {
     return calculateIncentive(monthly.bonusRules, monthly.actual)
   }, [monthly])
 
+  // Official, finance-recorded amount for this month (if Finance has entered
+  // one yet). Only takes priority over the live estimate once it's been
+  // approved or paid — while PENDING we keep showing the live projection so
+  // the BD/TL isn't confused by a placeholder figure sitting in review.
+  const { data: myIncentiveData } = useMyIncentive(undefined, undefined, isTargetRole)
+  const officialIncentive = myIncentiveData?.record ?? null
+  const isOfficialConfirmed = officialIncentive?.status === 'APPROVED' || officialIncentive?.status === 'PAID'
+
+  const incentiveValue = isOfficialConfirmed
+    ? `₹${officialIncentive!.amount.toLocaleString('en-IN')}`
+    : incentive && incentive.totalReward > 0
+    ? `₹${incentive.totalReward.toLocaleString('en-IN')}`
+    : '—'
+
+  const incentiveSub = isOfficialConfirmed
+    ? officialIncentive!.status === 'PAID' ? 'Paid by Finance' : 'Approved by Finance'
+    : incentive?.unresolvedRules.length
+    ? 'Some bonus rules need a fixed amount configured'
+    : incentive && incentive.totalReward > 0
+    ? 'Estimated · pending approval'
+    : 'No reward earned yet'
+
   if (!isTargetRole) return null
 
   if (!monthly) {
@@ -106,7 +129,7 @@ export function MonthlySummaryCard() {
             value={bestMonth ? bestMonth.label : '–'}
             sub={bestMonth ? `${fmtVal(bestMonth.actual, trend?.metric ?? '')} ${METRIC_LABELS[trend?.metric ?? ''] ?? ''}` : 'Not enough data yet'}
           />
-          <StatTile icon={<Gift className="h-3.5 w-3.5" />} label="Incentive Earned" value="–" sub="No reward earned yet" />
+          <StatTile icon={<Gift className="h-3.5 w-3.5" />} label="Incentive Earned" value={incentiveValue} sub={incentiveSub} />
         </div>
       </div>
     )
@@ -152,14 +175,8 @@ export function MonthlySummaryCard() {
         <StatTile
           icon={<Gift className="h-3.5 w-3.5" />}
           label="Incentive Earned"
-          value={incentive && incentive.totalReward > 0 ? `₹${incentive.totalReward.toLocaleString('en-IN')}` : '—'}
-          sub={
-            incentive?.unresolvedRules.length
-              ? 'Some bonus rules need a fixed amount configured'
-              : incentive && incentive.totalReward > 0
-              ? 'Live calculation'
-              : 'No reward earned yet'
-          }
+          value={incentiveValue}
+          sub={incentiveSub}
         />
       </div>
     </div>

@@ -33,6 +33,22 @@ export function useIncentives(filters: IncentiveFilters) {
   })
 }
 
+/**
+ * Self-scoped: returns only the calling user's own incentive record for the
+ * given month/year (or the current month if omitted). No admin permission
+ * needed — see GET /api/incentives/me.
+ */
+export function useMyIncentive(month?: number, year?: number, enabled: boolean = true) {
+  const now = new Date()
+  const m = month ?? now.getMonth() + 1
+  const y = year ?? now.getFullYear()
+  return useQuery({
+    queryKey: ['my-incentive', m, y],
+    queryFn: () => apiGet<{ record: IncentiveRecord | null }>(`/api/incentives/me?month=${m}&year=${y}`),
+    enabled,
+  })
+}
+
 export interface CreateIncentiveInput {
   employeeIds?: string[]
   entries?: { employeeId: string; amount: number }[]

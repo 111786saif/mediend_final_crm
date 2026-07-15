@@ -36,11 +36,7 @@ interface TargetProgress {
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const TARGET_ROLES = [
-  'BD', 'TEAM_LEAD', 'SALES_HEAD', 'CATEGORY_MANAGER',
-  'ASSISTANT_CATEGORY_MANAGER', 'HR_HEAD', 'DIGITAL_MARKETING_HEAD',
-  'IT_HEAD', 'FINANCE_HEAD',
-]
+const TARGET_ROLES = ['BD', 'TEAM_LEAD']
 
 const METRIC_LABELS: Record<string, string> = {
   IPD_DONE: 'IPDs',
