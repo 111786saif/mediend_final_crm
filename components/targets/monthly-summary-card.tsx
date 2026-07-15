@@ -88,7 +88,29 @@ export function MonthlySummaryCard() {
     return calculateIncentive(monthly.bonusRules, monthly.actual)
   }, [monthly])
 
-  if (!isTargetRole || !monthly) return null
+  if (!isTargetRole) return null
+
+  if (!monthly) {
+    return (
+      <div className="rounded-2xl border bg-card p-4 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <Trophy className="h-4 w-4 text-teal-600" />
+          <h2 className="text-sm font-semibold">Score Card</h2>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <StatTile icon={<Target className="h-3.5 w-3.5" />} label="Target / Achieved" value="–" sub="No target assigned" />
+          <StatTile icon={<Percent className="h-3.5 w-3.5" />} label="Achievement" value="–" sub="No target assigned" />
+          <StatTile
+            icon={<Trophy className="h-3.5 w-3.5" />}
+            label="Best Month"
+            value={bestMonth ? bestMonth.label : '–'}
+            sub={bestMonth ? `${fmtVal(bestMonth.actual, trend?.metric ?? '')} ${METRIC_LABELS[trend?.metric ?? ''] ?? ''}` : 'Not enough data yet'}
+          />
+          <StatTile icon={<Gift className="h-3.5 w-3.5" />} label="Incentive Earned" value="–" sub="No reward earned yet" />
+        </div>
+      </div>
+    )
+  }
 
   const metric = monthly.metric
   const label = METRIC_LABELS[metric] ?? metric.replace(/_/g, ' ')

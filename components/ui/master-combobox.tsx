@@ -73,6 +73,13 @@ export interface MasterComboboxProps {
   error?: string
   className?: string
   onItemSelect?: (item: MasterItem) => void
+  /**
+   * When true, only an explicit selection from the suggestion list can set
+   * the value. Typing alone never commits — on blur/Escape without a
+   * selection, the field reverts to the last committed `value` instead of
+   * keeping the raw typed text.
+   */
+  restrictToSuggestions?: boolean
 }
 
 export function MasterCombobox({
@@ -87,6 +94,7 @@ export function MasterCombobox({
   error,
   className,
   onItemSelect,
+  restrictToSuggestions = false,
 }: MasterComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState(value)
@@ -148,10 +156,16 @@ export function MasterCombobox({
   }, [open, highlightedIndex, listInstanceId, itemKey])
 
   const commitFreeText = React.useCallback(() => {
+    if (restrictToSuggestions) {
+      // No selection was made — drop the leftover typed text, don't commit it.
+      setInputValue(value)
+      setOpen(false)
+      return
+    }
     const v = inputValue.trim()
     onChange(v)
     setOpen(false)
-  }, [inputValue, onChange])
+  }, [inputValue, onChange, restrictToSuggestions, value])
 
   const selectItem = (item: MasterItem) => {
     onChange(item.name)
@@ -252,7 +266,7 @@ export function MasterCombobox({
             <div className="p-1">
               {items.length === 0 && !isFetching && (
                 <p className="text-muted-foreground px-2 py-3 text-sm">
-                  No matches. Press Enter to use your text.
+                  {restrictToSuggestions ? 'No matches found.' : 'No matches. Press Enter to use your text.'}
                 </p>
               )}
               {items.map((item, index) => {

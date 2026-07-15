@@ -353,7 +353,8 @@ export function IPDDetailsForm({
                 masterType="anesthesia"
                 value={formData.anesthesia}
                 onChange={(v) => set('anesthesia', v)}
-                placeholder="Search or type anaesthesia type"
+                placeholder="Search anaesthesia type"
+                restrictToSuggestions
               />
             </div>
           </div>
@@ -369,7 +370,15 @@ export function IPDDetailsForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="surgeonName">Surgeon Name</Label>
-            <Input id="surgeonName" value={formData.surgeonName} onChange={(e) => set('surgeonName', e.target.value)} placeholder="Surgeon name" className="mt-1" />
+            <MasterCombobox
+              id="surgeonName"
+              masterType="doctors"
+              value={formData.surgeonName}
+              onChange={(v) => set('surgeonName', v)}
+              placeholder="Search surgeon name"
+              className="mt-1"
+              restrictToSuggestions
+            />
           </div>
           <div>
             <Label htmlFor="surgeonType">Doctor Type</Label>
@@ -401,7 +410,8 @@ export function IPDDetailsForm({
               masterType="hospitals"
               value={formData.hospitalName}
               onChange={(v) => set('hospitalName', v)}
-              placeholder="Search or type hospital name"
+              placeholder="Search hospital name"
+              restrictToSuggestions
               onItemSelect={(item) => {
                 if (item.address && !formData.hospitalAddress) set('hospitalAddress', item.address)
                 if (item.googleMapLink && !formData.googleMapLocation) set('googleMapLocation', item.googleMapLink)

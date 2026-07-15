@@ -54,7 +54,7 @@ import { BirthdayPopup } from '@/components/birthday-popup'
 import { RankUpPopup } from '@/components/notifications/rank-up-popup'
 import { TeamTargetWidget } from '@/components/targets/team-target-widget'
 import { TLTeamAchievements } from '@/components/targets/tl-team-achievements'   
-import { useMyTargetProgress, TargetRingInline } from '../../app/bd/dashboard/BDDashboard'
+import { useMyTargetProgress, TargetRingInline, TargetRingInlineEmpty } from '../../app/bd/dashboard/BDDashboard'
 import { TargetTrendCard } from '@/components/targets/target-trend-card'
 import { LeadsTrendCard } from '@/components/targets/leads-trend-card'
 import { MonthlySummaryCard } from '@/components/targets/monthly-summary-card'
@@ -627,7 +627,11 @@ const { data: workLogCheck } = useWorkLogCheck({
         greeting={greeting}
         firstName={firstName}
         role={user?.role}
-        targetSlot={isTargetRole && monthlyTarget ? <TargetRingInline t={monthlyTarget} /> : undefined}
+        targetSlot={
+          isTargetRole
+            ? (monthlyTarget ? <TargetRingInline t={monthlyTarget} /> : <TargetRingInlineEmpty />)
+            : undefined
+        }
       />
 
       {/* Thought of the Day */}
@@ -665,6 +669,10 @@ const { data: workLogCheck } = useWorkLogCheck({
         <NoticeActions />
       </div>
 
+
+      {/* Monthly rewards summary — Sales/BD hierarchy only */}
+      <MonthlySummaryCard />
+
       {/* Target progress widget (compact — TL and Sales Head team overview) */}
       <TeamTargetWidget />
 
@@ -677,8 +685,6 @@ const { data: workLogCheck } = useWorkLogCheck({
         <LeadsTrendCard />
       </div>
 
-      {/* Monthly rewards summary — Sales/BD hierarchy only */}
-      <MonthlySummaryCard />
 
      
 
