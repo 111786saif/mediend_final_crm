@@ -108,7 +108,10 @@ export function countHeadcount(nodes: SalesTeamCostRole[]): number {
   return count
 }
 
-export function buildSummary(roots: SalesTeamCostRole[]): SalesTeamCostSummary {
+export function buildSummary(
+  roots: SalesTeamCostRole[],
+  unallocated: { misc: number; other: number } = { misc: 0, other: 0 },
+): SalesTeamCostSummary {
   const rollup = roots.reduce<SalesTeamCostRollup>(
     (acc, root) => {
       const r = computeDirectRollupTree(root)
@@ -125,9 +128,14 @@ export function buildSummary(roots: SalesTeamCostRole[]): SalesTeamCostSummary {
     { salary: 0, incentives: 0, seating: 0, misc: 0, other: 0, marketing: 0, total: 0 },
   )
 
+  rollup.misc += unallocated.misc
+  rollup.other += unallocated.other
+  rollup.total += unallocated.misc + unallocated.other
+
   return {
     headcount: countHeadcount(roots),
     grandTotal: rollup.total,
     rollup,
+    unallocated,
   }
 }

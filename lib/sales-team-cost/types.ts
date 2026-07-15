@@ -38,6 +38,8 @@ export interface SalesTeamCostSummary {
   headcount: number
   grandTotal: number
   rollup: SalesTeamCostRollup
+  /** Misc / other line items with no employee (or outside hierarchy). */
+  unallocated: { misc: number; other: number }
 }
 
 export interface SalesTeamCostResponse {

@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import type { DateRange } from 'react-day-picker'
 
 interface FilterOption {
@@ -221,6 +222,31 @@ export function ColumnFilter({
     option.label.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  const isAllSelected = useMemo(() => {
+    const targetOptions = searchQuery ? filteredOptions : normalizedOptions
+    if (targetOptions.length === 0) return false
+    return targetOptions.every((opt) => tempSelected.includes(opt.value))
+  }, [searchQuery, filteredOptions, normalizedOptions, tempSelected])
+
+  const handleSelectAllChange = (checked: boolean) => {
+    const targetOptions = searchQuery ? filteredOptions : normalizedOptions
+    const targetValues = targetOptions.map((opt) => opt.value)
+
+    if (checked) {
+      setTempSelected((prev) => {
+        const next = [...prev]
+        targetValues.forEach((val) => {
+          if (!next.includes(val)) {
+            next.push(val)
+          }
+        })
+        return next
+      })
+    } else {
+      setTempSelected((prev) => prev.filter((val) => !targetValues.includes(val)))
+    }
+  }
+
   const hasActiveFilters = useMemo(() => {
     if (resolvedType === 'dateRange') {
       return !!selectedRange?.from
@@ -245,12 +271,18 @@ export function ColumnFilter({
         ) : (
           <button
             type="button"
-            className="inline-flex items-center justify-center p-1 ml-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            className={cn(
+              "inline-flex items-center justify-center shrink-0 transition-colors ml-1 p-0.3 rounded-md border",
+              hasActiveFilters
+                ? "bg-teal-500/15 text-teal-700 hover:bg-teal-500/25 border-teal-500/20 dark:bg-teal-500/20 dark:text-teal-400"
+                : "border-transparent hover:bg-muted text-muted-foreground hover:text-foreground"
+            )}
           >
             <ChevronDown
-              className={`h-3.5 w-3.5 ${
-                hasActiveFilters ? 'text-primary font-bold' : 'opacity-60'
-              }`}
+              className={cn(
+                "h-3.5 w-3.5",
+                hasActiveFilters ? "text-teal-700 dark:text-teal-400 font-bold" : "opacity-60"
+              )}
             />
           </button>
         )}
@@ -382,6 +414,18 @@ export function ColumnFilter({
               onKeyDown={(e) => e.stopPropagation()}
             />
             <div className="max-h-48 overflow-y-auto border rounded-md">
+              {normalizedOptions.length > 0 && (
+                <>
+                  <DropdownMenuCheckboxItem
+                    checked={isAllSelected}
+                    onCheckedChange={handleSelectAllChange}
+                    onSelect={(e) => e.preventDefault()}
+                    className="font-semibold text-xs border-b border-muted rounded-none py-1.5"
+                  >
+                    Select All
+                  </DropdownMenuCheckboxItem>
+                </>
+              )}
               {filteredOptions.length === 0 ? (
                 <div className="p-2 text-xs text-muted-foreground text-center">
                   No options found

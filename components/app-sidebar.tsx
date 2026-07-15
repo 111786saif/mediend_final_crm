@@ -30,6 +30,10 @@ import {
   Shield,
   ShieldCheck,
   Sparkles,
+  Sun,
+  Moon,
+  Target,
+  Ticket,
   TrendingUp,
   User,
   UserCircle,
@@ -42,6 +46,7 @@ import * as React from 'react'
 import logo from '@/public/logo-mediend.png'
 import { UserRole } from '@/generated/prisma/enums'
 import { useAI } from '@/components/ai/ai-provider'
+import { useTheme } from 'next-themes'
 
 function getBadgeCount(
   itemTitle: string,
@@ -102,6 +107,18 @@ export function AppSidebar() {
   const pathname = usePathname()
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
+  const { data: unreadNotifications = [] } = useNotifications(true)
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
+  const isDarkMode = !mounted || theme === 'dark'
+  const meetNotificationBadge = React.useMemo(
+    () =>
+      unreadNotifications.filter(
+        (n) => n.type === 'MEET_SCHEDULED' || n.type === 'MEET_REMINDER'
+      ).length,
+    [unreadNotifications]
+  )
   const isMdOrAdmin = user?.role === 'MD' || user?.role === 'ADMIN'
 
   const { data: cplAccessData } = useQuery({
@@ -184,7 +201,11 @@ export function AppSidebar() {
               item.title === 'Attendance & Normalizations' ||
               item.title === 'People & Org' ||
               item.title === 'Compensation & Docs' ||
-              item.title === 'Engagement'
+              item.title === 'Engagement' ||
+              item.title === 'Doctor List' ||
+              item.title === 'Hospital List' ||
+              item.title === 'Outstanding List' ||
+              item.title === 'P/L Outstanding'
           )
         : user.role === 'EXECUTIVE_ASSISTANT'
           ? itemsWithUrls.filter(
@@ -729,6 +750,16 @@ export function AppSidebar() {
             </SidebarMenuItem>
           )}
           <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}
+              tooltip={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              asChild={false}
+            >
+              {isDarkMode ? <Sun /> : <Moon />}
+              <span>{isDarkMode ? 'Light mode' : 'Dark mode'}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Profile">
               <Link href="/profile" onClick={closeSidebarOnMobile}>
                 <User />
@@ -746,4 +777,8 @@ export function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
   )
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main

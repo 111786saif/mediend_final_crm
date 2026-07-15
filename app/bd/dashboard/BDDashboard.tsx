@@ -109,7 +109,7 @@ export function useMyTargetProgress() {
 
 // ── Circular Ring ─────────────────────────────────────────────────────────────
 
-export function Ring({ pct, size = 100 }: { pct: number; size?: number }) {
+export function Ring({ pct, size = 100, empty = false }: { pct: number; size?: number; empty?: boolean }) {
   const stroke = 9
   const r = (size - stroke) / 2
   const circ = 2 * Math.PI * r
@@ -121,18 +121,20 @@ export function Ring({ pct, size = 100 }: { pct: number; size?: number }) {
     <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
       <circle cx={size / 2} cy={size / 2} r={r} fill="none"
         stroke="rgba(255,255,255,0.15)" strokeWidth={stroke} />
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none"
-        stroke={color} strokeWidth={stroke}
-        strokeDasharray={circ} strokeDashoffset={offset}
-        strokeLinecap="round"
-        style={{ transition: 'stroke-dashoffset 0.8s ease' }} />
+      {!empty && (
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none"
+          stroke={color} strokeWidth={stroke}
+          strokeDasharray={circ} strokeDashoffset={offset}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.8s ease' }} />
+      )}
       <text
         x={size / 2} y={size / 2}
         textAnchor="middle" dominantBaseline="middle"
         fill="white" fontWeight="700" fontSize={size * 0.19}
         style={{ transform: 'rotate(90deg)', transformOrigin: '50% 50%' }}
       >
-        {Math.round(clamped)}%
+        {empty ? '–' : `${Math.round(clamped)}%`}
       </text>
     </svg>
   )
@@ -273,6 +275,72 @@ export function TargetRingInline({ t }: { t: TargetProgress }) {
   )
 }
 
+// ── Empty state (no target assigned this period) ─────────────────────────────
+// Keeps the banner slot / hero card / score card visible instead of hiding the
+// whole block — shows dashes so the layout stays consistent across users.
+
+export function TargetRingInlineEmpty() {
+  return (
+    <div className="relative flex gap-4 items-center rounded-xl bg-black/20 backdrop-blur-sm px-4 py-3 max-w-full">
+      <div className="shrink-0 flex flex-col items-center gap-0.5">
+        <Ring pct={0} size={84} empty />
+        <p className="text-[10px] text-white/60 tracking-wide uppercase">of target</p>
+      </div>
+
+      <div className="min-w-0">
+        <p className="text-white font-semibold text-sm leading-snug whitespace-nowrap">
+          No target assigned yet
+        </p>
+
+        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+          <div>
+            <p className="text-white/50 text-[10px] uppercase tracking-wide">Progress</p>
+            <p className="text-white text-xs font-bold">–</p>
+          </div>
+          <div>
+            <p className="text-white/50 text-[10px] uppercase tracking-wide">Period</p>
+            <p className="text-white text-xs font-semibold whitespace-nowrap">–</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EmptyHeroCard() {
+  return (
+    <div
+      className="relative rounded-2xl overflow-hidden p-5 shadow-lg"
+      style={{ background: 'linear-gradient(135deg, #062D4C 0%, #0a4170 50%, #0e6b65 100%)' }}
+    >
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at top right, rgba(30,197,183,0.15), transparent 60%)' }} />
+
+      <div className="relative flex gap-4 items-center">
+        <div className="shrink-0 flex flex-col items-center gap-0.5">
+          <Ring pct={0} size={92} empty />
+          <p className="text-[10px] text-white/50 tracking-wide uppercase">of target</p>
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <p className="text-white font-bold text-[15px] leading-snug">No target assigned yet</p>
+
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+            <div>
+              <p className="text-white/50 text-[10px] uppercase tracking-wide">Progress</p>
+              <p className="text-white font-bold text-sm tabular-nums">–</p>
+            </div>
+            <div>
+              <p className="text-white/50 text-[10px] uppercase tracking-wide">Period</p>
+              <p className="text-white font-semibold text-sm">–</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Weekly Card ───────────────────────────────────────────────────────────────
 
 function WeeklyCard({ t }: { t: TargetProgress }) {
@@ -324,7 +392,6 @@ export function BDDashboard() {
   const { isTargetRole, monthly, weekly } = useMyTargetProgress()
 
   if (!isTargetRole) return null
-  if (!monthly && !weekly) return null
 
   const trackerLink =
     user?.role === 'BD' ? '/bd/kyp'
@@ -342,7 +409,7 @@ export function BDDashboard() {
         </Link>
       </div>
 
-      {monthly && <HeroCard t={monthly} />}
+      {monthly ? <HeroCard t={monthly} /> : <EmptyHeroCard />}
       {weekly   && <WeeklyCard t={weekly} />}
     </div>
   )

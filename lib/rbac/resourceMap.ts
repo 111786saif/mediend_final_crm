@@ -40,6 +40,8 @@ export const RESOURCE_MAP = {
   "main.md_compliance": { path: "/md/compliance", component: "MDCompliancePage" },
   "main.md_outstanding": { path: "/md/outstanding", component: "MDOutstandingPage" },
   "main.incentive": { path: "/incentives", component: "IncentivesPage" },
+  "main.cumulative_report": { path: "/cumulative-report", component: "CumulativeReportPage" },
+
 
   // HRM Group Pages
   "hrm.attendance_normalizations": { path: "/hr/attendance-leaves", component: "AttendanceLeavesPage" },

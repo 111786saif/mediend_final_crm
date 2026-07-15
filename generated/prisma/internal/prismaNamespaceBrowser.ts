@@ -136,6 +136,8 @@ export const ModelName = {
   EmployeeMasterSeatingCost: 'EmployeeMasterSeatingCost',
   EmployeeMonthlySeatingMiscCost: 'EmployeeMonthlySeatingMiscCost',
   EmployeeMonthlySeatingMiscCostHistory: 'EmployeeMonthlySeatingMiscCostHistory',
+  SalesTeamBulkCostEntry: 'SalesTeamBulkCostEntry',
+  SalesTeamBulkCostEntryHistory: 'SalesTeamBulkCostEntryHistory',
   EmployeeSalesTeamSalaryOverride: 'EmployeeSalesTeamSalaryOverride',
   EmployeeSalesTeamSalaryOverrideHistory: 'EmployeeSalesTeamSalaryOverrideHistory',
   Task: 'Task',
@@ -1967,6 +1969,45 @@ export const EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = {
 export type EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum = (typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum)[keyof typeof EmployeeMonthlySeatingMiscCostHistoryScalarFieldEnum]
 
 
+export const SalesTeamBulkCostEntryScalarFieldEnum = {
+  id: 'id',
+  costType: 'costType',
+  month: 'month',
+  year: 'year',
+  amount: 'amount',
+  remark: 'remark',
+  employeeId: 'employeeId',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SalesTeamBulkCostEntryScalarFieldEnum = (typeof SalesTeamBulkCostEntryScalarFieldEnum)[keyof typeof SalesTeamBulkCostEntryScalarFieldEnum]
+
+
+export const SalesTeamBulkCostEntryHistoryScalarFieldEnum = {
+  id: 'id',
+  entryId: 'entryId',
+  costType: 'costType',
+  month: 'month',
+  year: 'year',
+  action: 'action',
+  amount: 'amount',
+  remark: 'remark',
+  employeeId: 'employeeId',
+  employeeName: 'employeeName',
+  previousAmount: 'previousAmount',
+  previousRemark: 'previousRemark',
+  previousEmployeeId: 'previousEmployeeId',
+  previousEmployeeName: 'previousEmployeeName',
+  changedByUserId: 'changedByUserId',
+  changedAt: 'changedAt'
+} as const
+
+export type SalesTeamBulkCostEntryHistoryScalarFieldEnum = (typeof SalesTeamBulkCostEntryHistoryScalarFieldEnum)[keyof typeof SalesTeamBulkCostEntryHistoryScalarFieldEnum]
+
+
 export const EmployeeSalesTeamSalaryOverrideScalarFieldEnum = {
   id: 'id',
   employeeId: 'employeeId',
@@ -2198,6 +2239,9 @@ export const HospitalMasterScalarFieldEnum = {
   address: 'address',
   googleMapLink: 'googleMapLink',
   mouAgreementUrl: 'mouAgreementUrl',
+  hospitalShare: 'hospitalShare',
+  mediendShare: 'mediendShare',
+  details: 'details',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -3,15 +3,15 @@ import withPWA from "@ducanh2912/next-pwa";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  // PWA plugin uses webpack; use `next build --webpack` so build uses webpack. Empty turbopack silences config check.
+  // PWA plugin uses webpack; use next build --webpack so build uses webpack. Empty turbopack silences config check.
   turbopack: {},
   // Skip the in-build typecheck — it OOMs on the 2GB KVM build host. We run
-  // `bunx tsc --noEmit` separately in CI, so safety isn't reduced.
+  // bunx tsc --noEmit separately in CI, so safety isn't reduced.
   typescript: {
     ignoreBuildErrors: true,
   },
   experimental: {
-    // Allows larger multipart bodies for Server Actions; pair with `/api/kyp/upload` + useFileUpload 20 MB cap.
+    // Allows larger multipart bodies for Server Actions; pair with /api/kyp/upload + useFileUpload 20 MB cap.
     serverActions: {
       bodySizeLimit: "20mb",
     },
@@ -41,8 +41,13 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA({
-  dest: "public",
-  register: true,
-  disable: process.env.NODE_ENV === "development",
-})(nextConfig);
+const finalConfig =
+  process.env.NODE_ENV === "development"
+    ? nextConfig
+    : withPWA({
+        dest: "public",
+        register: true,
+        disable: false,
+      })(nextConfig);
+
+export default finalConfig;

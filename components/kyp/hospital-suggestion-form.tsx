@@ -134,7 +134,11 @@ export function HospitalSuggestionForm({
       }))
       .filter((h) => h.hospitalName)
     if (!list.length) {
-      toast.error('At least one hospital with a name is required')
+      toast.error('Select at least one hospital from the list')
+      return
+    }
+    if (hospitals.some((h) => h.hospitalName.trim() === '')) {
+      toast.error('Each hospital row must have a hospital selected from the list')
       return
     }
 
@@ -261,7 +265,8 @@ export function HospitalSuggestionForm({
                     masterType="hospitals"
                     value={h.hospitalName}
                     onChange={(v) => updateHospital(index, 'hospitalName', v)}
-                    placeholder="Search or type hospital name"
+                    placeholder="Search and select a hospital"
+                    allowFreeText={false}
                   />
                 </div>
                 <div className="col-span-2">
@@ -270,7 +275,8 @@ export function HospitalSuggestionForm({
                     masterType="doctors"
                     value={h.suggestedDoctor}
                     onChange={(v) => updateHospital(index, 'suggestedDoctor', v)}
-                    placeholder="Search or type doctor name"
+                    placeholder="Search and select a doctor"
+                    allowFreeText={false}
                   />
                 </div>
                 <div>

@@ -10,7 +10,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'main.md_leave_balances', 'main.master_data', 'main.dept_targets', 'main.chat',
     'main.md_messages', 'main.md_appointments', 'main.company_pnl', 'main.targeted_pnl',
     'main.md_pnl', 'main.it_pnl', 'main.loan_demat_revenue', 'main.it_permissions',
-    'main.compliance', 'main.md_compliance', 'main.md_outstanding', 'main.incentive',
+    'main.compliance', 'main.md_compliance', 'main.md_outstanding', 'main.incentive', 'main.cumulative_report',
     'hrm.attendance_normalizations', 'hrm.people_org', 'hrm.compensation_docs', 'hrm.engagement', 'hrm.recruitment',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
     'sales.sales_dashboard', 'sales.dm_dashboard', 'sales.case_tracker', 'sales.pending_surgery', 'sales.targets', 'sales.sales_pnl', 'sales.campaign_cpl', 'sales.sales_pipeline', 'sales.team_lead_pipeline',
@@ -29,7 +29,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'main.md_hr_dashboard', 'hrm.attendance_normalizations', 'hrm.people_org',
     'hrm.compensation_docs', 'hrm.engagement',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval',
-    'sales.sales_dashboard', 'sales.case_tracker', 'main.incentive'
+    'sales.sales_dashboard', 'sales.case_tracker', 'main.incentive', 'main.cumulative_report'
   ],
   IT_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dept_targets', 'hrm.people_org', 'hrm.compensation_docs', 'hrm.engagement', 'main.it_permissions', 'main.it_pnl', 'sales.campaign_cpl',
@@ -55,7 +55,7 @@ const roleAllowedSections: Record<string, string[]> = {
   ],
   INSURANCE_HEAD: [
     'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.dashboard',
-    'insurance_pl.insurance', 'insurance_pl.cash_cases', 'main.chat', 'sales.campaign_cpl',
+    'insurance_pl.insurance', 'insurance_pl.cash_cases', 'main.chat', 'sales.campaign_cpl', 'main.cumulative_report',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   PL_HEAD: [
@@ -96,7 +96,7 @@ const roleAllowedSections: Record<string, string[]> = {
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   COMPLIANCE_HEAD: [
-    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.compliance', 'sales.campaign_cpl',
+    'main.home', 'main.tasks', 'main.calendar', 'main.meets', 'main.compliance', 'sales.campaign_cpl', 'main.cumulative_report',
     'myhrms.my_core_hr', 'myhrms.my_financial', 'myhrms.my_support_services', 'myhrms.my_team', 'myhrms.ask_md_approval'
   ],
   LOAN_DEMAT_HEAD: [

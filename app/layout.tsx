@@ -6,6 +6,7 @@ import { BackCloseProvider } from "@/providers/back-close-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthenticatedWrapper } from "@/components/authenticated-wrapper";
 import { AIProvider } from "@/components/ai/ai-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,19 +39,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased font-sans`}
         suppressHydrationWarning
       >
-        <QueryProvider>
-          <BackCloseProvider>
-            <AIProvider>
-              <AuthenticatedWrapper>{children}</AuthenticatedWrapper>
-              <Toaster />
-            </AIProvider>
-          </BackCloseProvider>
-        </QueryProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          storageKey="mediend-theme"
+          disableTransitionOnChange
+        >
+          <QueryProvider>
+            <BackCloseProvider>
+              <AIProvider>
+                <AuthenticatedWrapper>{children}</AuthenticatedWrapper>
+                <Toaster />
+              </AIProvider>
+            </BackCloseProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

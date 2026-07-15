@@ -23,6 +23,20 @@ export async function recomputeOutstandingFromInstallments(leadId: string) {
       doctorCharges: true,
       mediendShareAmount: true,
       mediendNetProfit: true,
+      paymentCollectedAt: true,
+      lead: {
+        select: {
+          flowType: true,
+          collectedByHospital: true,
+          collectedByMediend: true,
+        },
+      },
+      dischargeSheet: {
+        select: {
+          collectedByHospital: true,
+          collectedByMediend: true,
+        },
+      },
     },
   })
   if (!pl) return
@@ -37,14 +51,51 @@ export async function recomputeOutstandingFromInstallments(leadId: string) {
     number
   >
   for (const inst of installments) {
-    totals[inst.recipient] += inst.amount
+    if (inst.recipient in totals) {
+      totals[inst.recipient] += inst.amount
+    }
   }
 
   const hospitalExpected = pl.hospitalShareAmount ?? 0
   const doctorExpected = pl.doctorCharges ?? 0
   const mediendExpected = pl.mediendShareAmount ?? pl.mediendNetProfit ?? 0
 
-  const hospitalPending = Math.max(hospitalExpected - totals.HOSPITAL, 0)
+  // Detect who collected the cash/insurance approved amount
+  let isHospitalCollector = pl.lead?.flowType === 'INSURANCE'
+  if (pl.lead?.flowType === 'CASH') {
+    if (pl.paymentCollectedAt === 'HOSPITAL') {
+      isHospitalCollector = true
+    } else if (pl.paymentCollectedAt === 'MEDIEND') {
+      isHospitalCollector = false
+    } else {
+      const collectedByHospital = pl.dischargeSheet?.collectedByHospital ?? pl.lead?.collectedByHospital ?? 0
+      const collectedByMediend = pl.dischargeSheet?.collectedByMediend ?? pl.lead?.collectedByMediend ?? 0
+      if (collectedByHospital > 0 && collectedByHospital >= collectedByMediend) {
+        isHospitalCollector = true
+      } else if (collectedByMediend > 0) {
+        isHospitalCollector = false
+      } else {
+        // Fallback default
+        isHospitalCollector = true
+      }
+    }
+  }
+
+  let hospitalPending = 0
+  let hospitalPayoutStatus: StatusValue = 'PENDING'
+
+  if (isHospitalCollector) {
+    // Hospital collected the money. They owe MediEND.
+    // Outstanding amount is what MediEND is waiting to receive (recipient MEDIEND):
+    hospitalPending = Math.max(mediendExpected - totals.MEDIEND, 0)
+    hospitalPayoutStatus = statusFor(mediendExpected, totals.MEDIEND)
+  } else {
+    // MediEND collected the money. MediEND owes Hospital.
+    // Outstanding amount is what MediEND needs to pay the Hospital (recipient HOSPITAL):
+    hospitalPending = Math.max(hospitalExpected - totals.HOSPITAL, 0)
+    hospitalPayoutStatus = statusFor(hospitalExpected, totals.HOSPITAL)
+  }
+
   const doctorPending = Math.max(doctorExpected - totals.DOCTOR, 0)
 
   await prisma.pLRecord.update({
@@ -52,7 +103,7 @@ export async function recomputeOutstandingFromInstallments(leadId: string) {
     data: {
       hospitalAmountPending: hospitalPending,
       doctorAmountPending: doctorPending,
-      hospitalPayoutStatus: statusFor(hospitalExpected, totals.HOSPITAL),
+      hospitalPayoutStatus,
       doctorPayoutStatus: statusFor(doctorExpected, totals.DOCTOR),
       mediendInvoiceStatus: statusFor(mediendExpected, totals.MEDIEND),
     },
