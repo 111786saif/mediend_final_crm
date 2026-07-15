@@ -86,6 +86,14 @@ export const SalesTeamCostEntryType = {
 export type SalesTeamCostEntryType = (typeof SalesTeamCostEntryType)[keyof typeof SalesTeamCostEntryType]
 
 
+export const SalesTeamBulkCostType = {
+  MISC: 'MISC',
+  OTHER: 'OTHER'
+} as const
+
+export type SalesTeamBulkCostType = (typeof SalesTeamBulkCostType)[keyof typeof SalesTeamBulkCostType]
+
+
 export const EmployeeIncentiveStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

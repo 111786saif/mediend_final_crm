@@ -5,40 +5,8 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { successResponse, errorResponse, unauthorizedResponse, forbiddenResponse } from '@/lib/api-utils'
 import { emptyToNull, hospitalMasterPatchSchema } from '@/lib/masters/schemas'
-
-function mapHospital(row: {
-  id: string
-  name: string
-  address: string | null
-  googleMapLink: string | null
-  mouAgreementUrl: string | null
-  isActive: boolean
-  createdAt: Date
-  updatedAt: Date
-  insuranceProviders: { insuranceId: string; insurance: { id: string; name: string } }[]
-}) {
-  return {
-    id: row.id,
-    name: row.name,
-    address: row.address,
-    googleMapLink: row.googleMapLink,
-    mouAgreementUrl: row.mouAgreementUrl,
-    isActive: row.isActive,
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-    insuranceIds: row.insuranceProviders.map((p) => p.insuranceId),
-    insuranceProviders: row.insuranceProviders.map((p) => ({
-      id: p.insurance.id,
-      name: p.insurance.name,
-    })),
-  }
-}
-
-const hospitalInclude = {
-  insuranceProviders: {
-    include: { insurance: { select: { id: true, name: true } } },
-  },
-} as const
+import { serializeHospitalDetails } from '@/lib/masters/hospital'
+import { hospitalInclude, mapHospital } from '@/lib/masters/hospital-mapper'
 
 export async function PATCH(
   request: NextRequest,
@@ -68,6 +36,11 @@ export async function PATCH(
   if (d.address !== undefined) data.address = d.address?.trim() || null
   if (d.googleMapLink !== undefined) data.googleMapLink = emptyToNull(d.googleMapLink)
   if (d.mouAgreementUrl !== undefined) data.mouAgreementUrl = emptyToNull(d.mouAgreementUrl)
+  if (d.hospitalShare !== undefined) data.hospitalShare = d.hospitalShare
+  if (d.mediendShare !== undefined) data.mediendShare = d.mediendShare
+  if (d.details !== undefined) {
+    data.details = d.details ? serializeHospitalDetails(d.details) : Prisma.JsonNull
+  }
   if (d.isActive !== undefined) data.isActive = d.isActive
 
   try {

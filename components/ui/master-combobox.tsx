@@ -42,6 +42,9 @@ export interface MasterItem {
   address?: string | null
   googleMapLink?: string | null
   mouAgreementUrl?: string | null
+  hospitalShare?: number | null
+  mediendShare?: number | null
+  details?: import('@/lib/masters/hospital').HospitalMasterDetails | null
   insuranceIds?: string[]
   insuranceProviders?: { id: string; name: string }[]
   atsNewDelhi?: number | null
@@ -74,12 +77,11 @@ export interface MasterComboboxProps {
   className?: string
   onItemSelect?: (item: MasterItem) => void
   /**
-   * When true, only an explicit selection from the suggestion list can set
-   * the value. Typing alone never commits — on blur/Escape without a
-   * selection, the field reverts to the last committed `value` instead of
-   * keeping the raw typed text.
+   * When false, only values chosen from the dropdown are kept.
+   * Typing that does not match a master item is cleared on blur / Enter.
+   * @default true
    */
-  restrictToSuggestions?: boolean
+  allowFreeText?: boolean
 }
 
 export function MasterCombobox({
@@ -94,7 +96,7 @@ export function MasterCombobox({
   error,
   className,
   onItemSelect,
-  restrictToSuggestions = false,
+  allowFreeText = true,
 }: MasterComboboxProps) {
   const [open, setOpen] = React.useState(false)
   const [inputValue, setInputValue] = React.useState(value)
@@ -155,6 +157,16 @@ export function MasterCombobox({
     el?.scrollIntoView({ block: 'nearest' })
   }, [open, highlightedIndex, listInstanceId, itemKey])
 
+  const selectItem = React.useCallback(
+    (item: MasterItem) => {
+      onChange(item.name)
+      setInputValue(item.name)
+      setOpen(false)
+      onItemSelect?.(item)
+    },
+    [onChange, onItemSelect],
+  )
+
   const commitFreeText = React.useCallback(() => {
     if (restrictToSuggestions) {
       // No selection was made — drop the leftover typed text, don't commit it.
@@ -167,12 +179,32 @@ export function MasterCombobox({
     setOpen(false)
   }, [inputValue, onChange, restrictToSuggestions, value])
 
-  const selectItem = (item: MasterItem) => {
-    onChange(item.name)
-    setInputValue(item.name)
+  /** Select-only: keep exact master match or previously committed value; otherwise clear. */
+  const commitSelectionOnly = React.useCallback(() => {
+    const v = inputValue.trim()
+    if (!v) {
+      if (value) onChange('')
+      setInputValue('')
+      setOpen(false)
+      return
+    }
+
+    const match = items.find((i) => i.name.toLowerCase() === v.toLowerCase())
+    if (match) {
+      selectItem(match)
+      return
+    }
+
+    if (value && v.toLowerCase() === value.toLowerCase()) {
+      setInputValue(value)
+      setOpen(false)
+      return
+    }
+
+    onChange('')
+    setInputValue('')
     setOpen(false)
-    onItemSelect?.(item)
-  }
+  }, [inputValue, items, onChange, selectItem, value])
 
   return (
     <div className={cn('space-y-2', className)}>
@@ -198,7 +230,8 @@ export function MasterCombobox({
               onFocus={() => setOpen(true)}
               onBlur={() => {
                 window.setTimeout(() => {
-                  commitFreeText()
+                  if (allowFreeText) commitFreeText()
+                  else commitSelectionOnly()
                 }, 150)
               }}
               onKeyDown={(e) => {
@@ -241,8 +274,12 @@ export function MasterCombobox({
                     selectItem(items[highlightedIndex])
                     return
                   }
-                  if (items[0]) selectItem(items[0])
-                  else commitFreeText()
+                  if (items[0]) {
+                    selectItem(items[0])
+                    return
+                  }
+                  if (allowFreeText) commitFreeText()
+                  else commitSelectionOnly()
                   return
                 }
                 if (e.key === 'Escape') {
@@ -266,7 +303,9 @@ export function MasterCombobox({
             <div className="p-1">
               {items.length === 0 && !isFetching && (
                 <p className="text-muted-foreground px-2 py-3 text-sm">
-                  {restrictToSuggestions ? 'No matches found.' : 'No matches. Press Enter to use your text.'}
+                  {allowFreeText
+                    ? 'No matches. Press Enter to use your text.'
+                    : 'No matches. Select an item from the list.'}
                 </p>
               )}
               {items.map((item, index) => {

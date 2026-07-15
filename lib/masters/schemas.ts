@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { hospitalMasterDetailsSchema } from '@/lib/masters/hospital'
 
 /** Relative `/uploads/...` or absolute URL */
 const uploadUrl = z.string().min(1).max(2000)
@@ -40,6 +41,9 @@ export const hospitalMasterFieldsSchema = z.object({
   address: z.string().max(10000).optional().nullable(),
   googleMapLink: z.string().max(2000).optional().nullable().or(z.literal('')),
   mouAgreementUrl: z.string().max(2000).optional().nullable(),
+  hospitalShare: z.number().min(0).max(100).optional().nullable(),
+  mediendShare: z.number().min(0).max(100).optional().nullable(),
+  details: hospitalMasterDetailsSchema.optional().nullable(),
   insuranceIds: z.array(z.string().min(1)).optional(),
   isActive: z.boolean().optional(),
 })

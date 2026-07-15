@@ -39,6 +39,65 @@ const preAuthSchema = z.object({
   hospitals: z.array(hospitalSuggestionSchema).optional(),
 })
 
+/** Ensure each suggested hospital exists in HospitalMaster (case-insensitive). */
+async function assertHospitalsExistInMaster(
+  hospitals: { hospitalName: string }[],
+): Promise<string | null> {
+  const names = [...new Set(hospitals.map((h) => h.hospitalName.trim()).filter(Boolean))]
+  if (names.length === 0) return 'At least one hospital suggestion is required'
+
+  const masters = await prisma.hospitalMaster.findMany({
+    where: {
+      isActive: true,
+      OR: names.map((name) => ({ name: { equals: name, mode: 'insensitive' as const } })),
+    },
+    select: { name: true },
+  })
+  const masterSet = new Set(masters.map((m) => m.name.trim().toLowerCase()))
+  const missing = names.filter((n) => !masterSet.has(n.toLowerCase()))
+  if (missing.length > 0) {
+    return `Hospital not found in master list: ${missing.join(', ')}. Select an existing hospital.`
+  }
+  return null
+}
+
+/** Ensure each non-empty suggested doctor exists in DoctorMaster (case-insensitive). */
+async function assertDoctorsExistInMaster(
+  hospitals: { suggestedDoctor?: string }[],
+): Promise<string | null> {
+  const names = [
+    ...new Set(
+      hospitals
+        .map((h) => h.suggestedDoctor?.trim())
+        .filter((n): n is string => !!n),
+    ),
+  ]
+  if (names.length === 0) return null
+
+  const masters = await prisma.doctorMaster.findMany({
+    where: {
+      isActive: true,
+      OR: names.map((name) => ({ name: { equals: name, mode: 'insensitive' as const } })),
+    },
+    select: { name: true },
+  })
+  const masterSet = new Set(masters.map((m) => m.name.trim().toLowerCase()))
+  const missing = names.filter((n) => !masterSet.has(n.toLowerCase()))
+  if (missing.length > 0) {
+    return `Doctor not found in master list: ${missing.join(', ')}. Select an existing doctor.`
+  }
+  return null
+}
+
+async function assertHospitalSuggestionsAgainstMasters(
+  hospitals: { hospitalName: string; suggestedDoctor?: string }[],
+): Promise<string | null> {
+  return (
+    (await assertHospitalsExistInMaster(hospitals)) ??
+    (await assertDoctorsExistInMaster(hospitals))
+  )
+}
+
 export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
@@ -89,6 +148,9 @@ export async function POST(request: NextRequest) {
       if (!data.hospitals?.length) {
         return errorResponse('At least one hospital suggestion is required', 400)
       }
+
+      const masterError = await assertHospitalSuggestionsAgainstMasters(data.hospitals)
+      if (masterError) return errorResponse(masterError, 400)
 
       const preAuth = await prisma.preAuthorization.upsert({
         where: { kypSubmissionId: data.kypSubmissionId },
@@ -177,6 +239,9 @@ export async function POST(request: NextRequest) {
       if (!data.sumInsured?.trim()) {
         return errorResponse('Sum insured is required when suggesting hospitals', 400)
       }
+
+      const masterError = await assertHospitalSuggestionsAgainstMasters(data.hospitals)
+      if (masterError) return errorResponse(masterError, 400)
 
       // If we are updating hospitals, we should ensure the stage is HOSPITALS_SUGGESTED
       // This is important if the case was already in PREAUTH_RAISED (e.g. BD selected a hospital, but Insurance is now changing the options)

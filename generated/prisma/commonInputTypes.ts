@@ -1442,6 +1442,23 @@ export type EnumEmployeeSeatingMiscCostStatusWithAggregatesFilter<$PrismaModel =
   _max?: Prisma.NestedEnumEmployeeSeatingMiscCostStatusFilter<$PrismaModel>
 }
 
+export type EnumSalesTeamBulkCostTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.SalesTeamBulkCostType | Prisma.EnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.SalesTeamBulkCostType[] | Prisma.ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SalesTeamBulkCostType[] | Prisma.ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSalesTeamBulkCostTypeFilter<$PrismaModel> | $Enums.SalesTeamBulkCostType
+}
+
+export type EnumSalesTeamBulkCostTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SalesTeamBulkCostType | Prisma.EnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.SalesTeamBulkCostType[] | Prisma.ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SalesTeamBulkCostType[] | Prisma.ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSalesTeamBulkCostTypeWithAggregatesFilter<$PrismaModel> | $Enums.SalesTeamBulkCostType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSalesTeamBulkCostTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSalesTeamBulkCostTypeFilter<$PrismaModel>
+}
+
 export type EnumTaskPriorityFilter<$PrismaModel = never> = {
   equals?: $Enums.TaskPriority | Prisma.EnumTaskPriorityFieldRefInput<$PrismaModel>
   in?: $Enums.TaskPriority[] | Prisma.ListEnumTaskPriorityFieldRefInput<$PrismaModel>
@@ -2975,6 +2992,23 @@ export type NestedEnumEmployeeSeatingMiscCostStatusWithAggregatesFilter<$PrismaM
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumEmployeeSeatingMiscCostStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumEmployeeSeatingMiscCostStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSalesTeamBulkCostTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.SalesTeamBulkCostType | Prisma.EnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.SalesTeamBulkCostType[] | Prisma.ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SalesTeamBulkCostType[] | Prisma.ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSalesTeamBulkCostTypeFilter<$PrismaModel> | $Enums.SalesTeamBulkCostType
+}
+
+export type NestedEnumSalesTeamBulkCostTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SalesTeamBulkCostType | Prisma.EnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.SalesTeamBulkCostType[] | Prisma.ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SalesTeamBulkCostType[] | Prisma.ListEnumSalesTeamBulkCostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSalesTeamBulkCostTypeWithAggregatesFilter<$PrismaModel> | $Enums.SalesTeamBulkCostType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSalesTeamBulkCostTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSalesTeamBulkCostTypeFilter<$PrismaModel>
 }
 
 export type NestedEnumTaskPriorityFilter<$PrismaModel = never> = {

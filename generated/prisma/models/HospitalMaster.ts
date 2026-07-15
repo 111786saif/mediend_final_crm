@@ -20,8 +20,20 @@ export type HospitalMasterModel = runtime.Types.Result.DefaultSelection<Prisma.$
 
 export type AggregateHospitalMaster = {
   _count: HospitalMasterCountAggregateOutputType | null
+  _avg: HospitalMasterAvgAggregateOutputType | null
+  _sum: HospitalMasterSumAggregateOutputType | null
   _min: HospitalMasterMinAggregateOutputType | null
   _max: HospitalMasterMaxAggregateOutputType | null
+}
+
+export type HospitalMasterAvgAggregateOutputType = {
+  hospitalShare: number | null
+  mediendShare: number | null
+}
+
+export type HospitalMasterSumAggregateOutputType = {
+  hospitalShare: number | null
+  mediendShare: number | null
 }
 
 export type HospitalMasterMinAggregateOutputType = {
@@ -30,6 +42,8 @@ export type HospitalMasterMinAggregateOutputType = {
   address: string | null
   googleMapLink: string | null
   mouAgreementUrl: string | null
+  hospitalShare: number | null
+  mediendShare: number | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -41,6 +55,8 @@ export type HospitalMasterMaxAggregateOutputType = {
   address: string | null
   googleMapLink: string | null
   mouAgreementUrl: string | null
+  hospitalShare: number | null
+  mediendShare: number | null
   isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -52,6 +68,9 @@ export type HospitalMasterCountAggregateOutputType = {
   address: number
   googleMapLink: number
   mouAgreementUrl: number
+  hospitalShare: number
+  mediendShare: number
+  details: number
   isActive: number
   createdAt: number
   updatedAt: number
@@ -59,12 +78,24 @@ export type HospitalMasterCountAggregateOutputType = {
 }
 
 
+export type HospitalMasterAvgAggregateInputType = {
+  hospitalShare?: true
+  mediendShare?: true
+}
+
+export type HospitalMasterSumAggregateInputType = {
+  hospitalShare?: true
+  mediendShare?: true
+}
+
 export type HospitalMasterMinAggregateInputType = {
   id?: true
   name?: true
   address?: true
   googleMapLink?: true
   mouAgreementUrl?: true
+  hospitalShare?: true
+  mediendShare?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -76,6 +107,8 @@ export type HospitalMasterMaxAggregateInputType = {
   address?: true
   googleMapLink?: true
   mouAgreementUrl?: true
+  hospitalShare?: true
+  mediendShare?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -87,6 +120,9 @@ export type HospitalMasterCountAggregateInputType = {
   address?: true
   googleMapLink?: true
   mouAgreementUrl?: true
+  hospitalShare?: true
+  mediendShare?: true
+  details?: true
   isActive?: true
   createdAt?: true
   updatedAt?: true
@@ -131,6 +167,18 @@ export type HospitalMasterAggregateArgs<ExtArgs extends runtime.Types.Extensions
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: HospitalMasterAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: HospitalMasterSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: HospitalMasterMinAggregateInputType
@@ -161,6 +209,8 @@ export type HospitalMasterGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   _count?: HospitalMasterCountAggregateInputType | true
+  _avg?: HospitalMasterAvgAggregateInputType
+  _sum?: HospitalMasterSumAggregateInputType
   _min?: HospitalMasterMinAggregateInputType
   _max?: HospitalMasterMaxAggregateInputType
 }
@@ -171,10 +221,15 @@ export type HospitalMasterGroupByOutputType = {
   address: string | null
   googleMapLink: string | null
   mouAgreementUrl: string | null
+  hospitalShare: number | null
+  mediendShare: number | null
+  details: runtime.JsonValue | null
   isActive: boolean
   createdAt: Date
   updatedAt: Date
   _count: HospitalMasterCountAggregateOutputType | null
+  _avg: HospitalMasterAvgAggregateOutputType | null
+  _sum: HospitalMasterSumAggregateOutputType | null
   _min: HospitalMasterMinAggregateOutputType | null
   _max: HospitalMasterMaxAggregateOutputType | null
 }
@@ -203,6 +258,9 @@ export type HospitalMasterWhereInput = {
   address?: Prisma.StringNullableFilter<"HospitalMaster"> | string | null
   googleMapLink?: Prisma.StringNullableFilter<"HospitalMaster"> | string | null
   mouAgreementUrl?: Prisma.StringNullableFilter<"HospitalMaster"> | string | null
+  hospitalShare?: Prisma.FloatNullableFilter<"HospitalMaster"> | number | null
+  mediendShare?: Prisma.FloatNullableFilter<"HospitalMaster"> | number | null
+  details?: Prisma.JsonNullableFilter<"HospitalMaster">
   isActive?: Prisma.BoolFilter<"HospitalMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"HospitalMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HospitalMaster"> | Date | string
@@ -215,6 +273,9 @@ export type HospitalMasterOrderByWithRelationInput = {
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   googleMapLink?: Prisma.SortOrderInput | Prisma.SortOrder
   mouAgreementUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  hospitalShare?: Prisma.SortOrderInput | Prisma.SortOrder
+  mediendShare?: Prisma.SortOrderInput | Prisma.SortOrder
+  details?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -230,6 +291,9 @@ export type HospitalMasterWhereUniqueInput = Prisma.AtLeast<{
   address?: Prisma.StringNullableFilter<"HospitalMaster"> | string | null
   googleMapLink?: Prisma.StringNullableFilter<"HospitalMaster"> | string | null
   mouAgreementUrl?: Prisma.StringNullableFilter<"HospitalMaster"> | string | null
+  hospitalShare?: Prisma.FloatNullableFilter<"HospitalMaster"> | number | null
+  mediendShare?: Prisma.FloatNullableFilter<"HospitalMaster"> | number | null
+  details?: Prisma.JsonNullableFilter<"HospitalMaster">
   isActive?: Prisma.BoolFilter<"HospitalMaster"> | boolean
   createdAt?: Prisma.DateTimeFilter<"HospitalMaster"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"HospitalMaster"> | Date | string
@@ -242,12 +306,17 @@ export type HospitalMasterOrderByWithAggregationInput = {
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   googleMapLink?: Prisma.SortOrderInput | Prisma.SortOrder
   mouAgreementUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  hospitalShare?: Prisma.SortOrderInput | Prisma.SortOrder
+  mediendShare?: Prisma.SortOrderInput | Prisma.SortOrder
+  details?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.HospitalMasterCountOrderByAggregateInput
+  _avg?: Prisma.HospitalMasterAvgOrderByAggregateInput
   _max?: Prisma.HospitalMasterMaxOrderByAggregateInput
   _min?: Prisma.HospitalMasterMinOrderByAggregateInput
+  _sum?: Prisma.HospitalMasterSumOrderByAggregateInput
 }
 
 export type HospitalMasterScalarWhereWithAggregatesInput = {
@@ -259,6 +328,9 @@ export type HospitalMasterScalarWhereWithAggregatesInput = {
   address?: Prisma.StringNullableWithAggregatesFilter<"HospitalMaster"> | string | null
   googleMapLink?: Prisma.StringNullableWithAggregatesFilter<"HospitalMaster"> | string | null
   mouAgreementUrl?: Prisma.StringNullableWithAggregatesFilter<"HospitalMaster"> | string | null
+  hospitalShare?: Prisma.FloatNullableWithAggregatesFilter<"HospitalMaster"> | number | null
+  mediendShare?: Prisma.FloatNullableWithAggregatesFilter<"HospitalMaster"> | number | null
+  details?: Prisma.JsonNullableWithAggregatesFilter<"HospitalMaster">
   isActive?: Prisma.BoolWithAggregatesFilter<"HospitalMaster"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"HospitalMaster"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"HospitalMaster"> | Date | string
@@ -270,6 +342,9 @@ export type HospitalMasterCreateInput = {
   address?: string | null
   googleMapLink?: string | null
   mouAgreementUrl?: string | null
+  hospitalShare?: number | null
+  mediendShare?: number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -282,6 +357,9 @@ export type HospitalMasterUncheckedCreateInput = {
   address?: string | null
   googleMapLink?: string | null
   mouAgreementUrl?: string | null
+  hospitalShare?: number | null
+  mediendShare?: number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -294,6 +372,9 @@ export type HospitalMasterUpdateInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleMapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mouAgreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -306,6 +387,9 @@ export type HospitalMasterUncheckedUpdateInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleMapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mouAgreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -318,6 +402,9 @@ export type HospitalMasterCreateManyInput = {
   address?: string | null
   googleMapLink?: string | null
   mouAgreementUrl?: string | null
+  hospitalShare?: number | null
+  mediendShare?: number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -329,6 +416,9 @@ export type HospitalMasterUpdateManyMutationInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleMapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mouAgreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -340,6 +430,9 @@ export type HospitalMasterUncheckedUpdateManyInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleMapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mouAgreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -351,9 +444,17 @@ export type HospitalMasterCountOrderByAggregateInput = {
   address?: Prisma.SortOrder
   googleMapLink?: Prisma.SortOrder
   mouAgreementUrl?: Prisma.SortOrder
+  hospitalShare?: Prisma.SortOrder
+  mediendShare?: Prisma.SortOrder
+  details?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type HospitalMasterAvgOrderByAggregateInput = {
+  hospitalShare?: Prisma.SortOrder
+  mediendShare?: Prisma.SortOrder
 }
 
 export type HospitalMasterMaxOrderByAggregateInput = {
@@ -362,6 +463,8 @@ export type HospitalMasterMaxOrderByAggregateInput = {
   address?: Prisma.SortOrder
   googleMapLink?: Prisma.SortOrder
   mouAgreementUrl?: Prisma.SortOrder
+  hospitalShare?: Prisma.SortOrder
+  mediendShare?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -373,9 +476,16 @@ export type HospitalMasterMinOrderByAggregateInput = {
   address?: Prisma.SortOrder
   googleMapLink?: Prisma.SortOrder
   mouAgreementUrl?: Prisma.SortOrder
+  hospitalShare?: Prisma.SortOrder
+  mediendShare?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type HospitalMasterSumOrderByAggregateInput = {
+  hospitalShare?: Prisma.SortOrder
+  mediendShare?: Prisma.SortOrder
 }
 
 export type HospitalMasterScalarRelationFilter = {
@@ -403,6 +513,9 @@ export type HospitalMasterCreateWithoutInsuranceProvidersInput = {
   address?: string | null
   googleMapLink?: string | null
   mouAgreementUrl?: string | null
+  hospitalShare?: number | null
+  mediendShare?: number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -414,6 +527,9 @@ export type HospitalMasterUncheckedCreateWithoutInsuranceProvidersInput = {
   address?: string | null
   googleMapLink?: string | null
   mouAgreementUrl?: string | null
+  hospitalShare?: number | null
+  mediendShare?: number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -441,6 +557,9 @@ export type HospitalMasterUpdateWithoutInsuranceProvidersInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleMapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mouAgreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -452,6 +571,9 @@ export type HospitalMasterUncheckedUpdateWithoutInsuranceProvidersInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleMapLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mouAgreementUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hospitalShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  mediendShare?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  details?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -494,6 +616,9 @@ export type HospitalMasterSelect<ExtArgs extends runtime.Types.Extensions.Intern
   address?: boolean
   googleMapLink?: boolean
   mouAgreementUrl?: boolean
+  hospitalShare?: boolean
+  mediendShare?: boolean
+  details?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -507,6 +632,9 @@ export type HospitalMasterSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   address?: boolean
   googleMapLink?: boolean
   mouAgreementUrl?: boolean
+  hospitalShare?: boolean
+  mediendShare?: boolean
+  details?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -518,6 +646,9 @@ export type HospitalMasterSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   address?: boolean
   googleMapLink?: boolean
   mouAgreementUrl?: boolean
+  hospitalShare?: boolean
+  mediendShare?: boolean
+  details?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -529,12 +660,15 @@ export type HospitalMasterSelectScalar = {
   address?: boolean
   googleMapLink?: boolean
   mouAgreementUrl?: boolean
+  hospitalShare?: boolean
+  mediendShare?: boolean
+  details?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type HospitalMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "googleMapLink" | "mouAgreementUrl" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["hospitalMaster"]>
+export type HospitalMasterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "googleMapLink" | "mouAgreementUrl" | "hospitalShare" | "mediendShare" | "details" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["hospitalMaster"]>
 export type HospitalMasterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   insuranceProviders?: boolean | Prisma.HospitalMaster$insuranceProvidersArgs<ExtArgs>
   _count?: boolean | Prisma.HospitalMasterCountOutputTypeDefaultArgs<ExtArgs>
@@ -556,6 +690,18 @@ export type $HospitalMasterPayload<ExtArgs extends runtime.Types.Extensions.Inte
      * MOU / agreement document URL
      */
     mouAgreementUrl: string | null
+    /**
+     * Hospital revenue share % (0–100).
+     */
+    hospitalShare: number | null
+    /**
+     * Mediand revenue share % (0–100), entered manually.
+     */
+    mediendShare: number | null
+    /**
+     * Payment modes, service coverage, POC, payment terms, rating, notes (non-column fields).
+     */
+    details: runtime.JsonValue | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -988,6 +1134,9 @@ export interface HospitalMasterFieldRefs {
   readonly address: Prisma.FieldRef<"HospitalMaster", 'String'>
   readonly googleMapLink: Prisma.FieldRef<"HospitalMaster", 'String'>
   readonly mouAgreementUrl: Prisma.FieldRef<"HospitalMaster", 'String'>
+  readonly hospitalShare: Prisma.FieldRef<"HospitalMaster", 'Float'>
+  readonly mediendShare: Prisma.FieldRef<"HospitalMaster", 'Float'>
+  readonly details: Prisma.FieldRef<"HospitalMaster", 'Json'>
   readonly isActive: Prisma.FieldRef<"HospitalMaster", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"HospitalMaster", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"HospitalMaster", 'DateTime'>

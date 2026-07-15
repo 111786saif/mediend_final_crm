@@ -1,0 +1,1 @@
+ALTER TABLE "HospitalMaster" ADD COLUMN IF NOT EXISTS "mediendShare" DOUBLE PRECISION;
