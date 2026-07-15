@@ -106,6 +106,7 @@ export async function POST(request: NextRequest) {
               bdNumber: data.bdNumber ?? null,
               joinDate: data.joinDate ? new Date(data.joinDate) : null,
               dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+              onboardingStatus: 'PENDING_PROFILE',
             },
           })
 

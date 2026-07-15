@@ -10110,6 +10110,10 @@ export const EmployeeScalarFieldEnum = {
   otherDocuments: 'otherDocuments',
   uanNumber: 'uanNumber',
   status: 'status',
+  onboardingStatus: 'onboardingStatus',
+  onboardingSubmittedAt: 'onboardingSubmittedAt',
+  onboardingApprovedAt: 'onboardingApprovedAt',
+  onboardingApprovedById: 'onboardingApprovedById',
   pipStartDate: 'pipStartDate',
   pipEndDate: 'pipEndDate',
   noticePeriodStartDate: 'noticePeriodStartDate',
@@ -12345,6 +12349,20 @@ export type EnumEmployeeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'EmployeeStatus[]'
  */
 export type ListEnumEmployeeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployeeStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'OnboardingStatus'
+ */
+export type EnumOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OnboardingStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'OnboardingStatus[]'
+ */
+export type ListEnumOnboardingStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OnboardingStatus[]'>
     
 
 

@@ -274,11 +274,12 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
   const isPrintPage = pathname?.includes('/print/')
   const isAcknowledgePage = pathname?.startsWith('/documents/acknowledge')
   const isDocumentationPage = pathname?.startsWith('/documentation')
+  const isOnboardingPage = pathname === '/onboarding' || pathname?.startsWith('/onboarding/')
 
   const shouldShowSidebar =
-    !isLoading && user && !isLoginPage && !isPayslipPage && !isDocumentViewPage && !isPrintPage && !isAcknowledgePage && !isDocumentationPage
+    !isLoading && user && !isLoginPage && !isPayslipPage && !isDocumentViewPage && !isPrintPage && !isAcknowledgePage && !isDocumentationPage && !isOnboardingPage
 
-  if (isLoginPage || isPayslipPage || isDocumentViewPage || isPrintPage || isAcknowledgePage || isDocumentationPage) {
+  if (isLoginPage || isPayslipPage || isDocumentViewPage || isPrintPage || isAcknowledgePage || isDocumentationPage || isOnboardingPage) {
     return <>{children}</>
   }
 

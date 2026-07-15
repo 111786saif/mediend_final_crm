@@ -282,6 +282,12 @@ export const navItems: NavItem[] = [
     permission: 'hrms:employees:read',
   },
   {
+    title: 'Onboarding',
+    url: '/hr/onboarding',
+    icon: UserCheck,
+    permission: 'hrms:employees:read',
+  },
+  {
     title: 'Compensation & Docs',
     url: '/hr/compensation',
     icon: FileText,

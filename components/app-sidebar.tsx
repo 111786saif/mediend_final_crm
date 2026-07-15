@@ -83,6 +83,7 @@ function getBadgeCount(
     pendingLeaveBalanceEditRequests?: number
     /** Same pending normalization count rolled into Engagement’s aggregate; show on Attendance & Leaves instead. */
     hrPendingNormalizations?: number
+    pendingOnboardingApprovals?: number
   } | undefined,
   isMdOrAdmin: boolean
 ): number {
@@ -112,6 +113,7 @@ function getBadgeCount(
   if (itemTitle === 'MD Attendance')
     return counts.pendingMDTeamNormalizations ?? 0
   if (itemTitle === 'MD Leave balances') return counts.pendingLeaveBalanceEditRequests ?? 0
+  if (itemTitle === 'Onboarding') return counts.pendingOnboardingApprovals ?? 0
   return 0
 }
 

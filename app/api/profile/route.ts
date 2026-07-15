@@ -37,6 +37,14 @@ const updateProfileSchema = z.object({
   bankAccountName: z.string().max(100).optional().nullable(),
   bankAccountNumber: z.string().max(50).optional().nullable(),
   ifscCode: z.string().max(11).optional().nullable(),
+  dateOfBirth: z.string().optional().nullable(),
+  aadharDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  panDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  passportDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  drivingLicenseDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  resumeDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  educationalCertDocUrl: z.string().url().optional().nullable().or(z.literal('')),
+  experienceCertDocUrl: z.string().url().optional().nullable().or(z.literal('')),
 })
 
 const managerSelect = {
@@ -248,6 +256,24 @@ export async function PATCH(request: NextRequest) {
             403
           )
         }
+      }
+
+      const docFields = [
+        'aadharDocUrl',
+        'panDocUrl',
+        'passportDocUrl',
+        'drivingLicenseDocUrl',
+        'resumeDocUrl',
+        'educationalCertDocUrl',
+        'experienceCertDocUrl',
+      ] as const
+      for (const field of docFields) {
+        const val = data[field]
+        if (val === undefined) continue
+        empUpdate[field] = val || null
+      }
+      if (data.dateOfBirth !== undefined) {
+        empUpdate.dateOfBirth = data.dateOfBirth ? new Date(data.dateOfBirth) : null
       }
 
       if (Object.keys(empUpdate).length > 0) {

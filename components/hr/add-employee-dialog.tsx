@@ -418,6 +418,10 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                 </Table>
               </div>
 
+              <div className="rounded-lg border border-violet-200 bg-violet-50/60 dark:bg-violet-950/20 dark:border-violet-800 p-3 text-sm text-violet-800 dark:text-violet-300">
+                New employees start in onboarding. They must complete their profile and wait for HR approval before full access is unlocked.
+              </div>
+
               <div className="rounded-lg border border-amber-200 bg-amber-50/60 dark:bg-amber-950/20 dark:border-amber-800 p-3 text-sm text-amber-800 dark:text-amber-300">
                 Finance will be notified to set up payroll for {employees.length === 1 ? 'this employee' : 'these employees'}.
               </div>

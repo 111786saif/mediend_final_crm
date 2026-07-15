@@ -40,6 +40,7 @@ export interface BadgeCounts {
   taskApprovalCount: number
   taskOverdueCount: number
   upcomingMeetsToday: number
+  pendingOnboardingApprovals: number
 }
 
 export async function GET(request: NextRequest) {
@@ -83,6 +84,7 @@ export async function GET(request: NextRequest) {
       taskApprovalCount: 0,
       taskOverdueCount: 0,
       upcomingMeetsToday: 0,
+      pendingOnboardingApprovals: 0,
     }
 
     const promises: Promise<unknown>[] = []
@@ -393,6 +395,22 @@ export async function GET(request: NextRequest) {
         ]).then(([f, i, n]) => {
           counts.pendingHRActions = f + i + n
         })
+      )
+    }
+
+    // Pending onboarding approvals (HR / Admin / MD)
+    if (
+      user.role === 'HR_HEAD' ||
+      user.role === 'ADMIN' ||
+      user.role === 'MD' ||
+      hasPermission(user, 'hrms:employees:write')
+    ) {
+      promises.push(
+        prisma.employee
+          .count({ where: { onboardingStatus: 'PENDING_APPROVAL' } })
+          .then((c) => {
+            counts.pendingOnboardingApprovals = c
+          })
       )
     }
 

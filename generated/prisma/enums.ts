@@ -367,6 +367,8 @@ export const NotificationType = {
   MEET_SCHEDULED: 'MEET_SCHEDULED',
   MEET_REMINDER: 'MEET_REMINDER',
   EMPLOYEE_ONBOARDED: 'EMPLOYEE_ONBOARDED',
+  ONBOARDING_SUBMITTED: 'ONBOARDING_SUBMITTED',
+  ONBOARDING_APPROVED: 'ONBOARDING_APPROVED',
   LEAVE_BALANCE_EDIT_REQUESTED: 'LEAVE_BALANCE_EDIT_REQUESTED',
   LEAVE_BALANCE_EDIT_RESOLVED: 'LEAVE_BALANCE_EDIT_RESOLVED',
   GRACE2_MONTHLY_LIMIT_EXCEEDED: 'GRACE2_MONTHLY_LIMIT_EXCEEDED',
@@ -550,6 +552,15 @@ export const EmployeeStatus = {
 } as const
 
 export type EmployeeStatus = (typeof EmployeeStatus)[keyof typeof EmployeeStatus]
+
+
+export const OnboardingStatus = {
+  PENDING_PROFILE: 'PENDING_PROFILE',
+  PENDING_APPROVAL: 'PENDING_APPROVAL',
+  APPROVED: 'APPROVED'
+} as const
+
+export type OnboardingStatus = (typeof OnboardingStatus)[keyof typeof OnboardingStatus]
 
 
 export const ITProjectStatus = {

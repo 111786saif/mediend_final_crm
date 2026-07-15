@@ -46,6 +46,7 @@ export const RESOURCE_MAP = {
   // HRM Group Pages
   "hrm.attendance_normalizations": { path: "/hr/attendance-leaves", component: "AttendanceLeavesPage" },
   "hrm.people_org": { path: "/hr/people", component: "PeopleOrgPage" },
+  "hrm.onboarding": { path: "/hr/onboarding", component: "HROnboardingPage" },
   "hrm.compensation_docs": { path: "/hr/compensation", component: "CompensationDocsPage" },
   "hrm.engagement": { path: "/hr/engagement", component: "EngagementPage" },
   "hrm.recruitment": { path: "/hr/recruitment", component: "RecruitmentPage" },

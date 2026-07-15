@@ -51,7 +51,12 @@ export function useAuth() {
       localStorage.removeItem(TESTER_ROLE_KEY)
       setActiveRoleState(null)
       queryClient.invalidateQueries({ queryKey: ['me', 'permissions'] })
-      router.push(getFirstNavUrl(data.user))
+      const status = data.user.onboardingStatus
+      if (status && status !== 'APPROVED') {
+        router.push('/onboarding')
+      } else {
+        router.push(getFirstNavUrl(data.user))
+      }
     },
   })
 
