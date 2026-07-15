@@ -43,6 +43,8 @@ import {
   Shield,
   ShieldCheck,
   Sparkles,
+  Sun,
+  Moon,
   Target,
   Ticket,
   TrendingUp,
@@ -58,6 +60,7 @@ import * as React from 'react'
 import logo from '@/public/logo-mediend.png'
 import { UserRole } from '@/generated/prisma/enums'
 import { useAI } from '@/components/ai/ai-provider'
+import { useTheme } from 'next-themes'
 
 function getBadgeCount(
   itemTitle: string,
@@ -119,6 +122,10 @@ export function AppSidebar() {
   const { isMobile, setOpenMobile, navigatingRef } = useSidebar()
   const { data: badgeCounts } = useBadgeCounts()
   const { data: unreadNotifications = [] } = useNotifications(true)
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
+  const isDarkMode = !mounted || theme === 'dark'
   const meetNotificationBadge = React.useMemo(
     () =>
       unreadNotifications.filter(
@@ -699,6 +706,16 @@ export function AppSidebar() {
             </SidebarMenuItem>
           )}
           <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}
+              tooltip={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              asChild={false}
+            >
+              {isDarkMode ? <Sun /> : <Moon />}
+              <span>{isDarkMode ? 'Light mode' : 'Dark mode'}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Profile">
               <Link href="/profile" onClick={closeSidebarOnMobile}>
                 <User />
@@ -717,4 +734,3 @@ export function AppSidebar() {
     </Sidebar>
   )
 }
-

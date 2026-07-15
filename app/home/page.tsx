@@ -54,7 +54,7 @@ import { BirthdayPopup } from '@/components/birthday-popup'
 import { RankUpPopup } from '@/components/notifications/rank-up-popup'
 import { TeamTargetWidget } from '@/components/targets/team-target-widget'
 import { TLTeamAchievements } from '@/components/targets/tl-team-achievements'   
-import { useMyTargetProgress, TargetRingInline } from '../../app/bd/dashboard/BDDashboard'
+import { useMyTargetProgress, TargetRingInline, TargetRingInlineEmpty } from '../../app/bd/dashboard/BDDashboard'
 import { TargetTrendCard } from '@/components/targets/target-trend-card'
 import { LeadsTrendCard } from '@/components/targets/leads-trend-card'
 import { MonthlySummaryCard } from '@/components/targets/monthly-summary-card'
@@ -116,90 +116,55 @@ function getNavIconColor(title: string) {
 // ─── Banner section ────────────────────────────────────────────────────────────
 
 function BannerSection({
-  bannerUrl,
   greeting,
   firstName,
   role,
-  canEdit,
-  onBannerChange,
   targetSlot,
 }: {
-  bannerUrl?: string
   greeting: string
   firstName: string
   role?: string
-  canEdit: boolean
-  onBannerChange: (file: File) => void
   targetSlot?: React.ReactNode
 }) {
-  const fileRef = useRef<HTMLInputElement>(null)
+  const today = format(new Date(), 'EEEE, d MMMM')
 
   return (
-    <div className="relative w-full rounded-2xl overflow-hidden min-h-[180px] md:min-h-[220px]">
-      {bannerUrl ? (
-        <Image
-          src={bannerUrl}
-          alt="Home banner"
-          fill
-          className="object-cover"
-          priority
-        />
-      ) : (
-        <div className="absolute inset-0 bg-linear-to-br from-[#062D4C] via-[#0a4a7a] to-[#1EC5B7]" />
-      )}
-      {/* Overlay gradient for text legibility */}
-      <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
+    <div className="relative w-full overflow-hidden rounded-2xl bg-gradient-to-br from-[#0a2540] via-[#0d3b5c] to-[#0f5c56] p-6 md:p-8 shadow-sm">
+      {/* Subtle decorative circles — texture without a photo */}
+      <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full border border-white/10" />
+      <div className="pointer-events-none absolute -right-6 top-10 h-32 w-32 rounded-full border border-white/10" />
+      <div className="pointer-events-none absolute right-24 -bottom-10 h-40 w-40 rounded-full bg-white/5" />
 
-      {/* Greeting text + target ring */}
-      <div className="relative z-10 flex flex-col justify-end gap-4 h-full min-h-[180px] md:min-h-[220px] p-5 md:p-8">
-        <div>
-          <p className="text-white/80 text-sm md:text-base font-medium mb-1">{greeting},</p>
-          <h1 className="text-white text-2xl md:text-4xl font-bold tracking-tight">
-            {firstName}
+      <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 md:h-14 md:w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal-300 to-teal-500 text-[#0a2540] text-lg md:text-xl font-bold shadow-sm">
+            {firstName.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <p className="text-white/60 text-xs font-medium uppercase tracking-wide">{today}</p>
+            <h1 className="text-white text-xl md:text-2xl font-bold tracking-tight mt-0.5">
+              {greeting}, {firstName}
+            </h1>
             {role && (
-              <span className="text-white/70 text-lg md:text-2xl font-semibold ml-1.5 align-middle">
-                ({role.replace(/_/g, ' ')})
-              </span>
-            )}{' '}
-            👋
-          </h1>
+              <p className="text-white/70 text-sm font-medium mt-0.5">{role.replace(/_/g, ' ')}</p>
+            )}
+          </div>
         </div>
 
         {targetSlot && (
-          <div className="shrink-0">
-            {targetSlot}
-          </div>
+          <>
+            <div className="hidden sm:block h-14 w-px bg-white/15" />
+            <div className="shrink-0">{targetSlot}</div>
+          </>
         )}
       </div>
-
-      {/* Change banner button - every user can set their own */}
-      {canEdit && (
-        <button
-          type="button"
-          onClick={() => fileRef.current?.click()}
-          className="absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full bg-black/40 backdrop-blur-sm text-white text-xs px-3 py-1.5 hover:bg-black/60 transition-colors"
-        >
-          <Camera className="h-3.5 w-3.5" />
-          Change banner
-        </button>
-      )}
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const file = e.target.files?.[0]
-          if (file) onBannerChange(file)
-        }}
-      />
     </div>
   )
 }
 
 // ─── Thought of the Day ───────────────────────────────────────────────────────
 
-const DEFAULT_BANNER = '/Serene Night Scene with Shooting Star.png'
+// const DEFAULT_BANNER = '/Serene Night Scene with Shooting Star.png'
 
 function getThoughtOfTheDay(): string {
   const start = new Date(new Date().getFullYear(), 0, 0)
@@ -632,20 +597,13 @@ export default function HomePage() {
   const router = useRouter()
   const { user } = useAuth()
   const showFnFCard = user?.role === 'HR_HEAD'
-  const { data: workLogCheck } = useWorkLogCheck({
+const { data: workLogCheck } = useWorkLogCheck({
     tzOffsetMinutes: -new Date().getTimezoneOffset(),
   })
   const subjectToWorkLogs = workLogCheck?.subjectToWorkLogs ?? false
-  const { data: userBanner } = useUserBanner()
-  const updateUserBanner = useUpdateUserBanner()
-  const { uploadFile, uploading } = useFileUpload({
-    folder: 'home-banners',
-    endpoint: '/api/settings/home-banner/upload',
-  })
 
   const greeting = getGreeting()
   const firstName = user?.name?.split(' ')[0] ?? user?.email?.split('@')[0] ?? 'there'
-  const bannerUrl = userBanner?.bannerUrl || DEFAULT_BANNER
   const thought = useMemo(() => getThoughtOfTheDay(), [])
   const { isTargetRole, monthly: monthlyTarget } = useMyTargetProgress()
 
@@ -654,16 +612,6 @@ export default function HomePage() {
       router.replace('/md/home')
     }
   }, [user, router])
-
-  const handleBannerChange = useCallback(
-    async (file: File) => {
-      const result = await uploadFile(file)
-      if (result?.url) {
-        updateUserBanner.mutate(result.url)
-      }
-    },
-    [uploadFile, updateUserBanner]
-  )
 
   if (user?.role === 'MD') {
     return null
@@ -675,23 +623,15 @@ export default function HomePage() {
       <RankUpPopup />
       <NoticeBlockerModal />
       {/* Banner + Greeting */}
-      {uploading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-card rounded-xl px-6 py-4 flex items-center gap-3 shadow-xl">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <span className="text-sm font-medium">Uploading banner…</span>
-          </div>
-        </div>
-      )}
-
-      <BannerSection
-        bannerUrl={bannerUrl}
+       <BannerSection
         greeting={greeting}
         firstName={firstName}
         role={user?.role}
-        canEdit={true}
-        onBannerChange={handleBannerChange}
-        targetSlot={isTargetRole && monthlyTarget ? <TargetRingInline t={monthlyTarget} /> : undefined}
+        targetSlot={
+          isTargetRole
+            ? (monthlyTarget ? <TargetRingInline t={monthlyTarget} /> : <TargetRingInlineEmpty />)
+            : undefined
+        }
       />
 
       {/* Thought of the Day */}
@@ -710,6 +650,14 @@ export default function HomePage() {
       {/* Push reminder banner */}
       <PushReminderBanner />
 
+       {/* KPIs */}
+      <div>
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+          At a Glance
+        </h2>
+        <KPISection />
+      </div>
+
       {/* FnF reminder for HR */}
       {showFnFCard && <FnFReminderCard />}
 
@@ -720,6 +668,10 @@ export default function HomePage() {
         </h2>
         <NoticeActions />
       </div>
+
+
+      {/* Monthly rewards summary — Sales/BD hierarchy only */}
+      <MonthlySummaryCard />
 
       {/* Target progress widget (compact — TL and Sales Head team overview) */}
       <TeamTargetWidget />
@@ -733,16 +685,8 @@ export default function HomePage() {
         <LeadsTrendCard />
       </div>
 
-      {/* Monthly rewards summary — Sales/BD hierarchy only */}
-      <MonthlySummaryCard />
 
-      {/* KPIs */}
-      <div>
-        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-          At a Glance
-        </h2>
-        <KPISection />
-      </div>
+     
 
       {/* Today's meets */}
       <div>

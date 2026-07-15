@@ -48,6 +48,8 @@ const resourcesToSeed: ResourceSeedItem[] = [
   { key: 'main.md_compliance', label: 'MD Compliance', type: 'SECTION', parentKey: 'main', sortOrder: 23 },
   { key: 'main.md_outstanding', label: 'MD Outstanding', type: 'SECTION', parentKey: 'main', sortOrder: 24 },
   { key: 'main.incentive', label: 'Incentive', type: 'SECTION', parentKey: 'main', sortOrder: 25 },
+  { key: 'main.cumulative_report', label: 'Cumulative Report', type: 'SECTION', parentKey: 'main', sortOrder: 26 },
+
 
   // Under hrm
   { key: 'hrm.attendance_normalizations', label: 'Attendance & Normalizations', type: 'SECTION', parentKey: 'hrm', sortOrder: 1 },
