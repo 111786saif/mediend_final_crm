@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, Database, Edit, MapPinned, Plus, RefreshCw, RadioTower } from 'lucide-react'
@@ -35,6 +36,7 @@ import {
 } from '@/components/ui/table'
 import { useAuth } from '@/hooks/use-auth'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
+import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
 type SourceMaster = {
@@ -131,6 +133,17 @@ const MASTER_PAGE_CONFIG: Record<
     icon: MapPinned,
   },
 }
+
+const MASTER_TABS: Array<{
+  type: CampaignMasterType
+  label: string
+  href: string
+}> = [
+  { type: 'source', label: 'Sources', href: '/crm/masters' },
+  { type: 'leadSource', label: 'Lead Sources', href: '/crm/masters/lead-sources' },
+  { type: 'circle', label: 'Circles', href: '/crm/masters/circles' },
+  { type: 'city', label: 'Cities', href: '/crm/masters/cities' },
+]
 
 function createEmptyMasterForm(): MasterFormState {
   return {
@@ -340,6 +353,30 @@ export function CrmMasterPage({ masterType }: { masterType: CampaignMasterType }
             <Plus className="mr-2 h-4 w-4" />
             {config.actionLabel}
           </Button>
+        </div>
+
+        <div className="overflow-x-auto">
+          <div className="inline-flex min-w-full gap-1 rounded-2xl border border-border/70 bg-muted/50 p-1.5">
+            {MASTER_TABS.map((tab) => {
+              const isActive = tab.type === masterType
+
+              return (
+                <Link
+                  key={tab.type}
+                  href={tab.href}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={cn(
+                    'rounded-xl px-4 py-2 text-sm font-medium transition-[color,background-color,box-shadow] whitespace-nowrap',
+                    isActive
+                      ? 'border border-border/70 bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:bg-background/70 hover:text-foreground'
+                  )}
+                >
+                  {tab.label}
+                </Link>
+              )
+            })}
+          </div>
         </div>
 
         {error && !isLoading && (
