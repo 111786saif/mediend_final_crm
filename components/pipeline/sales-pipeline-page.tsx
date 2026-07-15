@@ -750,7 +750,7 @@ const PipelineRow = memo(function PipelineRow({
   const st = normalizeLeadStatus(lead.status)
   const sc = getStatusColor(st)
   const statusClass = isOpened
-    ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-950/60 dark:text-cyan-200'
+    ? 'bg-primary/18 text-primary ring-1 ring-primary/25 dark:bg-primary/20 dark:text-primary-foreground dark:ring-primary/30'
     : `${sc.bg} ${sc.text}`
   const latestRemarkPreview = getLatestRemarkPreview(lead)
   const patientName = typeof lead.patientName === 'string' ? lead.patientName : '—'
@@ -764,7 +764,7 @@ const PipelineRow = memo(function PipelineRow({
         className={cn(
           'cursor-pointer border-b border-border/60 transition-colors',
           isOpened
-            ? 'bg-cyan-50/80 hover:bg-cyan-100/70 dark:bg-cyan-950/20 dark:hover:bg-cyan-950/30'
+            ? 'bg-primary/8 hover:bg-primary/12 dark:bg-primary/10 dark:hover:bg-primary/16'
             : 'hover:bg-muted/50'
         )}
         onClick={() => onClick(lead.id)}
@@ -869,7 +869,7 @@ const PipelineRow = memo(function PipelineRow({
       className={cn(
         'cursor-pointer border-b border-border/60 transition-colors',
         isOpened
-          ? 'bg-cyan-50/80 hover:bg-cyan-100/70 dark:bg-cyan-950/20 dark:hover:bg-cyan-950/30'
+          ? 'bg-primary/8 hover:bg-primary/12 dark:bg-primary/10 dark:hover:bg-primary/16'
           : 'hover:bg-muted/50'
       )}
       onClick={() => onClick(lead.id)}

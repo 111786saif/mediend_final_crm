@@ -9,6 +9,7 @@ import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
+import { isStatusRequiringAgeSex, isStatusRequiringFollowUpDate } from '@/lib/lead-status-rules'
 import {
   buildLeadOwnershipTransferUpdate,
   canUserAddLeadRemarks,
@@ -18,15 +19,6 @@ import {
   canUserUpdateLeadStatus,
   canUserViewLeadOwner,
 } from '@/lib/lead-ownership'
-
-function isStatusRequiringFollowUpDate(status: string | null | undefined) {
-  const normalized = String(status ?? '').trim().toLowerCase()
-  return normalized.includes('follow-up') || normalized.startsWith('dnp')
-}
-
-function isFollowUpStatus(status: string | null | undefined) {
-  return String(status ?? '').trim().toLowerCase().includes('follow-up')
-}
 
 function parseFollowUpDateInput(value: unknown) {
   if (value === undefined) return { provided: false, value: undefined as Date | null | undefined }
@@ -421,7 +413,7 @@ export async function PATCH(
       return errorResponse('Follow-up date is required for DNP and follow-up statuses', 400)
     }
 
-    if (crmEditFollowUpValidation && statusChanged && isFollowUpStatus(requestedStatus)) {
+    if (crmEditFollowUpValidation && statusChanged && isStatusRequiringAgeSex(requestedStatus)) {
       const nextAge =
         body.age !== undefined
           ? body.age === null || body.age === ''
@@ -436,11 +428,11 @@ export async function PATCH(
           : lead.sex
 
       if (!Number.isFinite(nextAge) || Number(nextAge) <= 0) {
-        return errorResponse('Age is required for follow-up statuses', 400)
+        return errorResponse('Age is required for follow-up and DNP statuses', 400)
       }
 
       if (typeof nextSex !== 'string' || nextSex.trim().length === 0) {
-        return errorResponse('Sex is required for follow-up statuses', 400)
+        return errorResponse('Sex is required for follow-up and DNP statuses', 400)
       }
     }
 

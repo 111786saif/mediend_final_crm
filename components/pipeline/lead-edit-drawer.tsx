@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch } from '@/lib/api-client'
+import { isStatusRequiringAgeSex, isStatusRequiringFollowUpDate } from '@/lib/lead-status-rules'
 import { LEAD_STATUS_OPTIONS } from '@/lib/lead-status-options'
 import { getRoleLabel } from '@/lib/roles'
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
@@ -61,15 +62,6 @@ const CRM_EDIT_LEAD_STATUS_OPTIONS = [
 ]
 
 const CRM_LEAD_SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
-
-function isStatusRequiringFollowUpDate(status: string | null | undefined) {
-  const normalized = String(status ?? '').trim().toLowerCase()
-  return normalized.includes('follow-up') || normalized.startsWith('dnp')
-}
-
-function isFollowUpStatus(status: string | null | undefined) {
-  return String(status ?? '').trim().toLowerCase().includes('follow-up')
-}
 
 function parseFollowUpDate(value: string | null | undefined) {
   if (!value) return undefined
@@ -154,7 +146,7 @@ export function LeadEditDrawer({
     effectiveLeadStatus.trim().toLowerCase() === 'junk' ||
     effectiveLeadStatus.trim().toLowerCase() === 'churned'
   const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
-  const statusRequiresAgeSex = isFollowUpStatus(effectiveLeadStatus)
+  const statusRequiresAgeSex = isStatusRequiringAgeSex(effectiveLeadStatus)
   const statusChanged = effectiveLeadStatus !== (lead?.status ?? 'New')
   const shouldRequireFollowUpDate = statusChanged && statusRequiresFollowUpDate
   const shouldRequireAgeSex = statusChanged && statusRequiresAgeSex
@@ -237,7 +229,7 @@ export function LeadEditDrawer({
     }
 
     if (shouldRequireAgeSex && (effectiveAge.trim().length === 0 || effectiveSex.trim().length === 0)) {
-      toast.error('Age and sex are required for follow-up statuses')
+      toast.error('Age and sex are required for follow-up and DNP statuses')
       return
     }
 
@@ -365,8 +357,8 @@ export function LeadEditDrawer({
                   <p className="text-xs text-muted-foreground">
                     {canEditLeadProfile
                       ? statusRequiresAgeSex
-                        ? 'Follow-up statuses require age and sex in this CRM edit flow.'
-                        : 'Edits are limited to the leads you own or manage within your hierarchy scope.'
+                        ? 'Follow-up and DNP statuses require age and sex in this CRM edit flow.'
+                        : ''
                       : 'Your role cannot edit patient name, disease, age, sex, or treatment for this lead.'}
                   </p>
                 </CardContent>
@@ -394,7 +386,7 @@ export function LeadEditDrawer({
                           if (value.trim().toLowerCase() === 'junk' || value.trim().toLowerCase() === 'churned') {
                             setLeadAssigneeDraft('')
                           }
-                          if (!isFollowUpStatus(value)) {
+                          if (!isStatusRequiringAgeSex(value)) {
                             setAgeDraft(null)
                             setSexDraft(null)
                           }
@@ -415,11 +407,11 @@ export function LeadEditDrawer({
                           ))}
                         </SelectContent>
                       </Select>
-                      <p className="text-xs text-muted-foreground">
+                      {/* <p className="text-xs text-muted-foreground">
                         {canUpdateLeadStatus
                           ? 'You can update the current sales status for this lead.'
                           : 'Your role cannot change the lead status for this record.'}
-                      </p>
+                      </p> */}
                     </div>
 
                     {statusRequiresFollowUpDate && (
@@ -509,9 +501,7 @@ export function LeadEditDrawer({
                   {isLoadingMeta ? (
                     <p className="text-xs text-muted-foreground">Loading ownership rules...</p>
                   ) : (
-                    <p className="text-xs text-muted-foreground">
-                      Status updates and transfer permissions follow your role scope automatically.
-                    </p>
+                    <p className="text-xs text-muted-foreground"></p>
                   )}
                 </CardContent>
               </Card>
