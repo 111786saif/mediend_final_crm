@@ -16,6 +16,7 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
 import { useBadgeCounts } from '@/hooks/use-badge-counts'
+import { useNotifications } from '@/hooks/use-notifications'
 import { useAuth } from '@/hooks/use-auth'
 import { useSidebar } from '@/components/ui/sidebar'
 import { getCampaignCplNavItem, getFilteredNavItemsWithUrls } from '@/lib/sidebar-nav'
@@ -777,8 +778,4 @@ export function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> main
