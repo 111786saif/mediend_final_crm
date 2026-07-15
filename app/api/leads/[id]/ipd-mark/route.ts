@@ -96,7 +96,7 @@ export async function POST(
     const isCashFlow = lead.flowType === 'CASH'
     const allowedStages: CaseStage[] = isCashFlow
       ? [CaseStage.CASH_APPROVED, CaseStage.CASH_IPD_SUBMITTED]
-      : [CaseStage.INITIATED]
+      : [CaseStage.INITIATED, CaseStage.ADMITTED]
 
     if (!allowedStages.includes(lead.caseStage)) {
       return errorResponse(`Cannot mark IPD status. Current stage: ${lead.caseStage}.`, 400)
@@ -186,15 +186,13 @@ export async function POST(
     let toStage: CaseStage = lead.caseStage
 
     if (isCashFlow) {
-      if (data.status === 'IPD_DONE' || data.status === 'ADMITTED_DONE') {
+      if (data.status === 'IPD_DONE') {
         toStage = CaseStage.CASH_IPD_DONE
         leadUpdateData.caseStage = CaseStage.CASH_IPD_DONE
-        if (data.status === 'IPD_DONE') {
-          const surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : new Date()
-          leadUpdateData.surgeryDate = surgeryDate
-          leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
-          leadUpdateData.conversionDate = surgeryDate
-        }
+        const surgeryDate = data.surgeryDate ? new Date(data.surgeryDate) : new Date()
+        leadUpdateData.surgeryDate = surgeryDate
+        leadUpdateData.pipelineStage = 'PL' satisfies PipelineStage
+        leadUpdateData.conversionDate = surgeryDate
       }
     } else {
       if (data.status === 'IPD_DONE') {

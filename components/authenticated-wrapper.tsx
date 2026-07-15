@@ -15,7 +15,8 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { NotificationBell } from '@/components/notifications/notification-bell'
 import { Button } from '@/components/ui/button'
-import { Calendar, CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, UserCheck, UserCircle, Wallet } from 'lucide-react'
+import { Calendar, CheckSquare, LayoutDashboard, ListTodo, MessageSquare, Search, Sparkles, Home, UserCheck, UserCircle, Wallet, Sun, Moon } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { useAI } from '@/components/ai/ai-provider'
 import { CommandPalette } from '@/components/command-palette'
 import { PageTransition } from '@/components/page-transition'
@@ -36,6 +37,24 @@ function AIDesktopButton() {
   return (
     <Button variant="ghost" size="icon" onClick={ai.openAI} aria-label="Open mediendAI">
       <Sparkles className="h-5 w-5 text-muted-foreground" />
+    </Button>
+  )
+}
+
+function NavbarThemeToggle() {
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const isDarkMode = !mounted || theme === 'dark'
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setTheme(isDarkMode ? 'light' : 'dark')}
+      title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
     </Button>
   )
 }
@@ -276,6 +295,7 @@ export function AuthenticatedWrapper({ children }: { children: React.ReactNode }
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
               <div className="flex flex-1 items-center gap-2 justify-end">
+                <NavbarThemeToggle />
                 <Button
                   variant="ghost"
                   size="icon"

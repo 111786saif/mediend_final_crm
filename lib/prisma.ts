@@ -3,6 +3,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
+  prismaAdapter: PrismaPg | undefined
 }
 
 // Supabase session poolers allow few concurrent clients (often ~15 total for the project).

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -161,6 +161,22 @@ export function KYPBasicForm({
   const [panFiles, setPanFiles] = useState<{ name: string; url: string }[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [dobPopoverOpen, setDobPopoverOpen] = useState(false)
+
+  // Search text typed into the Insurance Name / Doctor Name comboboxes. Kept separate
+  // from formData so that raw typing never becomes the committed value on its own -
+  // only an explicit selection (click / Enter on a list item) commits a value.
+  const [insuranceSearchText, setInsuranceSearchText] = useState('')
+  const [doctorSearchText, setDoctorSearchText] = useState('')
+  const [insuranceFocused, setInsuranceFocused] = useState(false)
+  const [doctorFocused, setDoctorFocused] = useState(false)
+  const insuranceNameRef = useRef(formData.insuranceName)
+  const doctorNameRef = useRef(formData.doctorName)
+  useEffect(() => {
+    insuranceNameRef.current = formData.insuranceName
+  }, [formData.insuranceName])
+  useEffect(() => {
+    doctorNameRef.current = formData.doctorName
+  }, [formData.doctorName])
   const { uploadFile, uploading } = useFileUpload({
     maxFileSizeBytes: KYP_UPLOAD_MAX_BYTES,
   })
@@ -185,6 +201,8 @@ export function KYPBasicForm({
     setInsuranceFiles([...prefill.insuranceFiles])
     setAadharFiles([...prefill.aadharFiles])
     setPanFiles([...prefill.panFiles])
+    setInsuranceSearchText(prefill.insuranceName ?? '')
+    setDoctorSearchText(prefill.doctorName ?? '')
     setErrors({})
   }, [prefill?.kypId])
 
@@ -202,8 +220,8 @@ export function KYPBasicForm({
     return CITIES.filter((city) => fuzzyMatch(city, formData.location)).slice(0, 10)
   }, [formData.location])
 
-  const debouncedInsuranceSearch = useDebouncedValue(formData.insuranceName, 250)
-  const debouncedDoctorSearch = useDebouncedValue(formData.doctorName, 250)
+  const debouncedInsuranceSearch = useDebouncedValue(insuranceSearchText, 250)
+  const debouncedDoctorSearch = useDebouncedValue(doctorSearchText, 250)
 
   const { data: insuranceSuggestData } = useQuery({
     queryKey: ['masters', 'insurance', 'kyp-suggest', debouncedInsuranceSearch],
@@ -211,6 +229,8 @@ export function KYPBasicForm({
       apiGet<{ items: { id: string; name: string }[] }>(
         `/api/masters/insurance?search=${encodeURIComponent(debouncedInsuranceSearch.trim())}`
       ),
+    // Only hit the API once the user's cursor is actually in the field.
+    enabled: insuranceFocused,
     staleTime: 30_000,
   })
 
@@ -220,6 +240,8 @@ export function KYPBasicForm({
       apiGet<{ items: { id: string; name: string }[] }>(
         `/api/masters/doctors?search=${encodeURIComponent(debouncedDoctorSearch.trim())}`
       ),
+    // Only hit the API once the user's cursor is actually in the field.
+    enabled: doctorFocused,
     staleTime: 30_000,
   })
 
@@ -432,17 +454,25 @@ export function KYPBasicForm({
             onValueChange={(value) => {
               if (value) {
                 setFormData({ ...formData, insuranceName: value })
+                setInsuranceSearchText(value)
               }
             }}
           >
             <ComboboxInput
               id="insuranceName"
-              placeholder="Search insurance company or type name"
+              placeholder="Search insurance company"
               className={cn('w-full')}
-              value={formData.insuranceName}
+              value={insuranceSearchText}
+              onFocus={() => setInsuranceFocused(true)}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormData({ ...formData, insuranceName: e.target.value })
+                setInsuranceSearchText(e.target.value)
               }
+              onBlur={() => {
+                setInsuranceFocused(false)
+                // Give a click on a list item a chance to commit a selection first;
+                // if nothing was selected, drop the leftover typed text.
+                setTimeout(() => setInsuranceSearchText(insuranceNameRef.current || ''), 150)
+              }}
             />
             <ComboboxContent>
               <ComboboxList>
@@ -453,7 +483,9 @@ export function KYPBasicForm({
                     </ComboboxItem>
                   ))
                 ) : (
-                  <ComboboxEmpty>No insurance matches. Keep typing to use your own text.</ComboboxEmpty>
+                  <ComboboxEmpty>
+                    {insuranceSearchText.trim() ? 'No insurance matches found.' : 'Type to search insurance companies.'}
+                  </ComboboxEmpty>
                 )}
               </ComboboxList>
             </ComboboxContent>
@@ -469,17 +501,25 @@ export function KYPBasicForm({
             onValueChange={(value) => {
               if (value) {
                 setFormData({ ...formData, doctorName: value })
+                setDoctorSearchText(value)
               }
             }}
           >
             <ComboboxInput
               id="doctorName"
-              placeholder="Search doctor master or type any name"
+              placeholder="Search doctor master"
               className={cn('w-full', errors.doctorName && 'border-destructive')}
-              value={formData.doctorName}
+              value={doctorSearchText}
+              onFocus={() => setDoctorFocused(true)}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFormData({ ...formData, doctorName: e.target.value })
+                setDoctorSearchText(e.target.value)
               }
+              onBlur={() => {
+                setDoctorFocused(false)
+                // Give a click on a list item a chance to commit a selection first;
+                // if nothing was selected, drop the leftover typed text.
+                setTimeout(() => setDoctorSearchText(doctorNameRef.current || ''), 150)
+              }}
             />
             <ComboboxContent>
               <ComboboxList>
@@ -490,7 +530,9 @@ export function KYPBasicForm({
                     </ComboboxItem>
                   ))
                 ) : (
-                  <ComboboxEmpty>No doctor matches. Keep typing to use your own text.</ComboboxEmpty>
+                  <ComboboxEmpty>
+                    {doctorSearchText.trim() ? 'No doctor matches found.' : 'Type to search doctors.'}
+                  </ComboboxEmpty>
                 )}
               </ComboboxList>
             </ComboboxContent>
@@ -605,8 +647,13 @@ export function KYPBasicForm({
           <Input
             id="aadhar"
             value={formData.aadhar}
-            onChange={(e) => setFormData({ ...formData, aadhar: e.target.value })}
+            onChange={(e) => {
+              const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 12)
+              setFormData({ ...formData, aadhar: digitsOnly })
+            }}
             placeholder="Optional"
+            inputMode="numeric"
+            maxLength={12}
           />
           {errors.aadhar && <p className="text-xs text-destructive mt-1">{errors.aadhar}</p>}
         </div>

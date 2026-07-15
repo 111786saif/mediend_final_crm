@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Card } from '@/components/ui/card'
+import { ColumnFilter } from '@/components/ui/column-filter'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
@@ -77,6 +78,15 @@ async function fetchNoteCountsForLeads(leadIds: string[]): Promise<Record<string
   return out
 }
 
+function uniqueSorted(values: (string | null | undefined)[]): string[] {
+  const set = new Set<string>()
+  for (const v of values) {
+    const s = (v ?? '').trim()
+    if (s) set.add(s)
+  }
+  return Array.from(set).sort((a, b) => a.localeCompare(b))
+}
+
 function normalizedText(value: unknown, fallback: string): string {
   if (typeof value !== 'string') return fallback
   const trimmed = value.trim()
@@ -118,6 +128,18 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [searchInput, setSearchInput] = useState(state.q)
   const debouncedSearch = useDebouncedValue(searchInput, 300)
+
+  // Column header filters (dropdown-in-header) — client-side, applied on top of
+  // whatever page of data the server already returned/filtered/sorted.
+  const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({})
+  const handleColumnFilterChange = useCallback((key: string, selected: string[]) => {
+    setColumnFilters((prev) => ({ ...prev, [key]: selected }))
+  }, [])
+  const activeColumnFilterCount = useMemo(
+    () => Object.values(columnFilters).filter((v) => v && v.length > 0).length,
+    [columnFilters]
+  )
+  const clearColumnFilters = useCallback(() => setColumnFilters({}), [])
 
   useEffect(() => {
     setSearchInput(state.q)
@@ -172,13 +194,85 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     return { target: activeTarget, actual: null, pct: null, showActual: false as const }
   }, [variant, targets, data])
 
-  const pageLeadIds = useMemo(() => (data?.leads ?? []).map((l) => l.id).filter(Boolean), [data?.leads])
-  const noteCountKey = useMemo(() => [...pageLeadIds].sort().join(','), [pageLeadIds])
+  // Raw rows for the current server page, before client-side column filters.
+  const rawPageLeads: Lead[] = useMemo(() => data?.leads ?? [], [data?.leads])
+
+  // Column filter dropdown option lists — built from the current page only.
+  const leadRefOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => String(l.leadRef ?? ''))), [rawPageLeads])
+  const patientOptions = useMemo(
+    () => uniqueSorted(rawPageLeads.map((l) => (typeof l.patientName === 'string' ? l.patientName : ''))),
+    [rawPageLeads]
+  )
+  const treatmentOptions = useMemo(
+    () => uniqueSorted(rawPageLeads.map((l) => (typeof l.treatment === 'string' ? l.treatment : ''))),
+    [rawPageLeads]
+  )
+  const statusOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => normalizeLeadStatus(l.status))), [rawPageLeads])
+  const stageOptions = useMemo(
+    () =>
+      uniqueSorted(
+        rawPageLeads.map((l) => (l.caseStage ? getCaseStageBadgeConfig(String(l.caseStage))?.label ?? '' : ''))
+      ),
+    [rawPageLeads]
+  )
+  const categoryColOptions = useMemo(
+    () => uniqueSorted(rawPageLeads.map((l) => (typeof l.category === 'string' ? l.category : ''))),
+    [rawPageLeads]
+  )
+  // Team-lead only columns
+  const ageSexOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => formatLeadAgeSex(l))), [rawPageLeads])
+  const circleColOptions = useMemo(
+    () => uniqueSorted(rawPageLeads.map((l) => normalizedText(l.circle, 'Unknown'))),
+    [rawPageLeads]
+  )
+  const bdmOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => l.plRecord?.bdmName ?? '')), [rawPageLeads])
+  const hospitalOptions = useMemo(
+    () => uniqueSorted(rawPageLeads.map((l) => resolveLeadHospitalDoctor(l).hospital ?? '')),
+    [rawPageLeads]
+  )
+  const doctorOptions = useMemo(
+    () => uniqueSorted(rawPageLeads.map((l) => resolveLeadHospitalDoctor(l).doctor ?? '')),
+    [rawPageLeads]
+  )
+  const bdNameOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => l.bd?.name ?? '')), [rawPageLeads])
+
+  // Apply column filters on top of the current page's rows.
+  const tableRows: Lead[] = useMemo(() => {
+    let result = rawPageLeads
+    const cf = columnFilters
+
+    if (cf.leadRef?.length) result = result.filter((l) => cf.leadRef.includes(String(l.leadRef ?? '')))
+    if (cf.patient?.length)
+      result = result.filter((l) => cf.patient.includes(typeof l.patientName === 'string' ? l.patientName : ''))
+    if (cf.treatment?.length)
+      result = result.filter((l) => cf.treatment.includes(typeof l.treatment === 'string' ? l.treatment : ''))
+    if (cf.category?.length)
+      result = result.filter((l) => cf.category.includes(typeof l.category === 'string' ? l.category : ''))
+    if (cf.status?.length) result = result.filter((l) => cf.status.includes(normalizeLeadStatus(l.status)))
+    if (cf.stage?.length) {
+      result = result.filter((l) =>
+        cf.stage.includes(l.caseStage ? getCaseStageBadgeConfig(String(l.caseStage))?.label ?? '' : '')
+      )
+    }
+    if (variant === 'team-lead') {
+      if (cf.ageSex?.length) result = result.filter((l) => cf.ageSex.includes(formatLeadAgeSex(l)))
+      if (cf.circle?.length) result = result.filter((l) => cf.circle.includes(normalizedText(l.circle, 'Unknown')))
+      if (cf.bdm?.length) result = result.filter((l) => cf.bdm.includes(l.plRecord?.bdmName ?? ''))
+      if (cf.hospital?.length)
+        result = result.filter((l) => cf.hospital.includes(resolveLeadHospitalDoctor(l).hospital ?? ''))
+      if (cf.doctor?.length) result = result.filter((l) => cf.doctor.includes(resolveLeadHospitalDoctor(l).doctor ?? ''))
+      if (cf.bd?.length) result = result.filter((l) => cf.bd.includes(l.bd?.name ?? ''))
+    }
+
+    return result
+  }, [rawPageLeads, columnFilters, variant])
+
+  const noteCountKey = useMemo(() => [...tableRows.map((l) => l.id)].sort().join(','), [tableRows])
 
   const { data: noteCounts = {} } = useQuery({
     queryKey: ['call-note-counts', noteCountKey],
-    queryFn: () => fetchNoteCountsForLeads(pageLeadIds),
-    enabled: pageLeadIds.length > 0 && !!user?.id,
+    queryFn: () => fetchNoteCountsForLeads(tableRows.map((l) => l.id)),
+    enabled: tableRows.length > 0 && !!user?.id,
     staleTime: 60_000,
     placeholderData: (prev) => prev,
   })
@@ -193,7 +287,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
 
   const colCount = variant === 'team-lead' ? 16 : 9
 
-  const tableRows: Lead[] = data?.leads ?? []
   const total = data?.total ?? 0
   const page = data?.page ?? state.page
   const pageSize = data?.pageSize ?? state.pageSize
@@ -410,10 +503,25 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
               <div className="rounded-xl border border-border/80 bg-card overflow-hidden">
                 <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
                   <div>
-                    <h3 className="text-sm font-semibold">Leads</h3>
+                    <h3 className="flex items-center gap-2 text-sm font-semibold">
+                      Leads
+                      {activeColumnFilterCount > 0 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 py-0 text-[10px] font-medium text-rose-600 hover:text-rose-700 dark:text-rose-400"
+                          onClick={clearColumnFilters}
+                        >
+                          Clear column filters ({activeColumnFilterCount})
+                        </Button>
+                      )}
+                    </h3>
                     <p className="text-xs text-muted-foreground">
                       {data
-                        ? `${rangeStart}–${rangeEnd} of ${total} shown`
+                        ? `${rangeStart}–${rangeEnd} of ${total} shown${
+                            activeColumnFilterCount > 0 ? ` · ${tableRows.length} match column filters on this page` : ''
+                          }`
                         : 'Loading…'}{' '}
                       &middot; filters apply on top of campaign + status card
                     </p>
@@ -447,30 +555,92 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       <thead className="sticky top-0 z-10 bg-muted/50 [&_tr]:border-b">
                         {variant === 'team-lead' ? (
                           <tr className="border-b transition-colors hover:bg-muted/50">
-                            <SortableTh field="leadRef" state={state} onSort={handleSort}>
-                              Lead ref
-                            </SortableTh>
-                            <SortableTh field="date" state={state} onSort={handleSort}>
-                              Date
-                            </SortableTh>
-                            <SortableTh field="patient" state={state} onSort={handleSort}>
-                              Patient
-                            </SortableTh>
-                            <Th>Age/Sex</Th>
-                            <Th>Circle</Th>
-                            <Th>Treatment</Th>
-                            <Th>BDM</Th>
-                            <Th>Hospital</Th>
-                            <Th>Doctor</Th>
-                            <Th>Category</Th>
-                            <SortableTh field="status" state={state} onSort={handleSort}>
-                              Status
-                            </SortableTh>
-                            <Th>Stage</Th>
-                            <Th>Recency</Th>
-                            <SortableTh field="bd" state={state} onSort={handleSort}>
-                              BD
-                            </SortableTh>
+                            <HeaderCell
+                              label="Lead ref"
+                              sortField="leadRef"
+                              state={state}
+                              onSort={handleSort}
+                              filterValue={columnFilters.leadRef}
+                              filterOptions={leadRefOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('leadRef', v)}
+                            />
+                            <HeaderCell label="Date" sortField="date" state={state} onSort={handleSort} />
+                            <HeaderCell
+                              label="Patient"
+                              sortField="patient"
+                              state={state}
+                              onSort={handleSort}
+                              filterValue={columnFilters.patient}
+                              filterOptions={patientOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('patient', v)}
+                            />
+                            <HeaderCell
+                              label="Age/Sex"
+                              filterValue={columnFilters.ageSex}
+                              filterOptions={ageSexOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('ageSex', v)}
+                            />
+                            <HeaderCell
+                              label="Circle"
+                              filterValue={columnFilters.circle}
+                              filterOptions={circleColOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('circle', v)}
+                            />
+                            <HeaderCell
+                              label="Treatment"
+                              filterValue={columnFilters.treatment}
+                              filterOptions={treatmentOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('treatment', v)}
+                            />
+                            <HeaderCell
+                              label="BDM"
+                              filterValue={columnFilters.bdm}
+                              filterOptions={bdmOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('bdm', v)}
+                            />
+                            <HeaderCell
+                              label="Hospital"
+                              filterValue={columnFilters.hospital}
+                              filterOptions={hospitalOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('hospital', v)}
+                            />
+                            <HeaderCell
+                              label="Doctor"
+                              filterValue={columnFilters.doctor}
+                              filterOptions={doctorOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('doctor', v)}
+                            />
+                            <HeaderCell
+                              label="Category"
+                              filterValue={columnFilters.category}
+                              filterOptions={categoryColOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('category', v)}
+                            />
+                            <HeaderCell
+                              label="Status"
+                              sortField="status"
+                              state={state}
+                              onSort={handleSort}
+                              filterValue={columnFilters.status}
+                              filterOptions={statusOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('status', v)}
+                            />
+                            <HeaderCell
+                              label="Stage"
+                              filterValue={columnFilters.stage}
+                              filterOptions={stageOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('stage', v)}
+                            />
+                            <HeaderCell label="Recency" />
+                            <HeaderCell
+                              label="BD"
+                              sortField="bd"
+                              state={state}
+                              onSort={handleSort}
+                              filterValue={columnFilters.bd}
+                              filterOptions={bdNameOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('bd', v)}
+                            />
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
@@ -478,19 +648,52 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                           </tr>
                         ) : (
                           <tr className="border-b transition-colors hover:bg-muted/50">
-                            <SortableTh field="leadRef" state={state} onSort={handleSort}>
-                              Lead ref
-                            </SortableTh>
-                            <SortableTh field="patient" state={state} onSort={handleSort}>
-                              Patient
-                            </SortableTh>
-                            <Th>Treatment</Th>
-                            <Th>Category</Th>
-                            <Th>Age</Th>
-                            <SortableTh field="status" state={state} onSort={handleSort}>
-                              Status
-                            </SortableTh>
-                            <Th>Stage</Th>
+                            <HeaderCell
+                              label="Lead ref"
+                              sortField="leadRef"
+                              state={state}
+                              onSort={handleSort}
+                              filterValue={columnFilters.leadRef}
+                              filterOptions={leadRefOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('leadRef', v)}
+                            />
+                            <HeaderCell
+                              label="Patient"
+                              sortField="patient"
+                              state={state}
+                              onSort={handleSort}
+                              filterValue={columnFilters.patient}
+                              filterOptions={patientOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('patient', v)}
+                            />
+                            <HeaderCell
+                              label="Treatment"
+                              filterValue={columnFilters.treatment}
+                              filterOptions={treatmentOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('treatment', v)}
+                            />
+                            <HeaderCell
+                              label="Category"
+                              filterValue={columnFilters.category}
+                              filterOptions={categoryColOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('category', v)}
+                            />
+                            <HeaderCell label="Age" />
+                            <HeaderCell
+                              label="Status"
+                              sortField="status"
+                              state={state}
+                              onSort={handleSort}
+                              filterValue={columnFilters.status}
+                              filterOptions={statusOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('status', v)}
+                            />
+                            <HeaderCell
+                              label="Stage"
+                              filterValue={columnFilters.stage}
+                              filterOptions={stageOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('stage', v)}
+                            />
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
@@ -565,52 +768,61 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   )
 }
 
-function Th({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <th
-      className={cn(
-        'h-10 px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground',
-        className
-      )}
-    >
-      {children}
-    </th>
-  )
-}
-
-function SortableTh({
-  field,
+/**
+ * Unified header cell: optional sort button + optional column filter dropdown,
+ * side by side in one <th>. Pass sortField/state/onSort to make it sortable,
+ * and/or filterValue/filterOptions/onFilterChange to give it a filter dropdown.
+ * A header with neither is just a static label (e.g. "Recency").
+ */
+function HeaderCell({
+  label,
+  sortField,
   state,
   onSort,
-  children,
+  filterValue,
+  filterOptions,
+  onFilterChange,
 }: {
-  field: PipelineSortField
-  state: { sort: PipelineSortField; dir: PipelineSortDir }
-  onSort: (field: PipelineSortField) => void
-  children: React.ReactNode
+  label: string
+  sortField?: PipelineSortField
+  state?: { sort: PipelineSortField; dir: PipelineSortDir }
+  onSort?: (field: PipelineSortField) => void
+  filterValue?: string[]
+  filterOptions?: string[]
+  onFilterChange?: (v: string[]) => void
 }) {
-  const active = state.sort === field
+  const active = !!sortField && state?.sort === sortField
+
   return (
     <th className="h-10 whitespace-nowrap px-3 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-      <button
-        type="button"
-        onClick={() => onSort(field)}
-        className={cn(
-          'inline-flex items-center gap-1 transition-colors hover:text-foreground',
-          active && 'text-foreground'
-        )}
-      >
-        {children}
-        {active ? (
-          state.dir === 'asc' ? (
-            <ArrowUp className="h-3 w-3" />
-          ) : (
-            <ArrowDown className="h-3 w-3" />
-          )
+      <div className="flex items-center justify-between gap-1 whitespace-nowrap">
+        {sortField && onSort ? (
+          <button
+            type="button"
+            onClick={() => onSort(sortField)}
+            className={cn(
+              'inline-flex items-center gap-1 transition-colors hover:text-foreground',
+              active && 'text-foreground'
+            )}
+          >
+            {label}
+            {active ? (
+              state!.dir === 'asc' ? (
+                <ArrowUp className="h-3 w-3" />
+              ) : (
+                <ArrowDown className="h-3 w-3" />
+              )
+            ) : (
+              <ArrowUpDown className="h-3 w-3 text-muted-foreground/50" />
+            )}
+          </button>
         ) : (
-          <ArrowUpDown className="h-3 w-3 text-muted-foreground/50" />
+          <span>{label}</span>
         )}
-      </button>
+        {filterOptions && onFilterChange && (
+          <ColumnFilter value={filterValue} options={filterOptions} onChange={(v) => onFilterChange(v as string[])} />
+        )}
+      </div>
     </th>
   )
 }

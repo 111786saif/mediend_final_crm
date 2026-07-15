@@ -26,6 +26,7 @@ import {
   resolvePlRow,
 } from '@/lib/pl/resolve-pl-row'
 import { cn } from '@/lib/utils'
+import { getStatusBadgeClass } from '@/lib/pl/status-colors'
 import { useQuery } from '@tanstack/react-query'
 import { Building2, Calendar, CheckCircle, ChevronLeft, ChevronRight, CreditCard, FileText, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
@@ -355,637 +356,631 @@ export default function PLOutstandingPage() {
     [filteredRecords]
   )
 
-  const topHospitalsPending = useMemo(() => {
-    const m = new Map<string, number>()
-    for (const r of filteredRecords) {
-      if (!isPendingPayout(r)) continue
-      const h = (r.hospitalName?.trim() || 'Unknown') as string
-      m.set(h, (m.get(h) ?? 0) + 1)
-    }
-    return Array.from(m.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
+  const hospitalPendingCases = useMemo(() => {
+    return filteredRecords.filter((r: Lead) => {
+      const plRecord = r.plRecord as { hospitalAmountPending?: number } | undefined
+      const hospitalPending = plRecord?.hospitalAmountPending || 0
+      const oc = r.outstandingCase as { paymentReceived?: boolean } | undefined
+      const paymentReceived = oc?.paymentReceived === true
+      return hospitalPending > 0 && !paymentReceived
+    }).length
   }, [filteredRecords])
 
   const columns = useMemo<ColumnDef<Lead>[]>(() => {
     const cols: ColumnDef<Lead>[] = [
       {
         id: 'leadRef',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[130px]">
-          <span>Lead Ref</span>
-          <ColumnFilter
-            type="search"
-            value={leadRefFilter}
-            onChange={(val) => { setLeadRefFilter(val); setPage(1) }}
-            placeholder="Search Lead Ref..."
-          />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="flex items-center gap-1 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-          <span>{row.original.leadRef ?? '—'}</span>
-          {row.original.leadRef ? <CopyLeadRefButton leadRef={String(row.original.leadRef)} className="h-7 w-7" /> : null}
-        </div>
-      )
-    },
-    {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }) => (
-        <div className="whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-          {row.original.dischargeSheet ? (
-            <DischargeSummaryDialog
-              leadId={row.original.id}
-              preloaded={row.original.dischargeSheet as never}
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[130px]">
+            <span>Lead Ref</span>
+            <ColumnFilter
+              type="search"
+              value={leadRefFilter}
+              onChange={(val) => { setLeadRefFilter(val); setPage(1) }}
+              placeholder="Search Lead Ref..."
             />
-          ) : (
-            <span className="text-xs text-muted-foreground">—</span>
-          )}
-        </div>
-      )
-    },
-    {
-      id: 'month',
-      header: 'Month',
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlMonth(resolved.month)}</div>
-      }
-    },
-    {
-      id: 'leadReceived',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Lead Received (Insurance)</span>
-          <ColumnFilter
-            type="dateRange"
-            value={leadReceivedFilter}
-            onChange={(val) => { setLeadReceivedFilter(val); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlDate(resolved.leadReceivedFromInsuranceAt)}</div>
-      }
-    },
-    {
-      id: 'manager',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Manager</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.managers}
-            value={managerFilter}
-            onChange={(selected) => { setManagerFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.manager ?? '—'}</div>
-      }
-    },
-    {
-      id: 'bdm',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>BDM</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.bdms}
-            value={bdmFilter}
-            onChange={(selected) => { setBdmFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.bdm ?? '—'}</div>
-      }
-    },
-    {
-      id: 'patient',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Patient</span>
-          <ColumnFilter
-            type="search"
-            value={patientFilter}
-            onChange={(val) => { setPatientFilter(val); setPage(1) }}
-            placeholder="Search patient..."
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.patient ?? '—'}</div>
-      }
-    },
-    {
-      id: 'category',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[130px]">
-          <span>Category</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.categories}
-            value={categoryFilter}
-            onChange={(selected) => { setCategoryFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.category ?? '—'}</div>
-      }
-    },
-    {
-      id: 'treatment',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Treatment</span>
-          <ColumnFilter
-            type="search"
-            value={treatmentFilter}
-            onChange={(val) => { setTreatmentFilter(val); setPage(1) }}
-            placeholder="Search treatment..."
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.treatment ?? '—'}</div>
-      }
-    },
-    {
-      id: 'doctor',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
-          <span>Doctor</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.doctors}
-            value={doctorFilter}
-            onChange={(selected) => { setDoctorFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.doctor ?? '—'}</div>
-      }
-    },
-    {
-      id: 'hospital',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[200px]">
-          <span>Hospital</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.hospitals}
-            value={hospitalFilter}
-            onChange={(selected) => { setHospitalFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.hospital ?? '—'}</div>
-      }
-    },
-    {
-      id: 'admission',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Admission</span>
-          <ColumnFilter
-            type="dateRange"
-            value={admissionDateFilter}
-            onChange={(val) => { setAdmissionDateFilter(val); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlDate(resolved.admission)}</div>
-      }
-    },
-    {
-      id: 'surgery',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Surgery</span>
-          <ColumnFilter
-            type="dateRange"
-            value={surgeryDateFilter}
-            onChange={(val) => { setSurgeryDateFilter(val); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlDate(resolved.surgery)}</div>
-      }
-    },
-    {
-      id: 'paymentType',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Payment</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.paymentTypes}
-            value={paymentTypeFilter}
-            onChange={(selected) => { setPaymentTypeFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.paymentType ?? '—'}</div>
-      }
-    },
-    {
-      id: 'status',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Status</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.statuses}
-            value={statusFilter}
-            onChange={(selected) => { setStatusFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{resolved.status ?? '—'}</div>
-      }
-    },
-    {
-      id: 'totalBill',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
-          <span>Total Bill</span>
-          <ColumnFilter
-            type="numberRange"
-            value={totalBillFilter}
-            onChange={(val) => { setTotalBillFilter(val); setPage(1) }}
-            min={filterOptions.totalBillBounds.min}
-            max={filterOptions.totalBillBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlRupee(resolved.totalBill)}</div>
-      }
-    },
-    {
-      id: 'approved',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
-          <span>Approved</span>
-          <ColumnFilter
-            type="numberRange"
-            value={approvedAmountFilter}
-            onChange={(val) => { setApprovedAmountFilter(val); setPage(1) }}
-            min={filterOptions.approvedBounds.min}
-            max={filterOptions.approvedBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlRupee(resolved.approvedAmount)}</div>
-      }
-    },
-    {
-      id: 'deductionTotal',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
-          <span>Total Deduction</span>
-          <ColumnFilter
-            type="numberRange"
-            value={deductionTotalFilter}
-            onChange={(val) => { setDeductionTotalFilter(val); setPage(1) }}
-            min={filterOptions.deductionTotalBounds.min}
-            max={filterOptions.deductionTotalBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlRupee(resolved.deductionTotal)}</div>
-      }
-    },
-    {
-      id: 'deductionPaid',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
-          <span>Deduction Paid by Patient</span>
-          <ColumnFilter
-            type="numberRange"
-            value={deductionPaidFilter}
-            onChange={(val) => { setDeductionPaidFilter(val); setPage(1) }}
-            min={filterOptions.deductionPaidBounds.min}
-            max={filterOptions.deductionPaidBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlRupee(resolved.deductionPaidByPatient)}</div>
-      }
-    },
-    {
-      id: 'waivedOff',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
-          <span>Waived Off</span>
-          <ColumnFilter
-            type="numberRange"
-            value={waivedOffFilter}
-            onChange={(val) => { setWaivedOffFilter(val); setPage(1) }}
-            min={filterOptions.waivedBounds.min}
-            max={filterOptions.waivedBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
-        return <div className="whitespace-nowrap">{formatPlRupee(resolved.deductionWaived)}</div>
-      }
-    },
-    {
-      id: 'netProfit',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
-          <span>Net Profit</span>
-          <ColumnFilter
-            type="numberRange"
-            value={netProfitFilter}
-            onChange={(val) => { setNetProfitFilter(val); setPage(1) }}
-            min={filterOptions.netProfitBounds.min}
-            max={filterOptions.netProfitBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        return (
-          <div className="whitespace-nowrap font-medium">
-            ₹
-            {(
-              (row.original.plRecord as { finalProfit?: number; mediendNetProfit?: number } | undefined)?.finalProfit ??
-              (row.original.plRecord as { finalProfit?: number; mediendNetProfit?: number } | undefined)?.mediendNetProfit ??
-              row.original.netProfit ??
-              0
-            ).toLocaleString('en-IN')}
+          </div>
+        ),
+        cell: ({ row }) => (
+          <div className="flex items-center gap-1 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+            <span>{row.original.leadRef ?? '—'}</span>
+            {row.original.leadRef ? <CopyLeadRefButton leadRef={String(row.original.leadRef)} className="h-7 w-7" /> : null}
           </div>
         )
-      }
-    },
-    {
-      id: 'hospitalTotalAmount',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
-          <span>Hospital Total Amount</span>
-          <ColumnFilter
-            type="numberRange"
-            value={hospitalTotalAmountFilter}
-            onChange={(val) => { setHospitalTotalAmountFilter(val); setPage(1) }}
-            min={filterOptions.hospitalTotalBounds.min}
-            max={filterOptions.hospitalTotalBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="whitespace-nowrap">
-          {formatPlRupee(row.original.dischargeSheet?.hospitalShareAmount ?? row.original.plRecord?.hospitalShareAmount ?? 0)}
-        </div>
-      )
-    },
-    {
-      id: 'hospitalOutstandingAmount',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
-          <span>Hospital Outstanding Amount</span>
-          <ColumnFilter
-            type="numberRange"
-            value={hospitalOutstandingAmountFilter}
-            onChange={(val) => { setHospitalOutstandingAmountFilter(val); setPage(1) }}
-            min={filterOptions.hospitalOutstandingBounds.min}
-            max={filterOptions.hospitalOutstandingBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const hospitalPending = (row.original.plRecord as Record<string, unknown>)?.hospitalAmountPending as number || 0
-        return (
-          <div className="whitespace-nowrap font-medium text-red-600 dark:text-red-400">
-            {hospitalPending > 0 ? `₹${hospitalPending.toLocaleString('en-IN')}` : '—'}
+      },
+      {
+        id: 'actions',
+        header: 'Actions',
+        cell: ({ row }) => (
+          <div className="whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+            {row.original.dischargeSheet ? (
+              <DischargeSummaryDialog
+                leadId={row.original.id}
+                preloaded={row.original.dischargeSheet as never}
+              />
+            ) : (
+              <span className="text-xs text-muted-foreground">—</span>
+            )}
           </div>
         )
-      }
-    },
-    {
-      id: 'doctorPayoutAmount',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
-          <span>Doctor Payout Amount</span>
-          <ColumnFilter
-            type="numberRange"
-            value={doctorPayoutAmountFilter}
-            onChange={(val) => { setDoctorPayoutAmountFilter(val); setPage(1) }}
-            min={filterOptions.doctorPayoutBounds.min}
-            max={filterOptions.doctorPayoutBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="whitespace-nowrap">
-          {formatPlRupee(row.original.dischargeSheet?.doctorCharges ?? row.original.plRecord?.doctorCharges ?? 0)}
-        </div>
-      )
-    },
-    {
-      id: 'doctorOutstandingAmount',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
-          <span>Doctor Outstanding Amount</span>
-          <ColumnFilter
-            type="numberRange"
-            value={doctorOutstandingAmountFilter}
-            onChange={(val) => { setDoctorOutstandingAmountFilter(val); setPage(1) }}
-            min={filterOptions.doctorOutstandingBounds.min}
-            max={filterOptions.doctorOutstandingBounds.max}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const doctorPending = (row.original.plRecord as Record<string, unknown>)?.doctorAmountPending as number || 0
-        return (
-          <div className="whitespace-nowrap font-medium text-red-600 dark:text-red-400">
-            {doctorPending > 0 ? `₹${doctorPending.toLocaleString('en-IN')}` : '—'}
+      },
+      {
+        id: 'month',
+        header: 'Month',
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlMonth(resolved.month)}</div>
+        }
+      },
+      {
+        id: 'leadReceived',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Lead Received (Insurance)</span>
+            <ColumnFilter
+              type="dateRange"
+              value={leadReceivedFilter}
+              onChange={(val) => { setLeadReceivedFilter(val); setPage(1) }}
+            />
           </div>
-        )
-      }
-    },
-    {
-      id: 'mediendPayout',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>MediEND Payout</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.mediendPayouts}
-            value={mediendPayoutFilter}
-            onChange={(selected) => { setMediendPayoutFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div>
-          <Badge
-            variant={
-              row.original.plRecord?.hospitalPayoutStatus === 'PAID'
-                ? 'default'
-                : row.original.plRecord?.hospitalPayoutStatus === 'PARTIAL'
-                  ? 'secondary'
-                  : 'outline'
-            }
-          >
-            {row.original.plRecord?.hospitalPayoutStatus || 'PENDING'}
-          </Badge>
-        </div>
-      )
-    },
-    {
-      id: 'mediendPending',
-      header: 'MediEND Pending',
-      cell: ({ row }) => {
-        const hospitalPending = (row.original.plRecord as Record<string, unknown>)?.hospitalAmountPending as number || 0
-        return (
-          <div className="whitespace-nowrap font-medium">
-            {hospitalPending > 0 ? `₹${hospitalPending.toLocaleString('en-IN')}` : '—'}
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlDate(resolved.leadReceivedFromInsuranceAt)}</div>
+        }
+      },
+      {
+        id: 'manager',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Manager</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.managers}
+              value={managerFilter}
+              onChange={(selected) => { setManagerFilter(selected); setPage(1) }}
+            />
           </div>
-        )
-      }
-    },
-    {
-      id: 'doctorPayout',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Doctor Payout</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.doctorPayouts}
-            value={doctorPayoutFilter}
-            onChange={(selected) => { setDoctorPayoutFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div>
-          <Badge
-            variant={
-              row.original.plRecord?.doctorPayoutStatus === 'PAID'
-                ? 'default'
-                : row.original.plRecord?.doctorPayoutStatus === 'PARTIAL'
-                  ? 'secondary'
-                  : 'outline'
-            }
-          >
-            {row.original.plRecord?.doctorPayoutStatus || 'PENDING'}
-          </Badge>
-        </div>
-      )
-    },
-    {
-      id: 'doctorPending',
-      header: 'Doctor Pending',
-      cell: ({ row }) => {
-        const doctorPending = (row.original.plRecord as Record<string, unknown>)?.doctorAmountPending as number || 0
-        return (
-          <div className="whitespace-nowrap font-medium">
-            {doctorPending > 0 ? `₹${doctorPending.toLocaleString('en-IN')}` : '—'}
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{resolved.manager ?? '—'}</div>
+        }
+      },
+      {
+        id: 'bdm',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>BDM</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.bdms}
+              value={bdmFilter}
+              onChange={(selected) => { setBdmFilter(selected); setPage(1) }}
+            />
           </div>
-        )
-      }
-    },
-    {
-      id: 'invoiceStatus',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Invoice Status</span>
-          <ColumnFilter
-            type="multiSelect"
-            options={filterOptions.invoiceStatuses}
-            value={invoiceStatusFilter}
-            onChange={(selected) => { setInvoiceStatusFilter(selected); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div>
-          <Badge
-            variant={
-              row.original.plRecord?.mediendInvoiceStatus === 'PAID'
-                ? 'default'
-                : row.original.plRecord?.mediendInvoiceStatus === 'SENT'
-                  ? 'secondary'
-                  : 'outline'
-            }
-          >
-            {row.original.plRecord?.mediendInvoiceStatus || 'PENDING'}
-          </Badge>
-        </div>
-      )
-    },
-    {
-      id: 'paymentReceived',
-      header: () => (
-        <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
-          <span>Payment Received</span>
-          <ColumnFilter
-            type="boolean"
-            value={paymentReceivedFilter}
-            onChange={(val) => { setPaymentReceivedFilter(val); setPage(1) }}
-          />
-        </div>
-      ),
-      cell: ({ row }) => {
-        const oc = row.original.outstandingCase as { paymentReceived?: boolean; remark2?: string | null } | undefined
-        return (
-          <div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{resolved.bdm ?? '—'}</div>
+        }
+      },
+      {
+        id: 'patient',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Patient</span>
+            <ColumnFilter
+              type="search"
+              value={patientFilter}
+              onChange={(val) => { setPatientFilter(val); setPage(1) }}
+              placeholder="Search patient..."
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{resolved.patient ?? '—'}</div>
+        }
+      },
+      {
+        id: 'category',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[130px]">
+            <span>Category</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.categories}
+              value={categoryFilter}
+              onChange={(selected) => { setCategoryFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{resolved.category ?? '—'}</div>
+        }
+      },
+      {
+        id: 'treatment',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Treatment</span>
+            <ColumnFilter
+              type="search"
+              value={treatmentFilter}
+              onChange={(val) => { setTreatmentFilter(val); setPage(1) }}
+              placeholder="Search treatment..."
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{resolved.treatment ?? '—'}</div>
+        }
+      },
+      {
+        id: 'doctor',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
+            <span>Doctor</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.doctors}
+              value={doctorFilter}
+              onChange={(selected) => { setDoctorFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{resolved.doctor ?? '—'}</div>
+        }
+      },
+      {
+        id: 'hospital',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[200px]">
+            <span>Hospital</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.hospitals}
+              value={hospitalFilter}
+              onChange={(selected) => { setHospitalFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{resolved.hospital ?? '—'}</div>
+        }
+      },
+      {
+        id: 'admission',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Admission</span>
+            <ColumnFilter
+              type="dateRange"
+              value={admissionDateFilter}
+              onChange={(val) => { setAdmissionDateFilter(val); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlDate(resolved.admission)}</div>
+        }
+      },
+      {
+        id: 'surgery',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Surgery</span>
+            <ColumnFilter
+              type="dateRange"
+              value={surgeryDateFilter}
+              onChange={(val) => { setSurgeryDateFilter(val); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlDate(resolved.surgery)}</div>
+        }
+      },
+      {
+        id: 'paymentType',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Payment</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.paymentTypes}
+              value={paymentTypeFilter}
+              onChange={(selected) => { setPaymentTypeFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{resolved.paymentType ?? '—'}</div>
+        }
+      },
+      {
+        id: 'status',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Status</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.statuses}
+              value={statusFilter}
+              onChange={(selected) => { setStatusFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          const val = resolved.status
+          if (!val) return '—'
+          return (
             <Badge
-              variant={oc?.paymentReceived ? 'default' : 'outline'}
-              className={oc?.paymentReceived ? 'bg-green-500 hover:bg-green-600' : ''}
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'case'))}
+            >
+              {val}
+            </Badge>
+          )
+        }
+      },
+      {
+        id: 'totalBill',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
+            <span>Total Bill</span>
+            <ColumnFilter
+              type="numberRange"
+              value={totalBillFilter}
+              onChange={(val) => { setTotalBillFilter(val); setPage(1) }}
+              min={filterOptions.totalBillBounds.min}
+              max={filterOptions.totalBillBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlRupee(resolved.totalBill)}</div>
+        }
+      },
+      {
+        id: 'approved',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
+            <span>Approved</span>
+            <ColumnFilter
+              type="numberRange"
+              value={approvedAmountFilter}
+              onChange={(val) => { setApprovedAmountFilter(val); setPage(1) }}
+              min={filterOptions.approvedBounds.min}
+              max={filterOptions.approvedBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlRupee(resolved.approvedAmount)}</div>
+        }
+      },
+      {
+        id: 'deductionTotal',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
+            <span>Total Deduction</span>
+            <ColumnFilter
+              type="numberRange"
+              value={deductionTotalFilter}
+              onChange={(val) => { setDeductionTotalFilter(val); setPage(1) }}
+              min={filterOptions.deductionTotalBounds.min}
+              max={filterOptions.deductionTotalBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlRupee(resolved.deductionTotal)}</div>
+        }
+      },
+      {
+        id: 'deductionPaid',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
+            <span>Deduction Paid by Patient</span>
+            <ColumnFilter
+              type="numberRange"
+              value={deductionPaidFilter}
+              onChange={(val) => { setDeductionPaidFilter(val); setPage(1) }}
+              min={filterOptions.deductionPaidBounds.min}
+              max={filterOptions.deductionPaidBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlRupee(resolved.deductionPaidByPatient)}</div>
+        }
+      },
+      {
+        id: 'waivedOff',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
+            <span>Waived Off</span>
+            <ColumnFilter
+              type="numberRange"
+              value={waivedOffFilter}
+              onChange={(val) => { setWaivedOffFilter(val); setPage(1) }}
+              min={filterOptions.waivedBounds.min}
+              max={filterOptions.waivedBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const resolved = resolvePlRow(row.original as unknown as Record<string, unknown>)
+          return <div className="whitespace-nowrap">{formatPlRupee(resolved.deductionWaived)}</div>
+        }
+      },
+      {
+        id: 'netProfit',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[140px]">
+            <span>Net Profit</span>
+            <ColumnFilter
+              type="numberRange"
+              value={netProfitFilter}
+              onChange={(val) => { setNetProfitFilter(val); setPage(1) }}
+              min={filterOptions.netProfitBounds.min}
+              max={filterOptions.netProfitBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          return (
+            <div className="whitespace-nowrap font-medium">
+              ₹
+              {(
+                (row.original.plRecord as { finalProfit?: number; mediendNetProfit?: number } | undefined)?.finalProfit ??
+                (row.original.plRecord as { finalProfit?: number; mediendNetProfit?: number } | undefined)?.mediendNetProfit ??
+                row.original.netProfit ??
+                0
+              ).toLocaleString('en-IN')}
+            </div>
+          )
+        }
+      },
+      {
+        id: 'hospitalTotalAmount',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
+            <span>Hospital Total Amount</span>
+            <ColumnFilter
+              type="numberRange"
+              value={hospitalTotalAmountFilter}
+              onChange={(val) => { setHospitalTotalAmountFilter(val); setPage(1) }}
+              min={filterOptions.hospitalTotalBounds.min}
+              max={filterOptions.hospitalTotalBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => (
+          <div className="whitespace-nowrap">
+            {formatPlRupee((row.original.dischargeSheet as any)?.hospitalShareAmount ?? (row.original.plRecord as any)?.hospitalShareAmount ?? 0)}
+          </div>
+        )
+      },
+      {
+        id: 'hospitalOutstandingAmount',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
+            <span>Hospital Outstanding Amount</span>
+            <ColumnFilter
+              type="numberRange"
+              value={hospitalOutstandingAmountFilter}
+              onChange={(val) => { setHospitalOutstandingAmountFilter(val); setPage(1) }}
+              min={filterOptions.hospitalOutstandingBounds.min}
+              max={filterOptions.hospitalOutstandingBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const hospitalPending = (row.original.plRecord as Record<string, unknown>)?.hospitalAmountPending as number || 0
+          return (
+            <div className="whitespace-nowrap font-medium text-red-600 dark:text-red-400">
+              {hospitalPending > 0 ? `₹${hospitalPending.toLocaleString('en-IN')}` : '—'}
+            </div>
+          )
+        }
+      },
+      {
+        id: 'doctorPayoutAmount',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
+            <span>Doctor Payout Amount</span>
+            <ColumnFilter
+              type="numberRange"
+              value={doctorPayoutAmountFilter}
+              onChange={(val) => { setDoctorPayoutAmountFilter(val); setPage(1) }}
+              min={filterOptions.doctorPayoutBounds.min}
+              max={filterOptions.doctorPayoutBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => (
+          <div className="whitespace-nowrap">
+            {formatPlRupee((row.original.dischargeSheet as any)?.doctorCharges ?? (row.original.plRecord as any)?.doctorCharges ?? 0)}
+          </div>
+        )
+      },
+      {
+        id: 'doctorOutstandingAmount',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[180px]">
+            <span>Doctor Outstanding Amount</span>
+            <ColumnFilter
+              type="numberRange"
+              value={doctorOutstandingAmountFilter}
+              onChange={(val) => { setDoctorOutstandingAmountFilter(val); setPage(1) }}
+              min={filterOptions.doctorOutstandingBounds.min}
+              max={filterOptions.doctorOutstandingBounds.max}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const doctorPending = (row.original.plRecord as Record<string, unknown>)?.doctorAmountPending as number || 0
+          return (
+            <div className="whitespace-nowrap font-medium text-red-600 dark:text-red-400">
+              {doctorPending > 0 ? `₹${doctorPending.toLocaleString('en-IN')}` : '—'}
+            </div>
+          )
+        }
+      },
+      {
+        id: 'mediendPayout',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>MediEND Payout</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.mediendPayouts}
+              value={mediendPayoutFilter}
+              onChange={(selected) => { setMediendPayoutFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const val = row.original.plRecord?.hospitalPayoutStatus || 'PENDING'
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'payout'))}
+            >
+              {val}
+            </Badge>
+          )
+        }
+      },
+      {
+        id: 'mediendPending',
+        header: 'MediEND Pending',
+        cell: ({ row }) => {
+          const hospitalPending = (row.original.plRecord as Record<string, unknown>)?.hospitalAmountPending as number || 0
+          return (
+            <div className="whitespace-nowrap font-medium">
+              {hospitalPending > 0 ? `₹${hospitalPending.toLocaleString('en-IN')}` : '—'}
+            </div>
+          )
+        }
+      },
+      {
+        id: 'doctorPayout',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Doctor Payout</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.doctorPayouts}
+              value={doctorPayoutFilter}
+              onChange={(selected) => { setDoctorPayoutFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const val = row.original.plRecord?.doctorPayoutStatus || 'PENDING'
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'payout'))}
+            >
+              {val}
+            </Badge>
+          )
+        }
+      },
+      {
+        id: 'doctorPending',
+        header: 'Doctor Pending',
+        cell: ({ row }) => {
+          const doctorPending = (row.original.plRecord as Record<string, unknown>)?.doctorAmountPending as number || 0
+          return (
+            <div className="whitespace-nowrap font-medium">
+              {doctorPending > 0 ? `₹${doctorPending.toLocaleString('en-IN')}` : '—'}
+            </div>
+          )
+        }
+      },
+      {
+        id: 'invoiceStatus',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Invoice Status</span>
+            <ColumnFilter
+              type="multiSelect"
+              options={filterOptions.invoiceStatuses}
+              value={invoiceStatusFilter}
+              onChange={(selected) => { setInvoiceStatusFilter(selected); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const val = row.original.plRecord?.mediendInvoiceStatus || 'PENDING'
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'payout'))}
+            >
+              {val}
+            </Badge>
+          )
+        }
+      },
+      {
+        id: 'paymentReceived',
+        header: () => (
+          <div className="flex items-center justify-between gap-1 whitespace-nowrap min-w-[150px]">
+            <span>Payment Received</span>
+            <ColumnFilter
+              type="boolean"
+              value={paymentReceivedFilter}
+              onChange={(val) => { setPaymentReceivedFilter(val); setPage(1) }}
+            />
+          </div>
+        ),
+        cell: ({ row }) => {
+          const oc = row.original.outstandingCase as { paymentReceived?: boolean; remark2?: string | null } | undefined
+          const val = oc?.paymentReceived ? 'PAID' : 'PENDING'
+          return (
+            <Badge
+              variant="outline"
+              className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap", getStatusBadgeClass(val, 'payout'))}
             >
               {oc?.paymentReceived ? 'Received' : 'Pending'}
             </Badge>
-          </div>
-        )
+          )
+        }
+      },
+      {
+        id: 'remarks',
+        header: 'Remarks',
+        cell: ({ row }) => {
+          const oc = row.original.outstandingCase as { paymentReceived?: boolean; remark2?: string | null } | undefined
+          return (
+            <div className="max-w-[160px]">
+              <span className="text-sm text-muted-foreground truncate block" title={oc?.remark2 ?? ''}>
+                {oc?.remark2 || '—'}
+              </span>
+            </div>
+          )
+        }
       }
-    },
-    {
-      id: 'remarks',
-      header: 'Remarks',
-      cell: ({ row }) => {
-        const oc = row.original.outstandingCase as { paymentReceived?: boolean; remark2?: string | null } | undefined
-        return (
-          <div className="max-w-[160px]">
-            <span className="text-sm text-muted-foreground truncate block" title={oc?.remark2 ?? ''}>
-              {oc?.remark2 || '—'}
-            </span>
-          </div>
-        )
-      }
-    }
     ];
 
     return cols.filter((col) => {
@@ -1062,20 +1057,25 @@ export default function PLOutstandingPage() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              {selectedMonths.length > 0 && selectedMonths.length < MONTH_OPTIONS.length && (
-                <Button type="button" variant="ghost" size="sm" className="h-8 gap-1" onClick={() => setSelectedMonths([currentMonthKey()])}>
-                  <X className="h-3 w-3" />Reset
+              {(selectedMonths.length !== 1 || selectedMonths[0] !== currentMonthKey() || activeFilterCount > 0) && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 gap-1 text-rose-600 dark:text-rose-400 hover:text-rose-700 hover:bg-rose-500/10"
+                  onClick={() => {
+                    setSelectedMonths([currentMonthKey()])
+                    clearFilters()
+                  }}
+                >
+                  <X className="h-3 w-3" />
+                  Reset {activeFilterCount > 0 && `(${activeFilterCount})`}
                 </Button>
               )}
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            {activeFilterCount > 0 && (
-              <Button type="button" variant="ghost" size="sm" className="h-9" onClick={clearFilters}>
-                Clear filters ({activeFilterCount})
-              </Button>
-            )}
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <span className="text-xs text-muted-foreground ml-auto">
               {filteredRecords.length} of {records?.length ?? 0} rows
             </span>
@@ -1151,20 +1151,10 @@ export default function PLOutstandingPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {topHospitalsPending.length === 0 ? (
-                  <p className="text-sm text-sky-800/60 dark:text-sky-200/60">No pending cases in range</p>
-                ) : (
-                  <ul className="space-y-1.5 text-sm">
-                    {topHospitalsPending.map(([name, count]) => (
-                      <li key={name} className="flex justify-between gap-2 rounded-md px-1 py-0.5 hover:bg-sky-500/10">
-                        <span className="truncate font-medium text-sky-950 dark:text-sky-50" title={name}>
-                          {name}
-                        </span>
-                        <span className="shrink-0 font-medium text-sky-700 dark:text-sky-300">{count} cases</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <div className="text-2xl font-bold tabular-nums text-sky-950 dark:text-sky-50">
+                  {hospitalPendingCases}
+                </div>
+                <p className="text-xs text-sky-800/70 dark:text-sky-200/70 mt-1">Payment Outstanding from hospital</p>
               </CardContent>
             </Card>
           </div>

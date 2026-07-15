@@ -168,10 +168,16 @@ export function MasterCombobox({
   )
 
   const commitFreeText = React.useCallback(() => {
+    if (restrictToSuggestions) {
+      // No selection was made — drop the leftover typed text, don't commit it.
+      setInputValue(value)
+      setOpen(false)
+      return
+    }
     const v = inputValue.trim()
     onChange(v)
     setOpen(false)
-  }, [inputValue, onChange])
+  }, [inputValue, onChange, restrictToSuggestions, value])
 
   /** Select-only: keep exact master match or previously committed value; otherwise clear. */
   const commitSelectionOnly = React.useCallback(() => {
