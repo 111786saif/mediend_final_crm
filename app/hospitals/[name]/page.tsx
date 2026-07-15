@@ -113,6 +113,7 @@ export default function HospitalDetailPage() {
   const router = useRouter()
   const { user } = useAuth()
   const canRequestInvoice = user ? hasPermission(user, 'pl:write') : false
+  const canRecordPayment = canRequestInvoice
 
   const rawName = params.name as string
   const name = decodeURIComponent(rawName)
@@ -436,12 +437,16 @@ export default function HospitalDetailPage() {
                   </Button>
                 }
               />
-              <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
-                Add Document
-              </Button>
-              <Button className="bg-[#22d3ee] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#22d3ee]/20">
-                Request Invoice
-              </Button>
+              {canRequestInvoice && (
+                <>
+                  <Button variant="outline" className="bg-[#191D2E]/80 border-[#283150] text-[#dce1ff] hover:bg-[#283150] h-9 text-xs">
+                    Add Document
+                  </Button>
+                  <Button className="bg-[#22d3ee] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#22d3ee]/20">
+                    Request Invoice
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
@@ -532,34 +537,36 @@ export default function HospitalDetailPage() {
             </div>
           </div>
 
-          {/* Payment Form Section */}
-          <RecordPaymentForm
-            title="Record Hospital Payment"
-            amountLabel="Amount Paid"
-            onSubmit={async (amount, mode, txnId) => {
-              const amt = parseFloat(amount)
-              if (!amt || amt <= 0) {
-                toast.error('Please enter a valid payment amount')
-                return
-              }
-              if (selectedLeads.length === 0) {
-                toast.error('Please select at least one case from the table to record payment')
-                return
-              }
+          {/* Payment Form Section — PL outstanding action, not for Finance */}
+          {canRecordPayment && (
+            <RecordPaymentForm
+              title="Record Hospital Payment"
+              amountLabel="Amount Paid"
+              onSubmit={async (amount, mode, txnId) => {
+                const amt = parseFloat(amount)
+                if (!amt || amt <= 0) {
+                  toast.error('Please enter a valid payment amount')
+                  return
+                }
+                if (selectedLeads.length === 0) {
+                  toast.error('Please select at least one case from the table to record payment')
+                  return
+                }
 
-              const mappedMode =
-                mode === 'Bank Transfer' ? 'NEFT' :
-                  mode === 'Cheque' ? 'CHEQUE' :
-                    mode === 'UPI' ? 'UPI' : 'OTHER'
+                const mappedMode =
+                  mode === 'Bank Transfer' ? 'NEFT' :
+                    mode === 'Cheque' ? 'CHEQUE' :
+                      mode === 'UPI' ? 'UPI' : 'OTHER'
 
-              recordPaymentMutation.mutate({
-                leadIds: selectedLeads,
-                amount: amt,
-                mode: mappedMode,
-                reference: txnId,
-              })
-            }}
-          />
+                recordPaymentMutation.mutate({
+                  leadIds: selectedLeads,
+                  amount: amt,
+                  mode: mappedMode,
+                  reference: txnId,
+                })
+              }}
+            />
+          )}
 
           <Card className="min-w-0 w-full overflow-hidden border-sky-200/50 shadow-md dark:border-sky-800/40">
             <CardHeader className="border-b bg-gradient-to-r from-sky-500/10 to-indigo-500/8 flex flex-row items-center justify-between">

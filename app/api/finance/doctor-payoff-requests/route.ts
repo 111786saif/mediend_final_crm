@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { DoctorPayoffRequestStatus, Prisma } from '@/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { hasPermission, hasPlOrFinanceRead, hasPlOrFinanceWrite } from '@/lib/rbac'
+import { hasPermission, hasPlOrFinanceRead } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import {
   doctorPayoffInclude,
@@ -104,7 +104,8 @@ export async function POST(request: NextRequest) {
   try {
     const user = getSessionFromRequest(request)
     if (!user) return unauthorizedResponse()
-    if (!hasPlOrFinanceWrite(user)) {
+    // Creating a payoff request is a PL outstanding action; Finance only uploads/approves
+    if (!hasPermission(user, 'pl:write')) {
       return errorResponse('Forbidden', 403)
     }
 

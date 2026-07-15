@@ -17,6 +17,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { DischargeSummaryDialog } from '@/components/pl/discharge-summary-dialog'
 import { PaymentInstallmentsCard } from '@/components/pl/payment-installments-card'
+import { useAuth } from '@/hooks/use-auth'
+import { hasPermission } from '@/lib/rbac'
 
 interface Lead {
   id: string
@@ -50,6 +52,8 @@ export default function PLOutstandingEditPage() {
   const params = useParams()
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { user } = useAuth()
+  const canWrite = user ? hasPermission(user, 'pl:write') : false
   const leadId = params.leadId as string
 
   const { data: record, isLoading: loadingLead } = useQuery<Lead>({
@@ -184,11 +188,11 @@ export default function PLOutstandingEditPage() {
                 </Link>
                 <span className="mx-2">/</span>
                 <span className="text-foreground">
-                  Edit Outstanding — {record.leadRef ?? record.id}
+                  {canWrite ? 'Edit Outstanding' : 'Outstanding'} — {record.leadRef ?? record.id}
                 </span>
               </nav>
               <h1 className="text-2xl font-bold mt-0.5 bg-gradient-to-r from-amber-800 to-violet-800 bg-clip-text text-transparent dark:from-amber-200 dark:to-violet-200">
-                Edit Outstanding Record
+                {canWrite ? 'Edit Outstanding Record' : 'Outstanding Record'}
               </h1>
             </div>
           </div>
@@ -238,51 +242,67 @@ export default function PLOutstandingEditPage() {
             </CardContent>
           </Card>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={(e) => { if (!canWrite) { e.preventDefault(); return } handleSubmit(e) }} className="space-y-6">
             <Card className="overflow-hidden border-teal-200/50 shadow-sm dark:border-teal-800/35">
               <CardHeader className="border-b bg-gradient-to-r from-teal-500/10 to-cyan-500/8">
                 <CardTitle className="text-teal-950 dark:text-teal-100">Payout Statuses</CardTitle>
-                <CardDescription>Update the payout status for MediEND, doctor, and invoice</CardDescription>
+                <CardDescription>
+                  {canWrite
+                    ? 'Update the payout status for MediEND, doctor, and invoice'
+                    : 'Current payout status for MediEND, doctor, and invoice'}
+                </CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <Label>MediEND Payout Status</Label>
-                  <Select value={formData.hospitalPayoutStatus} onValueChange={(value) => update('hospitalPayoutStatus', value)}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PENDING">PENDING</SelectItem>
-                      <SelectItem value="PARTIAL">PARTIAL</SelectItem>
-                      <SelectItem value="PAID">PAID</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {canWrite ? (
+                    <Select value={formData.hospitalPayoutStatus} onValueChange={(value) => update('hospitalPayoutStatus', value)}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="PENDING">PENDING</SelectItem>
+                        <SelectItem value="PARTIAL">PARTIAL</SelectItem>
+                        <SelectItem value="PAID">PAID</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <p className="mt-1 font-medium">{formData.hospitalPayoutStatus}</p>
+                  )}
                 </div>
                 <div>
                   <Label>Doctor Payout Status</Label>
-                  <Select value={formData.doctorPayoutStatus} onValueChange={(value) => update('doctorPayoutStatus', value)}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PENDING">PENDING</SelectItem>
-                      <SelectItem value="PARTIAL">PARTIAL</SelectItem>
-                      <SelectItem value="PAID">PAID</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {canWrite ? (
+                    <Select value={formData.doctorPayoutStatus} onValueChange={(value) => update('doctorPayoutStatus', value)}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="PENDING">PENDING</SelectItem>
+                        <SelectItem value="PARTIAL">PARTIAL</SelectItem>
+                        <SelectItem value="PAID">PAID</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <p className="mt-1 font-medium">{formData.doctorPayoutStatus}</p>
+                  )}
                 </div>
                 <div>
                   <Label>Mediend Invoice Status</Label>
-                  <Select value={formData.mediendInvoiceStatus} onValueChange={(value) => update('mediendInvoiceStatus', value)}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="PENDING">PENDING</SelectItem>
-                      <SelectItem value="SENT">SENT</SelectItem>
-                      <SelectItem value="PAID">PAID</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {canWrite ? (
+                    <Select value={formData.mediendInvoiceStatus} onValueChange={(value) => update('mediendInvoiceStatus', value)}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="PENDING">PENDING</SelectItem>
+                        <SelectItem value="SENT">SENT</SelectItem>
+                        <SelectItem value="PAID">PAID</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <p className="mt-1 font-medium">{formData.mediendInvoiceStatus}</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -295,25 +315,33 @@ export default function PLOutstandingEditPage() {
               <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label>MediEND Amount Pending</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.hospitalAmountPending}
-                    onChange={(e) => update('hospitalAmountPending', e.target.value)}
-                    placeholder="0.00"
-                    className="mt-1"
-                  />
+                  {canWrite ? (
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.hospitalAmountPending}
+                      onChange={(e) => update('hospitalAmountPending', e.target.value)}
+                      placeholder="0.00"
+                      className="mt-1"
+                    />
+                  ) : (
+                    <p className="mt-1 font-medium tabular-nums">{formData.hospitalAmountPending || '0.00'}</p>
+                  )}
                 </div>
                 <div>
                   <Label>Doctor Amount Pending</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={formData.doctorAmountPending}
-                    onChange={(e) => update('doctorAmountPending', e.target.value)}
-                    placeholder="0.00"
-                    className="mt-1"
-                  />
+                  {canWrite ? (
+                    <Input
+                      type="number"
+                      step="0.01"
+                      value={formData.doctorAmountPending}
+                      onChange={(e) => update('doctorAmountPending', e.target.value)}
+                      placeholder="0.00"
+                      className="mt-1"
+                    />
+                  ) : (
+                    <p className="mt-1 font-medium tabular-nums">{formData.doctorAmountPending || '0.00'}</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -321,47 +349,62 @@ export default function PLOutstandingEditPage() {
             <Card className="overflow-hidden border-emerald-200/50 shadow-sm dark:border-emerald-800/35">
               <CardHeader className="border-b bg-gradient-to-r from-emerald-500/10 to-green-500/8">
                 <CardTitle className="text-emerald-950 dark:text-emerald-100">Payment & Remarks</CardTitle>
-                <CardDescription>Mark payment received and add follow-up notes</CardDescription>
+                <CardDescription>
+                  {canWrite ? 'Mark payment received and add follow-up notes' : 'Payment status and follow-up notes'}
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="paymentReceived"
-                    checked={formData.paymentReceived}
-                    onChange={(e) => update('paymentReceived', e.target.checked)}
-                    className="h-4 w-4 rounded border border-input accent-primary cursor-pointer"
-                  />
-                  <Label htmlFor="paymentReceived" className="cursor-pointer">
-                    Payment Received
-                  </Label>
-                </div>
+                {canWrite ? (
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="paymentReceived"
+                      checked={formData.paymentReceived}
+                      onChange={(e) => update('paymentReceived', e.target.checked)}
+                      className="h-4 w-4 rounded border border-input accent-primary cursor-pointer"
+                    />
+                    <Label htmlFor="paymentReceived" className="cursor-pointer">
+                      Payment Received
+                    </Label>
+                  </div>
+                ) : (
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Payment Received</Label>
+                    <p className="mt-1 font-medium">{formData.paymentReceived ? 'Received' : 'Pending'}</p>
+                  </div>
+                )}
                 <div>
                   <Label>Follow-up Remarks (remark2)</Label>
-                  <Textarea
-                    value={formData.remark2}
-                    onChange={(e) => update('remark2', e.target.value)}
-                    placeholder="Enter follow-up notes..."
-                    className="mt-1 resize-none"
-                    rows={3}
-                  />
+                  {canWrite ? (
+                    <Textarea
+                      value={formData.remark2}
+                      onChange={(e) => update('remark2', e.target.value)}
+                      placeholder="Enter follow-up notes..."
+                      className="mt-1 resize-none"
+                      rows={3}
+                    />
+                  ) : (
+                    <p className="mt-1 whitespace-pre-wrap text-sm">{formData.remark2 || '—'}</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
 
-            <PaymentInstallmentsCard leadId={leadId} />
+            <PaymentInstallmentsCard leadId={leadId} canWrite={canWrite} />
 
             <div className="flex gap-3">
-              <Button
-                type="submit"
-                disabled={updateMutation.isPending}
-                className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md hover:from-violet-700 hover:to-indigo-700"
-              >
-                {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Save Outstanding Record
-              </Button>
+              {canWrite && (
+                <Button
+                  type="submit"
+                  disabled={updateMutation.isPending}
+                  className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md hover:from-violet-700 hover:to-indigo-700"
+                >
+                  {updateMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                  Save Outstanding Record
+                </Button>
+              )}
               <Button type="button" variant="outline" asChild className="border-violet-200 dark:border-violet-700">
-                <Link href="/pl/outstanding">Cancel</Link>
+                <Link href="/pl/outstanding">{canWrite ? 'Cancel' : 'Back'}</Link>
               </Button>
             </div>
           </form>

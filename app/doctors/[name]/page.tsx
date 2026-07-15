@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -17,11 +17,14 @@ import {
   ChevronRight,
   ExternalLink,
   Loader2,
+  Calendar,
 } from 'lucide-react'
 import { ProtectedRoute } from '@/components/protected-route'
 import { RecentActivityLog } from '@/components/recent-activity-log'
 import { RecordPaymentForm } from '@/components/record-payment-form'
 import { ColumnFilter } from '@/components/ui/column-filter'
+import { useAuth } from '@/hooks/use-auth'
+import { hasPermission } from '@/lib/rbac'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -93,6 +96,8 @@ export default function DoctorDetailPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { user } = useAuth()
+  const canRequestPayoff = user ? hasPermission(user, 'pl:write') : false
   const rawName = Array.isArray(params.name) ? params.name[0] : params.name
   const name = decodeURIComponent(rawName || '')
   const startDate = searchParams.get('startDate') || ''
@@ -442,9 +447,11 @@ export default function DoctorDetailPage() {
                   </Button>
                 }
               />
-              <Button className="bg-[#25E8FF] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#25E8FF]/20">
-                Add Document
-              </Button>
+              {canRequestPayoff && (
+                <Button className="bg-[#25E8FF] text-[#07112f] hover:brightness-110 font-bold h-9 text-xs shadow-md shadow-[#25E8FF]/20">
+                  Add Document
+                </Button>
+              )}
             </div>
           </div>
 
@@ -458,14 +465,16 @@ export default function DoctorDetailPage() {
             <KpiTile label="MediEND share" value={formatPlRupee(data?.kpis.mediendShare ?? null)} icon={TrendingUp} />
           </div>
 
-          {/* Payout UI Section */}
-          <RecordPaymentForm
-            title="Record Doctor Payout"
-            amountLabel="Amount Paid"
-            onSubmit={(amount, mode, txnId) => {
-              toast.success(`Payout of ₹${amount || '0'} recorded successfully!`)
-            }}
-          />
+          {/* Payout UI Section — PL outstanding action, not for Finance */}
+          {canRequestPayoff && (
+            <RecordPaymentForm
+              title="Record Doctor Payout"
+              amountLabel="Amount Paid"
+              onSubmit={(amount) => {
+                toast.success(`Payout of ₹${amount || '0'} recorded successfully!`)
+              }}
+            />
+          )}
 
           {/* Cases Table Component Container (UI preserved as requested, wrapper styled) */}
           <div className="min-w-0 w-full bg-[#191D2E]/60 backdrop-blur-md border border-[#283150] rounded-xl overflow-hidden shadow-lg">
@@ -500,16 +509,18 @@ export default function DoctorDetailPage() {
                   </span>
                 </div>
               </div>
-              <div>
-                <Button
-                  disabled={selectedLeads.length === 0}
-                  onClick={() => setRequestDialogOpen(true)}
-                  className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
-                >
-                  <FileText className="h-4 w-4" />
-                  Request Payoff {selectedLeads.length > 0 && `(${selectedLeads.length})`}
-                </Button>
-              </div>
+              {canRequestPayoff && (
+                <div>
+                  <Button
+                    disabled={selectedLeads.length === 0}
+                    onClick={() => setRequestDialogOpen(true)}
+                    className="bg-[#22d3ee] hover:bg-[#22d3ee]/90 text-[#07112f] font-bold text-xs h-9 px-4 rounded-lg flex items-center gap-2 shadow-sm disabled:opacity-50 transition-all duration-150"
+                  >
+                    <FileText className="h-4 w-4" />
+                    Request Payoff {selectedLeads.length > 0 && `(${selectedLeads.length})`}
+                  </Button>
+                </div>
+              )}
             </div>
             <div className="overflow-x-auto p-0">
               <Table>
@@ -728,6 +739,7 @@ export default function DoctorDetailPage() {
                           <PayoffActionCell
                             payoffReq={payoffByLeadId.get(c.leadId)}
                             loading={payoffLoading}
+                            canRequest={canRequestPayoff}
                             onRequest={() => {
                               setSelectedLeads([c.leadId])
                               setRequestDialogOpen(true)
@@ -917,10 +929,12 @@ function PayoffStatusCell({
 function PayoffActionCell({
   payoffReq,
   loading,
+  canRequest,
   onRequest,
 }: {
   payoffReq?: DoctorPayoffRequestRecord
   loading: boolean
+  canRequest: boolean
   onRequest: () => void
 }) {
   if (loading) return null
@@ -954,17 +968,21 @@ function PayoffActionCell({
         <span className="text-[10px] text-rose-400 max-w-[140px] truncate" title={payoffReq.rejectionRemarks ?? ''}>
           {payoffReq.rejectionRemarks || 'Rejected'}
         </span>
-        <Button
-          size="sm"
-          className="h-7 px-2 text-xs bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/20"
-          variant="outline"
-          onClick={onRequest}
-        >
-          Re-request
-        </Button>
+        {canRequest && (
+          <Button
+            size="sm"
+            className="h-7 px-2 text-xs bg-[#22d3ee]/10 text-[#22d3ee] border border-[#22d3ee]/30 hover:bg-[#22d3ee]/20"
+            variant="outline"
+            onClick={onRequest}
+          >
+            Re-request
+          </Button>
+        )}
       </div>
     )
   }
+
+  if (!canRequest) return <span className="text-xs text-[#c7c6cd]/60">—</span>
 
   return (
     <Button
