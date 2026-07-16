@@ -252,7 +252,7 @@ export function LeadEditDrawer({
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={onOpenChange} disableBackClose>
       <SheetContent side="right" className="w-full sm:max-w-2xl p-0 gap-0 flex flex-col">
         <SheetHeader className="border-b">
           <SheetTitle>{lead ? `${lead.patientName}` : 'Edit lead'}</SheetTitle>

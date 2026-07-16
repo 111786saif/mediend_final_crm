@@ -342,6 +342,22 @@ export const pipelineTableSelect = {
   leadEntryDate: true,
   createdDate: true,
   hospitalName: true,
+  remarks: true,
+  leadRemarkEntries: {
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+    take: 1,
+  },
   ipdDrName: true,
   surgeonName: true,
   bd: { select: { id: true, name: true } },

@@ -93,10 +93,16 @@ export async function GET(request: NextRequest) {
       .map((r) => ({ id: r.bd!.id, name: r.bd!.name }))
       .sort((a, b) => a.name.localeCompare(b.name))
 
-    const mappedLeads = leads.map((lead) => ({
-      ...lead,
-      status: mapStatusCode(lead.status),
-    }))
+    const mappedLeads = leads.map((lead) => {
+      const latestRemark = lead.leadRemarkEntries?.[0] ?? null
+      const base = {
+        ...lead,
+        latestRemark,
+        status: mapStatusCode(lead.status),
+      }
+      delete (base as Record<string, unknown>).leadRemarkEntries
+      return base
+    })
 
     return successResponse({
       leads: mappedLeads,

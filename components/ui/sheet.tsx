@@ -11,11 +11,17 @@ function Sheet({
   open,
   onOpenChange,
   skipBackOnCloseRef,
+  disableBackClose = false,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Root> & {
   skipBackOnCloseRef?: React.RefObject<boolean>
+  disableBackClose?: boolean
 }) {
-  useBackClose(open, onOpenChange, skipBackOnCloseRef)
+  useBackClose(
+    disableBackClose ? false : open,
+    disableBackClose ? undefined : onOpenChange,
+    skipBackOnCloseRef
+  )
   return (
     <SheetPrimitive.Root
       data-slot="sheet"
