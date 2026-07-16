@@ -406,7 +406,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         </header>
 
         <div className="flex flex-1 overflow-hidden">
-          <CampaignSidebar
+          {/* <CampaignSidebar
             tree={data?.campaignTree ?? []}
             totalLeads={data?.facetTotal ?? 0}
             groupBy={state.groupBy}
@@ -416,7 +416,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             collapsed={sidebarCollapsed}
             onCollapsedChange={setSidebarCollapsed}
             isLoading={isLoading && !data}
-          />
+          /> */}
 
           <main className="flex-1 overflow-y-auto p-4 md:p-6">
             {targetProgress && (

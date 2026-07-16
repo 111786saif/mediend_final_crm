@@ -30,7 +30,6 @@ type LeadRemarksResponse = {
   }
   canEditRemarks: boolean
   canAddRemarks: boolean
-  canRemoveRemarks: boolean
   latestRemark: LeadRemarkHistoryItem | null
   remarks: LeadRemarkHistoryItem[]
 }
@@ -47,7 +46,6 @@ export function LeadRemarksDrawer({
   const queryClient = useQueryClient()
   const [remarksDraft, setRemarksDraft] = useState('')
   const [saving, setSaving] = useState(false)
-  const [deletingRemarkId, setDeletingRemarkId] = useState<string | null>(null)
 
   const { data, isLoading, error } = useQuery<LeadRemarksResponse, Error>({
     queryKey: ['lead-remarks', leadId],
@@ -57,7 +55,6 @@ export function LeadRemarksDrawer({
   })
 
   const canAddRemarks = data?.canAddRemarks ?? data?.canEditRemarks ?? false
-  const canRemoveRemarks = data?.canRemoveRemarks ?? false
   const trimmedDraft = remarksDraft.trim()
   const canSave = trimmedDraft.length > 0 && trimmedDraft.length <= 4000
 
@@ -76,24 +73,6 @@ export function LeadRemarksDrawer({
       toast.error(err instanceof Error ? err.message : 'Failed to add remark')
     } finally {
       setSaving(false)
-    }
-  }
-
-  async function handleDeleteRemark(remarkId: string) {
-    if (!leadId || !canRemoveRemarks) return
-    if (!window.confirm('Remove this remark from the lead history?')) return
-
-    setDeletingRemarkId(remarkId)
-    try {
-      await apiDelete(`/api/leads/${leadId}/remarks/${remarkId}`)
-      toast.success('Remark removed')
-      queryClient.invalidateQueries({ queryKey: ['leads'] })
-      queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
-      queryClient.invalidateQueries({ queryKey: ['lead-remarks', leadId] })
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Failed to remove remark')
-    } finally {
-      setDeletingRemarkId(null)
     }
   }
 
@@ -156,25 +135,6 @@ export function LeadRemarksDrawer({
                     <ul className="space-y-3">
                       {data.remarks.map((remark) => (
                         <li key={remark.id} className="rounded-lg border bg-background p-3 shadow-sm">
-                          {canRemoveRemarks ? (
-                            <div className="mb-2 flex justify-end">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                disabled={deletingRemarkId === remark.id}
-                                onClick={() => handleDeleteRemark(remark.id)}
-                              >
-                                {deletingRemarkId === remark.id ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <>
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    Remove
-                                  </>
-                                )}
-                              </Button>
-                            </div>
-                          ) : null}
                           <p className="whitespace-pre-wrap break-words text-sm">{remark.content}</p>
                           <p className="mt-2 text-xs text-muted-foreground">
                             {remark.createdBy?.name ?? 'Unknown user'} ·{' '}

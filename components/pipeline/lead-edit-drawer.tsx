@@ -94,6 +94,7 @@ type LeadOwnershipUser = {
 
 type LeadOwnershipMeta = {
   canEditLeadProfile: boolean
+  canEditRemarks: boolean
   canUpdateStatus: boolean
   canReassign: boolean
   currentAssigneeId: string
@@ -117,6 +118,7 @@ export function LeadEditDrawer({
   const [treatmentDraft, setTreatmentDraft] = useState<string | null>(null)
   const [diseaseDraft, setDiseaseDraft] = useState<string | null>(null)
   const [leadStatusDraft, setLeadStatusDraft] = useState<string | null>(null)
+  const [statusChangeRemarkDraft, setStatusChangeRemarkDraft] = useState('')
   const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
   const [leadAssigneeDraft, setLeadAssigneeDraft] = useState('')
   const [saving, setSaving] = useState(false)
@@ -153,10 +155,12 @@ export function LeadEditDrawer({
   const parsedEffectiveFollowUpDate = parseFollowUpDate(effectiveFollowUpDate)
 
   const canEditLeadProfile = leadOwnershipMeta?.canEditLeadProfile ?? false
+  const canEditRemarks = leadOwnershipMeta?.canEditRemarks ?? false
   const canUpdateLeadStatus = leadOwnershipMeta?.canUpdateStatus ?? false
   const canReassignLead = leadOwnershipMeta?.canReassign ?? false
   const assignableLeadUsers = leadOwnershipMeta?.assignableUsers ?? []
   const isBdRole = user?.role === 'BD'
+  const trimmedStatusChangeRemark = statusChangeRemarkDraft.trim()
 
   const isDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
@@ -233,16 +237,32 @@ export function LeadEditDrawer({
       return
     }
 
+    if (statusChanged && !canEditRemarks) {
+      toast.error('You do not have permission to add the required remark for a status change')
+      return
+    }
+
+    if (statusChanged && trimmedStatusChangeRemark.length === 0) {
+      toast.error('Remark is required when changing lead status')
+      return
+    }
+
     payload.crmEditFollowUpValidation = 'true'
+    if (statusChanged) {
+      payload.requireStatusChangeRemark = 'true'
+      payload.statusChangeRemark = trimmedStatusChangeRemark
+    }
 
     setSaving(true)
     try {
       await apiPatch(`/api/leads/${leadId}`, payload)
       toast.success('Lead updated')
       queryClient.invalidateQueries({ queryKey: ['leads'] })
+      queryClient.invalidateQueries({ queryKey: ['pipeline'] })
       queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
       queryClient.invalidateQueries({ queryKey: ['lead-edit-drawer', leadId] })
       queryClient.invalidateQueries({ queryKey: ['lead-ownership-meta', leadId] })
+      queryClient.invalidateQueries({ queryKey: ['lead-remarks', leadId] })
       onOpenChange(false)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update lead')
@@ -275,9 +295,6 @@ export function LeadEditDrawer({
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">Patient Details</CardTitle>
-                  <CardDescription>
-                    Edit patient name, disease, and treatment when your lead scope allows it.
-                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
@@ -503,6 +520,25 @@ export function LeadEditDrawer({
                   ) : (
                     <p className="text-xs text-muted-foreground"></p>
                   )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="drawer-status-change-remark">
+                      Status change remark
+                      {statusChanged ? <span className="text-destructive"> *</span> : null}
+                    </Label>
+                    <Textarea
+                      id="drawer-status-change-remark"
+                      value={statusChangeRemarkDraft}
+                      onChange={(e) => setStatusChangeRemarkDraft(e.target.value)}
+                      disabled={!canEditRemarks || saving}
+                      placeholder={
+                        statusChanged
+                          ? 'Explain why you are changing this lead status'
+                          : 'Add a remark if you plan to change the lead status'
+                      }
+                      rows={4}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             </>
@@ -521,6 +557,7 @@ export function LeadEditDrawer({
               isLoadingMeta ||
               !lead ||
               !isDirty ||
+              (statusChanged && (!canEditRemarks || trimmedStatusChangeRemark.length === 0)) ||
               (shouldRequireAgeSex &&
                 (!canEditLeadProfile ||
                   effectiveAge.trim().length === 0 ||

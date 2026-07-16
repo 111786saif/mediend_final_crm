@@ -388,6 +388,9 @@ export async function PATCH(
           : body.remarks === null
             ? null
             : body.remarks
+    const statusChangeRemark =
+      typeof body.statusChangeRemark === 'string' ? body.statusChangeRemark.trim() : ''
+    const requireStatusChangeRemark = body.requireStatusChangeRemark === 'true'
     const currentRemarks =
       typeof lead.remarks === 'string' ? lead.remarks.trim() || null : lead.remarks ?? null
     const crmEditFollowUpValidation = body.crmEditFollowUpValidation === 'true'
@@ -408,6 +411,19 @@ export async function PATCH(
 
     if (statusChanged && !(await canUserUpdateLeadStatus(user, lead.bdId))) {
       return errorResponse('You do not have permission to update the lead status', 403)
+    }
+
+    if (
+      statusChanged &&
+      (requireStatusChangeRemark || statusChangeRemark) &&
+      !(await canUserAddLeadRemarks(user, lead.bdId))
+    ) {
+      return errorResponse(
+        requireStatusChangeRemark
+          ? 'You do not have permission to add the required remark for this status change'
+          : 'You do not have permission to add a status-change remark for this lead',
+        403
+      )
     }
 
     if (leadProfileChanged && !(await canUserEditLeadProfile(user, lead.bdId))) {
@@ -439,6 +455,14 @@ export async function PATCH(
 
     if (parsedFollowUpDateInput.value === 'invalid') {
       return errorResponse('Follow-up date is invalid', 400)
+    }
+
+    if (requireStatusChangeRemark && statusChanged && !statusChangeRemark) {
+      return errorResponse('Remark is required when changing lead status', 400)
+    }
+
+    if (statusChangeRemark.length > 4000) {
+      return errorResponse('Remark must be 4000 characters or less', 400)
     }
 
     if (
@@ -615,13 +639,36 @@ export async function PATCH(
       Object.assign(updateData, buildLeadOwnershipTransferUpdate(String(body.bdId)))
     }
 
-    const updatedLead = await prisma.lead.update({
-      where: { id },
-      data: updateData,
-      include: {
-        bd: { select: prismaBdEmployeeTeamSelect },
-        plRecord: true,
-      },
+    const { updatedLead, statusRemarkEntry } = await prisma.$transaction(async (tx) => {
+      const updatedLead = await tx.lead.update({
+        where: { id },
+        data: updateData,
+        include: {
+          bd: { select: prismaBdEmployeeTeamSelect },
+          plRecord: true,
+        },
+      })
+
+      const statusRemarkEntry =
+        statusChanged && statusChangeRemark
+          ? await tx.leadRemarkEntry.create({
+              data: {
+                leadId: lead.id,
+                content: statusChangeRemark,
+                createdById: user.id,
+              },
+              include: {
+                createdBy: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            })
+          : null
+
+      return { updatedLead, statusRemarkEntry }
     })
 
     const leadEntityLabel = `${updatedLead.leadRef || lead.leadRef || lead.id} · ${updatedLead.patientName || lead.patientName || 'Lead'}`
@@ -661,6 +708,26 @@ export async function PATCH(
                   followUpDate: churnAutomationResult.followUpDate,
                 }
               : null,
+          },
+        })
+      )
+    }
+
+    if (statusRemarkEntry) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_REMARK_ADDED',
+          entityType: 'CRM_LEAD_REMARK',
+          entityId: lead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Added a lead remark for ${leadEntityLabel}`,
+          metadata: {
+            ...leadActivityMetadata,
+            remarkId: statusRemarkEntry.id,
+            remarkContent: statusRemarkEntry.content,
           },
         })
       )
