@@ -76,7 +76,13 @@ export async function getSessionWithFreshUser(): Promise<SessionUser | null> {
   if (!session) return null
   const row = await prisma.user.findUnique({
     where: { id: session.id },
-    select: { id: true, email: true, name: true, role: true },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      employee: { select: { onboardingStatus: true } },
+    },
   })
   if (!row) return null
   return {
@@ -84,6 +90,7 @@ export async function getSessionWithFreshUser(): Promise<SessionUser | null> {
     email: row.email,
     name: row.name,
     role: row.role,
+    onboardingStatus: row.employee?.onboardingStatus ?? null,
   }
 }
 

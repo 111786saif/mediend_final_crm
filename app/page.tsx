@@ -12,7 +12,11 @@ export default function Home() {
   useEffect(() => {
     if (!isLoading) {
       if (user) {
-        router.push(getFirstNavUrl(user))
+        if (user.onboardingStatus && user.onboardingStatus !== 'APPROVED') {
+          router.push('/onboarding')
+        } else {
+          router.push(getFirstNavUrl(user))
+        }
       } else {
         router.push('/login')
       }

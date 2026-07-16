@@ -57,9 +57,17 @@ interface CircleOption {
   isActive: boolean
 }
 
+/** Works on HTTP (non-secure) contexts where crypto.randomUUID is unavailable. */
+function createClientId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `id-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
+}
+
 function createEmptyEmployee(): EmployeeFormData {
   return {
-    id: crypto.randomUUID(),
+    id: createClientId(),
     name: '',
     email: '',
     password: '',
@@ -456,6 +464,10 @@ export function AddEmployeeDialog({ open, onOpenChange, onSuccess }: AddEmployee
                     ))}
                   </TableBody>
                 </Table>
+              </div>
+
+              <div className="rounded-lg border border-violet-200 bg-violet-50/60 dark:bg-violet-950/20 dark:border-violet-800 p-3 text-sm text-violet-800 dark:text-violet-300">
+                New employees start in onboarding. They must complete their profile and wait for HR approval before full access is unlocked.
               </div>
 
               <div className="rounded-lg border border-amber-200 bg-amber-50/60 dark:bg-amber-950/20 dark:border-amber-800 p-3 text-sm text-amber-800 dark:text-amber-300">

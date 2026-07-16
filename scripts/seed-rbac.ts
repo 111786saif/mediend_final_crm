@@ -54,9 +54,10 @@ const resourcesToSeed: ResourceSeedItem[] = [
   // Under hrm
   { key: 'hrm.attendance_normalizations', label: 'Attendance & Normalizations', type: 'SECTION', parentKey: 'hrm', sortOrder: 1 },
   { key: 'hrm.people_org', label: 'People & Org', type: 'SECTION', parentKey: 'hrm', sortOrder: 2 },
-  { key: 'hrm.compensation_docs', label: 'Compensation & Docs', type: 'SECTION', parentKey: 'hrm', sortOrder: 3 },
-  { key: 'hrm.engagement', label: 'Engagement', type: 'SECTION', parentKey: 'hrm', sortOrder: 4 },
-  { key: 'hrm.recruitment', label: 'Recruitment', type: 'SECTION', parentKey: 'hrm', sortOrder: 5 },
+  { key: 'hrm.onboarding', label: 'Onboarding', type: 'SECTION', parentKey: 'hrm', sortOrder: 3 },
+  { key: 'hrm.compensation_docs', label: 'Compensation & Docs', type: 'SECTION', parentKey: 'hrm', sortOrder: 4 },
+  { key: 'hrm.engagement', label: 'Engagement', type: 'SECTION', parentKey: 'hrm', sortOrder: 5 },
+  { key: 'hrm.recruitment', label: 'Recruitment', type: 'SECTION', parentKey: 'hrm', sortOrder: 6 },
 
   // Under myhrms
   { key: 'myhrms.my_core_hr', label: 'My Core HR', type: 'SECTION', parentKey: 'myhrms', sortOrder: 1 },

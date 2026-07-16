@@ -69,6 +69,10 @@ export type EmployeeMinAggregateOutputType = {
   appointmentLetterDocUrl: string | null
   uanNumber: string | null
   status: $Enums.EmployeeStatus | null
+  onboardingStatus: $Enums.OnboardingStatus | null
+  onboardingSubmittedAt: Date | null
+  onboardingApprovedAt: Date | null
+  onboardingApprovedById: string | null
   pipStartDate: Date | null
   pipEndDate: Date | null
   noticePeriodStartDate: Date | null
@@ -117,6 +121,10 @@ export type EmployeeMaxAggregateOutputType = {
   appointmentLetterDocUrl: string | null
   uanNumber: string | null
   status: $Enums.EmployeeStatus | null
+  onboardingStatus: $Enums.OnboardingStatus | null
+  onboardingSubmittedAt: Date | null
+  onboardingApprovedAt: Date | null
+  onboardingApprovedById: string | null
   pipStartDate: Date | null
   pipEndDate: Date | null
   noticePeriodStartDate: Date | null
@@ -166,6 +174,10 @@ export type EmployeeCountAggregateOutputType = {
   otherDocuments: number
   uanNumber: number
   status: number
+  onboardingStatus: number
+  onboardingSubmittedAt: number
+  onboardingApprovedAt: number
+  onboardingApprovedById: number
   pipStartDate: number
   pipEndDate: number
   noticePeriodStartDate: number
@@ -226,6 +238,10 @@ export type EmployeeMinAggregateInputType = {
   appointmentLetterDocUrl?: true
   uanNumber?: true
   status?: true
+  onboardingStatus?: true
+  onboardingSubmittedAt?: true
+  onboardingApprovedAt?: true
+  onboardingApprovedById?: true
   pipStartDate?: true
   pipEndDate?: true
   noticePeriodStartDate?: true
@@ -274,6 +290,10 @@ export type EmployeeMaxAggregateInputType = {
   appointmentLetterDocUrl?: true
   uanNumber?: true
   status?: true
+  onboardingStatus?: true
+  onboardingSubmittedAt?: true
+  onboardingApprovedAt?: true
+  onboardingApprovedById?: true
   pipStartDate?: true
   pipEndDate?: true
   noticePeriodStartDate?: true
@@ -323,6 +343,10 @@ export type EmployeeCountAggregateInputType = {
   otherDocuments?: true
   uanNumber?: true
   status?: true
+  onboardingStatus?: true
+  onboardingSubmittedAt?: true
+  onboardingApprovedAt?: true
+  onboardingApprovedById?: true
   pipStartDate?: true
   pipEndDate?: true
   noticePeriodStartDate?: true
@@ -459,6 +483,10 @@ export type EmployeeGroupByOutputType = {
   otherDocuments: runtime.JsonValue | null
   uanNumber: string | null
   status: $Enums.EmployeeStatus
+  onboardingStatus: $Enums.OnboardingStatus
+  onboardingSubmittedAt: Date | null
+  onboardingApprovedAt: Date | null
+  onboardingApprovedById: string | null
   pipStartDate: Date | null
   pipEndDate: Date | null
   noticePeriodStartDate: Date | null
@@ -531,6 +559,10 @@ export type EmployeeWhereInput = {
   otherDocuments?: Prisma.JsonNullableFilter<"Employee">
   uanNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   status?: Prisma.EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Employee"> | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
+  onboardingApprovedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
+  onboardingApprovedById?: Prisma.StringNullableFilter<"Employee"> | string | null
   pipStartDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   pipEndDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   noticePeriodStartDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
@@ -550,6 +582,7 @@ export type EmployeeWhereInput = {
   teamLeadOf?: Prisma.XOR<Prisma.DepartmentTeamNullableScalarRelationFilter, Prisma.DepartmentTeamWhereInput> | null
   manager?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   subordinates?: Prisma.EmployeeListRelationFilter
+  onboardingApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   fnfCompletedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   attendanceLogs?: Prisma.AttendanceLogListRelationFilter
   salaryStructures?: Prisma.SalaryStructureListRelationFilter
@@ -616,6 +649,10 @@ export type EmployeeOrderByWithRelationInput = {
   otherDocuments?: Prisma.SortOrderInput | Prisma.SortOrder
   uanNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
+  onboardingSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  onboardingApprovedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  onboardingApprovedById?: Prisma.SortOrderInput | Prisma.SortOrder
   pipStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
   pipEndDate?: Prisma.SortOrderInput | Prisma.SortOrder
   noticePeriodStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -635,6 +672,7 @@ export type EmployeeOrderByWithRelationInput = {
   teamLeadOf?: Prisma.DepartmentTeamOrderByWithRelationInput
   manager?: Prisma.EmployeeOrderByWithRelationInput
   subordinates?: Prisma.EmployeeOrderByRelationAggregateInput
+  onboardingApprovedBy?: Prisma.UserOrderByWithRelationInput
   fnfCompletedBy?: Prisma.UserOrderByWithRelationInput
   attendanceLogs?: Prisma.AttendanceLogOrderByRelationAggregateInput
   salaryStructures?: Prisma.SalaryStructureOrderByRelationAggregateInput
@@ -704,6 +742,10 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   otherDocuments?: Prisma.JsonNullableFilter<"Employee">
   uanNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   status?: Prisma.EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Employee"> | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
+  onboardingApprovedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
+  onboardingApprovedById?: Prisma.StringNullableFilter<"Employee"> | string | null
   pipStartDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   pipEndDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   noticePeriodStartDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
@@ -723,6 +765,7 @@ export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
   teamLeadOf?: Prisma.XOR<Prisma.DepartmentTeamNullableScalarRelationFilter, Prisma.DepartmentTeamWhereInput> | null
   manager?: Prisma.XOR<Prisma.EmployeeNullableScalarRelationFilter, Prisma.EmployeeWhereInput> | null
   subordinates?: Prisma.EmployeeListRelationFilter
+  onboardingApprovedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   fnfCompletedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   attendanceLogs?: Prisma.AttendanceLogListRelationFilter
   salaryStructures?: Prisma.SalaryStructureListRelationFilter
@@ -789,6 +832,10 @@ export type EmployeeOrderByWithAggregationInput = {
   otherDocuments?: Prisma.SortOrderInput | Prisma.SortOrder
   uanNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
+  onboardingSubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  onboardingApprovedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  onboardingApprovedById?: Prisma.SortOrderInput | Prisma.SortOrder
   pipStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
   pipEndDate?: Prisma.SortOrderInput | Prisma.SortOrder
   noticePeriodStartDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -846,6 +893,10 @@ export type EmployeeScalarWhereWithAggregatesInput = {
   otherDocuments?: Prisma.JsonNullableWithAggregatesFilter<"Employee">
   uanNumber?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   status?: Prisma.EnumEmployeeStatusWithAggregatesFilter<"Employee"> | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusWithAggregatesFilter<"Employee"> | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
+  onboardingApprovedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
+  onboardingApprovedById?: Prisma.StringNullableWithAggregatesFilter<"Employee"> | string | null
   pipStartDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
   pipEndDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
   noticePeriodStartDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
@@ -891,6 +942,9 @@ export type EmployeeCreateInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -909,6 +963,7 @@ export type EmployeeCreateInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -975,6 +1030,10 @@ export type EmployeeUncheckedCreateInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -1051,6 +1110,9 @@ export type EmployeeUpdateInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1069,6 +1131,7 @@ export type EmployeeUpdateInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -1135,6 +1198,10 @@ export type EmployeeUncheckedUpdateInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1215,6 +1282,10 @@ export type EmployeeCreateManyInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -1260,6 +1331,9 @@ export type EmployeeUpdateManyMutationInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1308,6 +1382,10 @@ export type EmployeeUncheckedUpdateManyInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1372,6 +1450,10 @@ export type EmployeeCountOrderByAggregateInput = {
   otherDocuments?: Prisma.SortOrder
   uanNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
+  onboardingSubmittedAt?: Prisma.SortOrder
+  onboardingApprovedAt?: Prisma.SortOrder
+  onboardingApprovedById?: Prisma.SortOrder
   pipStartDate?: Prisma.SortOrder
   pipEndDate?: Prisma.SortOrder
   noticePeriodStartDate?: Prisma.SortOrder
@@ -1425,6 +1507,10 @@ export type EmployeeMaxOrderByAggregateInput = {
   appointmentLetterDocUrl?: Prisma.SortOrder
   uanNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
+  onboardingSubmittedAt?: Prisma.SortOrder
+  onboardingApprovedAt?: Prisma.SortOrder
+  onboardingApprovedById?: Prisma.SortOrder
   pipStartDate?: Prisma.SortOrder
   pipEndDate?: Prisma.SortOrder
   noticePeriodStartDate?: Prisma.SortOrder
@@ -1473,6 +1559,10 @@ export type EmployeeMinOrderByAggregateInput = {
   appointmentLetterDocUrl?: Prisma.SortOrder
   uanNumber?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  onboardingStatus?: Prisma.SortOrder
+  onboardingSubmittedAt?: Prisma.SortOrder
+  onboardingApprovedAt?: Prisma.SortOrder
+  onboardingApprovedById?: Prisma.SortOrder
   pipStartDate?: Prisma.SortOrder
   pipEndDate?: Prisma.SortOrder
   noticePeriodStartDate?: Prisma.SortOrder
@@ -1511,6 +1601,13 @@ export type EmployeeCreateNestedManyWithoutFnfCompletedByInput = {
   connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
 }
 
+export type EmployeeCreateNestedManyWithoutOnboardingApprovedByInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOnboardingApprovedByInput, Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput> | Prisma.EmployeeCreateWithoutOnboardingApprovedByInput[] | Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput[]
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOnboardingApprovedByInput | Prisma.EmployeeCreateOrConnectWithoutOnboardingApprovedByInput[]
+  createMany?: Prisma.EmployeeCreateManyOnboardingApprovedByInputEnvelope
+  connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+}
+
 export type EmployeeUncheckedCreateNestedOneWithoutUserInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutUserInput, Prisma.EmployeeUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutUserInput
@@ -1521,6 +1618,13 @@ export type EmployeeUncheckedCreateNestedManyWithoutFnfCompletedByInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutFnfCompletedByInput, Prisma.EmployeeUncheckedCreateWithoutFnfCompletedByInput> | Prisma.EmployeeCreateWithoutFnfCompletedByInput[] | Prisma.EmployeeUncheckedCreateWithoutFnfCompletedByInput[]
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutFnfCompletedByInput | Prisma.EmployeeCreateOrConnectWithoutFnfCompletedByInput[]
   createMany?: Prisma.EmployeeCreateManyFnfCompletedByInputEnvelope
+  connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+}
+
+export type EmployeeUncheckedCreateNestedManyWithoutOnboardingApprovedByInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOnboardingApprovedByInput, Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput> | Prisma.EmployeeCreateWithoutOnboardingApprovedByInput[] | Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput[]
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOnboardingApprovedByInput | Prisma.EmployeeCreateOrConnectWithoutOnboardingApprovedByInput[]
+  createMany?: Prisma.EmployeeCreateManyOnboardingApprovedByInputEnvelope
   connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
 }
 
@@ -1548,6 +1652,20 @@ export type EmployeeUpdateManyWithoutFnfCompletedByNestedInput = {
   deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
 }
 
+export type EmployeeUpdateManyWithoutOnboardingApprovedByNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOnboardingApprovedByInput, Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput> | Prisma.EmployeeCreateWithoutOnboardingApprovedByInput[] | Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput[]
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOnboardingApprovedByInput | Prisma.EmployeeCreateOrConnectWithoutOnboardingApprovedByInput[]
+  upsert?: Prisma.EmployeeUpsertWithWhereUniqueWithoutOnboardingApprovedByInput | Prisma.EmployeeUpsertWithWhereUniqueWithoutOnboardingApprovedByInput[]
+  createMany?: Prisma.EmployeeCreateManyOnboardingApprovedByInputEnvelope
+  set?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+  disconnect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+  delete?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+  connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+  update?: Prisma.EmployeeUpdateWithWhereUniqueWithoutOnboardingApprovedByInput | Prisma.EmployeeUpdateWithWhereUniqueWithoutOnboardingApprovedByInput[]
+  updateMany?: Prisma.EmployeeUpdateManyWithWhereWithoutOnboardingApprovedByInput | Prisma.EmployeeUpdateManyWithWhereWithoutOnboardingApprovedByInput[]
+  deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
+}
+
 export type EmployeeUncheckedUpdateOneWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.EmployeeCreateWithoutUserInput, Prisma.EmployeeUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutUserInput
@@ -1569,6 +1687,20 @@ export type EmployeeUncheckedUpdateManyWithoutFnfCompletedByNestedInput = {
   connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
   update?: Prisma.EmployeeUpdateWithWhereUniqueWithoutFnfCompletedByInput | Prisma.EmployeeUpdateWithWhereUniqueWithoutFnfCompletedByInput[]
   updateMany?: Prisma.EmployeeUpdateManyWithWhereWithoutFnfCompletedByInput | Prisma.EmployeeUpdateManyWithWhereWithoutFnfCompletedByInput[]
+  deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
+}
+
+export type EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeeCreateWithoutOnboardingApprovedByInput, Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput> | Prisma.EmployeeCreateWithoutOnboardingApprovedByInput[] | Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput[]
+  connectOrCreate?: Prisma.EmployeeCreateOrConnectWithoutOnboardingApprovedByInput | Prisma.EmployeeCreateOrConnectWithoutOnboardingApprovedByInput[]
+  upsert?: Prisma.EmployeeUpsertWithWhereUniqueWithoutOnboardingApprovedByInput | Prisma.EmployeeUpsertWithWhereUniqueWithoutOnboardingApprovedByInput[]
+  createMany?: Prisma.EmployeeCreateManyOnboardingApprovedByInputEnvelope
+  set?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+  disconnect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+  delete?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+  connect?: Prisma.EmployeeWhereUniqueInput | Prisma.EmployeeWhereUniqueInput[]
+  update?: Prisma.EmployeeUpdateWithWhereUniqueWithoutOnboardingApprovedByInput | Prisma.EmployeeUpdateWithWhereUniqueWithoutOnboardingApprovedByInput[]
+  updateMany?: Prisma.EmployeeUpdateManyWithWhereWithoutOnboardingApprovedByInput | Prisma.EmployeeUpdateManyWithWhereWithoutOnboardingApprovedByInput[]
   deleteMany?: Prisma.EmployeeScalarWhereInput | Prisma.EmployeeScalarWhereInput[]
 }
 
@@ -1694,6 +1826,10 @@ export type EmployeeUncheckedCreateNestedManyWithoutManagerInput = {
 
 export type EnumEmployeeStatusFieldUpdateOperationsInput = {
   set?: $Enums.EmployeeStatus
+}
+
+export type EnumOnboardingStatusFieldUpdateOperationsInput = {
+  set?: $Enums.OnboardingStatus
 }
 
 export type EmployeeUpdateOneWithoutSubordinatesNestedInput = {
@@ -2182,6 +2318,9 @@ export type EmployeeCreateWithoutUserInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -2199,6 +2338,7 @@ export type EmployeeCreateWithoutUserInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -2264,6 +2404,10 @@ export type EmployeeUncheckedCreateWithoutUserInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -2345,6 +2489,9 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -2363,6 +2510,7 @@ export type EmployeeCreateWithoutFnfCompletedByInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
   monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
@@ -2428,6 +2576,10 @@ export type EmployeeUncheckedCreateWithoutFnfCompletedByInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -2483,6 +2635,182 @@ export type EmployeeCreateManyFnfCompletedByInputEnvelope = {
   skipDuplicates?: boolean
 }
 
+export type EmployeeCreateWithoutOnboardingApprovedByInput = {
+  id?: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutEmployeeInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutEmployeesInput
+  team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
+  teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
+  manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
+  attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostCreateNestedManyWithoutEmployeeInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeUncheckedCreateWithoutOnboardingApprovedByInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedCreateNestedOneWithoutTeamLeadInput
+  subordinates?: Prisma.EmployeeUncheckedCreateNestedManyWithoutManagerInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedCreateNestedManyWithoutEmployeeInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutEmployeeInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutRequestedByInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutApprovedByInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedCreateNestedManyWithoutManagerApprovedByInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTargetApproverInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedCreateNestedManyWithoutEmployeeInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedCreateNestedManyWithoutEmployeeInput
+  documents?: Prisma.EmployeeDocumentUncheckedCreateNestedManyWithoutEmployeeInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutEmployeeInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedCreateNestedManyWithoutEmployeeInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutEmployeeInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedCreateNestedManyWithoutEmployeeInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedCreateNestedManyWithoutReferrerInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedCreateNestedManyWithoutEmployeeInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedCreateNestedManyWithoutEmployeeInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedCreateNestedManyWithoutEmployeeInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedCreateNestedOneWithoutEmployeeInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedCreateNestedManyWithoutEmployeeInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedCreateNestedManyWithoutEmployeeInput
+}
+
+export type EmployeeCreateOrConnectWithoutOnboardingApprovedByInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutOnboardingApprovedByInput, Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput>
+}
+
+export type EmployeeCreateManyOnboardingApprovedByInputEnvelope = {
+  data: Prisma.EmployeeCreateManyOnboardingApprovedByInput | Prisma.EmployeeCreateManyOnboardingApprovedByInput[]
+  skipDuplicates?: boolean
+}
+
 export type EmployeeUpsertWithoutUserInput = {
   update: Prisma.XOR<Prisma.EmployeeUpdateWithoutUserInput, Prisma.EmployeeUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.EmployeeCreateWithoutUserInput, Prisma.EmployeeUncheckedCreateWithoutUserInput>
@@ -2524,6 +2852,9 @@ export type EmployeeUpdateWithoutUserInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2541,6 +2872,7 @@ export type EmployeeUpdateWithoutUserInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -2606,6 +2938,10 @@ export type EmployeeUncheckedUpdateWithoutUserInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2705,6 +3041,10 @@ export type EmployeeScalarWhereInput = {
   otherDocuments?: Prisma.JsonNullableFilter<"Employee">
   uanNumber?: Prisma.StringNullableFilter<"Employee"> | string | null
   status?: Prisma.EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFilter<"Employee"> | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
+  onboardingApprovedAt?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
+  onboardingApprovedById?: Prisma.StringNullableFilter<"Employee"> | string | null
   pipStartDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   pipEndDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
   noticePeriodStartDate?: Prisma.DateTimeNullableFilter<"Employee"> | Date | string | null
@@ -2718,6 +3058,22 @@ export type EmployeeScalarWhereInput = {
   fnfCompletedById?: Prisma.StringNullableFilter<"Employee"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Employee"> | Date | string
+}
+
+export type EmployeeUpsertWithWhereUniqueWithoutOnboardingApprovedByInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  update: Prisma.XOR<Prisma.EmployeeUpdateWithoutOnboardingApprovedByInput, Prisma.EmployeeUncheckedUpdateWithoutOnboardingApprovedByInput>
+  create: Prisma.XOR<Prisma.EmployeeCreateWithoutOnboardingApprovedByInput, Prisma.EmployeeUncheckedCreateWithoutOnboardingApprovedByInput>
+}
+
+export type EmployeeUpdateWithWhereUniqueWithoutOnboardingApprovedByInput = {
+  where: Prisma.EmployeeWhereUniqueInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateWithoutOnboardingApprovedByInput, Prisma.EmployeeUncheckedUpdateWithoutOnboardingApprovedByInput>
+}
+
+export type EmployeeUpdateManyWithWhereWithoutOnboardingApprovedByInput = {
+  where: Prisma.EmployeeScalarWhereInput
+  data: Prisma.XOR<Prisma.EmployeeUpdateManyMutationInput, Prisma.EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByInput>
 }
 
 export type EmployeeCreateWithoutDepartmentInput = {
@@ -2750,6 +3106,9 @@ export type EmployeeCreateWithoutDepartmentInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -2767,6 +3126,7 @@ export type EmployeeCreateWithoutDepartmentInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -2832,6 +3192,10 @@ export type EmployeeUncheckedCreateWithoutDepartmentInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -2934,6 +3298,9 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -2951,6 +3318,7 @@ export type EmployeeCreateWithoutTeamLeadOfInput = {
   team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -3017,6 +3385,10 @@ export type EmployeeUncheckedCreateWithoutTeamLeadOfInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -3097,6 +3469,9 @@ export type EmployeeCreateWithoutTeamInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -3114,6 +3489,7 @@ export type EmployeeCreateWithoutTeamInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -3179,6 +3555,10 @@ export type EmployeeUncheckedCreateWithoutTeamInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -3276,6 +3656,9 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3293,6 +3676,7 @@ export type EmployeeUpdateWithoutTeamLeadOfInput = {
   team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -3359,6 +3743,10 @@ export type EmployeeUncheckedUpdateWithoutTeamLeadOfInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3450,6 +3838,9 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -3467,6 +3858,7 @@ export type EmployeeCreateWithoutSubordinatesInput = {
   team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -3533,6 +3925,10 @@ export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -3613,6 +4009,9 @@ export type EmployeeCreateWithoutManagerInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -3630,6 +4029,7 @@ export type EmployeeCreateWithoutManagerInput = {
   team?: Prisma.DepartmentTeamCreateNestedOneWithoutMembersInput
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -3695,6 +4095,10 @@ export type EmployeeUncheckedCreateWithoutManagerInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -3792,6 +4196,9 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3809,6 +4216,7 @@ export type EmployeeUpdateWithoutSubordinatesInput = {
   team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -3875,6 +4283,10 @@ export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -3966,6 +4378,9 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -3984,6 +4399,7 @@ export type EmployeeCreateWithoutAttendanceLogsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
   monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
@@ -4049,6 +4465,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceLogsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4140,6 +4560,9 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4158,6 +4581,7 @@ export type EmployeeUpdateWithoutAttendanceLogsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
   monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
@@ -4223,6 +4647,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceLogsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4298,6 +4726,9 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4316,6 +4747,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsAsSubjectInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -4381,6 +4813,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsAsSubjectInput
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4461,6 +4897,9 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4479,6 +4918,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsRequestedInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -4544,6 +4984,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsRequestedInput
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4624,6 +5068,9 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4642,6 +5089,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsApprovedInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -4707,6 +5155,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsApprovedInput 
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4787,6 +5239,9 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4805,6 +5260,7 @@ export type EmployeeCreateWithoutAttendanceNormalizationsManagerApprovedInput = 
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -4870,6 +5326,10 @@ export type EmployeeUncheckedCreateWithoutAttendanceNormalizationsManagerApprove
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -4961,6 +5421,9 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -4979,6 +5442,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsAsSubjectInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -5044,6 +5508,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsAsSubjectInput
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5130,6 +5598,9 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5148,6 +5619,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsRequestedInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -5213,6 +5685,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsRequestedInput
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5299,6 +5775,9 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5317,6 +5796,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsApprovedInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -5382,6 +5862,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsApprovedInput 
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5468,6 +5952,9 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5486,6 +5973,7 @@ export type EmployeeUpdateWithoutAttendanceNormalizationsManagerApprovedInput = 
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -5551,6 +6039,10 @@ export type EmployeeUncheckedUpdateWithoutAttendanceNormalizationsManagerApprove
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5626,6 +6118,9 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -5644,6 +6139,7 @@ export type EmployeeCreateWithoutLeaveRequestsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -5709,6 +6205,10 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -5789,6 +6289,9 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -5807,6 +6310,7 @@ export type EmployeeCreateWithoutLeaveRequestsTargetApproverInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -5872,6 +6376,10 @@ export type EmployeeUncheckedCreateWithoutLeaveRequestsTargetApproverInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -5963,6 +6471,9 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5981,6 +6492,7 @@ export type EmployeeUpdateWithoutLeaveRequestsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -6046,6 +6558,10 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6132,6 +6648,9 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6150,6 +6669,7 @@ export type EmployeeUpdateWithoutLeaveRequestsTargetApproverInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -6215,6 +6735,10 @@ export type EmployeeUncheckedUpdateWithoutLeaveRequestsTargetApproverInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6290,6 +6814,9 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -6308,6 +6835,7 @@ export type EmployeeCreateWithoutLeaveBalancesInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -6373,6 +6901,10 @@ export type EmployeeUncheckedCreateWithoutLeaveBalancesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -6464,6 +6996,9 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6482,6 +7017,7 @@ export type EmployeeUpdateWithoutLeaveBalancesInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -6547,6 +7083,10 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalancesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6622,6 +7162,9 @@ export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -6640,6 +7183,7 @@ export type EmployeeCreateWithoutLeaveBalanceEditRequestsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -6705,6 +7249,10 @@ export type EmployeeUncheckedCreateWithoutLeaveBalanceEditRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -6796,6 +7344,9 @@ export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6814,6 +7365,7 @@ export type EmployeeUpdateWithoutLeaveBalanceEditRequestsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -6879,6 +7431,10 @@ export type EmployeeUncheckedUpdateWithoutLeaveBalanceEditRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6954,6 +7510,9 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -6972,6 +7531,7 @@ export type EmployeeCreateWithoutPayrollRecordsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -7037,6 +7597,10 @@ export type EmployeeUncheckedCreateWithoutPayrollRecordsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -7128,6 +7692,9 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7146,6 +7713,7 @@ export type EmployeeUpdateWithoutPayrollRecordsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -7211,6 +7779,10 @@ export type EmployeeUncheckedUpdateWithoutPayrollRecordsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7286,6 +7858,9 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -7304,6 +7879,7 @@ export type EmployeeCreateWithoutSalaryStructuresInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   monthlyPayrolls?: Prisma.MonthlyPayrollCreateNestedManyWithoutEmployeeInput
@@ -7369,6 +7945,10 @@ export type EmployeeUncheckedCreateWithoutSalaryStructuresInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -7460,6 +8040,9 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7478,6 +8061,7 @@ export type EmployeeUpdateWithoutSalaryStructuresInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
@@ -7543,6 +8127,10 @@ export type EmployeeUncheckedUpdateWithoutSalaryStructuresInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7618,6 +8206,9 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -7636,6 +8227,7 @@ export type EmployeeCreateWithoutMonthlyPayrollsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -7701,6 +8293,10 @@ export type EmployeeUncheckedCreateWithoutMonthlyPayrollsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -7792,6 +8388,9 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7810,6 +8409,7 @@ export type EmployeeUpdateWithoutMonthlyPayrollsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -7875,6 +8475,10 @@ export type EmployeeUncheckedUpdateWithoutMonthlyPayrollsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7950,6 +8554,9 @@ export type EmployeeCreateWithoutDocumentsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -7968,6 +8575,7 @@ export type EmployeeCreateWithoutDocumentsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -8033,6 +8641,10 @@ export type EmployeeUncheckedCreateWithoutDocumentsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -8124,6 +8736,9 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8142,6 +8757,7 @@ export type EmployeeUpdateWithoutDocumentsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -8207,6 +8823,10 @@ export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8282,6 +8902,9 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -8300,6 +8923,7 @@ export type EmployeeCreateWithoutFeedbacksInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -8365,6 +8989,10 @@ export type EmployeeUncheckedCreateWithoutFeedbacksInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -8456,6 +9084,9 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8474,6 +9105,7 @@ export type EmployeeUpdateWithoutFeedbacksInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -8539,6 +9171,10 @@ export type EmployeeUncheckedUpdateWithoutFeedbacksInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8614,6 +9250,9 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -8632,6 +9271,7 @@ export type EmployeeCreateWithoutMdAppointmentsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -8697,6 +9337,10 @@ export type EmployeeUncheckedCreateWithoutMdAppointmentsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -8788,6 +9432,9 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8806,6 +9453,7 @@ export type EmployeeUpdateWithoutMdAppointmentsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -8871,6 +9519,10 @@ export type EmployeeUncheckedUpdateWithoutMdAppointmentsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -8946,6 +9598,9 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -8964,6 +9619,7 @@ export type EmployeeCreateWithoutMentalHealthRequestsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -9029,6 +9685,10 @@ export type EmployeeUncheckedCreateWithoutMentalHealthRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -9120,6 +9780,9 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9138,6 +9801,7 @@ export type EmployeeUpdateWithoutMentalHealthRequestsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -9203,6 +9867,10 @@ export type EmployeeUncheckedUpdateWithoutMentalHealthRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9278,6 +9946,9 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -9296,6 +9967,7 @@ export type EmployeeCreateWithoutSupportTicketsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -9361,6 +10033,10 @@ export type EmployeeUncheckedCreateWithoutSupportTicketsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -9452,6 +10128,9 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9470,6 +10149,7 @@ export type EmployeeUpdateWithoutSupportTicketsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -9535,6 +10215,10 @@ export type EmployeeUncheckedUpdateWithoutSupportTicketsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9610,6 +10294,9 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -9628,6 +10315,7 @@ export type EmployeeCreateWithoutIncrementRequestsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -9693,6 +10381,10 @@ export type EmployeeUncheckedCreateWithoutIncrementRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -9784,6 +10476,9 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9802,6 +10497,7 @@ export type EmployeeUpdateWithoutIncrementRequestsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -9867,6 +10563,10 @@ export type EmployeeUncheckedUpdateWithoutIncrementRequestsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9942,6 +10642,9 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -9960,6 +10663,7 @@ export type EmployeeCreateWithoutIjpApplicationsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -10025,6 +10729,10 @@ export type EmployeeUncheckedCreateWithoutIjpApplicationsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -10116,6 +10824,9 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10134,6 +10845,7 @@ export type EmployeeUpdateWithoutIjpApplicationsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -10199,6 +10911,10 @@ export type EmployeeUncheckedUpdateWithoutIjpApplicationsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10274,6 +10990,9 @@ export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -10292,6 +11011,7 @@ export type EmployeeCreateWithoutSalesTeamCostEntriesInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -10357,6 +11077,10 @@ export type EmployeeUncheckedCreateWithoutSalesTeamCostEntriesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -10448,6 +11172,9 @@ export type EmployeeUpdateWithoutSalesTeamCostEntriesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10466,6 +11193,7 @@ export type EmployeeUpdateWithoutSalesTeamCostEntriesInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -10531,6 +11259,10 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamCostEntriesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10606,6 +11338,9 @@ export type EmployeeCreateWithoutMonthlyIncentivesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -10624,6 +11359,7 @@ export type EmployeeCreateWithoutMonthlyIncentivesInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -10689,6 +11425,10 @@ export type EmployeeUncheckedCreateWithoutMonthlyIncentivesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -10780,6 +11520,9 @@ export type EmployeeUpdateWithoutMonthlyIncentivesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10798,6 +11541,7 @@ export type EmployeeUpdateWithoutMonthlyIncentivesInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -10863,6 +11607,10 @@ export type EmployeeUncheckedUpdateWithoutMonthlyIncentivesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10938,6 +11686,9 @@ export type EmployeeCreateWithoutMasterSeatingCostInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -10956,6 +11707,7 @@ export type EmployeeCreateWithoutMasterSeatingCostInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -11021,6 +11773,10 @@ export type EmployeeUncheckedCreateWithoutMasterSeatingCostInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -11112,6 +11868,9 @@ export type EmployeeUpdateWithoutMasterSeatingCostInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11130,6 +11889,7 @@ export type EmployeeUpdateWithoutMasterSeatingCostInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -11195,6 +11955,10 @@ export type EmployeeUncheckedUpdateWithoutMasterSeatingCostInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11270,6 +12034,9 @@ export type EmployeeCreateWithoutMonthlySeatingMiscCostsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -11288,6 +12055,7 @@ export type EmployeeCreateWithoutMonthlySeatingMiscCostsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -11353,6 +12121,10 @@ export type EmployeeUncheckedCreateWithoutMonthlySeatingMiscCostsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -11444,6 +12216,9 @@ export type EmployeeUpdateWithoutMonthlySeatingMiscCostsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11462,6 +12237,7 @@ export type EmployeeUpdateWithoutMonthlySeatingMiscCostsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -11527,6 +12303,10 @@ export type EmployeeUncheckedUpdateWithoutMonthlySeatingMiscCostsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11602,6 +12382,9 @@ export type EmployeeCreateWithoutSalesTeamBulkCostEntriesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -11620,6 +12403,7 @@ export type EmployeeCreateWithoutSalesTeamBulkCostEntriesInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -11685,6 +12469,10 @@ export type EmployeeUncheckedCreateWithoutSalesTeamBulkCostEntriesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -11776,6 +12564,9 @@ export type EmployeeUpdateWithoutSalesTeamBulkCostEntriesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11794,6 +12585,7 @@ export type EmployeeUpdateWithoutSalesTeamBulkCostEntriesInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -11859,6 +12651,10 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamBulkCostEntriesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11934,6 +12730,9 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverridesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -11952,6 +12751,7 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverridesInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -12017,6 +12817,10 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverridesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -12108,6 +12912,9 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverridesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12126,6 +12933,7 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverridesInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -12191,6 +12999,10 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverridesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12266,6 +13078,9 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -12284,6 +13099,7 @@ export type EmployeeCreateWithoutSalesTeamSalaryOverrideHistoryInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -12349,6 +13165,10 @@ export type EmployeeUncheckedCreateWithoutSalesTeamSalaryOverrideHistoryInput = 
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -12440,6 +13260,9 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12458,6 +13281,7 @@ export type EmployeeUpdateWithoutSalesTeamSalaryOverrideHistoryInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -12523,6 +13347,10 @@ export type EmployeeUncheckedUpdateWithoutSalesTeamSalaryOverrideHistoryInput = 
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12598,6 +13426,9 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -12616,6 +13447,7 @@ export type EmployeeCreateWithoutMdTaskTeamMembershipsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -12681,6 +13513,10 @@ export type EmployeeUncheckedCreateWithoutMdTaskTeamMembershipsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -12772,6 +13608,9 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12790,6 +13629,7 @@ export type EmployeeUpdateWithoutMdTaskTeamMembershipsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -12855,6 +13695,10 @@ export type EmployeeUncheckedUpdateWithoutMdTaskTeamMembershipsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12930,6 +13774,9 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -12948,6 +13795,7 @@ export type EmployeeCreateWithoutMdWatchlistMembershipsInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -13013,6 +13861,10 @@ export type EmployeeUncheckedCreateWithoutMdWatchlistMembershipsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -13104,6 +13956,9 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13122,6 +13977,7 @@ export type EmployeeUpdateWithoutMdWatchlistMembershipsInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -13187,6 +14043,10 @@ export type EmployeeUncheckedUpdateWithoutMdWatchlistMembershipsInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13262,6 +14122,9 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -13280,6 +14143,7 @@ export type EmployeeCreateWithoutItProjectResourcesInput = {
   teamLeadOf?: Prisma.DepartmentTeamCreateNestedOneWithoutTeamLeadInput
   manager?: Prisma.EmployeeCreateNestedOneWithoutSubordinatesInput
   subordinates?: Prisma.EmployeeCreateNestedManyWithoutManagerInput
+  onboardingApprovedBy?: Prisma.UserCreateNestedOneWithoutOnboardingApprovalsInput
   fnfCompletedBy?: Prisma.UserCreateNestedOneWithoutFnfCompletedForEmployeesInput
   attendanceLogs?: Prisma.AttendanceLogCreateNestedManyWithoutEmployeeInput
   salaryStructures?: Prisma.SalaryStructureCreateNestedManyWithoutEmployeeInput
@@ -13345,6 +14209,10 @@ export type EmployeeUncheckedCreateWithoutItProjectResourcesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -13436,6 +14304,9 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13454,6 +14325,7 @@ export type EmployeeUpdateWithoutItProjectResourcesInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -13519,6 +14391,10 @@ export type EmployeeUncheckedUpdateWithoutItProjectResourcesInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13598,6 +14474,10 @@ export type EmployeeCreateManyFnfCompletedByInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -13608,6 +14488,58 @@ export type EmployeeCreateManyFnfCompletedByInput = {
   fnfDeadline?: Date | string | null
   fnfCompleted?: boolean
   fnfCompletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type EmployeeCreateManyOnboardingApprovedByInput = {
+  id?: string
+  userId: string
+  employeeCode: string
+  bdNumber?: number | null
+  joinDate?: Date | string | null
+  salary?: number | null
+  departmentId?: string | null
+  teamId?: string | null
+  managerId?: string | null
+  dateOfBirth?: Date | string | null
+  aadharNumber?: string | null
+  panNumber?: string | null
+  aadharDocUrl?: string | null
+  panDocUrl?: string | null
+  designation?: string | null
+  bankAccountName?: string | null
+  bankAccountNumber?: string | null
+  ifscCode?: string | null
+  bankName?: string | null
+  bankBranch?: string | null
+  upiId?: string | null
+  bloodGroup?: string | null
+  employmentType?: string | null
+  workLocation?: string | null
+  passportDocUrl?: string | null
+  drivingLicenseDocUrl?: string | null
+  resumeDocUrl?: string | null
+  educationalCertDocUrl?: string | null
+  experienceCertDocUrl?: string | null
+  appointmentLetterDocUrl?: string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: string | null
+  status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  pipStartDate?: Date | string | null
+  pipEndDate?: Date | string | null
+  noticePeriodStartDate?: Date | string | null
+  noticePeriodEndDate?: Date | string | null
+  finalWorkingDay?: Date | string | null
+  terminationReason?: string | null
+  statusNote?: string | null
+  fnfDeadline?: Date | string | null
+  fnfCompleted?: boolean
+  fnfCompletedAt?: Date | string | null
+  fnfCompletedById?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -13642,6 +14574,9 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13660,6 +14595,7 @@ export type EmployeeUpdateWithoutFnfCompletedByInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
   monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
@@ -13725,6 +14661,10 @@ export type EmployeeUncheckedUpdateWithoutFnfCompletedByInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13804,6 +14744,10 @@ export type EmployeeUncheckedUpdateManyWithoutFnfCompletedByInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13814,6 +14758,224 @@ export type EmployeeUncheckedUpdateManyWithoutFnfCompletedByInput = {
   fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type EmployeeUpdateWithoutOnboardingApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutEmployeeNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutEmployeesNestedInput
+  team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
+  teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
+  manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUpdateManyWithoutEmployeeNestedInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateWithoutOnboardingApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teamLeadOf?: Prisma.DepartmentTeamUncheckedUpdateOneWithoutTeamLeadNestedInput
+  subordinates?: Prisma.EmployeeUncheckedUpdateManyWithoutManagerNestedInput
+  attendanceLogs?: Prisma.AttendanceLogUncheckedUpdateManyWithoutEmployeeNestedInput
+  salaryStructures?: Prisma.SalaryStructureUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyPayrolls?: Prisma.MonthlyPayrollUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsAsSubject?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutEmployeeNestedInput
+  attendanceNormalizationsRequested?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutRequestedByNestedInput
+  attendanceNormalizationsApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutApprovedByNestedInput
+  attendanceNormalizationsManagerApproved?: Prisma.AttendanceNormalizationUncheckedUpdateManyWithoutManagerApprovedByNestedInput
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveRequestsTargetApprover?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTargetApproverNestedInput
+  leaveBalances?: Prisma.LeaveBalanceUncheckedUpdateManyWithoutEmployeeNestedInput
+  leaveBalanceEditRequests?: Prisma.LeaveBalanceEditRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  payrollRecords?: Prisma.PayrollRecordUncheckedUpdateManyWithoutEmployeeNestedInput
+  documents?: Prisma.EmployeeDocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdAppointments?: Prisma.MDAppointmentUncheckedUpdateManyWithoutEmployeeNestedInput
+  mentalHealthRequests?: Prisma.MentalHealthRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutEmployeeNestedInput
+  incrementRequests?: Prisma.IncrementRequestUncheckedUpdateManyWithoutEmployeeNestedInput
+  ijpApplications?: Prisma.IJPApplicationUncheckedUpdateManyWithoutReferrerNestedInput
+  mdTaskTeamMemberships?: Prisma.MDTaskTeamMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+  mdWatchlistMemberships?: Prisma.MDWatchlistEmployeeUncheckedUpdateManyWithoutEmployeeNestedInput
+  itProjectResources?: Prisma.ITProjectResourceUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamCostEntries?: Prisma.SalesTeamCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  monthlyIncentives?: Prisma.EmployeeMonthlyIncentiveUncheckedUpdateManyWithoutEmployeeNestedInput
+  masterSeatingCost?: Prisma.EmployeeMasterSeatingCostUncheckedUpdateOneWithoutEmployeeNestedInput
+  monthlySeatingMiscCosts?: Prisma.EmployeeMonthlySeatingMiscCostUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamBulkCostEntries?: Prisma.SalesTeamBulkCostEntryUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrides?: Prisma.EmployeeSalesTeamSalaryOverrideUncheckedUpdateManyWithoutEmployeeNestedInput
+  salesTeamSalaryOverrideHistory?: Prisma.EmployeeSalesTeamSalaryOverrideHistoryUncheckedUpdateManyWithoutEmployeeNestedInput
+}
+
+export type EmployeeUncheckedUpdateManyWithoutOnboardingApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bdNumber?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  joinDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  salary?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  teamId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aadharNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aadharDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  panDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ifscCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBranch?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bloodGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  workLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passportDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  drivingLicenseDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resumeDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  educationalCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  experienceCertDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  appointmentLetterDocUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  noticePeriodEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  finalWorkingDay?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  terminationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  statusNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fnfDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fnfCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fnfCompletedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -13851,6 +15013,10 @@ export type EmployeeCreateManyDepartmentInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -13896,6 +15062,9 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13913,6 +15082,7 @@ export type EmployeeUpdateWithoutDepartmentInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -13978,6 +15148,10 @@ export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14057,6 +15231,10 @@ export type EmployeeUncheckedUpdateManyWithoutDepartmentInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14105,6 +15283,10 @@ export type EmployeeCreateManyTeamInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -14150,6 +15332,9 @@ export type EmployeeUpdateWithoutTeamInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14167,6 +15352,7 @@ export type EmployeeUpdateWithoutTeamInput = {
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   manager?: Prisma.EmployeeUpdateOneWithoutSubordinatesNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -14232,6 +15418,10 @@ export type EmployeeUncheckedUpdateWithoutTeamInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14311,6 +15501,10 @@ export type EmployeeUncheckedUpdateManyWithoutTeamInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14359,6 +15553,10 @@ export type EmployeeCreateManyManagerInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: string | null
   status?: $Enums.EmployeeStatus
+  onboardingStatus?: $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Date | string | null
+  onboardingApprovedAt?: Date | string | null
+  onboardingApprovedById?: string | null
   pipStartDate?: Date | string | null
   pipEndDate?: Date | string | null
   noticePeriodStartDate?: Date | string | null
@@ -14404,6 +15602,9 @@ export type EmployeeUpdateWithoutManagerInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14421,6 +15622,7 @@ export type EmployeeUpdateWithoutManagerInput = {
   team?: Prisma.DepartmentTeamUpdateOneWithoutMembersNestedInput
   teamLeadOf?: Prisma.DepartmentTeamUpdateOneWithoutTeamLeadNestedInput
   subordinates?: Prisma.EmployeeUpdateManyWithoutManagerNestedInput
+  onboardingApprovedBy?: Prisma.UserUpdateOneWithoutOnboardingApprovalsNestedInput
   fnfCompletedBy?: Prisma.UserUpdateOneWithoutFnfCompletedForEmployeesNestedInput
   attendanceLogs?: Prisma.AttendanceLogUpdateManyWithoutEmployeeNestedInput
   salaryStructures?: Prisma.SalaryStructureUpdateManyWithoutEmployeeNestedInput
@@ -14486,6 +15688,10 @@ export type EmployeeUncheckedUpdateWithoutManagerInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14565,6 +15771,10 @@ export type EmployeeUncheckedUpdateManyWithoutManagerInput = {
   otherDocuments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   uanNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+  onboardingStatus?: Prisma.EnumOnboardingStatusFieldUpdateOperationsInput | $Enums.OnboardingStatus
+  onboardingSubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  onboardingApprovedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pipStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pipEndDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   noticePeriodStartDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14897,6 +16107,10 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   otherDocuments?: boolean
   uanNumber?: boolean
   status?: boolean
+  onboardingStatus?: boolean
+  onboardingSubmittedAt?: boolean
+  onboardingApprovedAt?: boolean
+  onboardingApprovedById?: boolean
   pipStartDate?: boolean
   pipEndDate?: boolean
   noticePeriodStartDate?: boolean
@@ -14916,6 +16130,7 @@ export type EmployeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   teamLeadOf?: boolean | Prisma.Employee$teamLeadOfArgs<ExtArgs>
   manager?: boolean | Prisma.Employee$managerArgs<ExtArgs>
   subordinates?: boolean | Prisma.Employee$subordinatesArgs<ExtArgs>
+  onboardingApprovedBy?: boolean | Prisma.Employee$onboardingApprovedByArgs<ExtArgs>
   fnfCompletedBy?: boolean | Prisma.Employee$fnfCompletedByArgs<ExtArgs>
   attendanceLogs?: boolean | Prisma.Employee$attendanceLogsArgs<ExtArgs>
   salaryStructures?: boolean | Prisma.Employee$salaryStructuresArgs<ExtArgs>
@@ -14983,6 +16198,10 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   otherDocuments?: boolean
   uanNumber?: boolean
   status?: boolean
+  onboardingStatus?: boolean
+  onboardingSubmittedAt?: boolean
+  onboardingApprovedAt?: boolean
+  onboardingApprovedById?: boolean
   pipStartDate?: boolean
   pipEndDate?: boolean
   noticePeriodStartDate?: boolean
@@ -15000,6 +16219,7 @@ export type EmployeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   department?: boolean | Prisma.Employee$departmentArgs<ExtArgs>
   team?: boolean | Prisma.Employee$teamArgs<ExtArgs>
   manager?: boolean | Prisma.Employee$managerArgs<ExtArgs>
+  onboardingApprovedBy?: boolean | Prisma.Employee$onboardingApprovedByArgs<ExtArgs>
   fnfCompletedBy?: boolean | Prisma.Employee$fnfCompletedByArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -15037,6 +16257,10 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   otherDocuments?: boolean
   uanNumber?: boolean
   status?: boolean
+  onboardingStatus?: boolean
+  onboardingSubmittedAt?: boolean
+  onboardingApprovedAt?: boolean
+  onboardingApprovedById?: boolean
   pipStartDate?: boolean
   pipEndDate?: boolean
   noticePeriodStartDate?: boolean
@@ -15054,6 +16278,7 @@ export type EmployeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   department?: boolean | Prisma.Employee$departmentArgs<ExtArgs>
   team?: boolean | Prisma.Employee$teamArgs<ExtArgs>
   manager?: boolean | Prisma.Employee$managerArgs<ExtArgs>
+  onboardingApprovedBy?: boolean | Prisma.Employee$onboardingApprovedByArgs<ExtArgs>
   fnfCompletedBy?: boolean | Prisma.Employee$fnfCompletedByArgs<ExtArgs>
 }, ExtArgs["result"]["employee"]>
 
@@ -15091,6 +16316,10 @@ export type EmployeeSelectScalar = {
   otherDocuments?: boolean
   uanNumber?: boolean
   status?: boolean
+  onboardingStatus?: boolean
+  onboardingSubmittedAt?: boolean
+  onboardingApprovedAt?: boolean
+  onboardingApprovedById?: boolean
   pipStartDate?: boolean
   pipEndDate?: boolean
   noticePeriodStartDate?: boolean
@@ -15106,7 +16335,7 @@ export type EmployeeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeCode" | "bdNumber" | "joinDate" | "salary" | "departmentId" | "teamId" | "managerId" | "dateOfBirth" | "aadharNumber" | "panNumber" | "aadharDocUrl" | "panDocUrl" | "designation" | "bankAccountName" | "bankAccountNumber" | "ifscCode" | "bankName" | "bankBranch" | "upiId" | "bloodGroup" | "employmentType" | "workLocation" | "passportDocUrl" | "drivingLicenseDocUrl" | "resumeDocUrl" | "educationalCertDocUrl" | "experienceCertDocUrl" | "appointmentLetterDocUrl" | "otherDocuments" | "uanNumber" | "status" | "pipStartDate" | "pipEndDate" | "noticePeriodStartDate" | "noticePeriodEndDate" | "finalWorkingDay" | "terminationReason" | "statusNote" | "fnfDeadline" | "fnfCompleted" | "fnfCompletedAt" | "fnfCompletedById" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
+export type EmployeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "employeeCode" | "bdNumber" | "joinDate" | "salary" | "departmentId" | "teamId" | "managerId" | "dateOfBirth" | "aadharNumber" | "panNumber" | "aadharDocUrl" | "panDocUrl" | "designation" | "bankAccountName" | "bankAccountNumber" | "ifscCode" | "bankName" | "bankBranch" | "upiId" | "bloodGroup" | "employmentType" | "workLocation" | "passportDocUrl" | "drivingLicenseDocUrl" | "resumeDocUrl" | "educationalCertDocUrl" | "experienceCertDocUrl" | "appointmentLetterDocUrl" | "otherDocuments" | "uanNumber" | "status" | "onboardingStatus" | "onboardingSubmittedAt" | "onboardingApprovedAt" | "onboardingApprovedById" | "pipStartDate" | "pipEndDate" | "noticePeriodStartDate" | "noticePeriodEndDate" | "finalWorkingDay" | "terminationReason" | "statusNote" | "fnfDeadline" | "fnfCompleted" | "fnfCompletedAt" | "fnfCompletedById" | "createdAt" | "updatedAt", ExtArgs["result"]["employee"]>
 export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   department?: boolean | Prisma.Employee$departmentArgs<ExtArgs>
@@ -15114,6 +16343,7 @@ export type EmployeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   teamLeadOf?: boolean | Prisma.Employee$teamLeadOfArgs<ExtArgs>
   manager?: boolean | Prisma.Employee$managerArgs<ExtArgs>
   subordinates?: boolean | Prisma.Employee$subordinatesArgs<ExtArgs>
+  onboardingApprovedBy?: boolean | Prisma.Employee$onboardingApprovedByArgs<ExtArgs>
   fnfCompletedBy?: boolean | Prisma.Employee$fnfCompletedByArgs<ExtArgs>
   attendanceLogs?: boolean | Prisma.Employee$attendanceLogsArgs<ExtArgs>
   salaryStructures?: boolean | Prisma.Employee$salaryStructuresArgs<ExtArgs>
@@ -15151,6 +16381,7 @@ export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   department?: boolean | Prisma.Employee$departmentArgs<ExtArgs>
   team?: boolean | Prisma.Employee$teamArgs<ExtArgs>
   manager?: boolean | Prisma.Employee$managerArgs<ExtArgs>
+  onboardingApprovedBy?: boolean | Prisma.Employee$onboardingApprovedByArgs<ExtArgs>
   fnfCompletedBy?: boolean | Prisma.Employee$fnfCompletedByArgs<ExtArgs>
 }
 export type EmployeeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -15158,6 +16389,7 @@ export type EmployeeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   department?: boolean | Prisma.Employee$departmentArgs<ExtArgs>
   team?: boolean | Prisma.Employee$teamArgs<ExtArgs>
   manager?: boolean | Prisma.Employee$managerArgs<ExtArgs>
+  onboardingApprovedBy?: boolean | Prisma.Employee$onboardingApprovedByArgs<ExtArgs>
   fnfCompletedBy?: boolean | Prisma.Employee$fnfCompletedByArgs<ExtArgs>
 }
 
@@ -15170,6 +16402,7 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     teamLeadOf: Prisma.$DepartmentTeamPayload<ExtArgs> | null
     manager: Prisma.$EmployeePayload<ExtArgs> | null
     subordinates: Prisma.$EmployeePayload<ExtArgs>[]
+    onboardingApprovedBy: Prisma.$UserPayload<ExtArgs> | null
     fnfCompletedBy: Prisma.$UserPayload<ExtArgs> | null
     attendanceLogs: Prisma.$AttendanceLogPayload<ExtArgs>[]
     salaryStructures: Prisma.$SalaryStructurePayload<ExtArgs>[]
@@ -15235,6 +16468,10 @@ export type $EmployeePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     otherDocuments: runtime.JsonValue | null
     uanNumber: string | null
     status: $Enums.EmployeeStatus
+    onboardingStatus: $Enums.OnboardingStatus
+    onboardingSubmittedAt: Date | null
+    onboardingApprovedAt: Date | null
+    onboardingApprovedById: string | null
     pipStartDate: Date | null
     pipEndDate: Date | null
     noticePeriodStartDate: Date | null
@@ -15648,6 +16885,7 @@ export interface Prisma__EmployeeClient<T, Null = never, ExtArgs extends runtime
   teamLeadOf<T extends Prisma.Employee$teamLeadOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$teamLeadOfArgs<ExtArgs>>): Prisma.Prisma__DepartmentTeamClient<runtime.Types.Result.GetResult<Prisma.$DepartmentTeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   manager<T extends Prisma.Employee$managerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$managerArgs<ExtArgs>>): Prisma.Prisma__EmployeeClient<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   subordinates<T extends Prisma.Employee$subordinatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$subordinatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  onboardingApprovedBy<T extends Prisma.Employee$onboardingApprovedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$onboardingApprovedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   fnfCompletedBy<T extends Prisma.Employee$fnfCompletedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$fnfCompletedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   attendanceLogs<T extends Prisma.Employee$attendanceLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$attendanceLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttendanceLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   salaryStructures<T extends Prisma.Employee$salaryStructuresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employee$salaryStructuresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SalaryStructurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -15740,6 +16978,10 @@ export interface EmployeeFieldRefs {
   readonly otherDocuments: Prisma.FieldRef<"Employee", 'Json'>
   readonly uanNumber: Prisma.FieldRef<"Employee", 'String'>
   readonly status: Prisma.FieldRef<"Employee", 'EmployeeStatus'>
+  readonly onboardingStatus: Prisma.FieldRef<"Employee", 'OnboardingStatus'>
+  readonly onboardingSubmittedAt: Prisma.FieldRef<"Employee", 'DateTime'>
+  readonly onboardingApprovedAt: Prisma.FieldRef<"Employee", 'DateTime'>
+  readonly onboardingApprovedById: Prisma.FieldRef<"Employee", 'String'>
   readonly pipStartDate: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly pipEndDate: Prisma.FieldRef<"Employee", 'DateTime'>
   readonly noticePeriodStartDate: Prisma.FieldRef<"Employee", 'DateTime'>
@@ -16251,6 +17493,25 @@ export type Employee$subordinatesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.EmployeeScalarFieldEnum | Prisma.EmployeeScalarFieldEnum[]
+}
+
+/**
+ * Employee.onboardingApprovedBy
+ */
+export type Employee$onboardingApprovedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

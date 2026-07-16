@@ -107,16 +107,17 @@ export async function POST(request: NextRequest) {
 
           const employee = await tx.employee.create({
             data: {
-            userId: newUser.id,
-            employeeCode: data.employeeCode.trim(),
-            departmentId: data.departmentId || null,
-            managerId: data.managerId ?? null,
-            bdNumber: data.bdNumber ?? null,
-            circle: data.circle?.trim() || null,
-            joinDate: data.joinDate ? new Date(data.joinDate) : null,
-            dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
-          },
-        })
+              userId: newUser.id,
+              employeeCode: data.employeeCode.trim(),
+              departmentId: data.departmentId || null,
+              managerId: data.managerId ?? null,
+              bdNumber: data.bdNumber ?? null,
+              circle: data.circle?.trim() || null,
+              joinDate: data.joinDate ? new Date(data.joinDate) : null,
+              dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+              onboardingStatus: 'PENDING_PROFILE',
+            },
+          })
 
           return { userId: newUser.id, employeeId: employee.id }
         })

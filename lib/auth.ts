@@ -2,11 +2,14 @@ import bcrypt from 'bcryptjs'
 import { prisma } from './prisma'
 import { UserRole } from '@/generated/prisma/enums'
 
+export type OnboardingStatus = 'PENDING_PROFILE' | 'PENDING_APPROVAL' | 'APPROVED'
+
 export interface SessionUser {
   id: string
   email: string
   name: string
   role: UserRole
+  onboardingStatus?: OnboardingStatus | null
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -35,7 +38,7 @@ export async function authenticateUser(email: string, password: string): Promise
 
   const user = await prisma.user.findUnique({
     where: { email: normalizedEmail },
-    include: { employee: { select: { status: true } } },
+    include: { employee: { select: { status: true, onboardingStatus: true } } },
   })
 
   if (!user) {
@@ -58,6 +61,7 @@ export async function authenticateUser(email: string, password: string): Promise
     email: user.email,
     name: user.name,
     role: user.role,
+    onboardingStatus: user.employee?.onboardingStatus ?? null,
   }
 }
 
@@ -69,9 +73,19 @@ export async function getUserById(id: string): Promise<SessionUser | null> {
       email: true,
       name: true,
       role: true,
+      employee: {
+        select: { onboardingStatus: true },
+      },
     },
   })
 
-  return user
-}
+  if (!user) return null
 
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    onboardingStatus: user.employee?.onboardingStatus ?? null,
+  }
+}
