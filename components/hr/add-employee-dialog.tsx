@@ -49,9 +49,17 @@ interface EmployeeFormData {
   dateOfBirth: string
 }
 
+/** Works on HTTP (non-secure) contexts where crypto.randomUUID is unavailable. */
+function createClientId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `id-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
+}
+
 function createEmptyEmployee(): EmployeeFormData {
   return {
-    id: crypto.randomUUID(),
+    id: createClientId(),
     name: '',
     email: '',
     password: '',
