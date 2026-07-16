@@ -47,9 +47,17 @@ interface Props {
   lockRecipient?: Recipient
   doctorName?: string | null
   hospitalName?: string | null
+  /** When false, hide add/delete form (Finance read-only). Default true. */
+  canWrite?: boolean
 }
 
-export function PaymentInstallmentsCard({ leadId, lockRecipient, doctorName, hospitalName }: Props) {
+export function PaymentInstallmentsCard({
+  leadId,
+  lockRecipient,
+  doctorName,
+  hospitalName,
+  canWrite = true,
+}: Props) {
   const queryClient = useQueryClient()
   const [paidOn, setPaidOn] = useState(todayYmd())
   const [amount, setAmount] = useState('')
@@ -139,83 +147,85 @@ export function PaymentInstallmentsCard({ leadId, lockRecipient, doctorName, hos
           <TotalTile label="MediEND received" amount={totals.MEDIEND} />
         </div>
 
-        <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-6 gap-3 items-end">
-          <div className="sm:col-span-1">
-            <Label className="text-xs">Date</Label>
-            <Input type="date" value={paidOn} onChange={(e) => setPaidOn(e.target.value)} className="mt-1" />
-          </div>
-          <div className="sm:col-span-1">
-            <Label className="text-xs">Amount</Label>
-            <Input
-              type="number"
-              step="0.01"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
-              className="mt-1"
-            />
-          </div>
-          <div className="sm:col-span-1">
-            <Label className="text-xs">Recipient</Label>
-            <Select
-              value={recipient}
-              onValueChange={(v) => setRecipient(v as Recipient)}
-              disabled={!!lockRecipient}
-            >
-              <SelectTrigger className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {RECIPIENTS.map((r) => (
-                  <SelectItem key={r} value={r}>
-                    {r === 'HOSPITAL' && hospitalName ? `HOSPITAL (${hospitalName})` :
-                     r === 'DOCTOR' && doctorName ? `DOCTOR (${doctorName})` : r}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="sm:col-span-1">
-            <Label className="text-xs">Mode</Label>
-            <Select value={mode || 'unset'} onValueChange={(v) => setMode(v === 'unset' ? '' : (v as Mode))}>
-              <SelectTrigger className="mt-1">
-                <SelectValue placeholder="—" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="unset">—</SelectItem>
-                {MODES.map((m) => (
-                  <SelectItem key={m} value={m}>
-                    {m}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="sm:col-span-1">
-            <Label className="text-xs">Reference</Label>
-            <Input
-              value={reference}
-              onChange={(e) => setReference(e.target.value)}
-              placeholder="UTR / cheque"
-              className="mt-1"
-            />
-          </div>
-          <div className="sm:col-span-1">
-            <Button type="submit" disabled={createMutation.isPending} className="w-full">
-              {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}
-              Add
-            </Button>
-          </div>
-          <div className="sm:col-span-6">
-            <Label className="text-xs">Notes (optional)</Label>
-            <Input
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Optional context"
-              className="mt-1"
-            />
-          </div>
-        </form>
+        {canWrite && (
+          <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-6 gap-3 items-end">
+            <div className="sm:col-span-1">
+              <Label className="text-xs">Date</Label>
+              <Input type="date" value={paidOn} onChange={(e) => setPaidOn(e.target.value)} className="mt-1" />
+            </div>
+            <div className="sm:col-span-1">
+              <Label className="text-xs">Amount</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="0.00"
+                className="mt-1"
+              />
+            </div>
+            <div className="sm:col-span-1">
+              <Label className="text-xs">Recipient</Label>
+              <Select
+                value={recipient}
+                onValueChange={(v) => setRecipient(v as Recipient)}
+                disabled={!!lockRecipient}
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {RECIPIENTS.map((r) => (
+                    <SelectItem key={r} value={r}>
+                      {r === 'HOSPITAL' && hospitalName ? `HOSPITAL (${hospitalName})` :
+                       r === 'DOCTOR' && doctorName ? `DOCTOR (${doctorName})` : r}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="sm:col-span-1">
+              <Label className="text-xs">Mode</Label>
+              <Select value={mode || 'unset'} onValueChange={(v) => setMode(v === 'unset' ? '' : (v as Mode))}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="—" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unset">—</SelectItem>
+                  {MODES.map((m) => (
+                    <SelectItem key={m} value={m}>
+                      {m}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="sm:col-span-1">
+              <Label className="text-xs">Reference</Label>
+              <Input
+                value={reference}
+                onChange={(e) => setReference(e.target.value)}
+                placeholder="UTR / cheque"
+                className="mt-1"
+              />
+            </div>
+            <div className="sm:col-span-1">
+              <Button type="submit" disabled={createMutation.isPending} className="w-full">
+                {createMutation.isPending && <Loader2 className="h-4 w-4 mr-1 animate-spin" />}
+                Add
+              </Button>
+            </div>
+            <div className="sm:col-span-6">
+              <Label className="text-xs">Notes (optional)</Label>
+              <Input
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Optional context"
+                className="mt-1"
+              />
+            </div>
+          </form>
+        )}
 
         <div className="border rounded-lg overflow-hidden">
           {isLoading ? (
@@ -238,7 +248,7 @@ export function PaymentInstallmentsCard({ leadId, lockRecipient, doctorName, hos
                   <th className="px-3 py-2 text-left">Reference</th>
                   <th className="px-3 py-2 text-left">Notes</th>
                   <th className="px-3 py-2 text-left">By</th>
-                  <th className="px-3 py-2"></th>
+                  {canWrite && <th className="px-3 py-2"></th>}
                 </tr>
               </thead>
               <tbody>
@@ -264,19 +274,21 @@ export function PaymentInstallmentsCard({ leadId, lockRecipient, doctorName, hos
                     <td className="px-3 py-2 text-xs text-muted-foreground">
                       {r.recordedBy?.name ?? '—'}
                     </td>
-                    <td className="px-3 py-2">
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        className="h-7 w-7"
-                        onClick={() => deleteMutation.mutate(r.id)}
-                        disabled={deleteMutation.isPending}
-                        aria-label="Delete installment"
-                      >
-                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      </Button>
-                    </td>
+                    {canWrite && (
+                      <td className="px-3 py-2">
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="h-7 w-7"
+                          onClick={() => deleteMutation.mutate(r.id)}
+                          disabled={deleteMutation.isPending}
+                          aria-label="Delete installment"
+                        >
+                          <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        </Button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
