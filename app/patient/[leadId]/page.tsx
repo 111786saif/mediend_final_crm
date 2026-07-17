@@ -16,7 +16,7 @@ import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Activity, ArrowLeft, Building2, Calendar as CalendarIcon, CheckCircle2, Clock, Copy, ExternalLink, File, FileDown, FileText, MapPin, MessageCircle, Pencil, Plus, Receipt, RefreshCw, RotateCcw, Shield, Stethoscope, Tag, User, Wallet, XCircle } from 'lucide-react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 import { ActivityTimeline } from '@/components/case/activity-timeline'
 import { CashStageProgress } from '@/components/case/cash-stage-progress'
@@ -61,7 +61,7 @@ import { resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { format, formatDistanceToNow } from 'date-fns'
 import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 type KypUploadedFile = { name?: string; url?: string }
@@ -425,6 +425,7 @@ export default function PatientDetailsPage() {
   const { user } = useAuth()
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const leadId = params.leadId as string
 
@@ -475,6 +476,37 @@ export default function PatientDetailsPage() {
   const [markLostSubmitting, setMarkLostSubmitting] = useState(false)
   const [switchingMode, setSwitchingMode] = useState(false)
   const [showResetStepperDialog, setShowResetStepperDialog] = useState(false)
+  const [handledQuickAction, setHandledQuickAction] = useState<string | null>(null)
+  const quickAction = searchParams.get('action')
+
+  useEffect(() => {
+    if (!lead || !quickAction || quickAction === handledQuickAction) return
+
+    if (
+      quickAction === 'ipd-schedule' &&
+      lead.flowType !== FlowType.CASH &&
+      [CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED].includes(lead.caseStage)
+    ) {
+      const timer = window.setTimeout(() => {
+        setAdmitEditMode(lead.caseStage !== CaseStage.PREAUTH_COMPLETE)
+        setShowAdmitModal(true)
+        setHandledQuickAction(quickAction)
+      }, 0)
+      return () => window.clearTimeout(timer)
+    }
+
+    if (
+      quickAction === 'ipd-cash' &&
+      lead.flowType === FlowType.CASH &&
+      [CaseStage.CASH_IPD_PENDING, CaseStage.CASH_IPD_SUBMITTED, CaseStage.CASH_ON_HOLD, CaseStage.CASH_APPROVED].includes(lead.caseStage)
+    ) {
+      const timer = window.setTimeout(() => {
+        setShowIPDCashModal(true)
+        setHandledQuickAction(quickAction)
+      }, 0)
+      return () => window.clearTimeout(timer)
+    }
+  }, [handledQuickAction, lead, quickAction])
 
   if (isLoading || isLoadingKYP) {
     return (

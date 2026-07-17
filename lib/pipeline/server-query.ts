@@ -333,14 +333,28 @@ export const pipelineTableSelect = {
   age: true,
   sex: true,
   treatment: true,
+  diseaseDetails: true,
   category: true,
   status: true,
   caseStage: true,
   bdId: true,
   circle: true,
   campaignName: true,
+  month: true,
+  assignedDate: true,
   leadEntryDate: true,
   createdDate: true,
+  updatedDate: true,
+  followUpDate: true,
+  subStatus: true,
+  surgeryDate: true,
+  profession: true,
+  teamLeadId: true,
+  duplCount: true,
+  source: true,
+  leadSource: true,
+  insuranceName: true,
+  modeOfPayment: true,
   hospitalName: true,
   remarks: true,
   leadRemarkEntries: {
@@ -360,11 +374,18 @@ export const pipelineTableSelect = {
   },
   ipdDrName: true,
   surgeonName: true,
+  updatedBy: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
   bd: { select: { id: true, name: true } },
-  plRecord: { select: { bdmName: true, doctorName: true, hospitalName: true } },
+  plRecord: { select: { bdmName: true, managerName: true, doctorName: true, hospitalName: true } },
   dischargeSheet: { select: { doctorName: true, hospitalName: true } },
   kypSubmission: {
     select: {
+      location: true,
       preAuthData: {
         select: {
           requestedHospitalName: true,

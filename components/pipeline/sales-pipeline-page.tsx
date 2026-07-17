@@ -2,10 +2,6 @@
 
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { CallNotesPopover } from '@/components/pipeline/call-notes-popover'
-import {
-  CampaignSidebar,
-  type SidebarGroupMode,
-} from '@/components/pipeline/campaign-sidebar'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
 import { LeadEditDrawer } from '@/components/pipeline/lead-edit-drawer'
 import { LeadRemarksDrawer } from '@/components/pipeline/lead-remarks-drawer'
@@ -17,18 +13,28 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Card } from '@/components/ui/card'
 import { ColumnFilter } from '@/components/ui/column-filter'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
+import { CaseStage } from '@/generated/prisma/enums'
 import { useAuth } from '@/hooks/use-auth'
 import { usePipelinePage, usePipelineUrlState } from '@/hooks/use-pipeline'
 import type { Lead } from '@/hooks/use-leads'
 import { apiGet } from '@/lib/api-client'
 import { getCaseStageBadgeConfig } from '@/lib/case-stage-labels'
-import { formatLeadAgeSex, resolveLeadHospitalDoctor } from '@/lib/lead-display'
+import { formatLeadAgeSex, resolveLeadCity, resolveLeadHospitalDoctor } from '@/lib/lead-display'
 import { getStatusColor } from '@/lib/lead-status-colors'
 import { getLeadReceiptDate, normalizeLeadStatus, type LeadAgeFilter } from '@/lib/pipeline-lead-buckets'
 import type { PipelineSortDir, PipelineSortField } from '@/lib/pipeline/server-query'
@@ -42,9 +48,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ExternalLink,
-  Search,
   FilePenLine,
+  Menu,
   Pencil,
+  Search,
+  SlidersHorizontal,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -129,6 +137,161 @@ function writeOpenedPipelineLeadIds(nextIds: string[]) {
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100]
 
+type PipelineColumnId =
+  | 'id'
+  | 'leadRef'
+  | 'assignDate'
+  | 'leadDate'
+  | 'patient'
+  | 'month'
+  | 'age'
+  | 'sex'
+  | 'ageSex'
+  | 'circle'
+  | 'city'
+  | 'category'
+  | 'treatment'
+  | 'planningTreatment'
+  | 'profession'
+  | 'tl'
+  | 'bdm'
+  | 'hospital'
+  | 'doctor'
+  | 'status'
+  | 'stage'
+  | 'mop'
+  | 'lastRemarks'
+  | 'newRemarks'
+  | 'followUpDate'
+  | 'subStatus'
+  | 'surgeryDate'
+  | 'healthInsurance'
+  | 'preferredLocation'
+  | 'source'
+  | 'leadSource'
+  | 'createDate'
+  | 'modifyBy'
+  | 'modifyDate'
+  | 'dupCount'
+  | 'recency'
+  | 'bd'
+
+type PipelineColumnDefinition = {
+  id: PipelineColumnId
+  label: string
+  variants?: Array<'bd' | 'team-lead'>
+  defaultVisible: {
+    bd: boolean
+    'team-lead': boolean
+  }
+}
+
+const PIPELINE_VISIBLE_COLUMNS_STORAGE_KEY_PREFIX = 'crm-pipeline-visible-columns'
+
+const PIPELINE_COLUMN_DEFINITIONS: PipelineColumnDefinition[] = [
+  { id: 'id', label: 'id', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'leadRef', label: 'Lead Ref', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'assignDate', label: 'Assign Date', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'leadDate', label: 'Lead Date', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'patient', label: 'Patient Name', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'month', label: 'Month', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'age', label: 'Age', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'sex', label: 'Sex', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'ageSex', label: 'Age/Sex', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'circle', label: 'Circle', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'city', label: 'City', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'category', label: 'Category', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'treatment', label: 'Treatment', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'planningTreatment', label: 'Planning Treatment', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'profession', label: 'Profession', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'tl', label: 'TL', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'bdm', label: 'BDM (Assign)', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'hospital', label: 'Hospital', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'doctor', label: 'Doctor', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'status', label: 'Status', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'stage', label: 'Stage', defaultVisible: { bd: true, 'team-lead': true } },
+  { id: 'mop', label: 'MOP', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'lastRemarks', label: 'Last Remarks', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'newRemarks', label: 'New Remarks', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'followUpDate', label: 'Follow Up Date', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'subStatus', label: 'Sub Status', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'surgeryDate', label: 'Surgery Date', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'healthInsurance', label: 'Health Insurance', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'preferredLocation', label: 'Preferred Location', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'source', label: 'Source', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'leadSource', label: 'Lead Source', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'createDate', label: 'Create Date', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'modifyBy', label: 'Modify By', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'modifyDate', label: 'Modify Date', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'dupCount', label: 'Dupl Count', defaultVisible: { bd: false, 'team-lead': false } },
+  { id: 'recency', label: 'Recency', defaultVisible: { bd: false, 'team-lead': true } },
+  { id: 'bd', label: 'BD', defaultVisible: { bd: false, 'team-lead': true } },
+]
+
+function getPipelineColumnDefinitions(variant: 'bd' | 'team-lead') {
+  return PIPELINE_COLUMN_DEFINITIONS.filter(
+    (column) => !column.variants || column.variants.includes(variant)
+  )
+}
+
+function createInitialVisibleColumns(variant: 'bd' | 'team-lead') {
+  return Object.fromEntries(
+    getPipelineColumnDefinitions(variant).map((column) => [column.id, column.defaultVisible[variant]])
+  ) as Record<PipelineColumnId, boolean>
+}
+
+function readPipelineVisibleColumns(variant: 'bd' | 'team-lead') {
+  const defaults = createInitialVisibleColumns(variant)
+
+  if (typeof window === 'undefined') return defaults
+
+  try {
+    const stored = window.localStorage.getItem(`${PIPELINE_VISIBLE_COLUMNS_STORAGE_KEY_PREFIX}:${variant}`)
+    if (!stored) return defaults
+
+    const parsed = JSON.parse(stored)
+    if (!parsed || typeof parsed !== 'object') return defaults
+
+    const next = { ...defaults }
+    for (const column of getPipelineColumnDefinitions(variant)) {
+      if (typeof parsed[column.id] === 'boolean') {
+        next[column.id] = parsed[column.id]
+      }
+    }
+    return next
+  } catch {
+    return defaults
+  }
+}
+
+function writePipelineVisibleColumns(
+  variant: 'bd' | 'team-lead',
+  nextColumns: Record<PipelineColumnId, boolean>
+) {
+  if (typeof window === 'undefined') return
+
+  try {
+    window.localStorage.setItem(
+      `${PIPELINE_VISIBLE_COLUMNS_STORAGE_KEY_PREFIX}:${variant}`,
+      JSON.stringify(nextColumns)
+    )
+  } catch {
+    // Ignore storage write failures. Column visibility is best-effort only.
+  }
+}
+
+function formatTableDate(value: unknown) {
+  if (!value) return '—'
+  const parsed = new Date(String(value))
+  return Number.isNaN(parsed.getTime()) ? String(value) : format(parsed, 'dd MMM yyyy')
+}
+
+function formatMonthCell(value: unknown) {
+  if (!value) return '—'
+  if (typeof value === 'string') return value.trim() || '—'
+  return formatTableDate(value)
+}
+
 export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) {
   return (
     <Suspense fallback={<PipelinePageFallback variant={variant} />}>
@@ -157,16 +320,28 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const { user } = useAuth()
   useRouter()
 
-  const { state, setState, campaignSelection, setCampaignSelection } = usePipelineUrlState()
+  const { state, setState, campaignSelection } = usePipelineUrlState()
   const { data, isLoading, isFetching } = usePipelinePage()
 
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
   const [remarksLeadId, setRemarksLeadId] = useState<string | null>(null)
   const [openedLeadIds, setOpenedLeadIds] = useState<string[]>(() => readOpenedPipelineLeadIds())
+  const [visibleColumns, setVisibleColumns] = useState<Record<PipelineColumnId, boolean>>(() =>
+    readPipelineVisibleColumns(variant)
+  )
 
   const [searchInput, setSearchInput] = useState(state.q)
   const debouncedSearch = useDebouncedValue(searchInput, 300)
+
+  const availableColumns = useMemo(() => getPipelineColumnDefinitions(variant), [variant])
+  const visibleColumnCount = useMemo(
+    () => availableColumns.filter((column) => visibleColumns[column.id]).length + 3,
+    [availableColumns, visibleColumns]
+  )
+  const isColumnVisible = useCallback(
+    (columnId: PipelineColumnId) => visibleColumns[columnId] === true,
+    [visibleColumns]
+  )
 
   // Column header filters (dropdown-in-header) — client-side, applied on top of
   // whatever page of data the server already returned/filtered/sorted.
@@ -195,12 +370,9 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch])
 
-  const handleGroupByChange = useCallback(
-    (mode: SidebarGroupMode) => {
-      setState({ groupBy: mode, campaign: '', groupValue: '' })
-    },
-    [setState]
-  )
+  useEffect(() => {
+    writePipelineVisibleColumns(variant, visibleColumns)
+  }, [variant, visibleColumns])
 
   const handleSort = useCallback(
     (field: PipelineSortField) => {
@@ -262,7 +434,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     () => uniqueSorted(rawPageLeads.map((l) => (typeof l.category === 'string' ? l.category : ''))),
     [rawPageLeads]
   )
-  // Team-lead only columns
   const ageSexOptions = useMemo(() => uniqueSorted(rawPageLeads.map((l) => formatLeadAgeSex(l))), [rawPageLeads])
   const circleColOptions = useMemo(
     () => uniqueSorted(rawPageLeads.map((l) => normalizedText(l.circle, 'Unknown'))),
@@ -297,18 +468,16 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         cf.stage.includes(l.caseStage ? getCaseStageBadgeConfig(String(l.caseStage))?.label ?? '' : '')
       )
     }
-    if (variant === 'team-lead') {
-      if (cf.ageSex?.length) result = result.filter((l) => cf.ageSex.includes(formatLeadAgeSex(l)))
-      if (cf.circle?.length) result = result.filter((l) => cf.circle.includes(normalizedText(l.circle, 'Unknown')))
-      if (cf.bdm?.length) result = result.filter((l) => cf.bdm.includes(l.plRecord?.bdmName ?? ''))
-      if (cf.hospital?.length)
-        result = result.filter((l) => cf.hospital.includes(resolveLeadHospitalDoctor(l).hospital ?? ''))
-      if (cf.doctor?.length) result = result.filter((l) => cf.doctor.includes(resolveLeadHospitalDoctor(l).doctor ?? ''))
-      if (cf.bd?.length) result = result.filter((l) => cf.bd.includes(l.bd?.name ?? ''))
-    }
+    if (cf.ageSex?.length) result = result.filter((l) => cf.ageSex.includes(formatLeadAgeSex(l)))
+    if (cf.circle?.length) result = result.filter((l) => cf.circle.includes(normalizedText(l.circle, 'Unknown')))
+    if (cf.bdm?.length) result = result.filter((l) => cf.bdm.includes(l.plRecord?.bdmName ?? ''))
+    if (cf.hospital?.length)
+      result = result.filter((l) => cf.hospital.includes(resolveLeadHospitalDoctor(l).hospital ?? ''))
+    if (cf.doctor?.length) result = result.filter((l) => cf.doctor.includes(resolveLeadHospitalDoctor(l).doctor ?? ''))
+    if (cf.bd?.length) result = result.filter((l) => cf.bd.includes(l.bd?.name ?? ''))
 
     return result
-  }, [rawPageLeads, columnFilters, variant])
+  }, [rawPageLeads, columnFilters])
 
   const noteCountKey = useMemo(() => [...tableRows.map((l) => l.id)].sort().join(','), [tableRows])
 
@@ -368,8 +537,6 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const title = variant === 'bd' ? 'Pipeline' : 'Team pipeline'
   const subtitle =
     variant === 'bd' ? 'Campaigns, status breakdown, and all your leads' : 'Your team\u2019s leads by campaign and status'
-
-  const colCount = variant === 'team-lead' ? 16 : 9
 
   const total = data?.total ?? 0
   const page = data?.page ?? state.page
@@ -610,6 +777,33 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       &middot; filters apply on top of campaign + status card
                     </p>
                   </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button type="button" variant="outline" size="sm" className="gap-2">
+                        <SlidersHorizontal className="h-4 w-4" />
+                        Columns
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="max-h-[380px] w-64 overflow-y-auto">
+                      <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {availableColumns.map((column) => (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          checked={visibleColumns[column.id]}
+                          onSelect={(event) => event.preventDefault()}
+                          onCheckedChange={(checked) =>
+                            setVisibleColumns((current) => ({
+                              ...current,
+                              [column.id]: checked === true,
+                            }))
+                          }
+                        >
+                          {column.label}
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 <div
@@ -623,7 +817,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                       <tbody>
                         {Array.from({ length: 10 }).map((_, i) => (
                           <tr key={i} className="border-b border-border/60">
-                            {Array.from({ length: colCount }).map((__, j) => (
+                            {Array.from({ length: visibleColumnCount }).map((__, j) => (
                               <td key={j} className="px-3 py-2.5">
                                 <Skeleton className="h-4 w-full" />
                               </td>
@@ -637,10 +831,14 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                   ) : (
                     <table className="w-full caption-bottom text-sm">
                       <thead className="sticky top-0 z-10 bg-muted/50 [&_tr]:border-b">
-                        {variant === 'team-lead' ? (
-                          <tr className="border-b transition-colors hover:bg-muted/50">
+                        <tr className="border-b transition-colors hover:bg-muted/50">
+                          <th className="h-10 w-12 px-2 text-left text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            Flow
+                          </th>
+                          {isColumnVisible('id') && <HeaderCell label="id" />}
+                          {isColumnVisible('leadRef') && (
                             <HeaderCell
-                              label="Lead ref"
+                              label="Lead Ref"
                               sortField="leadRef"
                               state={state}
                               onSort={handleSort}
@@ -648,9 +846,14 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               filterOptions={leadRefOptions}
                               onFilterChange={(v) => handleColumnFilterChange('leadRef', v)}
                             />
-                            <HeaderCell label="Date" sortField="date" state={state} onSort={handleSort} />
+                          )}
+                          {isColumnVisible('assignDate') && <HeaderCell label="Assign Date" />}
+                          {isColumnVisible('leadDate') && (
+                            <HeaderCell label="Lead Date" sortField="date" state={state} onSort={handleSort} />
+                          )}
+                          {isColumnVisible('patient') && (
                             <HeaderCell
-                              label="Patient"
+                              label="Patient Name"
                               sortField="patient"
                               state={state}
                               onSort={handleSort}
@@ -658,48 +861,71 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               filterOptions={patientOptions}
                               onFilterChange={(v) => handleColumnFilterChange('patient', v)}
                             />
+                          )}
+                          {isColumnVisible('month') && <HeaderCell label="Month" />}
+                          {isColumnVisible('age') && <HeaderCell label="Age" />}
+                          {isColumnVisible('sex') && <HeaderCell label="Sex" />}
+                          {isColumnVisible('ageSex') && (
                             <HeaderCell
                               label="Age/Sex"
                               filterValue={columnFilters.ageSex}
                               filterOptions={ageSexOptions}
                               onFilterChange={(v) => handleColumnFilterChange('ageSex', v)}
                             />
+                          )}
+                          {isColumnVisible('circle') && (
                             <HeaderCell
                               label="Circle"
                               filterValue={columnFilters.circle}
                               filterOptions={circleColOptions}
                               onFilterChange={(v) => handleColumnFilterChange('circle', v)}
                             />
-                            <HeaderCell
-                              label="Treatment"
-                              filterValue={columnFilters.treatment}
-                              filterOptions={treatmentOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('treatment', v)}
-                            />
-                            <HeaderCell
-                              label="BDM"
-                              filterValue={columnFilters.bdm}
-                              filterOptions={bdmOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('bdm', v)}
-                            />
-                            <HeaderCell
-                              label="Hospital"
-                              filterValue={columnFilters.hospital}
-                              filterOptions={hospitalOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('hospital', v)}
-                            />
-                            <HeaderCell
-                              label="Doctor"
-                              filterValue={columnFilters.doctor}
-                              filterOptions={doctorOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('doctor', v)}
-                            />
+                          )}
+                          {isColumnVisible('city') && <HeaderCell label="City" />}
+                          {isColumnVisible('category') && (
                             <HeaderCell
                               label="Category"
                               filterValue={columnFilters.category}
                               filterOptions={categoryColOptions}
                               onFilterChange={(v) => handleColumnFilterChange('category', v)}
                             />
+                          )}
+                          {isColumnVisible('treatment') && (
+                            <HeaderCell
+                              label="Treatment"
+                              filterValue={columnFilters.treatment}
+                              filterOptions={treatmentOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('treatment', v)}
+                            />
+                          )}
+                          {isColumnVisible('planningTreatment') && <HeaderCell label="Planning Treatment" />}
+                          {isColumnVisible('profession') && <HeaderCell label="Profession" />}
+                          {isColumnVisible('tl') && <HeaderCell label="TL" />}
+                          {isColumnVisible('bdm') && (
+                            <HeaderCell
+                              label="BDM (Assign)"
+                              filterValue={columnFilters.bdm}
+                              filterOptions={bdmOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('bdm', v)}
+                            />
+                          )}
+                          {isColumnVisible('hospital') && (
+                            <HeaderCell
+                              label="Hospital"
+                              filterValue={columnFilters.hospital}
+                              filterOptions={hospitalOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('hospital', v)}
+                            />
+                          )}
+                          {isColumnVisible('doctor') && (
+                            <HeaderCell
+                              label="Doctor"
+                              filterValue={columnFilters.doctor}
+                              filterOptions={doctorOptions}
+                              onFilterChange={(v) => handleColumnFilterChange('doctor', v)}
+                            />
+                          )}
+                          {isColumnVisible('status') && (
                             <HeaderCell
                               label="Status"
                               sortField="status"
@@ -709,13 +935,31 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               filterOptions={statusOptions}
                               onFilterChange={(v) => handleColumnFilterChange('status', v)}
                             />
+                          )}
+                          {isColumnVisible('stage') && (
                             <HeaderCell
                               label="Stage"
                               filterValue={columnFilters.stage}
                               filterOptions={stageOptions}
                               onFilterChange={(v) => handleColumnFilterChange('stage', v)}
                             />
-                            <HeaderCell label="Recency" />
+                          )}
+                          {isColumnVisible('mop') && <HeaderCell label="MOP" />}
+                          {isColumnVisible('lastRemarks') && <HeaderCell label="Last Remarks" />}
+                          {isColumnVisible('newRemarks') && <HeaderCell label="New Remarks" />}
+                          {isColumnVisible('followUpDate') && <HeaderCell label="Follow Up Date" />}
+                          {isColumnVisible('subStatus') && <HeaderCell label="Sub Status" />}
+                          {isColumnVisible('surgeryDate') && <HeaderCell label="Surgery Date" />}
+                          {isColumnVisible('healthInsurance') && <HeaderCell label="Health Insurance" />}
+                          {isColumnVisible('preferredLocation') && <HeaderCell label="Preferred Location" />}
+                          {isColumnVisible('source') && <HeaderCell label="Source" />}
+                          {isColumnVisible('leadSource') && <HeaderCell label="Lead Source" />}
+                          {isColumnVisible('createDate') && <HeaderCell label="Create Date" />}
+                          {isColumnVisible('modifyBy') && <HeaderCell label="Modify By" />}
+                          {isColumnVisible('modifyDate') && <HeaderCell label="Modify Date" />}
+                          {isColumnVisible('dupCount') && <HeaderCell label="Dupl Count" />}
+                          {isColumnVisible('recency') && <HeaderCell label="Recency" />}
+                          {isColumnVisible('bd') && (
                             <HeaderCell
                               label="BD"
                               sortField="bd"
@@ -725,79 +969,25 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                               filterOptions={bdNameOptions}
                               onFilterChange={(v) => handleColumnFilterChange('bd', v)}
                             />
-                            <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                              Notes
-                            </th>
-                            <th className="h-10 w-[132px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
-                          </tr>
-                        ) : (
-                          <tr className="border-b transition-colors hover:bg-muted/50">
-                            <HeaderCell
-                              label="Lead ref"
-                              sortField="leadRef"
-                              state={state}
-                              onSort={handleSort}
-                              filterValue={columnFilters.leadRef}
-                              filterOptions={leadRefOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('leadRef', v)}
-                            />
-                            <HeaderCell
-                              label="Patient"
-                              sortField="patient"
-                              state={state}
-                              onSort={handleSort}
-                              filterValue={columnFilters.patient}
-                              filterOptions={patientOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('patient', v)}
-                            />
-                            <HeaderCell
-                              label="Treatment"
-                              filterValue={columnFilters.treatment}
-                              filterOptions={treatmentOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('treatment', v)}
-                            />
-                            <HeaderCell
-                              label="Category"
-                              filterValue={columnFilters.category}
-                              filterOptions={categoryColOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('category', v)}
-                            />
-                            <HeaderCell label="Age" />
-                            <HeaderCell
-                              label="Status"
-                              sortField="status"
-                              state={state}
-                              onSort={handleSort}
-                              filterValue={columnFilters.status}
-                              filterOptions={statusOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('status', v)}
-                            />
-                            <HeaderCell
-                              label="Stage"
-                              filterValue={columnFilters.stage}
-                              filterOptions={stageOptions}
-                              onFilterChange={(v) => handleColumnFilterChange('stage', v)}
-                            />
-                            <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                              Notes
-                            </th>
-                            <th className="h-10 w-[132px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
-                          </tr>
-                        )}
+                          )}
+                          <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                            Notes
+                          </th>
+                          <th className="h-10 w-[132px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
+                        </tr>
                       </thead>
                       <tbody>
                         {tableRows.map((lead) => (
                           <PipelineRow
                             key={lead.id}
                             lead={lead}
-                            variant={variant}
                             noteCount={noteCounts[lead.id]}
                             onClick={handleRowClick}
                             onEdit={handleEditLead}
                             onEditRemarks={handleEditRemarks}
                             onMarkOpened={markLeadOpened}
                             isOpened={openedLeadIds.includes(lead.id)}
-
+                            visibleColumns={visibleColumns}
                           />
                         ))}
                       </tbody>
@@ -880,6 +1070,126 @@ function getLatestRemarkPreview(lead: Lead) {
   return trimmed.length > 0 ? trimmed : 'No remarks yet.'
 }
 
+type PipelineCaseAction = {
+  id: 'opd-schedule' | 'card-upload' | 'pre-auth-raised' | 'ipd-schedule'
+  label: string
+  href: string
+}
+
+function normalizeModeOfPaymentKey(value: unknown) {
+  if (typeof value !== 'string') return null
+  const normalized = value.trim().toLowerCase()
+  return normalized.length > 0 ? normalized : null
+}
+
+function isInsuranceModeOfPayment(modeOfPayment: unknown) {
+  const normalized = normalizeModeOfPaymentKey(modeOfPayment)
+  return normalized === 'cashless' || normalized === 'reimbursement'
+}
+
+function isCashModeOfPayment(modeOfPayment: unknown) {
+  const normalized = normalizeModeOfPaymentKey(modeOfPayment)
+  return normalized === 'cash' || normalized === 'emi'
+}
+
+function canShowPipelineOpdSchedule(lead: Lead) {
+  if (!lead.caseStage) return false
+
+  if (lead.flowType === 'CASH') {
+    return [
+      CaseStage.CASH_IPD_PENDING,
+      CaseStage.CASH_IPD_SUBMITTED,
+      CaseStage.CASH_ON_HOLD,
+      CaseStage.CASH_APPROVED,
+    ].includes(lead.caseStage)
+  }
+
+  return [
+    CaseStage.KYP_BASIC_COMPLETE,
+    CaseStage.HOSPITALS_SUGGESTED,
+    CaseStage.PREAUTH_RAISED,
+    CaseStage.PREAUTH_COMPLETE,
+    CaseStage.INITIATED,
+    CaseStage.ADMITTED,
+    CaseStage.IPD_DONE,
+    CaseStage.DISCHARGED,
+    CaseStage.PL_PENDING,
+    CaseStage.OUTSTANDING,
+  ].includes(lead.caseStage)
+}
+
+function canShowPipelineCardUpload(lead: Lead) {
+  if (!lead.caseStage || lead.flowType === 'CASH') return false
+  return [CaseStage.NEW_LEAD, CaseStage.KYP_BASIC_PENDING, CaseStage.KYP_BASIC_COMPLETE].includes(lead.caseStage)
+}
+
+function canShowPipelinePreAuthRaised(lead: Lead) {
+  return lead.flowType !== 'CASH' && lead.caseStage === CaseStage.HOSPITALS_SUGGESTED
+}
+
+function canShowPipelineIpdSchedule(lead: Lead) {
+  if (!lead.caseStage) return false
+
+  if (lead.flowType === 'CASH') {
+    return [
+      CaseStage.CASH_IPD_PENDING,
+      CaseStage.CASH_IPD_SUBMITTED,
+      CaseStage.CASH_ON_HOLD,
+      CaseStage.CASH_APPROVED,
+    ].includes(lead.caseStage)
+  }
+
+  return [CaseStage.PREAUTH_COMPLETE, CaseStage.INITIATED, CaseStage.ADMITTED].includes(lead.caseStage)
+}
+
+function getPipelineIpdScheduleHref(lead: Lead) {
+  return lead.flowType === 'CASH'
+    ? `/patient/${lead.id}?action=ipd-cash`
+    : `/patient/${lead.id}?action=ipd-schedule`
+}
+
+function getPipelineCaseActions(lead: Lead): PipelineCaseAction[] {
+  const actions: PipelineCaseAction[] = []
+  const showInsuranceActions = isInsuranceModeOfPayment(lead.modeOfPayment)
+  const showCashActions = isCashModeOfPayment(lead.modeOfPayment)
+
+  if (canShowPipelineOpdSchedule(lead) && (showInsuranceActions || showCashActions)) {
+    actions.push({
+      id: 'opd-schedule',
+      label: 'OPD Schedule',
+      href: `/patient/${lead.id}`,
+    })
+  }
+
+  if (showInsuranceActions) {
+    if (canShowPipelineCardUpload(lead)) {
+      actions.push({
+        id: 'card-upload',
+        label: 'Card Upload',
+        href: `/patient/${lead.id}/kyp/basic`,
+      })
+    }
+
+    if (canShowPipelinePreAuthRaised(lead)) {
+      actions.push({
+        id: 'pre-auth-raised',
+        label: 'Pre-Auth Raised',
+        href: `/patient/${lead.id}/raise-preauth`,
+      })
+    }
+  }
+
+  if (canShowPipelineIpdSchedule(lead) && (showInsuranceActions || showCashActions)) {
+    actions.push({
+      id: 'ipd-schedule',
+      label: 'IPD Schedule',
+      href: getPipelineIpdScheduleHref(lead),
+    })
+  }
+
+  return actions
+}
+
 
 /**
  * Unified header cell: optional sort button + optional column filter dropdown,
@@ -942,22 +1252,22 @@ function HeaderCell({
 
 const PipelineRow = memo(function PipelineRow({
   lead,
-  variant,
   noteCount,
   onClick,
   onEdit,
   onEditRemarks,
   onMarkOpened,
   isOpened,
+  visibleColumns,
 }: {
   lead: Lead
-  variant: 'bd' | 'team-lead'
   noteCount?: number
   onClick: (id: string) => void
   onEdit: (id: string) => void
   onEditRemarks: (id: string) => void
   onMarkOpened: (id: string) => void
   isOpened: boolean
+  visibleColumns: Record<PipelineColumnId, boolean>
 }) {
   const stage = lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage)) : null
   const st = normalizeLeadStatus(lead.status)
@@ -967,115 +1277,28 @@ const PipelineRow = memo(function PipelineRow({
     : `${sc.bg} ${sc.text}`
   const latestRemarkPreview = getLatestRemarkPreview(lead)
   const patientName = typeof lead.patientName === 'string' ? lead.patientName : '—'
-
-  if (variant === 'team-lead') {
-    const receipt = getLeadReceiptDate(lead)
-    const dateStr = receipt ? format(receipt, 'MMM d, yyyy') : '—'
-    const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
-    return (
-      <tr
-        className={cn(
-          'cursor-pointer border-b border-border/60 transition-colors',
-          isOpened
-            ? 'bg-primary/8 hover:bg-primary/12 dark:bg-primary/10 dark:hover:bg-primary/16'
-            : 'hover:bg-muted/50'
-        )}
-        onClick={() => onClick(lead.id)}
-      >
-        <td className="px-3 py-2 font-medium">
-          <div className="flex items-center gap-0.5">
-            <span className="truncate max-w-[120px] sm:max-w-[160px]" title={String(lead.leadRef)}>
-              {lead.leadRef}
-            </span>
-            {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
-          </div>
-        </td>
-        <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">{dateStr}</td>
-        <td className="max-w-[140px] truncate px-3 py-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="inline-block max-w-[140px] truncate align-bottom">{patientName}</span>
-            </TooltipTrigger>
-            <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
-              {latestRemarkPreview}
-            </TooltipContent>
-          </Tooltip>
-        </td>
-        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatLeadAgeSex(lead)}</td>
-        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{normalizedText(lead.circle, '—')}</td>
-        <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{typeof lead.treatment === 'string' ? lead.treatment : '—'}</td>
-        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{(lead.plRecord?.bdmName ?? '').trim() || '—'}</td>
-        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{hospital || '—'}</td>
-        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>
-        <td className="px-3 py-2">{typeof lead.category === 'string' ? lead.category : '—'}</td>
-        <td className="px-3 py-2">
-          <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${statusClass}`}>{st}</span>
-        </td>
-        <td className="px-3 py-2">
-          {stage ? (
-            <Badge variant="secondary" className={`text-[11px] ${stage.className}`}>
-              {stage.label}
-            </Badge>
-          ) : (
-            '—'
-          )}
-        </td>
-        <td className="px-3 py-2">
-          <LeadAgeBadge lead={lead} />
-        </td>
-        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>
-        <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
-          <div className="flex justify-center">
-            <CallNotesPopover leadId={lead.id} onRowClickStop noteCount={noteCount} />
-          </div>
-        </td>
-        <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
-          <div className="flex items-center justify-end gap-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => onEditRemarks(lead.id)}
-                  aria-label="Edit remarks"
-                >
-                  <FilePenLine className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
-                {latestRemarkPreview}
-              </TooltipContent>
-            </Tooltip>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 gap-1 px-2"
-              onClick={() => onEdit(lead.id)}
-            >
-              <Pencil className="h-4 w-4" />
-              Edit
-            </Button>
-            <LeadQrPopover
-              leadId={lead.id}
-              phoneNumber={lead.phoneNumber ?? ''}
-              patientName={patientName}
-              allowServerSidePhoneLookup
-            />
-            <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-              <Link
-                href={`/patient/${lead.id}`}
-                aria-label="Open lead"
-                onClick={() => onMarkOpened(lead.id)}
-              >
-                <ExternalLink className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </td>
-      </tr>
-    )
-  }
+  const receipt = getLeadReceiptDate(lead)
+  const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
+  const preferredLocation = resolveLeadCity(lead) ?? normalizedText(lead.circle, '—')
+  const leadRefText = typeof lead.leadRef === 'string' || typeof lead.leadRef === 'number' ? String(lead.leadRef) : '—'
+  const lastRemarksText = typeof lead.remarks === 'string' && lead.remarks.trim().length > 0 ? lead.remarks.trim() : '—'
+  const newRemarksText =
+    typeof lead.latestRemark?.content === 'string' && lead.latestRemark.content.trim().length > 0
+      ? lead.latestRemark.content.trim()
+      : '—'
+  const planningTreatmentText =
+    typeof lead.diseaseDetails === 'string' && lead.diseaseDetails.trim().length > 0
+      ? lead.diseaseDetails.trim()
+      : '—'
+  const caseActions = getPipelineCaseActions(lead)
+  const teamLeadText =
+    (typeof lead.plRecord?.managerName === 'string' && lead.plRecord.managerName.trim()) ||
+    (lead.teamLeadId != null ? String(lead.teamLeadId) : '—')
+  const bdmText =
+    typeof lead.plRecord?.bdmName === 'string' && lead.plRecord.bdmName.trim().length > 0
+      ? lead.plRecord.bdmName.trim()
+      : '—'
+  const show = (columnId: PipelineColumnId) => visibleColumns[columnId] === true
 
   return (
     <tr
@@ -1087,41 +1310,168 @@ const PipelineRow = memo(function PipelineRow({
       )}
       onClick={() => onClick(lead.id)}
     >
-      <td className="px-3 py-2 font-medium">
-        <div className="flex items-center gap-0.5">
-          <span className="truncate max-w-[120px] sm:max-w-[160px]" title={String(lead.leadRef)}>
-            {lead.leadRef}
-          </span>
-          {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
-        </div>
+      <td className="px-2 py-2" onClick={(e) => e.stopPropagation()}>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-md text-muted-foreground hover:text-foreground"
+              aria-label="Open case actions"
+            >
+              <Menu className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-52">
+            <DropdownMenuLabel>Case Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {caseActions.length > 0 ? (
+              caseActions.map((action) => (
+                <DropdownMenuItem key={action.id} asChild>
+                  <Link href={action.href} onClick={() => onMarkOpened(lead.id)}>
+                    {action.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))
+            ) : (
+              <div className="px-2 py-1.5 text-xs text-muted-foreground">
+                No flow actions available yet.
+              </div>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </td>
-      <td className="max-w-[140px] truncate px-3 py-2">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="inline-block max-w-[140px] truncate align-bottom">{patientName}</span>
-          </TooltipTrigger>
-          <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
-            {latestRemarkPreview}
-          </TooltipContent>
-        </Tooltip>
-      </td>
-      <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{typeof lead.treatment === 'string' ? lead.treatment : '—'}</td>
-      <td className="px-3 py-2">{typeof lead.category === 'string' ? lead.category : '—'}</td>
-      <td className="px-3 py-2">
-        <LeadAgeBadge lead={lead} />
-      </td>
-      <td className="px-3 py-2">
-        <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${statusClass}`}>{st}</span>
-      </td>
-      <td className="px-3 py-2">
-        {stage ? (
-          <Badge variant="secondary" className={`text-[11px] ${stage.className}`}>
-            {stage.label}
-          </Badge>
-        ) : (
-          '—'
-        )}
-      </td>
+      {show('id') && <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">{lead.id}</td>}
+      {show('leadRef') && (
+        <td className="px-3 py-2 font-medium">
+          <div className="flex items-center gap-0.5">
+            <span className="truncate max-w-[120px] sm:max-w-[160px]" title={leadRefText}>
+              {leadRefText}
+            </span>
+            {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
+          </div>
+        </td>
+      )}
+      {show('assignDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">
+          {formatTableDate(lead.assignedDate)}
+        </td>
+      )}
+      {show('leadDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">
+          {receipt ? format(receipt, 'dd MMM yyyy') : '—'}
+        </td>
+      )}
+      {show('patient') && (
+        <td className="max-w-[140px] truncate px-3 py-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-block max-w-[140px] truncate align-bottom">{patientName}</span>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+              {latestRemarkPreview}
+            </TooltipContent>
+          </Tooltip>
+        </td>
+      )}
+      {show('month') && <td className="whitespace-nowrap px-3 py-2 text-sm">{formatMonthCell(lead.month)}</td>}
+      {show('age') && <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.age ?? '—'}</td>}
+      {show('sex') && <td className="whitespace-nowrap px-3 py-2 text-sm">{normalizedText(lead.sex, '—')}</td>}
+      {show('ageSex') && <td className="whitespace-nowrap px-3 py-2 text-sm">{formatLeadAgeSex(lead)}</td>}
+      {show('circle') && (
+        <td className="max-w-[100px] truncate px-3 py-2 text-sm">{normalizedText(lead.circle, '—')}</td>
+      )}
+      {show('city') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{resolveLeadCity(lead) ?? '—'}</td>
+      )}
+      {show('category') && <td className="max-w-[120px] truncate px-3 py-2">{normalizedText(lead.category, '—')}</td>}
+      {show('treatment') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{normalizedText(lead.treatment, '—')}</td>
+      )}
+      {show('planningTreatment') && (
+        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={planningTreatmentText}>
+          {planningTreatmentText}
+        </td>
+      )}
+      {show('profession') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.profession, '—')}</td>
+      )}
+      {show('tl') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm" title={teamLeadText}>
+          {teamLeadText}
+        </td>
+      )}
+      {show('bdm') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{bdmText}</td>}
+      {show('hospital') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{hospital || '—'}</td>}
+      {show('doctor') && <td className="max-w-[160px] truncate px-3 py-2 text-sm">{doctor || '—'}</td>}
+      {show('status') && (
+        <td className="px-3 py-2">
+          <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${statusClass}`}>{st}</span>
+        </td>
+      )}
+      {show('stage') && (
+        <td className="px-3 py-2">
+          {stage ? (
+            <Badge variant="secondary" className={`text-[11px] ${stage.className}`}>
+              {stage.label}
+            </Badge>
+          ) : (
+            '—'
+          )}
+        </td>
+      )}
+      {show('mop') && (
+        <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.modeOfPayment, '—')}</td>
+      )}
+      {show('lastRemarks') && (
+        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={lastRemarksText}>
+          {lastRemarksText}
+        </td>
+      )}
+      {show('newRemarks') && (
+        <td className="max-w-[180px] truncate px-3 py-2 text-sm" title={newRemarksText}>
+          {newRemarksText}
+        </td>
+      )}
+      {show('followUpDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.followUpDate)}</td>
+      )}
+      {show('subStatus') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.subStatus != null ? String(lead.subStatus) : '—'}</td>
+      )}
+      {show('surgeryDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.surgeryDate)}</td>
+      )}
+      {show('healthInsurance') && (
+        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{normalizedText(lead.insuranceName, '—')}</td>
+      )}
+      {show('preferredLocation') && (
+        <td className="max-w-[160px] truncate px-3 py-2 text-sm">{preferredLocation}</td>
+      )}
+      {show('source') && <td className="max-w-[120px] truncate px-3 py-2 text-sm">{normalizedText(lead.source, '—')}</td>}
+      {show('leadSource') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">
+          {lead.leadSource != null && String(lead.leadSource).trim().length > 0 ? String(lead.leadSource) : '—'}
+        </td>
+      )}
+      {show('createDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.createdDate)}</td>
+      )}
+      {show('modifyBy') && (
+        <td className="max-w-[140px] truncate px-3 py-2 text-sm">{lead.updatedBy?.name ?? '—'}</td>
+      )}
+      {show('modifyDate') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{formatTableDate(lead.updatedDate)}</td>
+      )}
+      {show('dupCount') && (
+        <td className="whitespace-nowrap px-3 py-2 text-sm">{lead.duplCount != null ? String(lead.duplCount) : '0'}</td>
+      )}
+      {show('recency') && (
+        <td className="px-3 py-2">
+          <LeadAgeBadge lead={lead} />
+        </td>
+      )}
+      {show('bd') && <td className="max-w-[100px] truncate px-3 py-2 text-sm">{lead.bd?.name ?? '—'}</td>}
       <td className="px-3 py-2 text-center" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-center">
           <CallNotesPopover leadId={lead.id} onRowClickStop noteCount={noteCount} />
@@ -1134,9 +1484,9 @@ const PipelineRow = memo(function PipelineRow({
               <Button
                 variant="ghost"
                 size="icon"
-              className="h-8 w-8"
-              onClick={() => onEditRemarks(lead.id)}
-              aria-label="Edit remarks"
+                className="h-8 w-8"
+                onClick={() => onEditRemarks(lead.id)}
+                aria-label="Edit remarks"
               >
                 <FilePenLine className="h-4 w-4" />
               </Button>

@@ -3,13 +3,18 @@ import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
 import { logCrmActivity } from '@/lib/crm-activity'
 import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
-import { isStatusRequiringAgeSex, isStatusRequiringFollowUpDate } from '@/lib/lead-status-rules'
+import {
+  isStatusRequiringAgeSex,
+  isStatusRequiringFollowUpDate,
+  isStatusRequiringModeOfPayment,
+} from '@/lib/lead-status-rules'
 import {
   buildLeadOwnershipTransferUpdate,
   canUserAddLeadRemarks,
@@ -403,8 +408,9 @@ export async function PATCH(
     const assigneeChanged = body.bdId !== undefined && body.bdId !== lead.bdId
     const leadProfileChanged =
       (body.patientName !== undefined && body.patientName !== lead.patientName) ||
-      (body.treatment !== undefined && body.treatment !== lead.treatment) ||
-      (body.diseaseDetails !== undefined && body.diseaseDetails !== lead.diseaseDetails)
+      (body.whatsapp !== undefined && body.whatsapp !== lead.whatsapp) ||
+      (body.surgeryDate !== undefined &&
+        body.surgeryDate !== (lead.surgeryDate ? lead.surgeryDate.toISOString().slice(0, 10) : null))
     const remarksChanged = requestedRemarks !== undefined && requestedRemarks !== currentRemarks
     const remarksRemoved = remarksChanged && requestedRemarks === null && currentRemarks !== null
     const churnStatusTriggered = statusChanged && isChurnTriggerStatus(requestedStatus)
@@ -428,7 +434,7 @@ export async function PATCH(
 
     if (leadProfileChanged && !(await canUserEditLeadProfile(user, lead.bdId))) {
       return errorResponse(
-        'You do not have permission to edit patient name, disease, or treatment for this lead',
+        'You do not have permission to edit patient name, WhatsApp, or surgery date for this lead',
         403
       )
     }
@@ -453,6 +459,20 @@ export async function PATCH(
       return errorResponse('Patient name is required', 400)
     }
 
+    if (body.age !== undefined && body.age !== null && body.age !== '') {
+      const parsedAge = Number(body.age)
+      if (!Number.isFinite(parsedAge) || parsedAge < 0) {
+        return errorResponse('Age must be a valid number', 400)
+      }
+    }
+
+    if (body.sex !== undefined && body.sex !== null && body.sex !== '') {
+      const normalizedSex = normalizeLeadSexValue(String(body.sex))
+      if (!normalizedSex) {
+        return errorResponse('Sex must be Male, Female, or Other', 400)
+      }
+    }
+
     if (parsedFollowUpDateInput.value === 'invalid') {
       return errorResponse('Follow-up date is invalid', 400)
     }
@@ -465,13 +485,17 @@ export async function PATCH(
       return errorResponse('Remark must be 4000 characters or less', 400)
     }
 
+    const nextFollowUpDate = parsedFollowUpDateInput.provided
+      ? parsedFollowUpDateInput.value
+      : lead.followUpDate
+
     if (
       crmEditFollowUpValidation &&
       statusChanged &&
       isStatusRequiringFollowUpDate(requestedStatus) &&
-      !parsedFollowUpDateInput.value
+      !nextFollowUpDate
     ) {
-      return errorResponse('Follow-up date is required for DNP and follow-up statuses', 400)
+      return errorResponse('Follow-up date is required for follow-up and DNP statuses', 400)
     }
 
     if (crmEditFollowUpValidation && statusChanged && isStatusRequiringAgeSex(requestedStatus)) {
@@ -484,16 +508,33 @@ export async function PATCH(
       const nextSex =
         body.sex !== undefined
           ? typeof body.sex === 'string'
-            ? body.sex.trim() || null
+            ? normalizeLeadSexValue(body.sex) || null
             : body.sex
-          : lead.sex
+          : normalizeLeadSexValue(lead.sex)
 
       if (!Number.isFinite(nextAge) || Number(nextAge) <= 0) {
-        return errorResponse('Age is required for follow-up and DNP statuses', 400)
+        return errorResponse('Age is required for Follow-up and Follow-up 1-5 statuses', 400)
       }
 
       if (typeof nextSex !== 'string' || nextSex.trim().length === 0) {
-        return errorResponse('Sex is required for follow-up and DNP statuses', 400)
+        return errorResponse('Sex is required for Follow-up and Follow-up 1-5 statuses', 400)
+      }
+    }
+
+    if (
+      crmEditFollowUpValidation &&
+      statusChanged &&
+      isStatusRequiringModeOfPayment(requestedStatus)
+    ) {
+      const nextModeOfPayment =
+        body.modeOfPayment !== undefined
+          ? typeof body.modeOfPayment === 'string'
+            ? body.modeOfPayment.trim() || null
+            : body.modeOfPayment
+          : lead.modeOfPayment
+
+      if (typeof nextModeOfPayment !== 'string' || nextModeOfPayment.trim().length === 0) {
+        return errorResponse('Mode of payment is required for Follow-up and Follow-up 1-5 statuses', 400)
       }
     }
 
@@ -536,6 +577,7 @@ export async function PATCH(
       'sex',
       'phoneNumber',
       'alternateNumber',
+      'whatsapp',
       'attendantName',
       'bdId',
       'circle',
@@ -584,24 +626,39 @@ export async function PATCH(
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
-        if (
+        let nextValue = body[field]
+
+        if (field === 'age' && (body[field] === null || body[field] === '')) {
+          continue
+        }
+
+        if (field === 'sex' && typeof body[field] === 'string' && body[field].trim() === '') {
+          continue
+        }
+
+        if (field === 'surgeryDate') {
+          nextValue = body[field] ? new Date(String(body[field])) : null
+        } else if (field === 'sex' && typeof body[field] === 'string') {
+          nextValue = normalizeLeadSexValue(body[field]) || body[field]
+        } else if (
           (field === 'patientName' ||
-            field === 'treatment' ||
-            field === 'diseaseDetails' ||
+            field === 'whatsapp' ||
             field === 'status' ||
             field === 'remarks') &&
           typeof body[field] === 'string'
         ) {
           const trimmed = body[field].trim()
-          ;(updateData as any)[field] = field === 'remarks' ? trimmed || null : trimmed
+          nextValue = field === 'remarks' ? trimmed || null : trimmed
         } else {
-          (updateData as any)[field] = body[field]
+          nextValue = body[field]
         }
+
         // Restrict deleting phone numbers
         if ((field === 'phoneNumber' || field === 'alternateNumber') && (body[field] === null || (typeof body[field] === 'string' && body[field].trim() === ''))) {
           continue
         }
-        (updateData as any)[field] = body[field]
+
+        ;(updateData as any)[field] = nextValue
       }
     }
 
@@ -769,10 +826,10 @@ export async function PATCH(
             ...leadActivityMetadata,
             previousPatientName: lead.patientName,
             nextPatientName: updatedLead.patientName,
-            previousTreatment: lead.treatment,
-            nextTreatment: updatedLead.treatment,
-            previousDiseaseDetails: lead.diseaseDetails,
-            nextDiseaseDetails: updatedLead.diseaseDetails,
+            previousWhatsapp: lead.whatsapp,
+            nextWhatsapp: updatedLead.whatsapp,
+            previousSurgeryDate: lead.surgeryDate,
+            nextSurgeryDate: updatedLead.surgeryDate,
           },
         })
       )

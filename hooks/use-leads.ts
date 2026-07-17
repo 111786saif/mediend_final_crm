@@ -35,24 +35,33 @@ export interface Lead {
   circle?: string | null
   hospitalName?: string
   treatment?: string
+  diseaseDetails?: string | null
   remarks?: string
   status?: string
   pipelineStage?: string
   caseStage?: CaseStage
   leadRef?: string
   insuranceName?: string
+  modeOfPayment?: string | null
   tpa?: string
   sumInsured?: number
   flowType?: 'INSURANCE' | 'CASH'
   netProfit?: number
   surgeryDate?: string | Date | null
   source?: string
+  leadSource?: number | string | null
   bdId?: string
   createdDate?: string | Date
   updatedDate?: string | Date
   leadEntryDate?: string | Date | null
   assignedDate?: string | Date | null
+  followUpDate?: string | Date | null
   campaignName?: string | null
+  month?: string | Date | null
+  profession?: string | null
+  subStatus?: number | null
+  teamLeadId?: number | null
+  duplCount?: number | null
   latestRemark?: {
     id: string
     content: string
@@ -67,8 +76,13 @@ export interface Lead {
     name: string
     email: string
   }
+  updatedBy?: {
+    id: string
+    name: string | null
+  } | null
   kypSubmission?: {
     id: string
+    location?: string | null
     status?: string
     updatedAt?: string | Date
     preAuthData?: {
