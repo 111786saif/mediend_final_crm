@@ -51,7 +51,7 @@ export function PipelineStatusCards({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
         {Array.from({ length: 8 }).map((_, i) => (
           <Skeleton key={i} className="h-[96px] rounded-xl" />
         ))}
@@ -60,7 +60,7 @@ export function PipelineStatusCards({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
+    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
       <button
         type="button"
         onClick={() => onSelect('all')}

@@ -58,3 +58,4 @@ public/swe-worker-*.js
 !/public/uploads/.gitkeep
 
 /generated
+/docs/

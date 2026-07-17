@@ -7,8 +7,11 @@ import {
   type SidebarGroupMode,
 } from '@/components/pipeline/campaign-sidebar'
 import { CopyLeadRefButton } from '@/components/pipeline/copy-lead-ref-button'
+import { LeadEditDrawer } from '@/components/pipeline/lead-edit-drawer'
+import { LeadRemarksDrawer } from '@/components/pipeline/lead-remarks-drawer'
 import { LeadAgeBadge } from '@/components/pipeline/lead-age-badge'
 import { PipelineStatusCards } from '@/components/pipeline/pipeline-status-cards'
+import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -18,6 +21,7 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAuth } from '@/hooks/use-auth'
 import { usePipelinePage, usePipelineUrlState } from '@/hooks/use-pipeline'
@@ -39,8 +43,11 @@ import {
   ChevronRight,
   ExternalLink,
   Search,
+  FilePenLine,
+  Pencil,
 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useMemo, useState, memo } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -93,6 +100,33 @@ function normalizedText(value: unknown, fallback: string): string {
   return (trimmed || fallback).replace(/\s+/g, ' ')
 }
 
+const OPENED_PIPELINE_LEADS_STORAGE_KEY = 'crm-pipeline-opened-leads'
+
+function readOpenedPipelineLeadIds() {
+  if (typeof window === 'undefined') return []
+
+  try {
+    const stored = window.localStorage.getItem(OPENED_PIPELINE_LEADS_STORAGE_KEY)
+    if (!stored) return []
+    const parsed = JSON.parse(stored)
+    return Array.isArray(parsed)
+      ? parsed.filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      : []
+  } catch {
+    return []
+  }
+}
+
+function writeOpenedPipelineLeadIds(nextIds: string[]) {
+  if (typeof window === 'undefined') return
+
+  try {
+    window.localStorage.setItem(OPENED_PIPELINE_LEADS_STORAGE_KEY, JSON.stringify(nextIds))
+  } catch {
+    // Ignore storage write failures. The UI highlight is best-effort only.
+  }
+}
+
 const PAGE_SIZE_OPTIONS = [20, 50, 100]
 
 export function SalesPipelinePage({ variant }: { variant: 'bd' | 'team-lead' }) {
@@ -121,11 +155,16 @@ function PipelinePageFallback({ variant }: { variant: 'bd' | 'team-lead' }) {
 
 function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const { user } = useAuth()
+  useRouter()
 
   const { state, setState, campaignSelection, setCampaignSelection } = usePipelineUrlState()
   const { data, isLoading, isFetching } = usePipelinePage()
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [editingLeadId, setEditingLeadId] = useState<string | null>(null)
+  const [remarksLeadId, setRemarksLeadId] = useState<string | null>(null)
+  const [openedLeadIds, setOpenedLeadIds] = useState<string[]>(() => readOpenedPipelineLeadIds())
+
   const [searchInput, setSearchInput] = useState(state.q)
   const debouncedSearch = useDebouncedValue(searchInput, 300)
 
@@ -142,7 +181,11 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
   const clearColumnFilters = useCallback(() => setColumnFilters({}), [])
 
   useEffect(() => {
-    setSearchInput(state.q)
+    const id = window.setTimeout(() => {
+      setSearchInput(state.q)
+    }, 0)
+
+    return () => window.clearTimeout(id)
   }, [state.q])
 
   useEffect(() => {
@@ -277,8 +320,49 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
     placeholderData: (prev) => prev,
   })
 
-  const handleRowClick = useCallback((id: string) => {
-    window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
+  const markLeadOpened = useCallback((id: string) => {
+    setOpenedLeadIds((current) => {
+      if (current.includes(id)) return current
+      const next = [id, ...current].slice(0, 500)
+      writeOpenedPipelineLeadIds(next)
+      return next
+    })
+  }, [])
+
+  const handleRowClick = useCallback(
+    (id: string) => {
+      markLeadOpened(id)
+      // router.push(`/patient/${id}`)
+      window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
+    },
+    [markLeadOpened]
+  )
+
+
+  // const handleRowClick = useCallback((id: string) => {
+  //   window.open(`/patient/${id}`, '_blank', 'noopener,noreferrer')
+  // }, [])
+
+  const handleEditLead = useCallback((id: string) => {
+    markLeadOpened(id)
+    setEditingLeadId(id)
+  }, [markLeadOpened])
+
+  const handleEditRemarks = useCallback((id: string) => {
+    markLeadOpened(id)
+    setRemarksLeadId(id)
+  }, [markLeadOpened])
+
+  const handleEditDrawerChange = useCallback((open: boolean) => {
+    if (!open) {
+      setEditingLeadId(null)
+    }
+  }, [])
+
+  const handleRemarksDrawerChange = useCallback((open: boolean) => {
+    if (!open) {
+      setRemarksLeadId(null)
+    }
   }, [])
 
   const title = variant === 'bd' ? 'Pipeline' : 'Team pipeline'
@@ -322,7 +406,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
         </header>
 
         <div className="flex flex-1 overflow-hidden">
-          <CampaignSidebar
+          {/* <CampaignSidebar
             tree={data?.campaignTree ?? []}
             totalLeads={data?.facetTotal ?? 0}
             groupBy={state.groupBy}
@@ -332,7 +416,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             collapsed={sidebarCollapsed}
             onCollapsedChange={setSidebarCollapsed}
             isLoading={isLoading && !data}
-          />
+          /> */}
 
           <main className="flex-1 overflow-y-auto p-4 md:p-6">
             {targetProgress && (
@@ -644,7 +728,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
-                            <th className="h-10 w-[80px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
+                            <th className="h-10 w-[132px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
                           </tr>
                         ) : (
                           <tr className="border-b transition-colors hover:bg-muted/50">
@@ -697,7 +781,7 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             <th className="h-10 w-[100px] px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
                               Notes
                             </th>
-                            <th className="h-10 w-[80px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
+                            <th className="h-10 w-[132px] px-3 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground" />
                           </tr>
                         )}
                       </thead>
@@ -709,6 +793,11 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
                             variant={variant}
                             noteCount={noteCounts[lead.id]}
                             onClick={handleRowClick}
+                            onEdit={handleEditLead}
+                            onEditRemarks={handleEditRemarks}
+                            onMarkOpened={markLeadOpened}
+                            isOpened={openedLeadIds.includes(lead.id)}
+
                           />
                         ))}
                       </tbody>
@@ -763,10 +852,34 @@ function SalesPipelinePageInner({ variant }: { variant: 'bd' | 'team-lead' }) {
             </Card>
           </main>
         </div>
+        <LeadEditDrawer
+          key={editingLeadId ?? 'lead-edit-drawer'}
+          leadId={editingLeadId}
+          open={editingLeadId !== null}
+          onOpenChange={handleEditDrawerChange}
+        />
+        <LeadRemarksDrawer
+          key={remarksLeadId ?? 'lead-remarks-drawer'}
+          leadId={remarksLeadId}
+          open={remarksLeadId !== null}
+          onOpenChange={handleRemarksDrawerChange}
+        />
       </div>
     </AuthenticatedLayout>
   )
 }
+
+function getLatestRemarkPreview(lead: Lead) {
+  const rawRemark =
+    typeof lead.latestRemark?.content === 'string'
+      ? lead.latestRemark.content
+      : typeof lead.remarks === 'string'
+        ? lead.remarks
+        : ''
+  const trimmed = rawRemark.trim()
+  return trimmed.length > 0 ? trimmed : 'No remarks yet.'
+}
+
 
 /**
  * Unified header cell: optional sort button + optional column filter dropdown,
@@ -832,16 +945,28 @@ const PipelineRow = memo(function PipelineRow({
   variant,
   noteCount,
   onClick,
+  onEdit,
+  onEditRemarks,
+  onMarkOpened,
+  isOpened,
 }: {
   lead: Lead
   variant: 'bd' | 'team-lead'
   noteCount?: number
   onClick: (id: string) => void
+  onEdit: (id: string) => void
+  onEditRemarks: (id: string) => void
+  onMarkOpened: (id: string) => void
+  isOpened: boolean
 }) {
   const stage = lead.caseStage ? getCaseStageBadgeConfig(String(lead.caseStage)) : null
   const st = normalizeLeadStatus(lead.status)
   const sc = getStatusColor(st)
-  const statusClass = `${sc.bg} ${sc.text}`
+  const statusClass = isOpened
+    ? 'bg-primary/18 text-primary ring-1 ring-primary/25 dark:bg-primary/20 dark:text-primary-foreground dark:ring-primary/30'
+    : `${sc.bg} ${sc.text}`
+  const latestRemarkPreview = getLatestRemarkPreview(lead)
+  const patientName = typeof lead.patientName === 'string' ? lead.patientName : '—'
 
   if (variant === 'team-lead') {
     const receipt = getLeadReceiptDate(lead)
@@ -849,7 +974,12 @@ const PipelineRow = memo(function PipelineRow({
     const { hospital, doctor } = resolveLeadHospitalDoctor(lead)
     return (
       <tr
-        className="cursor-pointer border-b border-border/60 transition-colors hover:bg-muted/50"
+        className={cn(
+          'cursor-pointer border-b border-border/60 transition-colors',
+          isOpened
+            ? 'bg-primary/8 hover:bg-primary/12 dark:bg-primary/10 dark:hover:bg-primary/16'
+            : 'hover:bg-muted/50'
+        )}
         onClick={() => onClick(lead.id)}
       >
         <td className="px-3 py-2 font-medium">
@@ -861,7 +991,16 @@ const PipelineRow = memo(function PipelineRow({
           </div>
         </td>
         <td className="whitespace-nowrap px-3 py-2 text-sm text-muted-foreground">{dateStr}</td>
-        <td className="max-w-[140px] truncate px-3 py-2">{typeof lead.patientName === 'string' ? lead.patientName : '—'}</td>
+        <td className="max-w-[140px] truncate px-3 py-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-block max-w-[140px] truncate align-bottom">{patientName}</span>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+              {latestRemarkPreview}
+            </TooltipContent>
+          </Tooltip>
+        </td>
         <td className="whitespace-nowrap px-3 py-2 text-sm">{formatLeadAgeSex(lead)}</td>
         <td className="max-w-[100px] truncate px-3 py-2 text-sm">{normalizedText(lead.circle, '—')}</td>
         <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{typeof lead.treatment === 'string' ? lead.treatment : '—'}</td>
@@ -891,11 +1030,48 @@ const PipelineRow = memo(function PipelineRow({
           </div>
         </td>
         <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
-          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-            <Link href={`/patient/${lead.id}`} aria-label="Open lead">
-              <ExternalLink className="h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="flex items-center justify-end gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => onEditRemarks(lead.id)}
+                  aria-label="Edit remarks"
+                >
+                  <FilePenLine className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+                {latestRemarkPreview}
+              </TooltipContent>
+            </Tooltip>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 gap-1 px-2"
+              onClick={() => onEdit(lead.id)}
+            >
+              <Pencil className="h-4 w-4" />
+              Edit
+            </Button>
+            <LeadQrPopover
+              leadId={lead.id}
+              phoneNumber={lead.phoneNumber ?? ''}
+              patientName={patientName}
+              allowServerSidePhoneLookup
+            />
+            <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+              <Link
+                href={`/patient/${lead.id}`}
+                aria-label="Open lead"
+                onClick={() => onMarkOpened(lead.id)}
+              >
+                <ExternalLink className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </td>
       </tr>
     )
@@ -903,7 +1079,12 @@ const PipelineRow = memo(function PipelineRow({
 
   return (
     <tr
-      className="cursor-pointer border-b border-border/60 transition-colors hover:bg-muted/50"
+      className={cn(
+        'cursor-pointer border-b border-border/60 transition-colors',
+        isOpened
+          ? 'bg-primary/8 hover:bg-primary/12 dark:bg-primary/10 dark:hover:bg-primary/16'
+          : 'hover:bg-muted/50'
+      )}
       onClick={() => onClick(lead.id)}
     >
       <td className="px-3 py-2 font-medium">
@@ -914,7 +1095,16 @@ const PipelineRow = memo(function PipelineRow({
           {lead.leadRef && <CopyLeadRefButton leadRef={String(lead.leadRef)} />}
         </div>
       </td>
-      <td className="max-w-[140px] truncate px-3 py-2">{typeof lead.patientName === 'string' ? lead.patientName : '—'}</td>
+      <td className="max-w-[140px] truncate px-3 py-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-block max-w-[140px] truncate align-bottom">{patientName}</span>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+            {latestRemarkPreview}
+          </TooltipContent>
+        </Tooltip>
+      </td>
       <td className="max-w-[120px] truncate px-3 py-2 text-muted-foreground">{typeof lead.treatment === 'string' ? lead.treatment : '—'}</td>
       <td className="px-3 py-2">{typeof lead.category === 'string' ? lead.category : '—'}</td>
       <td className="px-3 py-2">
@@ -938,11 +1128,48 @@ const PipelineRow = memo(function PipelineRow({
         </div>
       </td>
       <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
-        <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-          <Link href={`/patient/${lead.id}`} aria-label="Open lead">
-            <ExternalLink className="h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="flex items-center justify-end gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+              className="h-8 w-8"
+              onClick={() => onEditRemarks(lead.id)}
+              aria-label="Edit remarks"
+              >
+                <FilePenLine className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-sm whitespace-pre-wrap text-left text-xs leading-5">
+              {latestRemarkPreview}
+            </TooltipContent>
+          </Tooltip>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 gap-1 px-2"
+            onClick={() => onEdit(lead.id)}
+          >
+            <Pencil className="h-4 w-4" />
+            Edit
+          </Button>
+          <LeadQrPopover
+            leadId={lead.id}
+            phoneNumber={lead.phoneNumber ?? ''}
+            patientName={patientName}
+            allowServerSidePhoneLookup
+          />
+          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+            <Link
+              href={`/patient/${lead.id}`}
+              aria-label="Open lead"
+              onClick={() => onMarkOpened(lead.id)}
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
       </td>
     </tr>
   )

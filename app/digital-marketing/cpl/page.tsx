@@ -98,18 +98,25 @@ export default function DailySpendPage() {
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [draftSpend, setDraftSpend] = useState<Record<string, string>>({})
 
-  const { data: accessData, isLoading: accessLoading } = useQuery({
-    queryKey: ['permissions-check', 'cpl_access'],
-    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=cpl_access'),
+  const { data: viewAccessData, isLoading: viewAccessLoading } = useQuery({
+    queryKey: ['permissions-check', 'crm.cpl.view'],
+    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=crm.cpl.view'),
     enabled: !!user,
   })
-  const allowed = accessData?.allowed === true
+  const { data: manageAccessData, isLoading: manageAccessLoading } = useQuery({
+    queryKey: ['permissions-check', 'crm.cpl.manage'],
+    queryFn: () => apiGet<{ allowed: boolean }>('/api/permissions/check?feature=crm.cpl.manage'),
+    enabled: !!user,
+  })
+  const canView = viewAccessData?.allowed === true
+  const canManage = manageAccessData?.allowed === true
+  const accessLoading = viewAccessLoading || manageAccessLoading
 
   // Day data
   const { data: dayData, isLoading: dayLoading } = useQuery<DayResponse>({
     queryKey: ['daily-spend', selectedDate],
     queryFn: () => apiGet<DayResponse>(`/api/digital-marketing/daily-spend?date=${selectedDate}`),
-    enabled: !!user && allowed,
+    enabled: !!user && canView,
   })
 
   // Month range for summary cards
@@ -117,7 +124,7 @@ export default function DailySpendPage() {
   const { data: monthData } = useQuery<RangeResponse>({
     queryKey: ['daily-spend-month', mStart, mEnd],
     queryFn: () => apiGet<RangeResponse>(`/api/digital-marketing/daily-spend?startDate=${mStart}&endDate=${mEnd}`),
-    enabled: !!user && allowed,
+    enabled: !!user && canView,
   })
 
   // Year range for chart
@@ -125,7 +132,7 @@ export default function DailySpendPage() {
   const { data: yearData, isLoading: yearLoading } = useQuery<RangeResponse>({
     queryKey: ['daily-spend-year', selectedYear],
     queryFn: () => apiGet<RangeResponse>(`/api/digital-marketing/daily-spend?startDate=${selectedYear}-01-01&endDate=${selectedYear}-12-31`),
-    enabled: !!user && allowed,
+    enabled: !!user && canView,
   })
 
   const chartRows = useMemo(() => {
@@ -158,6 +165,9 @@ export default function DailySpendPage() {
   })
 
   const handleSpendSave = (campaignName: string, raw: string) => {
+    if (!canManage) {
+      return
+    }
     const trimmed = raw.trim()
     const num = trimmed === '' ? 0 : parseFloat(trimmed)
     if (isNaN(num) || num < 0) {
@@ -212,13 +222,14 @@ export default function DailySpendPage() {
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground text-sm">Checking access...</CardContent>
           </Card>
-        ) : !allowed ? (
+        ) : !canView ? (
           <Card>
             <CardHeader>
               <CardTitle>No access</CardTitle>
               <CardDescription>
-                CPL access is controlled from <strong>IT Permissions</strong>. Ask IT to enable{' '}
-                <strong>CPL Access</strong> for your user.
+                CPL access is controlled from <strong>CRM Access Matrix</strong>. Legacy IT CPL
+                access is still honored during the transition, so if you previously had access but
+                no longer do, ask a Super Admin, CRM Admin, or IT to verify your setup.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -294,7 +305,9 @@ export default function DailySpendPage() {
               <CardHeader>
                 <CardTitle className="text-base">Campaigns - {formatDateDisplay(selectedDate)}</CardTitle>
                 <CardDescription>
-                  Enter spend per campaign. CPL is auto-calculated. Press Enter or click away to save.
+                  {canManage
+                    ? 'Enter spend per campaign. CPL is auto-calculated. Press Enter or click away to save.'
+                    : 'View-only mode. You can review spend and CPL, but only users with CRM CPL manage access can edit it.'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -334,6 +347,7 @@ export default function DailySpendPage() {
                                   inputMode="decimal"
                                   placeholder="0"
                                   value={draft}
+                                  disabled={!canManage || saveMutation.isPending}
                                   onChange={(e) =>
                                     setDraftSpend((d) => ({ ...d, [c.campaignName]: e.target.value }))
                                   }

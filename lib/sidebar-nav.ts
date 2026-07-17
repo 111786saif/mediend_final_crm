@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {
+  Activity,
   Armchair,
   Award,
   BarChart3,
@@ -19,6 +20,7 @@ import {
   GraduationCap,
   Heart,
   Home,
+  Inbox,
   IndianRupee,
   Layers,
   LayoutDashboard,
@@ -28,12 +30,12 @@ import {
   Package,
   PieChart,
   Plus,
+  Route,
   Shield,
   ShieldCheck,
   Star,
   Stethoscope,
   Target,
-  Ticket,
   TrendingUp,
   UserCheck,
   UserCircle,
@@ -138,6 +140,62 @@ export const navItems: NavItem[] = [
     icon: Megaphone,
     roles: ['DIGITAL_MARKETING_HEAD', 'MD', 'ADMIN', 'EXECUTIVE_ASSISTANT'],
   },
+  {
+    title: 'CRM Campaigns',
+    url: '/crm/campaigns',
+    icon: Megaphone,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  },
+  {
+    title: 'CRM Incoming Leads',
+    url: '/crm/incoming-leads',
+    icon: Inbox,
+    roles: [
+      'SUPER_ADMIN',
+      'CRM_ADMIN',
+      'BD',
+      'TEAM_LEAD',
+      'CATEGORY_MANAGER',
+      'ASSISTANT_CATEGORY_MANAGER',
+      'SALES_HEAD',
+    ],
+  },
+  {
+    title: 'CRM KPIs',
+    url: '/crm/kpis',
+    icon: BarChart3,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  },
+  {
+    title: 'CRM Activity',
+    url: '/crm/activity',
+    icon: Activity,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  },
+  {
+    title: 'CRM Masters',
+    url: '/crm/masters',
+    icon: Database,
+    roles: ['SUPER_ADMIN'],
+  },
+  {
+    title: 'CRM Access Matrix',
+    url: '/crm/access-matrix',
+    icon: ShieldCheck,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  },
+  {
+    title: 'CRM Churn Rules',
+    url: '/crm/churn-rules',
+    icon: Route,
+    roles: ['SUPER_ADMIN', 'CRM_ADMIN', 'ADMIN', 'SALES_HEAD', 'TEAM_LEAD'],
+  },
+  // {
+  //   title: 'CRM Assignment Rules',
+  //   url: '/crm/assignment-rules',
+  //   icon: FolderTree,
+  //   roles: ['SUPER_ADMIN', 'CRM_ADMIN'],
+  // },
   {
     title: 'Dept Targets',
     url: '/md/targets',
@@ -620,6 +678,8 @@ export function getFirstNavUrl(user: SessionUser | null): string {
   // MD/ADMIN land on the MD Command Center; everyone else on the generic home page
   if (user) {
     if (user.role === 'MD' || user.role === 'ADMIN') return '/md/home'
+    if (String(user.role) === 'SUPER_ADMIN') return '/crm/campaigns'
+    if (String(user.role) === 'CRM_ADMIN') return '/crm/access-matrix'
     if (user.role === 'COMPLIANCE_HEAD') return '/compliance/dashboard'
     if (user.role === 'ACCESS_MATRIX') return '/it/permissions'
     return '/home'

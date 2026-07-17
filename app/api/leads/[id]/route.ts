@@ -1,13 +1,43 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { canAccessLead, hasPermission } from '@/lib/rbac'
-import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
+import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { Prisma, PipelineStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { prismaBdEmployeeTeamSelect, toLegacyBdShape } from '@/lib/bd-employee-team'
+import { logCrmActivity } from '@/lib/crm-activity'
+import { isChurnTriggerStatus, planChurnLeadReassignment } from '@/lib/crm-churn-rules'
+import { isStatusRequiringAgeSex, isStatusRequiringFollowUpDate } from '@/lib/lead-status-rules'
+import {
+  buildLeadOwnershipTransferUpdate,
+  canUserAddLeadRemarks,
+  canUserEditLeadProfile,
+  canUserRemoveLeadRemarks,
+  canUserReassignLead,
+  canUserUpdateLeadStatus,
+  canUserViewLeadOwner,
+} from '@/lib/lead-ownership'
+
+function parseFollowUpDateInput(value: unknown) {
+  if (value === undefined) return { provided: false, value: undefined as Date | null | undefined }
+  if (value === null) return { provided: true, value: null as Date | null }
+  if (typeof value !== 'string') return { provided: true, value: 'invalid' as const }
+
+  const trimmed = value.trim()
+  if (!trimmed) return { provided: true, value: null as Date | null }
+
+  const parsed = /^\d{4}-\d{2}-\d{2}$/.test(trimmed)
+    ? new Date(`${trimmed}T00:00:00`)
+    : new Date(trimmed)
+
+  if (Number.isNaN(parsed.getTime())) {
+    return { provided: true, value: 'invalid' as const }
+  }
+
+  return { provided: true, value: parsed as Date }
+}
 import { recomputeOutstandingFromInstallments } from '@/lib/pl/installments'
 
 export async function GET(
@@ -282,9 +312,7 @@ export async function GET(
 
     console.log('[DEBUG] Full lead with relations fetched successfully')
 
-    const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
-    if (!canAccessLead(user, fullLead.bdId, subordinateIds)) {
+    if (!(await canUserViewLeadOwner(user, fullLead.bdId))) {
       console.log('[DEBUG] Access denied by canAccessLead', {
         userId: user.id,
         userRole: user.role,
@@ -327,7 +355,7 @@ export async function PATCH(
       return unauthorizedResponse()
     }
 
-    if (!hasPermission(user, 'leads:write')) {
+    if (user.role !== 'SUPER_ADMIN' && !hasPermission(user, 'leads:write')) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -343,16 +371,147 @@ export async function PATCH(
       return errorResponse('Lead not found', 404)
     }
 
-    const subordinateIds =
-      user.role === 'TEAM_LEAD' ? await getTeamLeadLeadAccessBdUserIds(user.id) : undefined
-    if (!canAccessLead(user, lead.bdId, subordinateIds)) {
+    if (!(await canUserViewLeadOwner(user, lead.bdId))) {
       return errorResponse('Forbidden', 403)
     }
 
     const body = await request.json()
+    const requestedStatus =
+      typeof body.status === 'string' && body.status.trim().length > 0
+        ? body.status.trim()
+        : undefined
+    const requestedRemarks =
+      body.remarks === undefined
+        ? undefined
+        : typeof body.remarks === 'string'
+          ? body.remarks.trim() || null
+          : body.remarks === null
+            ? null
+            : body.remarks
+    const statusChangeRemark =
+      typeof body.statusChangeRemark === 'string' ? body.statusChangeRemark.trim() : ''
+    const requireStatusChangeRemark = body.requireStatusChangeRemark === 'true'
+    const currentRemarks =
+      typeof lead.remarks === 'string' ? lead.remarks.trim() || null : lead.remarks ?? null
+    const crmEditFollowUpValidation = body.crmEditFollowUpValidation === 'true'
+    const parsedFollowUpDateInput = parseFollowUpDateInput(body.followUpDate)
     const updateData: Prisma.LeadUpdateInput = {
       updatedBy: { connect: { id: user.id } },
       updatedDate: new Date(),
+    }
+    const statusChanged = requestedStatus !== undefined && requestedStatus !== lead.status
+    const assigneeChanged = body.bdId !== undefined && body.bdId !== lead.bdId
+    const leadProfileChanged =
+      (body.patientName !== undefined && body.patientName !== lead.patientName) ||
+      (body.treatment !== undefined && body.treatment !== lead.treatment) ||
+      (body.diseaseDetails !== undefined && body.diseaseDetails !== lead.diseaseDetails)
+    const remarksChanged = requestedRemarks !== undefined && requestedRemarks !== currentRemarks
+    const remarksRemoved = remarksChanged && requestedRemarks === null && currentRemarks !== null
+    const churnStatusTriggered = statusChanged && isChurnTriggerStatus(requestedStatus)
+
+    if (statusChanged && !(await canUserUpdateLeadStatus(user, lead.bdId))) {
+      return errorResponse('You do not have permission to update the lead status', 403)
+    }
+
+    if (
+      statusChanged &&
+      (requireStatusChangeRemark || statusChangeRemark) &&
+      !(await canUserAddLeadRemarks(user, lead.bdId))
+    ) {
+      return errorResponse(
+        requireStatusChangeRemark
+          ? 'You do not have permission to add the required remark for this status change'
+          : 'You do not have permission to add a status-change remark for this lead',
+        403
+      )
+    }
+
+    if (leadProfileChanged && !(await canUserEditLeadProfile(user, lead.bdId))) {
+      return errorResponse(
+        'You do not have permission to edit patient name, disease, or treatment for this lead',
+        403
+      )
+    }
+
+    if (
+      remarksChanged &&
+      !(
+        await (remarksRemoved
+          ? canUserRemoveLeadRemarks(user, lead.bdId)
+          : canUserAddLeadRemarks(user, lead.bdId))
+      )
+    ) {
+      return errorResponse(
+        remarksRemoved
+          ? 'You do not have permission to remove remarks for this lead'
+          : 'You do not have permission to edit remarks for this lead',
+        403
+      )
+    }
+
+    if (body.patientName !== undefined && String(body.patientName).trim().length === 0) {
+      return errorResponse('Patient name is required', 400)
+    }
+
+    if (parsedFollowUpDateInput.value === 'invalid') {
+      return errorResponse('Follow-up date is invalid', 400)
+    }
+
+    if (requireStatusChangeRemark && statusChanged && !statusChangeRemark) {
+      return errorResponse('Remark is required when changing lead status', 400)
+    }
+
+    if (statusChangeRemark.length > 4000) {
+      return errorResponse('Remark must be 4000 characters or less', 400)
+    }
+
+    if (
+      crmEditFollowUpValidation &&
+      statusChanged &&
+      isStatusRequiringFollowUpDate(requestedStatus) &&
+      !parsedFollowUpDateInput.value
+    ) {
+      return errorResponse('Follow-up date is required for DNP and follow-up statuses', 400)
+    }
+
+    if (crmEditFollowUpValidation && statusChanged && isStatusRequiringAgeSex(requestedStatus)) {
+      const nextAge =
+        body.age !== undefined
+          ? body.age === null || body.age === ''
+            ? null
+            : Number(body.age)
+          : lead.age
+      const nextSex =
+        body.sex !== undefined
+          ? typeof body.sex === 'string'
+            ? body.sex.trim() || null
+            : body.sex
+          : lead.sex
+
+      if (!Number.isFinite(nextAge) || Number(nextAge) <= 0) {
+        return errorResponse('Age is required for follow-up and DNP statuses', 400)
+      }
+
+      if (typeof nextSex !== 'string' || nextSex.trim().length === 0) {
+        return errorResponse('Sex is required for follow-up and DNP statuses', 400)
+      }
+    }
+
+    if (churnStatusTriggered && assigneeChanged) {
+      return errorResponse(
+        'Junk and Churned leads are reassigned automatically. Remove the manual assignee before saving.',
+        400
+      )
+    }
+
+    if (
+      assigneeChanged &&
+      !(await canUserReassignLead(user, lead.bdId, String(body.bdId)))
+    ) {
+      return errorResponse(
+        'You can only transfer this lead to an allowed owner for your role',
+        403
+      )
     }
 
     // Track stage changes
@@ -382,6 +541,7 @@ export async function PATCH(
       'circle',
       'category',
       'treatment',
+      'diseaseDetails',
       'anesthesia',
       'quantityGrade',
       'surgeonName',
@@ -424,6 +584,19 @@ export async function PATCH(
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
+        if (
+          (field === 'patientName' ||
+            field === 'treatment' ||
+            field === 'diseaseDetails' ||
+            field === 'status' ||
+            field === 'remarks') &&
+          typeof body[field] === 'string'
+        ) {
+          const trimmed = body[field].trim()
+          ;(updateData as any)[field] = field === 'remarks' ? trimmed || null : trimmed
+        } else {
+          (updateData as any)[field] = body[field]
+        }
         // Restrict deleting phone numbers
         if ((field === 'phoneNumber' || field === 'alternateNumber') && (body[field] === null || (typeof body[field] === 'string' && body[field].trim() === ''))) {
           continue
@@ -432,32 +605,224 @@ export async function PATCH(
       }
     }
 
-    // Handle BD reassignment
-    if (body.bdId && body.bdId !== lead.bdId) {
-      if (user.role === 'BD' && body.bdId !== user.id) {
-        return errorResponse('You can only assign leads to yourself', 403)
-      }
-      if (user.role === 'TEAM_LEAD') {
-        const allowed =
-          body.bdId === user.id || (subordinateIds?.includes(body.bdId) ?? false)
-        if (!allowed) {
-          return errorResponse('Can only reassign to your subordinates or yourself', 403)
-        }
-      }
-      updateData.bd = { connect: { id: body.bdId } }
-      if (!lead.assignedDate) {
-        updateData.assignedDate = new Date()
-      }
+    if (parsedFollowUpDateInput.provided) {
+      updateData.followUpDate = parsedFollowUpDateInput.value
     }
 
-    const updatedLead = await prisma.lead.update({
-      where: { id },
-      data: updateData,
-      include: {
-        bd: { select: prismaBdEmployeeTeamSelect },
-        plRecord: true,
-      },
+    let churnAutomationResult:
+      | Awaited<ReturnType<typeof planChurnLeadReassignment>>
+      | null = null
+
+    if (churnStatusTriggered) {
+      try {
+      churnAutomationResult = await planChurnLeadReassignment(lead.bdId)
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : 'This lead could not be auto-reassigned for the selected status.'
+        return errorResponse(message, 409)
+      }
+      updateData.status = churnAutomationResult.nextStatus
+      updateData.followUpDate = churnAutomationResult.followUpDate
+      Object.assign(
+        updateData,
+        buildLeadOwnershipTransferUpdate(
+          churnAutomationResult.assignee.userId,
+          churnAutomationResult.assignedAt
+        )
+      )
+    }
+
+    // Handle BD reassignment
+    if (assigneeChanged && !churnAutomationResult) {
+      Object.assign(updateData, buildLeadOwnershipTransferUpdate(String(body.bdId)))
+    }
+
+    const { updatedLead, statusRemarkEntry } = await prisma.$transaction(async (tx) => {
+      const updatedLead = await tx.lead.update({
+        where: { id },
+        data: updateData,
+        include: {
+          bd: { select: prismaBdEmployeeTeamSelect },
+          plRecord: true,
+        },
+      })
+
+      const statusRemarkEntry =
+        statusChanged && statusChangeRemark
+          ? await tx.leadRemarkEntry.create({
+              data: {
+                leadId: lead.id,
+                content: statusChangeRemark,
+                createdById: user.id,
+              },
+              include: {
+                createdBy: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            })
+          : null
+
+      return { updatedLead, statusRemarkEntry }
     })
+
+    const leadEntityLabel = `${updatedLead.leadRef || lead.leadRef || lead.id} · ${updatedLead.patientName || lead.patientName || 'Lead'}`
+    const leadActivityMetadata = {
+      leadId: updatedLead.id,
+      leadRef: updatedLead.leadRef,
+      patientName: updatedLead.patientName,
+      previousBdId: lead.bdId,
+      nextBdId: updatedLead.bdId,
+      previousBdName: lead.bd?.name ?? null,
+      nextBdName: updatedLead.bd?.name ?? null,
+    }
+
+    const activityLogs: Promise<unknown>[] = []
+
+    if (statusChanged) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_STATUS_CHANGED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Changed lead status for ${leadEntityLabel} from ${lead.status || '—'} to ${updatedLead.status || '—'}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousStatus: lead.status,
+            nextStatus: updatedLead.status,
+            churnAutomation: churnAutomationResult
+              ? {
+                  scopeType: churnAutomationResult.rule.scopeType,
+                  behavior: churnAutomationResult.rule.behavior,
+                  assignedToUserId: churnAutomationResult.assignee.userId,
+                  assignedToName: churnAutomationResult.assignee.name,
+                  followUpDate: churnAutomationResult.followUpDate,
+                }
+              : null,
+          },
+        })
+      )
+    }
+
+    if (statusRemarkEntry) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_REMARK_ADDED',
+          entityType: 'CRM_LEAD_REMARK',
+          entityId: lead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Added a lead remark for ${leadEntityLabel}`,
+          metadata: {
+            ...leadActivityMetadata,
+            remarkId: statusRemarkEntry.id,
+            remarkContent: statusRemarkEntry.content,
+          },
+        })
+      )
+    }
+
+    if (assigneeChanged || churnAutomationResult) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_REASSIGNED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Reassigned lead ${leadEntityLabel} from ${lead.bd?.name ?? 'Unassigned'} to ${updatedLead.bd?.name ?? 'Unassigned'}`,
+          metadata: {
+            ...leadActivityMetadata,
+            automatic: Boolean(churnAutomationResult),
+            previousAssignedDate: lead.assignedDate,
+            nextAssignedDate: updatedLead.assignedDate,
+          },
+        })
+      )
+    }
+
+    if (leadProfileChanged) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_PROFILE_UPDATED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Updated lead profile details for ${leadEntityLabel}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousPatientName: lead.patientName,
+            nextPatientName: updatedLead.patientName,
+            previousTreatment: lead.treatment,
+            nextTreatment: updatedLead.treatment,
+            previousDiseaseDetails: lead.diseaseDetails,
+            nextDiseaseDetails: updatedLead.diseaseDetails,
+          },
+        })
+      )
+    }
+
+    if (remarksChanged) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_REMARK_UPDATED',
+          entityType: 'CRM_LEAD_REMARK',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Updated lead remarks for ${leadEntityLabel}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousRemarks: lead.remarks,
+            nextRemarks: updatedLead.remarks,
+          },
+        })
+      )
+    }
+
+    if (body.pipelineStage && body.pipelineStage !== lead.pipelineStage) {
+      activityLogs.push(
+        logCrmActivity({
+          action: 'CRM_LEAD_STAGE_CHANGED',
+          entityType: 'CRM_LEAD',
+          entityId: updatedLead.id,
+          entityLabel: leadEntityLabel,
+          actorUserId: user.id,
+          actorRole: user.role,
+          request,
+          summary: `Moved lead ${leadEntityLabel} from ${lead.pipelineStage} to ${updatedLead.pipelineStage}`,
+          metadata: {
+            ...leadActivityMetadata,
+            previousPipelineStage: lead.pipelineStage,
+            nextPipelineStage: updatedLead.pipelineStage,
+            stageChangeNote:
+              typeof body.stageChangeNote === 'string' ? body.stageChangeNote.trim() || null : null,
+          },
+        })
+      )
+    }
+
+    if (activityLogs.length > 0) {
+      await Promise.all(activityLogs)
+    }
 
     if (body.plRecord && typeof body.plRecord === 'object') {
       const raw = body.plRecord as Record<string, unknown>
@@ -555,11 +920,28 @@ export async function PATCH(
       payload && payload.bd
         ? { ...payload, bd: toLegacyBdShape(payload.bd) }
         : payload
+    const responsePayload = churnAutomationResult
+      ? {
+          ...mapped,
+          churnAutomation: {
+            scopeType: churnAutomationResult.rule.scopeType,
+            behavior: churnAutomationResult.rule.behavior,
+            assignedTo: {
+              userId: churnAutomationResult.assignee.userId,
+              name: churnAutomationResult.assignee.name,
+              employeeCode: churnAutomationResult.assignee.employeeCode,
+            },
+            teamLead: churnAutomationResult.teamLead,
+            followUpDate: churnAutomationResult.followUpDate,
+            nextStatus: churnAutomationResult.nextStatus,
+          },
+        }
+      : mapped
 
-    return successResponse(mapped, 'Lead updated successfully', 'lead')
+    return successResponse(responsePayload, 'Lead updated successfully')
   } catch (error) {
     console.error('Error updating lead:', error)
-    return errorResponse('Failed to update lead', 500)
+    const message = error instanceof Error ? error.message : 'Failed to update lead'
+    return errorResponse(message, 500)
   }
 }
-

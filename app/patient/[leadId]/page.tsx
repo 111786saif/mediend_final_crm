@@ -7,6 +7,7 @@ import { IPDMarkComponent } from '@/components/admission/ipd-mark-component'
 import { AuthenticatedLayout } from '@/components/authenticated-layout'
 import { PatientDischargeInfo } from '@/components/discharge/patient-discharge-info'
 import { InitiateFormCard } from '@/components/insurance/initiate-form-card'
+import { LeadQrPopover } from '@/components/leads/lead-qr-popover'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -125,6 +126,7 @@ interface Lead {
   category: string | null
   quantityGrade?: string | null
   anesthesia?: string | null
+  diseaseDetails?: string | null
   surgeonName?: string | null
   surgeonType?: string | null
   status: string
@@ -553,7 +555,6 @@ export default function PatientDetailsPage() {
   const canRaise = !readOnly && user && canRaisePreAuth(user as any, lead)
   const canAddDetails = !readOnly && user && canAddKYPDetails(user as any, lead)
   const canComplete = !readOnly && user && canCompletePreAuth(user as any, lead)
-  const canEdit = !readOnly && user && canEditKYP(user as any, lead)
   const canInit = !readOnly && user && canInitiate(user as any, lead)
   const canEditIPD = !readOnly && user && canEditIPDDetails(user as any, lead)
   const canMarkIPDStatus = !readOnly && user && canMarkIPD(user as any, lead)
@@ -838,6 +839,14 @@ export default function PatientDetailsPage() {
                 </div>
               </div>
               <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <LeadQrPopover
+                  leadId={leadId}
+                  phoneNumber={lead.phoneNumber ?? ''}
+                  patientName={lead.patientName}
+                  triggerVariant="button"
+                  buttonLabel="Lead QR"
+                  allowServerSidePhoneLookup
+                />
                 <Button asChild size="sm" variant="outline" className="gap-2">
                   <Link href={`/chat/${leadId}`}>
                     <MessageCircle className="h-4 w-4" />
@@ -1291,7 +1300,7 @@ export default function PatientDetailsPage() {
                         })
                         toast.success('Switched to Cash Mode')
                         queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
-                      } catch (e) {
+                      } catch {
                         toast.error('Failed to switch mode')
                       } finally {
                         setSwitchingMode(false)
@@ -1324,7 +1333,7 @@ export default function PatientDetailsPage() {
                         })
                         toast.success('Reverted to Insurance Flow')
                         queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
-                      } catch (e) {
+                      } catch {
                         toast.error('Failed to revert mode')
                       } finally {
                         setSwitchingMode(false)

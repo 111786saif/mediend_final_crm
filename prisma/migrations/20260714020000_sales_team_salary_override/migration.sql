@@ -36,7 +36,7 @@ CREATE INDEX IF NOT EXISTS "EmployeeSalesTeamSalaryOverride_month_year_idx" ON "
 CREATE UNIQUE INDEX IF NOT EXISTS "EmployeeSalesTeamSalaryOverride_employeeId_month_year_key" ON "EmployeeSalesTeamSalaryOverride"("employeeId", "month", "year");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "EmployeeSalesTeamSalaryOverrideHistory_employeeId_month_year_updatedAt_idx" ON "EmployeeSalesTeamSalaryOverrideHistory"("employeeId", "month", "year", "updatedAt");
+CREATE INDEX IF NOT EXISTS "EmployeeSalesTeamSalaryOverrideHistory_employeeId_month_yea_idx" ON "EmployeeSalesTeamSalaryOverrideHistory"("employeeId", "month", "year", "updatedAt");
 
 -- CreateIndex
 CREATE INDEX IF NOT EXISTS "EmployeeSalesTeamSalaryOverrideHistory_updatedAt_idx" ON "EmployeeSalesTeamSalaryOverrideHistory"("updatedAt");

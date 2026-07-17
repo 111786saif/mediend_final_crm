@@ -1,13 +1,13 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionFromRequest } from '@/lib/session'
-import { canAccessLead, hasPermission } from '@/lib/rbac'
+import { hasPermission } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { mapStatusCode, mapSourceCode } from '@/lib/mysql-code-mappings'
 import { FlowType, Prisma, PipelineStage, CaseStage } from '@/generated/prisma/client'
 import { maskPhoneNumber } from '@/lib/phone-utils'
 import { last10DigitsFromStored } from '@/lib/phone-search'
-import { getTeamLeadLeadAccessBdUserIds } from '@/lib/hierarchy'
+import { getLeadVisibilityScopeUserIds } from '@/lib/lead-ownership'
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       return unauthorizedResponse()
     }
 
-    if (!hasPermission(user, 'leads:read')) {
+    if (user.role !== 'SUPER_ADMIN' && !hasPermission(user, 'leads:read')) {
       return errorResponse('Forbidden', 403)
     }
 
@@ -37,16 +37,14 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get('limit')
 
     const where: Prisma.LeadWhereInput = {}
-    let subordinateUserIds: string[] | undefined
+    const scopedUserIds = await getLeadVisibilityScopeUserIds(user)
 
-    // Role-based filtering
-    if (user.role === 'BD') {
-      where.bdId = user.id
-    } else if (user.role === 'TEAM_LEAD') {
-      subordinateUserIds = await getTeamLeadLeadAccessBdUserIds(user.id)
-      where.bdId = { in: [user.id, ...subordinateUserIds] }
+    if (Array.isArray(scopedUserIds)) {
+      if (scopedUserIds.length === 0) {
+        return successResponse([])
+      }
+      where.bdId = { in: scopedUserIds }
     }
-    // Note: INSURANCE_HEAD can access all leads via canAccessLead, so we don't filter by bdId
 
     // For insurance users: show leads with KYP (insurance flow), insurance-related stages, or any cash flow lead (for cash cases page)
     if (user.role === 'INSURANCE_HEAD') {
@@ -78,7 +76,12 @@ export async function GET(request: NextRequest) {
         where.caseStage = { in: stages }
       }
     }
-    if (bdId) where.bdId = bdId
+    if (bdId) {
+      if (Array.isArray(scopedUserIds) && !scopedUserIds.includes(bdId)) {
+        return successResponse([])
+      }
+      where.bdId = bdId
+    }
     if (circle) where.circle = circle
     if (hospitalName) where.hospitalName = { contains: hospitalName, mode: 'insensitive' }
     if (treatment) where.treatment = { contains: treatment, mode: 'insensitive' }
@@ -423,6 +426,22 @@ export async function GET(request: NextRequest) {
       createdDate: true,
       updatedDate: true,
       hospitalName: true,
+      remarks: true,
+      leadRemarkEntries: {
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+      },
       ipdDrName: true,
       surgeonName: true,
       source: true,
@@ -661,10 +680,7 @@ export async function GET(request: NextRequest) {
           ...(maxLimit ? { take: maxLimit } : {}),
         })
 
-    // Filter leads based on access control
-    let accessibleLeads = leads.filter((lead) =>
-      canAccessLead(user, lead.bdId, subordinateUserIds)
-    )
+    let accessibleLeads = leads
 
     if (phoneLast10) {
       accessibleLeads = accessibleLeads.filter((lead) => {
@@ -689,11 +705,14 @@ export async function GET(request: NextRequest) {
     // Mask phone numbers if user is not INSURANCE_HEAD or ADMIN
     const canViewPhone = user.role === 'ADMIN'
     const mappedLeads = accessibleLeads.map((lead) => {
+      const latestRemark = isPipelineView ? lead.leadRemarkEntries?.[0] ?? null : undefined
       const base = {
         ...lead,
+        latestRemark,
         status: mapStatusCode(lead.status),
         source: lead.source ? mapSourceCode(lead.source) : lead.source,
       }
+      delete (base as Record<string, unknown>).leadRemarkEntries
       if (isPipelineView) {
         const rest = { ...base } as Record<string, unknown>
         delete rest.phoneNumber
@@ -790,4 +809,3 @@ export async function POST(request: NextRequest) {
     return errorResponse('Failed to create lead', 500)
   }
 }
-

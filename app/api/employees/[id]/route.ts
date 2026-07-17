@@ -9,6 +9,7 @@ import { Prisma } from '@/generated/prisma/client'
 
 const updateEmployeeSchema = z.object({
   employeeCode: z.string().optional(),
+  circle: z.string().trim().max(100).optional().nullable(),
   joinDate: z.string().transform((str) => new Date(str)).optional().nullable(),
   salary: z.number().positive().optional().nullable(),
   departmentId: z.string().optional().nullable(),
@@ -146,6 +147,7 @@ export async function PATCH(
         teamId: true,
         departmentId: true,
         bdNumber: true,
+        circle: true,
         employeeCode: true,
         user: {
           select: {
@@ -175,6 +177,16 @@ export async function PATCH(
       })
       if (bdNumExists) {
         return errorResponse('CRM Number already assigned to another employee', 400)
+      }
+    }
+
+    if (data.circle !== undefined && data.circle) {
+      const circle = await prisma.crmCampaignCircle.findFirst({
+        where: { name: data.circle.trim() },
+        select: { id: true },
+      })
+      if (!circle) {
+        return errorResponse('Selected circle was not found in CRM masters', 400)
       }
     }
 
@@ -252,6 +264,7 @@ export async function PATCH(
 
     const updateData: Prisma.EmployeeUpdateInput = {}
     if (data.employeeCode !== undefined) updateData.employeeCode = data.employeeCode
+    if (data.circle !== undefined) updateData.circle = data.circle?.trim() || null
     if (data.joinDate !== undefined) updateData.joinDate = data.joinDate
     if (data.salary !== undefined) updateData.salary = data.salary
     if (data.departmentId !== undefined) {
@@ -387,4 +400,3 @@ export async function PATCH(
     return errorResponse('Failed to update employee', 500)
   }
 }
-

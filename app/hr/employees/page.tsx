@@ -26,6 +26,12 @@ interface Department {
   name: string
 }
 
+interface CircleOption {
+  id: string
+  name: string
+  isActive: boolean
+}
+
 interface Employee {
   id: string
   employeeCode: string
@@ -33,6 +39,7 @@ interface Employee {
   designation: string | null
   status: string
   bdNumber: number | null
+  circle: string | null
   fnfDeadline: string | null
   statusNote: string | null
   finalWorkingDay: string | null
@@ -81,6 +88,7 @@ const ROW_STATUS_CLASS: Record<string, string> = {
 interface EditFormData {
   employeeCode: string
   bdNumber: string
+  circle: string
   joinDate: string
   departmentId: string
   managerId: string
@@ -98,6 +106,7 @@ interface EditFormData {
 
 interface EditPatchPayload {
   employeeCode?: string
+  circle?: string | null
   joinDate?: string | null
   departmentId?: string | null
   designation?: string | null
@@ -147,6 +156,11 @@ export default function HREmployeesPage() {
   const { data: departments } = useQuery<Department[]>({
     queryKey: ['departments'],
     queryFn: () => apiGet<Department[]>('/api/departments'),
+  })
+
+  const { data: employeeMeta } = useQuery<{ circles: CircleOption[] }>({
+    queryKey: ['employee-meta'],
+    queryFn: () => apiGet<{ circles: CircleOption[] }>('/api/employees/meta'),
   })
 
   const syncMutation = useMutation({
@@ -465,6 +479,7 @@ export default function HREmployeesPage() {
               key={selectedEmployee.id}
               employee={selectedEmployee}
               departments={departments || []}
+              circleOptions={employeeMeta?.circles ?? []}
               managerOptions={employees?.filter((e) => e.id !== selectedEmployee.id) ?? []}
               onSubmit={(data) => updateMutation.mutate({ id: selectedEmployee.id, data })}
               isLoading={updateMutation.isPending}
@@ -507,12 +522,14 @@ function toDateInput(value: string | Date | null | undefined): string {
 function EmployeeEditForm({
   employee,
   departments,
+  circleOptions,
   managerOptions,
   onSubmit,
   isLoading,
 }: {
   employee: Employee
   departments: Department[]
+  circleOptions: CircleOption[]
   managerOptions: Employee[]
   onSubmit: (data: EditPatchPayload) => void
   isLoading: boolean
@@ -520,6 +537,7 @@ function EmployeeEditForm({
   const [formData, setFormData] = useState<EditFormData>({
     employeeCode: employee.employeeCode,
     bdNumber: employee.bdNumber != null ? String(employee.bdNumber) : '',
+    circle: employee.circle || '',
     joinDate: toDateInput(employee.joinDate),
     departmentId: employee.department?.id || 'none',
     managerId: employee.manager?.id || 'none',
@@ -558,6 +576,7 @@ function EmployeeEditForm({
 
     const payload: EditPatchPayload = {
       employeeCode: formData.employeeCode.trim(),
+      circle: formData.circle.trim() || null,
       joinDate: formData.joinDate || null,
       departmentId: formData.departmentId === 'none' ? null : formData.departmentId || null,
       managerId: formData.managerId === 'none' ? null : formData.managerId || null,
@@ -611,6 +630,27 @@ function EmployeeEditForm({
             />
             <p className="text-xs text-muted-foreground mt-1">
               Changing this will resync leads from the CRM.
+            </p>
+          </div>
+          <div>
+            <Label>Circle</Label>
+            <Select value={formData.circle || 'none'} onValueChange={(v) => set('circle', v === 'none' ? '' : v)}>
+              <SelectTrigger><SelectValue placeholder="Select circle" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No circle</SelectItem>
+                {formData.circle &&
+                  !circleOptions.some((circle) => circle.name === formData.circle) && (
+                    <SelectItem value={formData.circle}>{formData.circle} (Legacy)</SelectItem>
+                  )}
+                {circleOptions.map((circle) => (
+                  <SelectItem key={circle.id} value={circle.name}>
+                    {circle.name}{!circle.isActive ? ' (Inactive)' : ''}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground mt-1">
+              CRM auto-assignment uses this to match lead city for BD employees.
             </p>
           </div>
           <div>

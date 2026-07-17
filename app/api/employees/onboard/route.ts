@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/generated/prisma/client'
+import { UserRole } from '@/generated/prisma/enums'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission, canCreateRole } from '@/lib/rbac'
 import { hashPassword } from '@/lib/auth'
@@ -11,14 +12,10 @@ const employeeSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(6),
-  role: z.enum([
-    'SALES_HEAD', 'CATEGORY_MANAGER', 'ASSISTANT_CATEGORY_MANAGER',
-    'TEAM_LEAD', 'BD', 'INSURANCE_HEAD', 'PL_HEAD', 'OUTSTANDING_HEAD',
-    'HR_HEAD', 'FINANCE_HEAD', 'DIGITAL_MARKETING_HEAD', 'IT_HEAD',
-    'LOAN_DEMAT_HEAD', 'EXECUTIVE_ASSISTANT', 'ADMIN', 'USER',
-  ]),
+  role: z.nativeEnum(UserRole),
   employeeCode: z.string().min(1),
   bdNumber: z.number().int().positive().optional().nullable(),
+  circle: z.string().trim().max(100).optional().nullable(),
   departmentId: z.string().optional().nullable(),
   managerId: z.string().nullable().optional(),
   joinDate: z.string().optional().nullable(),
@@ -85,6 +82,17 @@ export async function POST(request: NextRequest) {
           }
         }
 
+        if (data.circle) {
+          const circle = await prisma.crmCampaignCircle.findFirst({
+            where: { name: data.circle.trim() },
+            select: { id: true },
+          })
+          if (!circle) {
+            errors.push({ index: i, name: data.name, error: 'Selected circle was not found in CRM masters' })
+            continue
+          }
+        }
+
         const passwordHash = await hashPassword(data.password)
 
         const result = await prisma.$transaction(async (tx) => {
@@ -104,6 +112,7 @@ export async function POST(request: NextRequest) {
               departmentId: data.departmentId || null,
               managerId: data.managerId ?? null,
               bdNumber: data.bdNumber ?? null,
+              circle: data.circle?.trim() || null,
               joinDate: data.joinDate ? new Date(data.joinDate) : null,
               dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
               onboardingStatus: 'PENDING_PROFILE',

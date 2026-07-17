@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { getSessionFromRequest } from '@/lib/session'
 import { hasFeaturePermission } from '@/lib/permissions'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { hasEffectiveCrmPermission, isCrmPermissionKey } from '@/lib/crm-permissions'
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +15,9 @@ export async function GET(request: NextRequest) {
       return errorResponse('Missing feature query param', 400)
     }
 
-    const allowed = await hasFeaturePermission(user.id, feature)
+    const allowed = isCrmPermissionKey(feature)
+      ? await hasEffectiveCrmPermission(user.id, feature)
+      : await hasFeaturePermission(user.id, feature)
     return successResponse({ allowed })
   } catch (error) {
     console.error('Error checking permission:', error)

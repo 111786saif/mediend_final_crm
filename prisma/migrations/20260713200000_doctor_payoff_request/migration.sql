@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS "DoctorPayoffRequest" (
   "reviewedById" TEXT,
   "reviewedAt" TIMESTAMP(3),
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
   CONSTRAINT "DoctorPayoffRequest_pkey" PRIMARY KEY ("id")
 );
 

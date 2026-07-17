@@ -95,6 +95,11 @@ export const STATUS_COLORS: Record<string, { bg: string; border: string; text: s
     border: 'border-gray-200 dark:border-gray-800',
     text: 'text-gray-700 dark:text-gray-300',
   },
+  'Churned': {
+    bg: 'bg-stone-100 dark:bg-stone-950/40',
+    border: 'border-stone-200 dark:border-stone-800',
+    text: 'text-stone-700 dark:text-stone-300',
+  },
   'Invalid Number': {
     bg: 'bg-gray-100 dark:bg-gray-950/40',
     border: 'border-gray-200 dark:border-gray-800',
@@ -115,4 +120,3 @@ export function getStatusColor(status: string | null | undefined) {
     text: 'text-gray-700 dark:text-gray-300',
   }
 }
-

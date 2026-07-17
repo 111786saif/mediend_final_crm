@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/use-auth'
 import { getFirstNavUrl } from '@/lib/sidebar-nav'
 
-const PUBLIC_PATHS = ['/login', '/documents/acknowledge']
+const PUBLIC_PATHS = ['/login', '/documents/acknowledge', '/savemyleads']
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
