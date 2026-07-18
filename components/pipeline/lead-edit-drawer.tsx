@@ -1,18 +1,29 @@
 'use client'
 
 import { useState } from 'react'
+import { format } from 'date-fns'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { apiGet, apiPatch } from '@/lib/api-client'
-import { isStatusRequiringAgeSex, isStatusRequiringFollowUpDate } from '@/lib/lead-status-rules'
+import { normalizeLeadSexValue } from '@/lib/lead-sex'
 import { LEAD_STATUS_OPTIONS } from '@/lib/lead-status-options'
-import { getRoleLabel } from '@/lib/roles'
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  isStatusRequiringAgeSex,
+  isStatusRequiringFollowUpDate,
+  isStatusRequiringModeOfPayment,
+} from '@/lib/lead-status-rules'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -21,34 +32,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { useAuth } from '@/hooks/use-auth'
-import { format } from 'date-fns'
-import { CalendarIcon, Loader2, X } from 'lucide-react'
-import { toast } from 'sonner'
 
-const CRM_ADDITIONAL_LEAD_STATUS_OPTIONS = [
-  'Not Interested',
-  'Nurture',
-  'Nurture1',
-  'Nurture2',
-  'Nurture3',
-  'Nurture4',
-  'Nurture5',
-  'OPD Done',
-  'OPD Schedule',
-  'Order Booked',
-  'Out of Station',
-  'Out of station follow-up',
-  'Policy Booked',
-  'Policy Issued',
-  'Scan Done',
-  'Supply Gap',
-  'SX Not Suggested',
-  'WA Done',
-  'IPD Lost',
-  'Language Barrier',
-  'Duplicate lead',
-  'Already Insured',
+const CRM_LEAD_SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
+const MODE_OF_PAYMENT_OPTIONS = ['Cash', 'Cashless', 'EMI', 'Reimbursement'] as const
+const CRM_ADDITIONAL_STATUS_OPTIONS = [
   'DNP-1',
   'DNP-2',
   'DNP-3',
@@ -58,27 +45,43 @@ const CRM_ADDITIONAL_LEAD_STATUS_OPTIONS = [
 ] as const
 
 const CRM_EDIT_LEAD_STATUS_OPTIONS = [
-  ...new Set([...LEAD_STATUS_OPTIONS, ...CRM_ADDITIONAL_LEAD_STATUS_OPTIONS]),
+  ...new Set([...LEAD_STATUS_OPTIONS, ...CRM_ADDITIONAL_STATUS_OPTIONS]),
 ]
 
-const CRM_LEAD_SEX_OPTIONS = ['Male', 'Female', 'Other'] as const
+function formatDisplayValue(value: unknown, fallback = '—') {
+  if (typeof value !== 'string') return fallback
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : fallback
+}
 
-function parseFollowUpDate(value: string | null | undefined) {
-  if (!value) return undefined
+function toDateInputValue(value: string | null | undefined) {
+  if (!value) return ''
   const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed
+  return Number.isNaN(parsed.getTime()) ? '' : format(parsed, 'yyyy-MM-dd')
 }
 
 type LeadEditLead = {
   id: string
   leadRef: string
   patientName: string
+  phoneNumber?: string | null
+  alternateNumber?: string | null
+  whatsapp?: string | null
   age?: number | null
   sex?: string | null
   treatment?: string | null
   diseaseDetails?: string | null
   status?: string | null
   followUpDate?: string | null
+  modeOfPayment?: string | null
+  circle?: string | null
+  category?: string | null
+  hospitalName?: string | null
+  source?: string | null
+  campaignName?: string | null
+  month?: string | null
+  surgeryDate?: string | null
+  address?: string | null
   bd?: {
     id: string
     name: string
@@ -101,6 +104,21 @@ type LeadOwnershipMeta = {
   assignableUsers: LeadOwnershipUser[]
 }
 
+function ReadonlyField({
+  label,
+  value,
+}: {
+  label: string
+  value: string
+}) {
+  return (
+    <div className="space-y-1.5">
+      <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
+      <div className="rounded-lg border bg-muted/20 px-3 py-2.5 text-sm">{value}</div>
+    </div>
+  )
+}
+
 export function LeadEditDrawer({
   leadId,
   open,
@@ -111,16 +129,16 @@ export function LeadEditDrawer({
   onOpenChange: (open: boolean) => void
 }) {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
   const [patientNameDraft, setPatientNameDraft] = useState<string | null>(null)
+  const [whatsappDraft, setWhatsappDraft] = useState<string | null>(null)
+  const [surgeryDateDraft, setSurgeryDateDraft] = useState<string | null>(null)
+  const [assigneeIdDraft, setAssigneeIdDraft] = useState<string | null>(null)
   const [ageDraft, setAgeDraft] = useState<string | null>(null)
   const [sexDraft, setSexDraft] = useState<string | null>(null)
-  const [treatmentDraft, setTreatmentDraft] = useState<string | null>(null)
-  const [diseaseDraft, setDiseaseDraft] = useState<string | null>(null)
   const [leadStatusDraft, setLeadStatusDraft] = useState<string | null>(null)
-  const [statusChangeRemarkDraft, setStatusChangeRemarkDraft] = useState('')
   const [followUpDateDraft, setFollowUpDateDraft] = useState<string | null>(null)
-  const [leadAssigneeDraft, setLeadAssigneeDraft] = useState('')
+  const [modeOfPaymentDraft, setModeOfPaymentDraft] = useState<string | null>(null)
+  const [statusChangeRemarkDraft, setStatusChangeRemarkDraft] = useState('')
   const [saving, setSaving] = useState(false)
 
   const { data: lead, isLoading, error } = useQuery<LeadEditLead, Error>({
@@ -138,107 +156,142 @@ export function LeadEditDrawer({
   })
 
   const effectivePatientName = patientNameDraft ?? lead?.patientName ?? ''
+  const effectiveWhatsapp = whatsappDraft ?? (lead?.whatsapp ?? '')
+  const effectiveSurgeryDate = surgeryDateDraft ?? toDateInputValue(lead?.surgeryDate)
+  const effectiveAssigneeId = assigneeIdDraft ?? leadOwnershipMeta?.currentAssigneeId ?? lead?.bd?.id ?? ''
   const effectiveAge = ageDraft ?? (lead?.age == null ? '' : String(lead.age))
-  const effectiveSex = sexDraft ?? (lead?.sex ?? '')
-  const effectiveTreatment = treatmentDraft ?? (lead?.treatment ?? '')
-  const effectiveDisease = diseaseDraft ?? (lead?.diseaseDetails ?? '')
+  const currentNormalizedSex = normalizeLeadSexValue(lead?.sex)
+  const effectiveSex = sexDraft ?? currentNormalizedSex
   const effectiveLeadStatus = leadStatusDraft ?? (lead?.status ?? 'New')
-  const effectiveFollowUpDate = followUpDateDraft ?? (lead?.followUpDate ?? '')
-  const willAutoReassign =
-    effectiveLeadStatus.trim().toLowerCase() === 'junk' ||
-    effectiveLeadStatus.trim().toLowerCase() === 'churned'
-  const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
-  const statusRequiresAgeSex = isStatusRequiringAgeSex(effectiveLeadStatus)
-  const statusChanged = effectiveLeadStatus !== (lead?.status ?? 'New')
-  const shouldRequireFollowUpDate = statusChanged && statusRequiresFollowUpDate
-  const shouldRequireAgeSex = statusChanged && statusRequiresAgeSex
-  const parsedEffectiveFollowUpDate = parseFollowUpDate(effectiveFollowUpDate)
+  const effectiveFollowUpDate = followUpDateDraft ?? toDateInputValue(lead?.followUpDate)
+  const effectiveModeOfPayment = modeOfPaymentDraft ?? (lead?.modeOfPayment ?? '')
 
   const canEditLeadProfile = leadOwnershipMeta?.canEditLeadProfile ?? false
   const canEditRemarks = leadOwnershipMeta?.canEditRemarks ?? false
   const canUpdateLeadStatus = leadOwnershipMeta?.canUpdateStatus ?? false
   const canReassignLead = leadOwnershipMeta?.canReassign ?? false
-  const assignableLeadUsers = leadOwnershipMeta?.assignableUsers ?? []
-  const isBdRole = user?.role === 'BD'
+  const currentAssigneeId = leadOwnershipMeta?.currentAssigneeId ?? lead?.bd?.id ?? ''
+  const currentAssigneeName =
+    lead?.bd?.name ??
+    leadOwnershipMeta?.assignableUsers.find((assignableUser) => assignableUser.id === currentAssigneeId)?.name ??
+    'Unassigned'
+
+  const currentStatus = lead?.status ?? 'New'
+  const currentFollowUpDate = toDateInputValue(lead?.followUpDate)
+  const currentModeOfPayment = lead?.modeOfPayment ?? ''
   const trimmedStatusChangeRemark = statusChangeRemarkDraft.trim()
 
-  const isDirty =
+  const statusChanged = effectiveLeadStatus !== currentStatus
+  const followUpDateChanged = effectiveFollowUpDate !== currentFollowUpDate
+  const modeOfPaymentChanged = effectiveModeOfPayment !== currentModeOfPayment
+  const statusRequiresFollowUpDate = isStatusRequiringFollowUpDate(effectiveLeadStatus)
+  const statusRequiresAgeSex = isStatusRequiringAgeSex(effectiveLeadStatus)
+  const statusRequiresModeOfPayment = isStatusRequiringModeOfPayment(effectiveLeadStatus)
+
+  const profileDirty =
     effectivePatientName !== (lead?.patientName ?? '') ||
-    effectiveAge !== (lead?.age == null ? '' : String(lead.age)) ||
-    effectiveSex !== (lead?.sex ?? '') ||
-    effectiveTreatment !== (lead?.treatment ?? '') ||
-    effectiveDisease !== (lead?.diseaseDetails ?? '') ||
-    effectiveLeadStatus !== (lead?.status ?? 'New') ||
-    effectiveFollowUpDate !== (lead?.followUpDate ?? '') ||
-    leadAssigneeDraft.length > 0
+    effectiveWhatsapp !== (lead?.whatsapp ?? '') ||
+    effectiveSurgeryDate !== toDateInputValue(lead?.surgeryDate)
+  const assigneeDirty = effectiveAssigneeId !== currentAssigneeId
+
+  const statusDirty = statusChanged || followUpDateChanged || modeOfPaymentChanged
+  const isDirty = profileDirty || assigneeDirty || statusDirty
+
+  const statusOptions = Array.from(
+    new Set(
+      effectiveLeadStatus && effectiveLeadStatus.trim().length > 0
+        ? [effectiveLeadStatus, ...CRM_EDIT_LEAD_STATUS_OPTIONS]
+        : CRM_EDIT_LEAD_STATUS_OPTIONS
+    )
+  )
+
+  const modeOfPaymentOptions = Array.from(
+    new Set(
+      effectiveModeOfPayment && effectiveModeOfPayment.trim().length > 0
+        ? [effectiveModeOfPayment, ...MODE_OF_PAYMENT_OPTIONS]
+        : MODE_OF_PAYMENT_OPTIONS
+    )
+  )
+  const assigneeOptions = Array.from(
+    new Map(
+      [
+        ...(currentAssigneeId
+          ? [
+              {
+                id: currentAssigneeId,
+                name: currentAssigneeName,
+                email: '',
+                role: '',
+              },
+            ]
+          : []),
+        ...(leadOwnershipMeta?.assignableUsers ?? []),
+      ].map((assignableUser) => [assignableUser.id, assignableUser])
+    ).values()
+  )
 
   async function handleSave() {
     if (!leadId || !lead) return
 
-    const payload: Record<string, string | number | null> = {}
-
-    if (effectivePatientName !== lead.patientName) {
-      payload.patientName = effectivePatientName.trim()
-    }
-
-    if (effectiveAge !== (lead.age == null ? '' : String(lead.age))) {
-      const trimmedAge = effectiveAge.trim()
-      payload.age = trimmedAge ? Number.parseInt(trimmedAge, 10) : null
-    }
-
-    if (effectiveSex !== (lead.sex ?? '')) {
-      payload.sex = effectiveSex.trim() || null
-    }
-
-    if (effectiveTreatment !== (lead.treatment ?? '')) {
-      payload.treatment = effectiveTreatment.trim() || null
-    }
-
-    if (effectiveDisease !== (lead.diseaseDetails ?? '')) {
-      payload.diseaseDetails = effectiveDisease.trim() || null
-    }
-
-    if (effectiveLeadStatus !== (lead.status ?? 'New')) {
-      payload.status = effectiveLeadStatus
-    }
-
-    if (effectiveFollowUpDate !== (lead.followUpDate ?? '')) {
-      payload.followUpDate = effectiveFollowUpDate || null
-    }
-
-    if (leadAssigneeDraft) {
-      payload.bdId = leadAssigneeDraft
-    }
-
-    if (Object.keys(payload).length === 0) {
+    if (profileDirty && !canEditLeadProfile) {
+      toast.error('You do not have permission to edit patient profile fields for this lead')
       return
     }
 
-    if (typeof payload.patientName === 'string' && payload.patientName.trim().length === 0) {
-      toast.error('Patient name is required')
+    if (assigneeDirty && !canReassignLead) {
+      toast.error('You do not have permission to reassign this lead')
       return
     }
 
-    if (effectiveAge.trim().length > 0) {
-      const parsedAge = Number.parseInt(effectiveAge.trim(), 10)
-      if (!Number.isFinite(parsedAge) || parsedAge <= 0) {
-        toast.error('Age must be a valid positive number')
-        return
-      }
-    }
-
-    if (shouldRequireFollowUpDate && !effectiveFollowUpDate) {
-      toast.error('Follow-up date is required for DNP and follow-up statuses')
-      return
-    }
-
-    if (shouldRequireAgeSex && (effectiveAge.trim().length === 0 || effectiveSex.trim().length === 0)) {
-      toast.error('Age and sex are required for follow-up and DNP statuses')
+    if (statusDirty && !canUpdateLeadStatus) {
+      toast.error('You do not have permission to update the lead status')
       return
     }
 
     if (statusChanged && !canEditRemarks) {
-      toast.error('You do not have permission to add the required remark for a status change')
+      toast.error('You do not have permission to add the required remark for this status change')
+      return
+    }
+
+    const trimmedPatientName = effectivePatientName.trim()
+    const trimmedWhatsapp = effectiveWhatsapp.trim()
+    const trimmedAge = effectiveAge.trim()
+    const trimmedSex = effectiveSex.trim()
+    const trimmedModeOfPayment = effectiveModeOfPayment.trim()
+
+    if (trimmedPatientName.length === 0) {
+      toast.error('Patient name is required')
+      return
+    }
+
+    const requiresAgeSexForStatusChange = statusChanged && statusRequiresAgeSex
+
+    if (requiresAgeSexForStatusChange && trimmedAge.length === 0) {
+      toast.error('Age is required')
+      return
+    }
+
+    let parsedAge: number | null = null
+    if (trimmedAge.length > 0) {
+      parsedAge = Number.parseInt(trimmedAge, 10)
+      if (!Number.isFinite(parsedAge) || parsedAge < 0) {
+        toast.error('Age must be a valid number')
+        return
+      }
+    }
+
+    if (requiresAgeSexForStatusChange && (!Number.isFinite(parsedAge) || Number(parsedAge) <= 0)) {
+      toast.error('Age must be a valid positive number')
+      return
+    }
+
+    if (requiresAgeSexForStatusChange && trimmedSex.length === 0) {
+      toast.error('Sex is required')
+      return
+    }
+
+    if (assigneeDirty && effectiveAssigneeId.trim().length === 0) {
+      toast.error('Assignee is required')
       return
     }
 
@@ -247,10 +300,63 @@ export function LeadEditDrawer({
       return
     }
 
-    payload.crmEditFollowUpValidation = 'true'
+    if (statusChanged && statusRequiresFollowUpDate && !effectiveFollowUpDate) {
+      toast.error('Follow-up date is required for follow-up and DNP statuses')
+      return
+    }
+
+    if (statusChanged && statusRequiresModeOfPayment && trimmedModeOfPayment.length === 0) {
+      toast.error('Mode of payment is required for Follow-up and Follow-up 1-5 statuses')
+      return
+    }
+
+    const payload: Record<string, string | number | null> = {}
+
+    if (effectivePatientName !== lead.patientName) {
+      payload.patientName = trimmedPatientName
+    }
+
+    if (effectiveWhatsapp !== (lead.whatsapp ?? '')) {
+      payload.whatsapp = trimmedWhatsapp || null
+    }
+
+    if (effectiveSurgeryDate !== toDateInputValue(lead.surgeryDate)) {
+      payload.surgeryDate = effectiveSurgeryDate || null
+    }
+
+    if (
+      requiresAgeSexForStatusChange &&
+      effectiveAge !== (lead.age == null ? '' : String(lead.age)) &&
+      parsedAge !== null
+    ) {
+      payload.age = parsedAge
+    }
+
+    if (requiresAgeSexForStatusChange && effectiveSex !== currentNormalizedSex && trimmedSex.length > 0) {
+      payload.sex = trimmedSex
+    }
+
+    if (assigneeDirty) {
+      payload.bdId = effectiveAssigneeId
+    }
+
     if (statusChanged) {
+      payload.status = effectiveLeadStatus
+      payload.crmEditFollowUpValidation = 'true'
       payload.requireStatusChangeRemark = 'true'
       payload.statusChangeRemark = trimmedStatusChangeRemark
+    }
+
+    if (followUpDateChanged) {
+      payload.followUpDate = effectiveFollowUpDate || null
+    }
+
+    if (modeOfPaymentChanged) {
+      payload.modeOfPayment = trimmedModeOfPayment || null
+    }
+
+    if (Object.keys(payload).length === 0) {
+      return
     }
 
     setSaving(true)
@@ -262,7 +368,6 @@ export function LeadEditDrawer({
       queryClient.invalidateQueries({ queryKey: ['lead', leadId] })
       queryClient.invalidateQueries({ queryKey: ['lead-edit-drawer', leadId] })
       queryClient.invalidateQueries({ queryKey: ['lead-ownership-meta', leadId] })
-      queryClient.invalidateQueries({ queryKey: ['lead-remarks', leadId] })
       onOpenChange(false)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update lead')
@@ -273,17 +378,14 @@ export function LeadEditDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} disableBackClose>
-      <SheetContent side="right" className="w-full sm:max-w-2xl p-0 gap-0 flex flex-col">
-        <SheetHeader className="border-b">
-          <SheetTitle>{lead ? `${lead.patientName}` : 'Edit lead'}</SheetTitle>
-          <SheetDescription>
-            {lead ? `${lead.leadRef} · Update patient details and lead ownership from one drawer.` : 'Loading lead editor...'}
-          </SheetDescription>
+      <SheetContent side="right" className="flex h-full w-full max-w-4xl flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
+        <SheetHeader className="shrink-0 border-b px-4 py-4 text-left">
+          <SheetTitle>{lead ? lead.patientName : 'Edit lead'}</SheetTitle>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+        <div className="flex-1 overflow-y-auto px-4 py-4">
           {isLoading ? (
-            <div className="flex min-h-[240px] items-center justify-center text-sm text-muted-foreground">
+            <div className="flex min-h-[320px] items-center justify-center text-sm text-muted-foreground">
               Loading lead editor...
             </div>
           ) : error || !lead ? (
@@ -291,10 +393,14 @@ export function LeadEditDrawer({
               {error?.message ?? 'We could not load this lead right now.'}
             </div>
           ) : (
-            <>
+            <div className="space-y-4">
+
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Patient Details</CardTitle>
+                  <CardTitle className="text-base">Lead Details</CardTitle>
+                  <CardDescription>
+                    Editing is limited to name, WhatsApp, surgery date, and assignment.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
@@ -310,217 +416,178 @@ export function LeadEditDrawer({
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="drawer-treatment">Treatment</Label>
+                      <Label htmlFor="drawer-whatsapp">WhatsApp</Label>
                       <Input
-                        id="drawer-treatment"
-                        value={effectiveTreatment}
-                        onChange={(e) => setTreatmentDraft(e.target.value)}
+                        id="drawer-whatsapp"
+                        value={effectiveWhatsapp}
+                        onChange={(e) => setWhatsappDraft(e.target.value)}
                         disabled={!canEditLeadProfile || saving}
-                        placeholder="Enter treatment"
+                        placeholder="Enter WhatsApp number"
                       />
                     </div>
                   </div>
 
-                  {statusRequiresAgeSex && (
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="drawer-age">Age</Label>
-                        <Input
-                          id="drawer-age"
-                          type="number"
-                          min={1}
-                          value={effectiveAge}
-                          onChange={(e) => setAgeDraft(e.target.value)}
-                          disabled={!canEditLeadProfile || saving}
-                          placeholder="Enter age"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="drawer-sex">Sex</Label>
-                        <Select
-                          value={effectiveSex || '__none__'}
-                          onValueChange={(value) => setSexDraft(value === '__none__' ? '' : value)}
-                          disabled={!canEditLeadProfile || saving}
-                        >
-                          <SelectTrigger id="drawer-sex">
-                            <SelectValue placeholder="Select sex" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="__none__">Select sex</SelectItem>
-                            {CRM_LEAD_SEX_OPTIONS.map((sexOption) => (
-                              <SelectItem key={sexOption} value={sexOption}>
-                                {sexOption}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-surgery-date">Surgery date</Label>
+                      <Input
+                        id="drawer-surgery-date"
+                        type="date"
+                        value={effectiveSurgeryDate}
+                        onChange={(e) => setSurgeryDateDraft(e.target.value)}
+                        disabled={!canEditLeadProfile || saving}
+                      />
                     </div>
-                  )}
 
-                  <div className="space-y-2">
-                    <Label htmlFor="drawer-disease">Disease</Label>
-                    <Textarea
-                      id="drawer-disease"
-                      value={effectiveDisease}
-                      onChange={(e) => setDiseaseDraft(e.target.value)}
-                      disabled={!canEditLeadProfile || saving}
-                      placeholder="Enter disease details"
-                      rows={4}
-                    />
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-assign-to">Assign to</Label>
+                      <Select
+                        value={effectiveAssigneeId}
+                        onValueChange={setAssigneeIdDraft}
+                        disabled={!canReassignLead || saving || assigneeOptions.length === 0}
+                      >
+                        <SelectTrigger id="drawer-assign-to">
+                          <SelectValue placeholder="Select assignee" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {assigneeOptions.map((assignableUser) => (
+                            <SelectItem key={assignableUser.id} value={assignableUser.id}>
+                              {assignableUser.name}
+                              {assignableUser.role ? ` · ${assignableUser.role}` : ''}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
-                  <p className="text-xs text-muted-foreground">
-                    {canEditLeadProfile
-                      ? statusRequiresAgeSex
-                        ? 'Follow-up and DNP statuses require age and sex in this CRM edit flow.'
-                        : ''
-                      : 'Your role cannot edit patient name, disease, age, sex, or treatment for this lead.'}
-                  </p>
+                  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                    <ReadonlyField label="Phone" value={formatDisplayValue(lead.phoneNumber)} />
+                    <ReadonlyField label="Alternate Phone" value={formatDisplayValue(lead.alternateNumber)} />
+                    <ReadonlyField label="Circle" value={formatDisplayValue(lead.circle)} />
+                    <ReadonlyField label="Current Owner" value={currentAssigneeName} />
+                  </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">
-                    {isBdRole ? 'Lead Status' : 'Lead Transfer'}
-                  </CardTitle>
-                  <CardDescription>
-                    {isBdRole
-                      ? 'Update the sales status for this lead.'
-                      : 'Update the sales status and, when your role allows it, transfer this lead to another owner without changing campaign mapping.'}
-                  </CardDescription>
+                  <CardTitle className="text-base">Status Workflow</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className={`grid gap-4 ${isBdRole ? '' : 'md:grid-cols-2'}`}>
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                     <div className="space-y-2">
                       <Label htmlFor="drawer-lead-status">Lead status</Label>
                       <Select
                         value={effectiveLeadStatus}
-                        onValueChange={(value) => {
-                          setLeadStatusDraft(value)
-                          if (value.trim().toLowerCase() === 'junk' || value.trim().toLowerCase() === 'churned') {
-                            setLeadAssigneeDraft('')
-                          }
-                          if (!isStatusRequiringAgeSex(value)) {
-                            setAgeDraft(null)
-                            setSexDraft(null)
-                          }
-                          if (!isStatusRequiringFollowUpDate(value)) {
-                            setFollowUpDateDraft('')
-                          }
-                        }}
+                        onValueChange={setLeadStatusDraft}
                         disabled={!canUpdateLeadStatus || saving}
                       >
                         <SelectTrigger id="drawer-lead-status">
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          {CRM_EDIT_LEAD_STATUS_OPTIONS.map((statusOption) => (
+                          {statusOptions.map((statusOption) => (
                             <SelectItem key={statusOption} value={statusOption}>
                               {statusOption}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      {/* <p className="text-xs text-muted-foreground">
-                        {canUpdateLeadStatus
-                          ? 'You can update the current sales status for this lead.'
-                          : 'Your role cannot change the lead status for this record.'}
-                      </p> */}
                     </div>
 
-                    {statusRequiresFollowUpDate && (
-                      <div className="space-y-2">
-                        <Label>Follow-up date</Label>
-                        <div className="flex items-center gap-2">
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                className="flex-1 justify-start text-left font-normal"
-                                disabled={!canUpdateLeadStatus || saving}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4 shrink-0 opacity-70" />
-                                {parsedEffectiveFollowUpDate
-                                  ? format(parsedEffectiveFollowUpDate, 'PPP')
-                                  : 'Pick follow-up date'}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={parsedEffectiveFollowUpDate}
-                                onSelect={(date) =>
-                                  setFollowUpDateDraft(date ? format(date, 'yyyy-MM-dd') : '')
-                                }
-                                defaultMonth={parsedEffectiveFollowUpDate ?? new Date()}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          {effectiveFollowUpDate ? (
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="icon"
-                              disabled={!canUpdateLeadStatus || saving}
-                              onClick={() => setFollowUpDateDraft('')}
-                              aria-label="Clear follow-up date"
-                            >
-                              <X className="h-4 w-4" />
-                            </Button>
-                          ) : null}
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {shouldRequireFollowUpDate
-                            ? 'A follow-up date is required when you move this lead into a DNP or follow-up status.'
-                            : 'This status family carries a follow-up date in the CRM edit flow.'}
-                        </p>
-                      </div>
-                    )}
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-age">
+                        Age
+                        {statusChanged && statusRequiresAgeSex ? (
+                          <span className="text-destructive"> *</span>
+                        ) : null}
+                      </Label>
+                      <Input
+                        id="drawer-age"
+                        type="number"
+                        min={1}
+                        value={effectiveAge}
+                        onChange={(e) => setAgeDraft(e.target.value)}
+                        disabled={!canEditLeadProfile || saving}
+                        placeholder="Enter age"
+                      />
+                    </div>
 
-                    {!isBdRole && (
-                      <div className="space-y-2">
-                        <Label htmlFor="drawer-lead-assignee">Transfer lead</Label>
-                        <Select
-                          value={leadAssigneeDraft || '__none__'}
-                          onValueChange={(value) =>
-                            setLeadAssigneeDraft(value === '__none__' ? '' : value)
-                          }
-                          disabled={!canReassignLead || saving || willAutoReassign}
-                        >
-                          <SelectTrigger id="drawer-lead-assignee">
-                            <SelectValue placeholder="Keep current owner" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="__none__">Keep current owner</SelectItem>
-                            {assignableLeadUsers.map((assignableUser) => (
-                              <SelectItem key={assignableUser.id} value={assignableUser.id}>
-                                {assignableUser.name} · {getRoleLabel(assignableUser.role)}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <p className="text-xs text-muted-foreground">
-                          Current owner: {lead.bd?.name ?? 'Unassigned'}
-                          {willAutoReassign
-                            ? ' · Junk and Churned leads are reassigned automatically to another BD in the same team.'
-                            : canReassignLead
-                            ? ' · Choose any allowed owner when you want to transfer this lead. The lead ID and campaign name stay intact.'
-                            : ' · Lead transfer is not available for your role on this lead.'}
-                        </p>
-                      </div>
-                    )}
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-sex">
+                        Sex
+                        {statusChanged && statusRequiresAgeSex ? (
+                          <span className="text-destructive"> *</span>
+                        ) : null}
+                      </Label>
+                      <Select
+                        value={effectiveSex || '__none__'}
+                        onValueChange={(value) => setSexDraft(value === '__none__' ? '' : value)}
+                        disabled={!canEditLeadProfile || saving}
+                      >
+                        <SelectTrigger id="drawer-sex">
+                          <SelectValue placeholder="Select sex" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__none__">Select sex</SelectItem>
+                          {CRM_LEAD_SEX_OPTIONS.map((sexOption) => (
+                            <SelectItem key={sexOption} value={sexOption}>
+                              {sexOption}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-follow-up-date">
+                        Follow-up date
+                        {statusChanged && statusRequiresFollowUpDate ? (
+                          <span className="text-destructive"> *</span>
+                        ) : null}
+                      </Label>
+                      <Input
+                        id="drawer-follow-up-date"
+                        type="date"
+                        value={effectiveFollowUpDate}
+                        onChange={(e) => setFollowUpDateDraft(e.target.value)}
+                        disabled={!canUpdateLeadStatus || saving}
+                      />
+                    </div>
                   </div>
 
-                  {isLoadingMeta ? (
-                    <p className="text-xs text-muted-foreground">Loading ownership rules...</p>
-                  ) : (
-                    <p className="text-xs text-muted-foreground"></p>
-                  )}
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="drawer-mode-of-payment">
+                        Mode of Payment
+                        {statusChanged && statusRequiresModeOfPayment ? (
+                          <span className="text-destructive"> *</span>
+                        ) : null}
+                      </Label>
+                      <Select
+                        value={effectiveModeOfPayment || '__none__'}
+                        onValueChange={(value) =>
+                          setModeOfPaymentDraft(value === '__none__' ? '' : value)
+                        }
+                        disabled={!canUpdateLeadStatus || saving}
+                      >
+                        <SelectTrigger id="drawer-mode-of-payment">
+                          <SelectValue placeholder="Select mode of payment" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__none__">No mode selected</SelectItem>
+                          {modeOfPaymentOptions.map((modeOption) => (
+                            <SelectItem key={modeOption} value={modeOption}>
+                              {modeOption}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
 
+                  
                   <div className="space-y-2">
                     <Label htmlFor="drawer-status-change-remark">
                       Status change remark
@@ -534,18 +601,18 @@ export function LeadEditDrawer({
                       placeholder={
                         statusChanged
                           ? 'Explain why you are changing this lead status'
-                          : 'Add a remark if you plan to change the lead status'
+                          : 'This remark becomes mandatory when the status changes'
                       }
                       rows={4}
                     />
                   </div>
                 </CardContent>
               </Card>
-            </>
+            </div>
           )}
         </div>
 
-        <SheetFooter className="border-t">
+        <SheetFooter className="shrink-0 border-t px-4 py-3">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
             Cancel
           </Button>
@@ -557,13 +624,10 @@ export function LeadEditDrawer({
               isLoadingMeta ||
               !lead ||
               !isDirty ||
-              (statusChanged && (!canEditRemarks || trimmedStatusChangeRemark.length === 0)) ||
-              (shouldRequireAgeSex &&
-                (!canEditLeadProfile ||
-                  effectiveAge.trim().length === 0 ||
-                  effectiveSex.trim().length === 0)) ||
-              (shouldRequireFollowUpDate && !effectiveFollowUpDate) ||
-              effectivePatientName.trim().length === 0
+              (profileDirty && !canEditLeadProfile) ||
+              (assigneeDirty && !canReassignLead) ||
+              (statusDirty && !canUpdateLeadStatus) ||
+              (statusChanged && !canEditRemarks)
             }
           >
             {saving ? (
