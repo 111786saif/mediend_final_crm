@@ -23,13 +23,7 @@ import { CashStageProgress } from '@/components/case/cash-stage-progress'
 import { ResetStepperDialog } from '@/components/case/reset-stepper-dialog'
 import { StageProgress } from '@/components/case/stage-progress'
 import { Field, Section } from '@/components/patient/details-section'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { CaseStage, FlowType } from '@/generated/prisma/enums'
@@ -38,7 +32,6 @@ import {
   canCompletePreAuth,
   canEditDischargeSheet,
   canEditIPDDetails,
-  canEditKYP,
   canFillCashDischarge,
   canFillInitiateForm,
   canFillIPDCashForm,
@@ -150,6 +143,12 @@ interface Lead {
   month?: string | null
   profession?: string | null
   teamLeadId?: number | null
+  opdHospital?: string | null
+  opdDrName?: string | null
+  opdContactNo?: string | null
+  opdCharges?: number | null
+  opdScheduleDate?: string | null
+  opdMeeting?: number | null
   kypSubmission?: {
     id: string
     status: string

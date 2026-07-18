@@ -601,6 +601,12 @@ export async function PATCH(
       'roomRent',
       'icu',
       'capping',
+      'opdHospital',
+      'opdDrName',
+      'opdContactNo',
+      'opdCharges',
+      'opdScheduleDate',
+      'opdMeeting',
       'arrivalDate',
       'arrivalTime',
       'surgeryDate',
@@ -636,12 +642,15 @@ export async function PATCH(
           continue
         }
 
-        if (field === 'surgeryDate') {
+        if (field === 'surgeryDate' || field === 'opdScheduleDate') {
           nextValue = body[field] ? new Date(String(body[field])) : null
         } else if (field === 'sex' && typeof body[field] === 'string') {
           nextValue = normalizeLeadSexValue(body[field]) || body[field]
         } else if (
           (field === 'patientName' ||
+            field === 'opdHospital' ||
+            field === 'opdDrName' ||
+            field === 'opdContactNo' ||
             field === 'whatsapp' ||
             field === 'status' ||
             field === 'remarks') &&

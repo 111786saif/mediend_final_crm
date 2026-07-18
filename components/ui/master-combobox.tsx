@@ -102,10 +102,6 @@ export function MasterCombobox({
   const [inputValue, setInputValue] = React.useState(value)
   const debouncedSearch = useDebouncedValue(inputValue, 250)
 
-  React.useEffect(() => {
-    setInputValue(value)
-  }, [value])
-
   const path = MASTER_PATH[masterType]
   const { data, isFetching } = useQuery({
     queryKey: ['masters', masterType, debouncedSearch],
@@ -120,64 +116,39 @@ export function MasterCombobox({
 
   const items = React.useMemo(() => data?.items ?? [], [data])
   const [highlightedIndex, setHighlightedIndex] = React.useState(-1)
-  const prevDebouncedSearch = React.useRef(debouncedSearch)
   const itemKey = React.useMemo(() => items.map((x) => x.id).join('|'), [items])
   const listInstanceId = React.useId().replace(/:/g, '')
-
-  React.useEffect(() => {
-    if (!open) return
-    if (prevDebouncedSearch.current !== debouncedSearch) {
-      prevDebouncedSearch.current = debouncedSearch
-      setHighlightedIndex(items.length > 0 ? 0 : -1)
-      return
-    }
-    setHighlightedIndex((hi) => {
-      if (items.length === 0) return -1
-      return Math.min(Math.max(hi, 0), items.length - 1)
-    })
-  }, [open, debouncedSearch, itemKey, items.length])
-
-  React.useEffect(() => {
-    if (!open) {
-      setHighlightedIndex(-1)
-      return
-    }
-    setHighlightedIndex((hi) => {
-      if (items.length === 0) return -1
-      if (hi >= 0 && hi < items.length) return hi
-      return 0
-    })
-  }, [open, items.length, itemKey])
+  const effectiveHighlightedIndex = React.useMemo(() => {
+    if (!open || items.length === 0) return -1
+    if (highlightedIndex < 0) return 0
+    return Math.min(highlightedIndex, items.length - 1)
+  }, [open, highlightedIndex, items.length])
 
   React.useLayoutEffect(() => {
-    if (!open || highlightedIndex < 0) return
+    if (!open || effectiveHighlightedIndex < 0) return
     const el = document.querySelector(
-      `[data-master-combobox-option="${listInstanceId}-${highlightedIndex}"]`
+      `[data-master-combobox-option="${listInstanceId}-${effectiveHighlightedIndex}"]`
     )
     el?.scrollIntoView({ block: 'nearest' })
-  }, [open, highlightedIndex, listInstanceId, itemKey])
+  }, [open, effectiveHighlightedIndex, listInstanceId, itemKey])
 
   const selectItem = React.useCallback(
     (item: MasterItem) => {
       onChange(item.name)
       setInputValue(item.name)
       setOpen(false)
+      setHighlightedIndex(-1)
       onItemSelect?.(item)
     },
     [onChange, onItemSelect],
   )
 
   const commitFreeText = React.useCallback(() => {
-    if (restrictToSuggestions) {
-      // No selection was made — drop the leftover typed text, don't commit it.
-      setInputValue(value)
-      setOpen(false)
-      return
-    }
     const v = inputValue.trim()
     onChange(v)
     setOpen(false)
-  }, [inputValue, onChange, restrictToSuggestions, value])
+    setHighlightedIndex(-1)
+  }, [inputValue, onChange])
 
   /** Select-only: keep exact master match or previously committed value; otherwise clear. */
   const commitSelectionOnly = React.useCallback(() => {
@@ -186,6 +157,7 @@ export function MasterCombobox({
       if (value) onChange('')
       setInputValue('')
       setOpen(false)
+      setHighlightedIndex(-1)
       return
     }
 
@@ -198,12 +170,14 @@ export function MasterCombobox({
     if (value && v.toLowerCase() === value.toLowerCase()) {
       setInputValue(value)
       setOpen(false)
+      setHighlightedIndex(-1)
       return
     }
 
     onChange('')
     setInputValue('')
     setOpen(false)
+    setHighlightedIndex(-1)
   }, [inputValue, items, onChange, selectItem, value])
 
   return (
@@ -219,7 +193,7 @@ export function MasterCombobox({
           <div className="relative">
             <Input
               id={id}
-              value={inputValue}
+              value={open ? inputValue : value}
               disabled={disabled}
               placeholder={placeholder}
               autoComplete="off"
@@ -227,7 +201,10 @@ export function MasterCombobox({
                 setInputValue(e.target.value)
                 setOpen(true)
               }}
-              onFocus={() => setOpen(true)}
+              onFocus={() => {
+                setInputValue(value)
+                setOpen(true)
+              }}
               onBlur={() => {
                 window.setTimeout(() => {
                   if (allowFreeText) commitFreeText()
@@ -285,6 +262,7 @@ export function MasterCombobox({
                 if (e.key === 'Escape') {
                   setOpen(false)
                   setInputValue(value)
+                  setHighlightedIndex(-1)
                 }
               }}
               className={cn(error && 'border-destructive')}
@@ -309,7 +287,7 @@ export function MasterCombobox({
                 </p>
               )}
               {items.map((item, index) => {
-                const isHighlighted = index === highlightedIndex
+                const isHighlighted = index === effectiveHighlightedIndex
                 return (
                   <button
                     key={item.id}
