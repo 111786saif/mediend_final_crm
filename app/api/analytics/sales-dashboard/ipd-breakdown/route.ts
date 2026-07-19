@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
     const [
       byCircle,
       byTreatment,
+      byCategory,
       byHospital,
       bySource,
       byCampaign,
@@ -60,6 +61,12 @@ export async function GET(request: NextRequest) {
       prisma.lead.groupBy({
         by: ['treatment'],
         where: { ...completedWhere, treatment: { not: null } },
+        _count: { id: true },
+        _sum: { billAmount: true, netProfit: true },
+      }),
+      prisma.lead.groupBy({
+        by: ['category'],
+        where: completedWhere,
         _count: { id: true },
         _sum: { billAmount: true, netProfit: true },
       }),
@@ -122,6 +129,13 @@ export async function GET(request: NextRequest) {
       revenue: t._sum.billAmount ?? 0,
       profit: t._sum.netProfit ?? 0,
     })).sort((a, b) => b.revenue - a.revenue)
+
+    const categoryBreakdown = byCategory.map((c) => ({
+      category: c.category?.trim() || 'Uncategorized',
+      count: c._count.id,
+      revenue: c._sum.billAmount ?? 0,
+      profit: c._sum.netProfit ?? 0,
+    })).sort((a, b) => b.count - a.count)
 
     const hospitalBreakdown = byHospital.map((h) => ({
       hospitalName: h.hospitalName,
@@ -186,6 +200,7 @@ export async function GET(request: NextRequest) {
     return successResponse({
       byCircle: circleBreakdown,
       byDisease: diseaseBreakdown,
+      byCategory: categoryBreakdown,
       byHospital: hospitalBreakdown,
       bySource: sourceBreakdown,
       byCampaign: campaignBreakdown,

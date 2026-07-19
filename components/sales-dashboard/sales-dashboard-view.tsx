@@ -126,6 +126,7 @@ interface TeamDetail {
   team: { id: string; name: string; manager: { id: string; name: string; profilePicture: string | null } | null }
   kpis: { totalLeads: number; totalIpd: number; totalProfit: number; totalBill: number; conversionRate: number }
   members: Array<{ id: string; name: string; profilePicture: string | null; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
+  byCategory?: Array<{ category: string; leads: number; ipdDone: number; conversionRate: number; netProfit: number; billAmount: number }>
   targets?: Array<{ metric: string; label: string; targetValue: number; achieved: number; percentage: number }>
   monthWise: { months: string[]; rows: Array<{ month: string; bdId: string; bdName: string; leadCount: number; ipdCount: number }> }
 }
@@ -133,6 +134,7 @@ interface TeamDetail {
 interface IpdBreakdown {
   byCircle: Array<{ circle: string; count: number; revenue: number; profit: number }>
   byDisease: Array<{ disease: string; count: number; revenue: number; profit: number }>
+  byCategory?: Array<{ category: string; count: number; revenue: number; profit: number }>
   byHospital: Array<{ hospitalName: string; circle: string; count: number; revenue: number; profit: number }>
   bySource: Array<{ source: string; count: number; revenue: number; profit: number }>
   byCampaign: Array<{ campaign: string; count: number; revenue: number; profit: number }>
@@ -142,6 +144,7 @@ interface IpdBreakdown {
 
 interface LeadsBreakdown {
   byCircle: Array<{ circle: string; totalLeads: number; converted: number; conversionRate: number }>
+  byCategory?: Array<{ category: string; totalLeads: number; converted: number; conversionRate: number }>
   bySource: Array<{ source: string; totalLeads: number; converted: number; conversionRate: number }>
   byCampaign: Array<{ campaign: string; totalLeads: number; converted: number; conversionRate: number }>
   campaignTeamMapping?: Array<{ campaignName: string; team: string; leads: number; conversionPercentage: number; cpl: number | null; amountSpend: number | null }>
@@ -577,6 +580,34 @@ function TeamDetailSheet({
                   </div>
                 )}
 
+                {/* Category-wise */}
+                {(data.byCategory?.length ?? 0) > 0 && (
+                  <div>
+                    <p className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 className="h-4 w-4" />By Category</p>
+                    <div className="space-y-2">
+                      {data.byCategory!.map((c, i) => (
+                        <div key={c.category} className="flex items-center gap-3 rounded-lg border bg-card p-3">
+                          <span
+                            className="h-2.5 w-2.5 rounded-full shrink-0"
+                            style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate">{c.category}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Progress value={Math.min(c.conversionRate, 100)} className="h-1.5 w-16" />
+                              <span className="text-xs text-muted-foreground">{c.conversionRate.toFixed(0)}%</span>
+                            </div>
+                          </div>
+                          <div className="text-right text-sm">
+                            <p className="font-bold text-emerald-600">{c.ipdDone} IPD</p>
+                            <p className="text-xs text-muted-foreground">{c.leads} leads</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Members */}
                 <div>
                   <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Users className="h-4 w-4" />Team Members</p>
@@ -980,6 +1011,7 @@ function TeamPerformanceTab({
 }) {
   const { user } = useAuth()
   const isMdOrAdmin = user?.role === 'MD' || user?.role === 'ADMIN'
+  const qp = dateParams ? '?' + dateParams : ''
 
   const { data: bdMonthly } = useQuery<BdMonthly>({
     queryKey: ['sales-dashboard', variant, 'bd-monthly', dateParams],
@@ -990,6 +1022,16 @@ function TeamPerformanceTab({
     queryKey: ['sales-dashboard', variant, 'target-salary', dateParams],
     queryFn: () => apiGet<TargetSalaryData>(`/api/analytics/sales-dashboard/target-salary${dateParams ? '?' + dateParams : ''}`),
     enabled: isMdOrAdmin,
+  })
+
+  const { data: leadsBreakdown } = useQuery<LeadsBreakdown>({
+    queryKey: ['sales-dashboard', variant, 'leads-breakdown-team-tab', dateParams],
+    queryFn: () => apiGet<LeadsBreakdown>(`/api/analytics/sales-dashboard/leads-breakdown${qp}`),
+  })
+
+  const { data: ipdBreakdown } = useQuery<IpdBreakdown>({
+    queryKey: ['sales-dashboard', variant, 'ipd-breakdown-team-tab', dateParams],
+    queryFn: () => apiGet<IpdBreakdown>(`/api/analytics/sales-dashboard/ipd-breakdown${qp}`),
   })
 
   const teamSalaryMap = new Map((targetSalary?.teamSalaryBreakdown ?? []).map((t) => [t.managerId, t]))
@@ -1030,55 +1072,125 @@ function TeamPerformanceTab({
     .filter((g) => g.managerName !== 'Hardeep Bhargav')
     .sort((a, b) => b.totalIpd - a.totalIpd)
 
+  const categoryRows = (leadsBreakdown?.byCategory ?? []).map((c) => {
+    const ipdRow = (ipdBreakdown?.byCategory ?? []).find(
+      (i) => i.category.toLowerCase() === c.category.toLowerCase()
+    )
+    return {
+      category: c.category,
+      leads: c.totalLeads,
+      ipd: ipdRow?.count ?? c.converted,
+      conv: c.conversionRate,
+      revenue: ipdRow?.revenue ?? 0,
+    }
+  }).sort((a, b) => b.ipd - a.ipd || b.leads - a.leads)
+
+  // Include IPD categories that had no lead-entry matches
+  for (const ipdRow of ipdBreakdown?.byCategory ?? []) {
+    if (categoryRows.some((r) => r.category.toLowerCase() === ipdRow.category.toLowerCase())) continue
+    categoryRows.push({
+      category: ipdRow.category,
+      leads: 0,
+      ipd: ipdRow.count,
+      conv: 0,
+      revenue: ipdRow.revenue,
+    })
+  }
+
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {groups.map((group) => {
-          const conv = group.totalLeads > 0 ? ((group.totalIpd / group.totalLeads) * 100).toFixed(1) : '0.0'
-          const teamSal = teamSalaryMap.get(group.managerId)
-          return (
-            <button
-              key={group.managerId}
-              onClick={() => onSelectTeam(group.managerId)}
-              className="text-left rounded-xl border-l-4 border-blue-500 bg-card shadow-sm hover:shadow-md transition-shadow p-4 w-full"
+      {/* Category-wise performance */}
+      <div>
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
+          <BarChart3 className="h-4 w-4" /> By Category
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categoryRows.map((row, i) => (
+            <div
+              key={row.category}
+              className="rounded-xl border-l-4 bg-card shadow-sm p-4"
+              style={{ borderLeftColor: PIE_COLORS[i % PIE_COLORS.length] }}
             >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-semibold text-sm">{group.managerName}&apos;s Team</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Manager: {group.managerName}</p>
-                </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground mt-1" />
-              </div>
+              <p className="font-semibold text-sm">{row.category}</p>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 <div>
-                  <p className="text-lg font-bold text-emerald-600">{group.totalIpd}</p>
+                  <p className="text-lg font-bold text-emerald-600">{row.ipd}</p>
                   <p className="text-[10px] text-muted-foreground uppercase">IPD</p>
                 </div>
                 <div>
-                  <p className="text-lg font-bold">{group.totalLeads}</p>
+                  <p className="text-lg font-bold">{row.leads}</p>
                   <p className="text-[10px] text-muted-foreground uppercase">Leads</p>
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-violet-600">{conv}%</p>
+                  <p className="text-lg font-bold text-violet-600">{row.conv.toFixed(1)}%</p>
                   <p className="text-[10px] text-muted-foreground uppercase">Conv.</p>
                 </div>
               </div>
-              {isMdOrAdmin && teamSal && teamSal.totalSalary > 0 && (
-                <div className="mt-2 pt-2 border-t border-border/50">
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Team Salary: ₹{fmtK(teamSal.totalSalary)}</span>
-                    <span>
-                      Rev/Sal: <span className={teamSal.revenueSalaryRatio != null && teamSal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{teamSal.revenueSalaryRatio != null ? `${teamSal.revenueSalaryRatio.toFixed(1)}x` : '–'}</span>
-                    </span>
-                  </div>
-                  <Progress value={Math.min(teamSal.revenueSalaryRatio != null ? (teamSal.revenueSalaryRatio > 2 ? 100 : teamSal.revenueSalaryRatio * 50) : 0, 100)} className="mt-1.5 h-1" />
-                </div>
+              {row.revenue > 0 && (
+                <p className="mt-2 text-xs text-muted-foreground">Revenue: {fmtK(row.revenue)}</p>
               )}
-              <Progress value={Math.min(Number(conv), 100)} className="mt-2 h-1.5" />
-            </button>
-          )
-        })}
-        {groups.length === 0 && <p className="col-span-full text-center text-muted-foreground py-6 text-sm">No team data in selected range</p>}
+              <Progress value={Math.min(row.conv, 100)} className="mt-2 h-1.5" />
+            </div>
+          ))}
+          {categoryRows.length === 0 && (
+            <p className="col-span-full text-center text-muted-foreground py-4 text-sm">No category data in selected range</p>
+          )}
+        </div>
+      </div>
+
+      {/* Team lead cards */}
+      <div>
+        <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
+          <Users className="h-4 w-4" /> By Team
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {groups.map((group) => {
+            const conv = group.totalLeads > 0 ? ((group.totalIpd / group.totalLeads) * 100).toFixed(1) : '0.0'
+            const teamSal = teamSalaryMap.get(group.managerId)
+            return (
+              <button
+                key={group.managerId}
+                onClick={() => onSelectTeam(group.managerId)}
+                className="text-left rounded-xl border-l-4 border-blue-500 bg-card shadow-sm hover:shadow-md transition-shadow p-4 w-full"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-semibold text-sm">{group.managerName}&apos;s Team</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Manager: {group.managerName}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground mt-1" />
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-2">
+                  <div>
+                    <p className="text-lg font-bold text-emerald-600">{group.totalIpd}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase">IPD</p>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold">{group.totalLeads}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase">Leads</p>
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold text-violet-600">{conv}%</p>
+                    <p className="text-[10px] text-muted-foreground uppercase">Conv.</p>
+                  </div>
+                </div>
+                {isMdOrAdmin && teamSal && teamSal.totalSalary > 0 && (
+                  <div className="mt-2 pt-2 border-t border-border/50">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>Team Salary: ₹{fmtK(teamSal.totalSalary)}</span>
+                      <span>
+                        Rev/Sal: <span className={teamSal.revenueSalaryRatio != null && teamSal.revenueSalaryRatio >= 1 ? 'text-emerald-600 font-semibold' : 'text-rose-600'}>{teamSal.revenueSalaryRatio != null ? `${teamSal.revenueSalaryRatio.toFixed(1)}x` : '–'}</span>
+                      </span>
+                    </div>
+                    <Progress value={Math.min(teamSal.revenueSalaryRatio != null ? (teamSal.revenueSalaryRatio > 2 ? 100 : teamSal.revenueSalaryRatio * 50) : 0, 100)} className="mt-1.5 h-1" />
+                  </div>
+                )}
+                <Progress value={Math.min(Number(conv), 100)} className="mt-2 h-1.5" />
+              </button>
+            )
+          })}
+          {groups.length === 0 && <p className="col-span-full text-center text-muted-foreground py-6 text-sm">No team data in selected range</p>}
+        </div>
       </div>
     </div>
   )
