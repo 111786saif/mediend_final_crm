@@ -55,6 +55,8 @@ export const ModelName = {
   UserStatus: 'UserStatus',
   Lead: 'Lead',
   CallNote: 'CallNote',
+  LeadRemarkEntry: 'LeadRemarkEntry',
+  LeadQrCallAuditLog: 'LeadQrCallAuditLog',
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
@@ -114,6 +116,17 @@ export const ModelName = {
   NoticeRecipient: 'NoticeRecipient',
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
+  UserCrmPermission: 'UserCrmPermission',
+  CrmAssignmentRule: 'CrmAssignmentRule',
+  CrmAssignmentRuleMember: 'CrmAssignmentRuleMember',
+  CrmAssignmentPreviewLog: 'CrmAssignmentPreviewLog',
+  CrmCampaignSource: 'CrmCampaignSource',
+  CrmCampaignLeadSource: 'CrmCampaignLeadSource',
+  CrmCampaignCircle: 'CrmCampaignCircle',
+  CrmCampaignCity: 'CrmCampaignCity',
+  CrmCampaign: 'CrmCampaign',
+  CrmCampaignTeamLeadAssignment: 'CrmCampaignTeamLeadAssignment',
+  CrmActivityLog: 'CrmActivityLog',
   Resource: 'Resource',
   PermissionAssignment: 'PermissionAssignment',
   PermissionAuditLog: 'PermissionAuditLog',
@@ -351,6 +364,33 @@ export const CallNoteScalarFieldEnum = {
 export type CallNoteScalarFieldEnum = (typeof CallNoteScalarFieldEnum)[keyof typeof CallNoteScalarFieldEnum]
 
 
+export const LeadRemarkEntryScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  content: 'content',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadRemarkEntryScalarFieldEnum = (typeof LeadRemarkEntryScalarFieldEnum)[keyof typeof LeadRemarkEntryScalarFieldEnum]
+
+
+export const LeadQrCallAuditLogScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  userId: 'userId',
+  action: 'action',
+  phoneNumber: 'phoneNumber',
+  source: 'source',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadQrCallAuditLogScalarFieldEnum = (typeof LeadQrCallAuditLogScalarFieldEnum)[keyof typeof LeadQrCallAuditLogScalarFieldEnum]
+
+
 export const LeadStageEventScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
@@ -565,6 +605,14 @@ export const IncomingLeadScalarFieldEnum = {
   source: 'source',
   payload: 'payload',
   status: 'status',
+  externalCampaignId: 'externalCampaignId',
+  normalizedPhone: 'normalizedPhone',
+  processedLeadId: 'processedLeadId',
+  selectedTeamLeadUserId: 'selectedTeamLeadUserId',
+  selectedTeamLeadEmployeeId: 'selectedTeamLeadEmployeeId',
+  selectedBdUserId: 'selectedBdUserId',
+  errorMessage: 'errorMessage',
+  processedAt: 'processedAt',
   receivedAt: 'receivedAt'
 } as const
 
@@ -606,6 +654,7 @@ export const EmployeeScalarFieldEnum = {
   userId: 'userId',
   employeeCode: 'employeeCode',
   bdNumber: 'bdNumber',
+  circle: 'circle',
   joinDate: 'joinDate',
   salary: 'salary',
   departmentId: 'departmentId',
@@ -1485,6 +1534,187 @@ export const UserFeaturePermissionScalarFieldEnum = {
 } as const
 
 export type UserFeaturePermissionScalarFieldEnum = (typeof UserFeaturePermissionScalarFieldEnum)[keyof typeof UserFeaturePermissionScalarFieldEnum]
+
+
+export const UserCrmPermissionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  permissionKey: 'permissionKey',
+  enabled: 'enabled',
+  grantedById: 'grantedById',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserCrmPermissionScalarFieldEnum = (typeof UserCrmPermissionScalarFieldEnum)[keyof typeof UserCrmPermissionScalarFieldEnum]
+
+
+export const CrmAssignmentRuleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  priority: 'priority',
+  city: 'city',
+  category: 'category',
+  departmentId: 'departmentId',
+  strategy: 'strategy',
+  createdById: 'createdById',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmAssignmentRuleScalarFieldEnum = (typeof CrmAssignmentRuleScalarFieldEnum)[keyof typeof CrmAssignmentRuleScalarFieldEnum]
+
+
+export const CrmAssignmentRuleMemberScalarFieldEnum = {
+  id: 'id',
+  ruleId: 'ruleId',
+  employeeId: 'employeeId',
+  isActive: 'isActive',
+  priority: 'priority',
+  weight: 'weight',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmAssignmentRuleMemberScalarFieldEnum = (typeof CrmAssignmentRuleMemberScalarFieldEnum)[keyof typeof CrmAssignmentRuleMemberScalarFieldEnum]
+
+
+export const CrmAssignmentPreviewLogScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  leadRef: 'leadRef',
+  syncSource: 'syncSource',
+  currentBdUserId: 'currentBdUserId',
+  currentBdName: 'currentBdName',
+  matchedRuleId: 'matchedRuleId',
+  matchedRuleName: 'matchedRuleName',
+  matchedRuleStrategy: 'matchedRuleStrategy',
+  proposedBdUserId: 'proposedBdUserId',
+  proposedBdEmployeeId: 'proposedBdEmployeeId',
+  proposedBdName: 'proposedBdName',
+  proposedTeamLeadUserId: 'proposedTeamLeadUserId',
+  proposedTeamLeadEmployeeId: 'proposedTeamLeadEmployeeId',
+  proposedTeamLeadName: 'proposedTeamLeadName',
+  proposedSalesHeadUserId: 'proposedSalesHeadUserId',
+  proposedSalesHeadEmployeeId: 'proposedSalesHeadEmployeeId',
+  proposedSalesHeadName: 'proposedSalesHeadName',
+  isMatched: 'isMatched',
+  wouldReassignBd: 'wouldReassignBd',
+  assignmentDate: 'assignmentDate',
+  explanation: 'explanation',
+  inputSnapshot: 'inputSnapshot',
+  assignmentSnapshot: 'assignmentSnapshot',
+  candidateDiagnostics: 'candidateDiagnostics',
+  createdAt: 'createdAt'
+} as const
+
+export type CrmAssignmentPreviewLogScalarFieldEnum = (typeof CrmAssignmentPreviewLogScalarFieldEnum)[keyof typeof CrmAssignmentPreviewLogScalarFieldEnum]
+
+
+export const CrmCampaignSourceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignSourceScalarFieldEnum = (typeof CrmCampaignSourceScalarFieldEnum)[keyof typeof CrmCampaignSourceScalarFieldEnum]
+
+
+export const CrmCampaignLeadSourceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  cpl: 'cpl',
+  sourceId: 'sourceId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignLeadSourceScalarFieldEnum = (typeof CrmCampaignLeadSourceScalarFieldEnum)[keyof typeof CrmCampaignLeadSourceScalarFieldEnum]
+
+
+export const CrmCampaignCircleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignCircleScalarFieldEnum = (typeof CrmCampaignCircleScalarFieldEnum)[keyof typeof CrmCampaignCircleScalarFieldEnum]
+
+
+export const CrmCampaignCityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  circleId: 'circleId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignCityScalarFieldEnum = (typeof CrmCampaignCityScalarFieldEnum)[keyof typeof CrmCampaignCityScalarFieldEnum]
+
+
+export const CrmCampaignScalarFieldEnum = {
+  id: 'id',
+  externalCampaignId: 'externalCampaignId',
+  displayName: 'displayName',
+  category: 'category',
+  departmentId: 'departmentId',
+  sourceId: 'sourceId',
+  leadSourceId: 'leadSourceId',
+  circleId: 'circleId',
+  cityId: 'cityId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignScalarFieldEnum = (typeof CrmCampaignScalarFieldEnum)[keyof typeof CrmCampaignScalarFieldEnum]
+
+
+export const CrmCampaignTeamLeadAssignmentScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  teamLeadEmployeeId: 'teamLeadEmployeeId',
+  teamLeadUserId: 'teamLeadUserId',
+  month: 'month',
+  year: 'year',
+  weight: 'weight',
+  priority: 'priority',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignTeamLeadAssignmentScalarFieldEnum = (typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum)[keyof typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum]
+
+
+export const CrmActivityLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  entityLabel: 'entityLabel',
+  status: 'status',
+  summary: 'summary',
+  metadata: 'metadata',
+  actorUserId: 'actorUserId',
+  actorRole: 'actorRole',
+  route: 'route',
+  method: 'method',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type CrmActivityLogScalarFieldEnum = (typeof CrmActivityLogScalarFieldEnum)[keyof typeof CrmActivityLogScalarFieldEnum]
 
 
 export const ResourceScalarFieldEnum = {

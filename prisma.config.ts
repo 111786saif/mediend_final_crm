@@ -9,6 +9,7 @@ export default defineConfig({
   },
   datasource: {
     url: env("DATABASE_URL"),
-    shadowDatabaseUrl: env("SHADOW_DATABASE_URL"),
+    // Optional: only required for `prisma migrate dev` with Supabase/cloud DBs.
+    shadowDatabaseUrl: process.env.SHADOW_DATABASE_URL,
   },
 });

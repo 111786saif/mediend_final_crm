@@ -1187,6 +1187,40 @@ export type EnumMDApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumMDApprovalStatusFilter<$PrismaModel>
 }
 
+export type EnumCrmAssignmentStrategyFilter<$PrismaModel = never> = {
+  equals?: $Enums.CrmAssignmentStrategy | Prisma.EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  in?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCrmAssignmentStrategyFilter<$PrismaModel> | $Enums.CrmAssignmentStrategy
+}
+
+export type EnumCrmAssignmentStrategyWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CrmAssignmentStrategy | Prisma.EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  in?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCrmAssignmentStrategyWithAggregatesFilter<$PrismaModel> | $Enums.CrmAssignmentStrategy
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCrmAssignmentStrategyFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCrmAssignmentStrategyFilter<$PrismaModel>
+}
+
+export type EnumCrmAssignmentStrategyNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.CrmAssignmentStrategy | Prisma.EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumCrmAssignmentStrategyNullableFilter<$PrismaModel> | $Enums.CrmAssignmentStrategy | null
+}
+
+export type EnumCrmAssignmentStrategyNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CrmAssignmentStrategy | Prisma.EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumCrmAssignmentStrategyNullableWithAggregatesFilter<$PrismaModel> | $Enums.CrmAssignmentStrategy | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCrmAssignmentStrategyNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCrmAssignmentStrategyNullableFilter<$PrismaModel>
+}
+
 export type EnumResourceTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.ResourceType | Prisma.EnumResourceTypeFieldRefInput<$PrismaModel>
   in?: $Enums.ResourceType[] | Prisma.ListEnumResourceTypeFieldRefInput<$PrismaModel>
@@ -2754,6 +2788,40 @@ export type NestedEnumMDApprovalStatusWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumMDApprovalStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumMDApprovalStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumCrmAssignmentStrategyFilter<$PrismaModel = never> = {
+  equals?: $Enums.CrmAssignmentStrategy | Prisma.EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  in?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCrmAssignmentStrategyFilter<$PrismaModel> | $Enums.CrmAssignmentStrategy
+}
+
+export type NestedEnumCrmAssignmentStrategyWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CrmAssignmentStrategy | Prisma.EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  in?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCrmAssignmentStrategyWithAggregatesFilter<$PrismaModel> | $Enums.CrmAssignmentStrategy
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCrmAssignmentStrategyFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCrmAssignmentStrategyFilter<$PrismaModel>
+}
+
+export type NestedEnumCrmAssignmentStrategyNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.CrmAssignmentStrategy | Prisma.EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumCrmAssignmentStrategyNullableFilter<$PrismaModel> | $Enums.CrmAssignmentStrategy | null
+}
+
+export type NestedEnumCrmAssignmentStrategyNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CrmAssignmentStrategy | Prisma.EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  in?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.CrmAssignmentStrategy[] | Prisma.ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumCrmAssignmentStrategyNullableWithAggregatesFilter<$PrismaModel> | $Enums.CrmAssignmentStrategy | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCrmAssignmentStrategyNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCrmAssignmentStrategyNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumResourceTypeFilter<$PrismaModel = never> = {

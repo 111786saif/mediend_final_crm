@@ -388,6 +388,8 @@ export const ModelName = {
   UserStatus: 'UserStatus',
   Lead: 'Lead',
   CallNote: 'CallNote',
+  LeadRemarkEntry: 'LeadRemarkEntry',
+  LeadQrCallAuditLog: 'LeadQrCallAuditLog',
   LeadStageEvent: 'LeadStageEvent',
   Target: 'Target',
   BonusRule: 'BonusRule',
@@ -447,6 +449,17 @@ export const ModelName = {
   NoticeRecipient: 'NoticeRecipient',
   MDApprovalRequest: 'MDApprovalRequest',
   UserFeaturePermission: 'UserFeaturePermission',
+  UserCrmPermission: 'UserCrmPermission',
+  CrmAssignmentRule: 'CrmAssignmentRule',
+  CrmAssignmentRuleMember: 'CrmAssignmentRuleMember',
+  CrmAssignmentPreviewLog: 'CrmAssignmentPreviewLog',
+  CrmCampaignSource: 'CrmCampaignSource',
+  CrmCampaignLeadSource: 'CrmCampaignLeadSource',
+  CrmCampaignCircle: 'CrmCampaignCircle',
+  CrmCampaignCity: 'CrmCampaignCity',
+  CrmCampaign: 'CrmCampaign',
+  CrmCampaignTeamLeadAssignment: 'CrmCampaignTeamLeadAssignment',
+  CrmActivityLog: 'CrmActivityLog',
   Resource: 'Resource',
   PermissionAssignment: 'PermissionAssignment',
   PermissionAuditLog: 'PermissionAuditLog',
@@ -522,7 +535,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
+    modelProps: "user" | "userStatus" | "lead" | "callNote" | "leadRemarkEntry" | "leadQrCallAuditLog" | "leadStageEvent" | "target" | "bonusRule" | "tierDefinition" | "insuranceCase" | "pLRecord" | "invoiceRequest" | "invoiceRequestActivity" | "doctorPayoffRequest" | "doctorPayoffRequestActivity" | "incomingLead" | "department" | "departmentTeam" | "employee" | "attendanceLog" | "attendanceNormalization" | "leaveTypeMaster" | "leaveRequest" | "leaveBalance" | "leaveBalanceEditRequest" | "holiday" | "payrollRecord" | "payrollComponent" | "salaryStructure" | "monthlyPayroll" | "employeeDocument" | "feedback" | "anonymousMessage" | "mDAppointment" | "meet" | "meetParticipant" | "mentalHealthRequest" | "supportTicket" | "incrementRequest" | "internalJobPosting" | "iJPApplication" | "partyMaster" | "headMaster" | "projectMaster" | "paymentTypeMaster" | "paymentModeMaster" | "ledgerEntry" | "ledgerAuditLog" | "salesEntry" | "locationMaster" | "itemMaster" | "stockMovement" | "purchaseTransaction" | "issueTransaction" | "leadRemark" | "syncState" | "kYPSubmission" | "preAuthorization" | "hospitalSuggestion" | "notification" | "notice" | "noticeRecipient" | "mDApprovalRequest" | "userFeaturePermission" | "userCrmPermission" | "crmAssignmentRule" | "crmAssignmentRuleMember" | "crmAssignmentPreviewLog" | "crmCampaignSource" | "crmCampaignLeadSource" | "crmCampaignCircle" | "crmCampaignCity" | "crmCampaign" | "crmCampaignTeamLeadAssignment" | "crmActivityLog" | "resource" | "permissionAssignment" | "permissionAuditLog" | "campaignCPL" | "dailyCampaignSpend" | "insuranceQuery" | "preAuthPDF" | "admissionRecord" | "insuranceInitiateForm" | "caseStageHistory" | "workflowResetLog" | "caseChatMessage" | "chatReadReceipt" | "dischargeSheet" | "outstandingCase" | "paymentInstallment" | "complianceCall" | "salesTeamCostEntry" | "employeeMonthlyIncentive" | "employeeMasterSeatingCost" | "employeeMonthlySeatingMiscCost" | "employeeMonthlySeatingMiscCostHistory" | "salesTeamBulkCostEntry" | "salesTeamBulkCostEntryHistory" | "employeeSalesTeamSalaryOverride" | "employeeSalesTeamSalaryOverrideHistory" | "task" | "taskDueDateApproval" | "userTaskSeen" | "taskRating" | "taskProject" | "taskComment" | "taskActivityLog" | "warning" | "mDTaskTeam" | "mDTaskTeamMember" | "mDWatchlistEmployee" | "workLog" | "pushSubscription" | "cronJobLog" | "rankSnapshot" | "hospitalMaster" | "hospitalMasterInsurance" | "doctorMaster" | "tPAMaster" | "anesthesiaMaster" | "insuranceMaster" | "treatmentMaster" | "appSetting" | "iTProject" | "iTFreelancer" | "iTProjectResource" | "iTProjectBooking" | "loanDematVendor" | "departmentRevenue" | "pnLCategory" | "pnLConfig" | "pnLEntry" | "targetPnLEntry" | "requestLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -819,6 +832,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CallNoteCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CallNoteCountAggregateOutputType> | number
+        }
+      }
+    }
+    LeadRemarkEntry: {
+      payload: Prisma.$LeadRemarkEntryPayload<ExtArgs>
+      fields: Prisma.LeadRemarkEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadRemarkEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadRemarkEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.LeadRemarkEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadRemarkEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>
+        }
+        findMany: {
+          args: Prisma.LeadRemarkEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>[]
+        }
+        create: {
+          args: Prisma.LeadRemarkEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>
+        }
+        createMany: {
+          args: Prisma.LeadRemarkEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadRemarkEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.LeadRemarkEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>
+        }
+        update: {
+          args: Prisma.LeadRemarkEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadRemarkEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadRemarkEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadRemarkEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadRemarkEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadRemarkEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.LeadRemarkEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeadRemarkEntry>
+        }
+        groupBy: {
+          args: Prisma.LeadRemarkEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadRemarkEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadRemarkEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadRemarkEntryCountAggregateOutputType> | number
+        }
+      }
+    }
+    LeadQrCallAuditLog: {
+      payload: Prisma.$LeadQrCallAuditLogPayload<ExtArgs>
+      fields: Prisma.LeadQrCallAuditLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadQrCallAuditLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadQrCallAuditLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>
+        }
+        findFirst: {
+          args: Prisma.LeadQrCallAuditLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadQrCallAuditLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>
+        }
+        findMany: {
+          args: Prisma.LeadQrCallAuditLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>[]
+        }
+        create: {
+          args: Prisma.LeadQrCallAuditLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>
+        }
+        createMany: {
+          args: Prisma.LeadQrCallAuditLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadQrCallAuditLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>[]
+        }
+        delete: {
+          args: Prisma.LeadQrCallAuditLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>
+        }
+        update: {
+          args: Prisma.LeadQrCallAuditLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadQrCallAuditLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadQrCallAuditLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadQrCallAuditLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadQrCallAuditLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadQrCallAuditLogPayload>
+        }
+        aggregate: {
+          args: Prisma.LeadQrCallAuditLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeadQrCallAuditLog>
+        }
+        groupBy: {
+          args: Prisma.LeadQrCallAuditLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadQrCallAuditLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadQrCallAuditLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadQrCallAuditLogCountAggregateOutputType> | number
         }
       }
     }
@@ -5185,6 +5346,820 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserFeaturePermissionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserFeaturePermissionCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserCrmPermission: {
+      payload: Prisma.$UserCrmPermissionPayload<ExtArgs>
+      fields: Prisma.UserCrmPermissionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserCrmPermissionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserCrmPermissionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>
+        }
+        findFirst: {
+          args: Prisma.UserCrmPermissionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserCrmPermissionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>
+        }
+        findMany: {
+          args: Prisma.UserCrmPermissionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>[]
+        }
+        create: {
+          args: Prisma.UserCrmPermissionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>
+        }
+        createMany: {
+          args: Prisma.UserCrmPermissionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserCrmPermissionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>[]
+        }
+        delete: {
+          args: Prisma.UserCrmPermissionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>
+        }
+        update: {
+          args: Prisma.UserCrmPermissionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserCrmPermissionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserCrmPermissionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserCrmPermissionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserCrmPermissionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserCrmPermissionPayload>
+        }
+        aggregate: {
+          args: Prisma.UserCrmPermissionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserCrmPermission>
+        }
+        groupBy: {
+          args: Prisma.UserCrmPermissionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserCrmPermissionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserCrmPermissionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserCrmPermissionCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmAssignmentRule: {
+      payload: Prisma.$CrmAssignmentRulePayload<ExtArgs>
+      fields: Prisma.CrmAssignmentRuleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmAssignmentRuleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmAssignmentRuleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>
+        }
+        findFirst: {
+          args: Prisma.CrmAssignmentRuleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmAssignmentRuleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>
+        }
+        findMany: {
+          args: Prisma.CrmAssignmentRuleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>[]
+        }
+        create: {
+          args: Prisma.CrmAssignmentRuleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>
+        }
+        createMany: {
+          args: Prisma.CrmAssignmentRuleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmAssignmentRuleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>[]
+        }
+        delete: {
+          args: Prisma.CrmAssignmentRuleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>
+        }
+        update: {
+          args: Prisma.CrmAssignmentRuleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmAssignmentRuleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmAssignmentRuleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmAssignmentRuleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmAssignmentRuleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRulePayload>
+        }
+        aggregate: {
+          args: Prisma.CrmAssignmentRuleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmAssignmentRule>
+        }
+        groupBy: {
+          args: Prisma.CrmAssignmentRuleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmAssignmentRuleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmAssignmentRuleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmAssignmentRuleCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmAssignmentRuleMember: {
+      payload: Prisma.$CrmAssignmentRuleMemberPayload<ExtArgs>
+      fields: Prisma.CrmAssignmentRuleMemberFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmAssignmentRuleMemberFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmAssignmentRuleMemberFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>
+        }
+        findFirst: {
+          args: Prisma.CrmAssignmentRuleMemberFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmAssignmentRuleMemberFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>
+        }
+        findMany: {
+          args: Prisma.CrmAssignmentRuleMemberFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>[]
+        }
+        create: {
+          args: Prisma.CrmAssignmentRuleMemberCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>
+        }
+        createMany: {
+          args: Prisma.CrmAssignmentRuleMemberCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmAssignmentRuleMemberCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>[]
+        }
+        delete: {
+          args: Prisma.CrmAssignmentRuleMemberDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>
+        }
+        update: {
+          args: Prisma.CrmAssignmentRuleMemberUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmAssignmentRuleMemberDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmAssignmentRuleMemberUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmAssignmentRuleMemberUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmAssignmentRuleMemberUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentRuleMemberPayload>
+        }
+        aggregate: {
+          args: Prisma.CrmAssignmentRuleMemberAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmAssignmentRuleMember>
+        }
+        groupBy: {
+          args: Prisma.CrmAssignmentRuleMemberGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmAssignmentRuleMemberGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmAssignmentRuleMemberCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmAssignmentRuleMemberCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmAssignmentPreviewLog: {
+      payload: Prisma.$CrmAssignmentPreviewLogPayload<ExtArgs>
+      fields: Prisma.CrmAssignmentPreviewLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmAssignmentPreviewLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmAssignmentPreviewLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>
+        }
+        findFirst: {
+          args: Prisma.CrmAssignmentPreviewLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmAssignmentPreviewLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>
+        }
+        findMany: {
+          args: Prisma.CrmAssignmentPreviewLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>[]
+        }
+        create: {
+          args: Prisma.CrmAssignmentPreviewLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>
+        }
+        createMany: {
+          args: Prisma.CrmAssignmentPreviewLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmAssignmentPreviewLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>[]
+        }
+        delete: {
+          args: Prisma.CrmAssignmentPreviewLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>
+        }
+        update: {
+          args: Prisma.CrmAssignmentPreviewLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmAssignmentPreviewLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmAssignmentPreviewLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmAssignmentPreviewLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmAssignmentPreviewLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmAssignmentPreviewLogPayload>
+        }
+        aggregate: {
+          args: Prisma.CrmAssignmentPreviewLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmAssignmentPreviewLog>
+        }
+        groupBy: {
+          args: Prisma.CrmAssignmentPreviewLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmAssignmentPreviewLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmAssignmentPreviewLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmAssignmentPreviewLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmCampaignSource: {
+      payload: Prisma.$CrmCampaignSourcePayload<ExtArgs>
+      fields: Prisma.CrmCampaignSourceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmCampaignSourceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmCampaignSourceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>
+        }
+        findFirst: {
+          args: Prisma.CrmCampaignSourceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmCampaignSourceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>
+        }
+        findMany: {
+          args: Prisma.CrmCampaignSourceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>[]
+        }
+        create: {
+          args: Prisma.CrmCampaignSourceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>
+        }
+        createMany: {
+          args: Prisma.CrmCampaignSourceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmCampaignSourceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>[]
+        }
+        delete: {
+          args: Prisma.CrmCampaignSourceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>
+        }
+        update: {
+          args: Prisma.CrmCampaignSourceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmCampaignSourceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmCampaignSourceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmCampaignSourceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmCampaignSourceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignSourcePayload>
+        }
+        aggregate: {
+          args: Prisma.CrmCampaignSourceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmCampaignSource>
+        }
+        groupBy: {
+          args: Prisma.CrmCampaignSourceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignSourceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmCampaignSourceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignSourceCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmCampaignLeadSource: {
+      payload: Prisma.$CrmCampaignLeadSourcePayload<ExtArgs>
+      fields: Prisma.CrmCampaignLeadSourceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmCampaignLeadSourceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmCampaignLeadSourceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>
+        }
+        findFirst: {
+          args: Prisma.CrmCampaignLeadSourceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmCampaignLeadSourceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>
+        }
+        findMany: {
+          args: Prisma.CrmCampaignLeadSourceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>[]
+        }
+        create: {
+          args: Prisma.CrmCampaignLeadSourceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>
+        }
+        createMany: {
+          args: Prisma.CrmCampaignLeadSourceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmCampaignLeadSourceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>[]
+        }
+        delete: {
+          args: Prisma.CrmCampaignLeadSourceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>
+        }
+        update: {
+          args: Prisma.CrmCampaignLeadSourceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmCampaignLeadSourceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmCampaignLeadSourceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmCampaignLeadSourceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmCampaignLeadSourceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignLeadSourcePayload>
+        }
+        aggregate: {
+          args: Prisma.CrmCampaignLeadSourceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmCampaignLeadSource>
+        }
+        groupBy: {
+          args: Prisma.CrmCampaignLeadSourceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignLeadSourceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmCampaignLeadSourceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignLeadSourceCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmCampaignCircle: {
+      payload: Prisma.$CrmCampaignCirclePayload<ExtArgs>
+      fields: Prisma.CrmCampaignCircleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmCampaignCircleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmCampaignCircleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>
+        }
+        findFirst: {
+          args: Prisma.CrmCampaignCircleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmCampaignCircleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>
+        }
+        findMany: {
+          args: Prisma.CrmCampaignCircleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>[]
+        }
+        create: {
+          args: Prisma.CrmCampaignCircleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>
+        }
+        createMany: {
+          args: Prisma.CrmCampaignCircleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmCampaignCircleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>[]
+        }
+        delete: {
+          args: Prisma.CrmCampaignCircleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>
+        }
+        update: {
+          args: Prisma.CrmCampaignCircleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmCampaignCircleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmCampaignCircleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmCampaignCircleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmCampaignCircleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCirclePayload>
+        }
+        aggregate: {
+          args: Prisma.CrmCampaignCircleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmCampaignCircle>
+        }
+        groupBy: {
+          args: Prisma.CrmCampaignCircleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignCircleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmCampaignCircleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignCircleCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmCampaignCity: {
+      payload: Prisma.$CrmCampaignCityPayload<ExtArgs>
+      fields: Prisma.CrmCampaignCityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmCampaignCityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmCampaignCityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>
+        }
+        findFirst: {
+          args: Prisma.CrmCampaignCityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmCampaignCityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>
+        }
+        findMany: {
+          args: Prisma.CrmCampaignCityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>[]
+        }
+        create: {
+          args: Prisma.CrmCampaignCityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>
+        }
+        createMany: {
+          args: Prisma.CrmCampaignCityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmCampaignCityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>[]
+        }
+        delete: {
+          args: Prisma.CrmCampaignCityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>
+        }
+        update: {
+          args: Prisma.CrmCampaignCityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmCampaignCityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmCampaignCityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmCampaignCityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmCampaignCityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignCityPayload>
+        }
+        aggregate: {
+          args: Prisma.CrmCampaignCityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmCampaignCity>
+        }
+        groupBy: {
+          args: Prisma.CrmCampaignCityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignCityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmCampaignCityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignCityCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmCampaign: {
+      payload: Prisma.$CrmCampaignPayload<ExtArgs>
+      fields: Prisma.CrmCampaignFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmCampaignFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmCampaignFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>
+        }
+        findFirst: {
+          args: Prisma.CrmCampaignFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmCampaignFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>
+        }
+        findMany: {
+          args: Prisma.CrmCampaignFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>[]
+        }
+        create: {
+          args: Prisma.CrmCampaignCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>
+        }
+        createMany: {
+          args: Prisma.CrmCampaignCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmCampaignCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>[]
+        }
+        delete: {
+          args: Prisma.CrmCampaignDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>
+        }
+        update: {
+          args: Prisma.CrmCampaignUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmCampaignDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmCampaignUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmCampaignUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmCampaignUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignPayload>
+        }
+        aggregate: {
+          args: Prisma.CrmCampaignAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmCampaign>
+        }
+        groupBy: {
+          args: Prisma.CrmCampaignGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmCampaignCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmCampaignTeamLeadAssignment: {
+      payload: Prisma.$CrmCampaignTeamLeadAssignmentPayload<ExtArgs>
+      fields: Prisma.CrmCampaignTeamLeadAssignmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>
+        }
+        findFirst: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>
+        }
+        findMany: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>[]
+        }
+        create: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>
+        }
+        createMany: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>[]
+        }
+        delete: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>
+        }
+        update: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmCampaignTeamLeadAssignmentPayload>
+        }
+        aggregate: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmCampaignTeamLeadAssignment>
+        }
+        groupBy: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignTeamLeadAssignmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmCampaignTeamLeadAssignmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmCampaignTeamLeadAssignmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    CrmActivityLog: {
+      payload: Prisma.$CrmActivityLogPayload<ExtArgs>
+      fields: Prisma.CrmActivityLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CrmActivityLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CrmActivityLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>
+        }
+        findFirst: {
+          args: Prisma.CrmActivityLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CrmActivityLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>
+        }
+        findMany: {
+          args: Prisma.CrmActivityLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>[]
+        }
+        create: {
+          args: Prisma.CrmActivityLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>
+        }
+        createMany: {
+          args: Prisma.CrmActivityLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CrmActivityLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>[]
+        }
+        delete: {
+          args: Prisma.CrmActivityLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>
+        }
+        update: {
+          args: Prisma.CrmActivityLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.CrmActivityLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CrmActivityLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CrmActivityLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.CrmActivityLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CrmActivityLogPayload>
+        }
+        aggregate: {
+          args: Prisma.CrmActivityLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCrmActivityLog>
+        }
+        groupBy: {
+          args: Prisma.CrmActivityLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmActivityLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CrmActivityLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CrmActivityLogCountAggregateOutputType> | number
         }
       }
     }
@@ -9826,6 +10801,33 @@ export const CallNoteScalarFieldEnum = {
 export type CallNoteScalarFieldEnum = (typeof CallNoteScalarFieldEnum)[keyof typeof CallNoteScalarFieldEnum]
 
 
+export const LeadRemarkEntryScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  content: 'content',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadRemarkEntryScalarFieldEnum = (typeof LeadRemarkEntryScalarFieldEnum)[keyof typeof LeadRemarkEntryScalarFieldEnum]
+
+
+export const LeadQrCallAuditLogScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  userId: 'userId',
+  action: 'action',
+  phoneNumber: 'phoneNumber',
+  source: 'source',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadQrCallAuditLogScalarFieldEnum = (typeof LeadQrCallAuditLogScalarFieldEnum)[keyof typeof LeadQrCallAuditLogScalarFieldEnum]
+
+
 export const LeadStageEventScalarFieldEnum = {
   id: 'id',
   leadId: 'leadId',
@@ -10040,6 +11042,14 @@ export const IncomingLeadScalarFieldEnum = {
   source: 'source',
   payload: 'payload',
   status: 'status',
+  externalCampaignId: 'externalCampaignId',
+  normalizedPhone: 'normalizedPhone',
+  processedLeadId: 'processedLeadId',
+  selectedTeamLeadUserId: 'selectedTeamLeadUserId',
+  selectedTeamLeadEmployeeId: 'selectedTeamLeadEmployeeId',
+  selectedBdUserId: 'selectedBdUserId',
+  errorMessage: 'errorMessage',
+  processedAt: 'processedAt',
   receivedAt: 'receivedAt'
 } as const
 
@@ -10081,6 +11091,7 @@ export const EmployeeScalarFieldEnum = {
   userId: 'userId',
   employeeCode: 'employeeCode',
   bdNumber: 'bdNumber',
+  circle: 'circle',
   joinDate: 'joinDate',
   salary: 'salary',
   departmentId: 'departmentId',
@@ -10960,6 +11971,187 @@ export const UserFeaturePermissionScalarFieldEnum = {
 } as const
 
 export type UserFeaturePermissionScalarFieldEnum = (typeof UserFeaturePermissionScalarFieldEnum)[keyof typeof UserFeaturePermissionScalarFieldEnum]
+
+
+export const UserCrmPermissionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  permissionKey: 'permissionKey',
+  enabled: 'enabled',
+  grantedById: 'grantedById',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserCrmPermissionScalarFieldEnum = (typeof UserCrmPermissionScalarFieldEnum)[keyof typeof UserCrmPermissionScalarFieldEnum]
+
+
+export const CrmAssignmentRuleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  priority: 'priority',
+  city: 'city',
+  category: 'category',
+  departmentId: 'departmentId',
+  strategy: 'strategy',
+  createdById: 'createdById',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmAssignmentRuleScalarFieldEnum = (typeof CrmAssignmentRuleScalarFieldEnum)[keyof typeof CrmAssignmentRuleScalarFieldEnum]
+
+
+export const CrmAssignmentRuleMemberScalarFieldEnum = {
+  id: 'id',
+  ruleId: 'ruleId',
+  employeeId: 'employeeId',
+  isActive: 'isActive',
+  priority: 'priority',
+  weight: 'weight',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmAssignmentRuleMemberScalarFieldEnum = (typeof CrmAssignmentRuleMemberScalarFieldEnum)[keyof typeof CrmAssignmentRuleMemberScalarFieldEnum]
+
+
+export const CrmAssignmentPreviewLogScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  leadRef: 'leadRef',
+  syncSource: 'syncSource',
+  currentBdUserId: 'currentBdUserId',
+  currentBdName: 'currentBdName',
+  matchedRuleId: 'matchedRuleId',
+  matchedRuleName: 'matchedRuleName',
+  matchedRuleStrategy: 'matchedRuleStrategy',
+  proposedBdUserId: 'proposedBdUserId',
+  proposedBdEmployeeId: 'proposedBdEmployeeId',
+  proposedBdName: 'proposedBdName',
+  proposedTeamLeadUserId: 'proposedTeamLeadUserId',
+  proposedTeamLeadEmployeeId: 'proposedTeamLeadEmployeeId',
+  proposedTeamLeadName: 'proposedTeamLeadName',
+  proposedSalesHeadUserId: 'proposedSalesHeadUserId',
+  proposedSalesHeadEmployeeId: 'proposedSalesHeadEmployeeId',
+  proposedSalesHeadName: 'proposedSalesHeadName',
+  isMatched: 'isMatched',
+  wouldReassignBd: 'wouldReassignBd',
+  assignmentDate: 'assignmentDate',
+  explanation: 'explanation',
+  inputSnapshot: 'inputSnapshot',
+  assignmentSnapshot: 'assignmentSnapshot',
+  candidateDiagnostics: 'candidateDiagnostics',
+  createdAt: 'createdAt'
+} as const
+
+export type CrmAssignmentPreviewLogScalarFieldEnum = (typeof CrmAssignmentPreviewLogScalarFieldEnum)[keyof typeof CrmAssignmentPreviewLogScalarFieldEnum]
+
+
+export const CrmCampaignSourceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignSourceScalarFieldEnum = (typeof CrmCampaignSourceScalarFieldEnum)[keyof typeof CrmCampaignSourceScalarFieldEnum]
+
+
+export const CrmCampaignLeadSourceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  cpl: 'cpl',
+  sourceId: 'sourceId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignLeadSourceScalarFieldEnum = (typeof CrmCampaignLeadSourceScalarFieldEnum)[keyof typeof CrmCampaignLeadSourceScalarFieldEnum]
+
+
+export const CrmCampaignCircleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignCircleScalarFieldEnum = (typeof CrmCampaignCircleScalarFieldEnum)[keyof typeof CrmCampaignCircleScalarFieldEnum]
+
+
+export const CrmCampaignCityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  circleId: 'circleId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignCityScalarFieldEnum = (typeof CrmCampaignCityScalarFieldEnum)[keyof typeof CrmCampaignCityScalarFieldEnum]
+
+
+export const CrmCampaignScalarFieldEnum = {
+  id: 'id',
+  externalCampaignId: 'externalCampaignId',
+  displayName: 'displayName',
+  category: 'category',
+  departmentId: 'departmentId',
+  sourceId: 'sourceId',
+  leadSourceId: 'leadSourceId',
+  circleId: 'circleId',
+  cityId: 'cityId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignScalarFieldEnum = (typeof CrmCampaignScalarFieldEnum)[keyof typeof CrmCampaignScalarFieldEnum]
+
+
+export const CrmCampaignTeamLeadAssignmentScalarFieldEnum = {
+  id: 'id',
+  campaignId: 'campaignId',
+  teamLeadEmployeeId: 'teamLeadEmployeeId',
+  teamLeadUserId: 'teamLeadUserId',
+  month: 'month',
+  year: 'year',
+  weight: 'weight',
+  priority: 'priority',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CrmCampaignTeamLeadAssignmentScalarFieldEnum = (typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum)[keyof typeof CrmCampaignTeamLeadAssignmentScalarFieldEnum]
+
+
+export const CrmActivityLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  entityLabel: 'entityLabel',
+  status: 'status',
+  summary: 'summary',
+  metadata: 'metadata',
+  actorUserId: 'actorUserId',
+  actorRole: 'actorRole',
+  route: 'route',
+  method: 'method',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type CrmActivityLogScalarFieldEnum = (typeof CrmActivityLogScalarFieldEnum)[keyof typeof CrmActivityLogScalarFieldEnum]
 
 
 export const ResourceScalarFieldEnum = {
@@ -12787,6 +13979,20 @@ export type ListEnumMDApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'CrmAssignmentStrategy'
+ */
+export type EnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CrmAssignmentStrategy'>
+    
+
+
+/**
+ * Reference to a field of type 'CrmAssignmentStrategy[]'
+ */
+export type ListEnumCrmAssignmentStrategyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CrmAssignmentStrategy[]'>
+    
+
+
+/**
  * Reference to a field of type 'ResourceType'
  */
 export type EnumResourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResourceType'>
@@ -13248,6 +14454,8 @@ export type GlobalOmitConfig = {
   userStatus?: Prisma.UserStatusOmit
   lead?: Prisma.LeadOmit
   callNote?: Prisma.CallNoteOmit
+  leadRemarkEntry?: Prisma.LeadRemarkEntryOmit
+  leadQrCallAuditLog?: Prisma.LeadQrCallAuditLogOmit
   leadStageEvent?: Prisma.LeadStageEventOmit
   target?: Prisma.TargetOmit
   bonusRule?: Prisma.BonusRuleOmit
@@ -13307,6 +14515,17 @@ export type GlobalOmitConfig = {
   noticeRecipient?: Prisma.NoticeRecipientOmit
   mDApprovalRequest?: Prisma.MDApprovalRequestOmit
   userFeaturePermission?: Prisma.UserFeaturePermissionOmit
+  userCrmPermission?: Prisma.UserCrmPermissionOmit
+  crmAssignmentRule?: Prisma.CrmAssignmentRuleOmit
+  crmAssignmentRuleMember?: Prisma.CrmAssignmentRuleMemberOmit
+  crmAssignmentPreviewLog?: Prisma.CrmAssignmentPreviewLogOmit
+  crmCampaignSource?: Prisma.CrmCampaignSourceOmit
+  crmCampaignLeadSource?: Prisma.CrmCampaignLeadSourceOmit
+  crmCampaignCircle?: Prisma.CrmCampaignCircleOmit
+  crmCampaignCity?: Prisma.CrmCampaignCityOmit
+  crmCampaign?: Prisma.CrmCampaignOmit
+  crmCampaignTeamLeadAssignment?: Prisma.CrmCampaignTeamLeadAssignmentOmit
+  crmActivityLog?: Prisma.CrmActivityLogOmit
   resource?: Prisma.ResourceOmit
   permissionAssignment?: Prisma.PermissionAssignmentOmit
   permissionAuditLog?: Prisma.PermissionAuditLogOmit

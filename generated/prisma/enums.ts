@@ -11,6 +11,8 @@
 
 export const UserRole = {
   MD: 'MD',
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  CRM_ADMIN: 'CRM_ADMIN',
   EXECUTIVE_ASSISTANT: 'EXECUTIVE_ASSISTANT',
   SALES_HEAD: 'SALES_HEAD',
   CATEGORY_MANAGER: 'CATEGORY_MANAGER',
@@ -732,6 +734,15 @@ export const InventoryTransactionStatus = {
 } as const
 
 export type InventoryTransactionStatus = (typeof InventoryTransactionStatus)[keyof typeof InventoryTransactionStatus]
+
+
+export const CrmAssignmentStrategy = {
+  TARGET_BALANCED: 'TARGET_BALANCED',
+  ROUND_ROBIN: 'ROUND_ROBIN',
+  MANUAL_POOL_ORDER: 'MANUAL_POOL_ORDER'
+} as const
+
+export type CrmAssignmentStrategy = (typeof CrmAssignmentStrategy)[keyof typeof CrmAssignmentStrategy]
 
 
 export const ResourceType = {

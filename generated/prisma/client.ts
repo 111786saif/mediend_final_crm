@@ -62,6 +62,16 @@ export type Lead = Prisma.LeadModel
  */
 export type CallNote = Prisma.CallNoteModel
 /**
+ * Model LeadRemarkEntry
+ * 
+ */
+export type LeadRemarkEntry = Prisma.LeadRemarkEntryModel
+/**
+ * Model LeadQrCallAuditLog
+ * 
+ */
+export type LeadQrCallAuditLog = Prisma.LeadQrCallAuditLogModel
+/**
  * Model LeadStageEvent
  * 
  */
@@ -356,6 +366,61 @@ export type MDApprovalRequest = Prisma.MDApprovalRequestModel
  * 
  */
 export type UserFeaturePermission = Prisma.UserFeaturePermissionModel
+/**
+ * Model UserCrmPermission
+ * 
+ */
+export type UserCrmPermission = Prisma.UserCrmPermissionModel
+/**
+ * Model CrmAssignmentRule
+ * 
+ */
+export type CrmAssignmentRule = Prisma.CrmAssignmentRuleModel
+/**
+ * Model CrmAssignmentRuleMember
+ * 
+ */
+export type CrmAssignmentRuleMember = Prisma.CrmAssignmentRuleMemberModel
+/**
+ * Model CrmAssignmentPreviewLog
+ * 
+ */
+export type CrmAssignmentPreviewLog = Prisma.CrmAssignmentPreviewLogModel
+/**
+ * Model CrmCampaignSource
+ * 
+ */
+export type CrmCampaignSource = Prisma.CrmCampaignSourceModel
+/**
+ * Model CrmCampaignLeadSource
+ * 
+ */
+export type CrmCampaignLeadSource = Prisma.CrmCampaignLeadSourceModel
+/**
+ * Model CrmCampaignCircle
+ * 
+ */
+export type CrmCampaignCircle = Prisma.CrmCampaignCircleModel
+/**
+ * Model CrmCampaignCity
+ * 
+ */
+export type CrmCampaignCity = Prisma.CrmCampaignCityModel
+/**
+ * Model CrmCampaign
+ * 
+ */
+export type CrmCampaign = Prisma.CrmCampaignModel
+/**
+ * Model CrmCampaignTeamLeadAssignment
+ * 
+ */
+export type CrmCampaignTeamLeadAssignment = Prisma.CrmCampaignTeamLeadAssignmentModel
+/**
+ * Model CrmActivityLog
+ * 
+ */
+export type CrmActivityLog = Prisma.CrmActivityLogModel
 /**
  * Model Resource
  * 
