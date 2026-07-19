@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
       user.role !== UserRole.ADMIN &&
       user.role !== UserRole.SALES_HEAD &&
       user.role !== UserRole.EXECUTIVE_ASSISTANT &&
-      user.role !== UserRole.TEAM_LEAD
+      user.role !== UserRole.TEAM_LEAD &&
+      user.role !== UserRole.DIGITAL_MARKETING_HEAD
     ) {
       return errorResponse('Forbidden', 403)
     }
@@ -67,25 +68,39 @@ export async function GET(request: NextRequest) {
     // Include the manager themselves if they also do BD work
     const allUserIds = [managerEmp.user.id, ...bdIds]
 
-    const [allLeads, completedLeads] = await Promise.all([
+    const teamLeadDateWhere: Prisma.LeadWhereInput = {
+      bdId: { in: allUserIds },
+      OR: [
+        { leadEntryDate: { gte: start, lte: end } },
+        { AND: [{ leadEntryDate: null }, { createdDate: { gte: start, lte: end } }] },
+      ],
+    }
+    const teamCompletedWhere: Prisma.LeadWhereInput = {
+      bdId: { in: allUserIds },
+      ...canonicalSalesCompletedWhere({ gte: start, lte: end }),
+    }
+
+    const [allLeads, completedLeads, categoryLeads, categoryIpd] = await Promise.all([
       prisma.lead.groupBy({
         by: ['bdId'],
-        where: {
-          bdId: { in: allUserIds },
-          OR: [
-            { leadEntryDate: { gte: start, lte: end } },
-            { AND: [{ leadEntryDate: null }, { createdDate: { gte: start, lte: end } }] },
-          ],
-        },
+        where: teamLeadDateWhere,
         _count: { id: true },
         _sum: { netProfit: true, billAmount: true },
       }),
       prisma.lead.groupBy({
         by: ['bdId'],
-        where: {
-          bdId: { in: allUserIds },
-          ...canonicalSalesCompletedWhere({ gte: start, lte: end }),
-        },
+        where: teamCompletedWhere,
+        _count: { id: true },
+        _sum: { netProfit: true, billAmount: true },
+      }),
+      prisma.lead.groupBy({
+        by: ['category'],
+        where: teamLeadDateWhere,
+        _count: { id: true },
+      }),
+      prisma.lead.groupBy({
+        by: ['category'],
+        where: teamCompletedWhere,
         _count: { id: true },
         _sum: { netProfit: true, billAmount: true },
       }),
@@ -255,6 +270,41 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    const categoryIpdMap = new Map(
+      categoryIpd.map((c) => [c.category?.trim() || 'Uncategorized', c])
+    )
+    const byCategory = categoryLeads
+      .map((c) => {
+        const category = c.category?.trim() || 'Uncategorized'
+        const leads = c._count.id
+        const ipdRow = categoryIpdMap.get(category)
+        const ipdDone = ipdRow?._count.id ?? 0
+        return {
+          category,
+          leads,
+          ipdDone,
+          conversionRate: leads > 0 ? (ipdDone / leads) * 100 : 0,
+          netProfit: ipdRow?._sum.netProfit ?? 0,
+          billAmount: ipdRow?._sum.billAmount ?? 0,
+        }
+      })
+      .sort((a, b) => b.ipdDone - a.ipdDone || b.leads - a.leads)
+
+    // Include IPD-only categories that had no leads in the lead-entry window
+    for (const c of categoryIpd) {
+      const category = c.category?.trim() || 'Uncategorized'
+      if (byCategory.some((row) => row.category === category)) continue
+      byCategory.push({
+        category,
+        leads: 0,
+        ipdDone: c._count.id,
+        conversionRate: 0,
+        netProfit: c._sum.netProfit ?? 0,
+        billAmount: c._sum.billAmount ?? 0,
+      })
+    }
+    byCategory.sort((a, b) => b.ipdDone - a.ipdDone || b.leads - a.leads)
+
     return successResponse({
       team: {
         id: managerId,
@@ -269,6 +319,7 @@ export async function GET(request: NextRequest) {
         conversionRate: totalLeads > 0 ? (totalIpd / totalLeads) * 100 : 0,
       },
       members,
+      byCategory,
       targets: targetsBreakdown,
       monthWise: {
         months: allMonths,

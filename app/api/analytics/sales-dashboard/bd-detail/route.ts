@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
       user.role !== UserRole.ADMIN &&
       user.role !== UserRole.SALES_HEAD &&
       user.role !== UserRole.EXECUTIVE_ASSISTANT &&
-      user.role !== UserRole.TEAM_LEAD
+      user.role !== UserRole.TEAM_LEAD &&
+      user.role !== UserRole.DIGITAL_MARKETING_HEAD
     ) {
       return errorResponse('Forbidden', 403)
     }
