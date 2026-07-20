@@ -18,6 +18,7 @@ export const doctorMasterFieldsSchema = z.object({
   treatment: z.string().max(500).optional().nullable(),
   age: z.number().int().min(0).max(120).optional().nullable(),
   sex: z.string().max(20).optional().nullable(),
+  phoneNumber: z.string().max(20).optional().nullable(),
   aadhaarNumber: z.string().max(20).optional().nullable(),
   aadhaarCardUrl: z.string().max(2000).optional().nullable(),
   panNumber: z.string().max(20).optional().nullable(),

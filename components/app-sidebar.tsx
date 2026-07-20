@@ -219,6 +219,7 @@ export function AppSidebar() {
                 item.title === 'Calendar' ||
                 item.title === 'Chat' ||
                 item.title === 'Master Data' ||
+                item.title === 'Doctor Admin' ||
                 item.title === 'Compliance' ||
                 item.title === 'Cumulative Report' ||
                 SALES_TITLES.includes(item.title) ||

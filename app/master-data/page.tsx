@@ -105,6 +105,7 @@ function emptyDoctorForm() {
     treatment: '',
     age: '',
     sex: '',
+    phoneNumber: '',
     aadhaarNumber: '',
     aadhaarCardUrl: '',
     panNumber: '',
@@ -221,6 +222,7 @@ export default function MasterDataPage() {
       treatment: row.treatment || '',
       age: row.age?.toString() || '',
       sex: row.sex || '',
+      phoneNumber: row.phoneNumber || '',
       aadhaarNumber: row.aadhaarNumber || '',
       aadhaarCardUrl: row.aadhaarCardUrl || '',
       panNumber: row.panNumber || '',
@@ -270,6 +272,7 @@ export default function MasterDataPage() {
             treatment: doctorForm.treatment.trim() || null,
             age: doctorForm.age ? Number(doctorForm.age) : null,
             sex: doctorForm.sex || null,
+            phoneNumber: doctorForm.phoneNumber.trim() || null,
             aadhaarNumber: doctorForm.aadhaarNumber.trim() || null,
             aadhaarCardUrl: doctorForm.aadhaarCardUrl.trim() || null,
             panNumber: doctorForm.panNumber.trim() || null,
@@ -398,6 +401,7 @@ export default function MasterDataPage() {
                     <>
                       <TableHead>Category</TableHead>
                       <TableHead>Treatment</TableHead>
+                      <TableHead>Phone</TableHead>
                       <TableHead>Rating</TableHead>
                     </>
                   )}
@@ -489,6 +493,9 @@ export default function MasterDataPage() {
                           </TableCell>
                           <TableCell className="max-w-[180px] truncate text-sm text-muted-foreground">
                             {row.treatment || '—'}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {row.phoneNumber || '—'}
                           </TableCell>
                           <TableCell className="text-sm tabular-nums">
                             {row.ratingAverage != null
@@ -647,6 +654,18 @@ export default function MasterDataPage() {
                           <SelectItem value="Other">Other</SelectItem>
                         </SelectContent>
                       </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="doc-phone">Phone number</Label>
+                      <Input
+                        id="doc-phone"
+                        inputMode="tel"
+                        value={doctorForm.phoneNumber}
+                        onChange={(e) =>
+                          setDoctorForm((p) => ({ ...p, phoneNumber: e.target.value }))
+                        }
+                        placeholder="10-digit mobile number"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="doc-exp-years">Experience (years)</Label>

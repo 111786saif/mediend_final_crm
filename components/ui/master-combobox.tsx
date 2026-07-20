@@ -28,6 +28,7 @@ export interface MasterItem {
   treatment?: string | null
   age?: number | null
   sex?: string | null
+  phoneNumber?: string | null
   aadhaarNumber?: string | null
   aadhaarCardUrl?: string | null
   panNumber?: string | null
