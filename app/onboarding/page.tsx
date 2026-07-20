@@ -317,31 +317,35 @@ export default function OnboardingPage() {
       toast.error('Please fill all required profile fields')
       return false
     }
-    await saveMutation.mutateAsync({
+
+    const emp = profile?.employee
+    const payload: Record<string, unknown> = {
       name: form.name.trim(),
       phoneNumber: form.phoneNumber.trim() || null,
       gender: form.gender || null,
       address: form.address.trim() || null,
-      currentAddress: form.address.trim()
-        ? { line: form.address.trim() }
-        : null,
+      currentAddress: form.address.trim() ? { line: form.address.trim() } : null,
       emergencyContactName: form.emergencyContactName.trim() || null,
       emergencyContactPhone: form.emergencyContactPhone.trim() || null,
       profilePicture: form.profilePicture || null,
       dateOfBirth: form.dateOfBirth || null,
-      panNumber: form.panNumber.trim().toUpperCase() || null,
-      aadharNumber: form.aadharNumber.replace(/\D/g, '').slice(0, 12) || null,
-      uanNumber: form.uanNumber.replace(/\D/g, '').slice(0, 12) || null,
-      bankAccountName: form.bankAccountName.trim() || null,
-      bankAccountNumber: form.bankAccountNumber.replace(/\D/g, '') || null,
-      ifscCode: form.ifscCode.trim().toUpperCase() || null,
       aadharDocUrl: form.aadharDocUrl || null,
       panDocUrl: form.panDocUrl || null,
       passportDocUrl: form.passportDocUrl || null,
       resumeDocUrl: form.resumeDocUrl || null,
       educationalCertDocUrl: form.educationalCertDocUrl || null,
       experienceCertDocUrl: form.experienceCertDocUrl || null,
-    })
+    }
+
+    // Only send identity/bank fields when still empty (first-time). Avoids 403 on re-save.
+    if (!emp?.panNumber) payload.panNumber = form.panNumber.trim().toUpperCase() || null
+    if (!emp?.aadharNumber) payload.aadharNumber = form.aadharNumber.replace(/\D/g, '').slice(0, 12) || null
+    if (!emp?.uanNumber) payload.uanNumber = form.uanNumber.replace(/\D/g, '').slice(0, 12) || null
+    if (!emp?.bankAccountName) payload.bankAccountName = form.bankAccountName.trim() || null
+    if (!emp?.bankAccountNumber) payload.bankAccountNumber = form.bankAccountNumber.replace(/\D/g, '') || null
+    if (!emp?.ifscCode) payload.ifscCode = form.ifscCode.trim().toUpperCase() || null
+
+    await saveMutation.mutateAsync(payload)
     await refetch()
     return true
   }
@@ -356,8 +360,7 @@ export default function OnboardingPage() {
       toast.error('Please acknowledge that your details are correct')
       return
     }
-    const ok = await saveProfile()
-    if (!ok) return
+    // Data was already saved on the profile step — submit without re-patching locked fields
     await completeMutation.mutateAsync()
   }
 
@@ -450,21 +453,26 @@ export default function OnboardingPage() {
               />
 
               <div className="flex items-center gap-4">
-                <Avatar className="size-16">
+                <Avatar className="size-20 ring-2 ring-sky-500/30">
                   <AvatarImage src={form.profilePicture || undefined} alt={form.name} />
                   <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="gap-2"
-                  disabled={uploadingPhoto}
-                  onClick={() => photoRef.current?.click()}
-                >
-                  <Camera className="h-4 w-4" />
-                  {uploadingPhoto ? 'Uploading…' : 'Upload photo'}
-                </Button>
+                <div className="space-y-1.5">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                    disabled={uploadingPhoto}
+                    onClick={() => photoRef.current?.click()}
+                  >
+                    <Camera className="h-4 w-4" />
+                    {uploadingPhoto ? 'Uploading…' : form.profilePicture ? 'Change photo' : 'Upload photo'}
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    Optional — a default avatar is used if you skip this.
+                  </p>
+                </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -686,9 +694,18 @@ export default function OnboardingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="flex items-center gap-4 rounded-xl border p-4 bg-muted/20">
+                <Avatar className="size-20 ring-2 ring-violet-500/30">
+                  <AvatarImage src={form.profilePicture || undefined} alt={form.name} />
+                  <AvatarFallback className="text-lg">{initials}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold text-lg">{form.name}</p>
+                  <p className="text-sm text-muted-foreground">{profile?.user.email ?? user.email}</p>
+                </div>
+              </div>
+
               <div className="grid gap-3 sm:grid-cols-2 rounded-xl border p-4 bg-muted/20">
-                <PreviewRow label="Name" value={form.name} />
-                <PreviewRow label="Email" value={profile?.user.email ?? user.email} />
                 <PreviewRow label="Phone" value={form.phoneNumber} />
                 <PreviewRow label="Employee code" value={profile?.employee?.employeeCode} />
                 <PreviewRow label="Department" value={profile?.employee?.department?.name} />
@@ -747,7 +764,11 @@ export default function OnboardingPage() {
                 </Button>
                 <Button
                   className="bg-violet-600 hover:bg-violet-700"
-                  disabled={!acknowledged || completeMutation.isPending || saveMutation.isPending}
+                  disabled={
+                    !acknowledged ||
+                    completeMutation.isPending ||
+                    saveMutation.isPending
+                  }
                   onClick={handleSubmit}
                 >
                   {completeMutation.isPending ? 'Submitting…' : 'Submit for HR approval'}

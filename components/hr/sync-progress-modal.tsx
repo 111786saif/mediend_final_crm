@@ -200,6 +200,7 @@ interface SyncProgressModalProps {
 }
 
 export function SyncProgressModal({ open, onOpenChange, jobId }: SyncProgressModalProps) {
+  const skipBackOnCloseRef = useRef(false)
   const [job, setJob] = useState<SyncJob | null>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const closedWhileRunning = useRef(false)
@@ -228,13 +229,18 @@ export function SyncProgressModal({ open, onOpenChange, jobId }: SyncProgressMod
     return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
   }, [open, jobId])
 
-  const handleClose = () => {
-    if (job?.status === 'running') {
-      closedWhileRunning.current = true
-      toast.info("Sync is running in the background. You'll be notified when it completes.")
+  const handleOpenChange = (next: boolean) => {
+    if (!next) {
+      skipBackOnCloseRef.current = true
+      if (job?.status === 'running') {
+        closedWhileRunning.current = true
+        toast.info("Sync is running in the background. You'll be notified when it completes.")
+      }
     }
-    onOpenChange(false)
+    onOpenChange(next)
   }
+
+  const handleClose = () => handleOpenChange(false)
 
   const isRunning = job?.status === 'running'
   const isComplete = job?.status === 'completed'
@@ -244,7 +250,7 @@ export function SyncProgressModal({ open, onOpenChange, jobId }: SyncProgressMod
   const totalAttendance = job?.employees.reduce((s, e) => s + (e.attendance.enabled ? e.attendance.processed : 0), 0) ?? 0
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={handleOpenChange} skipBackOnCloseRef={skipBackOnCloseRef}>
       <DialogContent
         className="max-w-3xl w-full p-0 gap-0 overflow-hidden flex flex-col max-h-[90vh]"
         onInteractOutside={(e) => { if (isRunning) e.preventDefault() }}
@@ -351,7 +357,7 @@ export function SyncProgressModal({ open, onOpenChange, jobId }: SyncProgressMod
               Minimize
             </Button>
           ) : (
-            <Button size="sm" onClick={() => onOpenChange(false)}>
+            <Button size="sm" onClick={handleClose}>
               Done
             </Button>
           )}

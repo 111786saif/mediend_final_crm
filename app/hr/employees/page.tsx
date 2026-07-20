@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiGet, apiPatch, apiPost } from '@/lib/api-client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Building, Hash, Calendar, Search, Filter, X, Plus, Eye, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
@@ -85,6 +85,8 @@ const ROW_STATUS_CLASS: Record<string, string> = {
   ABSCONDED: 'bg-rose-50/50 dark:bg-rose-950/20',
 }
 
+const DEFAULT_STATUS_FILTER = 'ACTIVE'
+
 interface EditFormData {
   employeeCode: string
   bdNumber: string
@@ -133,12 +135,14 @@ export default function HREmployeesPage() {
   const [syncJobId, setSyncJobId] = useState<string | null>(null)
   const [syncModalOpen, setSyncModalOpen] = useState(false)
   const queryClient = useQueryClient()
+  const editDialogSkipBackRef = useRef(false)
+  const drawerSkipBackRef = useRef(false)
   const canEdit = !!user && hasPermission(user, 'hrms:employees:write')
   const canCreate = !!user && hasPermission(user, 'users:write')
 
   const [departmentFilter, setDepartmentFilter] = useState<string>('all')
   const [roleFilter, setRoleFilter] = useState<string>('all')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [statusFilter, setStatusFilter] = useState<string>(DEFAULT_STATUS_FILTER)
   const [searchQuery, setSearchQuery] = useState('')
   const [joinDateFrom, setJoinDateFrom] = useState('')
   const [joinDateTo, setJoinDateTo] = useState('')
@@ -192,6 +196,7 @@ export default function HREmployeesPage() {
         previous != null &&
         (variables.data.bdNumber ?? null) !== (previous.bdNumber ?? null)
 
+      editDialogSkipBackRef.current = true
       setIsDialogOpen(false)
       setSelectedEmployee(null)
       toast.success('Employee updated successfully')
@@ -218,7 +223,19 @@ export default function HREmployeesPage() {
     setDrawerOpen(true)
   }
 
+  const handleDrawerOpenChange = (open: boolean) => {
+    if (!open) drawerSkipBackRef.current = true
+    setDrawerOpen(open)
+  }
+
+  const handleEditDialogOpenChange = (open: boolean) => {
+    if (!open) editDialogSkipBackRef.current = true
+    setIsDialogOpen(open)
+    if (!open) setSelectedEmployee(null)
+  }
+
   const handleEditFromDrawer = (emp: unknown) => {
+    drawerSkipBackRef.current = true
     setDrawerOpen(false)
     setSelectedEmployee(emp as Employee)
     setIsDialogOpen(true)
@@ -255,12 +272,18 @@ export default function HREmployeesPage() {
     return true
   }) || []
 
-  const hasActiveFilters = departmentFilter !== 'all' || roleFilter !== 'all' || statusFilter !== 'all' || searchQuery || joinDateFrom || joinDateTo
+  const hasActiveFilters =
+    departmentFilter !== 'all' ||
+    roleFilter !== 'all' ||
+    statusFilter !== DEFAULT_STATUS_FILTER ||
+    searchQuery ||
+    joinDateFrom ||
+    joinDateTo
 
   const clearFilters = () => {
     setDepartmentFilter('all')
     setRoleFilter('all')
-    setStatusFilter('all')
+    setStatusFilter(DEFAULT_STATUS_FILTER)
     setSearchQuery('')
     setJoinDateFrom('')
     setJoinDateTo('')
@@ -465,10 +488,11 @@ export default function HREmployeesPage() {
         </CardContent>
       </Card>
 
-      <Dialog open={isDialogOpen} onOpenChange={(open) => {
-        setIsDialogOpen(open)
-        if (!open) setSelectedEmployee(null)
-      }}>
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={handleEditDialogOpenChange}
+        skipBackOnCloseRef={editDialogSkipBackRef}
+      >
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Employee Details</DialogTitle>
@@ -490,7 +514,8 @@ export default function HREmployeesPage() {
 
       <EmployeeDetailDrawer
         open={drawerOpen}
-        onOpenChange={setDrawerOpen}
+        onOpenChange={handleDrawerOpenChange}
+        skipBackOnCloseRef={drawerSkipBackRef}
         employeeId={drawerEmployeeId}
         canEdit={canEdit}
         onEditRequest={handleEditFromDrawer}

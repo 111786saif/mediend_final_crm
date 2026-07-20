@@ -47,6 +47,7 @@ import { AddWorkLogButton } from '@/components/calendar/add-work-log-button'
 import { NoticeBlockerModal } from '@/components/notices/notice-blocker-modal'
 import { ViewNoticesSheet } from '@/components/notices/view-notices-sheet'
 import { CreateNoticeModal } from '@/components/notices/create-notice-modal'
+import { NewHireWelcomePopup } from '@/components/new-hire-welcome-popup'
 import { Megaphone } from 'lucide-react'
 import { FnFReminderCard } from '@/components/hr/fnf-reminder-card'
 import { BirthdayCelebrationCard } from '@/components/birthday-celebration-card'
@@ -621,6 +622,7 @@ const { data: workLogCheck } = useWorkLogCheck({
     <div className="flex flex-col gap-5 max-w-5xl mx-auto w-full">
       <BirthdayPopup />
       <RankUpPopup />
+      <NewHireWelcomePopup />
       <NoticeBlockerModal />
       {/* Banner + Greeting */}
        <BannerSection

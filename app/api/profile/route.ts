@@ -245,6 +245,20 @@ export async function PATCH(request: NextRequest) {
 
         const currentVal = emp[field as keyof typeof emp]
         const isFirstTime = currentVal == null || currentVal === ''
+        const normalizedIncoming =
+          typeof val === 'string' ? val.trim() : val
+        const normalizedCurrent =
+          typeof currentVal === 'string' ? currentVal.trim() : currentVal
+
+        // Same value — treat as no-op (lets onboarding re-save without 403)
+        if (
+          !isFirstTime &&
+          normalizedIncoming != null &&
+          String(normalizedIncoming).toUpperCase() === String(normalizedCurrent ?? '').toUpperCase()
+        ) {
+          continue
+        }
+
         const canUserUpdate = isFirstTime && !isHr
         const canHrUpdate = isHr
 

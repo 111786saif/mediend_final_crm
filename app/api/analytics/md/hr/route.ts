@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 
 const SLA_HOURS = 48
 
@@ -52,8 +53,9 @@ export async function GET(request: NextRequest) {
     const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0))
     const todayEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999))
 
-    // All employees with shift timing details
+    // Active roster (excludes terminated / absconded) with shift timing details
     const allEmployees = await prisma.employee.findMany({
+      where: headcountEmployeeWhere,
       include: {
         user: { select: { id: true, name: true } },
         department: {
@@ -210,12 +212,12 @@ export async function GET(request: NextRequest) {
       .map(([name, amount]) => ({ departmentName: name, amount }))
       .sort((a, b) => b.amount - a.amount)
 
-    // Department-wise headcount
+    // Department-wise headcount (active roster only)
     const headcountByDept = new Map<string, number>()
-    allEmployees.forEach((e) => {
+    for (const e of allEmployees) {
       const deptName = e.department?.name || 'No Department'
       headcountByDept.set(deptName, (headcountByDept.get(deptName) || 0) + 1)
-    })
+    }
     const departmentHeadcount = Array.from(headcountByDept.entries())
       .map(([name, count]) => ({ departmentName: name, count }))
       .sort((a, b) => b.count - a.count)

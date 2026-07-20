@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -43,6 +43,7 @@ export function EmployeeActionDialog({
   action,
   onSuccess,
 }: EmployeeActionDialogProps) {
+  const skipBackOnCloseRef = useRef(false)
   const [days, setDays] = useState<number>(30)
   const [finalWorkingDay, setFinalWorkingDay] = useState('')
   const [fnfDeadline, setFnfDeadline] = useState('')
@@ -61,6 +62,18 @@ export function EmployeeActionDialog({
     setFinalWorkingDay('')
     setFnfDeadline('')
     setNote('')
+  }
+
+  const closeWithoutNavigatingBack = () => {
+    skipBackOnCloseRef.current = true
+    onOpenChange(false)
+    reset()
+  }
+
+  const handleOpenChange = (next: boolean) => {
+    if (!next) skipBackOnCloseRef.current = true
+    onOpenChange(next)
+    if (!next) reset()
   }
 
   const handleSubmit = async () => {
@@ -127,8 +140,7 @@ export function EmployeeActionDialog({
                   : 'Employee reactivated'
       )
       onSuccess()
-      onOpenChange(false)
-      reset()
+      closeWithoutNavigatingBack()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update')
     } finally {
@@ -163,7 +175,7 @@ export function EmployeeActionDialog({
               : `Clear PIP/Notice/Termination status and set ${employeeName} back to Active.`
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange} skipBackOnCloseRef={skipBackOnCloseRef}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -259,7 +271,7 @@ export function EmployeeActionDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={closeWithoutNavigatingBack}>
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={loading}>

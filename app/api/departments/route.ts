@@ -4,6 +4,7 @@ import { getSessionFromRequest } from '@/lib/session'
 import { hasPermission, canCreateRole } from '@/lib/rbac'
 import { errorResponse, successResponse, unauthorizedResponse } from '@/lib/api-utils'
 import { hashPassword } from '@/lib/auth'
+import { headcountEmployeeWhere } from '@/lib/hrms/headcount'
 import { z } from 'zod'
 
 const createDepartmentSchema = z.object({
@@ -44,13 +45,14 @@ export async function GET(request: NextRequest) {
           },
         },
         employees: {
+          where: headcountEmployeeWhere,
           select: {
             id: true,
           },
         },
         _count: {
           select: {
-            employees: true,
+            employees: { where: headcountEmployeeWhere },
           },
         },
       },
@@ -69,6 +71,7 @@ export async function GET(request: NextRequest) {
           where: {
             userId: dept.head.id,
             departmentId: dept.id,
+            ...headcountEmployeeWhere,
           },
         })
         

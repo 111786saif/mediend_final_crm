@@ -37,6 +37,7 @@ import {
   Cell,
 } from 'recharts'
 import { HRDashboardRecruitmentStrip } from '@/components/hr/hr-dashboard-recruitment-strip'
+import { isActiveHeadcountEmployee } from '@/lib/hrms/headcount'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -124,6 +125,7 @@ interface AttendanceData {
 interface EmployeeItem {
   id: string
   employeeCode: string
+  status?: string
   user: { name: string }
   department: { name: string } | null
 }
@@ -272,7 +274,7 @@ export function HRDashboard({
     if (!analytics) return null
     const today = todayAttendance?.data ?? []
     const monthData = monthAttendance?.data ?? []
-    const allEmployees = employees ?? []
+    const allEmployees = (employees ?? []).filter((e) => isActiveHeadcountEmployee(e.status))
 
     const todayStrength = today.length
     const lateToday = today.filter((r) => r.isLate)
